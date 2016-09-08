@@ -10,41 +10,41 @@ J_ = zeros(3)
 c_ = 0
 
 
-def A0(r, y):
-    return 2 / (r * (y+1))
+def A0(ρ, γ):
+    return 2 / (ρ * (γ+1))
 
-def B(p, y, pINF):
-    return p * (y-1) / (y+1) + (2*y*pINF) / (y+1)
+def B(p, γ, pINF):
+    return p * (γ-1) / (γ+1) + (2*γ*pINF) / (γ+1)
 
 def f0(z, P, params):
 
-    r = P.r
+    ρ = P.ρ
     p = P.p
-    y = params.y
+    γ = params.γ
     pINF = params.pINF
-    c0 = c_0(r, p, y, pINF)
+    c0 = c_0(ρ, p, γ, pINF)
 
     if (z > p):
-        temp = sqrt(A0(r,y) / (z+B(p,y,pINF)))
+        temp = sqrt(A0(ρ,γ) / (z+B(p,γ,pINF)))
         return (z-p) * temp
     else:
-        temp = pow((z+pINF)/(p+pINF), (y-1)/(2*y))
-        return 2 * c0 / (y-1) * (temp-1)
+        temp = pow((z+pINF)/(p+pINF), (γ-1)/(2*γ))
+        return 2 * c0 / (γ-1) * (temp-1)
 
 def f1(z, P, params):
 
-    r = P.r
+    ρ = P.ρ
     p = P.p
-    y = params.y
+    γ = params.γ
     pINF = params.pINF
-    c0 = c_0(r, p, y, pINF)
+    c0 = c_0(ρ, p, γ, pINF)
 
     if (z > p):
-        temp = sqrt( A0(r,y) / (z+B(p,y,pINF)) )
-        return (1 - (z-p) / (2*(z+B(p,y,pINF))) ) * temp
+        temp = sqrt( A0(ρ,γ) / (z+B(p,γ,pINF)) )
+        return (1 - (z-p) / (2*(z+B(p,γ,pINF))) ) * temp
     else:
-        temp = pow((z+pINF)/(p+pINF), -(y+1)/(2*y))
-        return temp * c0 / (y*(p+pINF))
+        temp = pow((z+pINF)/(p+pINF), -(γ+1)/(2*γ))
+        return temp * c0 / (γ*(p+pINF))
 
 def f(z, PL, PR, paramsL, paramsR):
     uR = PR.v[0]
@@ -76,51 +76,51 @@ def u_star(p_, PL, PR, paramsL, paramsR):
     return (uL + uR + f0(p_, PR, paramsR) - f0(p_, PL, paramsL)) / 2
 
 def Q(p_, P, params):
-    r = P.r
+    ρ = P.ρ
     p = P.p
     y = params.y
     pINF = params.pINF
-    return sqrt( (p_ + B(p,y,pINF)) / A0(r,y) )
+    return sqrt( (p_ + B(p,y,pINF)) / A0(ρ,y) )
 
 def Wfan(S, P, params, a):
-    r = P.r
+    ρ = P.ρ
     u = P.v[0]
     p = P.p
     y = params.y
     pINF = params.pINF
     temp = 2/(y+1) + (y-1)*(u-S)/((y+1)*a)
 
-    rf = r * pow(temp, 2/(y-1))
+    rf = ρ * pow(temp, 2/(y-1))
     vf = array([2 * (a + (y-1)*u/2 + S) / (y+1), 0, 0])
     pf = (p+pINF) * pow(temp, 2*y/(y-1)) - pINF
 
     return conserved(rf, pf, vf, A_, J_, c_, params, 0, 0, 0)
 
-def r_star_shock(p_, P, params):
+def ρ_star_shock(p_, P, params):
 
-    r = P.r
+    ρ = P.ρ
     p = P.p
-    y = params.y
+    γ = params.γ
     pINF = params.pINF
-    temp1 = (p_+pINF)/(p+pINF) + (y-1)/(y+1)
-    temp2 = (y-1)/(y+1)*(p_+pINF)/(p+pINF) + 1
-    return r * temp1 / temp2
+    temp1 = (p_+pINF)/(p+pINF) + (γ-1)/(γ+1)
+    temp2 = (γ-1)/(γ+1)*(p_+pINF)/(p+pINF) + 1
+    return ρ * temp1 / temp2
 
-def r_star_fan(p_, P, params):
+def ρ_star_fan(p_, P, params):
 
-    r = P.r
+    ρ = P.ρ
     p = P.p
-    y = params.y
+    γ = params.γ
     pINF = params.pINF
-    return r * pow((p_+pINF)/(p+pINF), 1/y)
+    return ρ * pow((p_+pINF)/(p+pINF), 1/γ)
 
 def c0_star(p_, P, params):
 
-    r = P.r
+    ρ = P.ρ
     p = P.p
     y = params.y
     pINF = params.pINF
-    c0 = c_0(r, p, y, pINF)
+    c0 = c_0(ρ, p, y, pINF)
     return c0 * pow((p_+pINF)/(p+pINF), (y-1)/(2*y))
 
 def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
@@ -131,14 +131,14 @@ def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
     PL = primitive(QL, paramsL, 0, 0, 0)
     PR = primitive(QR, paramsR, 0, 0, 0)
 
-    rL = PL.r
-    rR = PR.r
+    ρL = PL.ρ
+    ρR = PR.ρ
     uL = PL.v[0]
     uR = PR.v[0]
     pL = PL.p
     pR = PR.p
-    c0L = c_0(rL, pL, paramsL.y, paramsL.pINF)
-    c0R = c_0(rR, pR, paramsR.y, paramsR.pINF)
+    c0L = c_0(ρL, pL, paramsL.y, paramsL.pINF)
+    c0R = c_0(ρR, pR, paramsR.y, paramsR.pINF)
 
     p_ = p_star(PL, PR, paramsL, paramsR)
     u_ = u_star(p_, PL, PR, paramsL, paramsR)
@@ -159,18 +159,18 @@ def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
                     if (S < STL):
                         ret[i, 0, 0] = Wfan(S, PL, paramsL, c0L)
                     else:
-                        r_ = r_star_fan(p_, PL, paramsL)
+                        ρ_ = ρ_star_fan(p_, PL, paramsL)
                         v_ = array([u_, 0, 0])
-                        ret[i, 0, 0] = conserved(r_, p_, v_, A_, J_, c_, paramsL, 0, 0, 0)
+                        ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsL, 0, 0, 0)
 
             else:				# Left shock
-                SL = uL - Q(p_, PL, paramsL)/rL
+                SL = uL - Q(p_, PL, paramsL) / ρL
                 if (S < SL):
                     ret[i, 0, 0] = QL
                 else:
-                    r_ = r_star_shock(p_, PL, paramsL)
+                    ρ_ = ρ_star_shock(p_, PL, paramsL)
                     v_ = array([u_, 0, 0])
-                    ret[i, 0, 0] = conserved(r_, p_, v_, A_, J_, c_, paramsL, 0, 0, 0)
+                    ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsL, 0, 0, 0)
 
         else:
 
@@ -182,18 +182,18 @@ def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
                     if (STR < S):
                         ret[i, 0, 0] = Wfan(S, PR, paramsR, -c0R)
                     else:
-                        r_ = r_star_fan(p_, PR, paramsR)
+                        ρ_ = ρ_star_fan(p_, PR, paramsR)
                         v_ = array([u_, 0, 0])
-                        ret[i, 0, 0] = conserved(r_, p_, v_, A_, J_, c_, paramsR, 0, 0, 0)
+                        ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsR, 0, 0, 0)
 
             else:				# Right shock
-                SR = uR + Q(p_, PR, paramsR) / rR
+                SR = uR + Q(p_, PR, paramsR) / ρR
                 if (SR < S):
                     ret[i, 0, 0] = QR
                 else:
-                    r_ = r_star_shock(p_, PR, paramsR)
+                    ρ_ = ρ_star_shock(p_, PR, paramsR)
                     v_ = array([u_, 0, 0])
-                    ret[i, 0, 0] = conserved(r_, p_, v_, A_, J_, c_, paramsR, 0, 0, 0)
+                    ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsR, 0, 0, 0)
 
     return ret
 

@@ -22,13 +22,13 @@ def Bint(qL, qR, d, viscous):
         v += weights[i] * q[2:5] / q[0]
     return dot(block(v, d, viscous), qR - qL)
 
-def Aint(qL, qR, d, params, viscous, thermal, reactive):
+def Aint(qL, qR, d, params, subsystems):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
     """
     ret = zeros(18, dtype=complex128)
     for i in range(N1):
         q = qL + nodes[i] * (qR - qL)
-        J = jacobian(q, d, params, viscous, thermal, reactive)
+        J = jacobian(q, d, params, subsystems)
         eigs, R = eig(J, overwrite_a=1, check_finite=0)
         if DEBUG:
             if (abs(imag(R)) > 1e-15).any():
@@ -38,35 +38,35 @@ def Aint(qL, qR, d, params, viscous, thermal, reactive):
         ret += weights[i] * dot(R, dot(L, b))
     return ret.real
 
-def s_max(qL, qR, d, params, mechanical, viscous, thermal, reactive):
-    max1 = max_abs_eigs(qL, d, params, mechanical, viscous, thermal, reactive)
-    max2 = max_abs_eigs(qR, d, params, mechanical, viscous, thermal, reactive)
+def s_max(qL, qR, d, params, subsystems):
+    max1 = max_abs_eigs(qL, d, params, subsystems)
+    max2 = max_abs_eigs(qR, d, params, subsystems)
     return max(max1, max2) * (qR - qL)
 
-def Drus(qL, qR, d, pos, params, mechanical, viscous, thermal, reactive):
+def Drus(qL, qR, d, pos, params, subsystems):
     """ Returns the Rusanov jump term at the dth boundary
     """
     if pos:
-        ret = flux(qR, d, params, mechanical, viscous, thermal, reactive)
-        ret += flux(qL, d, params, mechanical, viscous, thermal, reactive)
-        ret += Bint(qL, qR, d, viscous)
+        ret = flux(qR, d, params, subsystems)
+        ret += flux(qL, d, params, subsystems)
+        ret += Bint(qL, qR, d, subsystems.viscous)
     else:
-        ret = -flux(qR, d, params, mechanical, viscous, thermal, reactive)
-        ret -= flux(qL, d, params, mechanical, viscous, thermal, reactive)
-        ret -= Bint(qL, qR, d, viscous)
-    ret -= s_max(qL, qR, d, params, mechanical, viscous, thermal, reactive)
+        ret = -flux(qR, d, params, subsystems)
+        ret -= flux(qL, d, params, subsystems)
+        ret -= Bint(qL, qR, d, subsystems.viscous)
+    ret -= s_max(qL, qR, d, params, subsystems)
     return ret
 
-def Dos(qL, qR, d, pos, params, mechanical, viscous, thermal, reactive):
+def Dos(qL, qR, d, pos, params, subsystems):
     """ Returns the Osher-Solomon jump term at the dth boundary
     """
     if pos:
-        ret = flux(qR, d, params, mechanical, viscous, thermal, reactive)
-        ret += flux(qL, d, params, mechanical, viscous, thermal, reactive)
-        ret += Bint(qL, qR, d, viscous)
+        ret = flux(qR, d, params, subsystems)
+        ret += flux(qL, d, params, subsystems)
+        ret += Bint(qL, qR, d, subsystems.viscous)
     else:
-        ret = -flux(qR, d, params, mechanical, viscous, thermal, reactive)
-        ret -= flux(qL, d, params, mechanical, viscous, thermal, reactive)
-        ret -= Bint(qL, qR, d, viscous)
-    ret -= Aint(qL, qR, d, params, viscous, thermal, reactive)
+        ret = -flux(qR, d, params, subsystems)
+        ret -= flux(qL, d, params, subsystems)
+        ret -= Bint(qL, qR, d, subsystems.viscous)
+    ret -= Aint(qL, qR, d, params, subsystems)
     return ret

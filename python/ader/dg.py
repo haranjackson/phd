@@ -1,3 +1,5 @@
+from itertools import product
+
 from numpy import absolute, array, dot, isnan, zeros
 from scipy.sparse.linalg import spsolve
 from scipy.optimize import newton_krylov
@@ -15,7 +17,7 @@ derivs = derivative_values()
 stiff = stiff
 
 
-def rhs(q, Fw, params, dt, mechanical, viscous, thermal, reactive):
+def rhs(q, Fw, params, dt, subsystems):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
     Tq = dot(Kt, q)
@@ -23,11 +25,11 @@ def rhs(q, Fw, params, dt, mechanical, viscous, thermal, reactive):
     Fq = zeros([ndim, NT, 18])
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
-        P = primitive(q[b], params, viscous, thermal, reactive)
-        source_ref(Sq[b], P, params, viscous, thermal, reactive)
+        P = primitive(q[b], params, subsystems)
+        source_ref(Sq[b], P, params, subsystems)
         for d in range(ndim):
-            flux_ref(Fq[d,b], P, d, params, mechanical, viscous, thermal, reactive)
-            Bdot(Bq[d,b], Tq[d,b], d, P.v, viscous)
+            flux_ref(Fq[d,b], P, d, params, subsystems)
+            Bdot(Bq[d,b], Tq[d,b], d, P.v, subsystems.viscous)
 
     ret = dx*Sq
     for d in range(ndim):
@@ -45,7 +47,7 @@ def standard_initial_guess(w):
     q = array([w for i in range(N1)])
     return q.reshape([NT, 18])
 
-def hidalgo_initial_guess(w, params, dtgaps, viscous, thermal, reactive):
+def hidalgo_initial_guess(w, params, dtgaps, subsystems):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
     """
     q = zeros([N1]*(ndim+1) + [18])
@@ -56,17 +58,17 @@ def hidalgo_initial_guess(w, params, dtgaps, viscous, thermal, reactive):
         for i in range(N1):
             qij = qj[i]
             dqdxij = dqdxj[i]
-            J = dot(jacobian(qij, 0, params, viscous, thermal, reactive), dqdxij)
-            Sj = source(qij, params, viscous, thermal, reactive)
+            J = dot(jacobian(qij, 0, params, subsystems), dqdxij)
+            Sj = source(qij, params, subsystems)
             if superStiff:
-                f = lambda X: X - qij + dt/dx * J - dt/2 * (Sj + source(X, params, viscous, thermal, reactive))
+                f = lambda X: X - qij + dt/dx * J - dt/2 * (Sj + source(X, params, subsystems))
                 q[j,i] = newton_krylov(f, qij, f_tol=TOL)
             else:
                 q[j,i] = qij - dt/dx * J + dt * Sj
         qj = q[j]
     return q.reshape([NT, 18])
 
-def predictor(wh, params, dt, mechanical, viscous, thermal, reactive):
+def predictor(wh, params, dt, subsystems):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     global stiff
@@ -75,43 +77,40 @@ def predictor(wh, params, dt, mechanical, viscous, thermal, reactive):
     dtgaps = dt * gaps
 
     def failed(w, qh, i, j, k, f):
-        q = hidalgo_initial_guess(w, params, dtgaps, viscous, thermal, reactive)
+        q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
         qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
 
     failCount = 0
-    for i in range(nx):
-        for j in range(ny):
-            for k in range(nz):
-                w = wh[i, j, k]
-                Fw = dot(F, w)
-                f = lambda X: X - spsolve(K0, rhs(X, Fw, params, dt,
-                                                  mechanical, viscous, thermal, reactive))
+    for i, j, k in product(range(nx), range(ny), range(nz)):
 
-                if hidalgo:
-                    q = hidalgo_initial_guess(w, params, dtgaps, viscous, thermal, reactive)
+        w = wh[i, j, k]
+        Fw = dot(F, w)
+        f = lambda X: X - spsolve(K0, rhs(X, Fw, params, dt, subsystems))
+
+        if hidalgo:
+            q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
+        else:
+            q = standard_initial_guess(w)
+
+        if stiff:
+            qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
+
+        else:
+            for count in range(MAX_ITER):
+                qNew = spsolve(K0, rhs(q, Fw, params, dt, subsystems))
+
+                if isnan(qNew).any():
+                    failed(w, qh, i, j, k, f)
+                    failCount += 1
+                    break
+                elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():
+                    q = qNew
+                    continue
                 else:
-                    q = standard_initial_guess(w)
-
-                if stiff:
-                    qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
-
-                else:
-                    for count in range(MAX_ITER):
-                        qNew = spsolve(K0, rhs(q, Fw, params, dt,
-                                               mechanical, viscous, thermal, reactive))
-
-                        if isnan(qNew).any():
-                            failed(w, qh, i, j, k, f)
-                            failCount += 1
-                            break
-                        elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():
-                            q = qNew
-                            continue
-                        else:
-                            qh[i, j, k] = qNew
-                            break
-                    else:
-                        failed(w, qh, i, j, k, f)
+                    qh[i, j, k] = qNew
+                    break
+            else:
+                failed(w, qh, i, j, k, f)
 
     if failCount > failLim:
         stiff = 1

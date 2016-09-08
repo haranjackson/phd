@@ -8,34 +8,34 @@ from gpr.variables import heat_flux, sigma, E_1, E_A, sigma_A
 from options import reactionType, reactiveEOS
 
 
-def flux_ref(ret, P, d, params, mechanical, viscous, thermal, reactive):
+def flux_ref(ret, P, d, params, subsystems):
 
-    r = P.r; p = P.p; v = P.v
-    rvd = r*v[d]
+    ρ = P.ρ; p = P.p; v = P.v
+    ρvd = ρ * v[d]
 
-    ret[1] = rvd * P.E + p * v[d]
+    ret[1] = ρvd * P.E + p * v[d]
 
-    if mechanical:
-        ret[0] = rvd
-        ret[2:5] = rvd * v
+    if subsystems.mechanical:
+        ret[0] = ρvd
+        ret[2:5] = ρvd * v
         ret[2+d] += p
 
-    if viscous:
+    if subsystems.viscous:
         A = P.A
-        sigd = sigma(r, A, params.cs2)[d]
-        ret[1] -= dot3(sigd, v)
-        ret[2:5] -= sigd
+        σd = sigma(ρ, A, params.cs2)[d]
+        ret[1] -= dot3(σd, v)
+        ret[2:5] -= σd
         ret[5+3*d:8+3*d] = dot(A, v)
 
-    if thermal:
+    if subsystems.thermal:
         T = P.T
         J = P.J
-        ret[1] += params.alpha2 * T * J[d]
-        ret[14:17] = rvd * J
+        ret[1] += params.α2 * T * J[d]
+        ret[14:17] = ρvd * J
         ret[14+d] += T
 
-    if reactive:
-        ret[17] = rvd * P.c
+    if subsystems.reactive:
+        ret[17] = ρvd * P.λ
 
 @jit
 def block_ref(ret, v, d, viscous):
@@ -51,38 +51,37 @@ def block_ref(ret, v, d, viscous):
             for j in range(3):
                 ret[k1+j, k2+j] -= vi
 
-def source_ref(ret, P, params, viscous, thermal, reactive):
+def source_ref(ret, P, params, subsystems):
 
-    r = P.r
+    ρ = P.ρ
 
-    if viscous:
-        r = P.r
+    if subsystems.viscous:
         A = P.A
         Asource = - E_A(A, params.cs2) / theta_1(A, params)
         ret[5:14] = Asource.ravel(order='F')
 
-    if thermal:
+    if subsystems.thermal:
         T = P.T
-        Jsource = - r * params.alpha2 * P.J / theta_2(r, T, params)
+        Jsource = - ρ * params.α2 * P.J / theta_2(ρ, T, params)
         ret[14:17] = Jsource
 
-    if reactive:
+    if subsystems.reactive:
         if reactionType == 'a':
-            K = arrhenius_reaction_rate(r, P.c, T, params)
+            K = arrhenius_reaction_rate(ρ, P.λ, T, params)
         elif reactionType == 'd':
-            K = discrete_ignition_temperature_reaction_rate(r, P.c, T, params)
+            K = discrete_ignition_temperature_reaction_rate(ρ, P.λ, T, params)
         ret[17] = -K
 
         if not reactiveEOS:
             ret[1] = params.Qc * K
 
 
-def flux(Q, d, params, mechanical, viscous, thermal, reactive):
+def flux(Q, d, params, subsystems):
     """ Returns the flux matrix in the kth direction
     """
-    P = primitive(Q, params, viscous, thermal, reactive)
+    P = primitive(Q, params, subsystems)
     ret = zeros(18)
-    flux_ref(ret, P, d, params, mechanical, viscous, thermal, reactive)
+    flux_ref(ret, P, d, params, subsystems)
     return ret
 
 def block(v, d, viscous):
@@ -92,12 +91,12 @@ def block(v, d, viscous):
     block_ref(ret, v, d, viscous)
     return ret
 
-def source(Q, params, viscous, thermal, reactive):
+def source(Q, params, subsystems):
     """ Returns the source vector
     """
-    P = primitive(Q, params, viscous, thermal, reactive)
+    P = primitive(Q, params, subsystems)
     ret = zeros(18)
-    source_ref(ret, P, params, viscous, thermal, reactive)
+    source_ref(ret, P, params, subsystems)
     return ret
 
 @jit
@@ -160,83 +159,83 @@ def Bdot(ret, Q, d, v, viscous):
 class jacobian_variables():
 
     def __init__(self, prims, params):
-        r = prims.r; p = prims.p; A = prims.A; J = prims.J; v = prims.v; E = prims.E
-        y = params.y; pINF = params.pINF; cs2 = params.cs2; alpha2 = params.alpha2
+        ρ = prims.ρ; p = prims.p; A = prims.A; J = prims.J; v = prims.v; E = prims.E
+        γ = params.γ; pINF = params.pINF; cs2 = params.cs2; α2 = params.α2
 
-        q = heat_flux(prims.T, J, alpha2)
-        sig = sigma(r, A, cs2)
-        dsdA = sigma_A(r, A, cs2)
-        psi = E_A(A, cs2)
+        q = heat_flux(prims.T, J, α2)
+        σ = sigma(ρ, A, cs2)
+        dσdA = sigma_A(ρ, A, cs2)
+        ψ = E_A(A, cs2)
 
-        self.Y = params.y - 1
-        self.Psi = r * outer(v, v) - sig
-        self.Omega = (E - E_1(r, p, y, pINF)) * v - (dot(sig, v) + q) / r
-        self.Upsilon = self.Y * (L2_1D(v) + alpha2 * L2_1D(J) + E_1(r, p, y, pINF) - E)
-        self.Phi = r * outer(v, psi).reshape([3,3,3])
-        self.Phi -= tensordot(v, dsdA, axes=(0,0))
+        self.Γ = params.γ - 1
+        self.Ψ = ρ * outer(v, v) - σ
+        self.Ω = (E - E_1(ρ, p, γ, pINF)) * v - (dot(σ, v) + q) / ρ
+        self.Υ = self.Γ * (L2_1D(v) + α2 * L2_1D(J) + E_1(ρ, p, γ, pINF) - E)
+        self.Φ = ρ * outer(v, ψ).reshape([3,3,3])
+        self.Φ -= tensordot(v, dσdA, axes=(0,0))
 
-def dPdQ(P, params, jacVars, viscous, thermal, reactive):
+def dPdQ(P, params, jacVars, subsystems):
     """ Returns the Jacobian of the primitive variables with respect to the conserved variables
     """
-    r = P.r; A = P.A; J = P.J; v = P.v; c = P.c
-    r_1 = 1 / r
-    psi = E_A(A, params.cs2)
+    ρ = P.ρ; A = P.A; J = P.J; v = P.v; λ = P.λ
+    ρ_1 = 1 / ρ
+    ψ = E_A(A, params.cs2)
     ret = eye(18)
-    Y, Upsilon = jacVars.Y, jacVars.Upsilon
+    Γ, Υ = jacVars.Γ, jacVars.Υ
 
-    ret[1, 0] = Upsilon
-    ret[1, 1] = Y
-    ret[1, 2:5] = -Y * v
-    ret[2:5, 0] = -v / r
+    ret[1, 0] = Υ
+    ret[1, 1] = Γ
+    ret[1, 2:5] = -Γ * v
+    ret[2:5, 0] = -v / ρ
     for i in range(2,5):
-        ret[i, i] = r_1
+        ret[i, i] = ρ_1
 
-    if viscous:
-        ret[1, 5:14] = -Y * r * psi.ravel(order='F')
+    if subsystems.viscous:
+        ret[1, 5:14] = -Γ * ρ * ψ.ravel(order='F')
 
-    if thermal:
-        ret[1, 14:17] = -Y * params.alpha2 * J
-        ret[14:17, 0] = -J / r
+    if subsystems.thermal:
+        ret[1, 14:17] = -Γ * params.α2 * J
+        ret[14:17, 0] = -J / ρ
         for i in range(14,17):
-            ret[i, i] = r_1
+            ret[i, i] = ρ_1
 
-    if reactive:
-        ret[17, 0] = -c / r
-        ret[17, 17] /= r
+    if subsystems.reactive:
+        ret[17, 0] = -λ / ρ
+        ret[17, 17] /= ρ
 
         if reactiveEOS:
-            ret[1, 0] += Y * params.Qc * c
-            ret[1, 17] -= Y * params.Qc
+            ret[1, 0] += Γ * params.Qc * λ
+            ret[1, 17] -= Γ * params.Qc
 
     return ret
 
-def dFdP(P, d, params, jacVars, viscous, thermal, reactive):
+def dFdP(P, d, params, jacVars, subsystems):
     """ Returns the Jacobian of the flux vector with respect to the primitive variables
     """
-    r = P.r; p = P.p; A = P.A; J = P.J; v = P.v; c = P.c; E = P.E; T = P.T
-    y = params.y; pINF = params.pINF; cs2 = params.cs2; alpha2 = params.alpha2
-    rvd = r * v[d]
+    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E; T = P.T
+    γ = params.γ; pINF = params.pINF; cs2 = params.cs2; α2 = params.α2
+    ρvd = ρ * v[d]
 
-    q = heat_flux(T, J, alpha2)
-    dsdA = sigma_A(r, A, cs2)
-    Psi, Phi, Omega, Y = jacVars.Psi, jacVars.Phi, jacVars.Omega, jacVars.Y
+    q = heat_flux(T, J, α2)
+    dσdA = sigma_A(ρ, A, cs2)
+    Ψ, Φ, Ω, Γ = jacVars.Ψ, jacVars.Φ, jacVars.Ω, jacVars.Γ
 
     ret = zeros([18, 18])
     ret[0, 0] = v[d]
-    ret[0, 2+d] = r
-    ret[1, 0] = Omega[d]
-    ret[1, 1] = y * v[d] / Y + q[d] / (p + pINF)
-    ret[1, 2:5] = Psi[d]
-    ret[1, 2+d] += r * E + p
-    ret[2:5, 0] = Psi[d] / r
+    ret[0, 2+d] = ρ
+    ret[1, 0] = Ω[d]
+    ret[1, 1] = γ * v[d] / Γ + q[d] / (p + pINF)
+    ret[1, 2:5] = Ψ[d]
+    ret[1, 2+d] += ρ * E + p
+    ret[2:5, 0] = Ψ[d] / ρ
     for i in range(2,5):
-        ret[i, i] = rvd
-    ret[2:5, 2+d] += r * v
+        ret[i, i] = ρvd
+    ret[2:5, 2+d] += ρ * v
     ret[2+d, 1] = 1
 
-    if viscous:
-        ret[1, 5:14] = Phi[d].ravel(order='F')
-        ret[2:5, 5:14] = -dsdA[d].reshape([3,9], order='F')
+    if subsystems.viscous:
+        ret[1, 5:14] = Φ[d].ravel(order='F')
+        ret[2:5, 5:14] = -dσdA[d].reshape([3,9], order='F')
         k1 = 5+3*d
         ret[k1:k1+3, 2:5] = A
         for i in range(3):
@@ -245,31 +244,31 @@ def dFdP(P, d, params, jacVars, viscous, thermal, reactive):
             for j in range(3):
                 ret[k1+j, k2+j] = vi
 
-    if thermal:
-        ret[1, 14:17] = alpha2 * rvd * J
-        ret[1, 14+d] += alpha2 * T
+    if subsystems.thermal:
+        ret[1, 14:17] = α2 * ρvd * J
+        ret[1, 14+d] += α2 * T
         ret[14:17, 0] = v[d] * J
-        ret[14+d, 0] -= T / r
+        ret[14+d, 0] -= T / ρ
         ret[14+d, 1] = T / (p+pINF)
-        ret[14:17, 2+d] = r * J
+        ret[14:17, 2+d] = ρ * J
         for i in range(14,17):
-            ret[i, i] = rvd
+            ret[i, i] = ρvd
 
-    if reactive:
-        ret[17, 0] = v[d] * c
-        ret[17, 2+d] = r * c
-        ret[17, 17] = rvd
+    if subsystems.reactive:
+        ret[17, 0] = v[d] * λ
+        ret[17, 2+d] = ρ * λ
+        ret[17, 17] = ρvd
 
         if reactiveEOS:
-            ret[1, 17] += params.Qc * rvd
+            ret[1, 17] += params.Qc * ρvd
 
     return ret
 
-def jacobian(Q, d, params, viscous, thermal, reactive):
+def jacobian(Q, d, params, subsystems):
     """ Returns the Jacobian in the dth direction
     """
-    P = primitive(Q, params, viscous, thermal, reactive)
+    P = primitive(Q, params, subsystems)
     jacVars = jacobian_variables(P, params)
-    DFDP = dFdP(P, d, params, jacVars, viscous, thermal, reactive)
-    DPDQ = dPdQ(P, params, jacVars, viscous, thermal, reactive)
-    return dot(DFDP, DPDQ) + block(P.v, d, viscous)
+    DFDP = dFdP(P, d, params, jacVars, subsystems)
+    DPDQ = dPdQ(P, params, jacVars, subsystems)
+    return dot(DFDP, DPDQ) + block(P.v, d, subsystems.viscous)

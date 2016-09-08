@@ -2,28 +2,29 @@ from numpy import array, eye, zeros, arange, around, concatenate, exp, int64, on
 from scipy.optimize import brentq
 from scipy.special import erf
 
-from auxiliary.common import material_parameters
+from auxiliary.classes import material_parameters
 from gpr.functions import conserved, primitive
 from gpr.variables import c_0
-from options import nx, ny, nz, Ms, dx, Rc, L
+from options import nx, ny, nz, Ms, dx, Rc, L, subsystems
 
 
 def first_stokes_problem_IC():
     """ tf = 1
         L = 1
     """
-    y = 1.4
-    mu = 1e-2 # 1e-3 # 1e-4
+    γ = 1.4
+    μ = 1e-2 # 1e-3 # 1e-4
 
-    r = 1
-    p = 1 / y
+    ρ = 1
+    p = 1 / γ
     v = array([0, 0.1, 0])
     A = eye(3)
     J = zeros(3)
 
-    params = material_parameters(y=y, pINF=0, cv=1, r0=r, p0=p, cs=1, alpha=1e-16, mu=mu, Pr=0.75)
-    QL = conserved(r, p, -v, A, J, 0, params, 1, 0, 0)
-    QR = conserved(r, p,  v, A, J, 0, params, 1, 0, 0)
+    params = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
+
+    QL = conserved(ρ, p, -v, A, J, 0, params, subsystems)
+    QR = conserved(ρ, p,  v, A, J, 0, params, subsystems)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
         if i*dx < L/2:
@@ -33,19 +34,18 @@ def first_stokes_problem_IC():
 
     return u, [params]*1, []
 
-def first_stokes_problem_exact(x, mu, v0=0.1, t=1):
-    return v0 * erf(x / (2 * sqrt(mu * t)))
+def first_stokes_problem_exact(x, μ, v0=0.1, t=1):
+    return v0 * erf(x / (2 * sqrt(μ * t)))
 
 def viscous_shock_IC():
     CENTER = 1
-    y = 1.4
+    γ = 1.4
     pINF = 0
-    r0 = 1
-    p0 = 1 / y
-    mu = 2e-2
+    ρ0 = 1
+    p0 = 1 / γ
+    μ = 2e-2
 
-    params = material_parameters(y=y, pINF=0, cv=2.5, r0=r0, p0=p0,
-                                 cs=5, alpha=5, mu=2e-2, Pr=0.75)
+    params = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ0, p0=p0, cs=5, α=5, μ=2e-2, Pr=0.75)
 
     if Ms==2:
         x0 = 0.07   # Position of center of shock for shock to start at x = 0
@@ -54,18 +54,12 @@ def viscous_shock_IC():
         x0 = 0.04   # Position of center of shock for shock to start at x = 0
         l = 0.13
 
-    c0 = c_0(r0, p0, y, pINF)
-    a = 2 / (Ms**2 * (y+1)) + (y-1)/(y+1)
+    c0 = c_0(ρ0, p0, γ, pINF)
+    a = 2 / (Ms**2 * (γ+1)) + (γ-1)/(γ+1)
 
-    Re = r0 * c0 * Ms / mu
+    Re = ρ0 * c0 * Ms / μ
     c1 = ((1-a)/2)**(1-a)
-    c2 = 3/4 * Re * (Ms**2-1) / (y*Ms**2)
-
-    # Morduchow's formula
-#    d = 0.35
-#    k = 3/(8*d) * (y+1) * sqrt(pi/(8*y))
-#    c1 = (1-sqrt(a)) / (sqrt(a)-a)**a
-#    c2 = k * (1-a) * Ms
+    c2 = 3/4 * Re * (Ms**2-1) / (γ*Ms**2)
 
     x = around(arange(-l, l, dx), decimals=14)
     n = x.size
@@ -74,12 +68,8 @@ def viscous_shock_IC():
         f = lambda v: (1-v)/(v-a)**a - c1 * exp(c2*-x[i])
         vbar[i] = brentq(f, a+1e-16, 1)
 
-    # Dumbser's formula
-#    pbar = 1-vbar + 1/(2*y) * (y+1)/(y-1) * (vbar-1)/vbar * (vbar-a)
-#    p = r0 * c0**2 * Ms**2 * pbar + p0
-
-    p = p0 / vbar * (1 + (y-1)/2 * Ms**2 * (1-vbar**2))
-    r = r0 / vbar
+    p = p0 / vbar * (1 + (γ-1)/2 * Ms**2 * (1-vbar**2))
+    ρ = ρ0 / vbar
     v = Ms * c0 * vbar
     v = Ms * c0  - v    # Shock travelling into fluid at rest
     v -= v[0]           # Velocity in shock 0
@@ -91,11 +81,11 @@ def viscous_shock_IC():
         reps[-1] = rem+1
         v = v.repeat(reps.astype(int64))
         p = p.repeat(reps.astype(int64))
-        r = r.repeat(reps.astype(int64))
+        ρ = ρ.repeat(reps.astype(int64))
     else:
         x = x + x0
         p = p[x>=0]
-        r = r[x>=0]
+        ρ = ρ[x>=0]
         v = v[x>=0]
         x = x[x>=0]
 
@@ -104,15 +94,15 @@ def viscous_shock_IC():
         reps[-1] = nx - n + 1
         v = v.repeat(reps.astype(int64))
         p = p.repeat(reps.astype(int64))
-        r = r.repeat(reps.astype(int64))
+        ρ = ρ.repeat(reps.astype(int64))
         x = concatenate((x, arange(l+x0, 1, dx)))
 
     u = zeros([nx, 1, 1, 18])
     for i in range(nx):
-        A = (r[i])**(1/3) * eye(3)
+        A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
-        c = 1
-        u[i,0,0] = conserved(r[i], p[i], array([v[i], 0, 0]), A, J, c, params, 1, 1, 0)
+        λ = 1
+        u[i,0,0] = conserved(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, params, subsystems)
 
     return u, [params], []
 
@@ -120,18 +110,18 @@ def viscous_shock_exact_x(n, M=2, t=0.2):
     return arange(M*t-0.25, M*t+0.75, 1/n)
 
 def heat_conduction_IC():
-    rL = 2
-    rR = 0.5
+    ρL = 2
+    ρR = 0.5
     p0 = 1
     v0 = zeros(3)
-    AL = rL**(1/3) * eye(3)
-    AR = rR**(1/3) * eye(3)
+    AL = ρL**(1/3) * eye(3)
+    AR = ρR**(1/3) * eye(3)
     J0 = zeros(3)
 
-    params = material_parameters(y=1.4, pINF=0, cv=2.5, r0=1, p0=p0,
-                                 cs=1, alpha=2, mu=1e-2, kappa=1e-2)
-    QL = conserved(rL, p0, v0, AL, J0, 0, params, 1, 1, 0)
-    QR = conserved(rR, p0, v0, AR, J0, 0, params, 1, 1, 0)
+    params = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=p0, cs=1, α=2, μ=1e-2, κ=1e-2)
+
+    QL = conserved(ρL, p0, v0, AL, J0, 0, params, subsystems)
+    QR = conserved(ρR, p0, v0, AR, J0, 0, params, subsystems)
     u = zeros([nx, ny, nz, 18])
     x0 = L / 2
     for i in range(nx):
@@ -146,19 +136,20 @@ def semenov_IC():
     cv = 2.5
     T0 = 1
     Qc = 4
-    eps = 1/20 # 1/15 # 1/10
-    Ea = Rc * 1 / eps
+    ε = 1/20 # 1/15 # 1/10
+    Ea = Rc * 1 / ε
     Bc = (cv * T0**2 * Rc) / (Ea * Qc) * exp(Ea/(Rc*T0))
 
-    r = 1
+    ρ = 1
     p = 1
     v = zeros(3)
-    A = r**(1/3) * eye(3)
+    A = ρ**(1/3) * eye(3)
     J = zeros(3)
-    c = 1
+    λ = 1
 
-    params = material_parameters(y=1.4, pINF=0, cv=cv, r0=r, p0=p, Qc=Qc, epsilon=eps, Bc=Bc)
-    Q = conserved(r, p, v, A, J, c, params, 0, 1, 1)
+    params = material_parameters(γ=1.4, pINF=0, cv=cv, ρ0=ρ, p0=p, Qc=Qc, ε=ε, Bc=Bc)
+
+    Q = conserved(ρ, p, v, A, J, λ, params, subsystems)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
         u[i,0,0] = Q

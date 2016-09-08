@@ -8,36 +8,36 @@ from options import reactiveEOS, minE
 
 
 @jit
-def c_0(r, p, y, pINF):
+def c_0(ρ, p, γ, pINF):
     """ Returns the adiabatic sound speed of a stiffened gas.
         NB The result for an ideal gas is obtained if pINF=0.
     """
-    return sqrt(y * (p+pINF) / r)
+    return sqrt(γ * (p+pINF) / ρ)
 
 @jit
-def c_inf(r, p, y, pINF, cs2):
+def c_inf(ρ, p, γ, pINF, cs2):
     """ Returns the longitudinal characteristic speed
     """
-    c0 = c_0(r, p, y, pINF)
+    c0 = c_0(ρ, p, γ, pINF)
     return sqrt(c0**2 + 4/3 * cs2)
 
-def c_h(r, T, alpha, cv):
+def c_h(ρ, T, α, cv):
     """ Returns the velocity of the heat characteristic at equilibrium
     """
-    return alpha / r * sqrt(T / cv)
+    return α / ρ * sqrt(T / cv)
 
 @jit
-def E_1(r, p, y, pINF):
+def E_1(ρ, p, γ, pINF):
     """ Returns the microscale energy corresponding to a stiffened gas.
         NB The ideal gas equation is obtained if pINF=0.
     """
-    return (p + y*pINF) / ((y-1) * r)
+    return (p + γ*pINF) / ((γ-1) * ρ)
 
-def E_1r(c, Qc):
+def E_1r(λ, Qc):
     """ Returns the microscale energy corresponding to the chemical energy in a discrete ignition
         temperature reaction
     """
-    return Qc * (c - minE)
+    return Qc * (λ - minE)
 
 @jit
 def E_2A(A, cs2):
@@ -47,10 +47,10 @@ def E_2A(A, cs2):
     return cs2 / 4 * L2_2D(dev(G))
 
 @jit
-def E_2J(J, alpha2):
+def E_2J(J, α2):
     """ Returns the mesoscale energy
     """
-    return alpha2 / 2 * L2_1D(J)
+    return α2 / 2 * L2_1D(J)
 
 @jit
 def E_3(v):
@@ -58,43 +58,43 @@ def E_3(v):
     """
     return L2_1D(v) / 2
 
-def total_energy(r, p, v, A, J, c, params, viscous, thermal, reactive):
+def total_energy(ρ, p, v, A, J, λ, params, subsystems):
     """ Returns the total energy
     """
-    ret = E_1(r, p, params.y, params.pINF) + E_3(v)
-    if viscous:
+    ret = E_1(ρ, p, params.γ, params.pINF) + E_3(v)
+    if subsystems.viscous:
         ret += E_2A(A, params.cs2)
-    if thermal:
-        ret += E_2J(J, params.alpha2)
-    if reactive and reactiveEOS:
-        ret += E_1r(c, params.Qc)
+    if subsystems.thermal:
+        ret += E_2J(J, params.α2)
+    if subsystems.reactive and reactiveEOS:
+        ret += E_1r(λ, params.Qc)
     return ret
 
-def pressure(E, v, A, r, J, c, params, viscous, thermal, reactive):
+def pressure(E, v, A, ρ, J, λ, params, subsystems):
     """ Returns the pressure, given the total energy, velocity, distortion matrix, and density
     """
     E1 = E - E_3(v)
-    y = params.y
-    if viscous:
+    γ = params.γ
+    if subsystems.viscous:
         E1 -= E_2A(A, params.cs2)
-    if thermal:
-        E1 -= E_2J(J, params.alpha2)
-    if reactive and reactiveEOS:
-        E1 -= E_1r(c, params.Qc)
-    return (y-1) * r * E1 - y * params.pINF
+    if subsystems.thermal:
+        E1 -= E_2J(J, params.α2)
+    if subsystems.reactive and reactiveEOS:
+        E1 -= E_1r(λ, params.Qc)
+    return (γ-1) * ρ * E1 - γ * params.pINF
 
-def entropy(Q, params, viscous, thermal, reactive):
+def entropy(Q, params, subsystems):
     """ Returns the entropy of a stiffened gas, given density and pressure
     """
-    r = Q[0]
-    E = Q[1] / r
+    ρ = Q[0]
+    E = Q[1] / ρ
     A = Q[5:14].reshape([3,3], order='F')
-    J = Q[14:17] / r
-    v = Q[2:5] / r
-    c = Q[17] / r
+    J = Q[14:17] / ρ
+    v = Q[2:5] / ρ
+    λ = Q[17] / ρ
 
-    p = pressure(E, v, A, r, J, c, params, viscous, thermal, reactive)
-    return (p + params.pINF) / r**params.y
+    p = pressure(E, v, A, ρ, J, λ, params, subsystems)
+    return (p + params.pINF) / ρ**params.y
 
 def density(S, p, params):
     """ Returns the density of a stiffened gas, given entropy and pressure
@@ -102,23 +102,23 @@ def density(S, p, params):
     return ((p + params.pINF) / S) ** (1 / params.y)
 
 @jit
-def sigma(r, A, cs2):
+def sigma(ρ, A, cs2):
     """ Returns the symmetric viscous shear stress tensor
     """
     G = gram(A)
-    return -r * cs2 * GdevG(G)
+    return -ρ * cs2 * GdevG(G)
 
 @jit
-def temperature(r, p, y, pINF, cv):
+def temperature(ρ, p, γ, pINF, cv):
     """ Returns the temperature for an stiffened gas
     """
-    return (p + pINF) / ((y-1) * r * cv)
+    return (p + pINF) / ((γ-1) * ρ * cv)
 
 @jit
-def heat_flux(T, J, alpha2):
+def heat_flux(T, J, α2):
     """ Returns the heat flux vector
     """
-    return alpha2 * T * J
+    return α2 * T * J
 
 @jit
 def E_A(A, cs2):
@@ -128,13 +128,13 @@ def E_A(A, cs2):
     return cs2 * AdevG(A,G)
 
 @jit
-def E_J(J, alpha2):
+def E_J(J, α2):
     """ Returns the partial derivative of E by J
     """
-    return alpha2 * J
+    return α2 * J
 
 @jit
-def sigma_A(r, A, cs2):
+def sigma_A(ρ, A, cs2):
     """ Returns the tensor T_ijmn corresponding to the partial derivative of sigma_ij with respect
         to A_mn, holding r constant.
     """
@@ -148,4 +148,4 @@ def sigma_A(r, A, cs2):
                     ret[i, j, m, n] += A[m, i] * G[j, n] + A[m, j] * G[i, n]
             ret[i, j, :, j] += AdevG_[:, i]
         ret[i, :, :, i] += AdevG_.T
-    return -r * cs2 * ret
+    return -ρ * cs2 * ret

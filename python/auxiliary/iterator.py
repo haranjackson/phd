@@ -22,7 +22,7 @@ def continue_condition(t, fluids):
     else:
         return t < tf
 
-def timestep(fluids, materialParameters, count, t, mechanical, viscous, thermal, reactive):
+def timestep(fluids, materialParameters, count, t, subsystems):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
     m = len(fluids)
@@ -33,7 +33,7 @@ def timestep(fluids, materialParameters, count, t, mechanical, viscous, thermal,
         n = len(u)
         for j in range(n):
             Q = u[j, 0, 0]
-            MAX = max(MAX, max_abs_eigs(Q, 0, params, mechanical, viscous, thermal, reactive))
+            MAX = max(MAX, max_abs_eigs(Q, 0, params, subsystems))
 
     dt = CFL * dx / MAX
     if count <= 5:
@@ -85,9 +85,9 @@ def changing_cells(u):
 def check_ignition_started(fluids):
     m = len(fluids)
     for i in range(m):
-        r = fluids[i,:,0,0,0]
-        rc = fluids[i,:,0,0,17]
-        if (rc/r < 0.975).any():
+        ρ = fluids[i,:,0,0,0]
+        ρλ = fluids[i,:,0,0,17]
+        if (ρλ/ρ < 0.975).any():
             print('/// IGNITION STARTED ///')
             return 1
     return 0
@@ -95,7 +95,7 @@ def check_ignition_started(fluids):
 def remaining_reactant(fluids):
     return sum(fluids[0,:,0,0,17]/fluids[0,:,0,0,0] > 6e-6) / len(fluids[0,:,0,0])
 
-def stepper(fluid, fluidBC, params, dt, pool, mechanical, viscous, thermal, reactive):
+def stepper(fluid, fluidBC, params, dt, pool, subsystems):
 
     wenoTime = 0; dgTime = 0; fvTime = 0
     changeRanges = changing_cells(fluidBC)
@@ -104,7 +104,7 @@ def stepper(fluid, fluidBC, params, dt, pool, mechanical, viscous, thermal, reac
     for changeRange in changeRanges:
         l = changeRange[0]; r = changeRange[1]
 
-        if altThermSolve and not mechanical:
+        if altThermSolve and not subsystems.mechanical:
             t0 = time()
             fluid[l:r-2] = thermal_stepper(fluidBC[l:r], params, dt)
             qh = None
@@ -116,23 +116,20 @@ def stepper(fluid, fluidBC, params, dt, pool, mechanical, viscous, thermal, reac
             t1 = time()
 
             if r-l >= minParaDGLen:
-                qh = parallel_predictor(pool, wh, params, dt,
-                                        mechanical, viscous, thermal, reactive)
+                qh = parallel_predictor(pool, wh, params, dt, subsystems)
             else:
-                qh = predictor(wh, params, dt, mechanical, viscous, thermal, reactive)
+                qh = predictor(wh, params, dt, subsystems)
             t2 = time()
 
             if r-l >= minParaFVLen:
                 fluid[l:r-2] += limit_noise(parallel_finite_volume_terms(pool, qh, params, dt,
-                                                                         mechanical, viscous,
-                                                                         thermal, reactive))
+                                                                         subsystems))
             else:
-                fluid[l:r-2] += limit_noise(finite_volume_terms(qh, params, dt, mechanical, viscous,
-                                                                thermal, reactive))
+                fluid[l:r-2] += limit_noise(finite_volume_terms(qh, params, dt, subsystems))
             t3 = time()
             wenoTime += t1-t0; dgTime += t2-t1; fvTime += t3-t2;
 
-    if altThermSolve and not mechanical:
+    if altThermSolve and not subsystems.mechanical:
         print('OS:', t1-t0)
     else:
         print('WENO:', wenoTime, '\nDG:  ', dgTime, '\nFV:  ', fvTime)

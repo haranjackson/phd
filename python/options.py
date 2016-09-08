@@ -2,9 +2,9 @@ Rc   = 8.314459848          # Universal gas constant
 
 """ Domain Parameters """
 
-tf = 1e-7                   # Final time of the simulation
-L  = 8.5e-6                 # Length of domain in x direction
-nx = 360                    # Number of cells in x direction
+tf = 1                   # Final time of the simulation
+L  = 1                 # Length of domain in x direction
+nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -13,7 +13,7 @@ nz = 1                      # Number of cells in z direction
 mechanical = 1              # Whether to include evolution of density and velocity
 viscous    = 1              # Whether to include viscosity
 thermal    = 1              # Whether to include thermal conduction
-reactive   = 1              # Whether to include reactivity
+reactive   = 0              # Whether to include reactivity
 
 """ Problem Parameters """
 
@@ -32,12 +32,12 @@ minE = 1                    # Whether to set the chemical energy to -Qc when con
 
 """ GFM Options """
 
-GFM  = 0                    # Whether to use original GFM
+GFM  = 1                    # Whether to use original GFM
 RGFM = 1                    # Whether to use RGFM (requires GFM=1)
-isoFix     = 0              # Whether to use isobaric fix
-entropyFix = 0              # Whether to fix entropy in ghost cells
-tempFix    = 1              # Whether to fix temperature in ghost cells (entropyFix must be 0)
-UPDATE_STEP = 5           # Number of timesteps used to update interface locations
+isoFix = 0                  # Whether to use isobaric fix
+SFix   = 0                  # Whether to fix entropy in ghost cells
+TFix   = 1                  # Whether to fix temperature in ghost cells (entropyFix must be 0)
+UPDATE_STEP = 5             # Number of timesteps used to update interface locations
 
 """ Solver Options """
 
@@ -46,8 +46,8 @@ CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 renormaliseRho = 0          # Whether to set density to determinant of distortion tensor
 convertTemp    = 1          # Whether to use constant-pressure approximation in cookoff
-NOISE_LIM = 1e-16           # Values below NOISE_LIM in finite volume solver are discarded
-altThermSolve = 1           # Whether to use the operator splitting solver for the thermal subsystem
+altThermSolve  = 1          # Whether to use the operator splitting solver for the thermal subsystem
+NOISE_LIM      = 1e-16      # Values below NOISE_LIM in finite volume solver are discarded
 
 """ DG Options """
 
@@ -60,9 +60,9 @@ MAX_ITER   = 50             # Maximum number of non-stiff iterations attempted i
 
 """ WENO Parameters """
 
-rc   = 8                    # Exponent used in oscillation indicator
-lam  = 1e5                  # Coefficient of oscillation indicator of central stencil(s)
-lams = 1                    # Coefficient of oscillation indicator of side stencils
+rc = 8                      # Exponent used in oscillation indicator
+λc = 1e5                    # Coefficient of oscillation indicator of central stencil(s)
+λs = 1                      # Coefficient of oscillation indicator of side stencils
 eps  = 1e-14                # Constant ensuring oscillation indicators don't blow up
 
 """ Speed-Up Parameters """
@@ -83,10 +83,12 @@ DEBUG      = 0      # In debug mode, warnings are given if complex values are en
 """ Derived Values """
 
 from numpy import array
+from auxiliary.classes import active_subsystems
 ndim = sum(array([nx, ny, nz]) > 1)
 N1 = N+1
 NT = N1**(ndim+1)
 dx = L / nx
+subsystems = active_subsystems(mechanical, viscous, thermal, reactive)
 
 """ Compatibility Settings """
 

@@ -5,14 +5,14 @@ from options import nx, ny, nz
 
 TEST = 1
 
-rho0 = 8.93e3
+ρ0 = 8.93e3
 c0 = 4.6e3
 cv = 3.9e2
 T0 = 300
 b0 = 2.1e3
-alpha = 1
-beta = 3
-gamma = 2
+α = 1
+β = 3
+γ = 2
 
 K0 = c0**2 - 4/3 * b0**2
 B0 = b0**2
@@ -22,10 +22,10 @@ def initial_vector(u, F, S):
     U = zeros(18)
     v = array(u)
     A = inv(array(F))
-    r = density(A)
-    U[0] = r
-    U[1] = r * total_energy(A, S, v)
-    U[2:5] = r * v
+    ρ = density(A)
+    U[0] = ρ
+    U[1] = ρ * total_energy(A, S, v)
+    U[2:5] = ρ * v
     U[5:14] = reshape(A, [9], 'F')
     return U
 
@@ -38,7 +38,7 @@ def total_energy(A, S, v):
 def density(A):
     """ Returns the density, given the distortion tensor
     """
-    return rho0 * det(A)
+    return ρ0 * det(A)
 
 def I_1(G):
     """ Returns the first invariant of G
@@ -58,17 +58,17 @@ def I_3(G):
 def U_1(G):
     """ Returns the first component of the thermal energy density, given G
     """
-    return K0/(2*alpha**2) * (I_3(G)**(alpha/2) - 1)**2
+    return K0/(2*α**2) * (I_3(G)**(α/2) - 1)**2
 
 def U_2(G, S):
     """ Returns the second component of the thermal energy density, given G and entropy
     """
-    return cv * T0 * I_3(G)**(gamma/2) * (exp(S/cv) - 1)
+    return cv * T0 * I_3(G)**(γ/2) * (exp(S/cv) - 1)
 
 def W(G):
     """ Returns the internal energy due to shear deformations, given the distortion tensor
     """
-    return B0/2 * I_3(G)**(beta/2) * (I_1(G)**2 / 3 - I_2(G))
+    return B0/2 * I_3(G)**(β/2) * (I_1(G)**2 / 3 - I_2(G))
 
 def barton_IC():
     if TEST==1:

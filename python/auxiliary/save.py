@@ -1,26 +1,39 @@
 from os import makedirs, path
 from time import time
 
-from numpy import array, concatenate, expand_dims, linspace, int64, save
+from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, L, nx, ny, nz
 from options import mechanical, viscous, thermal, reactive
 from options import Ms, W, doubleTime, fullBurn, burnProp
 from options import reactionType, reactiveEOS, minE
-from options import GFM, RGFM, isoFix, entropyFix, tempFix, UPDATE_STEP
+from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
 from options import N, CFL, method, renormaliseRho, convertTemp, NOISE_LIM
 from options import hidalgo, stiff, superStiff, failLim, TOL
-from options import rc, lam, lams, eps
+from options import rc, λc, λs, eps
 from options import MAX_ITER, minParaDGLen, minParaFVLen, ncore, reducedDomain
 
 
-def record_data(u, t, interfaceLocations, dataArray, timeArray, interArray):
+def print_stats(count, t, dt, interfaceLocations, subsystems):
+    print(count+1)
+    print('t  =', t)
+    print('dt =', dt)
+    print('Interfaces =', interfaceLocations)
+    print('M,V,T,R =', subsystems.mechanical, subsystems.viscous, subsystems.thermal,
+          subsystems.reactive)
+
+def record_data(fluids, inds, t, interfaceLocations, saveArrays):
     """ Appends the latest data and timestep to the recording arrays
     """
-    dataArray = concatenate([dataArray, expand_dims(u, axis=0)])
-    timeArray = concatenate([timeArray, array([t])])
-    interArray = concatenate([interArray, expand_dims(array(interfaceLocations), axis=0)])
-    return dataArray, timeArray, interArray
+    u = zeros(fluids[0].shape)
+    for i in range(len(fluids)):
+        l = inds[i]
+        r = inds[i+1]
+        u[l:r] = fluids[i][l:r]
+    saveArrays.data = concatenate([saveArrays.data, expand_dims(u, axis=0)])
+    saveArrays.time = concatenate([saveArrays.time, array([t])])
+    saveArrays.interfaces = concatenate([saveArrays.interfaces,
+                                         expand_dims(array(interfaceLocations), axis=0)])
 
 def save_config(path):
     with open(path, 'w+') as f:
@@ -47,9 +60,9 @@ def save_config(path):
 
         f.write('GFM    = %i\n' % GFM)
         f.write('RGFM   = %i\n' % RGFM)
-        f.write('isoFix     = %i\n' % isoFix)
-        f.write('entropyFix = %i\n' % entropyFix)
-        f.write('tempFix    = %i\n' % tempFix)
+        f.write('isoFix = %i\n' % isoFix)
+        f.write('SFix   = %i\n' % SFix)
+        f.write('TFix   = %i\n' % TFix)
         f.write('UPDATE_STEP = %i\n\n' % UPDATE_STEP)
 
         f.write('N      = %i\n' % N)
@@ -67,8 +80,8 @@ def save_config(path):
         f.write('MAX_ITER   = %i\n\n' % MAX_ITER)
 
         f.write('rc   = %f\n' % rc)
-        f.write('lam  = %e\n' % lam)
-        f.write('lams = %e\n' % lams)
+        f.write('λc   = %e\n' % λc)
+        f.write('λs   = %e\n' % λs)
         f.write('eps  = %e\n\n' % eps)
 
         f.write('minParaDGLen = %i\n' % minParaDGLen)
@@ -76,15 +89,15 @@ def save_config(path):
         f.write('ncore = %i\n' % ncore)
         f.write('reducedDomain = %i\n\n' % reducedDomain)
 
-def save_all(dataArray, timeArray, interArray):
+def save_all(saveArrays):
     if not path.exists('_dump'):
         makedirs('_dump')
-    save('_dump/dataArray%d.npy' % time(), dataArray)
-    save('_dump/timeArray%d.npy' % time(), timeArray)
-    save('_dump/interArray%d.npy' % time(), interArray)
+    save('_dump/dataArray%d.npy' % time(), saveArrays.data)
+    save('_dump/timeArray%d.npy' % time(), saveArrays.time)
+    save('_dump/interArray%d.npy' % time(), saveArrays.interfaces)
     save_config('_dump/options%d.txt' % time())
 
-def compress_arrays(dataArray, timeArray, interArray, N):
-    n = len(timeArray)
+def compress_arrays(saveArrays, N):
+    n = len(saveArrays.time)
     inds = linspace(0,n-1,N,dtype=int64)
-    return [dataArray[inds], timeArray[inds], interArray[inds]]
+    return [saveArrays.data[inds], saveArrays.time[inds], saveArrays.interfaces[inds]]

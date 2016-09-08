@@ -6,99 +6,99 @@ from gpr.matrices import jacobian_variables, block, dFdP, dPdQ, source
 from gpr.variables import sigma, E_1, E_A, E_J, sigma_A
 
 
-def dQdP(P, params, jacVars, viscous, thermal, reactive):
+def dQdP(P, params, jacVars, subsystems):
     """ Returns the Jacobian of the conserved variables with respect to the primitive variables
     """
-    r = P.r; p = P.p; A = P.A; J = P.J; v = P.v; c = P.c; E = P.E
-    psi = E_A(A)
+    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E
+    ψ = E_A(A)
     ret = eye(18)
-    Y = jacVars.Y
+    Γ = jacVars.Γ
 
-    ret[1, 0] = E - E_1(r, p, params.y, params.pINF)
-    ret[1, 1] /= Y
-    ret[1, 2:5] = r * v
+    ret[1, 0] = E - E_1(ρ, p, params.y, params.pINF)
+    ret[1, 1] /= Γ
+    ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
-    ret[2:5, 2:5] *= r
+    ret[2:5, 2:5] *= ρ
 
-    if viscous:
-        ret[1, 5:14] = r * psi.ravel(order='F')
+    if subsystems.viscous:
+        ret[1, 5:14] = ρ * ψ.ravel(order='F')
 
-    if thermal:
-        ret[1, 14:17] = params.alpha2 * r * J
+    if subsystems.thermal:
+        ret[1, 14:17] = params.α2 * ρ * J
         ret[14:17, 0] = J
-        ret[14:17, 14:17] *= r
+        ret[14:17, 14:17] *= ρ
 
-    if reactive:
-        ret[1, 17] = params.Qc * r
-        ret[17, 0] = c
-        ret[17, 17] *= r
+    if subsystems.reactive:
+        ret[1, 17] = params.Qc * ρ
+        ret[17, 0] = λ
+        ret[17, 17] *= ρ
 
     return ret
 
-def jacobian_primitive(Q, d, params, viscous, thermal, reactive):
+def jacobian_primitive(Q, d, params, subsystems):
     """ Returns the Jacobian in the dth direction for the system of primitive variables, using the
         constituent Jacobian matrices
     """
-    P = primitive(Q, params, viscous, thermal, reactive)
+    P = primitive(Q, params, subsystems)
     jacVars = jacobian_variables(P, params)
-    ret = dot(block(P.v, d, viscous), dQdP(P, params, jacVars, viscous, thermal, reactive))
-    ret += dFdP(P, d, params, jacVars, viscous, thermal, reactive)
-    return dot(dPdQ(P, params, jacVars, viscous, thermal, reactive), ret)
+    ret = dot(block(P.v, d, subsystems.viscous), dQdP(P, params, jacVars, subsystems))
+    ret += dFdP(P, d, params, jacVars, subsystems)
+    return dot(dPdQ(P, params, jacVars, subsystems), ret)
 
-def jacobian_primitive_direct(Q, d, params, viscous, thermal, reactive):
+def jacobian_primitive_direct(Q, d, params, subsystems):
     """ Returns the Jacobian in the dth direction for the system of primitive variables, calculated
         directly
     """
-    P = primitive(Q, params, viscous, thermal, reactive)
-    r = P.r; p = P.p; A = P.A; v = P.v; T = P.T
+    P = primitive(Q, params, subsystems)
+    ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
     y = params.y; pINF = params.pINF
-    sig = sigma(r, A)
-    dsdA = sigma_A(r, A)
+    sig = sigma(ρ, A)
+    dsdA = sigma_A(ρ, A)
 
     ret = v[d] * eye(18)
-    ret[0, 2+d] = r
+    ret[0, 2+d] = ρ
     ret[1, 2+d] = y * p
-    ret[1, 14+d] = (y-1) * params.alpha2 * T
-    ret[2+d, 1] = 1 / r
+    ret[1, 14+d] = (y-1) * params.α2 * T
+    ret[2+d, 1] = 1 / ρ
 
     for i in range(3):
-        ret[2+i, 0] = -sig[i, d] / r**2
-        ret[2+i, 5:14] = -1 / r * dsdA[i,d].ravel(order='F')
+        ret[2+i, 0] = -sig[i, d] / ρ**2
+        ret[2+i, 5:14] = -1 / ρ * dsdA[i,d].ravel(order='F')
     ret[5+3*d:5+3*(d+1), 2:5] = A
 
-    ret[14+d, 0] = -T / r**2
-    ret[14+d, 1] = T / (r * (p + pINF))
+    ret[14+d, 0] = -T / ρ**2
+    ret[14+d, 1] = T / (ρ * (p + pINF))
 
-    if not reactive:
+    if not subsystems.reactive:
         ret[17, 17] = 0
 
     return ret
 
-def jacobian_primitive_reordered(Q, d, params, viscous, thermal, reactive):
+def jacobian_primitive_reordered(Q, d, params, subsystems):
     """ Returns the Jacobian in the dth direction for the system of primitive variables, calculated
         directly
     """
-    P = primitive(Q, params, viscous, thermal, reactive)
-    r = P.r; p = P.p; A = P.A; v = P.v; T = P.T
-    y = params.y; pINF = params.pINF
-    sig = sigma(r, A)
-    dsdA = sigma_A(r, A)
+    P = primitive(Q, params, subsystems)
+    ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
+    γ = params.γ; pINF = params.pINF
+    sig = sigma(ρ, A)
+    dsdA = sigma_A(ρ, A)
 
     ret = v[d] * eye(18)
-    ret[0, 11+d] = r
-    ret[1, 11+d] = y * p
-    ret[1, 14+d] = (y-1) * params.alpha2 * T
+    ret[0, 11+d] = ρ
+    ret[1, 11+d] = γ * p
+    ret[1, 14+d] = (γ-1) * params.α2 * T
     ret[2+3*d:5+3*d, 11:14] = A
-    ret[11:14, 0] = -sig[d] / r**2
-    ret[11+d, 1] = 1 / r
+    ret[11:14, 0] = -sig[d] / ρ**2
+    ret[11+d, 1] = 1 / ρ
 
     for i in range(3):
-        ret[11+i, 2:11] = -1 / r * dsdA[i,d].ravel(order='F')
+        ret[11+i, 2:11] = -1 / ρ * dsdA[i,d].ravel(order='F')
 
-    ret[14+d, 0] = -T / r**2
-    ret[14+d, 1] = T / (r * (p + pINF))
+    ret[14+d, 0] = -T / ρ**2
+    ret[14+d, 1] = T / (ρ * (p + pINF))
 
-    if not reactive:
+    if not subsystems.reactive:
         ret[17, 17] = 0
 
     return ret
@@ -111,44 +111,44 @@ def source_primitive(Q, params):
     DPDQ = dPdQ(P, params, jacVars)
     return dot(DPDQ, S)
 
-def source_primitive_direct(Q, params, viscous, thermal):
+def source_primitive_direct(Q, params, subsystems):
 
     ret = zeros(18)
     P = primitive(Q, params)
-    r = P.r; A = P.A; J = P.J; T = P.T
-    y = params.y
+    ρ = P.ρ; A = P.A; J = P.J; T = P.T
+    γ = params.γ
 
-    if viscous:
-        psi = E_A(A)
-        theta1 = theta_1(A)
-        ret[1] += (y-1) * r * L2_2D(psi) / theta1
-        ret[5:14] = -psi.ravel(order='F') / theta1
+    if subsystems.viscous:
+        ψ = E_A(A)
+        θ1 = theta_1(A)
+        ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
+        ret[5:14] = -ψ.ravel(order='F') / θ1
 
-    if thermal:
+    if subsystems.thermal:
         H = E_J(J)
-        theta2 = theta_2(r, T)
-        ret[1] += (y-1) * r * L2_2D(H) / theta2
-        ret[14:17] = -H / theta2
+        θ2 = theta_2(ρ, T)
+        ret[1] += (γ-1) * ρ * L2_2D(H) / θ2
+        ret[14:17] = -H / θ2
 
     return ret
 
-def source_primitive_reordered(Q, params, viscous, thermal):
+def source_primitive_reordered(Q, params, subsystems):
 
     ret = zeros(18)
     P = primitive(Q, params)
-    r = P.r; A = P.A; J = P.J; T = P.T
-    y = params.y
+    ρ = P.ρ; A = P.A; J = P.J; T = P.T
+    γ = params.γ
 
-    if viscous:
-        psi = E_A(A)
-        theta1 = theta_1(A)
-        ret[1] += (y-1) * r * L2_2D(psi) / theta1
-        ret[2:11] = -psi.ravel(order='F') / theta1
+    if subsystems.viscous:
+        ψ = E_A(A)
+        θ1 = theta_1(A)
+        ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
+        ret[2:11] = -ψ.ravel(order='F') / θ1
 
-    if thermal:
+    if subsystems.thermal:
         H = E_J(J)
-        theta2 = theta_2(r, T)
-        ret[1] += (y-1) * r * L2_1D(H) / theta2
-        ret[14:17] = -H / theta2
+        θ2 = theta_2(ρ, T)
+        ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
+        ret[14:17] = -H / θ2
 
     return ret

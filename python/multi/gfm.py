@@ -6,7 +6,7 @@ from auxiliary.bc import temperature_fix_density
 from gpr.functions import conserved, primitive
 from gpr.variables import density, entropy, temperature
 from multi.approximate_riemann import star_states
-from options import dx, L, N1, nx, UPDATE_STEP, RGFM, isoFix, entropyFix, tempFix
+from options import dx, L, N1, nx, UPDATE_STEP, RGFM, isoFix
 
 
 psi, _, _ = basis_polys()
@@ -46,35 +46,35 @@ def interface_indices(intLocs, n):
                 break
     return concatenate([[0], ret, [n]]).astype(int64)
 
-def entropy_fix(Q0, params0, params1, S, viscous, thermal, reactive):
+def entropy_fix(Q0, params0, params1, S, subsystems):
     """ Changes density and distortion of state Q0 of a fluid with parameters given by params0,
         so that the cell it describes has entropy S for a fluid with parameters given by params1
     """
-    P = primitive(Q0, params0, viscous, thermal, reactive)
-    r = density(S, P.p, params1)
+    P = primitive(Q0, params0, subsystems)
+    ρ = density(S, P.p, params1)
     if (P.A==0).all():
         A = P.A
     else:
-        A = (r / (det(P.A) * params1.r0))**(1/3) * P.A
+        A = (ρ / (det(P.A) * params1.ρ0))**(1/3) * P.A
     T0 = P.T
-    T1 = temperature(r, P.p, params1.y, params1.pINF, params1.cv)
-    J1 = (T0 * params0.alpha2) / (T1 * params1.alpha2) * P.J
-    return conserved(r, P.p, P.v, A, J1, P.c, params1, viscous, thermal, reactive)
+    T1 = temperature(ρ, P.p, params1.γ, params1.pINF, params1.cv)
+    J1 = (T0 * params0.α2) / (T1 * params1.α2) * P.J
+    return conserved(ρ, P.p, P.v, A, J1, P.λ, params1, subsystems)
 
-def temperature_fix(Q0, params0, params1, T, viscous, thermal, reactive):
+def temperature_fix(Q0, params0, params1, T, subsystems):
     """ Changes density and distortion of state Q0 of a fluid with parameters given by params0,
         so that the cell it describes has temperature T for a fluid with parameters given by params1
     """
-    P = primitive(Q0, params0, viscous, thermal, reactive)
-    r = temperature_fix_density(P.p, T, params1)
+    P = primitive(Q0, params0, subsystems)
+    ρ = temperature_fix_density(P.p, T, params1)
     if (P.A==0).all():
         A = P.A
     else:
-        A = (r / det(P.A) * params1.r0)**(1/3) * P.A
-    J1 = (P.T * params0.alpha2) / (T * params1.alpha2) * P.J
-    return conserved(r, P.p, P.v, A, J1, P.c, params1, viscous, thermal, reactive)
+        A = (ρ / det(P.A) * params1.ρ0)**(1/3) * P.A
+    J1 = (P.T * params0.α2) / (T * params1.α2) * P.J
+    return conserved(ρ, P.p, P.v, A, J1, P.λ, params1, subsystems)
 
-def add_ghost_cells(fluids, inds, materialParameters, dt, viscous, thermal, reactive):
+def add_ghost_cells(fluids, inds, materialParameters, dt, subsystems, SFix, TFix):
 
     for i in range(len(fluids)-1):
         uL = fluids[i]
@@ -86,11 +86,11 @@ def add_ghost_cells(fluids, inds, materialParameters, dt, viscous, thermal, reac
         if RGFM:
             QL = uL[ind-1-isoFix, 0, 0]
             QR = uR[ind+isoFix, 0, 0]
-            QLstar, QRstar = star_states(QL, QR, paramsL, paramsR, dt, viscous, thermal, reactive)
+            QL_, QR_ = star_states(QL, QR, paramsL, paramsR, dt, subsystems)
             for j in range(ind, len(uL)):
-                uL[j] = QLstar
+                uL[j] = QL_
             for j in range(ind):
-                uR[j] = QRstar
+                uR[j] = QR_
 
         else:
             for j in range(ind, len(uL)):
@@ -98,49 +98,41 @@ def add_ghost_cells(fluids, inds, materialParameters, dt, viscous, thermal, reac
             for j in range(ind):
                 uR[j] = uL[j, 0, 0]
 
-        if entropyFix:
-            SL = entropy(uL[ind-isoFix-1, 0, 0], paramsL, viscous, thermal, reactive)
-            SR = entropy(uR[ind+isoFix, 0, 0], paramsR, viscous, thermal, reactive)
+        if SFix:
+            SL = entropy(uL[ind-isoFix-1, 0, 0], paramsL, subsystems)
+            SR = entropy(uR[ind+isoFix, 0, 0], paramsR, subsystems)
 
             if isoFix:
-                uL[ind-1] = entropy_fix(uL[ind-1,0,0], paramsL, paramsL, SL,
-                                        viscous, thermal, reactive)
-                uR[ind] = entropy_fix(uR[ind,0,0], paramsR, paramsR, SR,
-                                      viscous, thermal, reactive)
+                uL[ind-1] = entropy_fix(uL[ind-1,0,0], paramsL, paramsL, SL, subsystems)
+                uR[ind]  =  entropy_fix(uR[ind,0,0],   paramsR, paramsR, SR, subsystems)
 
             if RGFM:
                 for j in range(ind, len(uL)):
-                    uL[j] = entropy_fix(uL[j,0,0], paramsL, paramsL, SL, viscous, thermal, reactive)
+                    uL[j] = entropy_fix(uL[j,0,0], paramsL, paramsL, SL, subsystems)
                 for j in range(ind):
-                    uR[j] = entropy_fix(uR[j,0,0], paramsR, paramsR, SR, viscous, thermal, reactive)
+                    uR[j] = entropy_fix(uR[j,0,0], paramsR, paramsR, SR, subsystems)
             else:
                 for j in range(ind, len(uL)):
-                    uL[j] = entropy_fix(uL[j,0,0], paramsR, paramsL, SL, viscous, thermal, reactive)
+                    uL[j] = entropy_fix(uL[j,0,0], paramsR, paramsL, SL, subsystems)
                 for j in range(ind):
-                    uR[j] = entropy_fix(uR[j,0,0], paramsL, paramsR, SR, viscous, thermal, reactive)
+                    uR[j] = entropy_fix(uR[j,0,0], paramsL, paramsR, SR, subsystems)
 
-        elif tempFix:
-            TL = primitive(uL[ind-1, 0, 0], paramsL, viscous, thermal, reactive).T
-            TR = primitive(uR[ind, 0, 0], paramsR, viscous, thermal, reactive).T
+        elif TFix:
+            TL = primitive(uL[ind-1, 0, 0], paramsL, subsystems).T
+            TR = primitive(uR[ind, 0, 0], paramsR, subsystems).T
             T = (TL+TR)/2
 
             if isoFix:
-                uL[ind-1] = temperature_fix(uL[ind-1,0,0], paramsL, paramsL, T,
-                                            viscous, thermal, reactive)
-                uR[ind] = temperature_fix(uR[ind,0,0], paramsR, paramsR, T,
-                                          viscous, thermal, reactive)
+                uL[ind-1] = temperature_fix(uL[ind-1,0,0], paramsL, paramsL, T, subsystems)
+                uR[ind]  =  temperature_fix(uR[ind,0,0],   paramsR, paramsR, T, subsystems)
 
             if RGFM:
                 for j in range(ind, len(uL)):
-                    uL[j] = temperature_fix(uL[j, 0, 0], paramsL, paramsL, T,
-                                            viscous, thermal, reactive)
+                    uL[j] = temperature_fix(uL[j, 0, 0], paramsL, paramsL, T, subsystems)
                 for j in range(ind):
-                    uR[j] = temperature_fix(uR[j, 0, 0], paramsR, paramsR, T,
-                                            viscous, thermal, reactive)
+                    uR[j] = temperature_fix(uR[j, 0, 0], paramsR, paramsR, T, subsystems)
             else:
                 for j in range(ind, len(uL)):
-                    uL[j] = temperature_fix(uL[j, 0, 0], paramsR, paramsL, T,
-                                            viscous, thermal, reactive)
+                    uL[j] = temperature_fix(uL[j, 0, 0], paramsR, paramsL, T, subsystems)
                 for j in range(ind):
-                    uR[j] = temperature_fix(uR[j, 0, 0], paramsL, paramsR, T,
-                                            viscous, thermal, reactive)
+                    uR[j] = temperature_fix(uR[j, 0, 0], paramsL, paramsR, T, subsystems)

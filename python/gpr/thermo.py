@@ -11,7 +11,7 @@ def temperature(U, params):
 
 def flux(U, n, params):
     T = temperature(U, params)
-    q = params.alpha2 * T * U[:,2] / U[:,0]
+    q = params.α2 * T * U[:,2] / U[:,0]
     ret = zeros([n, 4])
     ret[:, 1] = q
     ret[:, 2] = T

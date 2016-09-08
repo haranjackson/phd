@@ -33,14 +33,14 @@ def energy_fix(Q1, Q2):
     """
     P1 = primitive(Q1)
     P2 = primitive(Q2)
-    return P1.r * total_energy(P1.r, P2.p, P1.v, P1.A, P1.J)
+    return P1.ρ * total_energy(P1.ρ, P2.p, P1.v, P1.A, P1.J)
 
 def temperature_fix_density(p, T, params):
     """ Calculates the density in Q, given that the cell must be at temperature T
     """
-    return (p + params.pINF) / ((params.y - 1) * T * params.cv)
+    return (p + params.pINF) / ((params.γ - 1) * T * params.cv)
 
-def temperature_fix_pressure(r, T, params):
+def temperature_fix_pressure(ρ, T, params):
     """ Calculates the pressure in Q, given that the cell must be at temperature T
     """
-    return r *(params.y-1) * T * params.cv - params.pINF
+    return ρ *(params.γ-1) * T * params.cv - params.pINF
