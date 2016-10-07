@@ -4,14 +4,27 @@ from options import ndim
 from ader.weno import extend
 
 
-def standard_BC(u, reflectLeft=0, reflectRight=0):
+def standard_BC(u, reflect=0):
     ret = extend(u, 1, 0)
-    if reflectLeft:
-        ret[0, 0, 0, 2:5] *= -1
-        ret[0, 0, 0, 14:17] *= -1
-    if reflectRight:
-        ret[-1, 0, 0, 2:5] *= -1
-        ret[-1, 0, 0, 14:17] *= -1
+    if reflect:
+        ret[0, :, :, 2:5] *= -1
+        ret[0, :, :, 14:17] *= -1
+        ret[-1, :, :, 2:5] *= -1
+        ret[-1, :, :, 14:17] *= -1
+    if ndim > 1:
+        ret = extend(u, 1, 1)
+        if reflect:
+            ret[:, 0, :, 2:5] *= -1
+            ret[:, 0, :, 14:17] *= -1
+            ret[:, -1, :, 2:5] *= -1
+            ret[:, -1, :, 14:17] *= -1
+    if ndim > 2:
+        ret = extend(u, 1, 2)
+        if reflect:
+            ret[:, :, 0, 2:5] *= -1
+            ret[:, :, 0, 14:17] *= -1
+            ret[:, :, -1, 2:5] *= -1
+            ret[:, :, -1, 14:17] *= -1
     return ret
 
 def periodic_BC(u):
@@ -22,8 +35,8 @@ def periodic_BC(u):
         ret = extend(ret, 1, 1)
         ret[:,0] = ret[:,-2]
         ret[:,-1] = ret[:,1]
-        if ndim > 2:
-            ret = extend(ret, 1, 2)
+    if ndim > 2:
+        ret = extend(ret, 1, 2)
         ret[:,:,0] = ret[:,:,-2]
         ret[:,:,-1] = ret[:,:,1]
     return ret

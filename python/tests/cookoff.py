@@ -93,12 +93,12 @@ def CKR_BC(u, dt, params, subsystems):
         J = array([q, 0, 0]) / (params.α2 * T)
         u[0,0,0] = conserved(P.ρ, P.p, P.v, P.A, J, P.λ, params, subsystems)
 
-    return standard_BC(u, reflectLeft=1)
+    return standard_BC(u, reflect=1)
 
 def fixed_wall_temp_BC(u, t, params, subsystems):
 
     Tc = params.T0 * (1 + t / doubleTime)                       # Temperature at which wall is held
-    uNew = standard_BC(u, reflectLeft=1, reflectRight=1)
+    uNew = standard_BC(u, reflect=1)
     Q0 = uNew[0,0,0]
     P0 = primitive(Q0, params, subsystems)
 

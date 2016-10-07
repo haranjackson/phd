@@ -2,10 +2,10 @@ Rc   = 8.314459848          # Universal gas constant
 
 """ Domain Parameters """
 
-tf = 1                   # Final time of the simulation
-L  = 1                 # Length of domain in x direction
-nx = 200                    # Number of cells in x direction
-ny = 1                      # Number of cells in y direction
+tf = 1                      # Final time of the simulation
+L  = 1                      # Length of domain in x direction
+nx = 100                    # Number of cells in x direction
+ny = 40                     # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
@@ -32,7 +32,7 @@ minE = 1                    # Whether to set the chemical energy to -Qc when con
 
 """ GFM Options """
 
-GFM  = 1                    # Whether to use original GFM
+GFM  = 0                    # Whether to use original GFM
 RGFM = 1                    # Whether to use RGFM (requires GFM=1)
 isoFix = 0                  # Whether to use isobaric fix
 SFix   = 0                  # Whether to fix entropy in ghost cells

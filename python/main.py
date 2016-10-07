@@ -6,6 +6,7 @@ from numpy import array, zeros
 from auxiliary.bc import standard_BC, periodic_BC
 from tests.cookoff import CKR_BC, fixed_wall_temp_BC
 from tests.cookoff import chapman_jouguet_IC, CKR_IC
+from tests.diffusion import barrier_IC, barrier_BC
 from tests.validation import first_stokes_problem_IC, heat_conduction_IC
 from tests.validation import viscous_shock_IC, semenov_IC
 from tests.multi import sod_shock_IC, water_gas_IC, water_water_IC, helium_bubble_IC
@@ -20,8 +21,8 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, subsystems, SFix, TFix
 
 
-IC = heat_conduction_IC
-BC = standard_BC               # CHECK ARGUMENTS
+IC = barrier_IC
+BC = barrier_BC               # CHECK ARGUMENTS
 
 
 subsystems, SFix, TFix = subsystems, SFix, TFix
