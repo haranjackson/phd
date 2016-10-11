@@ -1,11 +1,11 @@
-from matplotlib.pyplot import figure, plot, scatter, axvline, get_cmap
-from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim
-from numpy import arange, zeros, linspace
+from matplotlib.pyplot import figure, plot, scatter, axvline, get_cmap, imshow, colorbar, streamplot
+from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim, gca
+from numpy import arange, zeros, linspace, mgrid, flipud
 
 from gpr.functions import primitive
 from gpr.variables import sigma, entropy, heat_flux
 from multi.gfm import interface_indices
-from options import L, nx
+from options import L, nx, ny, ndim
 
 
 def plot1d(y, style, x, label, color, xlab, ylab, sci=1):
@@ -30,21 +30,42 @@ def plot1d(y, style, x, label, color, xlab, ylab, sci=1):
     xlabel(xlab)
     ylabel(ylab)
 
+def plot2d(x, style, y=None):
+    if style=='colormap':
+        im = imshow(y, get_cmap('viridis'))
+        colorbar(im)
+    elif style=='streams':
+        Y, X = mgrid[0:nx, 0:ny]
+        streamplot(X, Y, flipud(y), flipud(x))
+     #   gca().invert_yaxis()
 
 def plot_density(u, style='line', x=None, label=None, color=None, xlab='x', sci=0):
     figure(0)
-    y = u[:, 0, 0, 0]
-    plot1d(y, style, x, label, color, xlab, 'Density', sci)
+    if ndim==1:
+        y = u[:, 0, 0, 0]
+        plot1d(y, style, x, label, color, xlab, 'Density', sci)
+    elif ndim==2:
+        y = u[:, :, 0, 0]
+        plot2d(y, 'colormap')
 
 def plot_energy(u, style='line', x=None, label=None, color=None, xlab='x', sci=0):
     figure(1)
-    y = u[:, 0, 0, 1] / u[:, 0, 0, 0]
-    plot1d(y, style, x, label, color, xlab, 'Total Energy', sci)
+    if ndim==1:
+        y = u[:, 0, 0, 1] / u[:, 0, 0, 0]
+        plot1d(y, style, x, label, color, xlab, 'Total Energy', sci)
+    elif ndim==2:
+        y = u[:, :, 0, 1] / u[:, :, 0, 0]
+        plot2d(y, 'colormap')
 
-def plot_velocity(u, i, style='line', x=None, label=None, color=None, xlab='x', sci=0, offset=0):
+def plot_velocity(u, i=0, style='line', x=None, label=None, color=None, xlab='x', sci=0, offset=0):
     figure(2+i)
-    y = u[:, 0, 0, 2+i] / u[:, 0, 0, 0] + offset
-    plot1d(y, style, x, label, color, xlab, 'Velocity Component %d' % (i+1), sci)
+    if ndim==1:
+        y = u[:, 0, 0, 2+i] / u[:, 0, 0, 0] + offset
+        plot1d(y, style, x, label, color, xlab, 'Velocity Component %d' % (i+1), sci)
+    elif ndim==2:
+        x = u[:, :, 0, 2] / u[:, :, 0, 0] + offset
+        y = u[:, :, 0, 3] / u[:, :, 0, 0] + offset
+        plot2d(x, 'streams', y)
 
 def plot_distortion(u, i, j, style='line', x=None, label=None, color=None, xlab='x', sci=0):
     figure(5+i*3+j)

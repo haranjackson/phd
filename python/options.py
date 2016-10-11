@@ -4,8 +4,8 @@ Rc   = 8.314459848          # Universal gas constant
 
 tf = 1                      # Final time of the simulation
 L  = 1                      # Length of domain in x direction
-nx = 100                    # Number of cells in x direction
-ny = 40                     # Number of cells in y direction
+nx = 40                    # Number of cells in x direction
+ny = 60                     # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
