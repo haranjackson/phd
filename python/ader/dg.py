@@ -11,16 +11,16 @@ from gpr.matrices import source, jacobian, flux_ref, source_ref, Bdot
 from options import stiff, superStiff, hidalgo, TOL, ndim, dx, MAX_ITER, N1, NT, failLim
 
 
-F, K0, K, M, Kt = system_matrices()
+W, U, V, Z, T = system_matrices()
 _, gaps, _ = quad()
 derivs = derivative_values()
 stiff = stiff
 
 
-def rhs(q, Fw, params, dt, subsystems):
+def rhs(q, Ww, params, dt, subsystems):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
-    Tq = dot(Kt, q)
+    Tq = dot(T, q)
     Sq = zeros([NT, 18])
     Fq = zeros([ndim, NT, 18])
     Bq = zeros([ndim, NT, 18])
@@ -35,11 +35,11 @@ def rhs(q, Fw, params, dt, subsystems):
     for d in range(ndim):
         ret -= Bq[d]
 
-    ret *= M
+    ret *= Z
     for d in range(ndim):
-        ret -= dot(K[d], Fq[d])
+        ret -= dot(V[d], Fq[d])
 
-    return dt/dx * ret + Fw
+    return dt/dx * ret + Ww
 
 def standard_initial_guess(w):
     """ Returns a Galerkin intial guess consisting of the value of q at t=0
@@ -83,9 +83,9 @@ def predictor(wh, params, dt, subsystems):
     failCount = 0
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
-        w = wh[i, j, k]
-        Fw = dot(F, w)
-        f = lambda X: X - spsolve(K0, rhs(X, Fw, params, dt, subsystems))
+        w = wh[i, j, k].reshape([N1**ndim, 18])
+        Ww = dot(W, w)
+        f = lambda X: X - spsolve(U, rhs(X, Ww, params, dt, subsystems))
 
         if hidalgo:
             q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
@@ -97,7 +97,7 @@ def predictor(wh, params, dt, subsystems):
 
         else:
             for count in range(MAX_ITER):
-                qNew = spsolve(K0, rhs(q, Fw, params, dt, subsystems))
+                qNew = spsolve(U, rhs(q, Ww, params, dt, subsystems))
 
                 if isnan(qNew).any():
                     failed(w, qh, i, j, k, f)

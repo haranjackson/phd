@@ -22,12 +22,15 @@ def renormalise_density(fluids, materialParameters):
             uj[0] = det3(A) / params.ρ0
 
 def thermal_conversion(fluids, materialParameters):
+    """ Sets the pressure and density across the domain in the isobaric cookoff technique,
+        given the temperature calculated with the reduced thermal conduction system
+    """
     for i in range(len(fluids)):
         fluid = fluids[i]
         params = materialParameters[i]
         γ = params.γ; pINF = params.pINF; cv = params.cv; α2 = params.α2; Qc = params.Qc
         n = len(fluid)
-        Etot = sum(fluid[:, 0, 0, 1])
+        Etot = sum(fluid[:, 0, 0, 1])   # Total specific energy in domain
         temp = 0
         for j in range(n):
             Q = fluid[j, 0, 0]
@@ -36,7 +39,7 @@ def thermal_conversion(fluids, materialParameters):
             if reactiveEOS:
                 temp += E_1r(P.c, Qc) / P.T
 
-        p_t = ((γ-1) * Etot - n * γ * pINF) / (n + temp / cv)
+        p_t = ((γ-1) * Etot - n * γ * pINF) / (n + temp / cv)   # Average pressure
         for j in range(n):
             Q = fluid[j, 0, 0]
             P = primitive(Q, params, 0, 1, 1)

@@ -13,19 +13,20 @@ from tests.multi import sod_shock_IC, water_gas_IC, water_water_IC, helium_bubbl
 from tests.multi import helium_heat_transmission_IC
 from gpr.plot import *
 
+import options
 from auxiliary.adjust import renormalise_density, thermal_conversion
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep, stepper, check_ignition_started, continue_condition
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, subsystems, SFix, TFix
+from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM
 
 
 IC = barrier_IC
 BC = barrier_BC               # CHECK ARGUMENTS
 
 
-subsystems, SFix, TFix = subsystems, SFix, TFix
+subsystems, SFix, TFix = options.subsystems, options.SFix, options.TFix
 u, materialParameters, intLocs = IC()
 saveArrays = save_arrays(u, intLocs)
 
@@ -71,8 +72,8 @@ def run(t, count):
         if not subsystems.mechanical:
             subsystems.mechanical, subsystems.viscous = check_ignition_started(fluids)
 
-        if count > 5:
-            TFix = 0
+#        if count > 5:
+#            TFix = 0
 
         t += dt
         count += 1

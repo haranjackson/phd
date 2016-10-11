@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import dot, zeros
+from numpy import dot, zeros, tensordot
 
 from ader.fv_fluxes import Dos, Drus
 from ader.basis import quad, end_values, derivative_values
@@ -20,21 +20,13 @@ elif method == 'rusanov':
 
 def endpoints(qh):
     """ Returns an array containing the values of the basis polynomials at 0 and 1
-        qEnd[i,j,k,l,e,:,:,:,:] is the set of coefficients at end e in the lth direction
+        qEnd[d,e,i,j,k,:,:,:,:,:] is the set of coefficients at end e in the dth direction
     """
     nx, ny, nz = qh.shape[:3]
     qh0 = qh.reshape([nx, ny, nz] + [N1]*(ndim+1) + [18])
-    qEnd = zeros([nx, ny, nz, ndim, 2] + [N1]*ndim + [18])
-
-    for i in range(N1):
-        qEnd[:, :, :, 0, 0]     +=     endVals[i, 0] * qh0[:, :, :, :, i]
-        qEnd[:, :, :, 0, 1]     +=     endVals[i, 1] * qh0[:, :, :, :, i]
-        if ndim > 1:
-            qEnd[:, :, :, 1, 0]   +=   endVals[i, 0] * qh0[:, :, :, :, :, i]
-            qEnd[:, :, :, 1, 1]   +=   endVals[i, 1] * qh0[:, :, :, :, :, i]
-            if ndim > 2:
-                qEnd[:, :, :, 2, 0] += endVals[i, 0] * qh0[:, :, :, :, :, :, i]
-                qEnd[:, :, :, 2, 1] += endVals[i, 1] * qh0[:, :, :, :, :, :, i]
+    qEnd = zeros([ndim, 2, nx, ny, nz] + [N1]*ndim + [18])
+    for d in range(ndim):
+        qEnd[d] = tensordot(endVals, qh0, (0,4+d))
     return qEnd
 
 def interface(qEndL, qEndM, qEndR, d, params, subsystems):
@@ -142,17 +134,17 @@ def finite_volume_terms(qh, params, dt, subsystems):
                     weight = weights[t] * weights[x]
                     s[i, j, k] += weight * center_func(qhijk, t, x, 0, 0)
 
-        qEndM = qEnd[i+1, j+1, k+1]
-        qEndL = qEnd[i,   j+1, k+1]
-        qEndR = qEnd[i+2, j+1, k+1]
+        qEndM = qEnd[:, :, i+1, j+1, k+1]
+        qEndL = qEnd[:, :, i,   j+1, k+1]
+        qEndR = qEnd[:, :, i+2, j+1, k+1]
         f[i ,j, k] = interface_func(qEndL, qEndM, qEndR, 0)
         if ndim > 1:
-            qEndL = qEnd[i+1, j,   k+1]
-            qEndR = qEnd[i+1, j+2, k+1]
+            qEndL = qEnd[:, :, i+1, j,   k+1]
+            qEndR = qEnd[:, :, i+1, j+2, k+1]
             g[i, j, k] = interface_func(qEndL, qEndM, qEndR, 1)
             if ndim > 2:
-                qEndL = qEnd[i+1, j+1, k]
-                qEndR = qEnd[i+1, j+1, k+2]
+                qEndL = qEnd[:, :, i+1, j+1, k]
+                qEndR = qEnd[:, :, i+1, j+1, k+2]
                 h[i, j, k] = interface_func(qEndL, qEndM, qEndR, 2)
 
     return dt/dx * (s - f - g - h)

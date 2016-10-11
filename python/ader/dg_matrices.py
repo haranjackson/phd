@@ -32,9 +32,9 @@ def system_matrices():
 
     I11, I1, I2, I = inner_products(N1, nodes, weights, ψ, ψDer)
 
-    Kt = zeros([ndim, NT, NT])
+    T = zeros([ndim, NT, NT])
     for i in range(ndim):
-        Kt[i] = kron_prod([I]*(i+1) + [derivs] + [I]*(ndim-1-i))
+        T[i] = kron_prod([I]*(i+1) + [derivs] + [I]*(ndim-1-i))
 
     W = concatenate([ψ[a](0) * kron_prod([I1]*ndim) for a in range(N1)])
     U = kron_prod([I11-I2.T] + [I1]*ndim)
@@ -46,4 +46,4 @@ def system_matrices():
     U = csc_matrix(U)
     Z = (diag(Z) * ones([18, NT])).T
 
-    return W, U, V, Z, Kt
+    return W, U, V, Z, T
