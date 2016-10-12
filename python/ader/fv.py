@@ -94,7 +94,7 @@ def center(qhijk, t, x, y, z, params, subsystems):
 
     return term
 
-def finite_volume_terms(qh, params, dt, subsystems):
+def fv_terms(qh, params, dt, subsystems):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """

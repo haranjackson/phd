@@ -4,8 +4,8 @@ Rc   = 8.314459848          # Universal gas constant
 
 tf = 1                      # Final time of the simulation
 L  = 1                      # Length of domain in x direction
-nx = 40                    # Number of cells in x direction
-ny = 60                     # Number of cells in y direction
+nx = 200                    # Number of cells in x direction
+ny = 1                     # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
@@ -41,6 +41,7 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
+useDG  = 1                  # Whether to use DG to get higher order time accuracy
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')

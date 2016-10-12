@@ -1,8 +1,11 @@
 from time import time
 
-from ader.fv import finite_volume_terms
+from numpy import repeat, newaxis
+
+from ader.fv import fv_terms
+from ader.fv_space_only import fv_terms_space_only
 from ader.dg import predictor
-from ader.parallel import parallel_predictor, parallel_finite_volume_terms
+from ader.parallel import para_predictor, para_fv_terms, para_fv_terms_space_only
 from ader.weno import reconstruct
 
 from auxiliary.adjust import limit_noise
@@ -10,8 +13,8 @@ from auxiliary.adjust import limit_noise
 from gpr.eig import max_abs_eigs
 from gpr.thermo import thermal_stepper
 
-from options import minParaDGLen, minParaFVLen, CFL, dx, tf, N1, reducedDomain, nx, altThermSolve
-from options import fullBurn, burnProp
+from options import nx, NT, CFL, dx, tf, N1, reducedDomain, altThermSolve
+from options import fullBurn, burnProp, useDG, minParaDGLen, minParaFVLen
 
 
 def continue_condition(t, fluids):
@@ -115,18 +118,32 @@ def stepper(fluid, fluidBC, params, dt, pool, subsystems):
             wh = reconstruct(fluidBC[l:r])
             t1 = time()
 
-            if r-l >= minParaDGLen:
-                qh = parallel_predictor(pool, wh, params, dt, subsystems)
+            if useDG:
+                if r-l >= minParaDGLen:
+                    qh = para_predictor(pool, wh, params, dt, subsystems)
+                else:
+                    qh = predictor(wh, params, dt, subsystems)
+                t2 = time()
+    
+                if r-l >= minParaFVLen:
+                    fluid[l:r-2] += limit_noise(para_fv_terms(pool, qh, params, dt,
+                                                                             subsystems))
+                else:
+                    fluid[l:r-2] += limit_noise(fv_terms(qh, params, dt, subsystems))
+                t3 = time()
+                
             else:
-                qh = predictor(wh, params, dt, subsystems)
-            t2 = time()
-
-            if r-l >= minParaFVLen:
-                fluid[l:r-2] += limit_noise(parallel_finite_volume_terms(pool, qh, params, dt,
-                                                                         subsystems))
-            else:
-                fluid[l:r-2] += limit_noise(finite_volume_terms(qh, params, dt, subsystems))
-            t3 = time()
+                nx = wh.shape[0]; ny = wh.shape[1]; nz = wh.shape[2]
+                qh = repeat(wh[:,:,:,newaxis], N1, 3).reshape([nx, ny, nz, NT, 18])
+                t2 = time()
+                
+                if r-l >= minParaFVLen:
+                    fluid[l:r-2] += limit_noise(para_fv_terms_space_only(pool, wh, params, dt,
+                                                                             subsystems))
+                else:
+                    fluid[l:r-2] += limit_noise(fv_terms_space_only(wh, params, dt, subsystems))
+                t3 = time()
+                
             wenoTime += t1-t0; dgTime += t2-t1; fvTime += t3-t2;
 
     if altThermSolve and not subsystems.mechanical:

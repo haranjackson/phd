@@ -22,8 +22,8 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM
 
 
-IC = barrier_IC
-BC = barrier_BC               # CHECK ARGUMENTS
+IC = heat_conduction_IC
+BC = standard_BC               # CHECK ARGUMENTS
 
 
 subsystems, SFix, TFix = options.subsystems, options.SFix, options.TFix

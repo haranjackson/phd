@@ -8,7 +8,7 @@ from options import mechanical, viscous, thermal, reactive
 from options import Ms, W, doubleTime, fullBurn, burnProp
 from options import reactionType, reactiveEOS, minE
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
-from options import N, CFL, method, renormaliseRho, convertTemp, NOISE_LIM
+from options import useDG, N, CFL, method, renormaliseRho, convertTemp, NOISE_LIM
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
 from options import MAX_ITER, minParaDGLen, minParaFVLen, ncore, reducedDomain
@@ -65,6 +65,7 @@ def save_config(path):
         f.write('TFix   = %i\n' % TFix)
         f.write('UPDATE_STEP = %i\n\n' % UPDATE_STEP)
 
+        f.write('useDG  = %i\n' % useDG)
         f.write('N      = %i\n' % N)
         f.write('CFL    = %f\n' % CFL)
         f.write('method = %s\n' % method)

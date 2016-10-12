@@ -130,7 +130,7 @@ def heat_conduction_IC():
         else:
             u[i,0,0] = QR
 
-    return u, [params]*2, [x0]
+    return u, [params]*1, []
 
 def semenov_IC():
     cv = 2.5
