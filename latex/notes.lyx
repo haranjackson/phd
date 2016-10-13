@@ -129,13 +129,21 @@ Thus:
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}}=\frac{5}{3}\det\left(A\right)^{\frac{5}{3}}A_{mn}^{-T}\left(A\dev\left(G\right)\right)_{ij}+\det\left(A\right)^{\frac{5}{3}}\left(A_{in}A_{mj}+\delta_{jn}G_{im}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)
-\end{equation}
+\begin{align}
+\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\det\left(A\right)^{\frac{5}{3}}\left(\frac{5}{3}A_{mn}^{-T}\left(A\dev\left(G\right)\right)_{ij}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)
+\end{align}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $G^{'}=AA^{T}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
