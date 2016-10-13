@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import dot, empty, eye, kron
+from numpy import dot, empty, eye, kron, zeros
 
 
 @jit
@@ -15,6 +15,21 @@ def det3(X):
 @jit
 def dot3(a, b):
     return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
+
+@jit
+def inv3(X):
+    detX = det3(X)
+    ret = zeros([3,3])
+    ret[0, 0] = (X[1, 1] * X[2, 2] - X[2, 1] * X[1, 2])
+    ret[0, 1] = (X[0, 2] * X[2, 1] - X[0, 1] * X[2, 2])
+    ret[0, 2] = (X[0, 1] * X[1, 2] - X[0, 2] * X[1, 1])
+    ret[1, 0] = (X[1, 2] * X[2, 0] - X[1, 0] * X[2, 2])
+    ret[1, 1] = (X[0, 0] * X[2, 2] - X[0, 2] * X[2, 0])
+    ret[1, 2] = (X[1, 0] * X[0, 2] - X[0, 0] * X[1, 2])
+    ret[2, 0] = (X[1, 0] * X[2, 1] - X[2, 0] * X[1, 1])
+    ret[2, 1] = (X[2, 0] * X[0, 1] - X[0, 0] * X[2, 1])
+    ret[2, 2] = (X[0, 0] * X[1, 1] - X[1, 0] * X[0, 1])
+    return ret / detX
 
 @jit
 def L2_1D(x):
@@ -47,6 +62,12 @@ def gram(A):
     """ Returns the Gram matrix for A
     """
     return dot(A.T, A)
+
+@jit
+def gram_rev(A):
+    """ Returns the Gram matrix for A^T
+    """
+    return dot(A, A.T)
 
 @jit
 def outer3self(x):
