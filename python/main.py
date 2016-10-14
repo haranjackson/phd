@@ -16,13 +16,14 @@ from gpr.plot import *
 import options
 from auxiliary.adjust import renormalise_density, thermal_conversion
 from auxiliary.classes import save_arrays
-from auxiliary.iterator import timestep, stepper, check_ignition_started, continue_condition
+from auxiliary.iterator import timestep, check_ignition_started, continue_condition
+from auxiliary.iterator import stepper, slic_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM
+from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, useSLIC
 
 
-IC = heat_conduction_IC
+IC = first_stokes_problem_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 
@@ -55,7 +56,10 @@ def run(t, count):
             fluid = fluids[i]
             fluidBC = fluidsBC[i]
             params = materialParameters[i]
-            qh = stepper(fluid, fluidBC, params, dt, pool, subsystems)
+            if useSLIC:
+                slic_stepper(fluid, params, dt, subsystems)
+            else:
+                qh = stepper(fluid, fluidBC, params, dt, pool, subsystems)
             if GFM:
                 dg[inds[i] : inds[i+1]] = qh[inds[i]+1 : inds[i+1]+1, 0, 0]
 

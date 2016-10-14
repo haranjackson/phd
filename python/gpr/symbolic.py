@@ -74,11 +74,11 @@ def J_num(A, t1):
         ret[:,k,:,k] += Grev
 
     ret *= -3/t1 * det3(A)**(5/3)
-    return ret.reshape([9,9])
+    return ret.swapaxes(0,1).swapaxes(2,3).reshape([9,9])
 
 def J_sym(A, t1):
-    Svec = S_sym(A, t1).reshape(9,1)
-    Avec = A.reshape(9,1)
+    Svec = S_sym(A, t1).T.reshape(9,1)
+    Avec = A.T.reshape(9,1)
     return Svec.jacobian(Avec)
 
 def evaluate(M):

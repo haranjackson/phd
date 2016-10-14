@@ -12,7 +12,7 @@ nz = 1                      # Number of cells in z direction
 
 mechanical = 1              # Whether to include evolution of density and velocity
 viscous    = 1              # Whether to include viscosity
-thermal    = 1              # Whether to include thermal conduction
+thermal    = 0              # Whether to include thermal conduction
 reactive   = 0              # Whether to include reactivity
 
 """ Problem Parameters """
@@ -41,7 +41,8 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-useDG  = 1                  # Whether to use DG to get higher order time accuracy
+useSLIC = 1                 # Whether to use SLIC instead of ADER-WENO
+useDG   = 1                 # Whether to use DG to get higher order time accuracy with ADER-WENO
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
