@@ -1,4 +1,4 @@
-from numpy import vectorize, zeros
+from numpy import float, vectorize, zeros
 
 from ader.fv_fluxes import Dos, Drus
 from gpr.matrices import B0dot, flux
@@ -34,8 +34,8 @@ def limiter(d):
     else:
         return min([d, 2/(1+d), 2])
 
-vlimiter = vectorize(limiter)
-vbound_below = vectorize(bound_below)
+vbound_below = vectorize(bound_below, otypes=[float])
+vlimiter = vectorize(limiter, otypes=[float])
 
 
 def interface_values(un, params, subsystems, dt):
@@ -82,5 +82,5 @@ def flux_stepper(u, un, params, subsystems, dt):
         qM0 = u_L[i+1,0,0]
         qM1 = u_R[i+1,0,0]
         qR0 = u_L[i+2,0,0]
-        u[i,0,0] -= d * (  D(qM1, qR0, d, 1, params, subsystems)
-                         + D(qM0, qL1, d, 0, params, subsystems))
+        u[i,0,0] -= d * (  D(qM1, qR0, 0, 1, params, subsystems)
+                         + D(qM0, qL1, 0, 0, params, subsystems))

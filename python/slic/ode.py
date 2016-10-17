@@ -32,16 +32,17 @@ def jac(y, t0, P0, params):
     A = y[:9].reshape([3,3], order='F')
     ret[:9,:9] = A_jac(A, params.t1)
     ret[9:,9:] = (P0.T * params.ρ0) / (params.T0 * P0.ρ * params.t1) * eye(3)
+    return ret
 
 def f(y, t0, P0, params):
-    ret = zeros(12)
 
     A = y[:9].reshape([3,3], order='F')
     Asource = - E_A(A, params.cs2) / theta_1(A, params)
-    ret[:9] = Asource.ravel(order='F')
-
     J = y[9:]
     Jsource = - P0.ρ * params.α2 * J / theta_2(P0.ρ, P0.T, params)
+
+    ret = zeros(12)
+    ret[:9] = Asource.ravel(order='F')
     ret[9:] = Jsource
 
     return ret
