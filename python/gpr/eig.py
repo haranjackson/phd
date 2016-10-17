@@ -4,6 +4,8 @@ from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
 from auxiliary.funcs import GdevG, gram
 from gpr.functions import primitive
+from gpr.matrices import dPdQ, jacobian_variables
+from gpr.primitive import dQdP
 from gpr.variables import sigma, sigma_A, c_h
 
 
@@ -145,3 +147,11 @@ def primitive_eigs(q, params, subsystems):
 
     nonDegenList = [vd+sw[0], vd+sw[1], vd+sw[2], vd+sw[3], vd-sw[0], vd-sw[1], vd-sw[2], vd-sw[3]]
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
+
+def conserved_eigs(q, params, subsystems):
+    Λ, L, R = primitive_eigs(q, params, subsystems)
+    P = primitive(q, params, subsystems)
+    jacVars = jacobian_variables(P, params)
+    DPDQ = dPdQ(P, params, jacVars, subsystems)
+    DQDP = dQdP(P, params, jacVars, subsystems)
+    return Λ, dot(L, DPDQ), dot(DQDP, R)
