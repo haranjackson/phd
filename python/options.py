@@ -2,7 +2,7 @@ Rc   = 8.314459848          # Universal gas constant
 
 """ Domain Parameters """
 
-tf = 1                      # Final time of the simulation
+tf = 0.2                      # Final time of the simulation
 L  = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
 ny = 1                     # Number of cells in y direction
@@ -11,7 +11,7 @@ nz = 1                      # Number of cells in z direction
 """ Model Options """
 
 mechanical = 1              # Whether to include evolution of density and velocity
-viscous    = 1              # Whether to include viscosity
+viscous    = 0              # Whether to include viscosity
 thermal    = 0              # Whether to include thermal conduction
 reactive   = 0              # Whether to include reactivity
 
@@ -41,7 +41,7 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-useSLIC = 1                 # Whether to use SLIC instead of ADER-WENO
+useSLIC = 0                 # Whether to use SLIC instead of ADER-WENO
 useDG   = 1                 # Whether to use DG to get higher order time accuracy with ADER-WENO
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number

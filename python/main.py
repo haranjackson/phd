@@ -11,6 +11,7 @@ from tests.validation import first_stokes_problem_IC, heat_conduction_IC
 from tests.validation import viscous_shock_IC, semenov_IC
 from tests.multi import sod_shock_IC, water_gas_IC, water_water_IC, helium_bubble_IC
 from tests.multi import helium_heat_transmission_IC
+from tests.toro import toro_test1_IC
 from gpr.plot import *
 
 import options
@@ -23,7 +24,7 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, useSLIC
 
 
-IC = first_stokes_problem_IC
+IC = toro_test1_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 
