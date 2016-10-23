@@ -293,6 +293,142 @@ This equation can be linearised and the coefficients of
 .
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{1} & =\frac{1}{2}\left(1-\frac{1}{\sqrt{3}}\right)\\
+c_{2} & =\frac{1}{2}\left(1+\frac{1}{\sqrt{3}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\psi_{1}\left(x\right) & =\frac{x-c_{2}}{c_{1}-c_{2}}=-\sqrt{3}\left(x-c_{2}\right)\\
+\psi_{2}\left(x\right) & =\frac{x-c_{1}}{c_{2}-c_{1}}=\sqrt{3}\left(x-c_{1}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+q & =b_{11}\psi_{1}\left(x\right)\psi_{1}\left(t\right)+b_{21}\psi_{2}\left(x\right)\psi_{1}\left(t\right)+b_{12}\psi_{1}\left(x\right)\psi_{2}\left(t\right)+b_{22}\psi_{2}\left(x\right)\psi_{2}\left(t\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+M=\frac{1}{\left(c_{1}-c_{2}\right)^{2}}\left(\begin{array}{cccc}
+c_{2}^{2} & -c_{1}c_{2} & -c_{1}c_{2} & c_{1}^{2}\\
+-c_{2} & c_{2} & c_{1} & -c_{1}\\
+-c_{2} & c_{1} & c_{2} & -c_{1}\\
+1 & -1 & -1 & 1
+\end{array}\right)=3\left(\begin{array}{cccc}
+c_{2}^{2} & -c_{1}c_{2} & -c_{1}c_{2} & c_{1}^{2}\\
+-c_{2} & c_{2} & c_{1} & -c_{1}\\
+-c_{2} & c_{1} & c_{2} & -c_{1}\\
+1 & -1 & -1 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+M^{-1}=\left(\begin{array}{cccc}
+1 & c_{1} & c_{1} & c_{1}^{2}\\
+1 & c_{2} & c_{1} & c_{1}c_{2}\\
+1 & c_{1} & c_{2} & c_{1}c_{2}\\
+1 & c_{2} & c_{2} & c_{2}^{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Euler Equations
 \end_layout
