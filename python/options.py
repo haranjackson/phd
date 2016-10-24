@@ -2,10 +2,10 @@ Rc   = 8.314459848          # Universal gas constant
 
 """ Domain Parameters """
 
-tf = 0.2                      # Final time of the simulation
+tf = 0.2                    # Final time of the simulation
 L  = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
-ny = 1                     # Number of cells in y direction
+ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
@@ -41,14 +41,14 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'NEW'               # Which solver to use ('AW', 'SLIC', or 'NEW')
+solver = 'AW'               # Which solver to use ('AW', 'SLIC', or 'NEW')
 useDG  = 1                  # Whether to use DG to get higher order time accuracy with ADER-WENO
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 renormaliseRho = 0          # Whether to set density to determinant of distortion tensor
 convertTemp    = 1          # Whether to use constant-pressure approximation in cookoff
-altThermSolve  = 1          # Whether to use the operator splitting solver for the thermal subsystem
+altThermSolve  = 1          # Whether to use operator splitting solver for the thermal subsystem
 NOISE_LIM      = 1e-16      # Values below NOISE_LIM in finite volume solver are discarded
 
 """ DG Options """
@@ -69,11 +69,9 @@ eps  = 1e-14                # Constant ensuring oscillation indicators don't blo
 
 """ Speed-Up Parameters """
 
-minParaDGLen = 500          # Minimum block size for DG to be parallelised
-minParaFVLen = 500          # Minimum block size for FV to be parallelised
-ncore = 4                   # Number of cores to use if running in parallel
-reducedDomain = 0           # Whether to only calculate DG & FV for cells affected by fluxes
-                            # NOTE: Source terms may be non-zero. Not possible with GFM activated.
+paraDG = 0                  # Whether to parallelise the DG step
+paraFV = 0                  # Whether to parallelise the FV step
+ncore  = 4                  # Number of cores to use if running in parallel
 
 """ Debug Options """
 

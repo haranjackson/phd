@@ -11,7 +11,7 @@ from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
 from options import solver, useDG, N, CFL, method, renormaliseRho, convertTemp, NOISE_LIM
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
-from options import MAX_ITER, minParaDGLen, minParaFVLen, ncore, reducedDomain
+from options import MAX_ITER, paraDG, paraFV, ncore
 
 
 def print_stats(count, t, dt, interfaceLocations, subsystems):
@@ -86,10 +86,9 @@ def save_config(path):
         f.write('λs   = %e\n' % λs)
         f.write('eps  = %e\n\n' % eps)
 
-        f.write('minParaDGLen = %i\n' % minParaDGLen)
-        f.write('minParaFVLen = %i\n' % minParaFVLen)
-        f.write('ncore = %i\n' % ncore)
-        f.write('reducedDomain = %i\n\n' % reducedDomain)
+        f.write('paraDG = %i\n' % paraDG)
+        f.write('paraFV = %i\n' % paraFV)
+        f.write('ncore  = %i\n\n' % ncore)
 
 def save_all(saveArrays):
     if not path.exists('_dump'):
