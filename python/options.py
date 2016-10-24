@@ -41,8 +41,8 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-useSLIC = 0                 # Whether to use SLIC instead of ADER-WENO
-useDG   = 1                 # Whether to use DG to get higher order time accuracy with ADER-WENO
+solver = 'NEW'               # Which solver to use ('AW', 'SLIC', or 'NEW')
+useDG  = 1                  # Whether to use DG to get higher order time accuracy with ADER-WENO
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')

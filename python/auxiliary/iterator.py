@@ -11,7 +11,10 @@ from ader.weno import reconstruct
 from auxiliary.bc import standard_BC
 from auxiliary.adjust import limit_noise
 
+from experimental.new_solver import new_predictor
+
 from gpr.eig import max_abs_eigs
+from gpr.functions import primitive, primitive_vector
 from gpr.thermo import thermal_stepper
 
 from slic.ode import ode_stepper
@@ -163,3 +166,27 @@ def slic_stepper(fluid, params, dt, subsystems):
     flux_stepper(fluid, fluidn, params, subsystems, dt)
     ode_stepper(fluid, params, subsystems, dt/2)
     return None
+
+def new_stepper(fluid, fluidBC, params, dt, pool, subsystems):
+
+    wenoTime = 0; dgTime = 0; fvTime = 0
+    t0 = time()
+
+    nx = len(fluidBC)
+    for i in range(nx):
+        P = primitive(fluidBC[i,0,0], params, subsystems)
+        fluidBC[i,0,0] = primitive_vector(P)
+    wh = reconstruct(fluidBC)
+    t1 = time()
+
+    qh = new_predictor(wh, params, dt, subsystems)
+    t2 = time()
+
+    fluid += limit_noise(fv_terms(qh, params, dt, subsystems))
+    t3 = time()
+
+    wenoTime += t1-t0; dgTime += t2-t1; fvTime += t3-t2;
+
+    print('WENO:', wenoTime, '\nDG:  ', dgTime, '\nFV:  ', fvTime)
+
+    return qh

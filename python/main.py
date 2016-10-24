@@ -18,10 +18,10 @@ import options
 from auxiliary.adjust import renormalise_density, thermal_conversion
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep, check_ignition_started, continue_condition
-from auxiliary.iterator import stepper, slic_stepper
+from auxiliary.iterator import stepper, slic_stepper, new_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, useSLIC
+from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, solver
 
 
 IC = toro_test1_IC
@@ -57,10 +57,12 @@ def run(t, count):
             fluid = fluids[i]
             fluidBC = fluidsBC[i]
             params = materialParameters[i]
-            if useSLIC:
+            if solver == 'SLIC':
                 slic_stepper(fluid, params, dt, subsystems)
-            else:
+            elif solver == 'AW':
                 qh = stepper(fluid, fluidBC, params, dt, pool, subsystems)
+            elif solver == 'NEW':
+                qh = new_stepper(fluid, fluidBC, params, dt, pool, subsystems)
             if GFM:
                 dg[inds[i] : inds[i+1]] = qh[inds[i]+1 : inds[i+1]+1, 0, 0]
 
