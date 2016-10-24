@@ -1,4 +1,4 @@
-from numpy import array, dot, sqrt, zeros
+from numpy import array, dot, einsum, sqrt, zeros
 from numpy.polynomial.legendre import leggauss
 
 from gpr.functions import primitive_to_conserved
@@ -35,12 +35,12 @@ def new_predictor(wh, params, dt, subsystems):
     """ wh must be reconstruction of primitive variables
     """
     nx = wh.shape[0]
-    wh1 = dot(U, wh)
+    wh1 = einsum('ab,ijkbc->ijkac', U, wh)
     ret = zeros([nx, 1, 1, 4, 18])
     dtdx = dt/dx
     for i in range(nx):
-        q0 = wh1[0,i,0,0]
-        qx = wh1[1,i,0,0]
+        q0 = wh1[i,0,0,0]
+        qx = wh1[i,0,0,1]
         qt = zeros(18)
         qxt = zeros(18)
 

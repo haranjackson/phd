@@ -96,7 +96,20 @@ DG eigenvalues paper - submit to J.
 \end_layout
 
 \begin_layout Itemize
+Speed up DG and FV by using primitive WENO reconstruction, jacobian of DG
+ system, and precalculated inverse of 
+\begin_inset Formula $U$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
 Operator splitting with SLIC and non conservative jump terms
+\end_layout
+
+\begin_layout Itemize
+MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM)
 \end_layout
 
 \begin_layout Itemize

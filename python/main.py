@@ -57,12 +57,14 @@ def run(t, count):
             fluid = fluids[i]
             fluidBC = fluidsBC[i]
             params = materialParameters[i]
+
             if solver == 'SLIC':
                 slic_stepper(fluid, params, dt, subsystems)
             elif solver == 'AW':
                 qh = stepper(fluid, fluidBC, params, dt, pool, subsystems)
             elif solver == 'NEW':
                 qh = new_stepper(fluid, fluidBC, params, dt, pool, subsystems)
+
             if GFM:
                 dg[inds[i] : inds[i+1]] = qh[inds[i]+1 : inds[i+1]+1, 0, 0]
 

@@ -2,6 +2,7 @@ from matplotlib.pyplot import figure, plot, scatter, axvline, get_cmap, imshow, 
 from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim, gca
 from numpy import arange, zeros, linspace, mgrid, flipud
 
+from ader.basis import quad, basis_polys
 from gpr.functions import primitive
 from gpr.variables import sigma, entropy, heat_flux
 from multi.gfm import interface_indices
@@ -172,3 +173,43 @@ def plot_interfaces(intLocs, figNum=None, loc=None, color=None):
 def colors(n):
     cmap = get_cmap('viridis')
     return [cmap.colors[i] for i in linspace(0, 255, n, dtype=int)]
+
+def plot_weno(wh, var, gauss_basis=1):
+    n = len(wh)
+    x = zeros(2*n)
+    y = zeros(2*n)
+    nodes, _, _ = quad()
+    x1,x2 = nodes
+    for i in range(n):
+        ind = 2*i
+        x[ind] = i
+        x[ind+1] = i+1
+        if gauss_basis:
+            y1 = wh[i,0,0,0,var]
+            y2 = wh[i,0,0,1,var]
+            m = (y2-y1)/(x2-x1)
+            y[ind] = y1 - m*x1
+            y[ind+1] = y1 + m*(1-x1)
+        else:
+            y[ind] = wh[i,0,0,0,var]
+            y[ind+1] = wh[i,0,0,0,var] + wh[i,0,0,1,var]
+
+    plot(x,y)
+    plot(x,y,marker='x')
+
+def plot_dg(qh, var, t=0):
+    psi, _, _ = basis_polys()
+    n = len(qh)
+    x = zeros(2*n)
+    y = zeros(2*n)
+    for i in range(n):
+        ind = 2*i
+        x[ind] = i
+        x[ind+1] = i+1
+        for j in range(2):
+            for m in range(2):
+                for n in range(2):
+                    y[ind+j] += qh[i,0,0,2*m+n,var] * psi[m](t) * psi[n](j)
+
+    plot(x,y)
+    plot(x,y,marker='x')
