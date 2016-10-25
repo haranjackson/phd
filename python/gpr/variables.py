@@ -139,13 +139,10 @@ def sigma_A(ρ, A, cs2):
         to A_mn, holding r constant.
     """
     G = gram(A)
-    AdevG_ = AdevG(A,G)
-    ret = -2/3 * dot(G[:,:,None], A[:,None])
+    AdevGT = AdevG(A,G).T
+    GA = dot(G[:,:,None], A[:,None])
+    ret = GA.swapaxes(0,3) + GA.swapaxes(1,3) - 2/3 * GA
     for i in range(3):
-        for j in range(3):
-            for m in range(3):
-                for n in range(3):
-                    ret[i, j, m, n] += A[m, i] * G[j, n] + A[m, j] * G[i, n]
-            ret[i, j, :, j] += AdevG_[:, i]
-        ret[i, :, :, i] += AdevG_.T
+        ret[i, :, :, i] += AdevGT
+        ret[:, i, :, i] += AdevGT
     return -ρ * cs2 * ret
