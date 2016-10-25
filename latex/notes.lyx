@@ -109,7 +109,8 @@ Operator splitting with SLIC and non conservative jump terms
 \end_layout
 
 \begin_layout Itemize
-MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM)
+MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM) and
+ operator splitting for source terms
 \end_layout
 
 \begin_layout Itemize
