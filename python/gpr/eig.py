@@ -4,8 +4,7 @@ from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
 from auxiliary.funcs import GdevG, gram
 from gpr.functions import primitive
-from gpr.matrices import dPdQ, jacobian_variables
-from gpr.primitive import dQdP
+from gpr.matrices_jacobians import dQdP, dPdQ, jacobian_variables
 from gpr.variables import sigma, sigma_A, c_h
 
 
@@ -44,6 +43,8 @@ def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, subsystems):
     return ret
 
 def max_abs_eigs(Q, d, params, subsystems):
+    """ Returns the maximum of the absolute values of the eigenvalues of the GPR system
+    """
     P = primitive(Q, params, subsystems)
 
     if not subsystems.mechanical:
@@ -149,6 +150,11 @@ def primitive_eigs(q, params, subsystems):
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
 
 def conserved_eigs(q, params, subsystems):
+    """ Returns the eigenvalues and left and right eigenvectors of the conserved jacobian matrix.
+        NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
+              eigenvectors of the primitive system and transforming them into conserved eigenvectors
+              without attempting to put them in the standard ordering.
+    """
     Λ, L, R = primitive_eigs(q, params, subsystems)
     P = primitive(q, params, subsystems)
     jacVars = jacobian_variables(P, params)

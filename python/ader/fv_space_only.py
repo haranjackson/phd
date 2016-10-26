@@ -4,7 +4,7 @@ from numpy import dot, zeros, tensordot
 
 from ader.fv_fluxes import Dos, Drus
 from ader.basis import quad, end_values, derivative_values
-from gpr.matrices import block, source
+from gpr.matrices_conserved import block, source
 from options import ndim, dx, N1, method
 
 

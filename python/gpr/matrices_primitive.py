@@ -2,38 +2,11 @@ from numpy import dot, eye, zeros
 
 from auxiliary.funcs import L2_1D, L2_2D
 from gpr.functions import primitive, theta_1, theta_2
-from gpr.matrices import jacobian_variables, block, dFdP, dPdQ, source
-from gpr.variables import sigma, E_1, E_A, E_J, sigma_A
+from gpr.jacobians import dQdP
+from gpr.matrices_conserved import block, source
+from gpr.matrices_jacobians import jacobian_variables, dFdP, dPdQ
+from gpr.variables import sigma, E_A, E_J, sigma_A
 
-
-def dQdP(P, params, jacVars, subsystems):
-    """ Returns the Jacobian of the conserved variables with respect to the primitive variables
-    """
-    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E
-    ψ = E_A(A)
-    ret = eye(18)
-    Γ = jacVars.Γ
-
-    ret[1, 0] = E - E_1(ρ, p, params.y, params.pINF)
-    ret[1, 1] /= Γ
-    ret[1, 2:5] = ρ * v
-    ret[2:5, 0] = v
-    ret[2:5, 2:5] *= ρ
-
-    if subsystems.viscous:
-        ret[1, 5:14] = ρ * ψ.ravel(order='F')
-
-    if subsystems.thermal:
-        ret[1, 14:17] = params.α2 * ρ * J
-        ret[14:17, 0] = J
-        ret[14:17, 14:17] *= ρ
-
-    if subsystems.reactive:
-        ret[1, 17] = params.Qc * ρ
-        ret[17, 0] = λ
-        ret[17, 17] *= ρ
-
-    return ret
 
 def jacobian_primitive(Q, d, params, subsystems):
     """ Returns the Jacobian in the dth direction for the system of primitive variables, using the
