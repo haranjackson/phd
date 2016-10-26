@@ -1,9 +1,7 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
 from auxiliary.funcs import L2_1D
-from gpr.matrices.conserved import block
 from gpr.variables.eos import E_1, E_A
-from gpr.variables.vectors import primitive
 from gpr.variables.state import heat_flux, sigma, sigma_A
 from options import reactiveEOS
 
@@ -92,6 +90,7 @@ def dPdQ(P, params, jacVars, subsystems):
 
 def dFdP(P, d, params, jacVars, subsystems):
     """ Returns the Jacobian of the flux vector with respect to the primitive variables
+        NOTE: Primitive variables are assumed to be in standard ordering
     """
     ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E; T = P.T
     γ = params.γ; pINF = params.pINF; cs2 = params.cs2; α2 = params.α2
@@ -144,12 +143,3 @@ def dFdP(P, d, params, jacVars, subsystems):
             ret[1, 17] += params.Qc * ρvd
 
     return ret
-
-def jacobian(Q, d, params, subsystems):
-    """ Returns the Jacobian in the dth direction
-    """
-    P = primitive(Q, params, subsystems)
-    jacVars = jacobian_variables(P, params)
-    DFDP = dFdP(P, d, params, jacVars, subsystems)
-    DPDQ = dPdQ(P, params, jacVars, subsystems)
-    return dot(DFDP, DPDQ) + block(P.v, d, subsystems.viscous)

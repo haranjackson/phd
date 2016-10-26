@@ -9,19 +9,9 @@ from gpr.variables.state import sigma, sigma_A
 from gpr.variables.vectors import primitive
 
 
-def jacobian_primitive(Q, d, params, subsystems):
-    """ Returns the Jacobian in the dth direction for the system of primitive variables, using the
-        constituent Jacobian matrices
-    """
-    P = primitive(Q, params, subsystems)
-    jacVars = jacobian_variables(P, params)
-    ret = dot(block(P.v, d, subsystems.viscous), dQdP(P, params, jacVars, subsystems))
-    ret += dFdP(P, d, params, jacVars, subsystems)
-    return dot(dPdQ(P, params, jacVars, subsystems), ret)
-
-def jacobian_primitive_direct(Q, d, params, subsystems):
-    """ Returns the Jacobian in the dth direction for the system of primitive variables, calculated
-        directly
+def system_primitive(Q, d, params, subsystems):
+    """ Returns the system matrix in the dth direction for the system of primitive variables,
+        calculated directly
     """
     P = primitive(Q, params, subsystems)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
@@ -48,9 +38,9 @@ def jacobian_primitive_direct(Q, d, params, subsystems):
 
     return ret
 
-def jacobian_primitive_reordered(Q, d, params, subsystems):
-    """ Returns the Jacobian in the dth direction for the system of primitive variables, calculated
-        directly
+def system_primitive_reordered(Q, d, params, subsystems):
+    """ Returns the system matrix in the dth direction for the system of primitive variables,
+        calculated directly
     """
     P = primitive(Q, params, subsystems)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
@@ -77,15 +67,8 @@ def jacobian_primitive_reordered(Q, d, params, subsystems):
 
     return ret
 
-def source_primitive(Q, params):
 
-    S = source(Q, params)
-    P = primitive(Q, params)
-    jacVars = jacobian_variables(P, params)
-    DPDQ = dPdQ(P, params, jacVars)
-    return dot(DPDQ, S)
-
-def source_primitive_direct(Q, params, subsystems):
+def source_primitive(Q, params, subsystems):
 
     ret = zeros(18)
     P = primitive(Q, params)
@@ -126,3 +109,22 @@ def source_primitive_reordered(Q, params, subsystems):
         ret[14:17] = -H / θ2
 
     return ret
+
+
+def system_primitive_numeric(Q, d, params, subsystems):
+    """ Returns the systems matrix in the dth direction for the system of primitive variables, using
+        the constituent Jacobian matrices
+    """
+    P = primitive(Q, params, subsystems)
+    jacVars = jacobian_variables(P, params)
+    ret = dot(block(P.v, d, subsystems.viscous), dQdP(P, params, jacVars, subsystems))
+    ret += dFdP(P, d, params, jacVars, subsystems)
+    return dot(dPdQ(P, params, jacVars, subsystems), ret)
+
+def source_primitive_numeric(Q, params):
+
+    S = source(Q, params)
+    P = primitive(Q, params)
+    jacVars = jacobian_variables(P, params)
+    DPDQ = dPdQ(P, params, jacVars)
+    return dot(DPDQ, S)

@@ -4,8 +4,7 @@ from scipy.linalg import eig, solve
 
 from ader.basis import quad, end_values, derivative_values
 from gpr.eig import max_abs_eigs
-from gpr.matrices.conserved import flux, block
-from gpr.matrices.jacobians import jacobian
+from gpr.matrices.conserved import flux, block, system_conserved
 from options import DEBUG, N1
 
 nodes, _, weights = quad()
@@ -29,7 +28,7 @@ def Aint(qL, qR, d, params, subsystems):
     ret = zeros(18, dtype=complex128)
     for i in range(N1):
         q = qL + nodes[i] * (qR - qL)
-        J = jacobian(q, d, params, subsystems)
+        J = system_conserved(q, d, params, subsystems)
         eigs, R = eig(J, overwrite_a=1, check_finite=0)
         if DEBUG:
             if (abs(imag(R)) > 1e-15).any():

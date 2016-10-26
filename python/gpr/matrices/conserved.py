@@ -2,6 +2,7 @@ from numba import jit
 from numpy import dot, zeros
 
 from auxiliary.funcs import dot3
+from gpr.matrices.jacobians import jacobian_variables, dFdP, dPdQ
 from gpr.variables.eos import E_A
 from gpr.variables.material_functions import theta_1, theta_2, arrhenius_reaction_rate
 from gpr.variables.material_functions import discrete_ignition_temperature_reaction_rate
@@ -156,3 +157,12 @@ def Bdot(ret, Q, d, v, viscous):
         B1dot(ret, Q, v, viscous)
     else:
         B2dot(ret, Q, v, viscous)
+
+def system_conserved(Q, d, params, subsystems):
+    """ Returns the Jacobian in the dth direction
+    """
+    P = primitive(Q, params, subsystems)
+    jacVars = jacobian_variables(P, params)
+    DFDP = dFdP(P, d, params, jacVars, subsystems)
+    DPDQ = dPdQ(P, params, jacVars, subsystems)
+    return dot(DFDP, DPDQ) + block(P.v, d, subsystems.viscous)

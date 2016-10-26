@@ -7,8 +7,7 @@ from scipy.optimize import newton_krylov
 from ader.dg_matrices import system_matrices
 from ader.basis import quad, derivative_values
 from gpr.variables.vectors import primitive
-from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot
-from gpr.matrices.jacobians import jacobian
+from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_conserved
 from options import stiff, superStiff, hidalgo, TOL, ndim, dx, MAX_ITER, N1, NT, failLim
 
 
@@ -59,7 +58,7 @@ def hidalgo_initial_guess(w, params, dtgaps, subsystems):
         for i in range(N1):
             qij = qj[i]
             dqdxij = dqdxj[i]
-            J = dot(jacobian(qij, 0, params, subsystems), dqdxij)
+            J = dot(system_conserved(qij, 0, params, subsystems), dqdxij)
             Sj = source(qij, params, subsystems)
             if superStiff:
                 f = lambda X: X - qij + dt/dx * J - dt/2 * (Sj + source(X, params, subsystems))

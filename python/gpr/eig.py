@@ -80,7 +80,7 @@ def Xi2mat(ρ, p, A, T, γ, α2):
 
 def primitive_eigs(q, params, subsystems):
     """ Returns eigenvalues and set of left and right eigenvectors of the matrix returned by
-        jacobian_primitive_reordered
+        system_primitive_reordered
     """
     P = primitive(q, params, subsystems)
     ρ = P.ρ; p = P.p; A = P.A; T = P.T; vd = P.v[0]
@@ -151,7 +151,7 @@ def primitive_eigs(q, params, subsystems):
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
 
 def conserved_eigs(q, params, subsystems):
-    """ Returns the eigenvalues and left and right eigenvectors of the conserved jacobian matrix.
+    """ Returns the eigenvalues and left and right eigenvectors of the conserved system.
         NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
               eigenvectors of the primitive system and transforming them into conserved eigenvectors
               without attempting to put them in the standard ordering.
