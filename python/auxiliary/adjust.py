@@ -1,4 +1,3 @@
-from auxiliary.funcs import det3
 from gpr.functions import primitive, conserved
 from gpr.variables import E_1r, E_2J
 from options import NOISE_LIM, reactiveEOS
@@ -9,17 +8,6 @@ def limit_noise(arr):
     """
     arr[abs(arr) < NOISE_LIM] = 0
     return arr
-
-def renormalise_density(fluids, materialParameters):
-    """ Sets density to ρ0 * det(A)
-    """
-    for i in range(len(fluids)):
-        fluid = fluids[i]
-        params = materialParameters[i]
-        for j in range(len(fluid)):
-            uj = fluid[j,0,0]
-            A = uj[5:14].reshape([3,3], order='F')
-            uj[0] = det3(A) / params.ρ0
 
 def thermal_conversion(fluids, materialParameters):
     """ Sets the pressure and density across the domain in the isobaric cookoff technique,

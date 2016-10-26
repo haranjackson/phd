@@ -15,13 +15,13 @@ from tests.toro import toro_test1_IC
 from gpr.plot import *
 
 import options
-from auxiliary.adjust import renormalise_density, thermal_conversion
+from auxiliary.adjust import thermal_conversion
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep, check_ignition_started, continue_condition
 from auxiliary.iterator import stepper, slic_stepper, new_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, renormaliseRho, convertTemp, nx, NT, GFM, solver
+from options import ncore, convertTemp, nx, NT, GFM, solver
 
 
 IC = toro_test1_IC
@@ -71,9 +71,6 @@ def run(t, count):
         if GFM:
             interfaceLocations = update_interface_locations(dg, interfaceLocations, dt)
             inds = interface_indices(interfaceLocations, nx)
-
-        if renormaliseRho:
-            renormalise_density(fluids, materialParameters)
 
         if convertTemp and not subsystems.mechanical:
             thermal_conversion(fluids, materialParameters)

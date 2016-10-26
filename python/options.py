@@ -41,12 +41,11 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'NEW'               # Which solver to use ('AW', 'SLIC', or 'NEW')
+solver = 'AW'               # Which solver to use ('AW', 'SLIC', or 'NEW')
 useDG  = 1                  # Whether to use DG to get higher order time accuracy with ADER-WENO
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
-renormaliseRho = 0          # Whether to set density to determinant of distortion tensor
 convertTemp    = 1          # Whether to use constant-pressure approximation in cookoff
 altThermSolve  = 1          # Whether to use operator splitting solver for the thermal subsystem
 NOISE_LIM      = 1e-16      # Values below NOISE_LIM in finite volume solver are discarded

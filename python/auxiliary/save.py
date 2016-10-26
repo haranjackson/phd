@@ -9,7 +9,7 @@ from options import mechanical, viscous, thermal, reactive
 from options import Ms, W, doubleTime, fullBurn, burnProp
 from options import reactionType, reactiveEOS, minE
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
-from options import solver, useDG, N, CFL, method, renormaliseRho, convertTemp, NOISE_LIM
+from options import solver, useDG, N, CFL, method, convertTemp, NOISE_LIM
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
 from options import MAX_ITER, paraDG, paraFV, ncore
@@ -71,7 +71,6 @@ def save_config(path):
         f.write('N      = %i\n' % N)
         f.write('CFL    = %f\n' % CFL)
         f.write('method = %s\n' % method)
-        f.write('renormaliseRho = %i\n' % renormaliseRho)
         f.write('convertTemp    = %i\n' % convertTemp)
         f.write('NOISE_LIM = %e\n\n' % NOISE_LIM)
 
