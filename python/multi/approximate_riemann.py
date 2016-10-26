@@ -3,7 +3,7 @@ from scipy.linalg import solve, inv
 
 from gpr.eig import primitive_eigs
 from gpr.functions import primitive, primitive_vector, primitive_to_conserved
-#from gpr.matrices_primitive import source_primitive_reordered
+#from gpr.matrices.primitive import source_primitive_reordered
 from gpr.variables import sigma, heat_flux, sigma_A
 from options import dx
 

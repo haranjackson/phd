@@ -3,8 +3,8 @@ from numpy import dot, eye, zeros
 from auxiliary.funcs import L2_1D, L2_2D
 from gpr.functions import primitive, theta_1, theta_2
 from gpr.jacobians import dQdP
-from gpr.matrices_conserved import block, source
-from gpr.matrices_jacobians import jacobian_variables, dFdP, dPdQ
+from gpr.matrices.conserved import block, source
+from gpr.matrices.jacobians import jacobian_variables, dFdP, dPdQ
 from gpr.variables import sigma, E_A, E_J, sigma_A
 
 

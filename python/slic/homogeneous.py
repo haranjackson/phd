@@ -1,7 +1,7 @@
 from numpy import float, vectorize, zeros
 
 from ader.fv_fluxes import Dos, Drus
-from gpr.matrices_conserved import B0dot, flux
+from gpr.matrices.conserved import B0dot, flux
 from options import dx, method
 
 

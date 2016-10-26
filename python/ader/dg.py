@@ -7,8 +7,8 @@ from scipy.optimize import newton_krylov
 from ader.dg_matrices import system_matrices
 from ader.basis import quad, derivative_values
 from gpr.functions import primitive
-from gpr.matrices_conserved import source, flux_ref, source_ref, Bdot
-from gpr.matrices_jacobians import jacobian
+from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot
+from gpr.matrices.jacobians import jacobian
 from options import stiff, superStiff, hidalgo, TOL, ndim, dx, MAX_ITER, N1, NT, failLim
 
 

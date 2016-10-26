@@ -2,7 +2,7 @@ from numpy import dot, eye, outer, tensordot, zeros
 
 from auxiliary.funcs import L2_1D
 from gpr.functions import primitive
-from gpr.matrices_conserved import block
+from gpr.matrices.conserved import block
 from gpr.variables import E_1, E_A, heat_flux, sigma, sigma_A
 from options import reactiveEOS
 

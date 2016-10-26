@@ -4,8 +4,8 @@ from scipy.linalg import eig, solve
 
 from ader.basis import quad, end_values, derivative_values
 from gpr.eig import max_abs_eigs
-from gpr.matrices_conserved import flux, block
-from gpr.matrices_jacobians import jacobian
+from gpr.matrices.conserved import flux, block
+from gpr.matrices.jacobians import jacobian
 from options import DEBUG, N1
 
 nodes, _, weights = quad()
