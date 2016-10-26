@@ -1,3 +1,4 @@
+from codecs import open
 from os import makedirs, path
 from time import time
 
@@ -36,7 +37,7 @@ def record_data(fluids, inds, t, interfaceLocations, saveArrays):
                                          expand_dims(array(interfaceLocations), axis=0)])
 
 def save_config(path):
-    with open(path, 'w+') as f:
+    with open(path, 'w+', encoding='utf-8') as f:
         f.write('tf = %e\n' % tf)
         f.write('L  = %e\n' % L)
         f.write('nx = %i\n' % nx)
