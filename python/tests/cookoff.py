@@ -2,8 +2,9 @@ from numpy import array, eye, sqrt, zeros
 
 from auxiliary.bc import temperature_fix_pressure, standard_BC
 from auxiliary.classes import material_parameters
-from gpr.functions import conserved, primitive
-from gpr.variables import c_0, temperature
+from gpr.variables.state import temperature
+from gpr.variables.vectors import conserved, primitive
+from gpr.variables.wavespeeds import c_0
 from options import nx, ny, nz, L, dx, viscous, thermal, reactive, doubleTime, W, subsystems
 
 

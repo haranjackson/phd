@@ -14,7 +14,7 @@ from auxiliary.adjust import limit_noise
 from experimental.new_solver import new_predictor
 
 from gpr.eig import max_abs_eigs
-from gpr.functions import primitive, primitive_vector
+from gpr.variables.vectors import primitive, primitive_vector
 from gpr.thermo import thermal_stepper
 
 from slic.ode import ode_stepper

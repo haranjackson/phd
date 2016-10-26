@@ -1,9 +1,10 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
 from auxiliary.funcs import L2_1D
-from gpr.functions import primitive
 from gpr.matrices.conserved import block
-from gpr.variables import E_1, E_A, heat_flux, sigma, sigma_A
+from gpr.variables.eos import E_1, E_A
+from gpr.variables.vectors import primitive
+from gpr.variables.state import heat_flux, sigma, sigma_A
 from options import reactiveEOS
 
 

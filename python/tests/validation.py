@@ -3,8 +3,8 @@ from scipy.optimize import brentq
 from scipy.special import erf
 
 from auxiliary.classes import material_parameters
-from gpr.functions import conserved, primitive
-from gpr.variables import c_0
+from gpr.variables.vectors import conserved, primitive
+from gpr.variables.wavespeeds import c_0
 from options import nx, ny, nz, Ms, dx, Rc, L, subsystems
 
 

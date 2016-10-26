@@ -2,8 +2,9 @@ from numpy import array, einsum, eye, zeros
 from scipy.integrate import odeint
 
 from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D
-from gpr.functions import conserved, primitive, theta_1, theta_2
-from gpr.variables import E_A
+from gpr.variables.eos import E_A
+from gpr.variables.material_functions import theta_1, theta_2
+from gpr.variables.vectors import conserved, primitive
 
 
 def A_jac(A, t1):

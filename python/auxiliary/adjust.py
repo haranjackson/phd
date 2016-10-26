@@ -1,5 +1,5 @@
-from gpr.functions import primitive, conserved
-from gpr.variables import E_1r, E_2J
+from gpr.variables.eos import E_1r, E_2J
+from gpr.variables.vectors import primitive, conserved
 from options import NOISE_LIM, reactiveEOS
 
 

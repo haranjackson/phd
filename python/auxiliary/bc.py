@@ -1,5 +1,5 @@
-from gpr.functions import primitive
-from gpr.variables import total_energy
+from gpr.variables.eos import total_energy
+from gpr.variables.vectors import primitive
 from options import ndim
 from ader.weno import extend
 

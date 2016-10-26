@@ -17,7 +17,7 @@ class material_parameters():
 
         self.ρ0 = ρ0
         self.p0 = p0
-        self.T0 = gpr.variables.temperature(ρ0, p0, γ, pINF, cv)
+        self.T0 = gpr.variables.state.temperature(ρ0, p0, γ, pINF, cv)
 
         self.cs = cs
         self.α = α

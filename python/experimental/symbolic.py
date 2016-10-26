@@ -5,7 +5,7 @@ from numpy.random import rand
 from sympy import eye, Matrix, symbols
 
 from auxiliary.common import material_parameters
-from gpr.functions import conserved
+from gpr.variables.vectors import conserved
 from options import reactiveEOS, Qc
 
 

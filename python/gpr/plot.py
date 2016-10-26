@@ -1,10 +1,10 @@
 from matplotlib.pyplot import figure, plot, scatter, axvline, get_cmap, imshow, colorbar, streamplot
-from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim, gca
+from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim
 from numpy import arange, zeros, linspace, mgrid, flipud
 
 from ader.basis import quad, basis_polys
-from gpr.functions import primitive
-from gpr.variables import sigma, entropy, heat_flux
+from gpr.variables.state import sigma, entropy, heat_flux
+from gpr.variables.vectors import primitive
 from multi.gfm import interface_indices
 from options import L, nx, ny, ndim
 

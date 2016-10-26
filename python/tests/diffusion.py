@@ -4,7 +4,7 @@ from numpy import array, eye, zeros
 
 from auxiliary.bc import standard_BC
 from auxiliary.classes import material_parameters
-from gpr.functions import conserved
+from gpr.variables.vectors import conserved
 from options import nx, ny, nz, subsystems
 
 

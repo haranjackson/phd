@@ -1,7 +1,7 @@
 from numpy import array, dot, einsum, sqrt, zeros
 from numpy.polynomial.legendre import leggauss
 
-from gpr.functions import primitive_to_conserved
+from gpr.variables.vectors import primitive_to_conserved
 
 from options import dx
 

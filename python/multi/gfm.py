@@ -3,8 +3,8 @@ from scipy.linalg import det
 
 from ader.basis import basis_polys
 from auxiliary.bc import temperature_fix_density
-from gpr.functions import conserved, primitive
-from gpr.variables import density, entropy, temperature
+from gpr.variables.state import density, entropy, temperature
+from gpr.variables.vectors import conserved, primitive
 from multi.approximate_riemann import star_states
 from options import dx, L, N1, nx, UPDATE_STEP, RGFM, isoFix
 

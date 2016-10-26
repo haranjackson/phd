@@ -2,9 +2,11 @@ from numba import jit
 from numpy import dot, zeros
 
 from auxiliary.funcs import dot3
-from gpr.functions import primitive, theta_1, theta_2
-from gpr.functions import arrhenius_reaction_rate, discrete_ignition_temperature_reaction_rate
-from gpr.variables import E_A, sigma
+from gpr.variables.eos import E_A
+from gpr.variables.material_functions import theta_1, theta_2, arrhenius_reaction_rate
+from gpr.variables.material_functions import discrete_ignition_temperature_reaction_rate
+from gpr.variables.vectors import primitive
+from gpr.variables.state import sigma
 from options import reactionType, reactiveEOS
 
 

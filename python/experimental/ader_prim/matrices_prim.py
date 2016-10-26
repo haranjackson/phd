@@ -3,7 +3,7 @@ from numpy import dot, eye
 
 from options import ndim
 from auxiliary.funcs import AdevG, det3, gram, L2_1D, L2_2D
-from gpr.variables import temperature
+from gpr.variables.state import temperature
 
 
 @jit

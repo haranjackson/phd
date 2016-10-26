@@ -3,9 +3,10 @@ from scipy.linalg import solve, eig
 from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
 from auxiliary.funcs import GdevG, gram
-from gpr.functions import primitive
 from gpr.matrices.jacobians import dQdP, dPdQ, jacobian_variables
-from gpr.variables import sigma, sigma_A, c_h
+from gpr.variables.state import sigma, sigma_A
+from gpr.variables.vectors import primitive
+from gpr.variables.wavespeeds import c_h
 
 
 def eigvalsn(a, n):

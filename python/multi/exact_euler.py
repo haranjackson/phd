@@ -1,7 +1,7 @@
 from numpy import array, ones, sqrt, zeros
 
-from gpr.functions import conserved, primitive
-from gpr.variables import c_0
+from gpr.variables.vectors import conserved, primitive
+from gpr.variables.wavespeeds import c_0
 from options import dx
 
 
