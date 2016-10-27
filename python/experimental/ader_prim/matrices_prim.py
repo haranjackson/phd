@@ -1,93 +1,99 @@
-from numba import jit
-from numpy import dot, eye
+from numpy import dot, zeros
 
-from options import ndim
-from auxiliary.funcs import AdevG, det3, gram, L2_1D, L2_2D
-from gpr.variables.state import temperature
+from auxiliary.funcs import dot3, L2_1D, L2_2D
+from gpr.variables.eos import E_A, E_J, total_energy
+from gpr.variables.material_functions import theta_1, theta_2
+from gpr.variables.state import sigma, sigma_A, temperature
 
 
-@jit
-def sigma(ρ, A, ADEVG, cs2):
-    """ Returns the symmetric viscous shear stress tensor
+def Mdot_ref(ret, P, x, d, γ, pINF, cv, α2, viscous, thermal):
+    """ Returns M(P).x
     """
-    return -ρ * cs2 * dot(A.T, ADEVG)
+    ρ = P[0]
+    p = P[1]
 
-def sigma_A(ρ, A, G, ADEVG, cs2):
-    """ Returns the tensor T_ijmn corresponding to the partial derivative of sigma_ij with respect
-        to A_mn, holding r constant.
-    """
-    AdevGT = ADEVG.T
-    GA = dot(G[:,:,None], A[:,None])
-    ret = GA.swapaxes(0,3) + GA.swapaxes(1,3) - 2/3 * GA
-    for i in range(3):
-        ret[i, :, :, i] += AdevGT
-        ret[:, i, :, i] += AdevGT
-    return -ρ * cs2 * ret
-
-
-@jit
-def theta_1(A, cs2, τ1):
-    """ Returns the function used in the source terms for the distortion tensor
-    """
-    return (cs2 * τ1) / (3 * det3(A)**(5/3))
-
-@jit
-def theta_2(ρ, T, α2, τ2, ρ0, T0):
-    """ Returns the function used in the source terms for the thermal impulse vector
-    """
-    return α2 * τ2 * (ρ / ρ0) * (T0 / T)
-
-
-def jacobian_prim(d, ρ, p, v, A, T, G, ADEVG, γ, pINF, cv, cs2, α2, reactive):
-    """ Returns the Jacobian in the dth direction for the system of primitive variables, calculated
-        directly
-    """
-    sigd = sigma(ρ, A, ADEVG, cs2)[d]
-    dsdAd = sigma_A(ρ, A, G, ADEVG, cs2)[:,d]
-
-    ret = v[d] * eye(18)
-    ret[0, 2+d] = ρ
-    ret[1, 2+d] = γ * p
-    ret[1, 14+d] = (γ-1) * α2 * T
-    ret[2+d, 1] = 1 / ρ
-
-    ret[2:5, 0] = -sigd / ρ**2
-    for i in range(3):
-        ret[2+i, 5:14] = -1 / ρ * dsdAd[i].ravel(order='F')
-    ret[5+3*d:5+3*(d+1), 2:5] = A
-
-    ret[14+d, 0] = -T / ρ**2
-    ret[14+d, 1] = T / (ρ * (p + pINF))
-
-    if not reactive:
-        ret[17, 17] = 0
-
-    return ret
-
-def source_prim_ref(ret, ρ, A, J, T, G, ADEVG, γ, α2, cs2, τ1, τ2, ρ0, T0, viscous, thermal):
+    ret += P[2+d] * x            # v[d] * x
+    ret[0] += ρ * x[2+d]
+    ret[1] += γ * p * x[2+d]
+    ret[2+d] += x[1] / ρ
 
     if viscous:
-        ψ = cs2 * ADEVG                             # Depends on EOS
-        θ1 = theta_1(A, cs2, τ1)
-        ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
-        ret[5:14] -= ψ.ravel(order='F') / θ1
+        A = P[5:14].reshape([3,3])
+        σ = sigma(ρ, A)
+        dσdAd = sigma_A(ρ, A)[d].reshape([3,9])
+
+        ret[2:5] -= x[0] * σ[d] / ρ**2 + dot(dσdAd, x[5:14]) / ρ
+        xv = x[2:5]
+        ret[5+d] += dot(A[0],xv)
+        ret[8+d] += dot(A[1],xv)
+        ret[11+d] += dot(A[2],xv)
 
     if thermal:
-        H = α2 * J                                  # Depends on EOS
-        θ2 = theta_2(ρ, T, α2, τ2, ρ0, T0)
+        T = temperature(ρ, p, γ, pINF, cv)
+        ret[1] += (γ-1) * α2 * T * x[14+d]
+        ret[14+d] += T / ρ * (x[1]/(p+pINF) - x[0]/ρ)
+
+def source_primitive_ref(ret, P, γ, pINF, cv, viscous, thermal):
+
+    ρ = P[0]
+    p = P[1]
+
+    if viscous:
+        A = P[5:14].reshape([3,3])
+        ψ = E_A(A)
+        θ1 = theta_1(A)
+        ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
+        ret[5:14] = -ψ.ravel() / θ1
+
+    if thermal:
+        J = P[14:17]
+        T = temperature(ρ, p, γ, pINF, cv)
+        H = E_J(J)
+        θ2 = theta_2(ρ, T)
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
-        ret[14:17] -= H / θ2
+        ret[14:17] = -H / θ2
 
-def fill_rhs(ret, P, TP, γ, pINF, cv, cs2, α2, τ1, τ2, ρ0, T0, viscous, thermal, reactive):
+def source_primitive_ret(P, γ, pINF, cv, viscous, thermal):
 
-    ρ, p, v, A, J = P[0], P[1], P[2:5], P[5:14].reshape([3,3], order='F'), P[14:17]
+    ret = zeros(18)
+    source_primitive_ref(ret, P, γ, pINF, cv, viscous, thermal)
+    return ret
 
-    T = temperature(ρ, p, γ, pINF, cv)
-    G = gram(A)
-    ADEVG = AdevG(A, G)
 
-    for d in range(ndim):
-        M = jacobian_prim(d, ρ, p, v, A, T, G, ADEVG, γ, pINF, cv, cs2, α2, reactive)
-        ret += dot(M, TP[d])
+def flux_ref(ret, P, d, γ, pINF, cv, cs2, α2, Qc, mechanical, viscous, thermal, reactive):
 
-    source_prim_ref(ret, ρ, A, J, T, G, ADEVG, γ, α2, cs2, τ1, τ2, ρ0, T0, viscous, thermal)
+    ρ = P[0]
+    p = P[1]
+    v = P[2:5]
+    A = P[5:14].reshape([3,3])
+    J = P[14:17]
+    λ = P[17]
+
+    E = total_energy(ρ, p, v, A, J, λ, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive)
+    ρvd = ρ * v[d]
+
+    ret[1] += ρvd * E + p * v[d]
+
+    if mechanical:
+        ret[0] += ρvd
+        ret[2:5] += ρvd * v
+        ret[2+d] += p
+
+    if viscous:
+        σd = sigma(ρ, A, cs2)[d]
+        ret[1] -= dot3(σd, v)
+        ret[2:5] -= σd
+
+        Av = dot(A,v)
+        ret[5+d] += Av[0]
+        ret[8+d] += Av[1]
+        ret[11+d] += Av[2]
+
+    if thermal:
+        T = temperature(ρ, p, γ, pINF, cv)
+        ret[1] += α2 * T * J[d]
+        ret[14:17] += ρvd * J
+        ret[14+d] += T
+
+    if reactive:
+        ret[17] += ρvd * λ
