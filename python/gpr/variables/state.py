@@ -27,7 +27,7 @@ def entropy(Q, params, subsystems):
     """
     ρ = Q[0]
     E = Q[1] / ρ
-    A = Q[5:14].reshape([3,3], order='F')
+    A = Q[5:14].reshape([3,3])
     J = Q[14:17] / ρ
     v = Q[2:5] / ρ
     λ = Q[17] / ρ

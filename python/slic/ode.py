@@ -30,20 +30,20 @@ def A_jac(A, t1):
 
 def jac(y, t0, P0, params):
     ret = zeros([12, 12])
-    A = y[:9].reshape([3,3], order='F')
+    A = y[:9].reshape([3,3])
     ret[:9,:9] = A_jac(A, params.t1)
     ret[9:,9:] = (P0.T * params.ρ0) / (params.T0 * P0.ρ * params.t1) * eye(3)
     return ret
 
 def f(y, t0, P0, params):
 
-    A = y[:9].reshape([3,3], order='F')
+    A = y[:9].reshape([3,3])
     Asource = - E_A(A, params.cs2) / theta_1(A, params)
     J = y[9:]
     Jsource = - P0.ρ * params.α2 * J / theta_2(P0.ρ, P0.T, params)
 
     ret = zeros(12)
-    ret[:9] = Asource.ravel(order='F')
+    ret[:9] = Asource.ravel()
     ret[9:] = Jsource
 
     return ret
@@ -53,7 +53,7 @@ def ode_stepper(u, params, subsystems, dt):
         Q = u[i,0,0]
         P0 = primitive(Q, params, subsystems)
         y0 = zeros([12])
-        y0[:9] = P0.A.ravel(order='F')
+        y0[:9] = P0.A.ravel()
         y0[9:] = P0.J
         t = array([0, dt])
         y1 = odeint(f, y0, t, args=(P0,params), Dfun=jac)[1]

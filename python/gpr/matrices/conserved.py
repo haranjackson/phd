@@ -28,7 +28,10 @@ def flux_ref(ret, P, d, params, subsystems):
         σd = sigma(ρ, A, params.cs2)[d]
         ret[1] -= dot3(σd, v)
         ret[2:5] -= σd
-        ret[5+3*d:8+3*d] = dot(A, v)
+        Av = dot(A,v)
+        ret[5+d] = Av[0]
+        ret[8+d] = Av[1]
+        ret[11+d] = Av[2]
 
     if subsystems.thermal:
         T = P.T
@@ -47,12 +50,9 @@ def block_ref(ret, v, d, viscous):
         vd = v[d]
         for i in range(5,14):
             ret[i,i] = vd
-        k1 = 5+3*d
-        for i in range(3):
-            vi = v[i]
-            k2 = 5+3*i
-            for j in range(3):
-                ret[k1+j, k2+j] -= vi
+        ret[5+d, 5+d:8+d] -= v
+        ret[8+d, 8+d:11+d] -= v
+        ret[11+d, 11+d:14+d] -= v
 
 def source_ref(ret, P, params, subsystems):
 
@@ -61,7 +61,7 @@ def source_ref(ret, P, params, subsystems):
     if subsystems.viscous:
         A = P.A
         Asource = - E_A(A, params.cs2) / theta_1(A, params)
-        ret[5:14] = Asource.ravel(order='F')
+        ret[5:14] = Asource.ravel()
 
     if subsystems.thermal:
         T = P.T
@@ -108,13 +108,13 @@ def B0dot(ret, Q, v, viscous):
         v0 = v[0]
         v1 = v[1]
         v2 = v[2]
-        ret[5] = - v1 * Q[8] - v2 * Q[11]
-        ret[6] = - v1 * Q[9] - v2 * Q[12]
-        ret[7] = - v1 * Q[10] - v2 * Q[13]
-        ret[8] = v0 * Q[8]
+        ret[5] = - v1 * Q[6] - v2 * Q[7]
+        ret[6] = v0 * Q[6]
+        ret[7] = v0 * Q[7]
+        ret[8] = - v1 * Q[9] - v2 * Q[10]
         ret[9] = v0 * Q[9]
         ret[10] = v0 * Q[10]
-        ret[11] = v0 * Q[11]
+        ret[11] = - v1 * Q[12] - v2 * Q[13]
         ret[12] = v0 * Q[12]
         ret[13] = v0 * Q[13]
 
@@ -125,13 +125,13 @@ def B1dot(ret, Q, v, viscous):
         v1 = v[1]
         v2 = v[2]
         ret[5] = v1 * Q[5]
-        ret[6] = v1 * Q[6]
+        ret[6] = - v0 * Q[5] - v2 * Q[7]
         ret[7] = v1 * Q[7]
-        ret[8] = - v0 * Q[5] - v2 * Q[11]
-        ret[9] = - v0 * Q[6] - v2 * Q[12]
-        ret[10] = - v0 * Q[7] - v2 * Q[13]
+        ret[8] = v1 * Q[8]
+        ret[9] = - v0 * Q[8] - v2 * Q[10]
+        ret[10] = v1 * Q[10]
         ret[11] = v1 * Q[11]
-        ret[12] = v1 * Q[12]
+        ret[12] = - v0 * Q[11] - v2 * Q[13]
         ret[13] = v1 * Q[13]
 
 @jit
@@ -142,13 +142,13 @@ def B2dot(ret, Q, v, viscous):
         v2 = v[2]
         ret[5] = v2 * Q[5]
         ret[6] = v2 * Q[6]
-        ret[7] = v2 * Q[7]
+        ret[7] = - v0 * Q[5] - v1 * Q[6]
         ret[8] = v2 * Q[8]
         ret[9] = v2 * Q[9]
-        ret[10] = v2 * Q[10]
-        ret[11] = - v0 * Q[5] - v1 * Q[8]
-        ret[12] = - v0 * Q[6] - v1 * Q[9]
-        ret[13] = - v0 * Q[7] - v1 * Q[10]
+        ret[10] = - v0 * Q[8] - v1 * Q[9]
+        ret[11] = v2 * Q[11]
+        ret[12] = v2 * Q[12]
+        ret[13] = - v0 * Q[11] - v1 * Q[12]
 
 def Bdot(ret, Q, d, v, viscous):
     if d==0:

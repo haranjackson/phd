@@ -39,7 +39,7 @@ def dQdP(P, params, jacVars, subsystems):
     ret[2:5, 2:5] *= ρ
 
     if subsystems.viscous:
-        ret[1, 5:14] = ρ * ψ.ravel(order='F')
+        ret[1, 5:14] = ρ * ψ.ravel()
 
     if subsystems.thermal:
         ret[1, 14:17] = params.α2 * ρ * J
@@ -70,7 +70,7 @@ def dPdQ(P, params, jacVars, subsystems):
         ret[i, i] = ρ_1
 
     if subsystems.viscous:
-        ret[1, 5:14] = -Γ * ρ * ψ.ravel(order='F')
+        ret[1, 5:14] = -Γ * ρ * ψ.ravel()
 
     if subsystems.thermal:
         ret[1, 14:17] = -Γ * params.α2 * J
@@ -114,15 +114,15 @@ def dFdP(P, d, params, jacVars, subsystems):
     ret[2+d, 1] = 1
 
     if subsystems.viscous:
-        ret[1, 5:14] = Φ[d].ravel(order='F')
-        ret[2:5, 5:14] = -dσdA[d].reshape([3,9], order='F')
-        k1 = 5+3*d
-        ret[k1:k1+3, 2:5] = A
-        for i in range(3):
-            vi = v[i]
-            k2 = 5+3*i
-            for j in range(3):
-                ret[k1+j, k2+j] = vi
+        ret[1, 5:14] = Φ[d].ravel()
+        ret[2:5, 5:14] = -dσdA[d].reshape([3,9])
+        ret[5+d, 2:5] = A[0]
+        ret[8+d, 2:5] = A[1]
+        ret[11+d, 2:5] = A[2]
+        ret[5+d, 5:8] = v
+        ret[8+d, 8:11] = v
+        ret[11+d, 11:14] = v
+
 
     if subsystems.thermal:
         ret[1, 14:17] = α2 * ρvd * J
