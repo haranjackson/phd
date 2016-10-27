@@ -88,8 +88,8 @@ def star_stepper(QL, QR, paramsL, paramsR, dt, subsystems, SL=zeros(18), SR=zero
 
     PLvec = primitive_vector(PL)
     PRvec = primitive_vector(PR)
-    PL_vec = solve(LL, cL) + PLvec + dt*SL
-    PR_vec = solve(LR, cR) + PRvec + dt*SR
+    PL_vec = solve(LL, cL) + PLvec + dt*SL          # NOTE: Maybe incorrect, as LL,LR are calculated
+    PR_vec = solve(LR, cR) + PRvec + dt*SR          # using reordered primitive variables
     QL_ = primitive_to_conserved(PL_vec, paramsL, subsystems)
     QR_ = primitive_to_conserved(PR_vec, paramsR, subsystems)
     return QL_, QR_

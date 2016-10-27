@@ -4,7 +4,7 @@ from numpy import dot, zeros, tensordot
 
 from ader.fv_fluxes import Dos, Drus
 from ader.basis import quad, end_values, derivative_values
-from gpr.matrices.conserved import block, source
+from gpr.matrices.conserved import B0dot, B1dot, B2dot, source
 from options import ndim, dx, N1, method
 
 
@@ -84,13 +84,21 @@ def center(qhijk, t, x, y, z, params, subsystems):
 
     dqdx = dot(derivs, qx)[x]
     v = q[2:5] / q[0]
-    term -= dot(block(v, 0, subsystems.viscous), dqdx)
-    if ndim > 1:
-        dqdy = dot(derivs, qy)[y]
-        term -= dot(block(v, 1, subsystems.viscous), dqdy)
-        if ndim > 2:
-            dqdz = dot(derivs, qz)[z]
-            term -= dot(block(v, 2, subsystems.viscous), dqdz)
+
+    if subsystems.viscous:
+        temp = zeros(18)
+        B0dot(temp, dqdx, v, 1)
+        term -= temp
+        if ndim > 1:
+            dqdy = dot(derivs, qy)[y]
+            temp = zeros(18)
+            B1dot(temp, dqdy, v, 1)
+            term -= temp
+            if ndim > 2:
+                dqdz = dot(derivs, qz)[z]
+                temp = zeros(18)
+                B2dot(temp, dqdz, v, 1)
+                term -= temp
 
     return term
 
