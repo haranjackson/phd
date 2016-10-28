@@ -1,7 +1,7 @@
 from numpy import array, dot, einsum, sqrt, zeros
 from numpy.polynomial.legendre import leggauss
 
-from gpr.variables.vectors import primitive_to_conserved
+from gpr.variables.vectors import Pvec_to_Cvec
 
 from options import dx
 
@@ -65,7 +65,7 @@ def new_predictor(wh, params, dt, subsystems):
         Q = array([q0, qx, qt, qxt])
         Q1 = dot(Vinv, Q)
         for j in range(4):
-            Q1[j] = primitive_to_conserved(Q1[j], params, subsystems)
+            Q1[j] = Pvec_to_Cvec(Q1[j], params, subsystems)
 
         ret[i,0,0] = Q1
 
