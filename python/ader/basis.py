@@ -1,4 +1,4 @@
-from numpy import concatenate, eye, zeros
+from numpy import array, concatenate, eye, zeros
 from numpy import polyder, polyint
 from numpy.polynomial.legendre import leggauss
 from scipy.interpolate import lagrange
@@ -45,3 +45,7 @@ def derivative_values():
         for j in range(N1):
             ret[i,j] = psiDer[1][j](nodes[i])
     return ret
+
+def mid_values():
+    psi, _, _ = basis_polys()
+    return array([psii(0.5) for psii in psi])

@@ -2,15 +2,19 @@
 """
 from itertools import product
 
-from numpy import concatenate, int64, multiply, ones, zeros, floor, ceil
+from numpy import ceil, concatenate, dot, floor, int64, multiply, ones, zeros
 from scipy.linalg import solve
 
 from options import rc, λc, λs, eps, ndim, N, N1
+from ader.basis import mid_values
 from ader.weno_matrices import coefficient_matrices, oscillation_indicator
+from gpr.variables.vectors import Cvec_to_Pvec
 
 
 Mc = coefficient_matrices()
 Σ = oscillation_indicator()
+midvals = mid_values()
+
 
 if N%2:
     nStencils = 4
@@ -102,3 +106,17 @@ def reconstruct(u):
                 Wxyz[i, j, k, a, b] = coeffs([w1, w2, w3, w4])
     if ndim==3:
         return Wxyz
+
+def primitive_reconstruction(q):
+    """ Returns a WENO reconstruction in primitive variables, given the grid of conserved values.
+        A reconstruction in conserved variables is performed. The midpoints of this reconstruction
+        are then taken as the conserved cell averages (required for >2nd order). A primitive
+        reconstruction is then performed with these averages.
+    """
+    qr = reconstruct(q)
+    qav = dot(midvals, qr)
+    pav = zeros(qav.shape)
+    nx, ny, nz = qav.shape[:3]
+    for i, j, k in product(range(nx), range(ny), range(nz)):
+        pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k])
+    return reconstruct(pav)
