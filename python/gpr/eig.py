@@ -4,7 +4,7 @@ from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
 from auxiliary.funcs import GdevG, gram
 from gpr.matrices.jacobians import dQdP, dPdQ, jacobian_variables
-from gpr.variables.state import sigma, sigma_A
+from gpr.variables.state import sigma, sigma_A, temperature
 from gpr.variables.vectors import primitive
 from gpr.variables.wavespeeds import c_h
 
@@ -16,7 +16,7 @@ def eigvalsn(a, n):
     return w
 
 
-def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, subsystems):
+def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, viscous, thermal):
     """ Returns the tensor T_dij corresponding to the (i,j) component of the thermo-acoustic tensor
         in the dth direction
     """
@@ -24,7 +24,7 @@ def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, subsystems):
     Gd = G[d]
     ret = zeros([4,4])
 
-    if subsystems.viscous:
+    if viscous:
         O = GdevG(G)
         O[:, d] *= 2
         O[d] *= 2
@@ -35,7 +35,7 @@ def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, subsystems):
 
     ret[d, d] += γ * p / ρ
 
-    if subsystems.thermal:
+    if thermal:
         ret[3, 0] = ((γ-1) * p - pINF) * T / (ρ * (p+pINF))
         temp = (γ-1) * α2 * T / ρ
         ret[0, 3] = temp
@@ -52,14 +52,28 @@ def max_abs_eigs(Q, d, params, subsystems):
         return c_h(P.ρ, P.T, params.α, params.cv)
 
     else:
-        v = P.v[d]
-        O = thermo_acoustic_tensor(P.ρ, P.A, P.p, P.T, params.γ, params.pINF,
-                                   params.cs2, params.α2, d, subsystems)
+        vd = P.v[d]
+        O = thermo_acoustic_tensor(P.ρ, P.A, P.p, P.T, params.γ, params.pINF, params.cs2, params.α2,
+                                   d, subsystems.viscous, subsystems.thermal)
         lam = sqrt(eigvalsn(O, 4).max())
-        if v > 0:
-            return v + lam
+        if vd > 0:
+            return vd + lam
         else:
-            return lam - v
+            return lam - vd
+
+def max_abs_eigs_prim(P, d, γ, pINF, cv, cs2, α2, viscous, thermal):
+    ρ = P[0]
+    p = P[1]
+    vd = P[2+d]
+    A = P[5:14]
+    T = temperature(ρ, p, γ, pINF, cv)
+
+    O = thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, viscous, thermal)
+    lam = sqrt(eigvalsn(O, 4).max())
+    if vd > 0:
+        return vd + lam
+    else:
+        return lam - vd
 
 def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
     ret = zeros([4, 5])
@@ -94,7 +108,8 @@ def primitive_eigs(q, params, subsystems):
     Π2 = dσdA[:,:,1]
     Π3 = dσdA[:,:,2]
 
-    O = thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, 0, subsystems)
+    O = thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, 0, subsystems.viscous,
+                               subsystems.thermal)
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
     Ξ2 = Xi2mat(ρ, p, A, T, γ, α2)
     w, vl, vr = eig(O, left=1)
