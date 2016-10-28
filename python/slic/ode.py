@@ -7,7 +7,7 @@ from gpr.variables.material_functions import theta_1, theta_2
 from gpr.variables.vectors import conserved, primitive
 
 
-def A_jac(A, t1):
+def A_jac(A, τ1):
     G = gram(A)
     Grev = gram_rev(A)
     A_devG = AdevG(A,G)
@@ -25,22 +25,23 @@ def A_jac(A, t1):
         ret[k,:,k,:] += G
         ret[:,k,:,k] += Grev
 
-    ret *= -3/t1 * det3(A)**(5/3)
+    ret *= -3/τ1 * det3(A)**(5/3)
     return ret.swapaxes(0,1).swapaxes(2,3).reshape([9,9])
 
 def jac(y, t0, P0, params):
     ret = zeros([12, 12])
     A = y[:9].reshape([3,3])
-    ret[:9,:9] = A_jac(A, params.t1)
-    ret[9:,9:] = (P0.T * params.ρ0) / (params.T0 * P0.ρ * params.t1) * eye(3)
+    ret[:9,:9] = A_jac(A, params.τ1)
+    ret[9:,9:] = (P0.T * params.ρ0) / (params.T0 * P0.ρ * params.τ1) * eye(3)
     return ret
 
 def f(y, t0, P0, params):
 
     A = y[:9].reshape([3,3])
-    Asource = - E_A(A, params.cs2) / theta_1(A, params)
+    Asource = - E_A(A, params.cs2) / theta_1(A, params.cs2, params.τ1)
     J = y[9:]
-    Jsource = - P0.ρ * params.α2 * J / theta_2(P0.ρ, P0.T, params)
+    Jsource = - P0.ρ * params.α2 * J / theta_2(P0.ρ, P0.T, params.ρ0, params.T0, params.α2,
+                                               params.τ2)
 
     ret = zeros(12)
     ret[:9] = Asource.ravel()

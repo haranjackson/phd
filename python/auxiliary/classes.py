@@ -7,10 +7,10 @@ import gpr
 
 @jitclass([('γ', float64), ('pINF', float64), ('cv', float64), ('ρ0', float64), ('p0', float64),
            ('T0', float64), ('cs', float64), ('α', float64), ('μ', float64), ('Pr', float64),
-           ('t1', float64), ('κ', float64), ('t2', float64), ('Qc', float64), ('Kc', float64),
+           ('τ1', float64), ('κ', float64), ('τ2', float64), ('Qc', float64), ('Kc', float64),
            ('Ti', float64), ('Ea', float64), ('Bc', float64), ('cs2', float64), ('α2', float64)])
 class material_params():
-    def __init__(self, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, t1, t2, Qc, Kc, Ti, Ea, Bc):
+    def __init__(self, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc):
         self.γ = γ
         self.pINF = pINF
         self.cv = cv
@@ -23,9 +23,9 @@ class material_params():
         self.α = α
         self.μ = μ
         self.Pr = Pr
-        self.t1 = t1
+        self.τ1 = τ1
         self.κ = κ
-        self.t2 = t2
+        self.τ2 = τ2
 
         self.Qc = Qc
         self.Kc = Kc
@@ -47,10 +47,10 @@ def material_parameters(γ=None, pINF=None, cv=None, ρ0=None, p0=None,
     T0 = gpr.variables.state.temperature(ρ0, p0, γ, pINF, cv)
 
     if cs is not None:
-        t1 = 6 * μ / (ρ0 * cs**2)
+        τ1 = 6 * μ / (ρ0 * cs**2)
     else:
         cs = 0
-        t1 = 0
+        τ1 = 0
 
     if α is not None:
         if Pr is None:
@@ -58,12 +58,12 @@ def material_parameters(γ=None, pINF=None, cv=None, ρ0=None, p0=None,
             Pr = μ * γ * cv / κ
         else:
             κ = μ * γ * cv / Pr
-        t2 = κ * ρ0 / (T0 * α**2)
+        τ2 = κ * ρ0 / (T0 * α**2)
     else:
         α = 0
         Pr = 0
         κ = 0
-        t2 = 0
+        τ2 = 0
 
     if Qc is None:
         Qc = 0
@@ -79,7 +79,7 @@ def material_parameters(γ=None, pINF=None, cv=None, ρ0=None, p0=None,
     else:
         Ea = Rc * T0 / ε
 
-    return material_params(γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, t1, t2, Qc, Kc, Ti, Ea, Bc)
+    return material_params(γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc)
 
 @jitclass([('mechanical', boolean), ('viscous', boolean), ('thermal', boolean),
            ('reactive', boolean)])

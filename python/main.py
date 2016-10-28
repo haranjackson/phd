@@ -24,7 +24,7 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver
 
 
-IC = toro_test1_IC
+IC = first_stokes_problem_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 

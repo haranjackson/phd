@@ -39,7 +39,7 @@ def thermal_stepper(u, params, dt):
     Unew = ret[:, 0, 0, [0,1,14,17]]
     Tnew = temperature(Unew, params)
 
-    k1 = Tnew / Unew[:,0] * (params.r0 / (params.T0 * params.t2))
+    k1 = Tnew / Unew[:,0] * (params.r0 / (params.T0 * params.τ2))
     k2 = params.Bc * exp(-params.Ea / (Rc * Tnew))
     ret[:, 0, 0, 14] *= exp(-k1 * dt)
     ret[:, 0, 0, 17] *= exp(-k2 * dt)

@@ -11,7 +11,7 @@ nz = 1                      # Number of cells in z direction
 """ Model Options """
 
 mechanical = 1              # Whether to include evolution of density and velocity
-viscous    = 0              # Whether to include viscosity
+viscous    = 1              # Whether to include viscosity
 thermal    = 0              # Whether to include thermal conduction
 reactive   = 0              # Whether to include reactivity
 

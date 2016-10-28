@@ -6,7 +6,7 @@ from scipy.optimize import newton_krylov
 
 from ader.dg_matrices import system_matrices
 from ader.basis import quad, derivative_values
-from gpr.variables.vectors import primitive
+from gpr.variables.vectors import Cvec_to_Pvec
 from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_conserved
 from options import stiff, superStiff, hidalgo, TOL, ndim, dx, MAX_ITER, N1, NT, failLim
 
@@ -20,16 +20,37 @@ stiff = stiff
 def rhs(q, Ww, params, dt, subsystems):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
+    γ = params.γ
+    pINF = params.pINF
+    cv = params.cv
+    ρ0 = params.ρ0
+    T0 = params.T0
+    cs2 = params.cs2
+    α2 = params.α2
+    τ1 = params.τ1
+    τ2 = params.τ2
+    Qc = params.Qc
+    Kc = params.Kc
+    Ti = params.Ti
+    Ea = params.Ea
+    Bc = params.Bc
+    mechanical = subsystems.mechanical
+    viscous = subsystems.viscous
+    thermal = subsystems.thermal
+    reactive = subsystems.reactive
+
     Tq = dot(T, q)
     Sq = zeros([NT, 18])
     Fq = zeros([ndim, NT, 18])
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
-        P = primitive(q[b], params, subsystems)
-        source_ref(Sq[b], P, params, subsystems)
+        P = Cvec_to_Pvec(q[b], params, subsystems)
+        source_ref(Sq[b], P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti, Ea, Bc,
+                   viscous, thermal, reactive)
         for d in range(ndim):
-            flux_ref(Fq[d,b], P, d, params, subsystems)
-            Bdot(Bq[d,b], Tq[d,b], d, P.v, subsystems.viscous)
+            flux_ref(Fq[d,b], P, d, γ, pINF, cv, cs2, α2, Qc,
+                     mechanical, viscous, thermal, reactive)
+            Bdot(Bq[d,b], Tq[d,b], d, P[2:5], viscous)
 
     ret = dx*Sq
     for d in range(ndim):

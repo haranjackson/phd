@@ -1,11 +1,9 @@
-from numpy import dot, eye, zeros
+from numpy import eye, zeros
 
 from auxiliary.funcs import L2_1D, L2_2D
-from gpr.matrices.conserved import block, source
-from gpr.matrices.jacobians import jacobian_variables, dFdP, dPdQ, dQdP
 from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2
-from gpr.variables.state import sigma, sigma_A, temperature
+from gpr.variables.state import sigma, sigma_A
 from gpr.variables.vectors import primitive
 
 
@@ -80,13 +78,13 @@ def source_primitive(Q, params, subsystems):
 
     if subsystems.viscous:
         ψ = E_A(A)
-        θ1 = theta_1(A)
+        θ1 = theta_1(A, params.cs2, params.τ1)
         ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
         ret[5:14] = -ψ.ravel() / θ1
 
     if subsystems.thermal:
         H = E_J(J)
-        θ2 = theta_2(ρ, T)
+        θ2 = theta_2(ρ, T, params.ρ0, params.T0, params.α2, params.τ2)
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
         ret[14:17] = -H / θ2
 
@@ -101,33 +99,14 @@ def source_primitive_reordered(Q, params, subsystems):
 
     if subsystems.viscous:
         ψ = E_A(A)
-        θ1 = theta_1(A)
+        θ1 = theta_1(A, params.cs2, params.τ1)
         ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
         ret[2:11] = -ψ.ravel() / θ1
 
     if subsystems.thermal:
         H = E_J(J)
-        θ2 = theta_2(ρ, T)
+        θ2 = theta_2(ρ, T, params.ρ0, params.T0, params.α2, params.τ2)
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
         ret[14:17] = -H / θ2
 
     return ret
-
-
-def system_primitive_numeric(Q, d, params, subsystems):
-    """ Returns the systems matrix in the dth direction for the system of primitive variables, using
-        the constituent Jacobian matrices
-    """
-    P = primitive(Q, params, subsystems)
-    jacVars = jacobian_variables(P, params)
-    ret = dot(block(P.v, d, subsystems.viscous), dQdP(P, params, jacVars, subsystems))
-    ret += dFdP(P, d, params, jacVars, subsystems)
-    return dot(dPdQ(P, params, jacVars, subsystems), ret)
-
-def source_primitive_numeric(Q, params):
-
-    S = source(Q, params)
-    P = primitive(Q, params)
-    jacVars = jacobian_variables(P, params)
-    DPDQ = dPdQ(P, params, jacVars)
-    return dot(DPDQ, S)
