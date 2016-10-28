@@ -26,7 +26,7 @@ def initial_vector(u, F, S):
     U[0] = ρ
     U[1] = ρ * total_energy(A, S, v)
     U[2:5] = ρ * v
-    U[5:14] = reshape(A, [9], 'F')
+    U[5:14] = A.ravel()
     return U
 
 def total_energy(A, S, v):
