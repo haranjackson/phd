@@ -1,7 +1,7 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
 from auxiliary.funcs import L2_1D
-from gpr.variables.eos import E_1, E_A
+from gpr.variables.eos import E_1, E_A, total_energy
 from gpr.variables.state import heat_flux, sigma, sigma_A
 from options import reactiveEOS
 
@@ -30,10 +30,9 @@ def dQdP(P, params, jacVars, subsystems):
     ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E
     ψ = E_A(A)
     ret = eye(18)
-    Γ = jacVars.Γ
 
     ret[1, 0] = E - E_1(ρ, p, params.y, params.pINF)
-    ret[1, 1] /= Γ
+    ret[1, 1] /= params.γ - 1
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
     ret[2:5, 2:5] *= ρ
@@ -50,6 +49,32 @@ def dQdP(P, params, jacVars, subsystems):
         ret[1, 17] = params.Qc * ρ
         ret[17, 0] = λ
         ret[17, 17] *= ρ
+
+    return ret
+
+def dQdPdot(P, x, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive):
+    """ Returns DQ/DP.x where DQ/DP is evaluated at P
+    """
+    ret = zeros(18)
+
+    ρ = P[0]
+    p = P[1]
+    v = P[2:5]
+    A = P[5:14].reshape([3,3])
+    J = P[14:17]
+    λ = 0
+
+    x0 = x[0]
+    E = total_energy(ρ, p, v, A, J, λ, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive)
+    E1 = E_1(ρ, p, γ, pINF)
+    ψ = E_A(A, cs2)
+
+    ret[0] = x0
+    ret[1] = x0*(E-E1) + x[1]/(γ-1)
+    ret[1] += ρ * (dot(v,x[2:5]) + dot(ψ.ravel(),x[5:14]) + α2*dot(J,x[14:17]))
+    ret[2:5] = x0 * v + ρ * x[2:5]
+    ret[5:14] = x[5:14]
+    ret[14:17] = x0 * J + ρ * x[14:17]
 
     return ret
 

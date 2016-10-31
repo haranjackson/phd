@@ -40,7 +40,7 @@ def primitive_vector(P):
     ret[14:17] = P.J
     return ret
 
-def Pvec_to_Cvec(P, params, subsystems):
+def Pvec_reordered_to_Cvec(P, params, subsystems):
     """ Returns the vector of conserved variables, given the vector of (reordered) primitive
         variables
     """
@@ -57,6 +57,19 @@ def Pvec_to_Cvec(P, params, subsystems):
     Q[2:5] = ρ * v
     Q[5:14] = P[2:11]
     Q[14:17] = ρ * J
+    return Q
+
+def Pvec_to_Cvec(P, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive):
+    """ Returns the vector of conserved variables, given the vector of (reordered) primitive
+        variables
+    """
+    Q = P.copy()
+    ρ = P[0]
+    A = P[5:14].reshape([3,3])
+    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], P[17], γ, pINF, cs2, α2, Qc,
+                            viscous, thermal, reactive)
+    Q[2:5] *= ρ
+    Q[14:18] *= ρ
     return Q
 
 def Cvec_to_Pvec(Q, params, subsystems):

@@ -116,60 +116,58 @@ def source(Q, params, subsystems):
     return ret
 
 @jit
-def B0dot(ret, Q, v, viscous):
-    if viscous:
-        v0 = v[0]
-        v1 = v[1]
-        v2 = v[2]
-        ret[5] = - v1 * Q[6] - v2 * Q[7]
-        ret[6] = v0 * Q[6]
-        ret[7] = v0 * Q[7]
-        ret[8] = - v1 * Q[9] - v2 * Q[10]
-        ret[9] = v0 * Q[9]
-        ret[10] = v0 * Q[10]
-        ret[11] = - v1 * Q[12] - v2 * Q[13]
-        ret[12] = v0 * Q[12]
-        ret[13] = v0 * Q[13]
+def B0dot(ret, x, v):
+    v0 = v[0]
+    v1 = v[1]
+    v2 = v[2]
+    ret[5] = - v1 * x[6] - v2 * x[7]
+    ret[6] = v0 * x[6]
+    ret[7] = v0 * x[7]
+    ret[8] = - v1 * x[9] - v2 * x[10]
+    ret[9] = v0 * x[9]
+    ret[10] = v0 * x[10]
+    ret[11] = - v1 * x[12] - v2 * x[13]
+    ret[12] = v0 * x[12]
+    ret[13] = v0 * x[13]
 
 @jit
-def B1dot(ret, Q, v, viscous):
-    if viscous:
-        v0 = v[0]
-        v1 = v[1]
-        v2 = v[2]
-        ret[5] = v1 * Q[5]
-        ret[6] = - v0 * Q[5] - v2 * Q[7]
-        ret[7] = v1 * Q[7]
-        ret[8] = v1 * Q[8]
-        ret[9] = - v0 * Q[8] - v2 * Q[10]
-        ret[10] = v1 * Q[10]
-        ret[11] = v1 * Q[11]
-        ret[12] = - v0 * Q[11] - v2 * Q[13]
-        ret[13] = v1 * Q[13]
+def B1dot(ret, x, v):
+    v0 = v[0]
+    v1 = v[1]
+    v2 = v[2]
+    ret[5] = v1 * x[5]
+    ret[6] = - v0 * x[5] - v2 * x[7]
+    ret[7] = v1 * x[7]
+    ret[8] = v1 * x[8]
+    ret[9] = - v0 * x[8] - v2 * x[10]
+    ret[10] = v1 * x[10]
+    ret[11] = v1 * x[11]
+    ret[12] = - v0 * x[11] - v2 * x[13]
+    ret[13] = v1 * x[13]
 
 @jit
-def B2dot(ret, Q, v, viscous):
-    if viscous:
-        v0 = v[0]
-        v1 = v[1]
-        v2 = v[2]
-        ret[5] = v2 * Q[5]
-        ret[6] = v2 * Q[6]
-        ret[7] = - v0 * Q[5] - v1 * Q[6]
-        ret[8] = v2 * Q[8]
-        ret[9] = v2 * Q[9]
-        ret[10] = - v0 * Q[8] - v1 * Q[9]
-        ret[11] = v2 * Q[11]
-        ret[12] = v2 * Q[12]
-        ret[13] = - v0 * Q[11] - v1 * Q[12]
+def B2dot(ret, x, v):
+    v0 = v[0]
+    v1 = v[1]
+    v2 = v[2]
+    ret[5] = v2 * x[5]
+    ret[6] = v2 * x[6]
+    ret[7] = - v0 * x[5] - v1 * x[6]
+    ret[8] = v2 * x[8]
+    ret[9] = v2 * x[9]
+    ret[10] = - v0 * x[8] - v1 * x[9]
+    ret[11] = v2 * x[11]
+    ret[12] = v2 * x[12]
+    ret[13] = - v0 * x[11] - v1 * x[12]
 
-def Bdot(ret, Q, d, v, viscous):
+@jit
+def Bdot(ret, x, v, d):
     if d==0:
-        B0dot(ret, Q, v, viscous)
+        B0dot(ret, x, v)
     elif d==1:
-        B1dot(ret, Q, v, viscous)
+        B1dot(ret, x, v)
     else:
-        B2dot(ret, Q, v, viscous)
+        B2dot(ret, x, v)
 
 def system_conserved(Q, d, params, subsystems):
     """ Returns the Jacobian in the dth direction

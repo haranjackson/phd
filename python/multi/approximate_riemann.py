@@ -4,7 +4,7 @@ from scipy.linalg import solve, inv
 from gpr.eig import primitive_eigs
 #from gpr.matrices.primitive import source_primitive_reordered
 from gpr.variables.state import heat_flux, sigma, sigma_A
-from gpr.variables.vectors import primitive, primitive_vector, Pvec_to_Cvec
+from gpr.variables.vectors import primitive, primitive_vector, Pvec_reordered_to_Cvec
 from options import dx
 
 
@@ -90,8 +90,8 @@ def star_stepper(QL, QR, paramsL, paramsR, dt, subsystems, SL=zeros(18), SR=zero
     PRvec = primitive_vector(PR)
     PL_vec = solve(LL, cL) + PLvec + dt*SL          # NOTE: Maybe incorrect, as LL,LR are calculated
     PR_vec = solve(LR, cR) + PRvec + dt*SR          # using reordered primitive variables
-    QL_ = Pvec_to_Cvec(PL_vec, paramsL, subsystems)
-    QR_ = Pvec_to_Cvec(PR_vec, paramsR, subsystems)
+    QL_ = Pvec_reordered_to_Cvec(PL_vec, paramsL, subsystems)
+    QR_ = Pvec_reordered_to_Cvec(PR_vec, paramsR, subsystems)
     return QL_, QR_
 
 def star_states(QL, QR, paramsL, paramsR, dt, subsystems):

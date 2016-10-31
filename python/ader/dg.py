@@ -8,7 +8,9 @@ from ader.dg_matrices import system_matrices
 from ader.basis import quad, derivative_values
 from gpr.variables.vectors import Cvec_to_Pvec
 from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_conserved
-from options import stiff, superStiff, hidalgo, TOL, ndim, dx, MAX_ITER, N1, NT, failLim
+from gpr.matrices.primitive import source_primitive_ref, Mdot_ref
+from options import ndim, dx, N1, NT, reconstructPrim
+from options import stiff, superStiff, hidalgo, TOL, MAX_ITER, failLim
 
 
 W, U, V, Z, T = system_matrices()
@@ -17,7 +19,7 @@ derivs = derivative_values()
 stiff = stiff
 
 
-def rhs(q, Ww, params, dt, subsystems):
+def rhs_conserved(q, Ww, params, dt, subsystems):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
     γ = params.γ
@@ -50,7 +52,8 @@ def rhs(q, Ww, params, dt, subsystems):
         for d in range(ndim):
             flux_ref(Fq[d,b], P, d, γ, pINF, cv, cs2, α2, Qc,
                      mechanical, viscous, thermal, reactive)
-            Bdot(Bq[d,b], Tq[d,b], d, P[2:5], viscous)
+            if viscous:
+                Bdot(Bq[d,b], Tq[d,b], P[2:5], d)
 
     ret = dx*Sq
     for d in range(ndim):
@@ -62,11 +65,30 @@ def rhs(q, Ww, params, dt, subsystems):
 
     return dt/dx * ret + Ww
 
+def rhs_primitive(p, Ww, dt, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, viscous, thermal):
+    """ Returns the right handside of the linear system governing the coefficients of ph
+    """
+    Tp = dot(T, p)
+    Sp = zeros([NT, 18])
+    Mp = zeros([ndim, NT, 18])
+    for b in range(NT):
+        P = p[b]
+        source_primitive_ref(Sp[b], P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, viscous, thermal)
+        for d in range(ndim):
+            Mdot_ref(Mp[d,b], P, Tp[d,b], d, γ, pINF, cv, α2, viscous, thermal)
+
+    ret = dx*Sp
+    for d in range(ndim):
+        ret -= Mp[d]
+    ret *= Z
+
+    return dt/dx * ret + Ww
+
 def standard_initial_guess(w):
     """ Returns a Galerkin intial guess consisting of the value of q at t=0
     """
-    q = array([w for i in range(N1)])
-    return q.reshape([NT, 18])
+    ret = array([w for i in range(N1)])
+    return ret.reshape([NT, 18])
 
 def hidalgo_initial_guess(w, params, dtgaps, subsystems):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
@@ -89,24 +111,32 @@ def hidalgo_initial_guess(w, params, dtgaps, subsystems):
         qj = q[j]
     return q.reshape([NT, 18])
 
+def failed(w, qh, i, j, k, f, dtgaps, params, subsystems):
+    q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
+    qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
+
 def predictor(wh, params, dt, subsystems):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     global stiff
     nx, ny, nz, = wh.shape[:3]
+    wh = wh.reshape([nx, ny, nz, N1**ndim, 18])
     qh = zeros([nx, ny, nz, NT, 18])
     dtgaps = dt * gaps
 
-    def failed(w, qh, i, j, k, f):
-        q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
-        qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
+    if reconstructPrim:
+        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, params.γ, params.pINF, params.cv, params.ρ0,
+                                          params.T0, params.cs2, params.α2, params.τ1, params.τ2,
+                                          subsystems.viscous, subsystems.thermal)
+    else:
+        rhs = lambda X, Ww: rhs_conserved(X, Ww, params, dt, subsystems)
 
     failCount = 0
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
-        w = wh[i, j, k].reshape([N1**ndim, 18])
+        w = wh[i, j, k]
         Ww = dot(W, w)
-        f = lambda X: X - spsolve(U, rhs(X, Ww, params, dt, subsystems))
+        f = lambda X: X - spsolve(U, rhs(X, Ww))
 
         if hidalgo:
             q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
@@ -118,20 +148,21 @@ def predictor(wh, params, dt, subsystems):
 
         else:
             for count in range(MAX_ITER):
-                qNew = spsolve(U, rhs(q, Ww, params, dt, subsystems))
+
+                qNew = spsolve(U, rhs(q, Ww))
 
                 if isnan(qNew).any():
-                    failed(w, qh, i, j, k, f)
+                    failed(w, qh, i, j, k, f, dtgaps, params, subsystems)
                     failCount += 1
                     break
-                elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():
+                elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():# Mixed convergence cond.
                     q = qNew
                     continue
                 else:
                     qh[i, j, k] = qNew
                     break
             else:
-                failed(w, qh, i, j, k, f)
+                failed(w, qh, i, j, k, f, dtgaps, params, subsystems)
 
     if failCount > failLim:
         stiff = 1

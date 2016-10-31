@@ -43,12 +43,14 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 solver = 'AW'               # Which solver to use ('AW', 'SLIC', or 'NEW')
 useDG  = 1                  # Whether to use DG to get higher order time accuracy with ADER-WENO
+reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
+convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
+altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
+
 N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
-convertTemp    = 1          # Whether to use constant-pressure approximation in cookoff
-altThermSolve  = 1          # Whether to use operator splitting solver for the thermal subsystem
-NOISE_LIM      = 1e-16      # Values below NOISE_LIM in finite volume solver are discarded
+NOISE_LIM = 1e-16           # Values below NOISE_LIM in finite volume solver are discarded
 
 """ DG Options """
 

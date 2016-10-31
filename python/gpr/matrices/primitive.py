@@ -1,10 +1,10 @@
-from numpy import eye, zeros
+from numpy import dot, eye, zeros
 
 from auxiliary.funcs import L2_1D, L2_2D
 from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2
-from gpr.variables.state import sigma, sigma_A
-from gpr.variables.vectors import primitive
+from gpr.variables.state import sigma, sigma_A, temperature
+from gpr.variables.vectors import primitive, Cvec_to_Pvec
 
 
 def system_primitive(Q, d, params, subsystems):
@@ -69,25 +69,32 @@ def system_primitive_reordered(Q, d, params, subsystems):
     return ret
 
 
-def source_primitive(Q, params, subsystems):
+def source_primitive_ref(ret, P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, viscous, thermal):
 
-    ret = zeros(18)
-    P = primitive(Q, params)
-    ρ = P.ρ; A = P.A; J = P.J; T = P.T
-    γ = params.γ
+    ρ = P[0]
+    p = P[1]
 
-    if subsystems.viscous:
+    if viscous:
+        A = P[5:14].reshape([3,3])
         ψ = E_A(A)
-        θ1 = theta_1(A, params.cs2, params.τ1)
-        ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
+        θ1 = theta_1(A, cs2, τ1)
+        ret[1] = (γ-1) * ρ * L2_2D(ψ) / θ1
         ret[5:14] = -ψ.ravel() / θ1
 
-    if subsystems.thermal:
+    if thermal:
+        J = P[14:17]
+        T = temperature(ρ, p, γ, pINF, cv)
         H = E_J(J)
-        θ2 = theta_2(ρ, T, params.ρ0, params.T0, params.α2, params.τ2)
+        θ2 = theta_2(ρ, T, ρ0, T0, α2, τ2)
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
         ret[14:17] = -H / θ2
 
+def source_primitive(Q, params, subsystems):
+
+    ret = zeros(18)
+    P = Cvec_to_Pvec(Q, params, subsystems)
+    source_primitive_ref(ret, P, params.γ, params.pINF, params.cv, params.ρ0, params.T0, params.cs2,
+                         params.α2, params.τ1, params.τ2, subsystems.viscous, subsystems.thermal)
     return ret
 
 def source_primitive_reordered(Q, params, subsystems):
@@ -110,3 +117,31 @@ def source_primitive_reordered(Q, params, subsystems):
         ret[14:17] = -H / θ2
 
     return ret
+
+
+def Mdot_ref(ret, P, x, d, γ, pINF, cv, α2, viscous, thermal):
+    """ Returns M(P).x
+    """
+    ρ = P[0]
+    p = P[1]
+
+    ret += P[2+d] * x            # v[d] * x
+    ret[0] += ρ * x[2+d]
+    ret[1] += γ * p * x[2+d]
+    ret[2+d] += x[1] / ρ
+
+    if viscous:
+        A = P[5:14].reshape([3,3])
+        σ = sigma(ρ, A)
+        dσdAd = sigma_A(ρ, A)[d].reshape([3,9])
+
+        ret[2:5] -= x[0] * σ[d] / ρ**2 + dot(dσdAd, x[5:14]) / ρ
+        xv = x[2:5]
+        ret[5+d] += dot(A[0],xv)
+        ret[8+d] += dot(A[1],xv)
+        ret[11+d] += dot(A[2],xv)
+
+    if thermal:
+        T = temperature(ρ, p, γ, pINF, cv)
+        ret[1] += (γ-1) * α2 * T * x[14+d]
+        ret[14+d] += T / ρ * (x[1]/(p+pINF) - x[0]/ρ)

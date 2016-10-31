@@ -81,6 +81,7 @@ def material_parameters(γ=None, pINF=None, cv=None, ρ0=None, p0=None,
 
     return material_params(γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc)
 
+
 @jitclass([('mechanical', boolean), ('viscous', boolean), ('thermal', boolean),
            ('reactive', boolean)])
 class active_subsystems():

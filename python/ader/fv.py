@@ -4,8 +4,10 @@ from numpy import dot, zeros, tensordot
 
 from ader.fv_fluxes import Dos, Drus
 from ader.basis import quad, end_values, derivative_values
-from gpr.matrices.conserved import B0dot, B1dot, B2dot, source
-from options import ndim, dx, N1, method
+from gpr.matrices.conserved import Bdot, source_ref
+from gpr.matrices.jacobians import dQdPdot
+from gpr.variables.vectors import Cvec_to_Pvec
+from options import ndim, dx, N1, method, reconstructPrim
 
 
 nodes, _, weights = quad()
@@ -63,44 +65,46 @@ def interface(qEndL, qEndM, qEndR, d, params, subsystems):
 
     return 0.5 * ret
 
-def center(qhijk, t, x, y, z, params, subsystems):
+def center(qhijk, t, inds, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti, Ea, Bc,
+           viscous, thermal, reactive):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
+    qxi = zeros([ndim, N1, 18])
     if ndim > 1:
         if ndim > 2:
-            qx = qhijk[t, :, y, z]
-            qy = qhijk[t, x, :, z]
-            qz = qhijk[t, x, y, :]
-            q = qhijk[t, x, y, z]
+            qxi[0] = qhijk[t, :, inds[1], inds[2]]
+            qxi[1] = qhijk[t, inds[0], :, inds[2]]
+            qxi[2] = qhijk[t, inds[0], inds[1], :]
+            q = qhijk[t, inds[0], inds[1], inds[2]]
         else:
-            qx = qhijk[t, :, y]
-            qy = qhijk[t, x, :]
-            q = qhijk[t, x, y]
+            qxi[0] = qhijk[t, :, inds[1]]
+            qxi[1] = qhijk[t, inds[0], :]
+            q = qhijk[t, inds[0], inds[1]]
     else:
-        qx = qhijk[t, :]
-        q = qhijk[t, x]
+        qxi[0] = qhijk[t, :]
+        q = qhijk[t, inds[0]]
 
-    term = dx * source(q, params, subsystems)
+    if reconstructPrim:
+        P = q
+    else:
+        P = Cvec_to_Pvec(q)
 
-    dqdx = dot(derivs, qx)[x]
-    v = q[2:5] / q[0]
+    ret = zeros(18)
+    source_ref(ret, P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti, Ea, Bc,
+               viscous, thermal, reactive)
+    ret *= dx
 
-    if subsystems.viscous:
-        temp = zeros(18)
-        B0dot(temp, dqdx, v, 1)
-        term -= temp
-        if ndim > 1:
-            dqdy = dot(derivs, qy)[y]
+    if viscous:
+        v = P[2:5]
+        for d in range(ndim):
+            dqdxi = dot(derivs[inds[d]], qxi[d])
+            if reconstructPrim:
+                dqdxi = dQdPdot(P, dqdxi, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive)
             temp = zeros(18)
-            B1dot(temp, dqdy, v, 1)
-            term -= temp
-            if ndim > 2:
-                dqdz = dot(derivs, qz)[z]
-                temp = zeros(18)
-                B2dot(temp, dqdz, v, 1)
-                term -= temp
+            Bdot(temp, dqdxi, v, d)
+            ret -= temp
 
-    return term
+    return ret
 
 def fv_terms(qh, params, dt, subsystems):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
@@ -122,7 +126,11 @@ def fv_terms(qh, params, dt, subsystems):
     h = zeros([nx, ny, nz, 18])
 
     interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, params, subsystems)
-    center_func = lambda qhijk, t, x, y, z: center(qhijk, t, x, y, z, params, subsystems)
+    center_func = lambda qhijk, t, inds: center(qhijk, t, inds, params.γ, params.pINF, params.cv,
+                                                params.ρ0, params.T0, params.cs2, params.α2,
+                                                params.τ1, params.τ2, params.Qc, params.Kc,
+                                                params.Ti, params.Ea, params.Bc, subsystems.viscous,
+                                                subsystems.thermal, subsystems.reactive)
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
@@ -134,13 +142,13 @@ def fv_terms(qh, params, dt, subsystems):
                         if ndim > 2:
                             for z in range(N1):
                                 weight = weights[t] * weights[x] * weights[y] * weights[z]
-                                s[i, j, k] += weight * center_func(qhijk, t, x, y, z)
+                                s[i, j, k] += weight * center_func(qhijk, t, [x, y, z])
                         else:
                             weight = weights[t] * weights[x] * weights[y]
-                            s[i, j, k] += weight * center_func(qhijk, t, x, y, 0)
+                            s[i, j, k] += weight * center_func(qhijk, t, [x, y])
                 else:
                     weight = weights[t] * weights[x]
-                    s[i, j, k] += weight * center_func(qhijk, t, x, 0, 0)
+                    s[i, j, k] += weight * center_func(qhijk, t, [x])
 
         qEndM = qEnd[:, :, i+1, j+1, k+1]
         qEndL = qEnd[:, :, i,   j+1, k+1]

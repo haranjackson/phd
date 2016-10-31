@@ -4,7 +4,7 @@ from scipy.linalg import eig, solve
 
 from ader.basis import quad, end_values, derivative_values
 from gpr.eig import max_abs_eigs
-from gpr.matrices.conserved import flux, block, system_conserved
+from gpr.matrices.conserved import flux, Bdot, system_conserved
 from options import DEBUG, N1
 
 nodes, _, weights = quad()
@@ -14,27 +14,31 @@ derivs = derivative_values()
 
 @jit
 def Bint(qL, qR, d, viscous):
-    """ Returns the jump matrix for B, in the dth direction
+    """ Returns the jump matrix for B, in the dth direction.
     """
+    ret = zeros(18)
     v = zeros(3)
+    qJump = qR - qL
     for i in range(N1):
-        q = qL + nodes[i] * (qR - qL)
+        q = qL + nodes[i] * qJump
         v += weights[i] * q[2:5] / q[0]
-    return dot(block(v, d, viscous), qR - qL)
+    Bdot(ret, qJump, v, d)
+    return ret
 
 def Aint(qL, qR, d, params, subsystems):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
     """
     ret = zeros(18, dtype=complex128)
+    qJump = qR - qL
     for i in range(N1):
-        q = qL + nodes[i] * (qR - qL)
+        q = qL + nodes[i] * qJump
         J = system_conserved(q, d, params, subsystems)
         eigs, R = eig(J, overwrite_a=1, check_finite=0)
         if DEBUG:
             if (abs(imag(R)) > 1e-15).any():
                 print("////WARNING//// COMPLEX VALUES IN JACOBIAN")
         L = diag(abs(eigs))
-        b = solve(R, qR-qL, overwrite_b=1, check_finite=0)
+        b = solve(R, qJump, overwrite_b=1, check_finite=0)
         ret += weights[i] * dot(R, dot(L, b))
     return ret.real
 

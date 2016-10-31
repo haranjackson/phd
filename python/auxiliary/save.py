@@ -9,7 +9,8 @@ from options import mechanical, viscous, thermal, reactive
 from options import Ms, W, doubleTime, fullBurn, burnProp
 from options import reactionType, reactiveEOS, minE
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
-from options import solver, useDG, N, CFL, method, convertTemp, NOISE_LIM
+from options import solver, useDG, reconstructPrim, convertTemp, altThermSolve
+from options import  N, CFL, method, NOISE_LIM
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
 from options import MAX_ITER, paraDG, paraFV, ncore
@@ -59,8 +60,8 @@ def save_config(path):
         f.write('reactiveEOS  = %i\n' % reactiveEOS)
         f.write('minE = %i\n\n' % minE)
 
-        f.write('GFM    = %i\n' % GFM)
-        f.write('RGFM   = %i\n' % RGFM)
+        f.write('GFM  = %i\n' % GFM)
+        f.write('RGFM = %i\n' % RGFM)
         f.write('isoFix = %i\n' % isoFix)
         f.write('SFix   = %i\n' % SFix)
         f.write('TFix   = %i\n' % TFix)
@@ -68,10 +69,13 @@ def save_config(path):
 
         f.write('solver = %s\n' % solver)
         f.write('useDG  = %i\n' % useDG)
+        f.write('reconstructPrim = %i\n' % reconstructPrim)
+        f.write('convertTemp     = %i\n' % convertTemp)
+        f.write('altThermSolve   = %i\n' % altThermSolve)
+
         f.write('N      = %i\n' % N)
         f.write('CFL    = %f\n' % CFL)
         f.write('method = %s\n' % method)
-        f.write('convertTemp    = %i\n' % convertTemp)
         f.write('NOISE_LIM = %e\n\n' % NOISE_LIM)
 
         f.write('hidalgo    = %i\n' % hidalgo)
@@ -81,10 +85,10 @@ def save_config(path):
         f.write('TOL        = %e\n' % TOL)
         f.write('MAX_ITER   = %i\n\n' % MAX_ITER)
 
-        f.write('rc   = %f\n' % rc)
-        f.write('λc   = %e\n' % λc)
-        f.write('λs   = %e\n' % λs)
-        f.write('eps  = %e\n\n' % eps)
+        f.write('rc  = %f\n' % rc)
+        f.write('λc  = %e\n' % λc)
+        f.write('λs  = %e\n' % λs)
+        f.write('eps = %e\n\n' % eps)
 
         f.write('paraDG = %i\n' % paraDG)
         f.write('paraFV = %i\n' % paraFV)
