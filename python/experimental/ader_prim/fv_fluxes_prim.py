@@ -30,7 +30,7 @@ def Aint(pL, pR, d, params, subsystems):
     for i in range(N1):
         p = pL + nodes[i] * (pR - pL)
         J = system_conserved(p, d, params, subsystems)
-        eigs, R = eig(J, overwrite_a=1, check_finite=0
+        eigs, R = eig(J, overwrite_a=1, check_finite=0)
         L = diag(abs(eigs))
         b = solve(R, pR-pL, overwrite_b=1, check_finite=0)
         ret += weights[i] * dot(R, dot(L, b))

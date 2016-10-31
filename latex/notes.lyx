@@ -114,6 +114,10 @@ MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM) and
 \end_layout
 
 \begin_layout Itemize
+Try operator splitting with WENO for homogeneous step
+\end_layout
+
+\begin_layout Itemize
 Isobaric cookoff paper - make cookoff the focus
 \end_layout
 

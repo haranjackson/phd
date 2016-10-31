@@ -66,7 +66,7 @@ def hidalgo_initial_guess(w, dtgaps, γ, pINF, cv, α2, viscous, thermal):
         pj = p[j]
     return p.reshape([NT, 18])
 
-def predictor(wh, params, dt, subsystems):
+def predictor_prim(wh, params, dt, subsystems):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     global stiff
