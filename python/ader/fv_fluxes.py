@@ -4,8 +4,9 @@ from scipy.linalg import eig, solve
 
 from ader.basis import quad, end_values, derivative_values
 from gpr.eig import max_abs_eigs
-from gpr.matrices.conserved import flux, Bdot, system_conserved
-from options import DEBUG, N1
+from gpr.matrices.conserved import flux_ref, Bdot, system_conserved
+from gpr.variables.vectors import Pvec_to_Cvec, Cvec_to_Pvec
+from options import DEBUG, N1, reconstructPrim
 
 nodes, _, weights = quad()
 endVals = end_values()
@@ -25,14 +26,14 @@ def Bint(qL, qR, d, viscous):
     Bdot(ret, qJump, v, d)
     return ret
 
-def Aint(qL, qR, d, params, subsystems):
+def Aint(qL, qR, d, PAR, SYS):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
     """
     ret = zeros(18, dtype=complex128)
     qJump = qR - qL
     for i in range(N1):
         q = qL + nodes[i] * qJump
-        J = system_conserved(q, d, params, subsystems)
+        J = system_conserved(q, d, PAR, SYS)
         eigs, R = eig(J, overwrite_a=1, check_finite=0)
         if DEBUG:
             if (abs(imag(R)) > 1e-15).any():
@@ -42,35 +43,57 @@ def Aint(qL, qR, d, params, subsystems):
         ret += weights[i] * dot(R, dot(L, b))
     return ret.real
 
-def s_max(qL, qR, d, params, subsystems):
-    max1 = max_abs_eigs(qL, d, params, subsystems)
-    max2 = max_abs_eigs(qR, d, params, subsystems)
-    return max(max1, max2) * (qR - qL)
+def input_vectors(xL, xR, PAR, SYS):
 
-def Drus(qL, qR, d, pos, params, subsystems):
+    if reconstructPrim:
+        pL = xL
+        pR = xR
+        qL = Pvec_to_Cvec(pL, PAR, SYS)
+        qR = Pvec_to_Cvec(pR, PAR, SYS)
+    else:
+        qL = xL
+        qR = xR
+        pL = Cvec_to_Pvec(qL, PAR, SYS)
+        pR = Cvec_to_Pvec(qR, PAR, SYS)
+
+    return pL, pR, qL, qR
+
+def Drus(xL, xR, d, pos, PAR, SYS):
     """ Returns the Rusanov jump term at the dth boundary
     """
-    if pos:
-        ret = flux(qR, d, params, subsystems)
-        ret += flux(qL, d, params, subsystems)
-        ret += Bint(qL, qR, d, subsystems.viscous)
-    else:
-        ret = -flux(qR, d, params, subsystems)
-        ret -= flux(qL, d, params, subsystems)
-        ret -= Bint(qL, qR, d, subsystems.viscous)
-    ret -= s_max(qL, qR, d, params, subsystems)
-    return ret
+    pL, pR, qL, qR = input_vectors(xL, xR, PAR, SYS)
 
-def Dos(qL, qR, d, pos, params, subsystems):
+    max1 = max_abs_eigs(pL, d, PAR, SYS)
+    max2 = max_abs_eigs(pR, d, PAR, SYS)
+    if pos:
+        ret = - max(max1, max2) * (qR - qL)
+    else:
+        ret = max(max1, max2) * (qR - qL)
+
+    flux_ref(ret, pR, d, PAR, SYS)
+    flux_ref(ret, pL, d, PAR, SYS)
+    ret += Bint(qL, qR, d, SYS.viscous)
+
+    if pos:
+        return ret
+    else:
+        return -ret
+
+def Dos(xL, xR, d, pos, PAR, SYS):
     """ Returns the Osher-Solomon jump term at the dth boundary
     """
+    pL, pR, qL, qR = input_vectors(xL, xR, PAR, SYS)
+
     if pos:
-        ret = flux(qR, d, params, subsystems)
-        ret += flux(qL, d, params, subsystems)
-        ret += Bint(qL, qR, d, subsystems.viscous)
+        ret = - Aint(qL, qR, d, PAR, SYS)
     else:
-        ret = -flux(qR, d, params, subsystems)
-        ret -= flux(qL, d, params, subsystems)
-        ret -= Bint(qL, qR, d, subsystems.viscous)
-    ret -= Aint(qL, qR, d, params, subsystems)
-    return ret
+        ret = Aint(qL, qR, d, PAR, SYS)
+
+    flux_ref(ret, pR, d, PAR, SYS)
+    flux_ref(ret, pL, d, PAR, SYS)
+    ret += Bint(qL, qR, d, SYS.viscous)
+
+    if pos:
+        return ret
+    else:
+        return -ret

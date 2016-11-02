@@ -28,13 +28,13 @@ IC = first_stokes_problem_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 
-subsystems, SFix, TFix = options.subsystems, options.SFix, options.TFix
-u, materialParameters, intLocs = IC()
+SYS, SFix, TFix = options.SYS, options.SFix, options.TFix
+u, PARs, intLocs = IC()
 saveArrays = save_arrays(u, intLocs)
 
 def run(t, count):
 
-    global saveArrays, subsystems, SFix, TFix
+    global saveArrays, SYS, SFix, TFix
 
     interfaceLocations = saveArrays.interfaces[count]
     m = len(interfaceLocations)
@@ -47,23 +47,23 @@ def run(t, count):
 
         t0 = time()
 
-        dt = timestep(fluids, materialParameters, count, t, subsystems)
-        add_ghost_cells(fluids, inds, materialParameters, dt, subsystems, SFix, TFix)
+        dt = timestep(fluids, count, t, PARs, SYS)
+        add_ghost_cells(fluids, inds, PARs, dt, SYS, SFix, TFix)
         fluidsBC = array([BC(fluid) for fluid in fluids])
 
-        print_stats(count, t, dt, interfaceLocations, subsystems)
+        print_stats(count, t, dt, interfaceLocations, SYS)
 
         for i in range(m+1):
             fluid = fluids[i]
             fluidBC = fluidsBC[i]
-            params = materialParameters[i]
+            PAR = PARs[i]
 
             if solver == 'SLIC':
-                slic_stepper(fluid, params, dt, subsystems)
+                slic_stepper(fluid, dt, PAR, SYS)
             elif solver == 'AW':
-                qh = stepper(fluid, fluidBC, params, dt, pool, subsystems)
+                qh = stepper(pool, fluid, fluidBC, dt, PAR, SYS)
             elif solver == 'NEW':
-                qh = new_stepper(fluid, fluidBC, params, dt, pool, subsystems)
+                qh = new_stepper(fluid, fluidBC, dt, PAR, SYS)
 
             if GFM:
                 dg[inds[i] : inds[i+1]] = qh[inds[i]+1 : inds[i+1]+1, 0, 0]
@@ -72,11 +72,11 @@ def run(t, count):
             interfaceLocations = update_interface_locations(dg, interfaceLocations, dt)
             inds = interface_indices(interfaceLocations, nx)
 
-        if convertTemp and not subsystems.mechanical:
-            thermal_conversion(fluids, materialParameters)
+        if convertTemp and not SYS.mechanical:
+            thermal_conversion(fluids, PARs)
 
-        if not subsystems.mechanical:
-            subsystems.mechanical, subsystems.viscous = check_ignition_started(fluids)
+        if not SYS.mechanical:
+            SYS.mechanical, SYS.viscous = check_ignition_started(fluids)
 
 #        if count > 5:
 #            TFix = 0

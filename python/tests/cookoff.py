@@ -5,7 +5,7 @@ from auxiliary.classes import material_parameters
 from gpr.variables.state import temperature
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, L, dx, viscous, thermal, reactive, doubleTime, W, subsystems
+from options import nx, ny, nz, L, dx, viscous, thermal, reactive, doubleTime, W, SYS
 
 
 SET_THERMAL_IMPULSE = 0
@@ -16,7 +16,7 @@ def chapman_jouguet_IC():
         L = 1
         reactionType = 'd'
     """
-    params = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=1e-8, α=1e-8, μ=1e-4,
+    PAR = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=1e-8, α=1e-8, μ=1e-4,
                                  Pr=0.75, Qc=1, Kc=250, Ti=0.25)
 
     ρL = 1.4
@@ -33,8 +33,8 @@ def chapman_jouguet_IC():
 
     J = zeros(3)
 
-    QL = conserved(ρL, pL, vL, AL, J, λL, params, subsystems)
-    QR = conserved(ρR, pR, vR, AR, J, λR, params, subsystems)
+    QL = conserved(ρL, pL, vL, AL, J, λL, PAR, SYS)
+    QR = conserved(ρR, pR, vR, AR, J, λR, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
         if i*dx < L/4:
@@ -42,7 +42,7 @@ def chapman_jouguet_IC():
         else:
             u[i, 0, 0] = QR
 
-    return u, [params]*1, []
+    return u, [PAR]*1, []
 
 def CKR_IC():
     """ nx = 360
@@ -63,7 +63,7 @@ def CKR_IC():
     ρ0 = 1.17601
     p0 = 101325
 
-    params = material_parameters(γ=γ, pINF=0, cv=cv, ρ0=ρ0, p0=p0, cs=55, α=5e2, μ=1.98e-5, Pr=0.72,
+    PAR = material_parameters(γ=γ, pINF=0, cv=cv, ρ0=ρ0, p0=p0, cs=55, α=5e2, μ=1.98e-5, Pr=0.72,
                                  Qc=6*γ*cv*300, ε=1/20, Bc=7e10)
 
     v = zeros(3)
@@ -72,16 +72,16 @@ def CKR_IC():
     λ = 1
 
     u = zeros([nx, ny, nz, 18])
-    Q = conserved(ρ0, p0, v, A, J, λ, params, subsystems)
+    Q = conserved(ρ0, p0, v, A, J, λ, PAR, SYS)
     for i in range(nx):
         u[i,0,0] = Q
 
-    return u, [params], []
+    return u, [PAR], []
 
 
-def CKR_BC(u, dt, params, subsystems):
+def CKR_BC(u, dt, PAR, SYS):
 
-    ρ0 = params.ρ0, p0 = params.p0; γ = params.γ; pINF = params.pINF; Pr = params.Pr
+    ρ0 = PAR.ρ0, p0 = PAR.p0; γ = PAR.γ; pINF = PAR.pINF; Pr = PAR.Pr
 
     c0 = c_0(ρ0, p0, γ, pINF)
     q = γ * p0 * c0 * W / ((γ-1) * Pr)
@@ -89,37 +89,37 @@ def CKR_BC(u, dt, params, subsystems):
 
     if SET_THERMAL_IMPULSE:
         Q = u[0,0,0]
-        P = primitive(Q, params, subsystems)
+        P = primitive(Q, PAR, SYS)
         T = temperature(P.ρ, P.p, γ, pINF)
-        J = array([q, 0, 0]) / (params.α2 * T)
-        u[0,0,0] = conserved(P.ρ, P.p, P.v, P.A, J, P.λ, params, subsystems)
+        J = array([q, 0, 0]) / (PAR.α2 * T)
+        u[0,0,0] = conserved(P.ρ, P.p, P.v, P.A, J, P.λ, PAR, SYS)
 
     return standard_BC(u, reflect=1)
 
-def fixed_wall_temp_BC(u, t, params, subsystems):
+def fixed_wall_temp_BC(u, t, PAR, SYS):
 
-    Tc = params.T0 * (1 + t / doubleTime)                       # Temperature at which wall is held
+    Tc = PAR.T0 * (1 + t / doubleTime)                       # Temperature at which wall is held
     uNew = standard_BC(u, reflect=1)
     Q0 = uNew[0,0,0]
-    P0 = primitive(Q0, params, subsystems)
+    P0 = primitive(Q0, PAR, SYS)
 
     if P0.T < Tc:
-        p0 = temperature_fix_pressure(P0.ρ, Tc, params)
+        p0 = temperature_fix_pressure(P0.ρ, Tc, PAR)
     else:
         p0 = P0.p
 
     if SET_THERMAL_IMPULSE:
         Q1 = u[1,0,0]
-        P1 = primitive(Q1, params)
+        P1 = primitive(Q1, PAR)
         T1 = temperature(P1.ρ, P1.p)
-        J0 = array([params.κ * (temperature(P0.ρ, P0.p)-T1) / (params.α2 * Tc * dx), 0, 0])
+        J0 = array([PAR.κ * (temperature(P0.ρ, P0.p)-T1) / (PAR.α2 * Tc * dx), 0, 0])
     else:
         J0 = P0.J
 
-    uNew[0,0,0] = conserved(P0.ρ, p0, P0.v, P0.A, J0, P0.c, params, viscous, thermal, reactive)
+    uNew[0,0,0] = conserved(P0.ρ, p0, P0.v, P0.A, J0, P0.c, PAR, viscous, thermal, reactive)
     return uNew
 
-def scales(params):
-    tScale = params.μ / (params.p0 * params.y)                 # Pr * (κ / (ρ0 * cp)) / c0^2
-    xScale = tScale * sqrt(params.y * (params.p0+params.pINF) / params.ρ0)  # tScale * c0
+def scales(PAR):
+    tScale = PAR.μ / (PAR.p0 * PAR.y)                           # Pr * (κ / (ρ0 * cp)) / c0^2
+    xScale = tScale * sqrt(PAR.y * (PAR.p0+PAR.pINF) / PAR.ρ0)  # tScale * c0
     return tScale, xScale

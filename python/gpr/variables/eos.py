@@ -35,16 +35,20 @@ def E_3(v):
     """
     return L2_1D(v) / 2
 
-def total_energy(ρ, p, v, A, J, λ, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive):
+def total_energy(ρ, p, v, A, J, λ, PAR, SYS):
     """ Returns the total energy
     """
-    ret = E_1(ρ, p, γ, pINF) + E_3(v)
-    if viscous:
-        ret += E_2A(A, cs2)
-    if thermal:
-        ret += E_2J(J, α2)
-    if reactive and reactiveEOS:
-        ret += E_1r(λ, Qc)
+    ret = E_1(ρ, p, PAR.γ, PAR.pINF) + E_3(v)
+
+    if SYS.viscous:
+        ret += E_2A(A, PAR.cs2)
+
+    if SYS.thermal:
+        ret += E_2J(J, PAR.α2)
+
+    if SYS.reactive and reactiveEOS:
+        ret += E_1r(λ, PAR.Qc)
+
     return ret
 
 @jit

@@ -31,7 +31,7 @@ def endpoints(qh):
         qEnd[d] = tensordot(endVals, qh0, (0,4+d))
     return qEnd
 
-def interface(qEndL, qEndM, qEndR, d, params, subsystems):
+def interface(qEndL, qEndM, qEndR, d, PAR, SYS):
     """ Returns flux term and jump term in dth direction at the interface between states qhL, qhR
     """
     ret = zeros(18)
@@ -45,28 +45,24 @@ def interface(qEndL, qEndM, qEndR, d, params, subsystems):
                         qM1 = qEndM[d, 1, a, b, c]
                         qR0 = qEndR[d, 0, a, b, c]
                         weight = weights[a] * weights[b] * weights[c]
-                        ret += weight * (D(qM1, qR0, d, 1, params, subsystems)
-                                         + D(qM0, qL1, d, 0, params, subsystems))
+                        ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
                 else:
                     qL1 = qEndL[d, 1, a, b]
                     qM0 = qEndM[d, 0, a, b]
                     qM1 = qEndM[d, 1, a, b]
                     qR0 = qEndR[d, 0, a, b]
                     weight = weights[a] * weights[b]
-                    ret += weight * (D(qM1, qR0, d, 1, params, subsystems)
-                                     + D(qM0, qL1, d, 0, params, subsystems))
+                    ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
         else:
             qL1 = qEndL[d, 1, a]
             qM0 = qEndM[d, 0, a]
             qM1 = qEndM[d, 1, a]
             qR0 = qEndR[d, 0, a]
-            ret += weights[a] * (D(qM1, qR0, d, 1, params, subsystems)
-                                 + D(qM0, qL1, d, 0, params, subsystems))
+            ret += weights[a] * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
 
     return 0.5 * ret
 
-def center(qhijk, t, inds, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti, Ea, Bc,
-           viscous, thermal, reactive):
+def center(qhijk, t, inds, PAR, SYS):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
     qxi = zeros([ndim, N1, 18])
@@ -87,26 +83,25 @@ def center(qhijk, t, inds, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti
     if reconstructPrim:
         P = q
     else:
-        P = Cvec_to_Pvec(q)
+        P = Cvec_to_Pvec(q, PAR, SYS)
 
     ret = zeros(18)
-    source_ref(ret, P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti, Ea, Bc,
-               viscous, thermal, reactive)
+    source_ref(ret, P, PAR, SYS)
     ret *= dx
 
-    if viscous:
+    if SYS.viscous:
         v = P[2:5]
         for d in range(ndim):
             dqdxi = dot(derivs[inds[d]], qxi[d])
             if reconstructPrim:
-                dqdxi = dQdPdot(P, dqdxi, γ, pINF, cs2, α2, Qc, viscous, thermal, reactive)
+                dqdxi = dQdPdot(P, dqdxi, PAR, SYS)
             temp = zeros(18)
             Bdot(temp, dqdxi, v, d)
             ret -= temp
 
     return ret
 
-def fv_terms(qh, params, dt, subsystems):
+def fv_terms(qh, dt, PAR, SYS):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
@@ -125,12 +120,8 @@ def fv_terms(qh, params, dt, subsystems):
     g = zeros([nx, ny, nz, 18])
     h = zeros([nx, ny, nz, 18])
 
-    interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, params, subsystems)
-    center_func = lambda qhijk, t, inds: center(qhijk, t, inds, params.γ, params.pINF, params.cv,
-                                                params.ρ0, params.T0, params.cs2, params.α2,
-                                                params.τ1, params.τ2, params.Qc, params.Kc,
-                                                params.Ti, params.Ea, params.Bc, subsystems.viscous,
-                                                subsystems.thermal, subsystems.reactive)
+    interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, PAR, SYS)
+    center_func = lambda qhijk, t, inds: center(qhijk, t, inds, PAR, SYS)
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 

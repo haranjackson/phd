@@ -8,21 +8,25 @@ from gpr.variables.eos import E_1r, E_2A, E_2J, E_3, E_A
 from options import reactiveEOS
 
 
-def pressure(E, v, A, ρ, J, λ, params, subsystems):
+def pressure(E, v, A, ρ, J, λ, PAR, SYS):
     """ Returns the pressure, given the total energy, velocity, distortion matrix, and density.
         NOTE: Only valid for EOS used for fluids by Dumbser et al.
     """
     E1 = E - E_3(v)
-    γ = params.γ
-    if subsystems.viscous:
-        E1 -= E_2A(A, params.cs2)
-    if subsystems.thermal:
-        E1 -= E_2J(J, params.α2)
-    if subsystems.reactive and reactiveEOS:
-        E1 -= E_1r(λ, params.Qc)
-    return (γ-1) * ρ * E1 - γ * params.pINF
+    γ = PAR.γ
 
-def entropy(Q, params, subsystems):
+    if SYS.viscous:
+        E1 -= E_2A(A, PAR.cs2)
+
+    if SYS.thermal:
+        E1 -= E_2J(J, PAR.α2)
+
+    if SYS.reactive and reactiveEOS:
+        E1 -= E_1r(λ, PAR.Qc)
+
+    return (γ-1) * ρ * E1 - γ * PAR.pINF
+
+def entropy(Q, PAR, SYS):
     """ Returns the entropy of a stiffened gas, given density and pressure
     """
     ρ = Q[0]
@@ -32,13 +36,13 @@ def entropy(Q, params, subsystems):
     v = Q[2:5] / ρ
     λ = Q[17] / ρ
 
-    p = pressure(E, v, A, ρ, J, λ, params, subsystems)
-    return (p + params.pINF) / ρ**params.y
+    p = pressure(E, v, A, ρ, J, λ, PAR, SYS)
+    return (p + PAR.pINF) / ρ**PAR.y
 
-def density(S, p, params):
+def density(S, p, PAR):
     """ Returns the density of a stiffened gas, given entropy and pressure
     """
-    return ((p + params.pINF) / S) ** (1 / params.y)
+    return ((p + PAR.pINF) / S) ** (1 / PAR.y)
 
 @jit
 def temperature(ρ, p, γ, pINF, cv):
@@ -58,7 +62,6 @@ def sigma(ρ, A, cs2):
     """
     return -ρ * dot(A.T, E_A(A, cs2))
 
-@jit
 def sigma_A(ρ, A, cs2):
     """ Returns the tensor T_ijmn corresponding to the partial derivative of sigma_ij with respect
         to A_mn, holding r constant.

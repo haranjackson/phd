@@ -5,7 +5,7 @@ from scipy.special import erf
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, Ms, dx, Rc, L, subsystems
+from options import nx, ny, nz, Ms, dx, Rc, L, SYS
 
 
 def first_stokes_problem_IC():
@@ -21,10 +21,10 @@ def first_stokes_problem_IC():
     A = eye(3)
     J = zeros(3)
 
-    params = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
 
-    QL = conserved(ρ, p, -v, A, J, 0, params, subsystems)
-    QR = conserved(ρ, p,  v, A, J, 0, params, subsystems)
+    QL = conserved(ρ, p, -v, A, J, 0, PAR, SYS)
+    QR = conserved(ρ, p,  v, A, J, 0, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
         if i*dx < L/2:
@@ -32,7 +32,7 @@ def first_stokes_problem_IC():
         else:
             u[i,0,0] = QR
 
-    return u, [params]*1, []
+    return u, [PAR]*1, []
 
 def first_stokes_problem_exact(x, μ, v0=0.1, t=1):
     return v0 * erf(x / (2 * sqrt(μ * t)))
@@ -45,7 +45,7 @@ def viscous_shock_IC():
     p0 = 1 / γ
     μ = 2e-2
 
-    params = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ0, p0=p0, cs=5, α=5, μ=2e-2, Pr=0.75)
+    PAR = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ0, p0=p0, cs=5, α=5, μ=2e-2, Pr=0.75)
 
     if Ms==2:
         x0 = 0.07   # Position of center of shock for shock to start at x = 0
@@ -102,9 +102,9 @@ def viscous_shock_IC():
         A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
         λ = 1
-        u[i,0,0] = conserved(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, params, subsystems)
+        u[i,0,0] = conserved(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, PAR, SYS)
 
-    return u, [params], []
+    return u, [PAR], []
 
 def viscous_shock_exact_x(n, M=2, t=0.2):
     return arange(M*t-0.25, M*t+0.75, 1/n)
@@ -118,10 +118,10 @@ def heat_conduction_IC():
     AR = ρR**(1/3) * eye(3)
     J0 = zeros(3)
 
-    params = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=p0, cs=1, α=2, μ=1e-2, κ=1e-2)
+    PAR = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=p0, cs=1, α=2, μ=1e-2, κ=1e-2)
 
-    QL = conserved(ρL, p0, v0, AL, J0, 0, params, subsystems)
-    QR = conserved(ρR, p0, v0, AR, J0, 0, params, subsystems)
+    QL = conserved(ρL, p0, v0, AL, J0, 0, PAR, SYS)
+    QR = conserved(ρR, p0, v0, AR, J0, 0, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
     x0 = L / 2
     for i in range(nx):
@@ -130,7 +130,7 @@ def heat_conduction_IC():
         else:
             u[i,0,0] = QR
 
-    return u, [params]*1, []
+    return u, [PAR]*1, []
 
 def semenov_IC():
     cv = 2.5
@@ -147,15 +147,15 @@ def semenov_IC():
     J = zeros(3)
     λ = 1
 
-    params = material_parameters(γ=1.4, pINF=0, cv=cv, ρ0=ρ, p0=p, Qc=Qc, ε=ε, Bc=Bc)
+    PAR = material_parameters(γ=1.4, pINF=0, cv=cv, ρ0=ρ, p0=p, Qc=Qc, ε=ε, Bc=Bc)
 
-    Q = conserved(ρ, p, v, A, J, λ, params, subsystems)
+    Q = conserved(ρ, p, v, A, J, λ, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
         u[i,0,0] = Q
 
-    return u, [params], []
+    return u, [PAR], []
 
-def semenov_temp(dataArray, params):
+def semenov_temp(dataArray, PAR):
     states = [da[0, 0, 0] for da in dataArray]
-    return [primitive(state, params, 0, 0, 1).T for state in states]
+    return [primitive(state, PAR, 0, 0, 1).T for state in states]

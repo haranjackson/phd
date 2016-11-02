@@ -16,7 +16,7 @@ def eigvalsn(a, n):
     return w
 
 
-def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, viscous, thermal):
+def thermo_acoustic_tensor(ρ, A, p, T, d, PAR, SYS):
     """ Returns the tensor T_dij corresponding to the (i,j) component of the thermo-acoustic tensor
         in the dth direction
     """
@@ -24,56 +24,46 @@ def thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, viscous, thermal)
     Gd = G[d]
     ret = zeros([4,4])
 
-    if viscous:
+    γ = PAR.γ; pINF = PAR.pINF
+
+    if SYS.viscous:
         O = GdevG(G)
         O[:, d] *= 2
         O[d] *= 2
         O[d, d] *= 3/4
         O += Gd[d] * G + 1/3 * outer(Gd, Gd)
-        O *= cs2
+        O *= PAR.cs2
         ret[:3, :3] = O
 
     ret[d, d] += γ * p / ρ
 
-    if thermal:
+    if SYS.thermal:
         ret[3, 0] = ((γ-1) * p - pINF) * T / (ρ * (p+pINF))
-        temp = (γ-1) * α2 * T / ρ
+        temp = (γ-1) * PAR.α2 * T / ρ
         ret[0, 3] = temp
         ret[3, 3] = temp * T / (p+pINF)
 
     return ret
 
-def max_abs_eigs(Q, d, params, subsystems):
+def max_abs_eigs(P, d, PAR, SYS):
     """ Returns the maximum of the absolute values of the eigenvalues of the GPR system
     """
-    P = primitive(Q, params, subsystems)
+    ρ = P[0]
+    p = P[1]
+    vd = P[2+d]
+    A = P[5:14].reshape([3,3])
+    T = temperature(ρ, p, PAR.γ, PAR.pINF, PAR.cv)
 
-    if not subsystems.mechanical:
-        return c_h(P.ρ, P.T, params.α, params.cv)
+    if not SYS.mechanical:
+        return c_h(ρ, T, PAR.α, PAR.cv)
 
     else:
-        vd = P.v[d]
-        O = thermo_acoustic_tensor(P.ρ, P.A, P.p, P.T, params.γ, params.pINF, params.cs2, params.α2,
-                                   d, subsystems.viscous, subsystems.thermal)
+        O = thermo_acoustic_tensor(ρ, A, p, T, d, PAR, SYS)
         lam = sqrt(eigvalsn(O, 4).max())
         if vd > 0:
             return vd + lam
         else:
             return lam - vd
-
-def max_abs_eigs_prim(P, d, γ, pINF, cv, cs2, α2, viscous, thermal):
-    ρ = P[0]
-    p = P[1]
-    vd = P[2+d]
-    A = P[5:14]
-    T = temperature(ρ, p, γ, pINF, cv)
-
-    O = thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, d, viscous, thermal)
-    lam = sqrt(eigvalsn(O, 4).max())
-    if vd > 0:
-        return vd + lam
-    else:
-        return lam - vd
 
 def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
     ret = zeros([4, 5])
@@ -92,13 +82,13 @@ def Xi2mat(ρ, p, A, T, γ, α2):
     ret[1, 3] = (γ-1) * α2 * T
     return ret
 
-def primitive_eigs(q, params, subsystems):
+def primitive_eigs(q, PAR, SYS):
     """ Returns eigenvalues and set of left and right eigenvectors of the matrix returned by
         system_primitive_reordered
     """
-    P = primitive(q, params, subsystems)
+    P = primitive(q, PAR, SYS)
     ρ = P.ρ; p = P.p; A = P.A; T = P.T; vd = P.v[0]
-    γ = params.γ; pINF = params.pINF; cs2 = params.cs2; α2 = params.α2
+    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
 
     L = zeros([18,18])
     R = zeros([18,18])
@@ -108,8 +98,7 @@ def primitive_eigs(q, params, subsystems):
     Π2 = dσdA[:,:,1]
     Π3 = dσdA[:,:,2]
 
-    O = thermo_acoustic_tensor(ρ, A, p, T, γ, pINF, cs2, α2, 0, subsystems.viscous,
-                               subsystems.thermal)
+    O = thermo_acoustic_tensor(ρ, A, p, T, 0, PAR, SYS)
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
     Ξ2 = Xi2mat(ρ, p, A, T, γ, α2)
     w, vl, vr = eig(O, left=1)
@@ -165,15 +154,15 @@ def primitive_eigs(q, params, subsystems):
     nonDegenList = [vd+sw[0], vd+sw[1], vd+sw[2], vd+sw[3], vd-sw[0], vd-sw[1], vd-sw[2], vd-sw[3]]
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
 
-def conserved_eigs(q, params, subsystems):
+def conserved_eigs(q, PAR, SYS):
     """ Returns the eigenvalues and left and right eigenvectors of the conserved system.
         NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
               eigenvectors of the primitive system and transforming them into conserved eigenvectors
               without attempting to put them in the standard ordering.
     """
-    Λ, L, R = primitive_eigs(q, params, subsystems)
-    P = primitive(q, params, subsystems)
-    jacVars = jacobian_variables(P, params)
-    DPDQ = dPdQ(P, params, jacVars, subsystems)
-    DQDP = dQdP(P, params, jacVars, subsystems)
+    Λ, L, R = primitive_eigs(q, PAR, SYS)
+    P = primitive(q, PAR, SYS)
+    jacVars = jacobian_variables(P, PAR)
+    DPDQ = dPdQ(P, jacVars, PAR, SYS)
+    DQDP = dQdP(P, PAR, SYS)
     return Λ, dot(L, DPDQ), dot(DQDP, R)

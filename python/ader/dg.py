@@ -19,40 +19,19 @@ derivs = derivative_values()
 stiff = stiff
 
 
-def rhs_conserved(q, Ww, params, dt, subsystems):
+def rhs_conserved(q, Ww, dt, PAR, SYS):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
-    γ = params.γ
-    pINF = params.pINF
-    cv = params.cv
-    ρ0 = params.ρ0
-    T0 = params.T0
-    cs2 = params.cs2
-    α2 = params.α2
-    τ1 = params.τ1
-    τ2 = params.τ2
-    Qc = params.Qc
-    Kc = params.Kc
-    Ti = params.Ti
-    Ea = params.Ea
-    Bc = params.Bc
-    mechanical = subsystems.mechanical
-    viscous = subsystems.viscous
-    thermal = subsystems.thermal
-    reactive = subsystems.reactive
-
     Tq = dot(T, q)
     Sq = zeros([NT, 18])
     Fq = zeros([ndim, NT, 18])
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
-        P = Cvec_to_Pvec(q[b], params, subsystems)
-        source_ref(Sq[b], P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, Qc, Kc, Ti, Ea, Bc,
-                   viscous, thermal, reactive)
+        P = Cvec_to_Pvec(q[b], PAR, SYS)
+        source_ref(Sq[b], P, PAR, SYS)
         for d in range(ndim):
-            flux_ref(Fq[d,b], P, d, γ, pINF, cv, cs2, α2, Qc,
-                     mechanical, viscous, thermal, reactive)
-            if viscous:
+            flux_ref(Fq[d,b], P, d, PAR, SYS)
+            if SYS.viscous:
                 Bdot(Bq[d,b], Tq[d,b], P[2:5], d)
 
     ret = dx*Sq
@@ -65,7 +44,7 @@ def rhs_conserved(q, Ww, params, dt, subsystems):
 
     return dt/dx * ret + Ww
 
-def rhs_primitive(p, Ww, dt, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, viscous, thermal):
+def rhs_primitive(p, Ww, dt, PAR, SYS):
     """ Returns the right handside of the linear system governing the coefficients of ph
     """
     Tp = dot(T, p)
@@ -73,9 +52,9 @@ def rhs_primitive(p, Ww, dt, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, viscous,
     Mp = zeros([ndim, NT, 18])
     for b in range(NT):
         P = p[b]
-        source_primitive_ref(Sp[b], P, γ, pINF, cv, ρ0, T0, cs2, α2, τ1, τ2, viscous, thermal)
+        source_primitive_ref(Sp[b], P, PAR, SYS)
         for d in range(ndim):
-            Mdot_ref(Mp[d,b], P, Tp[d,b], d, γ, pINF, cv, α2, viscous, thermal)
+            Mdot_ref(Mp[d,b], P, Tp[d,b], d, PAR, SYS)
 
     ret = dx*Sp
     for d in range(ndim):
@@ -90,7 +69,7 @@ def standard_initial_guess(w):
     ret = array([w for i in range(N1)])
     return ret.reshape([NT, 18])
 
-def hidalgo_initial_guess(w, params, dtgaps, subsystems):
+def hidalgo_initial_guess(w, dtgaps, PAR, SYS):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
     """
     q = zeros([N1]*(ndim+1) + [18])
@@ -101,21 +80,21 @@ def hidalgo_initial_guess(w, params, dtgaps, subsystems):
         for i in range(N1):
             qij = qj[i]
             dqdxij = dqdxj[i]
-            J = dot(system_conserved(qij, 0, params, subsystems), dqdxij)
-            Sj = source(qij, params, subsystems)
+            J = dot(system_conserved(qij, 0, PAR, SYS), dqdxij)
+            Sj = source(qij, PAR, SYS)
             if superStiff:
-                f = lambda X: X - qij + dt/dx * J - dt/2 * (Sj + source(X, params, subsystems))
+                f = lambda X: X - qij + dt/dx * J - dt/2 * (Sj + source(X, PAR, SYS))
                 q[j,i] = newton_krylov(f, qij, f_tol=TOL)
             else:
                 q[j,i] = qij - dt/dx * J + dt * Sj
         qj = q[j]
     return q.reshape([NT, 18])
 
-def failed(w, qh, i, j, k, f, dtgaps, params, subsystems):
-    q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
+def failed(w, qh, i, j, k, f, dtgaps, PAR, SYS):
+    q = hidalgo_initial_guess(w, dtgaps, PAR, SYS)
     qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
 
-def predictor(wh, params, dt, subsystems):
+def predictor(wh, dt, PAR, SYS):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     global stiff
@@ -125,11 +104,9 @@ def predictor(wh, params, dt, subsystems):
     dtgaps = dt * gaps
 
     if reconstructPrim:
-        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, params.γ, params.pINF, params.cv, params.ρ0,
-                                          params.T0, params.cs2, params.α2, params.τ1, params.τ2,
-                                          subsystems.viscous, subsystems.thermal)
+        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, PAR, SYS)
     else:
-        rhs = lambda X, Ww: rhs_conserved(X, Ww, params, dt, subsystems)
+        rhs = lambda X, Ww: rhs_conserved(X, Ww, dt, PAR, SYS)
 
     failCount = 0
     for i, j, k in product(range(nx), range(ny), range(nz)):
@@ -139,7 +116,7 @@ def predictor(wh, params, dt, subsystems):
         f = lambda X: X - spsolve(U, rhs(X, Ww))
 
         if hidalgo:
-            q = hidalgo_initial_guess(w, params, dtgaps, subsystems)
+            q = hidalgo_initial_guess(w, dtgaps, PAR, SYS)
         else:
             q = standard_initial_guess(w)
 
@@ -152,7 +129,7 @@ def predictor(wh, params, dt, subsystems):
                 qNew = spsolve(U, rhs(q, Ww))
 
                 if isnan(qNew).any():
-                    failed(w, qh, i, j, k, f, dtgaps, params, subsystems)
+                    failed(w, qh, i, j, k, f, dtgaps, PAR, SYS)
                     failCount += 1
                     break
                 elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():# Mixed convergence cond.
@@ -162,7 +139,7 @@ def predictor(wh, params, dt, subsystems):
                     qh[i, j, k] = qNew
                     break
             else:
-                failed(w, qh, i, j, k, f, dtgaps, params, subsystems)
+                failed(w, qh, i, j, k, f, dtgaps, PAR, SYS)
 
     if failCount > failLim:
         stiff = 1

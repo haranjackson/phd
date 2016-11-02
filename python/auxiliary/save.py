@@ -16,13 +16,12 @@ from options import rc, λc, λs, eps
 from options import MAX_ITER, paraDG, paraFV, ncore
 
 
-def print_stats(count, t, dt, interfaceLocations, subsystems):
+def print_stats(count, t, dt, interfaceLocations, SYS):
     print(count+1)
     print('t  =', t)
     print('dt =', dt)
     print('Interfaces =', interfaceLocations)
-    print('M,V,T,R =', subsystems.mechanical, subsystems.viscous, subsystems.thermal,
-          subsystems.reactive)
+    print('M,V,T,R =', SYS.mechanical, SYS.viscous, SYS.thermal, SYS.reactive)
 
 def record_data(fluids, inds, t, interfaceLocations, saveArrays):
     """ Appends the latest data and timestep to the recording arrays

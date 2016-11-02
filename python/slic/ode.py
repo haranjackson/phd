@@ -28,20 +28,19 @@ def A_jac(A, τ1):
     ret *= -3/τ1 * det3(A)**(5/3)
     return ret.swapaxes(0,1).swapaxes(2,3).reshape([9,9])
 
-def jac(y, t0, P0, params):
+def jac(y, t0, P0, PAR):
     ret = zeros([12, 12])
     A = y[:9].reshape([3,3])
-    ret[:9,:9] = A_jac(A, params.τ1)
-    ret[9:,9:] = (P0.T * params.ρ0) / (params.T0 * P0.ρ * params.τ1) * eye(3)
+    ret[:9,:9] = A_jac(A, PAR.τ1)
+    ret[9:,9:] = (P0.T * PAR.ρ0) / (PAR.T0 * P0.ρ * PAR.τ1) * eye(3)
     return ret
 
-def f(y, t0, P0, params):
+def f(y, t0, P0, PAR):
 
     A = y[:9].reshape([3,3])
-    Asource = - E_A(A, params.cs2) / theta_1(A, params.cs2, params.τ1)
+    Asource = - E_A(A, PAR.cs2) / theta_1(A, PAR.cs2, PAR.τ1)
     J = y[9:]
-    Jsource = - P0.ρ * params.α2 * J / theta_2(P0.ρ, P0.T, params.ρ0, params.T0, params.α2,
-                                               params.τ2)
+    Jsource = - P0.ρ * PAR.α2 * J / theta_2(P0.ρ, P0.T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
 
     ret = zeros(12)
     ret[:9] = Asource.ravel()
@@ -49,16 +48,16 @@ def f(y, t0, P0, params):
 
     return ret
 
-def ode_stepper(u, params, subsystems, dt):
+def ode_stepper(u, dt, PAR, SYS):
     for i in range(len(u)):
         Q = u[i,0,0]
-        P0 = primitive(Q, params, subsystems)
+        P0 = primitive(Q, PAR, SYS)
         y0 = zeros([12])
         y0[:9] = P0.A.ravel()
         y0[9:] = P0.J
         t = array([0, dt])
-        y1 = odeint(f, y0, t, args=(P0,params), Dfun=jac)[1]
+        y1 = odeint(f, y0, t, args=(P0,PAR), Dfun=jac)[1]
 
         A1 = y1[:9].reshape([3,3])
         J1 = y1[9:]
-        u[i,0,0] = conserved(P0.ρ, P0.p, P0.v, A1, J1, P0.λ, params, subsystems)
+        u[i,0,0] = conserved(P0.ρ, P0.p, P0.v, A1, J1, P0.λ, PAR, SYS)

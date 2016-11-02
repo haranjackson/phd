@@ -16,12 +16,12 @@ def A0(ρ, γ):
 def B(p, γ, pINF):
     return p * (γ-1) / (γ+1) + (2*γ*pINF) / (γ+1)
 
-def f0(z, P, params):
+def f0(z, P, PAR):
 
     ρ = P.ρ
     p = P.p
-    γ = params.γ
-    pINF = params.pINF
+    γ = PAR.γ
+    pINF = PAR.pINF
     c0 = c_0(ρ, p, γ, pINF)
 
     if (z > p):
@@ -31,12 +31,12 @@ def f0(z, P, params):
         temp = pow((z+pINF)/(p+pINF), (γ-1)/(2*γ))
         return 2 * c0 / (γ-1) * (temp-1)
 
-def f1(z, P, params):
+def f1(z, P, PAR):
 
     ρ = P.ρ
     p = P.p
-    γ = params.γ
-    pINF = params.pINF
+    γ = PAR.γ
+    pINF = PAR.pINF
     c0 = c_0(ρ, p, γ, pINF)
 
     if (z > p):
@@ -46,18 +46,18 @@ def f1(z, P, params):
         temp = pow((z+pINF)/(p+pINF), -(γ+1)/(2*γ))
         return temp * c0 / (γ*(p+pINF))
 
-def f(z, PL, PR, paramsL, paramsR):
+def f(z, PL, PR, PARL, PARR):
     uR = PR.v[0]
     uL = PL.v[0]
-    return f0(z, PL, paramsL) + f0(z, PR, paramsR) + uR - uL
+    return f0(z, PL, PARL) + f0(z, PR, PARR) + uR - uL
 
-def f_deriv(z, PL, PR, paramsL, paramsR):
-    return f1(z, PL, paramsL) + f1(z, PR, paramsR)
+def f_deriv(z, PL, PR, PARL, PARR):
+    return f1(z, PL, PARL) + f1(z, PR, PARR)
 
 def CHA(pk, pk_1):
     return 2 * abs(pk-pk_1) / abs(pk+pk_1)
 
-def p_star(PL, PR, paramsL, paramsR):
+def p_star(PL, PR, PARL, PARR):
 
     TOL = 1e-6
     p0 = (PL.p + PR.p) / 2
@@ -65,71 +65,71 @@ def p_star(PL, PR, paramsL, paramsR):
 
     while (CHA(p1,p0) > TOL):
         p0 = p1
-        p1 = p0 - f(p0, PL, PR, paramsL, paramsR) / f_deriv(p0, PL, PR, paramsL, paramsR)
+        p1 = p0 - f(p0, PL, PR, PARL, PARR) / f_deriv(p0, PL, PR, PARL, PARR)
         if (p1<0):
             p1 = TOL
     return p1
 
-def u_star(p_, PL, PR, paramsL, paramsR):
+def u_star(p_, PL, PR, PARL, PARR):
     uL = PL.v[0]
     uR = PR.v[0]
-    return (uL + uR + f0(p_, PR, paramsR) - f0(p_, PL, paramsL)) / 2
+    return (uL + uR + f0(p_, PR, PARR) - f0(p_, PL, PARL)) / 2
 
-def Q(p_, P, params):
+def Q(p_, P, PAR):
     ρ = P.ρ
     p = P.p
-    y = params.y
-    pINF = params.pINF
-    return sqrt( (p_ + B(p,y,pINF)) / A0(ρ,y) )
+    γ = PAR.γ
+    pINF = PAR.pINF
+    return sqrt( (p_ + B(p,γ,pINF)) / A0(ρ,γ) )
 
-def Wfan(S, P, params, a):
+def Wfan(S, P, a, PAR):
     ρ = P.ρ
     u = P.v[0]
     p = P.p
-    y = params.y
-    pINF = params.pINF
-    temp = 2/(y+1) + (y-1)*(u-S)/((y+1)*a)
+    γ = PAR.γ
+    pINF = PAR.pINF
+    temp = 2/(γ+1) + (γ-1)*(u-S)/((γ+1)*a)
 
-    rf = ρ * pow(temp, 2/(y-1))
-    vf = array([2 * (a + (y-1)*u/2 + S) / (y+1), 0, 0])
-    pf = (p+pINF) * pow(temp, 2*y/(y-1)) - pINF
+    rf = ρ * pow(temp, 2/(γ-1))
+    vf = array([2 * (a + (γ-1)*u/2 + S) / (γ+1), 0, 0])
+    pf = (p+pINF) * pow(temp, 2*γ/(γ-1)) - pINF
 
-    return conserved(rf, pf, vf, A_, J_, c_, params, 0, 0, 0)
+    return conserved(rf, pf, vf, A_, J_, c_, PAR, 0, 0, 0)
 
-def ρ_star_shock(p_, P, params):
+def ρ_star_shock(p_, P, PAR):
 
     ρ = P.ρ
     p = P.p
-    γ = params.γ
-    pINF = params.pINF
+    γ = PAR.γ
+    pINF = PAR.pINF
     temp1 = (p_+pINF)/(p+pINF) + (γ-1)/(γ+1)
     temp2 = (γ-1)/(γ+1)*(p_+pINF)/(p+pINF) + 1
     return ρ * temp1 / temp2
 
-def ρ_star_fan(p_, P, params):
+def ρ_star_fan(p_, P, PAR):
 
     ρ = P.ρ
     p = P.p
-    γ = params.γ
-    pINF = params.pINF
+    γ = PAR.γ
+    pINF = PAR.pINF
     return ρ * pow((p_+pINF)/(p+pINF), 1/γ)
 
-def c0_star(p_, P, params):
+def c0_star(p_, P, PAR):
 
     ρ = P.ρ
     p = P.p
-    y = params.y
-    pINF = params.pINF
-    c0 = c_0(ρ, p, y, pINF)
-    return c0 * pow((p_+pINF)/(p+pINF), (y-1)/(2*y))
+    γ = PAR.γ
+    pINF = PAR.pINF
+    c0 = c_0(ρ, p, γ, pINF)
+    return c0 * pow((p_+pINF)/(p+pINF), (γ-1)/(2*γ))
 
-def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
+def exact_euler(n, t, x0, QL, QR, PARL, PARR):
     """ Returns the exact solution to the Euler equations at (x,t), given initial states PL for x<x0
         and PR for x>x0
     """
     ret = zeros([n, 1, 1, 18])
-    PL = primitive(QL, paramsL, 0, 0, 0)
-    PR = primitive(QR, paramsR, 0, 0, 0)
+    PL = primitive(QL, PARL, 0, 0, 0)
+    PR = primitive(QR, PARR, 0, 0, 0)
 
     ρL = PL.ρ
     ρR = PR.ρ
@@ -137,11 +137,11 @@ def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
     uR = PR.v[0]
     pL = PL.p
     pR = PR.p
-    c0L = c_0(ρL, pL, paramsL.y, paramsL.pINF)
-    c0R = c_0(ρR, pR, paramsR.y, paramsR.pINF)
+    c0L = c_0(ρL, pL, PARL.γ, PARL.pINF)
+    c0R = c_0(ρR, pR, PARR.γ, PARR.pINF)
 
-    p_ = p_star(PL, PR, paramsL, paramsR)
-    u_ = u_star(p_, PL, PR, paramsL, paramsR)
+    p_ = p_star(PL, PR, PARL, PARR)
+    u_ = u_star(p_, PL, PR, PARL, PARR)
 
     print('Interface:', u_ * t + x0)
 
@@ -155,22 +155,22 @@ def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
                 if (S < uL-c0L):
                     ret[i, 0, 0] = QL
                 else:
-                    STL = u_ - c0_star(p_, PL, paramsL)
+                    STL = u_ - c0_star(p_, PL, PARL)
                     if (S < STL):
-                        ret[i, 0, 0] = Wfan(S, PL, paramsL, c0L)
+                        ret[i, 0, 0] = Wfan(S, PL, c0L, PARL)
                     else:
-                        ρ_ = ρ_star_fan(p_, PL, paramsL)
+                        ρ_ = ρ_star_fan(p_, PL, PARL)
                         v_ = array([u_, 0, 0])
-                        ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsL, 0, 0, 0)
+                        ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, PARL, 0, 0, 0)
 
             else:				# Left shock
-                SL = uL - Q(p_, PL, paramsL) / ρL
+                SL = uL - Q(p_, PL, PARL) / ρL
                 if (S < SL):
                     ret[i, 0, 0] = QL
                 else:
-                    ρ_ = ρ_star_shock(p_, PL, paramsL)
+                    ρ_ = ρ_star_shock(p_, PL, PARL)
                     v_ = array([u_, 0, 0])
-                    ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsL, 0, 0, 0)
+                    ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, PARL, 0, 0, 0)
 
         else:
 
@@ -178,22 +178,22 @@ def exact_euler(n, t, x0, QL, QR, paramsL, paramsR):
                 if (uR+c0R < S):
                     ret[i, 0, 0] = QR
                 else:
-                    STR = u_ + c0_star(p_, PR, paramsR)
+                    STR = u_ + c0_star(p_, PR, PARR)
                     if (STR < S):
-                        ret[i, 0, 0] = Wfan(S, PR, paramsR, -c0R)
+                        ret[i, 0, 0] = Wfan(S, PR, -c0R, PARR)
                     else:
-                        ρ_ = ρ_star_fan(p_, PR, paramsR)
+                        ρ_ = ρ_star_fan(p_, PR, PARR)
                         v_ = array([u_, 0, 0])
-                        ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsR, 0, 0, 0)
+                        ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, PARR, 0, 0, 0)
 
             else:				# Right shock
-                SR = uR + Q(p_, PR, paramsR) / ρR
+                SR = uR + Q(p_, PR, PARR) / ρR
                 if (SR < S):
                     ret[i, 0, 0] = QR
                 else:
-                    ρ_ = ρ_star_shock(p_, PR, paramsR)
+                    ρ_ = ρ_star_shock(p_, PR, PARR)
                     v_ = array([u_, 0, 0])
-                    ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, paramsR, 0, 0, 0)
+                    ret[i, 0, 0] = conserved(ρ_, p_, v_, A_, J_, c_, PARR, 0, 0, 0)
 
     return ret
 

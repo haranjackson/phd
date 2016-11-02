@@ -38,7 +38,7 @@ vbound_below = vectorize(bound_below, otypes=[float])
 vlimiter = vectorize(limiter, otypes=[float])
 
 
-def interface_values(un, params, subsystems, dt):
+def interface_values(un, dt, PAR, SYS):
 
     unR = un[2:]
     unL = un[:-2]
@@ -60,10 +60,10 @@ def interface_values(un, params, subsystems, dt):
     FR = zeros(uR.shape)
     BL = newDiff.copy()
     BR = newDiff.copy()
-    viscous = subsystems.viscous
+    viscous = SYS.viscous
     for i in range(len(FL)):
-        FL[i,0,0] = flux(uL[i,0,0], 0, params, subsystems)
-        FR[i,0,0] = flux(uR[i,0,0], 0, params, subsystems)
+        FL[i,0,0] = flux(uL[i,0,0], 0, PAR, SYS)
+        FR[i,0,0] = flux(uR[i,0,0], 0, PAR, SYS)
         B0dot(BL[i,0,0], newDiff[i,0,0], vL[i,0,0], viscous)
         B0dot(BR[i,0,0], newDiff[i,0,0], vR[i,0,0], viscous)
 
@@ -74,13 +74,13 @@ def interface_values(un, params, subsystems, dt):
     u_R = uR + d * (fluxDiff + BR)
     return u_L, u_R
 
-def flux_stepper(u, un, params, subsystems, dt):
-    u_L, u_R = interface_values(un, params, subsystems, dt)
+def flux_stepper(u, un, dt, PAR, SYS):
+    u_L, u_R = interface_values(un, dt, PAR, SYS)
     d = dt / (2 * dx)
     for i in range(len(u)):
         qL1 = u_R[i,0,0]
         qM0 = u_L[i+1,0,0]
         qM1 = u_R[i+1,0,0]
         qR0 = u_L[i+2,0,0]
-        u[i,0,0] -= d * (  D(qM1, qR0, 0, 1, params, subsystems)
-                         + D(qM0, qL1, 0, 0, params, subsystems))
+        u[i,0,0] -= d * (  D(qM1, qR0, 0, 1, PAR, SYS)
+                         + D(qM0, qL1, 0, 0, PAR, SYS))

@@ -29,7 +29,7 @@ def endpoints(wh):
         qEnd[d] = tensordot(endVals, wh0, (0,3+d))
     return qEnd
 
-def interface(qEndL, qEndM, qEndR, d, params, subsystems):
+def interface(qEndL, qEndM, qEndR, d, PAR, SYS):
     """ Returns flux term and jump term in dth direction at the interface between states qhL, qhR
     """
     ret = zeros(18)
@@ -42,26 +42,24 @@ def interface(qEndL, qEndM, qEndR, d, params, subsystems):
                     qM1 = qEndM[d, 1, b, c]
                     qR0 = qEndR[d, 0, b, c]
                     weight = weights[b] * weights[c]
-                    ret += weight * (D(qM1, qR0, d, 1, params, subsystems)
-                                     + D(qM0, qL1, d, 0, params, subsystems))
+                    ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
             else:
                 qL1 = qEndL[d, 1, b]
                 qM0 = qEndM[d, 0, b]
                 qM1 = qEndM[d, 1, b]
                 qR0 = qEndR[d, 0, b]
                 weight = weights[b]
-                ret += weight * (D(qM1, qR0, d, 1, params, subsystems)
-                                 + D(qM0, qL1, d, 0, params, subsystems))
+                ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
     else:
         qL1 = qEndL[d, 1]
         qM0 = qEndM[d, 0]
         qM1 = qEndM[d, 1]
         qR0 = qEndR[d, 0]
-        ret += D(qM1, qR0, d, 1, params, subsystems) + D(qM0, qL1, d, 0, params, subsystems)
+        ret += D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS)
 
     return 0.5 * ret
 
-def center(whijk, x, y, z, params, subsystems):
+def center(whijk, x, y, z, PAR, SYS):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
     if ndim > 1:
@@ -78,21 +76,21 @@ def center(whijk, x, y, z, params, subsystems):
         qx = whijk[:]
         q = whijk[x]
 
-    term = dx * source(q, params, subsystems)
+    term = dx * source(q, PAR, SYS)
 
     dqdx = dot(derivs, qx)[x]
     v = q[2:5] / q[0]
-    term -= dot(block(v, 0, subsystems.viscous), dqdx)
+    term -= dot(block(v, 0, SYS.viscous), dqdx)
     if ndim > 1:
         dqdy = dot(derivs, qy)[y]
-        term -= dot(block(v, 1, subsystems.viscous), dqdy)
+        term -= dot(block(v, 1, SYS.viscous), dqdy)
         if ndim > 2:
             dqdz = dot(derivs, qz)[z]
-            term -= dot(block(v, 2, subsystems.viscous), dqdz)
+            term -= dot(block(v, 2, SYS.viscous), dqdz)
 
     return term
 
-def fv_terms_space_only(wh, params, dt, subsystems):
+def fv_terms_space_only(wh, dt, PAR, SYS):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
@@ -111,8 +109,8 @@ def fv_terms_space_only(wh, params, dt, subsystems):
     g = zeros([nx, ny, nz, 18])
     h = zeros([nx, ny, nz, 18])
 
-    interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, params, subsystems)
-    center_func = lambda whijk, x, y, z: center(whijk, x, y, z, params, subsystems)
+    interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, PAR, SYS)
+    center_func = lambda whijk, x, y, z: center(whijk, x, y, z, PAR, SYS)
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 

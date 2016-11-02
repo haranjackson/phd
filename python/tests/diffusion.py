@@ -5,7 +5,7 @@ from numpy import array, eye, zeros
 from auxiliary.bc import standard_BC
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
-from options import nx, ny, nz, subsystems
+from options import nx, ny, nz, SYS
 
 
 midx = int(nx/2)
@@ -23,27 +23,27 @@ def defaults():
     J = zeros(3)
     λ = 0
 
-    params = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
-    Q1 = conserved(ρ, p, v, A, J, λ, params, subsystems)
-    Q2 = conserved(ρ, p, zeros(3), A, J, λ, params, subsystems)
-    return Q1, Q2, params
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
+    Q1 = conserved(ρ, p, v, A, J, λ, PAR, SYS)
+    Q2 = conserved(ρ, p, zeros(3), A, J, λ, PAR, SYS)
+    return Q1, Q2, PAR
 
 def barrier_IC():
     """ nx = 40
         ny = 60
     """
-    Q1, Q2, params = defaults()
+    Q1, Q2, PAR = defaults()
     u = zeros([nx, ny, nz, 18])
     for i, j in product(range(nx), range(ny)):
         u[i,j,0] = Q1
     for i, j in product(range(midx), range(midy)):
         u[i,j,0] = Q2
 
-    return u, [params], []
+    return u, [PAR], []
 
 def barrier_BC(u):
 
-    _, Q2, params = defaults()
+    _, Q2, PAR = defaults()
     for i, j in product(range(midx), range(midy)):
         u[i,j,0] = Q2
 

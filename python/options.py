@@ -89,7 +89,7 @@ ndim = sum(array([nx, ny, nz]) > 1)
 N1 = N+1
 NT = N1**(ndim+1)
 dx = L / nx
-subsystems = active_subsystems(mechanical, viscous, thermal, reactive)
+SYS = active_subsystems(mechanical, viscous, thermal, reactive)
 
 """ Compatibility Settings """
 

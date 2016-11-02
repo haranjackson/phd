@@ -1,4 +1,4 @@
-from numpy import array, dot, exp, reshape, zeros, trace as tr, transpose as trans
+from numpy import array, dot, exp, zeros, trace as tr, transpose as trans
 from numpy.linalg import det, inv
 
 from options import nx, ny, nz

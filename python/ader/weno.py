@@ -44,7 +44,7 @@ def coeffs(uList):
         numerator += multiply(wList[i], oList[i])
     return numerator / oSum
 
-def reconstruct(u):
+def weno(u):
     """ Find reconstruction coefficients of u to order N+1
     """
     nx, ny, nz = u.shape[:3]
@@ -107,16 +107,16 @@ def reconstruct(u):
     if ndim==3:
         return Wxyz
 
-def primitive_reconstruction(q):
+def weno_primitive(q, PAR, SYS):
     """ Returns a WENO reconstruction in primitive variables, given the grid of conserved values.
         A reconstruction in conserved variables is performed. The midpoints of this reconstruction
         are then taken as the conserved cell averages (required for >2nd order). A primitive
         reconstruction is then performed with these averages.
     """
-    qr = reconstruct(q)
+    qr = weno(q)
     qav = dot(midvals, qr)
     pav = zeros(qav.shape)
     nx, ny, nz = qav.shape[:3]
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k])
-    return reconstruct(pav)
+        pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k], PAR, SYS)
+    return weno(pav)

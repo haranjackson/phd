@@ -83,8 +83,8 @@ def plot_concentration(u, style='line', x=None, label=None, color=None, xlab='x'
     y = u[:, 0, 0, 17] / u[:, 0, 0, 0]
     plot1d(y, style, x, label, color, xlab, 'Concentration', sci)
 
-def plot_pressure(u, materialParams, subsystems, intLocs=[], style='line', x=None, label=None,
-                  color=None, xlab='x', sci=0):
+def plot_pressure(u, materialParams, SYS, intLocs=[], style='line', x=None, label=None, color=None,
+                  xlab='x', sci=0):
     figure(19)
     n = len(u)
     inds = interface_indices(intLocs, n)
@@ -92,10 +92,10 @@ def plot_pressure(u, materialParams, subsystems, intLocs=[], style='line', x=Non
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            y[l] = primitive(u[l, 0, 0], materialParams[k], subsystems).p
+            y[l] = primitive(u[l, 0, 0], materialParams[k], SYS).p
     plot1d(y, style, x, label, color, xlab, 'Pressure', sci)
 
-def plot_temperature(u, materialParams, subsystems, intLocs=[], style='line', x=None, label=None,
+def plot_temperature(u, materialParams, SYS, intLocs=[], style='line', x=None, label=None,
                      color=None, xlab='x', sci=0):
     figure(20)
     n = len(u)
@@ -104,10 +104,10 @@ def plot_temperature(u, materialParams, subsystems, intLocs=[], style='line', x=
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            y[l] = primitive(u[l, 0, 0], materialParams[k], subsystems).T
+            y[l] = primitive(u[l, 0, 0], materialParams[k], SYS).T
     plot1d(y, style, x, label, color, xlab, 'Temperature', sci)
 
-def plot_sigma(u, i, j, materialParams, subsystems, intLocs=[], style='line', x=None, label=None,
+def plot_sigma(u, i, j, materialParams, SYS, intLocs=[], style='line', x=None, label=None,
                color=None, xlab='x', sci=0):
 
     figure(21+i*3+j)
@@ -117,11 +117,11 @@ def plot_sigma(u, i, j, materialParams, subsystems, intLocs=[], style='line', x=
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            P = primitive(u[l, 0, 0], materialParams[k], subsystems)
+            P = primitive(u[l, 0, 0], materialParams[k], SYS)
             y[l] = sigma(P.r, P.A, materialParams[k].cs2)[i, j]
     plot1d(y, style, x, label, color, xlab, ' Viscous Stress Component %d,%d' % (i+1, j+1), sci)
 
-def plot_heat_flux(u, i, materialParams, subsystems, intLocs=[], style='line', x=None, label=None,
+def plot_heat_flux(u, i, materialParams, SYS, intLocs=[], style='line', x=None, label=None,
                    color=None, xlab='x', sci=0):
     figure(30+i)
     n = len(u)
@@ -130,12 +130,12 @@ def plot_heat_flux(u, i, materialParams, subsystems, intLocs=[], style='line', x
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            P = primitive(u[l, 0, 0], materialParams[k], subsystems)
+            P = primitive(u[l, 0, 0], materialParams[k], SYS)
             y[l] = heat_flux(P.T, P.J, materialParams[k].α2)[i]
     plot1d(y, style, x, label, color, xlab, 'Heat Flux Component %d' % (i+1), sci)
 
-def plot_entropy(u, materialParams, subsystems, intLocs=[], style='line', x=None, label=None,
-                 color=None, xlab='x', sci=0):
+def plot_entropy(u, materialParams, SYS, intLocs=[], style='line', x=None, label=None, color=None,
+                 xlab='x', sci=0):
     figure(33)
     n = len(u)
     inds = interface_indices(intLocs, n)
@@ -143,7 +143,7 @@ def plot_entropy(u, materialParams, subsystems, intLocs=[], style='line', x=None
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            y[l] = entropy(u[l, 0, 0], materialParams[k], subsystems)
+            y[l] = entropy(u[l, 0, 0], materialParams[k], SYS)
     plot1d(y, style, x, label, color, xlab, 'Entropy', sci)
 
 def plot_variable(u, var, style='line', x=None, label=None, color=None, xlab='x', sci=0):
@@ -152,11 +152,11 @@ def plot_variable(u, var, style='line', x=None, label=None, color=None, xlab='x'
     y = u[:, 0, 0, var]
     plot1d(y, style, x, label, color, xlab, 'Variable %d' % var, sci)
 
-def plot_primitives(u, materialParams, subsystems, intLocs=[], style='line', x=None):
+def plot_primitives(u, materialParams, SYS, intLocs=[], style='line', x=None):
 
     plot_density(u, style=style, x=x)
     plot_velocity(u, 0, style=style, x=x)
-    plot_pressure(u, materialParams, subsystems, intLocs=intLocs, style=style, x=x)
+    plot_pressure(u, materialParams, SYS, intLocs=intLocs, style=style, x=x)
 
 def plot_interfaces(intLocs, figNum=None, loc=None, color=None):
     if figNum is not None:
