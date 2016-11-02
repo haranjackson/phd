@@ -62,7 +62,7 @@ def interface(qEndL, qEndM, qEndR, d, PAR, SYS):
 
     return 0.5 * ret
 
-def center(qhijk, t, inds, PAR, SYS):
+def center(qhijk, t, inds, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
     qxi = zeros([ndim, N1, 18])
@@ -86,8 +86,9 @@ def center(qhijk, t, inds, PAR, SYS):
         P = Cvec_to_Pvec(q, PAR, SYS)
 
     ret = zeros(18)
-    source_ref(ret, P, PAR, SYS)
-    ret *= dx
+    if not homogeneous:
+        source_ref(ret, P, PAR, SYS)
+        ret *= dx
 
     if SYS.viscous:
         v = P[2:5]
@@ -101,7 +102,7 @@ def center(qhijk, t, inds, PAR, SYS):
 
     return ret
 
-def fv_terms(qh, dt, PAR, SYS):
+def fv_terms(qh, dt, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
@@ -121,7 +122,7 @@ def fv_terms(qh, dt, PAR, SYS):
     h = zeros([nx, ny, nz, 18])
 
     interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, PAR, SYS)
-    center_func = lambda qhijk, t, inds: center(qhijk, t, inds, PAR, SYS)
+    center_func = lambda qhijk, t, inds: center(qhijk, t, inds, PAR, SYS, homogeneous)
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 

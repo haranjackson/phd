@@ -89,15 +89,8 @@ To Do
 \end_layout
 
 \begin_layout Itemize
-DG eigenvalues paper - submit to J.
- Comp.
- Phys.
- short notes
-\end_layout
-
-\begin_layout Itemize
-Speed up DG and FV by using primitive WENO reconstruction, jacobian of DG
- system, and precalculated inverse of 
+Speed up DG and FV by using jacobian of DG system, and precalculated inverse
+ of 
 \begin_inset Formula $U$
 \end_inset
 

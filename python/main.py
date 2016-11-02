@@ -18,10 +18,11 @@ import options
 from auxiliary.adjust import thermal_conversion
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep, check_ignition_started, continue_condition
-from auxiliary.iterator import stepper, slic_stepper, new_stepper
+from auxiliary.solvers import cookoff_stepper, aderweno_stepper, slic_stepper, new_stepper
+from auxiliary.solvers import weno_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, convertTemp, nx, NT, GFM, solver
+from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve, useDG
 
 
 IC = first_stokes_problem_IC
@@ -58,15 +59,20 @@ def run(t, count):
             fluidBC = fluidsBC[i]
             PAR = PARs[i]
 
-            if solver == 'SLIC':
+            if altThermSolve and not SYS.mechanical:
+                cookoff_stepper(fluid, fluidBC, dt, PAR)
+            elif solver == 'SLIC':
                 slic_stepper(fluid, dt, PAR, SYS)
             elif solver == 'AW':
-                qh = stepper(pool, fluid, fluidBC, dt, PAR, SYS)
+                if useDG:
+                    qh = aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
+                else:
+                    qh = weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
             elif solver == 'NEW':
                 qh = new_stepper(fluid, fluidBC, dt, PAR, SYS)
 
             if GFM:
-                dg[inds[i] : inds[i+1]] = qh[inds[i]+1 : inds[i+1]+1, 0, 0]
+                dg[inds[i]:inds[i+1]] = qh[inds[i]+1:inds[i+1]+1, 0, 0]
 
         if GFM:
             interfaceLocations = update_interface_locations(dg, interfaceLocations, dt)
