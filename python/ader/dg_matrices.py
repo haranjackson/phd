@@ -1,6 +1,7 @@
 from itertools import product
 
-from numpy import concatenate, diag, eye, ones, zeros
+from numba import jit
+from numpy import array, concatenate, diag, eye, ones, sqrt, zeros
 from scipy.sparse import csc_matrix
 
 from ader.basis import quad, basis_polys, derivative_values
@@ -53,3 +54,23 @@ def system_matrices():
         T[i-1] = kron_prod([I]*i + [derivs] + [I]*(ndim-i))
 
     return W, U, V, Z, T
+
+def Uinv1():
+    """ Returns the U^-1 for N=1
+    """
+    X = 1/3 * array([[2,1-sqrt(3)],[1+sqrt(3),2]])
+    return kron_prod([X] + [2*eye(2)]*ndim)
+
+c1 = 2*(1-sqrt(3))/3
+c2 = 2*(1+sqrt(3))/3
+
+@jit
+def UinvDot1(x):
+    """ Returns U^-1.x for N=1 and ndim=1
+    """
+    ret = 4*x/3
+    ret[0] += c1 * x[2]
+    ret[1] += c1 * x[3]
+    ret[2] += c2 * x[0]
+    ret[3] += c2 * x[1]
+    return ret

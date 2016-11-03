@@ -91,10 +91,9 @@ def source_primitive_ref(ret, P, PAR, SYS):
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
         ret[14:17] = -H / θ2
 
-def source_primitive(Q, PAR, SYS):
+def source_primitive(P, PAR, SYS):
 
     ret = zeros(18)
-    P = Cvec_to_Pvec(Q, PAR, SYS)
     source_primitive_ref(ret, P, PAR, SYS)
     return ret
 

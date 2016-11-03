@@ -4,11 +4,11 @@ from numpy import absolute, array, dot, isnan, zeros
 from scipy.sparse.linalg import spsolve
 from scipy.optimize import newton_krylov
 
-from ader.dg_matrices import system_matrices
+from ader.dg_matrices import system_matrices, UinvDot1
 from ader.basis import quad, derivative_values
 from gpr.variables.vectors import Cvec_to_Pvec
 from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_conserved
-from gpr.matrices.primitive import source_primitive_ref, Mdot_ref
+from gpr.matrices.primitive import source_primitive_ref, Mdot_ref, source_primitive
 from options import ndim, dx, N1, NT, reconstructPrim
 from options import stiff, superStiff, hidalgo, TOL, MAX_ITER, failLim
 
@@ -74,19 +74,32 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS):
     """
     q = zeros([N1]*(ndim+1) + [18])
     qj = w
+
     for j in range(N1):
         dt = dtgaps[j]
         dqdxj = dot(derivs, qj)
+
         for i in range(N1):
             qij = qj[i]
             dqdxij = dqdxj[i]
-            J = dot(system_conserved(qij, 0, PAR, SYS), dqdxij)
-            Sj = source(qij, PAR, SYS)
+
+            if reconstructPrim:
+                M = zeros(18)
+                Mdot_ref(M, qij, dqdxij, 0, PAR, SYS)
+                Sj = source_primitive(qij, PAR, SYS)
+            else:
+                M = dot(system_conserved(qij, 0, PAR, SYS), dqdxij)
+                Sj = source(qij, PAR, SYS)
+
             if superStiff:
-                f = lambda X: X - qij + dt/dx * J - dt/2 * (Sj + source(X, PAR, SYS))
+                if reconstructPrim:
+                    f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj + source_primitive(X, PAR, SYS))
+                else:
+                    f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj + source(X, PAR, SYS))
                 q[j,i] = newton_krylov(f, qij, f_tol=TOL)
             else:
-                q[j,i] = qij - dt/dx * J + dt * Sj
+                q[j,i] = qij - dt/dx * M + dt * Sj
+
         qj = q[j]
     return q.reshape([NT, 18])
 
@@ -126,7 +139,10 @@ def predictor(wh, dt, PAR, SYS):
         else:
             for count in range(MAX_ITER):
 
-                qNew = spsolve(U, rhs(q, Ww))
+                if N1==2:
+                    qNew = UinvDot1(rhs(q,Ww))
+                else:
+                    qNew = spsolve(U, rhs(q, Ww))
 
                 if isnan(qNew).any():
                     failed(w, qh, i, j, k, f, dtgaps, PAR, SYS)
