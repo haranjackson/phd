@@ -46,6 +46,16 @@ def derivative_values():
             ret[i,j] = psiDer[1][j](nodes[i])
     return ret
 
+def derivative_end_values():
+    """ Returns the value of the derivative of the ith basis function at 0 and 1
+    """
+    _, psiDer, _ = basis_polys()
+    ret = zeros([N1, 2])
+    for i in range(N1):
+        ret[i,0] = psiDer[1][i](0)
+        ret[i,1] = psiDer[1][i](1)
+    return ret
+
 def mid_values():
     psi, _, _ = basis_polys()
     return array([psii(0.5) for psii in psi])

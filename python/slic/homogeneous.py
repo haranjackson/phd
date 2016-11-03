@@ -64,8 +64,9 @@ def interface_values(un, dt, PAR, SYS):
     for i in range(len(FL)):
         FL[i,0,0] = flux(uL[i,0,0], 0, PAR, SYS)
         FR[i,0,0] = flux(uR[i,0,0], 0, PAR, SYS)
-        B0dot(BL[i,0,0], newDiff[i,0,0], vL[i,0,0], viscous)
-        B0dot(BR[i,0,0], newDiff[i,0,0], vR[i,0,0], viscous)
+        if viscous:
+            B0dot(BL[i,0,0], newDiff[i,0,0], vL[i,0,0])
+            B0dot(BR[i,0,0], newDiff[i,0,0], vR[i,0,0])
 
     fluxDiff = FL - FR
 
