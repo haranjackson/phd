@@ -89,11 +89,18 @@ To Do
 \end_layout
 
 \begin_layout Itemize
-Speed up DG and FV by using jacobian of DG system
+Implement jacobian in DG system
 \end_layout
 
 \begin_layout Itemize
-Operator splitting with SLIC and non conservative jump terms
+Implement Perron-Frobenius estimate of maximum eigenvalue of the system
+ (as thermo-acoustic tensor is irreducible and non-negative), to speed up
+ Rusanov flux calculation
+\end_layout
+
+\begin_layout Itemize
+Approximate integral of intercell fluxes as intercell flux of integral of
+ boundary states, to reduce number of flux calculations in FV
 \end_layout
 
 \begin_layout Itemize
@@ -102,7 +109,8 @@ MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM) and
 \end_layout
 
 \begin_layout Itemize
-Try operator splitting with WENO for homogeneous step
+Try operator splitting with WENO for homogeneous step, similar to SLIC but
+ with derivatives given by WENO
 \end_layout
 
 \begin_layout Itemize
@@ -359,6 +367,14 @@ Using a precalculated, analytical form of
 
 \begin_layout Section
 SLIC GPR Solver
+\end_layout
+
+\begin_layout Standard
+The nonconservative terms are now included in the step where the system
+ is evolved by half a time step.
+ The fluxes are also now calculated as either Rusanov or Osher-Solomon fluxes,
+ as in ADER-WENO.
+ The results are still more diffusive than desired on Stokes' First Problem.
 \end_layout
 
 \begin_layout Subsection
@@ -1505,10 +1521,6 @@ The RGFM does nothing without a temperature fix when applied to the heat
 \end_inset
 
 ?
-\end_layout
-
-\begin_layout Chapter
-General Primitive Form
 \end_layout
 
 \begin_layout Standard
