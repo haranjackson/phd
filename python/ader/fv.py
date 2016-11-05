@@ -7,7 +7,7 @@ from ader.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref
 from gpr.matrices.jacobians import dQdPdot
 from gpr.variables.vectors import Cvec_to_Pvec
-from options import ndim, dx, N1, method, reconstructPrim
+from options import ndim, dx, N1, method, approxInterface, reconstructPrim
 
 
 nodes, _, weights = quad()
@@ -34,33 +34,48 @@ def endpoints(qh):
 def interface(qEndL, qEndM, qEndR, d, PAR, SYS):
     """ Returns flux term and jump term in dth direction at the interface between states qhL, qhR
     """
-    ret = zeros(18)
-    for a in range(N1):
-        if ndim > 1:
-            for b in range(N1):
-                if ndim > 2:
-                    for c in range(N1):
-                        qL1 = qEndL[d, 1, a, b, c]
-                        qM0 = qEndM[d, 0, a, b, c]
-                        qM1 = qEndM[d, 1, a, b, c]
-                        qR0 = qEndR[d, 0, a, b, c]
-                        weight = weights[a] * weights[b] * weights[c]
-                        ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
-                else:
-                    qL1 = qEndL[d, 1, a, b]
-                    qM0 = qEndM[d, 0, a, b]
-                    qM1 = qEndM[d, 1, a, b]
-                    qR0 = qEndR[d, 0, a, b]
-                    weight = weights[a] * weights[b]
-                    ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
-        else:
-            qL1 = qEndL[d, 1, a]
-            qM0 = qEndM[d, 0, a]
-            qM1 = qEndM[d, 1, a]
-            qR0 = qEndR[d, 0, a]
-            ret += weights[a] * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
+    if approxInterface:
+        qL1 = zeros(18)
+        qM0 = zeros(18)
+        qM1 = zeros(18)
+        qR0 = zeros(18)
+        for a in range(N1):
+            weight = weights[a]
+            qL1 += weight * qEndL[d, 1, a]
+            qM0 += weight * qEndM[d, 0, a]
+            qM1 += weight * qEndM[d, 1, a]
+            qR0 += weight * qEndR[d, 0, a]
+        return 0.5 * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
 
-    return 0.5 * ret
+    else:
+        ret = zeros(18)
+        for a in range(N1):
+            if ndim > 1:
+                for b in range(N1):
+                    if ndim > 2:
+                        for c in range(N1):
+                            qL1 = qEndL[d, 1, a, b, c]
+                            qM0 = qEndM[d, 0, a, b, c]
+                            qM1 = qEndM[d, 1, a, b, c]
+                            qR0 = qEndR[d, 0, a, b, c]
+                            weight = weights[a] * weights[b] * weights[c]
+                            ret += weight * (D(qM1, qR0, d, 1, PAR, SYS)
+                                             + D(qM0, qL1, d, 0, PAR, SYS))
+                    else:
+                        qL1 = qEndL[d, 1, a, b]
+                        qM0 = qEndM[d, 0, a, b]
+                        qM1 = qEndM[d, 1, a, b]
+                        qR0 = qEndR[d, 0, a, b]
+                        weight = weights[a] * weights[b]
+                        ret += weight * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
+            else:
+                qL1 = qEndL[d, 1, a]
+                qM0 = qEndM[d, 0, a]
+                qM1 = qEndM[d, 1, a]
+                qR0 = qEndR[d, 0, a]
+                ret += weights[a] * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
+
+        return 0.5 * ret
 
 def center(qhijk, t, inds, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk

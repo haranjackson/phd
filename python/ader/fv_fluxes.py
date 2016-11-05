@@ -3,10 +3,10 @@ from numpy import complex128, diag, dot, imag, zeros
 from scipy.linalg import eig, solve
 
 from ader.basis import quad, end_values, derivative_values
-from gpr.eig import max_abs_eigs
+from gpr.eig import max_abs_eigs, perron_frobenius
 from gpr.matrices.conserved import flux_ref, Bdot, system_conserved
 from gpr.variables.vectors import Pvec_to_Cvec, Cvec_to_Pvec
-from options import DEBUG, N1, reconstructPrim
+from options import DEBUG, N1, reconstructPrim, perronFrob
 
 nodes, _, weights = quad()
 endVals = end_values()
@@ -63,8 +63,14 @@ def Drus(xL, xR, d, pos, PAR, SYS):
     """
     pL, pR, qL, qR = input_vectors(xL, xR, PAR, SYS)
 
-    max1 = max_abs_eigs(pL, d, PAR, SYS)
-    max2 = max_abs_eigs(pR, d, PAR, SYS)
+
+    if perronFrob:
+        max1 = perron_frobenius(pL, d, PAR, SYS)
+        max2 = perron_frobenius(pR, d, PAR, SYS)
+    else:
+        max1 = max_abs_eigs(pL, d, PAR, SYS)
+        max2 = max_abs_eigs(pR, d, PAR, SYS)
+
     if pos:
         ret = - max(max1, max2) * (qR - qL)
     else:

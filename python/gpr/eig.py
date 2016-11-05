@@ -65,6 +65,29 @@ def max_abs_eigs(P, d, PAR, SYS):
         else:
             return lam - vd
 
+def perron_frobenius(P, d, PAR, SYS):
+    """ Returns an estimate of the maximum eigenvalue of the GPR system using an average of the
+        Perron-Frobenius bounds on the maximum eigenvalue of the thermo-acoustic tensor.
+    """
+    ρ = P[0]
+    p = P[1]
+    vd = P[2+d]
+    A = P[5:14].reshape([3,3])
+    T = temperature(ρ, p, PAR.γ, PAR.pINF, PAR.cv)
+
+    if not SYS.mechanical:
+        return c_h(ρ, T, PAR.α, PAR.cv)
+
+    else:
+        O = thermo_acoustic_tensor(ρ, A, p, T, d, PAR, SYS)
+        rowSum = [sum(o) for o in O]
+
+        lam = sqrt((max(rowSum)+min(rowSum))/2)
+        if vd > 0:
+            return vd + lam
+        else:
+            return lam - vd
+
 def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
     ret = zeros([4, 5])
     ret[:3, 0] = -σd / ρ**2

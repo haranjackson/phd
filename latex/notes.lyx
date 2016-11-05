@@ -93,14 +93,7 @@ Implement jacobian in DG system
 \end_layout
 
 \begin_layout Itemize
-Implement Perron-Frobenius estimate of maximum eigenvalue of the system
- (as thermo-acoustic tensor is irreducible and non-negative), to speed up
- Rusanov flux calculation
-\end_layout
-
-\begin_layout Itemize
-Approximate integral of intercell fluxes as intercell flux of integral of
- boundary states, to reduce number of flux calculations in FV
+Currently calculating components of the FV jump term twice - sort this out
 \end_layout
 
 \begin_layout Itemize
@@ -147,6 +140,118 @@ Driven isotropic turbulence
 
 \begin_layout Chapter
 Faster Solvers
+\end_layout
+
+\begin_layout Section
+Perron-Frobenius Estimate for Rusanov Flux
+\end_layout
+
+\begin_layout Standard
+The most expensive single part of the FV flux updates when using the Rusanov
+ flux is the calculation of the maximum absolute eigenvalue of the system
+ matrix.
+ In my dissertation I showed that this is equal to 
+\begin_inset Formula $\left|v\pm\lambda_{max}\right|$
+\end_inset
+
+ where 
+\begin_inset Formula $\lambda_{max}$
+\end_inset
+
+ is the maximum eigenvalue of the thermo-acoustic tensor 
+\begin_inset Formula $X$
+\end_inset
+
+, and the sign depends on the sign of 
+\begin_inset Formula $v$
+\end_inset
+
+.
+ When 
+\begin_inset Formula $\alpha\neq0$
+\end_inset
+
+, by considering the fact that the adjacency graph of 
+\begin_inset Formula $X$
+\end_inset
+
+ is clearly strongly connected, it follows that 
+\begin_inset Formula $X$
+\end_inset
+
+ is irreducible.
+ Additionally, it can be shown that its non-zero components are always positive
+ [INSERT PROOF].
+ Thus, by the Perron-Frobenius Theorem, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\min_{i}\sum_{j}X_{ij}\leq\lambda_{max}\leq\max_{i}\sum_{j}X_{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These bounds are much more quickly calculated than explicitly finding the
+ eigenvalues.
+ I proposed using an average of the bounds as an estimate for 
+\begin_inset Formula $\lambda_{max}$
+\end_inset
+
+.
+ This results in ~35% speedup on the FV section of Stokes' First Problem.
+\end_layout
+
+\begin_layout Standard
+NB this method can be used to obtain a conservative upper bound on 
+\begin_inset Formula $\lambda_{max}$
+\end_inset
+
+when calculating the timestep.
+\end_layout
+
+\begin_layout Section
+Approximating Interface Terms in FV
+\end_layout
+
+\begin_layout Standard
+Instead of calculating the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\int D\left(q^{-}\left(x_{0},t\right),q^{+}\left(x_{0},t\right)\right)dt
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I propose calculating the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+D\left(\frac{1}{\Delta t}\int q^{-}\left(x_{0},t\right)dt,\frac{1}{\Delta t}\int q^{+}\left(x_{0},t\right)dt\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This obtains a large speedup with no discernable difference in the results
+ of Stokes' First Problem.
 \end_layout
 
 \begin_layout Section
