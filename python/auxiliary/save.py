@@ -10,7 +10,7 @@ from options import Ms, W, doubleTime, fullBurn, burnProp
 from options import reactionType, reactiveEOS, minE
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
 from options import solver, useDG, approxInterface, reconstructPrim, convertTemp, altThermSolve
-from options import  N, CFL, method, perronFrob, NOISE_LIM
+from options import  N, CFL, method, perronFrob
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
 from options import MAX_ITER, paraDG, paraFV, ncore

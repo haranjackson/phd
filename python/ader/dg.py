@@ -19,7 +19,7 @@ derivs = derivative_values()
 stiff = stiff
 
 
-def rhs_conserved(q, Ww, dt, PAR, SYS):
+def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
     Tq = dot(T, q)
@@ -28,7 +28,8 @@ def rhs_conserved(q, Ww, dt, PAR, SYS):
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
         P = Cvec_to_Pvec(q[b], PAR, SYS)
-        source_ref(Sq[b], P, PAR, SYS)
+        if not homogeneous:
+            source_ref(Sq[b], P, PAR, SYS)
         for d in range(ndim):
             flux_ref(Fq[d,b], P, d, PAR, SYS)
             if SYS.viscous:
@@ -44,7 +45,7 @@ def rhs_conserved(q, Ww, dt, PAR, SYS):
 
     return dt/dx * ret + Ww
 
-def rhs_primitive(p, Ww, dt, PAR, SYS):
+def rhs_primitive(p, Ww, dt, PAR, SYS, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of ph
     """
     Tp = dot(T, p)
@@ -52,7 +53,8 @@ def rhs_primitive(p, Ww, dt, PAR, SYS):
     Mp = zeros([ndim, NT, 18])
     for b in range(NT):
         P = p[b]
-        source_primitive_ref(Sp[b], P, PAR, SYS)
+        if not homogeneous:
+            source_primitive_ref(Sp[b], P, PAR, SYS)
         for d in range(ndim):
             Mdot_ref(Mp[d,b], P, Tp[d,b], d, PAR, SYS)
 
@@ -69,7 +71,7 @@ def standard_initial_guess(w):
     ret = array([w for i in range(N1)])
     return ret.reshape([NT, 18])
 
-def hidalgo_initial_guess(w, dtgaps, PAR, SYS):
+def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
     """
     q = zeros([N1]*(ndim+1) + [18])
@@ -92,10 +94,16 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS):
                 Sj = source(qij, PAR, SYS)
 
             if superStiff:
-                if reconstructPrim:
-                    f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj + source_primitive(X, PAR, SYS))
+                if homogeneous:
+                    if reconstructPrim:
+                        f = lambda X: X - qij + dt/dx * M
+                    else:
+                        f = lambda X: X - qij + dt/dx * M
                 else:
-                    f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj + source(X, PAR, SYS))
+                    if reconstructPrim:
+                        f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj+source_primitive(X,PAR,SYS))
+                    else:
+                        f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj+source(X,PAR,SYS))
                 q[j,i] = newton_krylov(f, qij, f_tol=TOL)
             else:
                 q[j,i] = qij - dt/dx * M + dt * Sj
@@ -107,7 +115,7 @@ def failed(w, qh, i, j, k, f, dtgaps, PAR, SYS):
     q = hidalgo_initial_guess(w, dtgaps, PAR, SYS)
     qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
 
-def predictor(wh, dt, PAR, SYS):
+def predictor(wh, dt, PAR, SYS, homogeneous=0):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     global stiff
@@ -117,9 +125,9 @@ def predictor(wh, dt, PAR, SYS):
     dtgaps = dt * gaps
 
     if reconstructPrim:
-        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, PAR, SYS)
+        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, PAR, SYS, homogeneous)
     else:
-        rhs = lambda X, Ww: rhs_conserved(X, Ww, dt, PAR, SYS)
+        rhs = lambda X, Ww: rhs_conserved(X, Ww, dt, PAR, SYS, homogeneous)
 
     failCount = 0
     for i, j, k in product(range(nx), range(ny), range(nz)):
