@@ -1,13 +1,7 @@
 from gpr.variables.eos import E_1r, E_2J
 from gpr.variables.vectors import primitive, conserved
-from options import NOISE_LIM, reactiveEOS
+from options import reactiveEOS
 
-
-def limit_noise(arr):
-    """ Removes all elements of arr smaller in absolute value than the noise limit
-    """
-    arr[abs(arr) < NOISE_LIM] = 0
-    return arr
 
 def thermal_conversion(fluids, PARs, SYS):
     """ Sets the pressure and density across the domain in the isobaric cookoff technique,

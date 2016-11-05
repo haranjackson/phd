@@ -52,7 +52,6 @@ N      = 1                  # Method is order N+1
 CFL    = 0.9                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 1              # Whether to use the Perron-Frobenius approximation to the max eigenval
-NOISE_LIM = 1e-16           # Values below NOISE_LIM in finite volume solver are discarded
 
 """ DG Options """
 

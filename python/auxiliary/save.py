@@ -76,8 +76,7 @@ def save_config(path):
         f.write('N      = %i\n' % N)
         f.write('CFL    = %f\n' % CFL)
         f.write('method = %s\n' % method)
-        f.write('perronFrob = %i\n' % perronFrob)
-        f.write('NOISE_LIM  = %e\n\n' % NOISE_LIM)
+        f.write('perronFrob = %i\n\n' % perronFrob)
 
         f.write('hidalgo    = %i\n' % hidalgo)
         f.write('stiff      = %i\n' % stiff)

@@ -9,7 +9,6 @@ from ader.parallel import para_predictor, para_fv_terms, para_fv_terms_space_onl
 from ader.weno import weno, weno_primitive
 
 from auxiliary.bc import standard_BC
-from auxiliary.adjust import limit_noise
 
 from experimental.new_solver import new_predictor
 
@@ -44,9 +43,9 @@ def aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     t2 = time()
 
     if paraFV:
-        fluid += limit_noise(para_fv_terms(pool, qh, dt, PAR, SYS))
+        fluid += para_fv_terms(pool, qh, dt, PAR, SYS)
     else:
-        fluid += limit_noise(fv_terms(qh, dt, PAR, SYS))
+        fluid += fv_terms(qh, dt, PAR, SYS)
     t3 = time()
 
     print('WENO:', t1-t0, '\nDG:  ', t2-t1, '\nFV:  ', t3-t2)
@@ -64,9 +63,9 @@ def weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     t2 = time()
 
     if paraFV:
-        fluid += limit_noise(para_fv_terms_space_only(pool, wh, dt, PAR, SYS))
+        fluid += para_fv_terms_space_only(pool, wh, dt, PAR, SYS)
     else:
-        fluid += limit_noise(fv_terms_space_only(wh, dt, PAR, SYS))
+        fluid += fv_terms_space_only(wh, dt, PAR, SYS)
     t2 = time()
 
     print('WENO:', t1-t0, '\nFV:  ', t2-t1)
@@ -85,7 +84,7 @@ def split_weno_stepper(fluid, dt, PAR, SYS):
     wh = weno(fluidBC)
     nx,ny,nz = wh.shape[:3]
     qh = repeat(wh[:,:,:,newaxis], N1, 3).reshape([nx, ny, nz, NT, 18])
-    fluid += limit_noise(fv_terms(qh, dt, PAR, SYS, 1))
+    fluid += fv_terms(qh, dt, PAR, SYS, 1)
     ode_stepper(fluid, dt/2, PAR, SYS)
 
 def new_stepper(fluid, fluidBC, dt, PAR, SYS):
@@ -102,7 +101,7 @@ def new_stepper(fluid, fluidBC, dt, PAR, SYS):
     qh = new_predictor(wh, dt, PAR, SYS)
     t2 = time()
 
-    fluid += limit_noise(fv_terms(qh, dt, PAR, SYS))
+    fluid += fv_terms(qh, dt, PAR, SYS)
     t3 = time()
 
     print('WENO:', t1-t0, '\nDG:  ', t2-t1, '\nFV:  ', t3-t2)
