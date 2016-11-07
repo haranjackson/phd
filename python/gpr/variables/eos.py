@@ -63,3 +63,10 @@ def E_J(J, α2):
     """ Returns the partial derivative of E by J
     """
     return α2 * J
+
+def energy_to_temperature(E, A, J, PAR):
+    """ Returns the temperature of an ideal gas, given the energy (minus the kinetic energy or any
+        chemical energy)
+    """
+    E1 = E - E_2A(A, PAR.cs2) - E_2J(J, PAR.α2)
+    return E1 / PAR.cv
