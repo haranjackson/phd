@@ -111,8 +111,8 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
         qj = q[j]
     return q.reshape([NT, 18])
 
-def failed(w, qh, i, j, k, f, dtgaps, PAR, SYS):
-    q = hidalgo_initial_guess(w, dtgaps, PAR, SYS)
+def failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous):
+    q = hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous)
     qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
 
 def predictor(wh, dt, PAR, SYS, homogeneous=0):
@@ -153,7 +153,7 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
                     qNew = spsolve(U, rhs(q, Ww))
 
                 if isnan(qNew).any():
-                    failed(w, qh, i, j, k, f, dtgaps, PAR, SYS)
+                    failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous)
                     failCount += 1
                     break
                 elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():# Mixed convergence cond.
@@ -163,7 +163,7 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
                     qh[i, j, k] = qNew
                     break
             else:
-                failed(w, qh, i, j, k, f, dtgaps, PAR, SYS)
+                failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous)
 
     if failCount > failLim:
         stiff = 1

@@ -22,7 +22,7 @@ from auxiliary.solvers import cookoff_stepper, aderweno_stepper, split_slic_step
 from auxiliary.solvers import weno_stepper, split_weno_stepper, split_dg_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve, useDG
+from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
 IC = first_stokes_problem_IC

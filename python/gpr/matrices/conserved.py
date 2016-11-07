@@ -6,7 +6,7 @@ from gpr.matrices.jacobians import jacobian_variables, dFdP, dPdQ
 from gpr.variables.eos import E_A, E_J, total_energy
 from gpr.variables.material_functions import theta_1, theta_2, arrhenius_reaction_rate
 from gpr.variables.material_functions import discrete_ignition_temperature_reaction_rate
-from gpr.variables.vectors import Cvec_to_Pvec
+from gpr.variables.vectors import Cvec_to_Pvec, primitive
 from gpr.variables.state import sigma, temperature
 from options import reactionType, reactiveEOS
 
@@ -169,7 +169,7 @@ def Bdot(ret, x, v, d):
 def system_conserved(Q, d, PAR, SYS):
     """ Returns the Jacobian in the dth direction
     """
-    P = Cvec_to_Pvec(Q, PAR, SYS)
+    P = primitive(Q, PAR, SYS)
     jacVars = jacobian_variables(P, PAR)
     DFDP = dFdP(P, d, jacVars, PAR, SYS)
     DPDQ = dPdQ(P, jacVars, PAR, SYS)
