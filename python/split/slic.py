@@ -75,7 +75,7 @@ def interface_values(un, dt, PAR, SYS):
     u_R = uR + d * (fluxDiff + BR)
     return u_L, u_R
 
-def flux_stepper(u, un, dt, PAR, SYS):
+def slic_stepper(u, un, dt, PAR, SYS):
     u_L, u_R = interface_values(un, dt, PAR, SYS)
     d = dt / (2 * dx)
     for i in range(len(u)):

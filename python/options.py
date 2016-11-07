@@ -41,7 +41,7 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'SPLIT-DG'        # Options: 'ADER-WENO', 'SLIC', 'NEW', 'SPLIT-WENO', 'SPLIT-DG'
+solver = 'SPLIT-DG'        # Options: 'ADER-WENO', 'SPLIT-SLIC', 'NEW', 'SPLIT-WENO', 'SPLIT-DG'
 useDG  = 1                  # Whether to use DG to get higher order time accuracy with ADER-WENO
 approxInterface = 1         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables

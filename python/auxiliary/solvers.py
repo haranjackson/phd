@@ -15,8 +15,8 @@ from experimental.new_solver import new_predictor
 from gpr.variables.vectors import primitive, primitive_vector
 from gpr.thermo import thermal_stepper
 
-from slic.ode import ode_stepper
-from slic.homogeneous import flux_stepper
+from split.ode import ode_stepper
+from split.slic import slic_stepper
 
 from options import NT, N1, reconstructPrim, paraDG, paraFV
 
@@ -71,10 +71,10 @@ def weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     print('WENO:', t1-t0, '\nFV:  ', t2-t1)
     return qh
 
-def slic_stepper(fluid, dt, PAR, SYS):
+def split_slic_stepper(fluid, dt, PAR, SYS):
     ode_stepper(fluid, dt/2, PAR, SYS)
     fluidn = standard_BC(standard_BC(fluid))
-    flux_stepper(fluid, fluidn, dt, PAR, SYS)
+    slic_stepper(fluid, fluidn, dt, PAR, SYS)
     ode_stepper(fluid, dt/2, PAR, SYS)
     return None
 
