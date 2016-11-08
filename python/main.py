@@ -35,6 +35,8 @@ saveArrays = save_arrays(u, intLocs)
 
 def run(t, count):
 
+    tStart = time()
+
     global saveArrays, SYS, SFix, TFix
 
     interfaceLocations = saveArrays.interfaces[count]
@@ -94,6 +96,8 @@ def run(t, count):
         count += 1
         record_data(fluids, inds, t, interfaceLocations, saveArrays)
         print('Total Time:', time()-t0, '\n')
+
+    print('TOTAL RUNTIME:', time()-tStart)
 
 if __name__ == "__main__":
     run(0, 0)

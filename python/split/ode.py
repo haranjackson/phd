@@ -1,6 +1,7 @@
 from numpy import array, einsum, exp, eye, zeros
 from scipy.integrate import odeint
 
+import auxiliary
 from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D, tr
 from gpr.variables.eos import E_3, E_A, E_J, energy_to_temperature
 from gpr.variables.material_functions import theta_1, theta_2
@@ -28,27 +29,35 @@ def A_jac(A, τ1):
     ret *= -3/τ1 * det3(A)**(5/3)
     return ret.reshape([9,9])
 
-def jac(y, t0, ρ, E, PAR):
-    A = y[:9].reshape([3,3])
-    J = y[9:]
-    T = energy_to_temperature(E, A, J, PAR)
+def jac(y, t0, ρ, E, PAR, SYS):
 
     ret = zeros([12, 12])
-    ret[:9,:9] = A_jac(A, PAR.τ1)
-    ret[9:,9:] = -(T * PAR.ρ0) / (PAR.T0 * ρ * PAR.τ1) * eye(3)
+    A = y[:9].reshape([3,3])
+
+    if SYS.viscous:
+        ret[:9,:9] = A_jac(A, PAR.τ1)
+
+    if SYS.thermal:
+        J = y[9:]
+        T = energy_to_temperature(E, A, J, PAR)
+        ret[9:,9:] = -(T * PAR.ρ0) / (PAR.T0 * ρ * PAR.τ1) * eye(3)
+
     return ret
 
-def f(y, t0, ρ, E, PAR):
-    A = y[:9].reshape([3,3])
-    J = y[9:]
-    T = energy_to_temperature(E, A, J, PAR)
-
-    Asource = - E_A(A, PAR.cs2) / theta_1(A, PAR.cs2, PAR.τ1)
-    Jsource = - E_J(J, PAR.α2) / theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
+def f(y, t0, ρ, E, PAR, SYS):
 
     ret = zeros(12)
-    ret[:9] = Asource.ravel()
-    ret[9:] = Jsource
+    A = y[:9].reshape([3,3])
+
+    if SYS.viscous:
+        Asource = - E_A(A, PAR.cs2) / theta_1(A, PAR.cs2, PAR.τ1)
+        ret[:9] = Asource.ravel()
+
+    if SYS.thermal:
+        J = y[9:]
+        T = energy_to_temperature(E, A, J, PAR)
+        ret[9:] = - E_J(J, PAR.α2) / theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
+
     return ret
 
 def ode_stepper_full(u, dt, PAR, SYS):
@@ -65,7 +74,8 @@ def ode_stepper_full(u, dt, PAR, SYS):
         y0[9:] = Q[14:17] / ρ
         t = array([0, dt])
 
-        y1 = odeint(f, y0, t, args=(ρ,E,PAR), Dfun=jac)[1]
+        y1 = odeint(f, y0, t, args=(ρ,E,PAR,SYS))[1]
+#        y1 = odeint(f, y0, t, args=(ρ,E,PAR,SYS), Dfun=jac)[1]
         u[i,0,0,5:14] = y1[:9]
         u[i,0,0,14:17] = ρ * y1[9:]
 
@@ -85,8 +95,24 @@ def ode_stepper(u, dt, PAR, SYS):
 
         if SYS.viscous:
             A = Q[5:14].reshape([3,3])
-            u[i,0,0,5:14] = linearised_distortion(ρ, A, dt, PAR).ravel()
+            A1 = linearised_distortion(ρ, A, dt, PAR)
+            u[i,0,0,5:14] = A1.ravel()
 
         if SYS.thermal:
             P0 = primitive(Q, PAR, SYS)
             u[i,0,0,14:17] = ρ * exp(-(P0.T * PAR.ρ0 * dt)/(PAR.T0 * ρ * PAR.τ2)) * P0.J
+
+def compare_solvers(A, dt):
+    PAR = auxiliary.classes.material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1e-16, μ=1e-3, Pr=0.75)
+    SYS = auxiliary.classes.active_subsystems(1,1,0,0)
+    ρ = det3(A)
+
+    A1 = linearised_distortion(ρ, A, dt, PAR)
+
+    y0 = zeros([12])
+    y0[:9] = A.ravel()
+    t = array([0, dt])
+    y1 = odeint(f, y0, t, args=(ρ,0,PAR,SYS), Dfun=jac)[1]
+    A2 = y1[:9].reshape([3,3])
+
+    return A1, A2

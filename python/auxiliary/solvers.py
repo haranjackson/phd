@@ -15,10 +15,10 @@ from experimental.new_solver import new_predictor
 from gpr.variables.vectors import primitive, primitive_vector
 from gpr.thermo import thermal_stepper
 
-from split.ode import ode_stepper
+from split.ode import ode_stepper, ode_stepper_full
 from split.slic import slic_stepper
 
-from options import NT, N1, reconstructPrim, paraDG, paraFV
+from options import NT, N1, reconstructPrim, paraDG, paraFV, linODE
 
 
 def cookoff_stepper(fluid, fluidBC, dt, PAR):
@@ -72,20 +72,26 @@ def weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     return qh
 
 def split_slic_stepper(fluid, dt, PAR, SYS):
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    if linODE:
+        ode_stepper(fluid, dt/2, PAR, SYS)
+    else:
+        ode_stepper_full(fluid, dt/2, PAR, SYS)
     fluidn = standard_BC(standard_BC(fluid))
     slic_stepper(fluid, fluidn, dt, PAR, SYS)
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    if linODE:
+        ode_stepper(fluid, dt/2, PAR, SYS)
+    else:
+        ode_stepper_full(fluid, dt/2, PAR, SYS)
     return None
 
 def split_weno_stepper(fluid, dt, PAR, SYS):
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    ode_stepper_full(fluid, dt/2, PAR, SYS)
     fluidBC = standard_BC(fluid)
     wh = weno(fluidBC)
     nx,ny,nz = wh.shape[:3]
     qh = repeat(wh[:,:,:,newaxis], N1, 3).reshape([nx, ny, nz, NT, 18])
     fluid += fv_terms(qh, dt, PAR, SYS, 1)
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    ode_stepper_full(fluid, dt/2, PAR, SYS)
 
 def split_dg_stepper(fluid, dt, PAR, SYS):
     t1 = time()
@@ -98,7 +104,7 @@ def split_dg_stepper(fluid, dt, PAR, SYS):
     t4 = time()
     fluid += fv_terms(qh, dt, PAR, SYS, 1)
     t5 = time()
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    ode_stepper_full(fluid, dt/2, PAR, SYS)
     t6 = time()
     print('ODE1:', t2-t1, '\nWENO:', t3-t2, '\nDG:  ', t4-t3, '\nFV:  ', t5-t4, '\nODE2:', t6-t5)
 

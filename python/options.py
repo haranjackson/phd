@@ -2,7 +2,7 @@ Rc   = 8.314459848          # Universal gas constant
 
 """ Domain Parameters """
 
-tf = 0.2                    # Final time of the simulation
+tf = 1                    # Final time of the simulation
 L  = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
@@ -41,21 +41,22 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'ADER-WENO'        # 'ADER-WENO','WENO','SPLIT-WENO','SPLIT-DG','SPLIT-SLIC','NEW'
+solver = 'SPLIT-WENO'        # 'ADER-WENO','WENO','SPLIT-WENO','SPLIT-DG','SPLIT-SLIC','NEW'
+linODE = 1                  # Whether to use the linearised ODE solver
 approxInterface = 1         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
 
 N      = 1                  # Method is order N+1
-CFL    = 0.9                # CFL number
+CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
-perronFrob = 1              # Whether to use the Perron-Frobenius approximation to the max eigenval
+perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
 
 """ DG Options """
 
 hidalgo    = 0              # Whether to use the Hidalgo initial guess
-stiff      = 1              # Whether source terms are stiff (Newton-Krylov solver is used)
+stiff      = 0              # Whether source terms are stiff (Newton-Krylov solver is used)
 superStiff = 0              # Whether to use Newton-Krylov to compute the Hidalgo initial guess
 failLim    = 180            # Maximum number of non-stiff solves that are allowed to fail
 TOL        = 6e-6           # Tolerance to which the Galerkin Predictor must converge

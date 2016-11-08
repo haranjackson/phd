@@ -98,11 +98,19 @@ To Do
 \end_layout
 
 \begin_layout Itemize
-Implement jacobian in DG system
+Investigate ways of determining whether the linearised ODE solver is appropriate
+\end_layout
+
+\begin_layout Itemize
+Find analytic form of inverse of WENO matrices
 \end_layout
 
 \begin_layout Itemize
 Currently calculating components of the FV jump term twice - sort this out
+\end_layout
+
+\begin_layout Itemize
+Implement jacobian in DG system
 \end_layout
 
 \begin_layout Itemize
@@ -111,8 +119,11 @@ MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM) and
 \end_layout
 
 \begin_layout Itemize
-Try operator splitting with WENO for homogeneous step, similar to SLIC but
- with derivatives given by WENO
+Try evolving in time by 
+\begin_inset Formula $\frac{\Delta t}{2}$
+\end_inset
+
+ in split-WENO
 \end_layout
 
 \begin_layout Itemize
@@ -608,6 +619,13 @@ The eqations for
  must be solved with a numerical ODE solver.
 \end_layout
 
+\begin_layout Standard
+Many different solvers can be used to solve the homogeneous part of the
+ system.
+ So far, this has been tested with SLIC, WENO, and DG.
+ A split-WENO scheme seems to be the fastest and most accurate method available.
+\end_layout
+
 \begin_layout Subsection
 Jacobian of Source ODE Solver
 \end_layout
@@ -932,18 +950,6 @@ This is equal to:
 Results with Stokes' First Problem look good with this linearisation.
  The ODE step takes a negligible amount of time, meaning that if accuracy
  is maintained to second order, the solver is now fast enough.
-\end_layout
-
-\begin_layout Subsection
-SLIC Solver
-\end_layout
-
-\begin_layout Standard
-The nonconservative terms are now included in the step where the system
- is evolved by half a time step.
- The fluxes are also now calculated as either Rusanov or Osher-Solomon fluxes,
- as in ADER-WENO.
- The results are still more diffusive than desired on Stokes' First Problem.
 \end_layout
 
 \begin_layout Section
