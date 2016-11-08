@@ -1,4 +1,4 @@
-from numpy import polyint, zeros, floor, ceil
+from numpy import array, ceil, floor, polyint, sqrt, zeros
 
 from ader.basis import basis_polys
 from options import N, N1
@@ -32,6 +32,12 @@ def coefficient_matrices():
                 Mc[2,e,p] = ψpInt(e-N1+2) - ψpInt(e-N1+1)
                 Mc[3,e,p] = ψpInt(e+1) - ψpInt(e)
     return Mc
+
+def inv_coeff_mats_1():
+    r3 = sqrt(3)
+    ret1 = 1/r3 * array([[r3+1/2, -1/2],[r3-1/2, 1/2]])
+    ret2 = 1/r3 * array([[1/2, r3-1/2],[-1/2, r3+1/2]])
+    return ret1, ret2
 
 def oscillation_indicator():
     """ Generate the oscillation indicator matrix

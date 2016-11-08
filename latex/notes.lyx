@@ -102,10 +102,6 @@ Investigate ways of determining whether the linearised ODE solver is appropriate
 \end_layout
 
 \begin_layout Itemize
-Find analytic form of inverse of WENO matrices
-\end_layout
-
-\begin_layout Itemize
 Currently calculating components of the FV jump term twice - sort this out
 \end_layout
 
@@ -275,7 +271,7 @@ This obtains a large speedup with no discernable difference in the results
 \end_layout
 
 \begin_layout Section
-Analytical Results for DG System
+Analytical Results for Basis Vectors
 \end_layout
 
 \begin_layout Standard
@@ -422,6 +418,92 @@ status open
 \backslash
 end{subequations}
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\int_{m}^{m+1}\psi_{1}\left(x\right)dx & =\frac{-\sqrt{3}}{2}\left(2m+1\right)+\frac{1+\sqrt{3}}{2}=\frac{1}{2}-m\sqrt{3}\\
+\int_{m}^{m+1}\psi_{2}\left(x\right)dx & =\frac{\sqrt{3}}{2}\left(2m+1\right)+\frac{1-\sqrt{3}}{2}=\frac{1}{2}+m\sqrt{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The WENO matrices are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cc}
+\frac{1}{2} & \frac{1}{2}\\
+\frac{1}{2}-\sqrt{3} & \frac{1}{2}+\sqrt{3}
+\end{array}\right),\left(\begin{array}{cc}
+\frac{1}{2}+\sqrt{3} & \frac{1}{2}-\sqrt{3}\\
+\frac{1}{2} & \frac{1}{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The inverses are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\sqrt{3}}\left(\begin{array}{cc}
+\sqrt{3}+\frac{1}{2} & -\frac{1}{2}\\
+\sqrt{3}-\frac{1}{2} & \frac{1}{2}
+\end{array}\right),\frac{1}{\sqrt{3}}\left(\begin{array}{cc}
+\frac{1}{2} & \sqrt{3}-\frac{1}{2}\\
+-\frac{1}{2} & \sqrt{3}+\frac{1}{2}
+\end{array}\right)
+\end{equation}
 
 \end_inset
 

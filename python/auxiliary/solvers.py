@@ -85,13 +85,17 @@ def split_slic_stepper(fluid, dt, PAR, SYS):
     return None
 
 def split_weno_stepper(fluid, dt, PAR, SYS):
-    ode_stepper_full(fluid, dt/2, PAR, SYS)
+    t1 = time()
+    ode_stepper(fluid, dt/2, PAR, SYS)
+    t2 = time()
     fluidBC = standard_BC(fluid)
     wh = weno(fluidBC)
-    nx,ny,nz = wh.shape[:3]
-    qh = repeat(wh[:,:,:,newaxis], N1, 3).reshape([nx, ny, nz, NT, 18])
-    fluid += fv_terms(qh, dt, PAR, SYS, 1)
-    ode_stepper_full(fluid, dt/2, PAR, SYS)
+    t3 = time()
+    fluid += fv_terms(wh, dt, PAR, SYS, 1)
+    t4 = time()
+    ode_stepper(fluid, dt/2, PAR, SYS)
+    t5 = time()
+    print('ODE1:',t2-t1, '\nWENO:',t3-t2, '\nFV:  ',t4-t3, '\nODE2:',t5-t4)
 
 def split_dg_stepper(fluid, dt, PAR, SYS):
     t1 = time()
@@ -106,7 +110,7 @@ def split_dg_stepper(fluid, dt, PAR, SYS):
     t5 = time()
     ode_stepper_full(fluid, dt/2, PAR, SYS)
     t6 = time()
-    print('ODE1:', t2-t1, '\nWENO:', t3-t2, '\nDG:  ', t4-t3, '\nFV:  ', t5-t4, '\nODE2:', t6-t5)
+    print('ODE1:',t2-t1, '\nWENO:',t3-t2, '\nDG:  ',t4-t3, '\nFV:  ',t5-t4, '\nODE2:',t6-t5)
 
 def new_stepper(fluid, fluidBC, dt, PAR, SYS):
 

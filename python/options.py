@@ -43,7 +43,7 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 solver = 'SPLIT-WENO'        # 'ADER-WENO','WENO','SPLIT-WENO','SPLIT-DG','SPLIT-SLIC','NEW'
 linODE = 1                  # Whether to use the linearised ODE solver
-approxInterface = 1         # Whether to calculate fluxes with average value of interface states
+approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
@@ -51,7 +51,7 @@ altThermSolve   = 1         # Whether to use operator splitting solver for the t
 N      = 1                  # Method is order N+1
 CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
-perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
+perronFrob = 1              # Whether to use the Perron-Frobenius approximation to the max eigenval
 
 """ DG Options """
 
@@ -91,6 +91,12 @@ N1 = N+1
 NT = N1**(ndim+1)
 dx = L / nx
 SYS = active_subsystems(mechanical, viscous, thermal, reactive)
+if solver in ['SPLIT-WENO', 'WENO']:
+    timeDim = 0
+else:
+    timeDim = 1
+if not timeDim:
+    approxInterface = 0
 
 """ Compatibility Settings """
 
