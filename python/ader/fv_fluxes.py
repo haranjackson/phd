@@ -63,7 +63,6 @@ def Drus(xL, xR, d, pos, PAR, SYS):
     """
     pL, pR, qL, qR = input_vectors(xL, xR, PAR, SYS)
 
-
     if perronFrob:
         max1 = perron_frobenius(pL, d, PAR, SYS)
         max2 = perron_frobenius(pR, d, PAR, SYS)

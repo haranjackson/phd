@@ -29,116 +29,127 @@ index = [N1 if timeDim else 1] + [N1]*ndim + [1]*(3-ndim)
 indexEnd = [N1 if (timeDim and not approxInterface) else 1] + [N1]*(ndim-1) + [1]*(3-ndim)
 
 
-def endpoints(qh):
+def endpoints(xh):
     """ Returns an array containing the values of the basis polynomials at 0 and 1
-        qEnd[d,e,i,j,k,:,:,:,:,:] is the set of coefficients at end e in the dth direction
+        xEnd[d,e,i,j,k,:,:,:,:,:] is the set of coefficients at end e in the dth direction
     """
-    nx, ny, nz = qh.shape[:3]
-    qh0 = qh.reshape([nx, ny, nz] + index + [18])
-    qEnd = zeros([ndim, 2, nx, ny, nz] + indexEnd + [18])
+    nx, ny, nz = xh.shape[:3]
+    xh0 = xh.reshape([nx, ny, nz] + index + [18])
+    xEnd = zeros([ndim, 2, nx, ny, nz] + indexEnd + [18])
     for d in range(ndim):
-        temp = tensordot(endVals, qh0, (0,4+d))
+        temp = tensordot(endVals, xh0, (0,4+d))
         if approxInterface:
-            qEnd[d,:,:,:,:,0] = tensordot(weights, temp, (0,4))
+            xEnd[d,:,:,:,:,0] = tensordot(weights, temp, (0,4))
         else:
-            qEnd[d] = temp
-    return qEnd
+            xEnd[d] = temp
+    return xEnd
 
-def interface(qEndL, qEndM, qEndR, d, PAR, SYS):
-    """ Returns flux term and jump term in dth direction at the interface between states qhL, qhR
+def flux_endpoints(xEnd):
+    nx, ny, nz = xEnd.shape[2:5]
+    fEnd = zeros([ndim, nx-1, ny-1, nz-1] + indexEnd + [18])
+    for d, i, j, k in product(range(ndim), range(nx-1), range(ny-1), range(nz-1)):
+        for t, x1, x2 in product(range(indexEnd[0]), range(indexEnd[1]), range(indexEnd[2])):
+            xL = xEnd[d,1,i,j,k,t,x1,x2]
+            if d==1:
+                xR = xEnd[d, 0, i+1, j, k, t, x1, x2]
+            elif d==2:
+                xR = xEnd[d, 0, i, j+1, k, t, x1, x2]
+            else:
+                xR = xEnd[d, 0, i+1, j, k+1, t, x1, x2]
+            fEnd[d, i, j, k, t, x1, x2] = None
+
+def interface(ret, xEndL, xEndM, xEndR, d, PAR, SYS):
+    """ Returns flux term and jump term in dth direction at the interface between states xhL, xhR
     """
-    ret = zeros(18)
     for t, x1, x2 in product(range(indexEnd[0]), range(indexEnd[1]), range(indexEnd[2])):
-        qL1 = qEndL[d, 1, t, x1, x2]
-        qM0 = qEndM[d, 0, t, x1, x2]
-        qM1 = qEndM[d, 1, t, x1, x2]
-        qR0 = qEndR[d, 0, t, x1, x2]
-        ret += weightEnd[t,x1,x2] * (D(qM1, qR0, d, 1, PAR, SYS) + D(qM0, qL1, d, 0, PAR, SYS))
+        xL1 = xEndL[d, 1, t, x1, x2]
+        xM0 = xEndM[d, 0, t, x1, x2]
+        xM1 = xEndM[d, 1, t, x1, x2]
+        xR0 = xEndR[d, 0, t, x1, x2]
+        ret += 0.5 * weightEnd[t,x1,x2] * (D(xM1,xR0,d,1,PAR,SYS) + D(xM0,xL1,d,0,PAR,SYS))
 
-    return 0.5 * ret
-
-def center(qhijk, t, inds, PAR, SYS, homogeneous=0):
+def center(xhijk, t, inds, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
-    qxi = zeros([ndim, N1, 18])
+    xxi = zeros([ndim, N1, 18])
     if ndim > 1:
         if ndim > 2:
-            qxi[0] = qhijk[t, :, inds[1], inds[2]]
-            qxi[1] = qhijk[t, inds[0], :, inds[2]]
-            qxi[2] = qhijk[t, inds[0], inds[1], :]
-            q = qhijk[t, inds[0], inds[1], inds[2]]
+            xxi[0] = xhijk[t, :, inds[1], inds[2]]
+            xxi[1] = xhijk[t, inds[0], :, inds[2]]
+            xxi[2] = xhijk[t, inds[0], inds[1], :]
+            x = xhijk[t, inds[0], inds[1], inds[2]]
         else:
-            qxi[0] = qhijk[t, :, inds[1], 0]
-            qxi[1] = qhijk[t, inds[0], :, 0]
-            q = qhijk[t, inds[0], inds[1], 0]
+            xxi[0] = xhijk[t, :, inds[1], 0]
+            xxi[1] = xhijk[t, inds[0], :, 0]
+            x = xhijk[t, inds[0], inds[1], 0]
     else:
-        qxi[0] = qhijk[t, :, 0, 0]
-        q = qhijk[t, inds[0], 0, 0]
+        xxi[0] = xhijk[t, :, 0, 0]
+        x = xhijk[t, inds[0], 0, 0]
 
     ret = zeros(18)
 
     if not homogeneous:
         if reconstructPrim:
-            P = q
+            p = x
         else:
-            P = Cvec_to_Pvec(q, PAR, SYS)
-        source_ref(ret, P, PAR, SYS)
+            p = Cvec_to_Pvec(x, PAR, SYS)
+        source_ref(ret, p, PAR, SYS)
         ret *= dx
 
     if SYS.viscous:
         if reconstructPrim:
-            v = q[2:5]
+            v = x[2:5]
         else:
-            v = q[2:5] / q[0]
+            v = x[2:5] / x[0]
         for d in range(ndim):
-            dqdxi = dot(derivs[inds[d]], qxi[d])
+            dxdxi = dot(derivs[inds[d]], xxi[d])
             if reconstructPrim:
-                dqdxi = dQdPdot(q, dqdxi, PAR, SYS)
+                dxdxi = dQdPdot(x, dxdxi, PAR, SYS)
             temp = zeros(18)
-            Bdot(temp, dqdxi, v, d)
+            Bdot(temp, dxdxi, v, d)
             ret -= temp
 
     return ret
 
-def fv_terms(qh, dt, PAR, SYS, homogeneous=0):
+def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
     if ndim < 3:
-        qh0 = qh.repeat([3], axis=2)
+        xh0 = xh.repeat([3], axis=2)
     if ndim < 2:
-        qh0 = qh.repeat([3], axis=1)
-        qh0 = qh0.repeat([3], axis=2)
+        xh0 = xh.repeat([3], axis=1)
+        xh0 = xh0.repeat([3], axis=2)
 
-    nx, ny, nz = array(qh0.shape[:3]) - 2
-    qEnd = endpoints(qh0)
-    qh0 = qh0.reshape([nx+2, ny+2, nz+2] + index + [18])
+    nx, ny, nz = array(xh0.shape[:3]) - 2
+    xEnd = endpoints(xh0)
+    xh0 = xh0.reshape([nx+2, ny+2, nz+2] + index + [18])
 
     s = zeros([nx, ny, nz, 18])
     F = zeros([ndim, nx, ny, nz, 18])
 
-    interface_func = lambda qL, qM, qR, d: interface(qL, qM, qR, d, PAR, SYS)
-    center_func = lambda qhijk, t, inds: center(qhijk, t, inds, PAR, SYS, homogeneous)
+    interface_func = lambda ret, xL, xM, xR, d: interface(ret, xL, xM, xR, d, PAR, SYS)
+    center_func = lambda xhijk, t, inds: center(xhijk, t, inds, PAR, SYS, homogeneous)
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
-        qhijk = qh0[i+1, j+1, k+1]
+        xhijk = xh0[i+1, j+1, k+1]
 
         for t, x, y, z in product(range(index[0]),range(index[1]),range(index[2]),range(index[3])):
-            s[i, j, k] += weight[t,x,y,z] * center_func(qhijk, t, [x, y, z])
+            s[i, j, k] += weight[t,x,y,z] * center_func(xhijk, t, [x, y, z])
 
-        qEndM = qEnd[:, :, i+1, j+1, k+1]
-        qEndL = qEnd[:, :, i,   j+1, k+1]
-        qEndR = qEnd[:, :, i+2, j+1, k+1]
-        F[0, i ,j, k] = interface_func(qEndL, qEndM, qEndR, 0)
+        xEndM = xEnd[:, :, i+1, j+1, k+1]
+        xEndL = xEnd[:, :, i,   j+1, k+1]
+        xEndR = xEnd[:, :, i+2, j+1, k+1]
+        interface_func(F[0,i,j,k], xEndL, xEndM, xEndR, 0)
         if ndim > 1:
-            qEndL = qEnd[:, :, i+1, j,   k+1]
-            qEndR = qEnd[:, :, i+1, j+2, k+1]
-            F[1, i, j, k] = interface_func(qEndL, qEndM, qEndR, 1)
+            xEndL = xEnd[:, :, i+1, j,   k+1]
+            xEndR = xEnd[:, :, i+1, j+2, k+1]
+            interface_func(F[1,i,j,k], xEndL, xEndM, xEndR, 1)
             if ndim > 2:
-                qEndL = qEnd[:, :, i+1, j+1, k]
-                qEndR = qEnd[:, :, i+1, j+1, k+2]
-                F[2, i, j, k] = interface_func(qEndL, qEndM, qEndR, 2)
+                xEndL = xEnd[:, :, i+1, j+1, k]
+                xEndR = xEnd[:, :, i+1, j+1, k+2]
+                interface_func(F[2,i,j,k], xEndL, xEndM, xEndR, 2)
 
     for d in range(ndim):
         s -= F[d]

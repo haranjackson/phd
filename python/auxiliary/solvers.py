@@ -3,9 +3,8 @@ from time import time
 from numpy import repeat, newaxis
 
 from ader.fv import fv_terms
-from ader.fv_space_only import fv_terms_space_only
 from ader.dg import predictor
-from ader.parallel import para_predictor, para_fv_terms, para_fv_terms_space_only
+from ader.parallel import para_predictor, para_fv_terms
 from ader.weno import weno, weno_primitive
 
 from auxiliary.bc import standard_BC
@@ -63,9 +62,9 @@ def weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     t2 = time()
 
     if paraFV:
-        fluid += para_fv_terms_space_only(pool, wh, dt, PAR, SYS)
+        fluid += para_fv_terms(pool, wh, dt, PAR, SYS)
     else:
-        fluid += fv_terms_space_only(wh, dt, PAR, SYS)
+        fluid += fv_terms(wh, dt, PAR, SYS)
     t2 = time()
 
     print('WENO:', t1-t0, '\nFV:  ', t2-t1)
