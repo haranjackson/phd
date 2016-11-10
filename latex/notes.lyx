@@ -98,6 +98,10 @@ To Do
 \end_layout
 
 \begin_layout Itemize
+Implement compressible Euler with ADER-WENO
+\end_layout
+
+\begin_layout Itemize
 Investigate ways of determining whether the linearised ODE solver is appropriate
 \end_layout
 
