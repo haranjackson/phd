@@ -5,6 +5,10 @@
 \save_transient_properties true
 \origin unavailable
 \textclass book
+\begin_preamble
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -98,7 +102,7 @@ To Do
 \end_layout
 
 \begin_layout Itemize
-Implement compressible Euler with ADER-WENO
+Test compressible Euler vs GPR
 \end_layout
 
 \begin_layout Itemize
@@ -191,18 +195,176 @@ The most expensive single part of the FV flux updates when using the Rusanov
 \begin_inset Formula $\alpha\neq0$
 \end_inset
 
-, by considering the fact that the adjacency graph of 
+, by considering the fact that the graph of which 
 \begin_inset Formula $X$
 \end_inset
 
- is clearly strongly connected, it follows that 
+ is the adjacency matrix is clearly strongly connected, it follows that
+ 
 \begin_inset Formula $X$
 \end_inset
 
  is irreducible.
- Additionally, it can be shown that its non-zero components are always positive
- [INSERT PROOF].
- Thus, by the Perron-Frobenius Theorem, we have:
+ Additionally, it can be shown that its non-zero components are always positive.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cccc}
+1 & 1 & 1 & 1\\
+1 & 1 & 1 & 0\\
+1 & 1 & 1 & 0\\
+1 & 0 & 0 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+tikzset{edge/.style = {->,> = latex'}}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (1) at  (0,4) {$1$};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (2) at  (4,4) {$2$};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (3) at  (0,0) {$3$};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (4) at  (4,0) {$4$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (1) to (2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (1) to (3);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (2) to (1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (2) to (3);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (3) to (1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (3) to (2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (4) to (1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (1) to (4);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, by the Perron-Frobenius Theorem, we have:
 \end_layout
 
 \begin_layout Standard
@@ -652,7 +814,7 @@ Density does not change over this time period.
 
 \begin_layout Standard
 Note that the constant pressure assumption may not always work well [to
- be investigated].
+ be investigated.
  Pressure (and temperature) increase over this time period, by conservation
  of energy (see the EOS), so the relaxation of 
 \begin_inset Formula $\boldsymbol{J}$
@@ -663,22 +825,95 @@ Note that the constant pressure assumption may not always work well [to
 \begin_inset Formula $A$
 \end_inset
 
-, the EOS gives 
-\begin_inset Formula $T=c-\frac{\alpha^{2}}{2}\boldsymbol{J}^{2}$
+, the EOS gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+T & =\frac{E_{1}}{c_{v}}\\
+ & =\frac{E-E_{2A}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}-\frac{1}{c_{v}}E_{2J}\left(\boldsymbol{J}\right)\nonumber \\
+ & =c_{1}-c_{2}\boldsymbol{J}^{2}\nonumber 
+\end{align}
+
 \end_inset
 
- where 
-\begin_inset Formula $c>0$
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
 \end_inset
 
- is a constant.
- Thus, in one dimension we have:
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{1} & =\frac{E-E_{2A}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}\\
+c_{2} & =\frac{\alpha^{2}}{2c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Over this time period 
+\begin_inset Formula $c_{1},c_{2}>0$
+\end_inset
+
+ are constant.
+ In one dimension we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dJ_{1}}{dt} & =-\frac{1}{\tau_{2}}\frac{\rho_{0}}{T_{0}\rho}\left(c_{1}J_{1}-c_{2}J_{1}^{3}\right)\\
+ & =-c_{3}J_{1}+c_{4}J_{1}^{3}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This has the solution:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{dJ_{i}}{dt}=-c_{1}J_{i}+c_{2}J_{i}^{3}
+J_{1}=\pm\frac{\sqrt{c_{3}}}{\sqrt{e^{2c_{3}\left(c+t\right)}+c_{4}}}
 \end{equation}
 
 \end_inset
@@ -687,22 +922,18 @@ Note that the constant pressure assumption may not always work well [to
 \end_layout
 
 \begin_layout Standard
-where 
-\begin_inset Formula $c_{1},c_{2}>0$
+\begin_inset Formula 
+\begin{equation}
+c=\frac{\log\left(\frac{c_{3}}{J_{0}^{2}}-c_{4}\right)}{2c_{3}}
+\end{equation}
+
 \end_inset
 
- are constants.
- This has an analytic solution, and perhaps provides a closer approximation
- to the true relaxation process.
- I suggest splitting the thermal and distortion relaxation processes thus.
+
 \end_layout
 
 \begin_layout Standard
-The eqations for 
-\begin_inset Formula $A_{ij}$
-\end_inset
-
- must be solved with a numerical ODE solver.
+I suggest splitting the thermal and distortion relaxation processes thus.
 \end_layout
 
 \begin_layout Standard
@@ -805,7 +1036,8 @@ Note that
 \begin_inset Formula 
 \begin{align}
 \frac{dA}{dt} & \approx J_{A}\left(A^{*}\right)\left(A-A^{*}\right)\\
- & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{in}\delta_{mj}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{jn}\delta_{im}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}-\frac{1}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}\delta_{kl}\delta_{kl}-\frac{2}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{ij}\delta_{mn}\right)\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{in}\delta_{mj}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{jn}\delta_{im}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}-\frac{1}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}\delta_{kl}\delta_{kl}-\frac{2}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{ij}\delta_{mn}\right)\nonumber \\
+ & \quad\times\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
  & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
  & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\right)\nonumber \\
  & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\left(A_{ji}+A_{ij}-\frac{2}{3}\tr\left(A\right)\delta_{ij}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\left(\delta_{ij}+\delta_{ij}-2\delta_{ij}\right)\right)\nonumber \\
@@ -1036,21 +1268,6 @@ This is equal to:
 Results with Stokes' First Problem look good with this linearisation.
  The ODE step takes a negligible amount of time, meaning that if accuracy
  is maintained to second order, the solver is now fast enough.
-\end_layout
-
-\begin_layout Section
-WENO Reconstruction (No ADER-DG)
-\end_layout
-
-\begin_layout Standard
-The CFL number must be reduced from 0.9 to about 0.5 on the test of heat conductio
-n between two gases, to ensure that it doesn't crash.
- However, at this level there are serious aberrations around the spurious
- wave generated by the discontinuous initial conditions, not present in
- the full ADER-WENO.
- It may be a good idea to try an operator splitting, with WENO instead of
- SLIC applied to the homogeneous system.
- WENO's reconstruction is meant to be better.
 \end_layout
 
 \begin_layout Section
@@ -1582,15 +1799,46 @@ The GPR equations are:
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\begin{align}\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\\
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\\
 \frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\\
 \frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\\
 \frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\\
 \frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}
 \end{align}
-\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
 
 \end_inset
 
@@ -1602,14 +1850,45 @@ Under row-major ordering, we have:
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\begin{align}\boldsymbol{Q}= & \left(\begin{array}{ccccccccccccccccc}
+\begin{align}
+\boldsymbol{Q}= & \left(\begin{array}{ccccccccccccccccc}
 \rho & \rho E & \rho v_{1} & \rho v_{2} & \rho v_{3} & A_{11} & A_{12} & A_{13} & A_{21} & A_{22} & A_{23} & A_{31} & A_{32} & A_{33} & \rho J_{1} & \rho J_{2} & \rho J_{3}\end{array}\right)^{T}\\
 \boldsymbol{P}= & \left(\begin{array}{ccccccccccccccccc}
 \rho & p & v_{1} & v_{2} & v_{3} & A_{11} & A_{21} & A_{31} & A_{12} & A_{22} & A_{32} & A_{13} & A_{23} & A_{33} & J_{1} & J_{2} & J_{3}\end{array}\right)^{T}
 \end{align}
-\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
 
 \end_inset
 
@@ -1699,7 +1978,18 @@ B_{1}=\left(\begin{array}{ccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
-\end{array}\right)\quad B_{2}=\left(\begin{array}{ccccccccccccccccc}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+B_{2}=\left(\begin{array}{ccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -1717,7 +2007,18 @@ B_{1}=\left(\begin{array}{ccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
-\end{array}\right)\quad B_{3}=\left(\begin{array}{ccccccccccccccccc}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+B_{3}=\left(\begin{array}{ccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -1791,15 +2092,15 @@ B_{1}=\left(\begin{array}{ccccccccccccccccc}
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\begin{align}\Psi_{ij} & =\rho v_{i}v_{j}-\sigma_{ij}\\
-\Phi_{ij}^{k} & =\rho v_{k}\psi_{ij}-v_{m}\frac{\partial\sigma_{mk}}{\partial A_{ij}}\\
-\Omega_{i} & =v_{i}\left(E+\rho E_{\rho}\right)-\frac{\sigma_{im}v_{m}}{\rho}+T_{\rho}H_{i}\\
-\Upsilon & =\frac{\left\Vert \boldsymbol{v}\right\Vert ^{2}+\boldsymbol{H}\cdot\boldsymbol{J}-E-\rho E_{ρ}}{\rho E_{p}}\\
-\boldsymbol{\tilde{H}} & =E_{\boldsymbol{JJ}}
-\end{align}
-\end{equation}
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
 
 \end_inset
 
@@ -1807,6 +2108,44 @@ B_{1}=\left(\begin{array}{ccccccccccccccccc}
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Psi_{ij} & =\rho v_{i}v_{j}-\sigma_{ij}\\
+\Phi_{ij}^{k} & =\rho v_{k}\psi_{ij}-v_{m}\frac{\partial\sigma_{mk}}{\partial A_{ij}}\\
+\Omega_{i} & =v_{i}\left(E+\rho E_{\rho}\right)-\frac{\sigma_{im}v_{m}}{\rho}+T_{\rho}H_{i}\\
+\Upsilon & =\frac{\left\Vert \boldsymbol{v}\right\Vert ^{2}+\boldsymbol{H}\cdot\boldsymbol{J}-E-\rho E_{ρ}}{\rho E_{p}}\\
+\boldsymbol{\tilde{H}} & =E_{\boldsymbol{JJ}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial\boldsymbol{Q}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
@@ -1835,7 +2174,19 @@ J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial\boldsymbol{P}}{\partial\boldsymbol{Q}}=\left(\begin{array}{ccccccccccccccccc}
@@ -1864,7 +2215,21 @@ J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size scriptsize
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial\boldsymbol{F_{1}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
@@ -1893,7 +2258,21 @@ v_{1}J_{3} & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size scriptsize
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial\boldsymbol{F_{2}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
@@ -1922,7 +2301,21 @@ v_{2}J_{3} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size scriptsize
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial\boldsymbol{F_{3}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
@@ -1951,7 +2344,21 @@ v_{3}J_{3}+T_{\rho} & T_{p} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size small
 \begin_inset Formula 
 \begin{equation}
 M_{1}=\left(\begin{array}{ccccccccccccccccc}
@@ -1980,7 +2387,21 @@ v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size small
 \begin_inset Formula 
 \begin{equation}
 M_{2}=\left(\begin{array}{ccccccccccccccccc}
@@ -2009,7 +2430,21 @@ v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size small
 \begin_inset Formula 
 \begin{equation}
 M_{3}=\left(\begin{array}{ccccccccccccccccc}
@@ -2032,6 +2467,11 @@ v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 -\frac{T}{\rho^{2}} & \frac{T}{\rho\left(p+p_{\infty}\right)} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3}
 \end{array}\right)
 \end{equation}
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
