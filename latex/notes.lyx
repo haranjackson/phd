@@ -106,6 +106,15 @@ Test compressible Euler vs GPR
 \end_layout
 
 \begin_layout Itemize
+The analytic solution of the thermal impulse ODE in 3D results in a generalised
+ Lotka-Volterra system for the variables 
+\begin_inset Formula $\left\{ J_{1}^{2},J_{2}^{2},J_{3}^{2}\right\} $
+\end_inset
+
+ - investigate.
+\end_layout
+
+\begin_layout Itemize
 Investigate ways of determining whether the linearised ODE solver is appropriate
 \end_layout
 
@@ -795,8 +804,12 @@ end{subequations}
 
 \end_layout
 
+\begin_layout Subsection
+Thermal Impulse Equations
+\end_layout
+
 \begin_layout Standard
-Density does not change over this time period.
+Density does not change over the time period of the ODE.
  Assuming pressure (and therefore temperature) does not change also, we
  have the following:
 \end_layout
@@ -813,8 +826,7 @@ Density does not change over this time period.
 \end_layout
 
 \begin_layout Standard
-Note that the constant pressure assumption may not always work well [to
- be investigated.
+Note that the constant pressure assumption may not always work well.
  Pressure (and temperature) increase over this time period, by conservation
  of energy (see the EOS), so the relaxation of 
 \begin_inset Formula $\boldsymbol{J}$
@@ -839,6 +851,10 @@ T & =\frac{E_{1}}{c_{v}}\\
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+where:
 \end_layout
 
 \begin_layout Standard
@@ -886,7 +902,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Over this time period 
+Over the time period of the ODE, 
 \begin_inset Formula $c_{1},c_{2}>0$
 \end_inset
 

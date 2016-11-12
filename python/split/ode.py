@@ -1,9 +1,9 @@
-from numpy import array, einsum, exp, eye, zeros
+from numpy import array, einsum, exp, eye, log, sqrt, zeros
 from scipy.integrate import odeint
 
 import auxiliary
 from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D, tr
-from gpr.variables.eos import E_3, E_A, E_J, energy_to_temperature
+from gpr.variables.eos import E_2A, E_3, E_A, E_J, energy_to_temperature
 from gpr.variables.material_functions import theta_1, theta_2
 from gpr.variables.vectors import primitive
 
@@ -101,6 +101,19 @@ def ode_stepper(u, dt, PAR, SYS):
         if SYS.thermal:
             P0 = primitive(Q, PAR, SYS)
             u[i,0,0,14:17] = ρ * exp(-(P0.T * PAR.ρ0 * dt)/(PAR.T0 * ρ * PAR.τ2)) * P0.J
+
+def analytic_thermal_solver(ρ, E, A, J, v, dt, PAR):
+    cv = PAR.cv
+    c1 = (E - E_2A(A, PAR.cs2) - E_3(v)) / cv
+    c2 = PAR.α2 / (2 * cv)
+    k = PAR.ρ0 / (PAR.τ2 * PAR.T0 * ρ)
+    c1 *= k
+    c2 *= k
+    c = log(c1/J**2 - c2) / (2 * c1)
+    if J > 0:
+        return sqrt(c1 / (exp(2*c1*(c+dt)) + c2))
+    else:
+        return -sqrt(c1 / (exp(2*c1*(c+dt)) + c2))
 
 def compare_solvers(A, dt):
     PAR = auxiliary.classes.material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1e-16, μ=1e-3, Pr=0.75)
