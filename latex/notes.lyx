@@ -106,15 +106,6 @@ Test compressible Euler vs GPR
 \end_layout
 
 \begin_layout Itemize
-The analytic solution of the thermal impulse ODE in 3D results in a generalised
- Lotka-Volterra system for the variables 
-\begin_inset Formula $\left\{ J_{1}^{2},J_{2}^{2},J_{3}^{2}\right\} $
-\end_inset
-
- - investigate.
-\end_layout
-
-\begin_layout Itemize
 Investigate ways of determining whether the linearised ODE solver is appropriate
 \end_layout
 
@@ -804,6 +795,13 @@ end{subequations}
 
 \end_layout
 
+\begin_layout Standard
+Many different solvers can be used to solve the homogeneous part of the
+ system.
+ So far, this has been tested with SLIC, WENO, and DG.
+ A split-WENO scheme seems to be the fastest and most accurate method available.
+\end_layout
+
 \begin_layout Subsection
 Thermal Impulse Equations
 \end_layout
@@ -953,10 +951,48 @@ I suggest splitting the thermal and distortion relaxation processes thus.
 \end_layout
 
 \begin_layout Standard
-Many different solvers can be used to solve the homogeneous part of the
- system.
- So far, this has been tested with SLIC, WENO, and DG.
- A split-WENO scheme seems to be the fastest and most accurate method available.
+In 3 dimensions we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dJ_{i}}{dt}=-c_{3}J_{i}+c_{4}J_{i}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\therefore J_{i}\frac{dJ_{i}}{dt}=\frac{1}{2}\frac{d}{dt}\left(J_{i}^{2}\right)=-c_{3}J_{i}^{2}+c_{4}J_{i}^{2}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\therefore\frac{d}{dt}\left(J_{i}^{2}\right)=J_{i}^{2}\left(-2c_{3}+2c_{4}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this is a generalised Lotka-Volterra system in 
+\begin_inset Formula $\left\{ J_{1}^{2},J_{2}^{2},J_{3}^{2}\right\} $
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
