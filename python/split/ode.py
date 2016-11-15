@@ -1,7 +1,6 @@
 from numpy import array, einsum, exp, eye, log, sqrt, zeros
 from scipy.integrate import odeint
 
-import auxiliary
 from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D, tr
 from gpr.variables.eos import E_2A, E_3, E_A, E_J, energy_to_temperature
 from gpr.variables.material_functions import theta_1, theta_2
@@ -79,11 +78,37 @@ def ode_stepper_full(u, dt, PAR, SYS):
         u[i,0,0,5:14] = y1[:9]
         u[i,0,0,14:17] = ρ * y1[9:]
 
+
 def linearised_distortion(ρ, A, dt, PAR):
+    """ A linearised solver for the distortion ODE
+    """
     diff = tr(A)/3 * eye(3)
     ret1 = 0.5 * (A - A.T) + diff
     ret2 = 0.5 * (A + A.T) - diff
     return ret1 + exp(-6*dt/PAR.τ1 * (ρ/PAR.ρ0)**(7/3)) * ret2
+
+def simple_analytical_thermal_solver(ρ, Q, dt, PAR, SYS):
+    """ Returns the analytic solution to the thermal impulse ODE, assuming pressure is constant
+        over the timescale of the ODE.
+        NB This may not be a good assumption.
+    """
+    P0 = primitive(Q, PAR, SYS)
+    return ρ * exp(-(P0.T * PAR.ρ0 * dt)/(PAR.T0 * ρ * PAR.τ2)) * P0.J
+
+def analytic_thermal_solver(ρ, E, A, Ji, v, dt, PAR):
+    """ Solves the thermal impulse ODE analytically in 1D for the ideal gas EOS
+    """
+    cv = PAR.cv
+    c1 = (E - E_2A(A, PAR.cs2) - E_3(v)) / cv
+    c2 = PAR.α2 / (2 * cv)
+    k = PAR.ρ0 / (PAR.τ2 * PAR.T0 * ρ)
+    c1 *= k
+    c2 *= k
+    c = log(c1/Ji**2 - c2) / (2 * c1)
+    if Ji > 0:
+        return sqrt(c1 / (exp(2*c1*(c+dt)) + c2))
+    else:
+        return -sqrt(c1 / (exp(2*c1*(c+dt)) + c2))
 
 def ode_stepper(u, dt, PAR, SYS):
     """ Solves the ODE analytically by linearising the distortion equations and providing an
@@ -92,40 +117,16 @@ def ode_stepper(u, dt, PAR, SYS):
     for i in range(len(u)):
         Q = u[i,0,0]
         ρ = Q[0]
+        A = Q[5:14].reshape([3,3])
 
         if SYS.viscous:
-            A = Q[5:14].reshape([3,3])
             A1 = linearised_distortion(ρ, A, dt, PAR)
             u[i,0,0,5:14] = A1.ravel()
 
         if SYS.thermal:
-            P0 = primitive(Q, PAR, SYS)
-            u[i,0,0,14:17] = ρ * exp(-(P0.T * PAR.ρ0 * dt)/(PAR.T0 * ρ * PAR.τ2)) * P0.J
-
-def analytic_thermal_solver(ρ, E, A, J, v, dt, PAR):
-    cv = PAR.cv
-    c1 = (E - E_2A(A, PAR.cs2) - E_3(v)) / cv
-    c2 = PAR.α2 / (2 * cv)
-    k = PAR.ρ0 / (PAR.τ2 * PAR.T0 * ρ)
-    c1 *= k
-    c2 *= k
-    c = log(c1/J**2 - c2) / (2 * c1)
-    if J > 0:
-        return sqrt(c1 / (exp(2*c1*(c+dt)) + c2))
-    else:
-        return -sqrt(c1 / (exp(2*c1*(c+dt)) + c2))
-
-def compare_solvers(A, dt):
-    PAR = auxiliary.classes.material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1e-16, μ=1e-3, Pr=0.75)
-    SYS = auxiliary.classes.active_subsystems(1,1,0,0)
-    ρ = det3(A)
-
-    A1 = linearised_distortion(ρ, A, dt, PAR)
-
-    y0 = zeros([12])
-    y0[:9] = A.ravel()
-    t = array([0, dt])
-    y1 = odeint(f, y0, t, args=(ρ,0,PAR,SYS), Dfun=jac)[1]
-    A2 = y1[:9].reshape([3,3])
-
-    return A1, A2
+            u[i,0,0,14:17] = simple_analytical_thermal_solver(ρ, Q, dt, PAR, SYS)
+#            E = Q[1] / ρ
+#            J1 = Q[14] / ρ
+#            v = Q[2:5] / ρ
+#            A2 = (A+A1)/2
+#            u[i,0,0,14] = ρ * analytic_thermal_solver(ρ, E, A2, J1, v, dt, PAR)
