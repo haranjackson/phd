@@ -23,7 +23,7 @@ weightList = [weights if timeDim else array([1])] + [weights]*ndim + [array([1])
 weightListEnd = [weights if timeDim else array([1])] + [weights]*(ndim-1) + [array([1])]*(3-ndim)
 
 weight = einsum('t,x,y,z', weightList[0], weightList[1], weightList[2], weightList[3])
-weightEnd = einsum('t,a,b', weightListEnd[0], weightListEnd[1], weightListEnd[2])
+weightEnd = einsum('t,x,y', weightListEnd[0], weightListEnd[1], weightListEnd[2])
 
 index = [N1 if timeDim else 1] + [N1]*ndim + [1]*(3-ndim)
 indexEnd = [N1 if (timeDim and not approxInterface) else 1] + [N1]*(ndim-1) + [1]*(3-ndim)
