@@ -85,14 +85,14 @@ def split_slic_stepper(fluid, dt, PAR, SYS):
 
 def split_weno_stepper(fluid, dt, PAR, SYS):
     t1 = time()
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    ode_stepper_full(fluid, dt/2, PAR, SYS)
     t2 = time()
     fluidBC = standard_BC(fluid)
     wh = weno(fluidBC)
     t3 = time()
     fluid += fv_terms(wh, dt, PAR, SYS, 1)
     t4 = time()
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    ode_stepper_full(fluid, dt/2, PAR, SYS)
     t5 = time()
     print('ODE1:',t2-t1, '\nWENO:',t3-t2, '\nFV:  ',t4-t3, '\nODE2:',t5-t4)
 

@@ -110,6 +110,9 @@ def viscous_shock_exact_x(n, M=2, t=0.2):
     return arange(M*t-0.25, M*t+0.75, 1/n)
 
 def heat_conduction_IC():
+    """ tf = 1
+        L = 1
+    """
     ρL = 2
     ρR = 0.5
     p0 = 1

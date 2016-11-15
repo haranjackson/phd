@@ -25,7 +25,7 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
-IC = first_stokes_problem_IC
+IC = heat_conduction_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 

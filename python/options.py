@@ -4,7 +4,7 @@ Rc   = 8.314459848          # Universal gas constant
 
 tf = 1                    # Final time of the simulation
 L  = 1                      # Length of domain in x direction
-nx = 200                    # Number of cells in x direction
+nx = 400                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -12,7 +12,7 @@ nz = 1                      # Number of cells in z direction
 
 mechanical = 1              # Whether to include evolution of density and velocity
 viscous    = 1              # Whether to include viscosity
-thermal    = 0              # Whether to include thermal conduction
+thermal    = 1              # Whether to include thermal conduction
 reactive   = 0              # Whether to include reactivity
 
 """ Problem Parameters """
@@ -51,7 +51,7 @@ altThermSolve   = 1         # Whether to use operator splitting solver for the t
 N      = 1                  # Method is order N+1
 CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
-perronFrob = 1              # Whether to use the Perron-Frobenius approximation to the max eigenval
+perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
 
 """ DG Options """
 
