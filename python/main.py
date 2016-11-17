@@ -25,7 +25,7 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
-IC = heat_conduction_IC
+IC = first_stokes_problem_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 
@@ -66,7 +66,7 @@ def run(t, count):
             elif solver == 'ADER-WENO':
                 qh = aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
             elif solver == 'WENO':
-                    qh = weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
+                qh = weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
             elif solver == 'SPLIT-WENO':
                 split_weno_stepper(fluid, dt, PAR, SYS)
             elif solver == 'SPLIT-DG':

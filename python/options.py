@@ -4,7 +4,7 @@ Rc   = 8.314459848          # Universal gas constant
 
 tf = 1                    # Final time of the simulation
 L  = 1                      # Length of domain in x direction
-nx = 400                    # Number of cells in x direction
+nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -12,7 +12,7 @@ nz = 1                      # Number of cells in z direction
 
 mechanical = 1              # Whether to include evolution of density and velocity
 viscous    = 1              # Whether to include viscosity
-thermal    = 1              # Whether to include thermal conduction
+thermal    = 0              # Whether to include thermal conduction
 reactive   = 0              # Whether to include reactivity
 
 """ Problem Parameters """
