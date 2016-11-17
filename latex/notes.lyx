@@ -102,7 +102,15 @@ To Do
 \end_layout
 
 \begin_layout Itemize
-Test compressible Euler vs GPR
+Test compressible Euler vs GPR - use narrowing domain from Toro's book
+\end_layout
+
+\begin_layout Itemize
+Investigate further methods of obtaining predictor with form 
+\begin_inset Formula $w_{0}+w_{1}x+c_{0}t+c_{0}xt$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -800,6 +808,136 @@ Many different solvers can be used to solve the homogeneous part of the
  system.
  So far, this has been tested with SLIC, WENO, and DG.
  A split-WENO scheme seems to be the fastest and most accurate method available.
+\end_layout
+
+\begin_layout Subsection
+Distortion Equations
+\end_layout
+
+\begin_layout Standard
+Take the following form for 
+\begin_inset Formula $A$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A=\left(\begin{array}{ccc}
+a_{1} & 0 & 0\\
+0 & a_{2} & 0\\
+0 & 0 & a_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A\dev\left(G\right)=\left(\begin{array}{ccc}
+a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right) & 0 & 0\\
+0 & a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right) & 0\\
+0 & 0 & a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $x_{i}=a_{i}^{2}$
+\end_inset
+
+ we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{dt}=-kx_{i}\left(x_{i}-\bar{x}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $k>0$
+\end_inset
+
+.
+ Now, 
+\begin_inset Formula $\det\left(A\right)=a_{1}a_{2}a_{3}=\sqrt{c}$
+\end_inset
+
+ is constant.
+ The ODE system travels along the surface 
+\begin_inset Formula $x_{1}x_{2}x_{3}=c$
+\end_inset
+
+ to the point 
+\begin_inset Formula $x_{1},x_{2},x_{3}=c^{\frac{1}{3}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+By the Polar Decomposition Theorem, under an appropriate change of coordinates,
+ 
+\begin_inset Formula $A=RS$
+\end_inset
+
+ where 
+\begin_inset Formula $R$
+\end_inset
+
+ is a rotation matrix and 
+\begin_inset Formula $S$
+\end_inset
+
+ is a diagonal matrix, representing the principle stretches.
+ In this case, 
+\begin_inset Formula $G=A^{T}A=S^{T}R^{T}RS=S^{2}$
+\end_inset
+
+.
+ Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\left(RS\right)}{dt}=-kRS\dev\left(S^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for some 
+\begin_inset Formula $k>0$
+\end_inset
+
+.
+ This is similar to the case studied above, which may prove useful.
 \end_layout
 
 \begin_layout Subsection
