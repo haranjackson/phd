@@ -831,7 +831,7 @@ status open
 \begin_inset Graphics
 	filename figs/StokesFirstProblem1e-2_SplitWENO.png
 	lyxscale 25
-	width 50text%
+	width 33text%
 
 \end_inset
 
@@ -839,7 +839,15 @@ status open
 \begin_inset Graphics
 	filename figs/StokesFirstProblem1e-3_SplitWENO.png
 	lyxscale 25
-	width 50text%
+	width 33text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-4_SplitWENO.png
+	lyxscale 25
+	width 33text%
 
 \end_inset
 
@@ -851,11 +859,7 @@ status open
 
 \begin_layout Plain Layout
 Results of solving Stokes' First Problem (
-\begin_inset Formula $\mu=10^{-2}$
-\end_inset
-
- and 
-\begin_inset Formula $\mu=10^{-3}$
+\begin_inset Formula $\mu=10^{-2},\mu=10^{-3},\mu=10^{-4}$
 \end_inset
 
 ) with a split-WENO scheme

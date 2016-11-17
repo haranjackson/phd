@@ -98,7 +98,7 @@ def split_weno_stepper(fluid, dt, PAR, SYS):
 
 def split_dg_stepper(fluid, dt, PAR, SYS):
     t1 = time()
-    ode_stepper(fluid, dt/2, PAR, SYS)
+    ode_stepper_full(fluid, dt/2, PAR, SYS)
     t2 = time()
     fluidBC = standard_BC(fluid)
     wh = weno(fluidBC)
