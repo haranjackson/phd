@@ -943,7 +943,7 @@ Letting
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{dx_{i}}{dt}=-kx_{i}\left(x_{i}-\bar{x}\right)
+\frac{dx_{i}}{dt}=-3kx_{i}\left(x_{i}-\bar{x}\right)
 \end{equation}
 
 \end_inset
@@ -953,12 +953,16 @@ Letting
 
 \begin_layout Standard
 where 
-\begin_inset Formula $k>0$
+\begin_inset Formula $k=\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}>0$
 \end_inset
 
 .
  Now, 
 \begin_inset Formula $\det\left(A\right)=a_{1}a_{2}a_{3}=\sqrt{c}$
+\end_inset
+
+ where 
+\begin_inset Formula $c=\left(\frac{\rho}{\rho_{0}}\right)^{2}$
 \end_inset
 
  is constant.
@@ -968,6 +972,80 @@ where
 
  to the point 
 \begin_inset Formula $x_{1},x_{2},x_{3}=c^{\frac{1}{3}}$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dx_{1}}{dt} & =-kx_{1}\left(2x_{1}-x_{2}-x_{3}\right)=-kx_{1}\left(2x_{1}-x_{2}-\frac{c}{x_{1}x_{2}}\right)\\
+\frac{dx_{2}}{dt} & =-kx_{2}\left(2x_{2}-x_{3}-x_{1}\right)=-kx_{2}\left(2x_{2}-x_{1}-\frac{c}{x_{1}x_{2}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{2}}{dx_{1}}=\frac{x_{2}}{x_{1}}\frac{2x_{2}-x_{1}-\frac{c}{x_{1}x_{2}}}{2x_{1}-x_{2}-\frac{c}{x_{1}x_{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This has solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{2}=\frac{c-c_{0}\pm\sqrt{c^{2}-2cc_{0}+4c_{0}x_{1}^{3}+c_{0}^{2}}}{2x_{1}^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{0}=\frac{x_{1,0}^{2}x_{2,0}^{2}-cx_{2,0}}{x_{1,0}-x_{2,0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the ODE system for 
+\begin_inset Formula $A$
+\end_inset
+
+ has been reduced to a single ODE, as 
+\begin_inset Formula $x_{2}\left(x_{1}\right)$
+\end_inset
+
+ can be inserted into the RHS of the equation for 
+\begin_inset Formula $\frac{dx_{1}}{dt}$
 \end_inset
 
 .
@@ -1013,7 +1091,64 @@ for some
 \end_inset
 
 .
- This is similar to the case studied above, which may prove useful.
+ Note that 
+\begin_inset Formula $A\left(t\right)=R\left(0\right)S\left(t\right)$
+\end_inset
+
+ is a solution if:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dS}{dt}=-kS\dev\left(S^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+whose solution takes the form above.
+\end_layout
+
+\begin_layout Standard
+Let the SVD of 
+\begin_inset Formula $A$
+\end_inset
+
+ be 
+\begin_inset Formula $U\Sigma V^{T}$
+\end_inset
+
+.
+ Then a change of coordinates under 
+\begin_inset Formula $V$
+\end_inset
+
+ gives 
+\begin_inset Formula $V^{T}AV=\left(V^{T}U\right)\Sigma=RS$
+\end_inset
+
+.
+ Thus, using a fast 
+\begin_inset Formula $3\times3$
+\end_inset
+
+ SVD algorithm, 
+\begin_inset Formula $U,V,\Sigma$
+\end_inset
+
+ can be obtained, after which the above proceedure is applied to 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+, giving 
+\begin_inset Formula $A\left(t\right)=U\Sigma\left(t\right)V^{T}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
