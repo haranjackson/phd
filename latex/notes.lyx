@@ -820,6 +820,15 @@ reference "split-WENO-results"
 \end_inset
 
 .
+ These results are comparable to the corresponding results using ADER-WENO,
+ as seen in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "ADER-WENO-results"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -894,6 +903,73 @@ name "split-WENO-results"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-2_ADERWENO.png
+	lyxscale 25
+	width 33text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-3_ADERWENO.png
+	lyxscale 25
+	width 33text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-4_ADERWENO.png
+	lyxscale 25
+	width 33text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results of solving Stokes' First Problem (
+\begin_inset Formula $\mu=10^{-2},\mu=10^{-3},\mu=10^{-4}$
+\end_inset
+
+) with a ADER-WENO scheme (
+\begin_inset Formula $N=1$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ADER-WENO-results"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The results of using a 3rd-order split-WENO scheme to solve Stokes' First
  Problem are shown in 
 \begin_inset CommandInset ref
@@ -905,7 +981,7 @@ reference "split-WENO-results-2"
 .
  Note the close agreement with the Navier-Stokes solution, closely matching
  the result using ADER-WENO.
- The split-WENO scheme took 15 times less cpu time than the ADER-WENO scheme.
+ The split-WENO scheme took 15 times less CPU time than the ADER-WENO scheme.
 \end_layout
 
 \begin_layout Standard
@@ -1016,7 +1092,7 @@ Letting
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{dx_{i}}{dt}=-3kx_{i}\left(x_{i}-\bar{x}\right)
+\frac{dx_{i}}{dt}=-3kx_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem}
 \end{equation}
 
 \end_inset
@@ -1209,16 +1285,199 @@ Let the SVD of
 \begin_inset Formula $3\times3$
 \end_inset
 
- SVD algorithm, 
+ SVD algorithm (such as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "McAdams2011"
+
+\end_inset
+
+), 
 \begin_inset Formula $U,V,\Sigma$
 \end_inset
 
- can be obtained, after which the above proceedure is applied to 
+ can be obtained, after which the above procedure is applied to 
 \begin_inset Formula $\Sigma$
 \end_inset
 
 , giving 
 \begin_inset Formula $A\left(t\right)=U\Sigma\left(t\right)V^{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Linearized Stretch Solver
+\end_layout
+
+\begin_layout Standard
+Taking system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:StretchODESystem"
+
+\end_inset
+
+, note that the Jacobian of the system is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J=-k\left(\begin{array}{ccc}
+4x_{1}-x_{2}-x_{3} & -x_{1} & -x_{1}\\
+-x_{2} & 4x_{2}-x_{3}-x_{1} & -x_{3}\\
+-x_{3} & -x_{3} & 4x_{3}-x_{1}-x_{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Evaluated at stationary point 
+\begin_inset Formula $x_{i}=\sqrt[3]{c}$
+\end_inset
+
+ we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J\left(\boldsymbol{x_{0}}\right)=-k\sqrt[3]{c}\left(\begin{array}{ccc}
+2 & -1 & -1\\
+-1 & 2 & -1\\
+-1 & -1 & 2
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the system is linearized to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{d\boldsymbol{x}}{dt} & \approx-k\sqrt[3]{c}\left(\begin{array}{ccc}
+2 & -1 & -1\\
+-1 & 2 & -1\\
+-1 & -1 & 2
+\end{array}\right)\left(\left(\begin{array}{c}
+x_{1}\\
+x_{2}\\
+x_{3}
+\end{array}\right)-\sqrt[3]{c}\left(\begin{array}{c}
+1\\
+1\\
+1
+\end{array}\right)\right)\\
+ & =k\sqrt[3]{c}\left(\begin{array}{ccc}
+-2 & 1 & 1\\
+1 & -2 & 1\\
+1 & 1 & -2
+\end{array}\right)\left(\begin{array}{c}
+x_{1}\\
+x_{2}\\
+x_{3}
+\end{array}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The eigenvalues of this system matrix are 
+\begin_inset Formula $\left\{ -3k\sqrt[3]{c},-3k\sqrt[3]{c},0\right\} $
+\end_inset
+
+ and the eigenvectors are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+-1\\
+0\\
+1
+\end{array}\right),\left(\begin{array}{c}
+0\\
+-1\\
+1
+\end{array}\right),\left(\begin{array}{c}
+1\\
+1\\
+1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the linearized solution is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{x}\left(t\right)=\frac{-2x_{1}+x_{2}+x_{3}}{3}e^{-3k\sqrt[3]{c}t}\left(\begin{array}{c}
+-1\\
+0\\
+1
+\end{array}\right)+\frac{x_{1}-2x_{2}+x_{3}}{3}e^{-3k\sqrt[3]{c}t}\left(\begin{array}{c}
+0\\
+-1\\
+1
+\end{array}\right)+\frac{x_{1}+x_{2}+x_{3}}{3}\left(\begin{array}{c}
+1\\
+1\\
+1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This may represent a faster way to calculate the evolution of the stretch
+ terms of 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ Note that some kind of normalization will probably be necessary, as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{x_{1}+x_{2}+x_{3}}{3}\geq\left(x_{1}x_{2}x_{3}\right)^{\frac{1}{3}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+with equality if and only if 
+\begin_inset Formula $x_{1}=x_{2}=x_{3}$
 \end_inset
 
 .
@@ -1410,7 +1669,7 @@ In 3 dimensions we have:
 \end_layout
 
 \begin_layout Standard
-Note that this is a generalised Lotka-Volterra system in 
+Note that this is a generalized Lotka-Volterra system in 
 \begin_inset Formula $\left\{ J_{1}^{2},J_{2}^{2},J_{3}^{2}\right\} $
 \end_inset
 
@@ -1484,7 +1743,7 @@ where
 \end_layout
 
 \begin_layout Subsection
-Linearised ODE Solver
+Linearized ODE Solver
 \end_layout
 
 \begin_layout Standard
@@ -1497,7 +1756,7 @@ Note that
 \end_inset
 
 .
- Linearising the ODE around 
+ Linearizing the ODE around 
 \begin_inset Formula $A^{*}$
 \end_inset
 
