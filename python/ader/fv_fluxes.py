@@ -26,7 +26,7 @@ def Bint(qL, qR, d, viscous):
     Bdot(ret, qJump, v, d)
     return ret
 
-def Aint(qL, qR, d, PAR, SYS):
+def Aint(pL, pR, qL, qR, d, PAR, SYS):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
     """
     ret = zeros(18, dtype=complex128)
@@ -43,6 +43,17 @@ def Aint(qL, qR, d, PAR, SYS):
         ret += weights[i] * dot(R, dot(L, b))
     return ret.real
 
+def Smax(pL, pR, qL, qR, d, PAR, SYS):
+
+    if perronFrob:
+        max1 = perron_frobenius(pL, d, PAR, SYS)
+        max2 = perron_frobenius(pR, d, PAR, SYS)
+    else:
+        max1 = max_abs_eigs(pL, d, PAR, SYS)
+        max2 = max_abs_eigs(pR, d, PAR, SYS)
+
+    return max(max1, max2) * (qR - qL)
+
 def input_vectors(xL, xR, PAR, SYS):
 
     if reconstructPrim:
@@ -58,26 +69,25 @@ def input_vectors(xL, xR, PAR, SYS):
 
     return pL, pR, qL, qR
 
+def flux_average(ret, pL, pR, qL, qR, d, PAR, SYS):
+    """ Returns the average flux and contribution from the nonconservative terms over the
+        interface
+    """
+    flux_ref(ret, pR, d, PAR, SYS)
+    flux_ref(ret, pL, d, PAR, SYS)
+    ret += Bint(qL, qR, d, SYS.viscous)
+
 def Drus(xL, xR, d, pos, PAR, SYS):
     """ Returns the Rusanov jump term at the dth boundary
     """
     pL, pR, qL, qR = input_vectors(xL, xR, PAR, SYS)
 
-    if perronFrob:
-        max1 = perron_frobenius(pL, d, PAR, SYS)
-        max2 = perron_frobenius(pR, d, PAR, SYS)
-    else:
-        max1 = max_abs_eigs(pL, d, PAR, SYS)
-        max2 = max_abs_eigs(pR, d, PAR, SYS)
-
     if pos:
-        ret = - max(max1, max2) * (qR - qL)
+        ret = - Smax(pL, pR, qL, qR, d, PAR, SYS)
     else:
-        ret = max(max1, max2) * (qR - qL)
+        ret = Smax(pL, pR, qL, qR, d, PAR, SYS)
 
-    flux_ref(ret, pR, d, PAR, SYS)
-    flux_ref(ret, pL, d, PAR, SYS)
-    ret += Bint(qL, qR, d, SYS.viscous)
+    flux_average(ret, pL, pR, qL, qR, d, PAR, SYS)
 
     if pos:
         return ret
@@ -94,9 +104,7 @@ def Dos(xL, xR, d, pos, PAR, SYS):
     else:
         ret = Aint(qL, qR, d, PAR, SYS)
 
-    flux_ref(ret, pR, d, PAR, SYS)
-    flux_ref(ret, pL, d, PAR, SYS)
-    ret += Bint(qL, qR, d, SYS.viscous)
+    flux_average(ret, pL, pR, qL, qR, d, PAR, SYS)
 
     if pos:
         return ret

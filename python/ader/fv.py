@@ -2,12 +2,15 @@ from itertools import product
 
 from numpy import array, dot, einsum, tensordot, zeros
 
-from ader.fv_fluxes import Dos, Drus
+from ader.fv_fluxes import Dos, Drus, input_vectors, Bint, Aint, Smax
 from ader.basis import quad, end_values, derivative_values
-from gpr.matrices.conserved import Bdot, source_ref
+from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot
 from gpr.variables.vectors import Cvec_to_Pvec
 from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim
+
+
+altInterfaces = 0
 
 
 nodes, _, weights = quad()
@@ -16,8 +19,10 @@ derivs = derivative_values()
 
 if method == 'osher':
     D = Dos
+    s_func = Aint
 elif method == 'rusanov':
     D = Drus
+    s_func = Smax
 
 weightList = [weights if timeDim else array([1])] + [weights]*ndim + [array([1])]*(3-ndim)
 weightListEnd = [weights if timeDim else array([1])] + [weights]*(ndim-1) + [array([1])]*(3-ndim)
@@ -25,8 +30,8 @@ weightListEnd = [weights if timeDim else array([1])] + [weights]*(ndim-1) + [arr
 weight = einsum('t,x,y,z', weightList[0], weightList[1], weightList[2], weightList[3])
 weightEnd = einsum('t,x,y', weightListEnd[0], weightListEnd[1], weightListEnd[2])
 
-index = [N1 if timeDim else 1] + [N1]*ndim + [1]*(3-ndim)
-indexEnd = [N1 if (timeDim and not approxInterface) else 1] + [N1]*(ndim-1) + [1]*(3-ndim)
+idx = [N1 if timeDim else 1] + [N1]*ndim + [1]*(3-ndim)
+idxEnd = [N1 if (timeDim and not approxInterface) else 1] + [N1]*(ndim-1) + [1]*(3-ndim)
 
 
 def endpoints(xh):
@@ -34,8 +39,8 @@ def endpoints(xh):
         xEnd[d,e,i,j,k,:,:,:,:,:] is the set of coefficients at end e in the dth direction
     """
     nx, ny, nz = xh.shape[:3]
-    xh0 = xh.reshape([nx, ny, nz] + index + [18])
-    xEnd = zeros([ndim, 2, nx, ny, nz] + indexEnd + [18])
+    xh0 = xh.reshape([nx, ny, nz] + idx + [18])
+    xEnd = zeros([ndim, 2, nx, ny, nz] + idxEnd + [18])
     for d in range(ndim):
         temp = tensordot(endVals, xh0, (0,4+d))
         if approxInterface:
@@ -44,24 +49,62 @@ def endpoints(xh):
             xEnd[d] = temp
     return xEnd
 
-def flux_endpoints(xEnd):
+def alternative_interfaces(xEnd, PAR, SYS):
     nx, ny, nz = xEnd.shape[2:5]
-    fEnd = zeros([ndim, nx-1, ny-1, nz-1] + indexEnd + [18])
+    fEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
+    BEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
+
+    inpt_lam = lambda xL, xR: input_vectors(xL, xR, PAR, SYS)
+    flux_lam = lambda ftemp, p, d: flux_ref(ftemp, p, d, PAR, SYS)
+    s_lam = lambda pL, pR, qL, qR, d: s_func(pL, pR, qL, qR, d, PAR, SYS)
+
     for d, i, j, k in product(range(ndim), range(nx-1), range(ny-1), range(nz-1)):
-        for t, x1, x2 in product(range(indexEnd[0]), range(indexEnd[1]), range(indexEnd[2])):
-            xL = xEnd[d,1,i,j,k,t,x1,x2]
-            if d==1:
-                xR = xEnd[d, 0, i+1, j, k, t, x1, x2]
-            elif d==2:
-                xR = xEnd[d, 0, i, j+1, k, t, x1, x2]
-            else:
-                xR = xEnd[d, 0, i+1, j, k+1, t, x1, x2]
-            fEnd[d, i, j, k, t, x1, x2] = None
+
+        xL0 = xEnd[d, 1, i, j, k]
+        if d==1:
+            xR0 = xEnd[d, 0, i+1, j, k]
+        elif d==2:
+            xR0 = xEnd[d, 0, i, j+1, k]
+        else:
+            xR0 = xEnd[d, 0, i+1, j, k+1]
+
+        fEndTemp = zeros(18)
+        BEndTemp = zeros(18)
+        for t, x1, x2 in product(range(idxEnd[0]), range(idxEnd[1]), range(idxEnd[2])):
+            pL, pR, qL, qR = inpt_lam(xL0[t, x1, x2], xR0[t, x1, x2])
+            ftemp = zeros(18)
+            weight0 = weightEnd[t, x1, x2]
+
+            flux_lam(ftemp, pL, d)
+            flux_lam(ftemp, pR, d)
+            ftemp -= s_lam(pL, pR, qL, qR, d)
+            fEndTemp += weight0 * ftemp
+            BEndTemp += weight0 * Bint(qL, qR, d, SYS.viscous)
+
+        fEnd[d, i, j, k] = fEndTemp
+        BEnd[d, i, j, k] = BEndTemp
+
+    ret = zeros([nx-2, ny-2, nz-2, 18])
+    ret -= fEnd[0, :-1, 1:, 1:]
+    ret += fEnd[0, 1:, 1:, 1:]
+    ret += BEnd[0, :-1, 1:, 1:]
+    ret += BEnd[0, 1:, 1:, 1:]
+    if ndim > 1:
+        ret -= fEnd[1, 1:, :-1, 1:]
+        ret += fEnd[1, 1:, 1:, 1:]
+        ret += BEnd[1, 1:, :-1, 1:]
+        ret += BEnd[1, 1:, 1:, 1:]
+    if ndim > 2:
+        ret -= fEnd[2, 1:, 1:, :-1]
+        ret += fEnd[2, 1:, 1:, 1:]
+        ret += BEnd[2, 1:, 1:, :-1]
+        ret += BEnd[2, 1:, 1:, 1:]
+    return ret
 
 def interface(ret, xEndL, xEndM, xEndR, d, PAR, SYS):
     """ Returns flux term and jump term in dth direction at the interface between states xhL, xhR
     """
-    for t, x1, x2 in product(range(indexEnd[0]), range(indexEnd[1]), range(indexEnd[2])):
+    for t, x1, x2 in product(range(idxEnd[0]), range(idxEnd[1]), range(idxEnd[2])):
         xL1 = xEndL[d, 1, t, x1, x2]
         xM0 = xEndM[d, 0, t, x1, x2]
         xM1 = xEndM[d, 1, t, x1, x2]
@@ -123,7 +166,7 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
 
     nx, ny, nz = array(xh0.shape[:3]) - 2
     xEnd = endpoints(xh0)
-    xh0 = xh0.reshape([nx+2, ny+2, nz+2] + index + [18])
+    xh0 = xh0.reshape([nx+2, ny+2, nz+2] + idx + [18])
 
     s = zeros([nx, ny, nz, 18])
     F = zeros([ndim, nx, ny, nz, 18])
@@ -131,26 +174,32 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
     interface_func = lambda ret, xL, xM, xR, d: interface(ret, xL, xM, xR, d, PAR, SYS)
     center_func = lambda xhijk, t, inds: center(xhijk, t, inds, PAR, SYS, homogeneous)
 
-    for i, j, k in product(range(nx), range(ny), range(nz)):
+    if altInterfaces:
+        s -= 0.5 * alternative_interfaces(xEnd, PAR, SYS)
+        # s is 0 at this point
 
-        xhijk = xh0[i+1, j+1, k+1]
+    else:
+        for i, j, k in product(range(nx), range(ny), range(nz)):
 
-        for t, x, y, z in product(range(index[0]),range(index[1]),range(index[2]),range(index[3])):
-            s[i, j, k] += weight[t,x,y,z] * center_func(xhijk, t, [x, y, z])
+            xhijk = xh0[i+1, j+1, k+1]
 
-        xEndM = xEnd[:, :, i+1, j+1, k+1]
-        xEndL = xEnd[:, :, i,   j+1, k+1]
-        xEndR = xEnd[:, :, i+2, j+1, k+1]
-        interface_func(F[0,i,j,k], xEndL, xEndM, xEndR, 0)
-        if ndim > 1:
-            xEndL = xEnd[:, :, i+1, j,   k+1]
-            xEndR = xEnd[:, :, i+1, j+2, k+1]
-            interface_func(F[1,i,j,k], xEndL, xEndM, xEndR, 1)
-            if ndim > 2:
-                xEndL = xEnd[:, :, i+1, j+1, k]
-                xEndR = xEnd[:, :, i+1, j+1, k+2]
-                interface_func(F[2,i,j,k], xEndL, xEndM, xEndR, 2)
+            for t, x, y, z in product(range(idx[0]),range(idx[1]),range(idx[2]),range(idx[3])):
+                s[i, j, k] += weight[t,x,y,z] * center_func(xhijk, t, [x, y, z])
 
-    for d in range(ndim):
-        s -= F[d]
+            xEndM = xEnd[:, :, i+1, j+1, k+1]
+            xEndL = xEnd[:, :, i,   j+1, k+1]
+            xEndR = xEnd[:, :, i+2, j+1, k+1]
+            interface_func(F[0,i,j,k], xEndL, xEndM, xEndR, 0)
+            if ndim > 1:
+                xEndL = xEnd[:, :, i+1, j,   k+1]
+                xEndR = xEnd[:, :, i+1, j+2, k+1]
+                interface_func(F[1,i,j,k], xEndL, xEndM, xEndR, 1)
+                if ndim > 2:
+                    xEndL = xEnd[:, :, i+1, j+1, k]
+                    xEndR = xEnd[:, :, i+1, j+1, k+2]
+                    interface_func(F[2,i,j,k], xEndL, xEndM, xEndR, 2)
+
+        for d in range(ndim):
+            s -= F[d]
+
     return dt/dx * s
