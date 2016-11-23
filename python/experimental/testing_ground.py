@@ -43,14 +43,6 @@ def numerical(A, dt, PAR):
     y1 = odeint(f, y0, t, args=(PAR,), Dfun=jac)[1]
     return y1[:9].reshape([3,3])
 
-def compare_solvers(A, dt):
-    PAR = auxiliary.classes.material_parameters(γ=1.4,pINF=0,cv=1,ρ0=1,p0=1,cs=1,α=1e-16,μ=1e-3,Pr=3/4)
-    ρ = det3(A)
-
-    A1 = linearised_distortion(ρ, A, dt, PAR)
-    A2 = numerical(A, dt, PAR)
-    return A1, A2
-
 @jit
 def stretch_f(y, t0, k):
     ret = zeros(3)
@@ -69,3 +61,32 @@ def stretch_solver(A, dt, PAR):
     k = -2 * prod(s)**(5/3) / PAR.τ1
     s2 = odeint(stretch_f, s0, t, args=(k,))[1]
     return dot(U*sqrt(s2),V)
+
+@jit
+def stretch_f2(y, t0, k, c):
+    ret = zeros(2)
+    y0 = y[0]
+    y1 = y[1]
+    ret[0] = k * y0 * (2*y0 - y1 - c/(y0*y1))
+    ret[1] = k * y1 * (2*y1 - y0 - c/(y0*y1))
+    return ret
+
+def stretch_solver2(A, dt, PAR):
+    U, s, V = svd(A)
+    s0 = s**2
+    c = prod(s0)
+    t = array([0, dt])
+    k = -2 * prod(s)**(5/3) / PAR.τ1
+    s2 = odeint(stretch_f2, s0[:2], t, args=(k,c))[1]
+    s = array([s2[0], s2[1], c/(s2[0]*s2[1])])
+    return dot(U*sqrt(s),V)
+
+def compare_solvers(A, dt):
+    PAR = auxiliary.classes.material_parameters(γ=1.4,pINF=0,cv=1,ρ0=1,p0=1,cs=1,α=1e-16,μ=1e-3,Pr=3/4)
+    ρ = det3(A)
+
+    A1 = linearised_distortion(ρ, A, dt, PAR)
+    A2 = numerical(A, dt, PAR)
+    A3 = stretch_solver(A, dt, PAR)
+    A4 = stretch_solver2(A, dt, PAR)
+    return A1, A2, A3, A4

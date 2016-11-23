@@ -1,0 +1,2828 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass book
+\begin_preamble
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.54cm
+\topmargin 2.54cm
+\rightmargin 2.54cm
+\bottommargin 2.54cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{\mathrm{tr}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+To Do
+\end_layout
+
+\begin_layout Itemize
+Test compressible Euler vs GPR - use narrowing domain from Toro's book
+\end_layout
+
+\begin_layout Itemize
+Investigate further methods of obtaining predictor with form 
+\begin_inset Formula $w_{0}+w_{1}x+c_{0}t+c_{0}xt$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Investigate ways of determining whether the linearised ODE solver is appropriate
+\end_layout
+
+\begin_layout Itemize
+Currently calculating components of the FV jump term twice - sort this out
+\end_layout
+
+\begin_layout Itemize
+Implement jacobian in DG system
+\end_layout
+
+\begin_layout Itemize
+MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM) and
+ operator splitting for source terms
+\end_layout
+
+\begin_layout Itemize
+Try evolving in time by 
+\begin_inset Formula $\frac{\Delta t}{2}$
+\end_inset
+
+ in split-WENO
+\end_layout
+
+\begin_layout Itemize
+Isobaric cookoff paper - make cookoff the focus
+\end_layout
+
+\begin_layout Itemize
+Sort out heat flux in HPR-RGFM
+\end_layout
+
+\begin_layout Itemize
+HPR-RGFM paper
+\end_layout
+
+\begin_layout Itemize
+Solid EOSs
+\end_layout
+
+\begin_layout Itemize
+Try conservative formulation [Peshkov,Grmela,Romenski]
+\end_layout
+
+\begin_layout Itemize
+2D and 3D test cases
+\end_layout
+
+\begin_layout Itemize
+Convergence of conservation of mass in RGFM
+\end_layout
+
+\begin_layout Itemize
+Driven isotropic turbulence
+\end_layout
+
+\begin_layout Chapter
+Faster Solvers
+\end_layout
+
+\begin_layout Section
+Perron-Frobenius Estimate for Rusanov Flux
+\end_layout
+
+\begin_layout Standard
+The most expensive single part of the FV flux updates when using the Rusanov
+ flux is the calculation of the maximum absolute eigenvalue of the system
+ matrix.
+ In my dissertation I showed that this is equal to 
+\begin_inset Formula $\left|v\pm\lambda_{max}\right|$
+\end_inset
+
+ where 
+\begin_inset Formula $\lambda_{max}$
+\end_inset
+
+ is the maximum eigenvalue of the thermo-acoustic tensor 
+\begin_inset Formula $X$
+\end_inset
+
+, and the sign depends on the sign of 
+\begin_inset Formula $v$
+\end_inset
+
+.
+ When 
+\begin_inset Formula $\alpha\neq0$
+\end_inset
+
+, by considering the fact that the graph of which 
+\begin_inset Formula $X$
+\end_inset
+
+ is the adjacency matrix is clearly strongly connected, it follows that
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ is irreducible.
+ Additionally, it can be shown that its non-zero components are always positive.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cccc}
+1 & 1 & 1 & 1\\
+1 & 1 & 1 & 0\\
+1 & 1 & 1 & 0\\
+1 & 0 & 0 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+tikzset{edge/.style = {->,> = latex'}}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (1) at  (0,4) {$1$};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (2) at  (4,4) {$2$};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (3) at  (0,0) {$3$};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[vertex] (4) at  (4,0) {$4$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (1) to (2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (1) to (3);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (2) to (1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (2) to (3);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (3) to (1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (3) to (2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (4) to (1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[edge] (1) to (4);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, by the Perron-Frobenius Theorem, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\min_{i}\sum_{j}X_{ij}\leq\lambda_{max}\leq\max_{i}\sum_{j}X_{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These bounds are much more quickly calculated than explicitly finding the
+ eigenvalues.
+ I proposed using an average of the bounds as an estimate for 
+\begin_inset Formula $\lambda_{max}$
+\end_inset
+
+.
+ This results in ~35% speedup on the FV section of Stokes' First Problem.
+\end_layout
+
+\begin_layout Standard
+NB this method can be used to obtain a conservative upper bound on 
+\begin_inset Formula $\lambda_{max}$
+\end_inset
+
+when calculating the timestep.
+\end_layout
+
+\begin_layout Section
+Approximating Interface Terms in FV
+\end_layout
+
+\begin_layout Standard
+Instead of calculating the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\int D\left(q^{-}\left(x_{0},t\right),q^{+}\left(x_{0},t\right)\right)dt
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I propose calculating the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+D\left(\frac{1}{\Delta t}\int q^{-}\left(x_{0},t\right)dt,\frac{1}{\Delta t}\int q^{+}\left(x_{0},t\right)dt\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This obtains a large speedup with no discernable difference in the results
+ of Stokes' First Problem.
+\end_layout
+
+\begin_layout Section
+Analytical Results for Basis Vectors
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $N=1$
+\end_inset
+
+, the Gauss-Legendre nodes on 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+ are 
+\begin_inset Formula $\left\{ \frac{1}{2}\left(1-\frac{1}{\sqrt{3}}\right),\frac{1}{2}\left(1+\frac{1}{\sqrt{3}}\right)\right\} $
+\end_inset
+
+.
+ Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\psi_{1}\left(x\right) & =-\sqrt{3}x+\frac{1+\sqrt{3}}{2}\\
+\psi_{2}\left(x\right) & =\sqrt{3}x+\frac{1-\sqrt{3}}{2}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\psi_{1}\left(1\right) & =\frac{1-\sqrt{3}}{2}\\
+\psi_{2}\left(1\right) & =\frac{1+\sqrt{3}}{2}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\psi_{1}\left(1\right)\psi_{1}\left(1\right) & =1-\frac{\sqrt{3}}{2}\\
+\psi_{1}\left(1\right)\psi_{2}\left(1\right) & =-\frac{1}{2}\\
+\psi_{2}\left(1\right)\psi_{2}\left(1\right) & =1+\frac{\sqrt{3}}{2}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\int_{m}^{m+1}\psi_{1}\left(x\right)dx & =\frac{-\sqrt{3}}{2}\left(2m+1\right)+\frac{1+\sqrt{3}}{2}=\frac{1}{2}-m\sqrt{3}\\
+\int_{m}^{m+1}\psi_{2}\left(x\right)dx & =\frac{\sqrt{3}}{2}\left(2m+1\right)+\frac{1-\sqrt{3}}{2}=\frac{1}{2}+m\sqrt{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The WENO matrices are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cc}
+\frac{1}{2} & \frac{1}{2}\\
+\frac{1}{2}-\sqrt{3} & \frac{1}{2}+\sqrt{3}
+\end{array}\right),\left(\begin{array}{cc}
+\frac{1}{2}+\sqrt{3} & \frac{1}{2}-\sqrt{3}\\
+\frac{1}{2} & \frac{1}{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The inverses are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\sqrt{3}}\left(\begin{array}{cc}
+\sqrt{3}+\frac{1}{2} & -\frac{1}{2}\\
+\sqrt{3}-\frac{1}{2} & \frac{1}{2}
+\end{array}\right),\frac{1}{\sqrt{3}}\left(\begin{array}{cc}
+\frac{1}{2} & \sqrt{3}-\frac{1}{2}\\
+-\frac{1}{2} & \sqrt{3}+\frac{1}{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The weights for both nodes are 
+\begin_inset Formula $0.5$
+\end_inset
+
+ so 
+\begin_inset Formula $\int_{0}^{1}\psi_{i}\psi_{j}dx=\frac{\delta_{ij}}{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{1}\psi_{i}\psi_{j}^{'}dx=\left(-1\right)^{j}\frac{\sqrt{3}}{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+I_{11}-I_{2}^{T} & =\frac{1}{2}\left(\begin{array}{cc}
+2-\sqrt{3} & -1\\
+-1 & 2+\sqrt{3}
+\end{array}\right)-\frac{1}{2}\left(\begin{array}{cc}
+-\sqrt{3} & -\sqrt{3}\\
+\sqrt{3} & \sqrt{3}
+\end{array}\right)\\
+ & =\frac{1}{2}\left(\begin{array}{cc}
+2 & -\left(1-\sqrt{3}\right)\\
+-\left(1+\sqrt{3}\right) & 2
+\end{array}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(I_{11}-I_{2}^{T}\right)^{-1}=\frac{1}{3}\left(\begin{array}{cc}
+2 & 1-\sqrt{3}\\
+1+\sqrt{3} & 2
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using a precalculated, analytical form of 
+\begin_inset Formula $U$
+\end_inset
+
+ in the DG predictor for 
+\begin_inset Formula $N=1$
+\end_inset
+
+ obtains a ~30% speedup on Stokes' First Problem.
+\end_layout
+
+\begin_layout Section
+Operator Splitting
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $\frac{d\rho}{dt}=0$
+\end_inset
+
+ over the ODE time step, we must solve the following system:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dA_{ij}}{dt} & =\frac{-\psi_{ij}}{\theta_{1}\left(\tau_{1}\right)}=\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
+\frac{dJ_{i}}{dt} & =\frac{-H_{i}}{\theta_{2}\left(\tau_{2}\right)}=-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}J_{i}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Many different solvers can be used to solve the homogeneous part of the
+ system.
+ So far, this has been tested with SLIC, WENO, and DG.
+ A split-WENO scheme seems to be the fastest and most accurate method available.
+ The results using split-WENO to solve Stokes' First Problem are shown in
+ [FIG].
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-2_SplitWENO.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-3_SplitWENO.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results of solving Stokes' First Problem (
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu=10^{-3}$
+\end_inset
+
+) with a split-WENO scheme
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Distortion Equations
+\end_layout
+
+\begin_layout Standard
+Take the following form for 
+\begin_inset Formula $A$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A=\left(\begin{array}{ccc}
+a_{1} & 0 & 0\\
+0 & a_{2} & 0\\
+0 & 0 & a_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A\dev\left(G\right)=\left(\begin{array}{ccc}
+a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right) & 0 & 0\\
+0 & a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right) & 0\\
+0 & 0 & a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $x_{i}=a_{i}^{2}$
+\end_inset
+
+ we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{dt}=-kx_{i}\left(x_{i}-\bar{x}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $k>0$
+\end_inset
+
+.
+ Now, 
+\begin_inset Formula $\det\left(A\right)=a_{1}a_{2}a_{3}=\sqrt{c}$
+\end_inset
+
+ is constant.
+ The ODE system travels along the surface 
+\begin_inset Formula $x_{1}x_{2}x_{3}=c$
+\end_inset
+
+ to the point 
+\begin_inset Formula $x_{1},x_{2},x_{3}=c^{\frac{1}{3}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+By the Polar Decomposition Theorem, under an appropriate change of coordinates,
+ 
+\begin_inset Formula $A=RS$
+\end_inset
+
+ where 
+\begin_inset Formula $R$
+\end_inset
+
+ is a rotation matrix and 
+\begin_inset Formula $S$
+\end_inset
+
+ is a diagonal matrix, representing the principle stretches.
+ In this case, 
+\begin_inset Formula $G=A^{T}A=S^{T}R^{T}RS=S^{2}$
+\end_inset
+
+.
+ Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\left(RS\right)}{dt}=-kRS\dev\left(S^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for some 
+\begin_inset Formula $k>0$
+\end_inset
+
+.
+ This is similar to the case studied above, which may prove useful.
+\end_layout
+
+\begin_layout Subsection
+Thermal Impulse Equations
+\end_layout
+
+\begin_layout Standard
+Density does not change over the time period of the ODE.
+ Assuming pressure (and therefore temperature) does not change also, we
+ have the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{J_{i}}=\exp\left(-\frac{T\rho_{0}}{T_{0}\rho}\frac{\Delta t}{\tau_{2}}\right)J_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the constant pressure assumption may not always work well.
+ Pressure (and temperature) increase over this time period, by conservation
+ of energy (see the EOS), so the relaxation of 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ is quicker than produced here.
+ Ignoring the contribution from 
+\begin_inset Formula $A$
+\end_inset
+
+, the EOS gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+T & =\frac{E_{1}}{c_{v}}\\
+ & =\frac{E-E_{2A}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}-\frac{1}{c_{v}}E_{2J}\left(\boldsymbol{J}\right)\nonumber \\
+ & =c_{1}-c_{2}\boldsymbol{J}^{2}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{1} & =\frac{E-E_{2A}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}\\
+c_{2} & =\frac{\alpha^{2}}{2c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Over the time period of the ODE, 
+\begin_inset Formula $c_{1},c_{2}>0$
+\end_inset
+
+ are constant.
+ In one dimension we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dJ_{1}}{dt} & =-\frac{1}{\tau_{2}}\frac{\rho_{0}}{T_{0}\rho}\left(c_{1}J_{1}-c_{2}J_{1}^{3}\right)\\
+ & =-c_{3}J_{1}+c_{4}J_{1}^{3}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This has the solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J_{1}=\pm\frac{\sqrt{c_{3}}}{\sqrt{e^{2c_{3}\left(c+t\right)}+c_{4}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c=\frac{\log\left(\frac{c_{3}}{J_{0}^{2}}-c_{4}\right)}{2c_{3}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I suggest splitting the thermal and distortion relaxation processes thus.
+\end_layout
+
+\begin_layout Standard
+In 3 dimensions we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dJ_{i}}{dt}=-c_{3}J_{i}+c_{4}J_{i}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\therefore J_{i}\frac{dJ_{i}}{dt}=\frac{1}{2}\frac{d}{dt}\left(J_{i}^{2}\right)=-c_{3}J_{i}^{2}+c_{4}J_{i}^{2}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\therefore\frac{d}{dt}\left(J_{i}^{2}\right)=J_{i}^{2}\left(-2c_{3}+2c_{4}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this is a generalised Lotka-Volterra system in 
+\begin_inset Formula $\left\{ J_{1}^{2},J_{2}^{2},J_{3}^{2}\right\} $
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Jacobian of Source ODE Solver
+\end_layout
+
+\begin_layout Standard
+The Jacobian of the source function is used to speed up numerical integration
+ of the ODE.
+ It is derived thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\dev\left(G\right)_{ij}}{\partial A_{mn}}=\delta_{in}A_{mj}+\delta_{jn}A_{mi}-\frac{2}{3}\delta_{ij}A_{mn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\frac{\partial A_{it}}{\partial A_{mn}}\dev\left(G\right)_{tj}+A_{it}\frac{\partial\dev\left(G\right)_{tj}}{\partial A_{mn}}\\
+ & =\delta_{im}\delta_{tn}\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)\nonumber \\
+ & \quad+A_{it}\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)\nonumber \\
+ & =\left(\delta_{im}A_{kn}A_{kj}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}\right)\nonumber \\
+ & \quad+\left(A_{in}A_{mj}+\delta_{jn}A_{ik}A_{mk}-\frac{2}{3}A_{ij}A_{mn}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+J_{A} & \equiv\frac{-3}{\tau_{1}}\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}}\\
+ & =\frac{-3}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\frac{5}{3}\left(A\dev\left(G\right)\right)_{ij}A_{mn}^{-T}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $G^{'}=AA^{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Linearised ODE Solver
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $A^{*}=\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}I$
+\end_inset
+
+ is a stationary point of the ODE for 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ Linearising the ODE around 
+\begin_inset Formula $A^{*}$
+\end_inset
+
+ gives:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{dA}{dt} & \approx J_{A}\left(A^{*}\right)\left(A-A^{*}\right)\\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{in}\delta_{mj}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{jn}\delta_{im}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}-\frac{1}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}\delta_{kl}\delta_{kl}-\frac{2}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{ij}\delta_{mn}\right)\nonumber \\
+ & \quad\times\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\left(A_{ji}+A_{ij}-\frac{2}{3}\tr\left(A\right)\delta_{ij}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\left(\delta_{ij}+\delta_{ij}-2\delta_{ij}\right)\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A+A^{T}-\frac{2}{3}\tr\left(A\right)I\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The matrix for this system, in row-major form, is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\begin{array}{ccccccccc}
+\frac{4}{3} & 0 & 0 & 0 & -\frac{2}{3} & 0 & 0 & 0 & -\frac{2}{3}\\
+0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
+0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+-\frac{2}{3} & 0 & 0 & 0 & \frac{4}{3} & 0 & 0 & 0 & -\frac{2}{3}\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0\\
+-\frac{2}{3} & 0 & 0 & 0 & -\frac{2}{3} & 0 & 0 & 0 & \frac{4}{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The eigenvalues and eigenvectors are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ 0,0,0,0,-2k,-2k,-2k,-2k,-2k\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+0\\
+1\\
+0\\
+-1\\
+0\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+-1\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+1\\
+0\\
+-1\\
+0
+\end{array}\right)\left(\begin{array}{c}
+1\\
+0\\
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+1
+\end{array}\right)\left(\begin{array}{c}
+-1\\
+0\\
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+-1\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+1
+\end{array}\right)\left(\begin{array}{c}
+0\\
+1\\
+0\\
+1\\
+0\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+1\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+1\\
+0\\
+1\\
+0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $k=\frac{3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}$
+\end_inset
+
+.
+ Thus, the solution is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{alignat}{1}
+ & \frac{A_{12}-A_{21}}{2}\left(\begin{array}{ccc}
+0 & 1 & 0\\
+-1 & 0 & 0\\
+0 & 0 & 0
+\end{array}\right)+\frac{A_{13}-A_{31}}{2}\left(\begin{array}{ccc}
+0 & 0 & 1\\
+0 & 0 & 0\\
+-1 & 0 & 0
+\end{array}\right)+\frac{A_{23}-A_{32}}{2}\left(\begin{array}{ccc}
+0 & 0 & 0\\
+0 & 0 & 1\\
+0 & -1 & 0
+\end{array}\right)\\
+ & +\frac{A_{11}+A_{22}+A_{33}}{3}\left(\begin{array}{ccc}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{array}\right)\nonumber \\
+ & +\frac{2A_{22}-A_{11}-A_{33}}{3}e^{-2kt}\left(\begin{array}{ccc}
+-1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 0
+\end{array}\right)+\frac{2A_{33}-A_{11}-A_{22}}{3}e^{-2kt}\left(\begin{array}{ccc}
+-1 & 0 & 0\\
+0 & 0 & 0\\
+0 & 0 & 1
+\end{array}\right)\nonumber \\
+ & +\frac{A_{12}+A_{21}}{2}e^{-2kt}\left(\begin{array}{ccc}
+0 & 1 & 0\\
+1 & 0 & 0\\
+0 & 0 & 0
+\end{array}\right)+\frac{A_{13}+A_{31}}{2}e^{-2kt}\left(\begin{array}{ccc}
+0 & 0 & 1\\
+0 & 0 & 0\\
+1 & 0 & 0
+\end{array}\right)+\frac{A_{23}+A_{32}}{2}e^{-2kt}\left(\begin{array}{ccc}
+0 & 0 & 0\\
+0 & 0 & 1\\
+0 & 1 & 0
+\end{array}\right)\nonumber 
+\end{alignat}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is equal to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{2}\left(A-A^{T}\right)+\frac{\tr\left(A\right)}{3}I+e^{-2kt}\left(\frac{1}{2}\left(A+A^{T}\right)-\frac{\tr\left(A\right)}{3}I\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Results with Stokes' First Problem look good with this linearisation.
+ The ODE step takes a negligible amount of time, meaning that if accuracy
+ is maintained to second order, the solver is now fast enough.
+\end_layout
+
+\begin_layout Section
+New Second-Order Method
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $q=a_{0}+a_{x}\bar{x}+a_{t}\bar{t}+a_{xt}\bar{x}\bar{t}$
+\end_inset
+
+ be the normalized linear polynomial reconstruction of 
+\begin_inset Formula $q$
+\end_inset
+
+ in the spacetime cell 
+\begin_inset Formula $\left[0,\Delta x\right]\times\left[0,\Delta t\right]$
+\end_inset
+
+.
+ 
+\begin_inset Formula $a_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{x}$
+\end_inset
+
+ are found using WENO at 
+\begin_inset Formula $t=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\bar{x}=\frac{1}{\Delta x}\left(x-x_{i}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\bar{t}=\frac{1}{\Delta t}\left(t-t_{n}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial q}{\partial t}+M\left(q\right)\frac{\partial q}{\partial x}=S\left(q\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\Delta t}\frac{\partial q}{\partial\bar{t}}+\frac{1}{\Delta x}M\left(q\right)\frac{\partial q}{\partial\bar{x}}=S\left(q\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At 
+\begin_inset Formula $t=0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+a_{t}+a_{xt}\bar{x}+\frac{\Delta t}{\Delta x}M\left(a_{0}+a_{x}\bar{x}\right)a_{x}=\Delta t\cdot S\left(a_{0}+a_{x}\bar{x}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation can be linearised and the coefficients of 
+\begin_inset Formula $x$
+\end_inset
+
+ can be compared to find 
+\begin_inset Formula $a_{t},a_{xt}$
+\end_inset
+
+, ignoring higher-order terms of 
+\begin_inset Formula $x$
+\end_inset
+
+ as 
+\begin_inset Formula $x<1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{1} & =\frac{1}{2}\left(1-\frac{1}{\sqrt{3}}\right)\\
+c_{2} & =\frac{1}{2}\left(1+\frac{1}{\sqrt{3}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\psi_{1}\left(x\right) & =\frac{x-c_{2}}{c_{1}-c_{2}}=-\sqrt{3}\left(x-c_{2}\right)\\
+\psi_{2}\left(x\right) & =\frac{x-c_{1}}{c_{2}-c_{1}}=\sqrt{3}\left(x-c_{1}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+q & =b_{11}\psi_{1}\left(x\right)\psi_{1}\left(t\right)+b_{21}\psi_{2}\left(x\right)\psi_{1}\left(t\right)+b_{12}\psi_{1}\left(x\right)\psi_{2}\left(t\right)+b_{22}\psi_{2}\left(x\right)\psi_{2}\left(t\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Change of basis matrix for 
+\begin_inset Formula $\left\{ \psi_{1}\left(x\right),\psi_{2}\left(x\right)\right\} \rightarrow\left\{ 1,x\right\} $
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U=\sqrt{3}\left(\begin{array}{cc}
+c_{2} & -c_{1}\\
+-1 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U^{-1}=\left(\begin{array}{cc}
+1 & c_{1}\\
+1 & c_{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Change of basis matrix for 
+\begin_inset Formula $\left\{ \psi_{1}\left(x\right)\psi_{1}\left(t\right),\psi_{2}\left(x\right)\psi_{1}\left(t\right),\psi_{1}\left(x\right)\psi_{2}\left(t\right),\psi_{2}\left(x\right)\psi_{2}\left(t\right)\right\} \rightarrow\left\{ 1,x,t,xt\right\} $
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V=3\left(\begin{array}{cccc}
+c_{2}^{2} & -c_{1}c_{2} & -c_{1}c_{2} & c_{1}^{2}\\
+-c_{2} & c_{2} & c_{1} & -c_{1}\\
+-c_{2} & c_{1} & c_{2} & -c_{1}\\
+1 & -1 & -1 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V^{-1}=\left(\begin{array}{cccc}
+1 & c_{1} & c_{1} & c_{1}^{2}\\
+1 & c_{2} & c_{1} & c_{1}c_{2}\\
+1 & c_{1} & c_{2} & c_{1}c_{2}\\
+1 & c_{2} & c_{2} & c_{2}^{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Euler Equations
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+u\frac{\partial\rho}{\partial x}+\rho\frac{\partial u}{\partial x} & =0\\
+\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}+\frac{1}{\rho}\frac{\partial p}{\partial x} & =0\\
+\frac{\partial p}{\partial t}+u\frac{\partial p}{\partial x}+\gamma p\frac{\partial u}{\partial x} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\rho_{t}+\rho_{xt}x+\left(u_{0}+u_{x}x+u_{t}t+u_{xt}xt\right)\left(\rho_{x}+\rho_{xt}t\right)+\left(\rho_{0}+\rho_{x}x+\rho_{t}t+\rho_{xt}xt\right)\left(u_{x}+u_{xt}t\right) & =0\\
+u_{t}+u_{xt}x+\left(u_{0}+u_{x}x+u_{t}t+u_{xt}xt\right)\left(u_{x}+u_{xt}t\right)+\frac{p_{x}+p_{xt}t}{\rho_{0}+\rho_{x}x+\rho_{t}t+\rho_{xt}xt} & =0\\
+p_{t}+p_{xt}x+\left(u_{0}+u_{x}x+u_{t}t+u_{xt}xt\right)\left(p_{x}+p_{xt}t\right)+\gamma\left(p_{0}+p_{x}x+p_{t}t+p_{xt}xt\right)\left(u_{x}+u_{xt}t\right) & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left(\rho_{0}+\rho_{x}x\right)\left(u_{t}+u_{xt}x\right)+\left(\rho_{0}+\rho_{x}x\right)\left(u_{0}+u_{x}x\right)u_{x}+p_{x}\approx\left(\rho_{0}u_{t}+\rho_{0}u_{0}u_{x}+p_{x}\right)+\left(\rho_{0}u_{xt}+\rho_{x}u_{t}+\rho_{0}u_{x}^{2}+\rho_{x}u_{0}u_{x}\right)x=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\rho_{t}+\rho_{xt}x+\left(u_{0}+u_{x}x\right)\rho_{x}+\left(\rho_{0}+\rho_{x}x\right)u_{x} & =0\\
+\left(\rho_{0}+\rho_{x}x\right)\left(u_{t}+u_{xt}x\right)+\left(\rho_{0}+\rho_{x}x\right)\left(u_{0}+u_{x}x\right)u_{x}+p_{x} & =0\\
+p_{t}+p_{xt}x+\left(u_{0}+u_{x}x\right)p_{x}+\gamma\left(p_{0}+p_{x}x\right)u_{x} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\rho_{t} & =-\left(\rho_{x}u_{0}+\rho_{0}u_{x}\right)\\
+\rho_{xt} & =-2\rho_{x}u_{x}\\
+u_{t} & =-\left(u_{0}u_{x}+\frac{p_{x}}{\rho_{0}}\right)\\
+u_{xt} & =-\frac{\rho_{x}u_{t}+\rho_{0}u_{x}^{2}+\rho_{x}u_{0}u_{x}}{\rho_{0}}\\
+p_{t} & =-\left(u_{0}p_{x}+\gamma p_{0}u_{x}\right)\\
+p_{xt} & =-\left(1+\gamma\right)u_{x}p_{x}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+NB This doesn't seem to work very well.
+ The linearisation procedure is too rudimentary.
+\end_layout
+
+\begin_layout Section
+Primitive WENO and DG Reconstruction
+\end_layout
+
+\begin_layout Standard
+As suggested in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zanotti2016"
+
+\end_inset
+
+, the WENO and DG can be performed in primitive variables, which is less
+ computationally expensive than evaluating fluxes using conserved variables.
+ Achieves around 20% speedup in DG step, at double cost in WENO step.
+ Minimal speedup in FV step, as both primitive and conserved variables must
+ be calculated for the flux updates.
+ Not enough.
+\end_layout
+
+\begin_layout Section
+Change to Row-Major Ordering
+\end_layout
+
+\begin_layout Standard
+The original GPR papers state the equations for 
+\begin_inset Formula $A$
+\end_inset
+
+ in column-major order, probably because the authors use Fortran.
+ For C++ and Python implementations it is faster to work in row-major order.
+ ~10% speedup was achieved by implementing this.
+\end_layout
+
+\begin_layout Standard
+The GPR equations are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Under row-major ordering, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q}= & \left(\begin{array}{ccccccccccccccccc}
+\rho & \rho E & \rho v_{1} & \rho v_{2} & \rho v_{3} & A_{11} & A_{12} & A_{13} & A_{21} & A_{22} & A_{23} & A_{31} & A_{32} & A_{33} & \rho J_{1} & \rho J_{2} & \rho J_{3}\end{array}\right)^{T}\\
+\boldsymbol{P}= & \left(\begin{array}{ccccccccccccccccc}
+\rho & p & v_{1} & v_{2} & v_{3} & A_{11} & A_{21} & A_{31} & A_{12} & A_{22} & A_{32} & A_{13} & A_{23} & A_{33} & J_{1} & J_{2} & J_{3}\end{array}\right)^{T}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F_{1}}=\begin{pmatrix}\rho v_{1}\\
+\rho v_{1}E+v_{1}p-\sigma_{1m}v_{m}+q_{1}\\
+\rho v_{1}^{2}+p-\sigma_{11}\\
+\rho v_{1}v_{2}-\sigma_{12}\\
+\rho v_{1}v_{3}-\sigma_{13}\\
+A_{1m}v_{m}\\
+0\\
+0\\
+A_{2m}v_{m}\\
+0\\
+0\\
+A_{3m}v_{m}\\
+0\\
+0\\
+\rho J_{1}v_{1}+T\\
+\rho J_{2}v_{1}\\
+\rho J_{3}v_{1}
+\end{pmatrix}\quad\boldsymbol{F_{2}}=\begin{pmatrix}\rho v_{2}\\
+\rho v_{2}E+v_{2}p-\sigma_{2m}v_{m}+q_{2}\\
+\rho v_{1}v_{2}-\sigma_{21}\\
+\rho v_{2}^{2}+p-\sigma_{22}\\
+\rho v_{2}v_{3}-\sigma_{23}\\
+0\\
+A_{1m}v_{m}\\
+0\\
+0\\
+A_{2m}v_{m}\\
+0\\
+0\\
+A_{3m}v_{m}\\
+0\\
+\rho J_{1}v_{2}\\
+\rho J_{2}v_{2}+T\\
+\rho J_{3}v_{2}
+\end{pmatrix}\quad\boldsymbol{F_{3}}=\begin{pmatrix}\rho v_{3}\\
+\rho v_{3}E+v_{3}p-\sigma_{3m}v_{m}+q_{3}\\
+\rho v_{1}v_{3}-\sigma_{31}\\
+\rho v_{2}v_{3}-\sigma_{32}\\
+\rho v_{3}^{2}+p-\sigma_{33}\\
+0\\
+0\\
+A_{1m}v_{m}\\
+0\\
+0\\
+A_{2m}v_{m}\\
+0\\
+0\\
+A_{3m}v_{m}\\
+\rho J_{1}v_{3}\\
+\rho J_{2}v_{3}\\
+\rho J_{3}v_{3}+T
+\end{pmatrix}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+B_{1}=\left(\begin{array}{ccccccccccccccccc}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & -v_{2} & -v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -v_{2} & -v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -v_{2} & -v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+B_{2}=\left(\begin{array}{ccccccccccccccccc}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & -v_{1} & 0 & -v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -v_{1} & 0 & -v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -v_{1} & 0 & -v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+B_{3}=\left(\begin{array}{ccccccccccccccccc}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & -v_{1} & -v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -v_{1} & -v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -v_{1} & -v_{2} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{S}=-\frac{1}{\theta_{1}\left(\tau_{1}\right)}\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+\psi_{11}\\
+\psi_{12}\\
+\psi_{13}\\
+\psi_{21}\\
+\psi_{22}\\
+\psi_{23}\\
+\psi_{31}\\
+\psi_{32}\\
+\psi_{33}\\
+0\\
+0\\
+0
+\end{array}\right)-\frac{1}{\theta_{2}\left(\tau_{2}\right)}\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+\rho H_{1}\\
+\rho H_{2}\\
+\rho H_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Psi_{ij} & =\rho v_{i}v_{j}-\sigma_{ij}\\
+\Phi_{ij}^{k} & =\rho v_{k}\psi_{ij}-v_{m}\frac{\partial\sigma_{mk}}{\partial A_{ij}}\\
+\Omega_{i} & =v_{i}\left(E+\rho E_{\rho}\right)-\frac{\sigma_{im}v_{m}}{\rho}+T_{\rho}H_{i}\\
+\Upsilon & =\frac{\left\Vert \boldsymbol{v}\right\Vert ^{2}+\boldsymbol{H}\cdot\boldsymbol{J}-E-\rho E_{ρ}}{\rho E_{p}}\\
+\boldsymbol{\tilde{H}} & =E_{\boldsymbol{JJ}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+E+\rho E_{\rho} & \rho E_{p} & \rho v_{1} & \rho v_{2} & \rho v_{3} & \rho\psi_{11} & \rho\psi_{12} & \rho\psi_{13} & \rho\psi_{21} & \rho\psi_{22} & \rho\psi_{23} & \rho\psi_{31} & \rho\psi_{32} & \rho\psi_{33} & \rho H_{1} & \rho H_{2} & \rho H_{3}\\
+v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0\\
+J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0\\
+J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{P}}{\partial\boldsymbol{Q}}=\left(\begin{array}{ccccccccccccccccc}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Upsilon & \frac{1}{ρE_{p}} & -\frac{v_{1}}{ρE_{p}} & -\frac{v_{2}}{ρE_{p}} & -\frac{v_{3}}{ρE_{p}} & -\frac{\psi_{11}}{E_{p}} & -\frac{\psi_{12}}{E_{p}} & -\frac{\psi_{13}}{E_{p}} & -\frac{\psi_{21}}{E_{p}} & -\frac{\psi_{22}}{E_{p}} & -\frac{\psi_{23}}{E_{p}} & -\frac{\psi_{31}}{E_{p}} & -\frac{\psi_{32}}{E_{p}} & -\frac{\psi_{33}}{E_{p}} & -\frac{H_{1}}{ρE_{p}} & -\frac{H_{2}}{ρE_{p}} & -\frac{H_{3}}{ρE_{p}}\\
+-\frac{v_{1}}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+-\frac{v_{2}}{\rho} & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+-\frac{v_{3}}{\rho} & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+-\frac{J_{1}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0\\
+-\frac{J_{2}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0\\
+-\frac{J_{3}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size scriptsize
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{F_{1}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Omega_{1} & \left(v_{1}\left(\rho E_{p}+1\right)+T_{p}H_{1}\right) & \left(\Psi_{11}+\rho E+p\right) & \Psi_{12} & \Psi_{13} & \Phi_{11}^{1} & \Phi_{12}^{1} & \Phi_{13}^{1} & \Phi_{21}^{1} & \Phi_{22}^{1} & \Phi_{23}^{1} & \Phi_{31}^{1} & \Phi_{32}^{1} & \Phi_{33}^{1} & \left(\rho v_{1}H_{1}+T\tilde{H}_{1}\right) & \rho v_{1}H_{2} & \rho v_{1}H_{3}\\
+\frac{\Psi_{11}}{\rho} & 1 & 2\rho v_{1} & 0 & 0 & -\frac{\partial\sigma_{11}}{A_{11}} & -\frac{\partial\sigma_{11}}{A_{12}} & -\frac{\partial\sigma_{11}}{A_{13}} & -\frac{\partial\sigma_{11}}{A_{21}} & -\frac{\partial\sigma_{11}}{A_{22}} & -\frac{\partial\sigma_{11}}{A_{23}} & -\frac{\partial\sigma_{11}}{A_{31}} & -\frac{\partial\sigma_{11}}{A_{32}} & -\frac{\partial\sigma_{11}}{A_{33}} & 0 & 0 & 0\\
+\frac{\Psi_{12}}{\rho} & 0 & \rho v_{2} & \rho v_{1} & 0 & -\frac{\partial\sigma_{12}}{A_{11}} & -\frac{\partial\sigma_{12}}{A_{12}} & -\frac{\partial\sigma_{12}}{A_{13}} & -\frac{\partial\sigma_{12}}{A_{21}} & -\frac{\partial\sigma_{12}}{A_{22}} & -\frac{\partial\sigma_{12}}{A_{23}} & -\frac{\partial\sigma_{12}}{A_{31}} & -\frac{\partial\sigma_{12}}{A_{32}} & -\frac{\partial\sigma_{12}}{A_{33}} & 0 & 0 & 0\\
+\frac{\Psi_{13}}{\rho} & 0 & \rho v_{3} & 0 & \rho v_{1} & -\frac{\partial\sigma_{13}}{A_{11}} & -\frac{\partial\sigma_{13}}{A_{12}} & -\frac{\partial\sigma_{13}}{A_{13}} & -\frac{\partial\sigma_{13}}{A_{21}} & -\frac{\partial\sigma_{13}}{A_{22}} & -\frac{\partial\sigma_{13}}{A_{23}} & -\frac{\partial\sigma_{13}}{A_{31}} & -\frac{\partial\sigma_{13}}{A_{32}} & -\frac{\partial\sigma_{13}}{A_{33}} & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{1}J_{1}+T_{ρ} & T_{p} & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1} & 0 & 0\\
+v_{1}J_{2} & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1} & 0\\
+v_{1}J_{3} & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size scriptsize
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{F_{2}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Omega_{2} & \left(v_{2}\left(\rho E_{p}+1\right)+T_{p}H_{2}\right) & \Psi_{21} & \left(\Psi_{22}+\rho E+p\right) & \Psi_{23} & \Phi_{11}^{2} & \Phi_{12}^{2} & \Phi_{13}^{2} & \Phi_{21}^{2} & \Phi_{22}^{2} & \Phi_{23}^{2} & \Phi_{31}^{2} & \Phi_{32}^{2} & \Phi_{33}^{2} & \rho v_{2}H_{1} & \left(\rho v_{2}H_{2}+T\tilde{H}_{2}\right) & \rho v_{2}H_{3}\\
+\frac{\Psi_{21}}{\rho} & 0 & \rho v_{2} & \rho v_{1} & 0 & -\frac{\partial\sigma_{21}}{A_{11}} & -\frac{\partial\sigma_{21}}{A_{12}} & -\frac{\partial\sigma_{21}}{A_{13}} & -\frac{\partial\sigma_{21}}{A_{21}} & -\frac{\partial\sigma_{21}}{A_{22}} & -\frac{\partial\sigma_{21}}{A_{23}} & -\frac{\partial\sigma_{21}}{A_{31}} & -\frac{\partial\sigma_{21}}{A_{32}} & -\frac{\partial\sigma_{21}}{A_{33}} & 0 & 0 & 0\\
+\frac{\Psi_{22}}{\rho} & 1 & 0 & 2\rho v_{2} & 0 & -\frac{\partial\sigma_{22}}{A_{11}} & -\frac{\partial\sigma_{22}}{A_{12}} & -\frac{\partial\sigma_{22}}{A_{13}} & -\frac{\partial\sigma_{22}}{A_{21}} & -\frac{\partial\sigma_{22}}{A_{22}} & -\frac{\partial\sigma_{22}}{A_{23}} & -\frac{\partial\sigma_{22}}{A_{31}} & -\frac{\partial\sigma_{22}}{A_{32}} & -\frac{\partial\sigma_{22}}{A_{33}} & 0 & 0 & 0\\
+\frac{\Psi_{23}}{\rho} & 0 & 0 & \rho v_{3} & \rho v_{2} & -\frac{\partial\sigma_{23}}{A_{11}} & -\frac{\partial\sigma_{23}}{A_{12}} & -\frac{\partial\sigma_{23}}{A_{13}} & -\frac{\partial\sigma_{23}}{A_{21}} & -\frac{\partial\sigma_{23}}{A_{22}} & -\frac{\partial\sigma_{23}}{A_{23}} & -\frac{\partial\sigma_{23}}{A_{31}} & -\frac{\partial\sigma_{23}}{A_{32}} & -\frac{\partial\sigma_{23}}{A_{33}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{2}J_{1} & 0 & 0 & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2} & 0 & 0\\
+v_{2}J_{2}+T_{ρ} & T_{p} & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2} & 0\\
+v_{2}J_{3} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size scriptsize
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{F_{3}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+v_{3} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Omega_{3} & \left(v_{3}\left(\rho E_{p}+1\right)+T_{p}H_{3}\right) & \Psi_{31} & \Psi_{32} & \left(\Psi_{33}+\rho E+p\right) & \Phi_{11}^{3} & \Phi_{12}^{3} & \Phi_{13}^{3} & \Phi_{21}^{3} & \Phi_{22}^{3} & \Phi_{23}^{3} & \Phi_{31}^{3} & \Phi_{32}^{3} & \Phi_{33}^{3} & \rho v_{3}H_{1} & \rho v_{3}H_{2} & \left(\rho v_{3}H_{3}+T\tilde{H}_{3}\right)\\
+\frac{\Psi_{31}}{\rho} & 0 & \rho v_{3} & 0 & \rho v_{1} & -\frac{\partial\sigma_{31}}{A_{11}} & -\frac{\partial\sigma_{31}}{A_{12}} & -\frac{\partial\sigma_{31}}{A_{13}} & -\frac{\partial\sigma_{31}}{A_{21}} & -\frac{\partial\sigma_{31}}{A_{22}} & -\frac{\partial\sigma_{31}}{A_{23}} & -\frac{\partial\sigma_{31}}{A_{31}} & -\frac{\partial\sigma_{31}}{A_{32}} & -\frac{\partial\sigma_{31}}{A_{33}} & 0 & 0 & 0\\
+\frac{\Psi_{32}}{\rho} & 0 & 0 & \rho v_{3} & \rho v_{2} & -\frac{\partial\sigma_{32}}{A_{11}} & -\frac{\partial\sigma_{32}}{A_{12}} & -\frac{\partial\sigma_{32}}{A_{13}} & -\frac{\partial\sigma_{32}}{A_{21}} & -\frac{\partial\sigma_{32}}{A_{22}} & -\frac{\partial\sigma_{32}}{A_{23}} & -\frac{\partial\sigma_{32}}{A_{31}} & -\frac{\partial\sigma_{32}}{A_{32}} & -\frac{\partial\sigma_{32}}{A_{33}} & 0 & 0 & 0\\
+\frac{\Psi_{33}}{\rho} & 1 & 0 & 0 & 2\rho v_{3} & -\frac{\partial\sigma_{33}}{A_{11}} & -\frac{\partial\sigma_{33}}{A_{12}} & -\frac{\partial\sigma_{33}}{A_{13}} & -\frac{\partial\sigma_{33}}{A_{21}} & -\frac{\partial\sigma_{33}}{A_{22}} & -\frac{\partial\sigma_{33}}{A_{23}} & -\frac{\partial\sigma_{33}}{A_{31}} & -\frac{\partial\sigma_{33}}{A_{32}} & -\frac{\partial\sigma_{33}}{A_{33}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0\\
+v_{3}J_{1} & 0 & 0 & 0 & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3} & 0 & 0\\
+v_{3}J_{2} & 0 & 0 & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3} & 0\\
+v_{3}J_{3}+T_{\rho} & T_{p} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+M_{1}=\left(\begin{array}{ccccccccccccccccc}
+v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & v_{1} & \gamma p & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \Gamma\alpha^{2}T & 0 & 0\\
+-\frac{\sigma_{11}}{\rho^{2}} & \frac{1}{\rho} & v_{1} & 0 & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{33}} & 0 & 0 & 0\\
+-\frac{\sigma_{12}}{\rho^{2}} & 0 & 0 & v_{1} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{33}} & 0 & 0 & 0\\
+-\frac{\sigma_{13}}{\rho^{2}} & 0 & 0 & 0 & v_{1} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{33}} & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0\\
+-\frac{T}{\rho^{2}} & \frac{T}{\rho\left(p+p_{\infty}\right)} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+M_{2}=\left(\begin{array}{ccccccccccccccccc}
+v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & v_{2} & 0 & \gamma p & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \Gamma\alpha^{2}T & 0\\
+-\frac{\sigma_{21}}{\rho^{2}} & 0 & v_{2} & 0 & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{33}} & 0 & 0 & 0\\
+-\frac{\sigma_{22}}{\rho^{2}} & \frac{1}{\rho} & 0 & v_{2} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{33}} & 0 & 0 & 0\\
+-\frac{\sigma_{23}}{\rho^{2}} & 0 & 0 & 0 & v_{2} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{33}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0\\
+-\frac{T}{\rho^{2}} & \frac{T}{\rho\left(p+p_{\infty}\right)} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+M_{3}=\left(\begin{array}{ccccccccccccccccc}
+v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & v_{3} & 0 & 0 & \gamma p & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \Gamma\alpha^{2}T\\
+-\frac{\sigma_{31}}{\rho^{2}} & 0 & v_{3} & 0 & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{33}} & 0 & 0 & 0\\
+-\frac{\sigma_{32}}{\rho^{2}} & 0 & 0 & v_{3} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{33}} & 0 & 0 & 0\\
+-\frac{\sigma_{33}}{\rho^{2}} & \frac{1}{\rho} & 0 & 0 & v_{3} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{33}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0\\
+-\frac{T}{\rho^{2}} & \frac{T}{\rho\left(p+p_{\infty}\right)} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{S_{p}}=\frac{1}{\theta_{1}\left(\tau_{1}\right)}\left(\begin{array}{c}
+0\\
+\left(\gamma-1\right)\rho\left\Vert \psi\right\Vert _{F}^{2}\\
+0\\
+0\\
+0\\
+-\psi_{11}\\
+-\psi_{12}\\
+-\psi_{13}\\
+-\psi_{21}\\
+-\psi_{22}\\
+-\psi_{23}\\
+-\psi_{31}\\
+-\psi_{32}\\
+-\psi_{33}\\
+0\\
+0\\
+0
+\end{array}\right)+\frac{1}{\theta_{2}\left(\tau_{2}\right)}\left(\begin{array}{c}
+0\\
+\left(\gamma-1\right)\rho\left\Vert \boldsymbol{H}\right\Vert ^{2}\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+-H_{1}\\
+-H_{2}\\
+-H_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Slow Flow
+\end_layout
+
+\begin_layout Section
+Studying numerical smearing with slow flow past a barrier
+\end_layout
+
+\begin_layout Standard
+A checkerboard pattern appears around the corner of the barrier, leading
+ to a crash, using reflective boundary conditions (in velocity) for the
+ barrier.
+ Do we need a staggered grid?
+\end_layout
+
+\begin_layout Chapter
+RGFM
+\end_layout
+
+\begin_layout Standard
+The RGFM does nothing without a temperature fix when applied to the heat
+ conduction test.
+ The linearisation upon which it is based results in a stationary solution
+ when 
+\begin_inset Formula $q_{L}=q_{R}$
+\end_inset
+
+ and 
+\begin_inset Formula $σ_{L}=σ_{R}$
+\end_inset
+
+ initially.
+ Barton's RGFM is similar.
+ Should q be fixed? Maybe use analytical solution to heat equation at 
+\begin_inset Formula $t=\Delta t$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../../library/library"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
