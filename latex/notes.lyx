@@ -118,7 +118,7 @@ Investigate ways of determining whether the linearised ODE solver is appropriate
 \end_layout
 
 \begin_layout Itemize
-Currently calculating components of the FV jump term twice - sort this out
+Fix bug in alternative interface term calculator in FV solver
 \end_layout
 
 \begin_layout Itemize
@@ -808,8 +808,11 @@ Many different solvers can be used to solve the homogeneous part of the
  system.
  So far, this has been tested with SLIC, WENO, and DG.
  A split-WENO scheme seems to be the fastest and most accurate method available.
- The results using split-WENO to solve Stokes' First Problem are shown in
- 
+ The results using split-WENO to solve Stokes' First Problem with 
+\begin_inset Formula $N=1$
+\end_inset
+
+ are shown in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "split-WENO-results"
@@ -862,7 +865,11 @@ Results of solving Stokes' First Problem (
 \begin_inset Formula $\mu=10^{-2},\mu=10^{-3},\mu=10^{-4}$
 \end_inset
 
-) with a split-WENO scheme
+) with a split-WENO scheme (
+\begin_inset Formula $N=1$
+\end_inset
+
+)
 \end_layout
 
 \end_inset
@@ -878,6 +885,72 @@ name "split-WENO-results"
 \end_layout
 
 \begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results of using a 3rd-order split-WENO scheme to solve Stokes' First
+ Problem are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "split-WENO-results-2"
+
+\end_inset
+
+.
+ Note the close agreement with the Navier-Stokes solution, closely matching
+ the result using ADER-WENO.
+ The split-WENO scheme took 15 times less cpu time than the ADER-WENO scheme.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/StokesFirstProblem1e-4_SplitWENO_N=2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results of solving Stokes' First Problem (
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+) with a split-WENO scheme (
+\begin_inset Formula $N=2$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "split-WENO-results-2"
+
+\end_inset
+
 
 \end_layout
 

@@ -58,31 +58,37 @@ def alternative_interfaces(xEnd, PAR, SYS):
     flux_lam = lambda ftemp, p, d: flux_ref(ftemp, p, d, PAR, SYS)
     s_lam = lambda pL, pR, qL, qR, d: s_func(pL, pR, qL, qR, d, PAR, SYS)
 
-    for d, i, j, k in product(range(ndim), range(nx-1), range(ny-1), range(nz-1)):
+    dims = [nx-2, ny-2, nz-2]
+    for d in range(ndim):
+        dimsd = dims.copy()
+        dimsd[d] += 1
+        for i, j, k in product(range(dimsd[0]), range(dimsd[1]), range(dimsd[2])):
 
-        xL0 = xEnd[d, 1, i, j, k]
-        if d==1:
-            xR0 = xEnd[d, 0, i+1, j, k]
-        elif d==2:
-            xR0 = xEnd[d, 0, i, j+1, k]
-        else:
-            xR0 = xEnd[d, 0, i+1, j, k+1]
+            xL0 = xEnd[d, 1, i, j, k]
+            if d==1:
+                xR0 = xEnd[d, 0, i+1, j, k]
+            elif d==2:
+                xR0 = xEnd[d, 0, i, j+1, k]
+            else:
+                xR0 = xEnd[d, 0, i+1, j, k+1]
 
-        fEndTemp = zeros(18)
-        BEndTemp = zeros(18)
-        for t, x1, x2 in product(range(idxEnd[0]), range(idxEnd[1]), range(idxEnd[2])):
-            pL, pR, qL, qR = inpt_lam(xL0[t, x1, x2], xR0[t, x1, x2])
-            ftemp = zeros(18)
-            weight0 = weightEnd[t, x1, x2]
+            fEndTemp = zeros(18)
+            BEndTemp = zeros(18)
+            for t, x1, x2 in product(range(idxEnd[0]), range(idxEnd[1]), range(idxEnd[2])):
+                pL, pR, qL, qR = inpt_lam(xL0[t, x1, x2], xR0[t, x1, x2])
+                ftemp = zeros(18)
+                weight0 = weightEnd[t, x1, x2]
 
-            flux_lam(ftemp, pL, d)
-            flux_lam(ftemp, pR, d)
-            ftemp -= s_lam(pL, pR, qL, qR, d)
-            fEndTemp += weight0 * ftemp
-            BEndTemp += weight0 * Bint(qL, qR, d, SYS.viscous)
+                flux_lam(ftemp, pL, d)
+                flux_lam(ftemp, pR, d)
+                ftemp -= s_lam(pL, pR, qL, qR, d)
+                fEndTemp += weight0 * ftemp
+                BEndTemp += weight0 * Bint(qL, qR, d, SYS.viscous)
 
-        fEnd[d, i, j, k] = fEndTemp
-        BEnd[d, i, j, k] = BEndTemp
+            coords = [i+1,j+1,k+1]
+            coords[d] -=1
+            fEnd[d, coords[0], coords[1], coords[2]] = fEndTemp
+            BEnd[d, coords[0], coords[1], coords[2]] = BEndTemp
 
     ret = zeros([nx-2, ny-2, nz-2, 18])
     ret -= fEnd[0, :-1, 1:, 1:]
