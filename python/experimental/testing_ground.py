@@ -1,3 +1,7 @@
+from numpy import arange, meshgrid
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
 from numba import jit
 from numpy import array, dot, einsum, prod, sqrt, zeros
 from scipy.integrate import odeint
@@ -90,3 +94,20 @@ def compare_solvers(A, dt):
     A3 = stretch_solver(A, dt, PAR)
     A4 = stretch_solver2(A, dt, PAR)
     return A1, A2, A3, A4
+
+
+def plot_surfaces():
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    X = arange(0.5, 2, 0.01)
+    Y = arange(0.5, 2, 0.01)
+    X, Y = meshgrid(X, Y)
+    Z = 1/(X*Y)
+    Z2 = 3 - X - Y
+
+    ax.plot_surface(X,Y,Z, color = 'b')
+    ax.plot_surface(X,Y,Z2, color='g')
+    ax.set_xlim(0,2)
+    ax.set_ylim(0,2)
+    ax.set_zlim(0,2)

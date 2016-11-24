@@ -137,7 +137,7 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
         f = lambda X: X - spsolve(U, rhs(X, Ww))
 
         if hidalgo:
-            q = hidalgo_initial_guess(w, dtgaps, PAR, SYS)
+            q = hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous)
         else:
             q = standard_initial_guess(w)
 
