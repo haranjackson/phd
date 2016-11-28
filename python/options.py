@@ -2,10 +2,10 @@ Rc   = 8.314459848          # Universal gas constant
 
 """ Domain Parameters """
 
-tf = 1                    # Final time of the simulation
+tf = 1                      # Final time of the simulation
 L  = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
-ny = 1                      # Number of cells in y direction
+ny = 3                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
@@ -41,14 +41,14 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'ADER-WENO'        # 'ADER-WENO','WENO','SPLIT-WENO','SPLIT-DG','SPLIT-SLIC','NEW'
+solver = 'SPLIT-WENO'        # 'ADER-WENO','WENO','SPLIT-WENO','SPLIT-DG','SPLIT-SLIC','NEW'
 linODE = 1                  # Whether to use the linearised ODE solver
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
 
-N      = 1                  # Method is order N+1
+N      = 3                  # Method is order N+1
 CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 1              # Whether to use the Perron-Frobenius approximation to the max eigenval

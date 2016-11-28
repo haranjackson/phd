@@ -1,3 +1,5 @@
+from itertools import product
+
 from numpy import array, eye, zeros, arange, around, concatenate, exp, int64, ones, sqrt
 from scipy.optimize import brentq
 from scipy.special import erf
@@ -26,11 +28,11 @@ def first_stokes_problem_IC():
     QL = conserved(ρ, p, -v, A, J, 0, PAR, SYS)
     QR = conserved(ρ, p,  v, A, J, 0, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
-    for i in range(nx):
+    for i,j,k in product(range(nx), range(ny), range(nz)):
         if i*dx < L/2:
-            u[i,0,0] = QL
+            u[i,j,k] = QL
         else:
-            u[i,0,0] = QR
+            u[i,j,k] = QR
 
     return u, [PAR]*1, []
 

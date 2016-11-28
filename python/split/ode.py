@@ -1,3 +1,5 @@
+from itertools import product
+
 from numpy import array, einsum, exp, eye, log, sqrt, zeros
 from scipy.integrate import odeint
 
@@ -62,8 +64,9 @@ def f(y, t0, ρ, E, PAR, SYS):
 def ode_stepper_full(u, dt, PAR, SYS):
     """ Full numerical solver for the ODE system
     """
-    for i in range(len(u)):
-        Q = u[i,0,0]
+    nx,ny,nz = u.shape[:3]
+    for i,j,k in product(range(nx), range(ny), range(nz)):
+        Q = u[i,j,k]
         P0 = primitive(Q, PAR, SYS)
         ρ = P0.ρ
         E = P0.E - E_3(P0.v)
@@ -75,8 +78,8 @@ def ode_stepper_full(u, dt, PAR, SYS):
 
         y1 = odeint(f, y0, t, args=(ρ,E,PAR,SYS))[1]
 #        y1 = odeint(f, y0, t, args=(ρ,E,PAR,SYS), Dfun=jac)[1]
-        u[i,0,0,5:14] = y1[:9]
-        u[i,0,0,14:17] = ρ * y1[9:]
+        Q[5:14] = y1[:9]
+        Q[14:17] = ρ * y1[9:]
 
 
 def linearised_distortion(ρ, A, dt, PAR):
@@ -114,17 +117,18 @@ def ode_stepper(u, dt, PAR, SYS):
     """ Solves the ODE analytically by linearising the distortion equations and providing an
         analytic approximation to the thermal impulse evolution
     """
-    for i in range(len(u)):
-        Q = u[i,0,0]
+    nx,ny,nz = u.shape[:3]
+    for i,j,k in product(range(nx), range(ny), range(nz)):
+        Q = u[i,j,k]
         ρ = Q[0]
         A = Q[5:14].reshape([3,3])
 
         if SYS.viscous:
             A1 = linearised_distortion(ρ, A, dt, PAR)
-            u[i,0,0,5:14] = A1.ravel()
+            Q[5:14] = A1.ravel()
 
         if SYS.thermal:
-            u[i,0,0,14:17] = simple_analytical_thermal_solver(ρ, Q, dt, PAR, SYS)
+            Q[14:17] = simple_analytical_thermal_solver(ρ, Q, dt, PAR, SYS)
 #            E = Q[1] / ρ
 #            J1 = Q[14] / ρ
 #            v = Q[2:5] / ρ

@@ -58,12 +58,15 @@ def plot_energy(u, style='line', x=None, label=None, color=None, xlab='x', sci=0
         y = u[:, :, 0, 1] / u[:, :, 0, 0]
         plot2d(y, 'colormap')
 
-def plot_velocity(u, i=0, style='line', x=None, label=None, color=None, xlab='x', sci=0, offset=0):
+def plot_velocity(u, i=0, style='line', x=None, label=None, color=None, xlab='x', sci=0, offset=0,
+                  dims=None):
     figure(2+i)
-    if ndim==1:
+    if dims==None:
+        dims = ndim
+    if dims==1:
         y = u[:, 0, 0, 2+i] / u[:, 0, 0, 0] + offset
         plot1d(y, style, x, label, color, xlab, 'Velocity Component %d' % (i+1), sci)
-    elif ndim==2:
+    elif dims==2:
         x = u[:, :, 0, 2] / u[:, :, 0, 0] + offset
         y = u[:, :, 0, 3] / u[:, :, 0, 0] + offset
         plot2d(x, 'streams', y)
