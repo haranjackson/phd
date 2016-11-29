@@ -4,7 +4,7 @@ from time import time
 
 from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
-from options import tf, L, nx, ny, nz
+from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import mechanical, viscous, thermal, reactive
 from options import Ms, W, doubleTime, fullBurn, burnProp
 from options import reactionType, reactiveEOS, minE
@@ -39,7 +39,9 @@ def record_data(fluids, inds, t, interfaceLocations, saveArrays):
 def save_config(path):
     with open(path, 'w+', encoding='utf-8') as f:
         f.write('tf = %e\n' % tf)
-        f.write('L  = %e\n' % L)
+        f.write('Lx = %e\n' % Lx)
+        f.write('Ly = %e\n' % Ly)
+        f.write('Lz = %e\n' % Lz)
         f.write('nx = %i\n' % nx)
         f.write('ny = %i\n' % ny)
         f.write('nz = %i\n\n' % nz)

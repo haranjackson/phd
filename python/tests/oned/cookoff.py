@@ -5,7 +5,7 @@ from auxiliary.classes import material_parameters
 from gpr.variables.state import temperature
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, L, dx, viscous, thermal, reactive, doubleTime, W, SYS
+from options import nx, ny, nz, Lx, dx, viscous, thermal, reactive, doubleTime, W, SYS
 
 
 SET_THERMAL_IMPULSE = 0
@@ -37,7 +37,7 @@ def chapman_jouguet_IC():
     QR = conserved(ρR, pR, vR, AR, J, λR, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
-        if i*dx < L/4:
+        if i*dx < Lx/4:
             u[i, 0, 0] = QL
         else:
             u[i, 0, 0] = QR

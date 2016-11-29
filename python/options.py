@@ -1,7 +1,9 @@
 """ Domain Parameters """
 
 tf = 1                      # Final time of the simulation
-L  = 1                      # Length of domain in x direction
+Lx = 10                     # Length of domain in x direction
+Ly = 10                     # Length of domain in x direction
+Lz = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
 ny = 3                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
@@ -87,7 +89,9 @@ from auxiliary.classes import active_subsystems
 ndim = sum(array([nx, ny, nz]) > 1)
 N1 = N+1
 NT = N1**(ndim+1)
-dx = L / nx
+dx = Lx / nx
+dy = Ly / ny
+dz = Lz / nz
 SYS = active_subsystems(mechanical, viscous, thermal, reactive)
 if solver in ['SPLIT-WENO', 'WENO']:
     timeDim = 0

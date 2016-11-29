@@ -6,7 +6,7 @@ from ader.basis import quad, basis_polys
 from gpr.variables.state import sigma, entropy, heat_flux
 from gpr.variables.vectors import primitive
 from multi.gfm import interface_indices
-from options import L, nx, ny, ndim
+from options import Lx, nx, ny, ndim
 
 
 def plot1d(y, style, x, label, color, xlab, ylab, sci=1):
@@ -168,10 +168,10 @@ def plot_interfaces(intLocs, figNum=None, loc=None, color=None):
         if loc=='true':
             axvline(x=i, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
         elif loc=='cell':
-            ind = int(i*nx/L) + 0.5
+            ind = int(i*nx/Lx) + 0.5
             axvline(x=ind, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
         else:
-            axvline(i/L*loc, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
+            axvline(i/Lx*loc, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
 
 def colors(n):
     cmap = get_cmap('viridis')

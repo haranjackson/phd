@@ -2,7 +2,7 @@ from numpy import array, eye, sqrt, zeros
 
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
-from options import nx, ny, nz, L, dx, SYS
+from options import nx, ny, nz, Lx, dx, SYS
 
 
 def sod_shock_IC():
@@ -32,7 +32,7 @@ def sod_shock_IC():
         else:
             u[i, 0, 0] = QR
 
-    return u, [PAR]*2, [L/2]
+    return u, [PAR]*2, [Lx/2]
 
 def water_gas_IC():
     """ tf = 237.44e-6
@@ -159,7 +159,7 @@ def helium_heat_transmission_IC():
     QL = conserved(ρL, p0, v, A, J, λ, PAR_air, SYS)
     QR = conserved(ρR, p0, v, A, J, λ, PAR_hel, SYS)
     u = zeros([nx, ny, nz, 18])
-    x0 = L/4
+    x0 = Lx/4
     for i in range(nx):
         if i*dx < x0:
             u[i] = QL

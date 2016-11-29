@@ -7,7 +7,7 @@ from scipy.special import erf
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, Ms, dx, L, SYS
+from options import nx, ny, nz, Ms, dx, Lx, SYS
 
 
 def first_stokes_problem_IC():
@@ -29,7 +29,7 @@ def first_stokes_problem_IC():
     QR = conserved(ρ, p,  v, A, J, 0, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
     for i,j,k in product(range(nx), range(ny), range(nz)):
-        if i*dx < L/2:
+        if i*dx < Lx/2:
             u[i,j,k] = QL
         else:
             u[i,j,k] = QR
@@ -128,7 +128,7 @@ def heat_conduction_IC():
     QL = conserved(ρL, p0, v0, AL, J0, 0, PAR, SYS)
     QR = conserved(ρR, p0, v0, AR, J0, 0, PAR, SYS)
     u = zeros([nx, ny, nz, 18])
-    x0 = L / 2
+    x0 = Lx / 2
     for i in range(nx):
         if i*dx < x0:
             u[i,0,0] = QL

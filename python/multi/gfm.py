@@ -6,7 +6,7 @@ from auxiliary.bc import temperature_fix_density
 from gpr.variables.state import density, entropy, temperature
 from gpr.variables.vectors import conserved, primitive
 from multi.approximate_riemann import star_states
-from options import dx, L, N1, nx, UPDATE_STEP, RGFM, isoFix
+from options import dx, Lx, N1, nx, UPDATE_STEP, RGFM, isoFix
 
 
 psi, _, _ = basis_polys()
@@ -27,7 +27,7 @@ def update_interface_locations(qh, interfaceLocations, dt):
         x0 = interfaceLocations[i]
 
         for j in range(UPDATE_STEP):
-            qh0 = qh[int(x0*nx/L)].copy()
+            qh0 = qh[int(x0*nx/Lx)].copy()
             x00 = remainder(x0, dx) / dx
             t00 = j*ddt
             u00 = qhxt(qh0, x00, t00)
