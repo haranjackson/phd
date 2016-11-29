@@ -1,6 +1,6 @@
 from numpy import exp, zeros
 
-from options import Rc, minE, dx
+from options import minE, dx
 
 
 def temperature(U, PAR):
@@ -40,7 +40,7 @@ def thermal_stepper(u, dt, PAR):
     Tnew = temperature(Unew, PAR)
 
     k1 = Tnew / Unew[:,0] * (PAR.r0 / (PAR.T0 * PAR.τ2))
-    k2 = PAR.Bc * exp(-PAR.Ea / (Rc * Tnew))
+    k2 = PAR.Bc * exp(-PAR.Ea / (PAR.Rc * Tnew))
     ret[:, 0, 0, 14] *= exp(-k1 * dt)
     ret[:, 0, 0, 17] *= exp(-k2 * dt)
 

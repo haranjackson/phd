@@ -1,7 +1,6 @@
 from numba import jit
 from numpy import exp
 
-from options import Rc
 from auxiliary.funcs import det3
 
 
@@ -20,7 +19,7 @@ def theta_2(ρ, T, ρ0, T0, α2, τ2):
     return α2 * τ2 * (ρ / ρ0) * (T0 / T)
 
 @jit
-def arrhenius_reaction_rate(ρ, λ, T, Ea, Bc):
+def arrhenius_reaction_rate(ρ, λ, T, Ea, Bc, Rc):
     """ Returns the rate of reaction according to Arrhenius kinetics
     """
     return Bc * ρ * λ * exp(-Ea / (Rc*T))

@@ -1,5 +1,3 @@
-Rc   = 8.314459848          # Universal gas constant
-
 """ Domain Parameters """
 
 tf = 1                      # Final time of the simulation

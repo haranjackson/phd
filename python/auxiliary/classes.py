@@ -1,16 +1,18 @@
 from numba import boolean, float64, jitclass
 from numpy import array, expand_dims
 
-from options import Rc
 import gpr
 
 
-@jitclass([('γ', float64), ('pINF', float64), ('cv', float64), ('ρ0', float64), ('p0', float64),
+@jitclass([('Rc', float64),
+           ('γ', float64), ('pINF', float64), ('cv', float64), ('ρ0', float64), ('p0', float64),
            ('T0', float64), ('cs', float64), ('α', float64), ('μ', float64), ('Pr', float64),
            ('τ1', float64), ('κ', float64), ('τ2', float64), ('Qc', float64), ('Kc', float64),
            ('Ti', float64), ('Ea', float64), ('Bc', float64), ('cs2', float64), ('α2', float64)])
 class material_params():
-    def __init__(self, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc):
+    def __init__(self, Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc):
+        self.Rc = Rc
+
         self.γ = γ
         self.pINF = pINF
         self.cv = cv
@@ -36,9 +38,8 @@ class material_params():
         self.cs2 = self.cs**2
         self.α2 = self.α**2
 
-def material_parameters(γ=None, pINF=None, cv=None, ρ0=None, p0=None,
-                 cs=None, α=None, μ=None, κ=None, Pr=None,
-                 Qc=None, Kc=None, Ti=None, ε=None, Bc=None):
+def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None, p0=None, cs=None,
+                        α=None, μ=None, κ=None, Pr=None, Qc=None, Kc=None, Ti=None, ε=None, Bc=None):
     """ An object to hold the material constants
     """
     if pINF is None:
@@ -79,7 +80,7 @@ def material_parameters(γ=None, pINF=None, cv=None, ρ0=None, p0=None,
     else:
         Ea = Rc * T0 / ε
 
-    return material_params(γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc)
+    return material_params(Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc)
 
 
 @jitclass([('mechanical', boolean), ('viscous', boolean), ('thermal', boolean),

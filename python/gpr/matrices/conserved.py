@@ -80,7 +80,7 @@ def source_ref(ret, P, PAR, SYS):
     if SYS.reactive:
         λ = P[17]
         if reactionType == 'a':
-            K = arrhenius_reaction_rate(ρ, λ, T, PAR.Ea, PAR.Bc)
+            K = arrhenius_reaction_rate(ρ, λ, T, PAR.Ea, PAR.Bc, PAR.Rc)
         elif reactionType == 'd':
             K = discrete_ignition_temperature_reaction_rate(ρ, λ, T, PAR.Kc, PAR.Ti)
         ret[17] = -K

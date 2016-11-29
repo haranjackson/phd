@@ -7,7 +7,7 @@ from scipy.special import erf
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, Ms, dx, Rc, L, SYS
+from options import nx, ny, nz, Ms, dx, L, SYS
 
 
 def first_stokes_problem_IC():
@@ -138,6 +138,8 @@ def heat_conduction_IC():
     return u, [PAR]*1, []
 
 def semenov_IC():
+    Rc = 8.314459848
+
     cv = 2.5
     T0 = 1
     Qc = 4
