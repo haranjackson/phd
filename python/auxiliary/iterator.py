@@ -1,7 +1,8 @@
+from itertools import product
+
 from gpr.eig import max_abs_eigs
 from gpr.variables.vectors import Cvec_to_Pvec
-
-from options import CFL, dx, tf, fullBurn, burnProp
+from options import burnProp, CFL, dx, dy, dz, fullBurn, ndim, tf
 
 
 def continue_condition(t, fluids):
@@ -17,15 +18,19 @@ def timestep(fluids, count, t, PARs, SYS):
     """
     m = len(fluids)
     MAX = 0
-    for i in range(m):
-        u = fluids[i]
-        PAR = PARs[i]
-        n = len(u)
-        for j in range(n):
-            P = Cvec_to_Pvec(u[j,0,0], PAR, SYS)
-            MAX = max(MAX, max_abs_eigs(P, 0, PAR, SYS))
+    for ind in range(m):
+        u = fluids[ind]
+        PAR = PARs[ind]
+        nx, ny, nz = u.shape[:3]
+        for i,j,k in product(range(nx), range(ny), range(nz)):
+            P = Cvec_to_Pvec(u[i,j,k], PAR, SYS)
+            MAX = max(MAX, max_abs_eigs(P, 0, PAR, SYS) / dx)
+            if ndim > 1:
+                MAX = max(MAX, max_abs_eigs(P, 1, PAR, SYS) / dy)
+                if ndim > 2:
+                    MAX = max(MAX, max_abs_eigs(P, 2, PAR, SYS) / dz)
 
-    dt = CFL * dx / MAX
+    dt = CFL / MAX
     if count <= 5:
         dt *= 0.2
     if t + dt > tf:
