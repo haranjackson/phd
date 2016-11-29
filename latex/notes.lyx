@@ -102,6 +102,18 @@ To Do
 \end_layout
 
 \begin_layout Itemize
+Test split-WENO in 2D
+\end_layout
+
+\begin_layout Itemize
+Solid EOSs
+\end_layout
+
+\begin_layout Itemize
+Implement Barton's damage model
+\end_layout
+
+\begin_layout Itemize
 Test compressible Euler vs GPR - use narrowing domain from Toro's book
 \end_layout
 
@@ -115,14 +127,6 @@ Investigate further methods of obtaining predictor with form
 
 \begin_layout Itemize
 Investigate ways of determining whether the linearised ODE solver is appropriate
-\end_layout
-
-\begin_layout Itemize
-Fix bug in alternative interface term calculator in FV solver
-\end_layout
-
-\begin_layout Itemize
-Implement jacobian in DG system
 \end_layout
 
 \begin_layout Itemize
@@ -143,6 +147,10 @@ Isobaric cookoff paper - make cookoff the focus
 \end_layout
 
 \begin_layout Itemize
+Convergence of conservation of mass in RGFM
+\end_layout
+
+\begin_layout Itemize
 Sort out heat flux in HPR-RGFM
 \end_layout
 
@@ -151,23 +159,7 @@ HPR-RGFM paper
 \end_layout
 
 \begin_layout Itemize
-Solid EOSs
-\end_layout
-
-\begin_layout Itemize
 Try conservative formulation [Peshkov,Grmela,Romenski]
-\end_layout
-
-\begin_layout Itemize
-2D and 3D test cases
-\end_layout
-
-\begin_layout Itemize
-Convergence of conservation of mass in RGFM
-\end_layout
-
-\begin_layout Itemize
-Driven isotropic turbulence
 \end_layout
 
 \begin_layout Chapter
