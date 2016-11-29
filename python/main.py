@@ -18,8 +18,8 @@ import options
 from auxiliary.adjust import thermal_conversion
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep, check_ignition_started, continue_condition
-from auxiliary.solvers import cookoff_stepper, aderweno_stepper, split_slic_stepper, new_stepper
-from auxiliary.solvers import weno_stepper, split_weno_stepper, split_dg_stepper
+from auxiliary.solvers import cookoff_stepper, aderweno_stepper
+from auxiliary.solvers import split_weno_stepper, split_dg_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
@@ -65,16 +65,13 @@ def run(t, count):
                 cookoff_stepper(fluid, fluidBC, dt, PAR)
             elif solver == 'ADER-WENO':
                 qh = aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
-            elif solver == 'WENO':
-                qh = weno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
             elif solver == 'SPLIT-WENO':
-                split_weno_stepper(fluid, dt, PAR, SYS)
+                split_weno_stepper(pool, fluid, dt, PAR, SYS)
             elif solver == 'SPLIT-DG':
-                split_dg_stepper(fluid, dt, PAR, SYS)
-            elif solver == 'SPLIT-SLIC':
-                split_slic_stepper(fluid, dt, PAR, SYS)
-            elif solver == 'NEW':
-                qh = new_stepper(fluid, fluidBC, dt, PAR, SYS)
+                split_dg_stepper(pool, fluid, dt, PAR, SYS)
+            else:
+                print('SOLVER NOT RECOGNISED')
+                return
 
             if GFM:
                 dg[inds[i]:inds[i+1]] = qh[inds[i]+1:inds[i+1]+1, 0, 0]

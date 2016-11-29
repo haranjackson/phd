@@ -1,6 +1,7 @@
 from itertools import product
 
-from numpy import absolute, array, dot, isnan, zeros
+from joblib import delayed
+from numpy import absolute, array, concatenate, dot, isnan, zeros
 from scipy.sparse.linalg import spsolve
 from scipy.optimize import newton_krylov
 
@@ -10,7 +11,7 @@ from gpr.variables.vectors import Cvec_to_Pvec
 from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_conserved
 from gpr.matrices.primitive import source_primitive_ref, Mdot_ref, source_primitive
 from options import ndim, dx, N1, NT, reconstructPrim
-from options import stiff, superStiff, hidalgo, TOL, MAX_ITER, failLim
+from options import stiff, superStiff, hidalgo, TOL, MAX_ITER, failLim, paraDG, ncore
 
 
 W, U, V, Z, T = system_matrices()
@@ -169,3 +170,17 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
         stiff = 1
         print('Defaulting to Stiff Solver')
     return qh
+
+def dg_launcher(pool, wh, dt, PAR, SYS, homogeneous=0):
+    """ Controls the parallel computation of the Galerkin predictor
+    """
+    if paraDG:
+        nx = wh.shape[0]
+        step = int(nx / ncore)
+        chunk = array([i*step for i in range(ncore)] + [nx+1])
+        n = len(chunk) - 1
+        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i+1]], dt, PAR, SYS, homogeneous)
+                                        for i in range(n))
+        return concatenate(qhList)
+    else:
+        return predictor(wh, dt, PAR, SYS, homogeneous)

@@ -1,13 +1,14 @@
 from itertools import product
 
-from numpy import array, dot, einsum, tensordot, zeros
+from joblib import delayed
+from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
 from ader.fv_fluxes import Dos, Drus, input_vectors, Bint, Aint, Smax
 from ader.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot
 from gpr.variables.vectors import Cvec_to_Pvec
-from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim
+from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim, paraFV, ncore
 
 
 altInterfaces = 1
@@ -201,3 +202,19 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
             s -= F[d]
 
     return dt/dx * s
+
+def fv_launcher(pool, qh, dt, PAR, SYS, homogeneous=0):
+    """ Controls the parallel computation of the Finite Volume interface terms
+    """
+    if paraFV:
+        nx = qh.shape[0]
+        step = int(nx / ncore)
+        chunk = array([i*step for i in range(ncore)] + [nx+1])
+        chunk[0] += 1
+        chunk[-1] -= 1
+        n = len(chunk) - 1
+        qhList = pool(delayed(fv_terms)(qh[chunk[i]-1:chunk[i+1]+1], dt, PAR, SYS, homogeneous)
+                                       for i in range(n))
+        return concatenate(qhList)
+    else:
+        return fv_terms(qh, dt, PAR, SYS, homogeneous)

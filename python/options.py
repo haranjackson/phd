@@ -39,14 +39,14 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'SPLIT-WENO'        # 'ADER-WENO','WENO','SPLIT-WENO','SPLIT-DG','SPLIT-SLIC','NEW'
+solver = 'SPLIT-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
 linODE = 1                  # Whether to use the linearised ODE solver
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
 
-N      = 3                  # Method is order N+1
+N      = 1                  # Method is order N+1
 CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 1              # Whether to use the Perron-Frobenius approximation to the max eigenval
@@ -71,7 +71,7 @@ eps  = 1e-14                # Constant ensuring oscillation indicators don't blo
 
 paraDG = 0                  # Whether to parallelise the DG step
 paraFV = 0                  # Whether to parallelise the FV step
-ncore  = 4                  # Number of cores to use if running in parallel
+ncore  = 2                  # Number of cores to use if running in parallel
 
 """ Debug Options """
 
