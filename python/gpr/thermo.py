@@ -1,12 +1,12 @@
 from numpy import exp, zeros
 
-from options import minE, dx
+from options import dx
 
 
 def temperature(U, PAR):
     E = U[:,1] / U[:,0]
     λ = U[:,3] / U[:,0]
-    E1 = E - PAR.Qc * (λ - minE)
+    E1 = E - PAR.Qc * (λ - 1)
     return  E1 / PAR.cv
 
 def flux(U, n, PAR):

@@ -6,8 +6,7 @@ from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import mechanical, viscous, thermal, reactive
-from options import Ms, W, doubleTime, fullBurn, burnProp
-from options import reactionType, minE
+from options import Ms, W, doubleTime, reactionType, fullBurn, burnProp
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
 from options import solver, linODE, approxInterface, reconstructPrim, convertTemp, altThermSolve
 from options import  N, CFL, method, perronFrob
@@ -54,11 +53,9 @@ def save_config(path):
         f.write('Ms = %f\n' % Ms)
         f.write('W  = %e\n' % W)
         f.write('doubleTime = %e\n' % doubleTime)
+        f.write('reactionType = %s\n' % reactionType)
         f.write('fullBurn = %i\n' % fullBurn)
         f.write('burnProp = %f\n\n' % burnProp)
-
-        f.write('reactionType = %s\n' % reactionType)
-        f.write('minE = %i\n\n' % minE)
 
         f.write('GFM  = %i\n' % GFM)
         f.write('RGFM = %i\n' % RGFM)

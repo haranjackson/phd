@@ -1,7 +1,7 @@
-from numba import boolean, float64, jitclass
+from numba import float64, jitclass
 from numpy import array, expand_dims
 
-import gpr
+from gpr.variables.state import temperature
 
 
 @jitclass([('Rc', float64),
@@ -45,7 +45,7 @@ def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None, p
     if pINF is None:
         pINF = 0
 
-    T0 = gpr.variables.state.temperature(ρ0, p0, γ, pINF, cv)
+    T0 = temperature(ρ0, p0, γ, pINF, cv)
 
     if cs is not None:
         τ1 = 6 * μ / (ρ0 * cs**2)
@@ -81,18 +81,6 @@ def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None, p
         Ea = Rc * T0 / ε
 
     return material_params(Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc)
-
-
-@jitclass([('mechanical', boolean), ('viscous', boolean), ('thermal', boolean),
-           ('reactive', boolean)])
-class active_subsystems():
-    """ An object to hold information on which components of the GPR model are activated
-    """
-    def __init__(self, mechanical=1, viscous=1, thermal=1, reactive=1):
-        self.mechanical = mechanical
-        self.viscous = viscous
-        self.thermal = thermal
-        self.reactive = reactive
 
 class save_arrays():
     """ An object to hold the arrays in which simulation data are saved

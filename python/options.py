@@ -20,14 +20,10 @@ reactive   = 0              # Whether to include reactivity
 Ms = 2                      # Mach number of viscous shock
 W  = 1                      # Power input at wall in cook off
 doubleTime = 1e-6           # Time taken for temperature at wall to double
+reactionType = 'a'          # 'a' (Arrhenius) or 'd' (Discrete)
 fullBurn = 0                # Whether to run simulation until 50% of reactant has burned
 burnProp = 0.5              # If fullBurn=1, simulation stops when proportion of cells with reactant
                             # remaining falls below burnProp
-
-""" Reactive System Options """
-
-reactionType = 'a'          # 'a' (Arrhenius) or 'd' (Discrete)
-minE = 1                    # Whether to set the chemical energy to -Qc when concentration=0
 
 """ GFM Options """
 
@@ -84,20 +80,24 @@ DEBUG      = 0      # In debug mode, warnings are given if complex values are en
 """ Derived Values """
 
 from numpy import array
-from auxiliary.classes import active_subsystems
 ndim = sum(array([nx, ny, nz]) > 1)
 N1 = N+1
 NT = N1**(ndim+1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
-SYS = active_subsystems(mechanical, viscous, thermal, reactive)
 if solver in ['SPLIT-WENO', 'WENO']:
     timeDim = 0
 else:
     timeDim = 1
 if not timeDim:
     approxInterface = 0
+
+SYS = type('', (), {})()
+SYS.mechanical = mechanical
+SYS.viscous = viscous
+SYS.thermal = thermal
+SYS.reactive = reactive
 
 """ Compatibility Settings """
 

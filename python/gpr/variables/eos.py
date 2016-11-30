@@ -1,6 +1,5 @@
 from numba import jit
 
-from options import minE
 from auxiliary.funcs import AdevG, dev, gram, L2_1D, L2_2D
 
 
@@ -14,7 +13,7 @@ def E_1(ρ, p, γ, pINF):
 def E_1r(λ, Qc):
     """ Returns the microscale energy corresponding to the chemical energy in a reactive material
     """
-    return Qc * (λ - minE)
+    return Qc * (λ - 1)
 
 @jit
 def E_2A(A, cs2):
