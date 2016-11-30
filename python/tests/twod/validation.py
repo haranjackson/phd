@@ -32,7 +32,7 @@ def convected_isentropic_vortex_IC():
         y = (j+0.5)*dy
         r2 = (x-5)**2 + (y-5)**2
 
-        dv = ε/(2*pi) * exp((1-r2)/2) * array([5-y, x-5, 0])
+        dv = ε/(2*pi) * exp((1-r2)/2) * array([-(y-5), x-5, 0])
         dT = -(γ-1) * ε**2 / (8 * γ * pi**2) * exp(1-r2)
         dρ = (1+dT)**(1/(γ-1)) - 1
         dp = (1+dT)**(γ/(γ-1)) - 1
@@ -63,7 +63,7 @@ def convected_isentropic_vortex_exact(t=1):
         y = (j+0.5)*dy
         r2 = (x-(5+t))**2 + (y-(5+t))**2
 
-        dv = ε/(2*pi) * exp((1-r2)/2) * array([5-y, x-5, 0])
+        dv = ε/(2*pi) * exp((1-r2)/2) * array([-(y-(5+t)), x-(5+t), 0])
         dT = -(γ-1) * ε**2 / (8 * γ * pi**2) * exp(1-r2)
         dρ = (1+dT)**(1/(γ-1)) - 1
         dp = (1+dT)**(γ/(γ-1)) - 1
