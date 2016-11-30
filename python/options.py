@@ -27,7 +27,6 @@ burnProp = 0.5              # If fullBurn=1, simulation stops when proportion of
 """ Reactive System Options """
 
 reactionType = 'a'          # 'a' (Arrhenius) or 'd' (Discrete)
-reactiveEOS  = 1            # Use a reactive equation of state (if not, energy term has sources)
 minE = 1                    # Whether to set the chemical energy to -Qc when concentration=0
 
 """ GFM Options """

@@ -8,7 +8,7 @@ from gpr.variables.material_functions import theta_1, theta_2, arrhenius_reactio
 from gpr.variables.material_functions import discrete_ignition_temperature_reaction_rate
 from gpr.variables.vectors import Cvec_to_Pvec, primitive
 from gpr.variables.state import sigma, temperature
-from options import reactionType, reactiveEOS
+from options import reactionType
 
 
 def flux_ref(ret, P, d, PAR, SYS):
@@ -84,9 +84,6 @@ def source_ref(ret, P, PAR, SYS):
         elif reactionType == 'd':
             K = discrete_ignition_temperature_reaction_rate(ρ, λ, T, PAR.Kc, PAR.Ti)
         ret[17] = -K
-
-        if not reactiveEOS:
-            ret[1] = PAR.Qc * K
 
 
 def flux(Q, d, PAR, SYS):

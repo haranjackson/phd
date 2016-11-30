@@ -3,7 +3,6 @@ from numpy import dot, eye, outer, tensordot, zeros
 from auxiliary.funcs import L2_1D
 from gpr.variables.eos import E_1, E_A, total_energy
 from gpr.variables.state import heat_flux, sigma, sigma_A
-from options import reactiveEOS
 
 
 class jacobian_variables():
@@ -106,11 +105,9 @@ def dPdQ(P, jacVars, PAR, SYS):
     if SYS.reactive:
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
-
-        if reactiveEOS:
-            Qc = PAR.Qc
-            ret[1, 0] += Γ * Qc * λ
-            ret[1, 17] -= Γ * Qc
+        Qc = PAR.Qc
+        ret[1, 0] += Γ * Qc * λ
+        ret[1, 17] -= Γ * Qc
 
     return ret
 
@@ -164,8 +161,6 @@ def dFdP(P, d, jacVars, PAR, SYS):
         ret[17, 0] = v[d] * λ
         ret[17, 2+d] = ρ * λ
         ret[17, 17] = ρvd
-
-        if reactiveEOS:
-            ret[1, 17] += PAR.Qc * ρvd
+        ret[1, 17] += PAR.Qc * ρvd
 
     return ret

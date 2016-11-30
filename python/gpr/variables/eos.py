@@ -1,6 +1,6 @@
 from numba import jit
 
-from options import minE, reactiveEOS
+from options import minE
 from auxiliary.funcs import AdevG, dev, gram, L2_1D, L2_2D
 
 
@@ -46,7 +46,7 @@ def total_energy(ρ, p, v, A, J, λ, PAR, SYS):
     if SYS.thermal:
         ret += E_2J(J, PAR.α2)
 
-    if SYS.reactive and reactiveEOS:
+    if SYS.reactive:
         ret += E_1r(λ, PAR.Qc)
 
     return ret

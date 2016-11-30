@@ -5,7 +5,6 @@ from numpy import dot
 
 from auxiliary.funcs import AdevG, gram
 from gpr.variables.eos import E_1r, E_2A, E_2J, E_3, E_A
-from options import reactiveEOS
 
 
 def pressure(E, v, A, ρ, J, λ, PAR, SYS):
@@ -21,7 +20,7 @@ def pressure(E, v, A, ρ, J, λ, PAR, SYS):
     if SYS.thermal:
         E1 -= E_2J(J, PAR.α2)
 
-    if SYS.reactive and reactiveEOS:
+    if SYS.reactive:
         E1 -= E_1r(λ, PAR.Qc)
 
     return (γ-1) * ρ * E1 - γ * PAR.pINF

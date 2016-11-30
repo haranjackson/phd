@@ -1,6 +1,5 @@
 from gpr.variables.eos import E_1r, E_2J
 from gpr.variables.vectors import primitive, conserved
-from options import reactiveEOS
 
 
 def thermal_conversion(fluids, PARs, SYS):
@@ -20,7 +19,7 @@ def thermal_conversion(fluids, PARs, SYS):
             Q = fluid[j, 0, 0]
             P = primitive(Q, PAR, SYS)
             temp += E_2J(P.J, PAR.α2) / P.T
-            if reactiveEOS:
+            if SYS.reactive:
                 temp += E_1r(P.c, PAR.Qc) / P.T
 
         p_t = ((γ-1) * Etot - n * γ * PAR.pINF) / (n + temp / cv)   # Average pressure
