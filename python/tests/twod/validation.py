@@ -18,9 +18,9 @@ def vortex(x, y, x0, y0, ε, γ, ρ, p):
     return dv, dT, dρ, dp, A
 
 def convected_isentropic_vortex_IC():
-    """ tf = 1
-        Lx = 10
+    """ Lx = 10
         Ly = 10
+        t = 1
     """
     ε = 5
 
@@ -71,6 +71,10 @@ def convected_isentropic_vortex_exact(t=1):
 def circular_explosion_IC():
     """ Lx = 2
         Ly = 2
+        nx = 400
+        ny = 400
+        t = 0.2
+        N = 2
     """
     R = 0.5 * Lx
     PAR = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=0.5, α=0.5, μ=1e-4, κ=1e-4)
@@ -102,6 +106,10 @@ def circular_explosion_IC():
 def laminar_boundary_layer_IC():
     """ Lx = 1.5
         Ly = 0.4
+        nx = 75
+        ny = 100
+        t = 10
+        N = 2
     """
     γ = 1.4
 
@@ -111,7 +119,7 @@ def laminar_boundary_layer_IC():
     A = eye(3)
     J = zeros(3)
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, α=0, μ=1e-3, κ=0)
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=1e-3)
 
     u = zeros([nx, ny, nz, 18])
     Q = conserved(ρ, p, v, A, J, 0, PAR, SYS)
@@ -123,6 +131,10 @@ def laminar_boundary_layer_IC():
 def hagen_poiseuille_duct_IC():
     """ Lx = 10
         Ly = 0.5
+        nx = 100
+        ny = 50
+        t = 10
+        N = 2
     """
     γ = 1.4
 
@@ -132,7 +144,7 @@ def hagen_poiseuille_duct_IC():
     A = eye(3)
     J = zeros(3)
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, α=0, μ=1e-2, κ=0)
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=1e-2)
     dp = 4.8
 
     u = zeros([nx, ny, nz, 18])
@@ -145,6 +157,10 @@ def hagen_poiseuille_duct_IC():
 def lid_driven_cavity_IC():
     """ Lx = 1
         Ly = 1
+        nx = 100
+        ny = 100
+        t = 10
+        N = 2
     """
     γ = 1.4
 
@@ -154,7 +170,7 @@ def lid_driven_cavity_IC():
     A = eye(3)
     J = zeros(3)
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, α=0, μ=1e-2, κ=0)
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=1e-2)
 
     u = zeros([nx, ny, nz, 18])
     Q = conserved(ρ, p, v, A, J, 0, PAR, SYS)
@@ -166,6 +182,10 @@ def lid_driven_cavity_IC():
 def double_shear_layer_IC():
     """ Lx = 1
         Ly = 1
+        nx = 200
+        ny = 200
+        t = 1.8
+        N = 3
     """
     γ = 1.4
 
@@ -174,7 +194,7 @@ def double_shear_layer_IC():
     A = eye(3)
     J = zeros(3)
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, α=0, μ=2e-4, κ=0)
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=2e-4)
     ρ_ = 30
     δ = 0.05
 
@@ -198,6 +218,10 @@ def compressible_mixing_layer_IC():
 def taylor_green_vortex_IC():
     """ Lx = 2π
         Ly = 2π
+        nx = 50
+        ny = 50
+        t = 10
+        N = 3
     """
     γ = 1.4
 
@@ -206,7 +230,7 @@ def taylor_green_vortex_IC():
     A = eye(3)
     J = zeros(3)
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=10, α=0, μ=1e-2, κ=0)
+    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=10, μ=1e-2)
 
     u = zeros([nx, ny, nz, 18])
     for i,j,k in product(range(nx), range(ny), range(nz)):

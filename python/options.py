@@ -1,18 +1,21 @@
+import numpy as np
+
+
 """ Domain Parameters """
 
-tf = 1                      # Final time of the simulation
-Lx = 10                     # Length of domain in x direction
-Ly = 10                     # Length of domain in x direction
+tf = 10                      # Final time of the simulation
+Lx = 2*np.pi                      # Length of domain in x direction
+Ly = 2*np.pi                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 10                     # Number of cells in x direction
-ny = 10                     # Number of cells in y direction
+nx = 50                    # Number of cells in x direction
+ny = 50                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
 
 mechanical = 1              # Whether to include evolution of density and velocity
 viscous    = 1              # Whether to include viscosity
-thermal    = 1              # Whether to include thermal conduction
+thermal    = 0              # Whether to include thermal conduction
 reactive   = 0              # Whether to include reactivity
 
 """ Problem Parameters """
@@ -37,13 +40,13 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 """ Solver Options """
 
 solver = 'SPLIT-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
-linODE = 1                  # Whether to use the linearised ODE solver
+linODE = 0                  # Whether to use the linearised ODE solver
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
 
-N      = 1                  # Method is order N+1
+N      = 3                  # Method is order N+1
 CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
@@ -68,7 +71,7 @@ eps  = 1e-14                # Constant ensuring oscillation indicators don't blo
 
 paraDG = 0                  # Whether to parallelise the DG step
 paraFV = 0                  # Whether to parallelise the FV step
-ncore  = 2                  # Number of cores to use if running in parallel
+ncore  = 4                  # Number of cores to use if running in parallel
 
 """ Debug Options """
 
@@ -79,8 +82,7 @@ DEBUG      = 0      # In debug mode, warnings are given if complex values are en
 
 """ Derived Values """
 
-from numpy import array
-ndim = sum(array([nx, ny, nz]) > 1)
+ndim = sum(np.array([nx, ny, nz]) > 1)
 N1 = N+1
 NT = N1**(ndim+1)
 dx = Lx / nx

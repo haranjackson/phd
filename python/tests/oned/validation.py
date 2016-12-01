@@ -15,7 +15,7 @@ def first_stokes_problem_IC():
         L = 1
     """
     γ = 1.4
-    μ = 1e-3 # 1e-3 # 1e-4
+    μ = 1e-4 # 1e-3 # 1e-4
 
     ρ = 1
     p = 1 / γ

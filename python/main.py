@@ -7,12 +7,15 @@ from auxiliary.bc import standard_BC, periodic_BC
 from tests.oned.cookoff import CKR_BC, fixed_wall_temp_BC
 from tests.oned.cookoff import chapman_jouguet_IC, CKR_IC
 from tests.oned.diffusion import barrier_IC, barrier_BC
-from tests.oned.validation import first_stokes_problem_IC, heat_conduction_IC
-from tests.oned.validation import viscous_shock_IC, semenov_IC
 from tests.oned.multi import sod_shock_IC, water_gas_IC, water_water_IC, helium_bubble_IC
 from tests.oned.multi import helium_heat_transmission_IC
+from tests.oned.validation import first_stokes_problem_IC, heat_conduction_IC
+from tests.oned.validation import viscous_shock_IC, semenov_IC
 from tests.oned.toro import toro_test1_IC
-from tests.twod.validation import convected_isentropic_vortex_IC
+from tests.twod.validation import convected_isentropic_vortex_IC, circular_explosion_IC
+from tests.twod.validation import laminar_boundary_layer_IC, hagen_poiseuille_duct_IC
+from tests.twod.validation import lid_driven_cavity_IC, double_shear_layer_IC
+from tests.twod.validation import taylor_green_vortex_IC
 from gpr.plot import *
 
 import options
@@ -26,8 +29,8 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
-IC = convected_isentropic_vortex_IC
-BC = standard_BC               # CHECK ARGUMENTS
+IC = taylor_green_vortex_IC
+BC = periodic_BC               # CHECK ARGUMENTS
 
 
 SYS, SFix, TFix = options.SYS, options.SFix, options.TFix
