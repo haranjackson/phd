@@ -26,7 +26,7 @@ function lagrange(x, w)
     for k in 1:M
       if k != j
         fac = x[j]-x[k]
-        pt *= Poly([1.0, -x[k]]) / fac
+        pt *= Poly([-x[k], 1.0]) / fac
       end
     end
     p += pt
@@ -36,19 +36,19 @@ end
 
 function nodes(N)
   # Returns Legendre-Gauss nodes, scaled to [0,1]
-  if N==1
+  if N==0
     return [0.5]
-  elseif N==2
+  elseif N==1
     return 0.5 * (1 + [-sqrt(1/3), sqrt(1/3)])
-  elseif N==3
+  elseif N==2
     tmp = sqrt(3/5)
     return 0.5 * (1 + [-tmp, 0, tmp])
-  elseif N==4
+  elseif N==3
     tmp = 2/7 * sqrt(6/5)
     tmp1 = sqrt(3/7 - tmp)
     tmp2 = sqrt(3/7 + tmp)
     return 0.5 * (1 + [-tmp2, -tmp1, tmp1, tmp2])
-  elseif N==5
+  elseif N==4
     tmp = 2 * sqrt(10/7)
     tmp1 = 1/3 * sqrt(5-tmp)
     tmp2 = 1/3 * sqrt(5+tmp)
@@ -60,7 +60,7 @@ end
 
 function basis(N)
   # Returns basis polynomials
-  nodeArray = nodes(N+1)
+  nodeArray = nodes(N)
   return [lagrange(nodeArray, eye(N+1)[:,i]) for i in 1:N+1]
 end
 

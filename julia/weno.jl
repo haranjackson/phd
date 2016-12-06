@@ -1,7 +1,7 @@
 # Implements the WENO method used in Dumbser et al (DOI 10.1016/j.cma.2013.09.022)
 include("weno_matrices.jl")
 
-function extend(inarray, nx, ny, nz, nvar, d)
+function extend(inarray, N, nx, ny, nz, nvar, d)
   # Extends the input array by M cells on each surface
   if d==1
     ret = zeros(nx+2N, ny, nz, nvar)
@@ -13,8 +13,8 @@ function extend(inarray, nx, ny, nz, nvar, d)
     return ret
 
   elseif d==2
-    ret = zeros(nx, ny+2N, nz, nvar)
-    ret[:, N+1:ny+N, :, :] = inarray
+    ret = zeros(nx, ny+2N, nz, N+1, nvar)
+    ret[:, N+1:ny+N, :, :, :] = inarray
     for i = 1:N
       ret[:, i, :, :] = inarray[:, 1, :, :]
       ret[:, ny+N+i, :, :] = inarray[:, ny, :, :]
@@ -22,8 +22,8 @@ function extend(inarray, nx, ny, nz, nvar, d)
     return ret
 
   else
-    ret = zeros(nx, ny, nz+2N, nvar)
-    ret[:, :, N+1:nz+N, :] = inarray
+    ret = zeros(nx, ny, nz+2N, N+1, N+1, nvar)
+    ret[:, :, N+1:nz+N, :, :, :] = inarray
     for i = 1:N
       ret[:, :, i, :] = inarray[:, :, 1, :]
       ret[:, :, nz+N+i, :] = inarray[:, :, nz, :]
@@ -34,19 +34,21 @@ end
 
 function coeffs(w0list, N, nvar, n, Mlist, λlist, Σ, ε, r)
   # Calculate coefficients of basis polynomials and weights
-  wlist = [Mlist[i] \ w0list[i] for i = 1:n]
+  wlist = [Mlist[i,:,:] \ w0list[i] for i = 1:n]
   σlist = [diag(w' * Σ * w) for w in wlist]
   olist = [λlist[i]  ./ (abs(σlist[i]) + ε).^r for i = 1:n]
   oSum = zeros(nvar)
   num = zeros(N+1, nvar)
-  print(n, size(num)," ",size(wlist[1])," ",size(olist[1]))
   for i = 1:n
     oSum += olist[i]
     for j = 1:N+1
-      num[j] += wlist[i][j] .* olist[i]
+      num[j,:] += wlist[i][j,:] .* olist[i]
     end
   end
-  return num ./ oSum
+  for j = 1:N+1
+    num[j,:] ./= oSum
+  end
+  return num
 end
 
 function weno(u, N, λc=1e5, λs=1, r=8, ε=1e-14)
@@ -67,7 +69,7 @@ function weno(u, N, λc=1e5, λs=1, r=8, ε=1e-14)
   Σ = oscillation_indicator(N)
 
   Wx = zeros(nx, ny, nz, N+1, nvar)
-  Wx0 = extend(u, nx, ny, nz, nvar, 1)
+  Wx0 = extend(u, N, nx, ny, nz, nvar, 1)
   for i = 1:nx
     for j = 1:ny
       for k = 1:nz
@@ -92,7 +94,7 @@ function weno(u, N, λc=1e5, λs=1, r=8, ε=1e-14)
   end
 
   Wxy = zeros(nx, ny, nz, N+1, N+1, nvar)
-  tempWx = extend(Wx, nx, ny, nz, nvar, 2)
+  Wxy0 = extend(Wx, N, nx, ny, nz, nvar, 2)
   for i = 1:nx
     for j = 1:ny
       for k = 1:nz
@@ -119,7 +121,7 @@ function weno(u, N, λc=1e5, λs=1, r=8, ε=1e-14)
   end
 
   Wxyz = zeros(nx, ny, nz, N+1, N+1, N+1, nvar)
-  Wxyz0 = extend(Wxy, nx, ny, nz, nvar, 3)
+  Wxyz0 = extend(Wxy, N, nx, ny, nz, nvar, 3)
   for i in 1:nx
     for j = 1:ny
       for k = 1:nz
