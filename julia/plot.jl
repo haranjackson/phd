@@ -1,4 +1,4 @@
-using PyPlot
+import PyPlot: plot
 include("weno_matrices.jl")
 
 function plot_weno(wh, var, N)

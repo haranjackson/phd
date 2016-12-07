@@ -68,21 +68,17 @@ function coefficient_matrices(N, n)
   # Generate linear systems governing the coefficients of the basis polynomials
   fHalfN = floor(N/2)
   cHalfN = ceil(N/2)
-  Mlist = [zeros(N+1, N+1) for i in 1:n]
+  Mlist = [zeros(N+1, N+1) for i in 1:4]
   ψ = basis(N)
 
   for a in 1:N+1
     for p in 1:N+1
       ψintp = polyint(ψ[p])
+      Mlist[1][a,p] = ψintp(a-N)      - ψintp(a-N-1)
+      Mlist[2][a,p] = ψintp(a)        - ψintp(a-1)
+      Mlist[3][a,p] = ψintp(a-fHalfN) - ψintp(a-fHalfN-1)
       if Bool(N%2)
-        Mlist[1][a,p] = ψintp(a-fHalfN) - ψintp(a-fHalfN-1)
-        Mlist[2][a,p] = ψintp(a-cHalfN) - ψintp(a-cHalfN-1)
-        Mlist[3][a,p] = ψintp(a-N)      - ψintp(a-N-1)
-        Mlist[4][a,p] = ψintp(a)        - ψintp(a-1)
-      else
-        Mlist[1][a,p] = ψintp(a-fHalfN) - ψintp(a-fHalfN-1)
-        Mlist[2][a,p] = ψintp(a-N)      - ψintp(a-N-1)
-        Mlist[3][a,p] = ψintp(a)        - ψintp(a-1)
+        Mlist[4][a,p] = ψintp(a-cHalfN) - ψintp(a-cHalfN-1)
       end
     end
   end
