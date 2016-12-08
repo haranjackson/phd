@@ -102,7 +102,15 @@ To Do
 \end_layout
 
 \begin_layout Itemize
+Write up use of Cholesky decomposition of Σ in WENO
+\end_layout
+
+\begin_layout Itemize
 Test split-WENO in 2D
+\end_layout
+
+\begin_layout Itemize
+Implement in CUDA
 \end_layout
 
 \begin_layout Itemize
