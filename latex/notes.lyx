@@ -1836,7 +1836,7 @@ In 3 dimensions we have:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\therefore\frac{d}{dt}\left(J_{i}^{2}\right)=J_{i}^{2}\left(-2c_{3}+2c_{4}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)
+\therefore\frac{d}{dt}\left(J_{i}^{2}\right)=J_{i}^{2}\left(-a+b\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)
 \end{equation}
 
 \end_inset
@@ -1850,6 +1850,18 @@ Note that this is a generalized Lotka-Volterra system in
 \end_inset
 
 .
+ It has solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J_{i}\left(t\right)=\pm\sqrt{\frac{aJ_{i}\left(0\right)^{2}}{ae^{at}-b\left(e^{at}-1\right)\left(J_{1}\left(0\right)^{2}+J_{2}\left(0\right)^{2}+J_{3}\left(0\right)^{2}\right)}}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
