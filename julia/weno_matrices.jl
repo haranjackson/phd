@@ -21,9 +21,9 @@ function lagrange(x, w)
   """
   M = size(x)[1]
   p = Poly([0])
-  for j in 1:M
+  for j=1:M
     pt = Poly([w[j]])
-    for k in 1:M
+    for k=1:M
       if k != j
         fac = x[j]-x[k]
         pt *= Poly([-x[k], 1.0]) / fac
@@ -71,15 +71,13 @@ function coefficient_matrices(N, n)
   Mlist = [zeros(N+1, N+1) for i in 1:4]
   ψ = basis(N)
 
-  for a in 1:N+1
-    for p in 1:N+1
-      ψintp = polyint(ψ[p])
-      Mlist[1][a,p] = ψintp(a-N)      - ψintp(a-N-1)
-      Mlist[2][a,p] = ψintp(a)        - ψintp(a-1)
-      Mlist[3][a,p] = ψintp(a-fHalfN) - ψintp(a-fHalfN-1)
-      if Bool(N%2)
-        Mlist[4][a,p] = ψintp(a-cHalfN) - ψintp(a-cHalfN-1)
-      end
+  for p=1:N+1, a=1:N+1
+    ψintp = polyint(ψ[p])
+    Mlist[1][a,p] = ψintp(a-N)      - ψintp(a-N-1)
+    Mlist[2][a,p] = ψintp(a)        - ψintp(a-1)
+    Mlist[3][a,p] = ψintp(a-fHalfN) - ψintp(a-fHalfN-1)
+    if Bool(N%2)
+      Mlist[4][a,p] = ψintp(a-cHalfN) - ψintp(a-cHalfN-1)
     end
   end
   return Mlist
@@ -90,13 +88,11 @@ function oscillation_indicator(N)
   Σ = zeros(N+1, N+1)
   ψ = basis(N)
 
-  for a in 1:N
+  for a=1:N
     ψdera = [polyder(ψp, a) for ψp in ψ]
-    for p in 1:N+1
-      for m in 1:N+1
-        antiderivative = polyint(ψdera[p] * ψdera[m])
-        Σ[p,m] += antiderivative(1) - antiderivative(0)
-      end
+    for p=1:N+1, m=1:N+1
+      antiderivative = polyint(ψdera[p] * ψdera[m])
+      Σ[p,m] += antiderivative(1) - antiderivative(0)
     end
   end
   return Σ
