@@ -8,6 +8,7 @@
 \begin_preamble
 \usepackage{tikz}
 \usetikzlibrary{arrows}
+\usepackage{algorithm,algpseudocode}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -102,10 +103,6 @@ To Do
 \end_layout
 
 \begin_layout Itemize
-Write up use of Cholesky decomposition of Σ in WENO
-\end_layout
-
-\begin_layout Itemize
 Test split-WENO in 2D
 \end_layout
 
@@ -172,6 +169,185 @@ Try conservative formulation [Peshkov,Grmela,Romenski]
 
 \begin_layout Chapter
 Faster Solvers
+\end_layout
+
+\begin_layout Section
+Fast WENO Oscillation Indicator Calculation
+\end_layout
+
+\begin_layout Standard
+The WENO oscillation indicator is defined as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+o=\Sigma_{mn}w_{m}w_{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ are the WENO coefficients calculated for a particular stencil, and:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Sigma_{mn}=\sum_{α=1}^{N}\int_{0}^{1}\psi_{m}^{\left(α\right)}\psi_{n}^{\left(α\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By considering that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+o=\sum_{α=1}^{N}\int_{0}^{1}\left(\frac{d^{α}w}{dx^{α}}\right)^{2}>0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we have that 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+ is symmetric positive definite.
+ Thus, it has a Cholesky decomposition 
+\begin_inset Formula $\Sigma=LL^{T}$
+\end_inset
+
+.
+ Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+o=\left\Vert w^{T}L\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $L$
+\end_inset
+
+ can be precalculated, and 
+\begin_inset Formula $o$
+\end_inset
+
+ calculated quickly as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{o = 0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For{j = 1...n}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{tmp = 0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For{i = j...n}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{tmp = tmp + w(i) * L(i,j)}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{o = o + tmp * tmp}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
