@@ -5,7 +5,7 @@ from ader.dg import dg_launcher
 from ader.weno import weno, weno_primitive
 from auxiliary.bc import standard_BC
 from gpr.thermo import thermal_stepper
-from split.ode import ode_stepper, ode_stepper_full
+from split.ode import ode_stepper_fast, ode_stepper_full
 from options import reconstructPrim, linODE
 
 
@@ -36,7 +36,7 @@ def split_weno_stepper(pool, fluid, dt, PAR, SYS):
     t1 = time()
 
     if linODE:
-        ode_stepper(fluid, dt/2, PAR, SYS)
+        ode_stepper_fast(fluid, dt/2, PAR, SYS)
     else:
         ode_stepper_full(fluid, dt/2, PAR, SYS)
     t2 = time()
@@ -49,7 +49,7 @@ def split_weno_stepper(pool, fluid, dt, PAR, SYS):
     t4 = time()
 
     if linODE:
-        ode_stepper(fluid, dt/2, PAR, SYS)
+        ode_stepper_fast(fluid, dt/2, PAR, SYS)
     else:
         ode_stepper_full(fluid, dt/2, PAR, SYS)
     t5 = time()
@@ -60,7 +60,7 @@ def split_dg_stepper(pool, fluid, dt, PAR, SYS):
     t1 = time()
 
     if linODE:
-        ode_stepper(fluid, dt/2, PAR, SYS)
+        ode_stepper_fast(fluid, dt/2, PAR, SYS)
     else:
         ode_stepper_full(fluid, dt/2, PAR, SYS)
     t2 = time()
@@ -76,7 +76,7 @@ def split_dg_stepper(pool, fluid, dt, PAR, SYS):
     t5 = time()
 
     if linODE:
-        ode_stepper(fluid, dt/2, PAR, SYS)
+        ode_stepper_fast(fluid, dt/2, PAR, SYS)
     else:
         ode_stepper_full(fluid, dt/2, PAR, SYS)
     t6 = time()
