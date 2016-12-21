@@ -77,8 +77,8 @@ def ode_stepper_fast(u, dt, PAR, SYS):
             Q[5:14] = A1.ravel()
 
         if SYS.thermal:
-            J = Q[14] / ρ
+            J = Q[14:17] / ρ
             E = Q[1] / ρ
             v = Q[2:5] / ρ
             A2 = (A+A1)/2
-            Q[14:17] = solver_thermal_analytic_ideal(ρ, E, A2, J, v, dt, PAR)
+            Q[14:17] = ρ * solver_thermal_analytic_ideal(ρ, E, A2, J, v, dt, PAR)

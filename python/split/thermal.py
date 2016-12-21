@@ -1,4 +1,4 @@
-from numpy import exp, eye, log, sign, sqrt
+from numpy import exp, eye, sqrt
 
 from auxiliary.funcs import L2_1D
 from gpr.variables.eos import E_2A, E_3, energy_to_temperature
@@ -28,4 +28,4 @@ def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, PAR):
 
     ea = exp(c1*dt)
     den = ea - c2/c1*(ea-1)*L2_1D(J)
-    return J * sqrt(1 / den)
+    return J / sqrt(den)

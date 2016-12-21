@@ -8,7 +8,7 @@ from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import mechanical, viscous, thermal, reactive
 from options import Ms, W, doubleTime, reactionType, fullBurn, burnProp
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
-from options import solver, linODE, approxInterface, reconstructPrim, convertTemp, altThermSolve
+from options import solver, fullODE, approxInterface, reconstructPrim, convertTemp, altThermSolve
 from options import  N, CFL, method, perronFrob
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
@@ -64,8 +64,8 @@ def save_config(path):
         f.write('TFix   = %i\n' % TFix)
         f.write('UPDATE_STEP = %i\n\n' % UPDATE_STEP)
 
-        f.write('solver = %s\n' % solver)
-        f.write('linODE = %i\n' % linODE)
+        f.write('solver  = %s\n' % solver)
+        f.write('fullODE = %i\n' % fullODE)
         f.write('approxInterface = %i\n' % approxInterface)
         f.write('reconstructPrim = %i\n' % reconstructPrim)
         f.write('convertTemp     = %i\n' % convertTemp)

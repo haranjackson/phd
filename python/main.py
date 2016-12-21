@@ -1,4 +1,4 @@
-from time import time
+from time import time, sleep
 
 from joblib import Parallel
 from numpy import array, zeros
@@ -29,8 +29,8 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
-IC = taylor_green_vortex_IC
-BC = periodic_BC               # CHECK ARGUMENTS
+IC = heat_conduction_IC
+BC = standard_BC               # CHECK ARGUMENTS
 
 
 SYS, SFix, TFix = options.SYS, options.SFix, options.TFix
@@ -75,7 +75,7 @@ def run(t, count):
                 split_dg_stepper(pool, fluid, dt, PAR, SYS)
             else:
                 print('SOLVER NOT RECOGNISED')
-                return
+                sleep(1)
 
             if GFM:
                 dg[inds[i]:inds[i+1]] = qh[inds[i]+1:inds[i+1]+1, 0, 0]
