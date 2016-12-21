@@ -98,6 +98,23 @@
 
 \end_layout
 
+\begin_layout Title
+Lab Notes
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Chapter
 To Do
 \end_layout
@@ -1211,8 +1228,339 @@ name "split-WENO-results-2"
 
 \end_layout
 
+\begin_layout Section
+Distortion ODEs
+\end_layout
+
 \begin_layout Subsection
-Distortion Equations
+Jacobian of Distortion ODEs
+\end_layout
+
+\begin_layout Standard
+The Jacobian of the source function is used to speed up numerical integration
+ of the ODE.
+ It is derived thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\dev\left(G\right)_{ij}}{\partial A_{mn}}=\delta_{in}A_{mj}+\delta_{jn}A_{mi}-\frac{2}{3}\delta_{ij}A_{mn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\frac{\partial A_{it}}{\partial A_{mn}}\dev\left(G\right)_{tj}+A_{it}\frac{\partial\dev\left(G\right)_{tj}}{\partial A_{mn}}\\
+ & =\delta_{im}\delta_{tn}\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)\nonumber \\
+ & \quad+A_{it}\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)\nonumber \\
+ & =\left(\delta_{im}A_{kn}A_{kj}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}\right)\nonumber \\
+ & \quad+\left(A_{in}A_{mj}+\delta_{jn}A_{ik}A_{mk}-\frac{2}{3}A_{ij}A_{mn}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+J_{A} & \equiv\frac{-3}{\tau_{1}}\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}}\\
+ & =\frac{-3}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\frac{5}{3}\left(A\dev\left(G\right)\right)_{ij}A_{mn}^{-T}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $G^{'}=AA^{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Linearized Distortion ODEs Solver
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $A^{*}=\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}I$
+\end_inset
+
+ is a stationary point of the ODE for 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ Linearizing the ODE around 
+\begin_inset Formula $A^{*}$
+\end_inset
+
+ gives:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{dA}{dt} & \approx J_{A}\left(A^{*}\right)\left(A-A^{*}\right)\\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{in}\delta_{mj}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{jn}\delta_{im}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}-\frac{1}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}\delta_{kl}\delta_{kl}-\frac{2}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{ij}\delta_{mn}\right)\nonumber \\
+ & \quad\times\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\left(A_{ji}+A_{ij}-\frac{2}{3}\tr\left(A\right)\delta_{ij}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\left(\delta_{ij}+\delta_{ij}-2\delta_{ij}\right)\right)\nonumber \\
+ & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A+A^{T}-\frac{2}{3}\tr\left(A\right)I\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The matrix for this system, in row-major form, is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\begin{array}{ccccccccc}
+\frac{4}{3} & 0 & 0 & 0 & -\frac{2}{3} & 0 & 0 & 0 & -\frac{2}{3}\\
+0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
+0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+-\frac{2}{3} & 0 & 0 & 0 & \frac{4}{3} & 0 & 0 & 0 & -\frac{2}{3}\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0\\
+-\frac{2}{3} & 0 & 0 & 0 & -\frac{2}{3} & 0 & 0 & 0 & \frac{4}{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The eigenvalues and eigenvectors are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ 0,0,0,0,-2k,-2k,-2k,-2k,-2k\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+0\\
+1\\
+0\\
+-1\\
+0\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+-1\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+1\\
+0\\
+-1\\
+0
+\end{array}\right)\left(\begin{array}{c}
+1\\
+0\\
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+1
+\end{array}\right)\left(\begin{array}{c}
+-1\\
+0\\
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+-1\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+1
+\end{array}\right)\left(\begin{array}{c}
+0\\
+1\\
+0\\
+1\\
+0\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+1\\
+0\\
+0\\
+0\\
+1\\
+0\\
+0
+\end{array}\right)\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+1\\
+0\\
+1\\
+0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $k=\frac{3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}$
+\end_inset
+
+.
+ Thus, the solution is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{alignat}{1}
+ & \frac{A_{12}-A_{21}}{2}\left(\begin{array}{ccc}
+0 & 1 & 0\\
+-1 & 0 & 0\\
+0 & 0 & 0
+\end{array}\right)+\frac{A_{13}-A_{31}}{2}\left(\begin{array}{ccc}
+0 & 0 & 1\\
+0 & 0 & 0\\
+-1 & 0 & 0
+\end{array}\right)+\frac{A_{23}-A_{32}}{2}\left(\begin{array}{ccc}
+0 & 0 & 0\\
+0 & 0 & 1\\
+0 & -1 & 0
+\end{array}\right)\\
+ & +\frac{A_{11}+A_{22}+A_{33}}{3}\left(\begin{array}{ccc}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{array}\right)\nonumber \\
+ & +\frac{2A_{22}-A_{11}-A_{33}}{3}e^{-2kt}\left(\begin{array}{ccc}
+-1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 0
+\end{array}\right)+\frac{2A_{33}-A_{11}-A_{22}}{3}e^{-2kt}\left(\begin{array}{ccc}
+-1 & 0 & 0\\
+0 & 0 & 0\\
+0 & 0 & 1
+\end{array}\right)\nonumber \\
+ & +\frac{A_{12}+A_{21}}{2}e^{-2kt}\left(\begin{array}{ccc}
+0 & 1 & 0\\
+1 & 0 & 0\\
+0 & 0 & 0
+\end{array}\right)+\frac{A_{13}+A_{31}}{2}e^{-2kt}\left(\begin{array}{ccc}
+0 & 0 & 1\\
+0 & 0 & 0\\
+1 & 0 & 0
+\end{array}\right)+\frac{A_{23}+A_{32}}{2}e^{-2kt}\left(\begin{array}{ccc}
+0 & 0 & 0\\
+0 & 0 & 1\\
+0 & 1 & 0
+\end{array}\right)\nonumber 
+\end{alignat}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is equal to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{2}\left(A-A^{T}\right)+\frac{\tr\left(A\right)}{3}I+e^{-2kt}\left(\frac{1}{2}\left(A+A^{T}\right)-\frac{\tr\left(A\right)}{3}I\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Results with Stokes' First Problem look good with this linearisation.
+ The ODE step takes a negligible amount of time, meaning that if accuracy
+ is maintained to second order, the solver is now fast enough.
+\end_layout
+
+\begin_layout Subsection
+Reduced Distortion ODEs
 \end_layout
 
 \begin_layout Standard
@@ -1484,7 +1832,7 @@ reference "eq:2odes"
 \end_layout
 
 \begin_layout Subsection
-Bounds on the Distortion ODE System
+Bounds on Reduced Distortion ODEs
 \end_layout
 
 \begin_layout Standard
@@ -1940,7 +2288,7 @@ Similarly, if
 \end_layout
 
 \begin_layout Subsection
-Linearized Stretch Solver
+Linearized Reduced Distortion ODE Solver
 \end_layout
 
 \begin_layout Standard
@@ -2115,8 +2463,8 @@ with equality if and only if
 .
 \end_layout
 
-\begin_layout Subsection
-Thermal Impulse Equations
+\begin_layout Section
+Thermal Impulse ODEs
 \end_layout
 
 \begin_layout Standard
@@ -2218,60 +2566,15 @@ Over the time period of the ODE,
 \end_inset
 
  are constant.
- In one dimension we have:
+ We have:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{dJ_{1}}{dt} & =-\frac{1}{\tau_{2}}\frac{\rho_{0}}{T_{0}\rho}\left(c_{1}J_{1}-c_{2}J_{1}^{3}\right)\\
- & =-c_{3}J_{1}+c_{4}J_{1}^{3}\nonumber 
+\frac{dJ_{1}}{dt} & =-\frac{1}{\tau_{2}}\frac{\rho_{0}}{T_{0}\rho}\left(c_{1}J_{1}-c_{2}\boldsymbol{J^{2}}\right)\\
+ & =-c_{3}J_{1}+c_{4}J_{i}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\nonumber 
 \end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This has the solution:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-J_{1}=\pm\frac{\sqrt{c_{3}}}{\sqrt{e^{2c_{3}\left(c+t\right)}+c_{4}}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-c=\frac{\log\left(\frac{c_{3}}{J_{0}^{2}}-c_{4}\right)}{2c_{3}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-I suggest splitting the thermal and distortion relaxation processes thus.
-\end_layout
-
-\begin_layout Standard
-In 3 dimensions we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{dJ_{i}}{dt}=-c_{3}J_{i}+c_{4}J_{i}\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)
-\end{equation}
 
 \end_inset
 
@@ -2312,339 +2615,12 @@ Note that this is a generalized Lotka-Volterra system in
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-J_{i}\left(t\right)=\pm\sqrt{\frac{aJ_{i}\left(0\right)^{2}}{ae^{at}-b\left(e^{at}-1\right)\left(J_{1}\left(0\right)^{2}+J_{2}\left(0\right)^{2}+J_{3}\left(0\right)^{2}\right)}}
+J_{i}\left(t\right)=J_{i}\left(0\right)\sqrt{\frac{1}{e^{at}-\frac{b}{a}\left(e^{at}-1\right)\boldsymbol{J\left(0\right)^{2}}}}
 \end{equation}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Jacobian of Source ODE Solver
-\end_layout
-
-\begin_layout Standard
-The Jacobian of the source function is used to speed up numerical integration
- of the ODE.
- It is derived thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{\partial\dev\left(G\right)_{ij}}{\partial A_{mn}}=\delta_{in}A_{mj}+\delta_{jn}A_{mi}-\frac{2}{3}\delta_{ij}A_{mn}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus:
-\end_layout
-
-\begin_layout Standard
-
-\size small
-\begin_inset Formula 
-\begin{align}
-\frac{\partial\left(A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\frac{\partial A_{it}}{\partial A_{mn}}\dev\left(G\right)_{tj}+A_{it}\frac{\partial\dev\left(G\right)_{tj}}{\partial A_{mn}}\\
- & =\delta_{im}\delta_{tn}\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)\nonumber \\
- & \quad+A_{it}\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)\nonumber \\
- & =\left(\delta_{im}A_{kn}A_{kj}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}\right)\nonumber \\
- & \quad+\left(A_{in}A_{mj}+\delta_{jn}A_{ik}A_{mk}-\frac{2}{3}A_{ij}A_{mn}\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-J_{A} & \equiv\frac{-3}{\tau_{1}}\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}}\\
- & =\frac{-3}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\frac{5}{3}\left(A\dev\left(G\right)\right)_{ij}A_{mn}^{-T}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $G^{'}=AA^{T}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsection
-Linearized ODE Solver
-\end_layout
-
-\begin_layout Standard
-Note that 
-\begin_inset Formula $A^{*}=\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}I$
-\end_inset
-
- is a stationary point of the ODE for 
-\begin_inset Formula $A$
-\end_inset
-
-.
- Linearizing the ODE around 
-\begin_inset Formula $A^{*}$
-\end_inset
-
- gives:
-\end_layout
-
-\begin_layout Standard
-
-\size small
-\begin_inset Formula 
-\begin{align}
-\frac{dA}{dt} & \approx J_{A}\left(A^{*}\right)\left(A-A^{*}\right)\\
- & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{in}\delta_{mj}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{jn}\delta_{im}+\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}-\frac{1}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{im}\delta_{jn}\delta_{kl}\delta_{kl}-\frac{2}{3}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\delta_{ij}\delta_{mn}\right)\nonumber \\
- & \quad\times\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
- & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\left(A_{mn}-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\right)\nonumber \\
- & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\delta_{mn}\left(\delta_{in}\delta_{mj}+\delta_{im}\delta_{jn}-\frac{2}{3}\delta_{ij}\delta_{mn}\right)\right)\nonumber \\
- & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\left(A_{ji}+A_{ij}-\frac{2}{3}\tr\left(A\right)\delta_{ij}\right)-\left(\frac{\rho}{\rho_{0}}\right)^{\frac{1}{3}}\left(\delta_{ij}+\delta_{ij}-2\delta_{ij}\right)\right)\nonumber \\
- & =\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(A+A^{T}-\frac{2}{3}\tr\left(A\right)I\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The matrix for this system, in row-major form, is:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{-3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\left(\begin{array}{ccccccccc}
-\frac{4}{3} & 0 & 0 & 0 & -\frac{2}{3} & 0 & 0 & 0 & -\frac{2}{3}\\
-0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
-0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
--\frac{2}{3} & 0 & 0 & 0 & \frac{4}{3} & 0 & 0 & 0 & -\frac{2}{3}\\
-0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0\\
-0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 0\\
--\frac{2}{3} & 0 & 0 & 0 & -\frac{2}{3} & 0 & 0 & 0 & \frac{4}{3}
-\end{array}\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The eigenvalues and eigenvectors are:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left\{ 0,0,0,0,-2k,-2k,-2k,-2k,-2k\right\} 
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(\begin{array}{c}
-0\\
-1\\
-0\\
--1\\
-0\\
-0\\
-0\\
-0\\
-0
-\end{array}\right)\left(\begin{array}{c}
-0\\
-0\\
-1\\
-0\\
-0\\
-0\\
--1\\
-0\\
-0
-\end{array}\right)\left(\begin{array}{c}
-0\\
-0\\
-0\\
-0\\
-0\\
-1\\
-0\\
--1\\
-0
-\end{array}\right)\left(\begin{array}{c}
-1\\
-0\\
-0\\
-0\\
-1\\
-0\\
-0\\
-0\\
-1
-\end{array}\right)\left(\begin{array}{c}
--1\\
-0\\
-0\\
-0\\
-1\\
-0\\
-0\\
-0\\
-0
-\end{array}\right)\left(\begin{array}{c}
--1\\
-0\\
-0\\
-0\\
-0\\
-0\\
-0\\
-0\\
-1
-\end{array}\right)\left(\begin{array}{c}
-0\\
-1\\
-0\\
-1\\
-0\\
-0\\
-0\\
-0\\
-0
-\end{array}\right)\left(\begin{array}{c}
-0\\
-0\\
-1\\
-0\\
-0\\
-0\\
-1\\
-0\\
-0
-\end{array}\right)\left(\begin{array}{c}
-0\\
-0\\
-0\\
-0\\
-0\\
-1\\
-0\\
-1\\
-0
-\end{array}\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $k=\frac{3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}$
-\end_inset
-
-.
- Thus, the solution is:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{alignat}{1}
- & \frac{A_{12}-A_{21}}{2}\left(\begin{array}{ccc}
-0 & 1 & 0\\
--1 & 0 & 0\\
-0 & 0 & 0
-\end{array}\right)+\frac{A_{13}-A_{31}}{2}\left(\begin{array}{ccc}
-0 & 0 & 1\\
-0 & 0 & 0\\
--1 & 0 & 0
-\end{array}\right)+\frac{A_{23}-A_{32}}{2}\left(\begin{array}{ccc}
-0 & 0 & 0\\
-0 & 0 & 1\\
-0 & -1 & 0
-\end{array}\right)\\
- & +\frac{A_{11}+A_{22}+A_{33}}{3}\left(\begin{array}{ccc}
-1 & 0 & 0\\
-0 & 1 & 0\\
-0 & 0 & 1
-\end{array}\right)\nonumber \\
- & +\frac{2A_{22}-A_{11}-A_{33}}{3}e^{-2kt}\left(\begin{array}{ccc}
--1 & 0 & 0\\
-0 & 1 & 0\\
-0 & 0 & 0
-\end{array}\right)+\frac{2A_{33}-A_{11}-A_{22}}{3}e^{-2kt}\left(\begin{array}{ccc}
--1 & 0 & 0\\
-0 & 0 & 0\\
-0 & 0 & 1
-\end{array}\right)\nonumber \\
- & +\frac{A_{12}+A_{21}}{2}e^{-2kt}\left(\begin{array}{ccc}
-0 & 1 & 0\\
-1 & 0 & 0\\
-0 & 0 & 0
-\end{array}\right)+\frac{A_{13}+A_{31}}{2}e^{-2kt}\left(\begin{array}{ccc}
-0 & 0 & 1\\
-0 & 0 & 0\\
-1 & 0 & 0
-\end{array}\right)+\frac{A_{23}+A_{32}}{2}e^{-2kt}\left(\begin{array}{ccc}
-0 & 0 & 0\\
-0 & 0 & 1\\
-0 & 1 & 0
-\end{array}\right)\nonumber 
-\end{alignat}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This is equal to:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{1}{2}\left(A-A^{T}\right)+\frac{\tr\left(A\right)}{3}I+e^{-2kt}\left(\frac{1}{2}\left(A+A^{T}\right)-\frac{\tr\left(A\right)}{3}I\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Results with Stokes' First Problem look good with this linearisation.
- The ODE step takes a negligible amount of time, meaning that if accuracy
- is maintained to second order, the solver is now fast enough.
 \end_layout
 
 \begin_layout Section
