@@ -119,6 +119,10 @@ LatexCommand tableofcontents
 To Do
 \end_layout
 
+\begin_layout Section
+Coding
+\end_layout
+
 \begin_layout Itemize
 Test split-WENO in 2D
 \end_layout
@@ -140,15 +144,19 @@ Test compressible Euler vs GPR - use narrowing domain from Toro's book
 \end_layout
 
 \begin_layout Itemize
+Try conservative formulation [Peshkov,Grmela,Romenski]
+\end_layout
+
+\begin_layout Section
+Theoretical
+\end_layout
+
+\begin_layout Itemize
 Investigate further methods of obtaining predictor with form 
 \begin_inset Formula $w_{0}+w_{1}x+c_{0}t+c_{0}xt$
 \end_inset
 
 
-\end_layout
-
-\begin_layout Itemize
-Investigate ways of determining whether the linearised ODE solver is appropriate
 \end_layout
 
 \begin_layout Itemize
@@ -165,23 +173,28 @@ Try evolving in time by
 \end_layout
 
 \begin_layout Itemize
+Convergence of conservation of mass in RGFM
+\end_layout
+
+\begin_layout Section
+Papers
+\end_layout
+
+\begin_layout Itemize
+Application of ADER-WENO to equations in other areas of Physics, Biology,
+ & Economics
+\end_layout
+
+\begin_layout Itemize
+Split solver vs ADER-WENO
+\end_layout
+
+\begin_layout Itemize
 Isobaric cookoff paper - make cookoff the focus
 \end_layout
 
 \begin_layout Itemize
-Convergence of conservation of mass in RGFM
-\end_layout
-
-\begin_layout Itemize
-Sort out heat flux in HPR-RGFM
-\end_layout
-
-\begin_layout Itemize
-HPR-RGFM paper
-\end_layout
-
-\begin_layout Itemize
-Try conservative formulation [Peshkov,Grmela,Romenski]
+HPR-RGFM paper (solve stationarity of interface solver under some conditions)
 \end_layout
 
 \begin_layout Chapter
