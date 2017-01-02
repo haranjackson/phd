@@ -3,7 +3,7 @@ import numpy as np
 
 """ Domain Parameters """
 
-tf = 1                      # Final time of the simulation
+tf = 0.5                      # Final time of the simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
@@ -46,7 +46,7 @@ reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in 
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
 
-N      = 3                  # Method is order N+1
+N      = 2                  # Method is order N+1
 CFL    = 0.4                # CFL number
 method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
