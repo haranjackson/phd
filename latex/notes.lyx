@@ -2151,7 +2151,7 @@ This yields:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-x_{1}+\frac{c_{0}\pm\sqrt{c_{0}^{2}+4\left(1-c_{0}\right)x_{1}^{3}}}{2x_{1}^{2}}+\frac{2x_{1}}{c_{0}\pm\sqrt{c_{0}^{2}+4\left(1-c_{0}\right)x_{1}^{3}}}=m_{\Delta t}
+x_{1}+\frac{c_{0}+\sqrt{c_{0}^{2}+4\left(1-c_{0}\right)x_{1}^{3}}}{2x_{1}^{2}}+\frac{2x_{1}}{c_{0}+\sqrt{c_{0}^{2}+4\left(1-c_{0}\right)x_{1}^{3}}}=m_{\Delta t}
 \end{equation}
 
 \end_inset
@@ -2207,6 +2207,67 @@ c_{0}^{2}-c_{0}^{2}m_{\Delta t}x^{2}+\left(4\left(1-c_{0}\right)+2c_{0}^{2}\righ
 
  then the system can be considered to have converged, rendering the polynomial
  root-finding unnecessary, and saving more time.
+\end_layout
+
+\begin_layout Standard
+Tighter bounds for the region in which 
+\begin_inset Formula $x_{1}$
+\end_inset
+
+ lies are given by the roots of the following equations (corresponding to
+ 
+\begin_inset Formula $c_{0}=1$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{0}=0$
+\end_inset
+
+, respectively):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+2x_{1}+\frac{1}{x_{1}^{2}} & =m_{\Delta t}\\
+x_{1}+\frac{2}{\sqrt{x_{1}}} & =m_{\Delta t}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
