@@ -1845,6 +1845,116 @@ reference "eq:2odes"
 \end_layout
 
 \begin_layout Subsection
+Alternative Form of Reduced Distortion ODEs
+\end_layout
+
+\begin_layout Standard
+Define the following variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =x_{1}+y_{1}+z_{1}\\
+r & =x_{1}^{2}+x_{2}^{2}+x_{3}^{2}\\
+s & =x_{1}x_{2}+x_{2}x_{3}+x_{3}x_{1}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dm}{dt} & =2\left(s-r\right)\\
+\frac{dr}{dt} & =m\left(6s-4r\right)-18c\\
+\frac{ds}{dt} & =9c-ms
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note also that 
+\begin_inset Formula $m^{2}=r+2s$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
 Bounds on Reduced Distortion ODEs
 \end_layout
 
