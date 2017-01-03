@@ -1796,7 +1796,7 @@ This has solution:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-x_{2}=\frac{c-c_{0}\pm\sqrt{c^{2}-2cc_{0}+4c_{0}x_{1}^{3}+c_{0}^{2}}}{2x_{1}^{2}}
+x_{2}=\frac{c_{0}\pm\sqrt{c_{0}^{2}+4\left(c-c_{0}\right)x_{1}^{3}}}{2x_{1}^{2}}
 \end{equation}
 
 \end_inset
@@ -1811,7 +1811,7 @@ where
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-c_{0}=\frac{x_{1,0}^{2}x_{2,0}^{2}-cx_{2,0}}{x_{1,0}-x_{2,0}}
+c_{0}=c-\frac{x_{1,0}^{2}x_{2,0}^{2}-cx_{2,0}}{x_{1,0}-x_{2,0}}\in\left[0,c\right]
 \end{equation}
 
 \end_inset
@@ -1845,11 +1845,15 @@ reference "eq:2odes"
 \end_layout
 
 \begin_layout Subsection
-Alternative Form of Reduced Distortion ODEs
+Semi-Analytic Solution of Reduced Distortion ODEs
 \end_layout
 
 \begin_layout Standard
-Define the following variables:
+Letting 
+\begin_inset Formula $c=1$
+\end_inset
+
+, define the following variables:
 \end_layout
 
 \begin_layout Standard
@@ -1871,9 +1875,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-m & =x_{1}+y_{1}+z_{1}\\
-r & =x_{1}^{2}+x_{2}^{2}+x_{3}^{2}\\
-s & =x_{1}x_{2}+x_{2}x_{3}+x_{3}x_{1}
+m & =x_{1}+x_{2}+x_{3}\\
+e & =\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}
 \end{align}
 
 \end_inset
@@ -1898,7 +1901,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Note that:
+Then:
 \end_layout
 
 \begin_layout Standard
@@ -1920,9 +1923,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{dm}{dt} & =2\left(s-r\right)\\
-\frac{dr}{dt} & =m\left(6s-4r\right)-18c\\
-\frac{ds}{dt} & =9c-ms
+\frac{de}{dt} & =m\left(m^{2}-\frac{5}{2}e\right)-27\\
+\frac{dm}{dt} & =-e\label{eq:dm/dt}
 \end{align}
 
 \end_inset
@@ -1947,11 +1949,292 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Note also that 
-\begin_inset Formula $m^{2}=r+2s$
+This gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dm}{de} & =\frac{e}{27-m\left(m^{2}-\frac{5}{2}e\right)}\\
+m\left(0\right) & =3
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $\frac{dm}{de}$
+\end_inset
+
+ is undefined at 
+\begin_inset Formula $\left(m,e\right)=\left(3,0\right)$
+\end_inset
+
+ and in fact the solution to this ODE is the limit curve of the solutions
+ as 
+\begin_inset Formula $m\left(0\right)\rightarrow3$
+\end_inset
+
+ from below.
+ This solution can be calculated numerically.
+ It is monotone increasing so the inverse 
+\begin_inset Formula $e\left(m\right)$
+\end_inset
+
+ can also be calculated easily.
+ 
+\begin_inset Formula $e\left(m\right)$
+\end_inset
+
+ can now be used to obtain 
+\begin_inset Formula $m\left(t\right)$
+\end_inset
+
+ from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dm/dt"
+
+\end_inset
+
+, numerically.
+ Note that 
+\begin_inset Formula $m$
+\end_inset
+
+ is monotone decreasing in time, and 
+\begin_inset Formula $\frac{dm}{dt}$
+\end_inset
+
+ only depends on 
+\begin_inset Formula $m$
 \end_inset
 
 .
+ We now calculate 
+\begin_inset Formula $m^{*}\left(t\right)$
+\end_inset
+
+ as the solution curve to this ODE with some large value for 
+\begin_inset Formula $m\left(0\right)$
+\end_inset
+
+.
+ This solution curve can be used to evaluate 
+\begin_inset Formula $m_{\Delta t}=m\left(\Delta t\right)$
+\end_inset
+
+ for any 
+\begin_inset Formula $m\left(0\right)=m_{0}$
+\end_inset
+
+, by finding 
+\begin_inset Formula $t^{*}$
+\end_inset
+
+ such that 
+\begin_inset Formula $m^{*}\left(t^{*}\right)=m_{0}$
+\end_inset
+
+ and evaluating 
+\begin_inset Formula $m^{*}\left(t^{*}+\Delta t\right)$
+\end_inset
+
+.
+ Note that, as with 
+\begin_inset Formula $e\left(m\right)$
+\end_inset
+
+, 
+\begin_inset Formula $m^{*}\left(t\right)$
+\end_inset
+
+ is easily invertible, allowing 
+\begin_inset Formula $t^{*}$
+\end_inset
+
+ to be evaluated quickly.
+\end_layout
+
+\begin_layout Standard
+Once 
+\begin_inset Formula $m_{\Delta t}$
+\end_inset
+
+ has be found, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{1}+x_{2}+x_{3} & =m_{\Delta t}\\
+x_{1}x_{2}x_{3} & =1\\
+x_{2} & =\frac{c_{0}\pm\sqrt{c_{0}^{2}+4\left(c-c_{0}\right)x_{1}^{3}}}{2x_{1}^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This yields:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{1}+\frac{c_{0}\pm\sqrt{c_{0}^{2}+4\left(1-c_{0}\right)x_{1}^{3}}}{2x_{1}^{2}}+\frac{2x_{1}}{c_{0}\pm\sqrt{c_{0}^{2}+4\left(1-c_{0}\right)x_{1}^{3}}}=m_{\Delta t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x_{1}$
+\end_inset
+
+ is in fact the root of the following polynomial in the region 
+\begin_inset Formula $x\in\left[1,x_{1,0}\right]$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{0}^{2}-c_{0}^{2}m_{\Delta t}x^{2}+\left(4\left(1-c_{0}\right)+2c_{0}^{2}\right)x^{3}-m_{\Delta t}^{2}\left(1-c_{0}\right)x^{4}+2m_{\Delta t}\left(1-c_{0}\right)x^{5}-\left(1-c_{0}\right)x^{6}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x_{2}$
+\end_inset
+
+ and thus 
+\begin_inset Formula $x_{3}$
+\end_inset
+
+ are found from 
+\begin_inset Formula $x_{1}$
+\end_inset
+
+ with the available formulas.
+ Thus, the calculation of the distortion factors has been reduced to 2 simple
+ evaluations (to obtain 
+\begin_inset Formula $t^{*},m_{\Delta t}$
+\end_inset
+
+) and a polynomial root find (using e.g.
+ Newton's Method).
+ Note that if 
+\begin_inset Formula $\left|m_{\Delta t}-3\right|<\epsilon_{machine}$
+\end_inset
+
+ then the system can be considered to have converged, rendering the polynomial
+ root-finding unnecessary, and saving more time.
+\end_layout
+
+\begin_layout Standard
+The following result may be useful in future:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{d^{2}m}{dt^{2}} & =-\frac{de}{dt}\\
+ & =27c-m\left(m^{2}-\frac{5}{2}e\right)\nonumber \\
+ & =27c-m^{3}-\frac{5}{2}m\frac{dm}{dt}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\therefore\frac{d^{2}m}{dt^{2}}+\frac{5}{2}m\frac{dm}{dt}+\left(m^{3}-27c\right)=0
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
