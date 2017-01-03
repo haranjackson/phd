@@ -560,5 +560,126 @@ NB This doesn't seem to work very well.
  The linearisation procedure is too rudimentary.
 \end_layout
 
+\begin_layout Section
+Reduced Distortion ODEs
+\end_layout
+
+\begin_layout Standard
+Define the following variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =x_{1}+x_{2}+x_{3}\\
+r & =x_{1}^{2}+x_{2}^{2}+x_{3}^{2}\\
+s & =x_{1}x_{2}+x_{2}x_{3}+x_{3}x_{1}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dm}{dt} & =2\left(s-r\right)\\
+\frac{dr}{dt} & =m\left(6s-4r\right)-18c\\
+\frac{ds}{dt} & =9c-ms
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note also that 
+\begin_inset Formula $m^{2}=r+2s$
+\end_inset
+
+, thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dm}{dt}=2\left(3s-m^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
