@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import arctan, array, dot, einsum, exp, eye, log, prod, sqrt, zeros
+from numpy import arctan, array, dot, einsum, exp, eye, log, pi, prod, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -56,3 +56,12 @@ def solver_distortion_reduced(A, dt, PAR):
 
 def bound_f(x, l):
     return log((x**2+l*x+l**2) / (x-l)**2) - 2*sqrt(3)*arctan((2*x+l) / (sqrt(3)*l))
+
+def perturbation_solver(x1,x2,x3,t,stiff=1):
+    m0 = (x1+x2+x3)/3
+    if stiff:
+        exparg = 36*t/5 + 2*pi/sqrt(3) - 2*sqrt(3)*arctan((2*m0+1)/sqrt(3))
+        m = 1 + (m0-1) * sqrt(6 / (2*(m0**2+m0+1)*exp(exparg) - 11*(m0-1)**2))
+        print(m)
+        s2 = odeint(f_reduced, array([x1,x2]), array([0,t]), args=(1,1))[1]
+        print((s2[0]+s2[1]+1/(s2[0]*s2[1]))/3)
