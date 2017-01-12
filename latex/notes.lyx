@@ -2259,7 +2259,7 @@ The RGFM does nothing without a temperature fix when applied to the heat
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../library/library"
+bibfiles "refs"
 options "plain"
 
 \end_inset
