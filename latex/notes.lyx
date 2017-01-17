@@ -152,24 +152,8 @@ Theoretical
 \end_layout
 
 \begin_layout Itemize
-Investigate further methods of obtaining predictor with form 
-\begin_inset Formula $w_{0}+w_{1}x+c_{0}t+c_{0}xt$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-MUSCL using some approximate Riemann solver (perhaps Dumbser's HLLEM) and
- operator splitting for source terms
-\end_layout
-
-\begin_layout Itemize
-Try evolving in time by 
-\begin_inset Formula $\frac{\Delta t}{2}$
-\end_inset
-
- in split-WENO
+Investiage approximate Riemann solvers (e.g.
+ Dumbser's HLLEM)
 \end_layout
 
 \begin_layout Itemize
@@ -181,8 +165,7 @@ Papers
 \end_layout
 
 \begin_layout Itemize
-Application of ADER-WENO to equations in other areas of Physics, Biology,
- & Economics
+Isobaric cookoff (make cookoff the focus)
 \end_layout
 
 \begin_layout Itemize
@@ -190,7 +173,12 @@ Split solver vs ADER-WENO
 \end_layout
 
 \begin_layout Itemize
-Isobaric cookoff paper - make cookoff the focus
+Analytical results for GPR split solver
+\end_layout
+
+\begin_layout Itemize
+Application of ADER-WENO to equations in other areas of Physics, Biology,
+ & Economics
 \end_layout
 
 \begin_layout Itemize
