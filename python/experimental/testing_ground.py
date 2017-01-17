@@ -6,7 +6,7 @@ from numpy import array, dot, einsum, prod, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
-import auxiliary
+from auxiliary.classes import material_parameters
 from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D
 from gpr.variables.eos import E_A
 from gpr.variables.material_functions import theta_1
@@ -85,7 +85,7 @@ def stretch_solver2(A, dt, PAR):
     return dot(U*sqrt(s),V)
 
 def compare_solvers(A, dt):
-    PAR = auxiliary.classes.material_parameters(γ=1.4,pINF=0,cv=1,ρ0=1,p0=1,cs=1,α=1e-16,μ=1e-3,Pr=3/4)
+    PAR = material_parameters(γ=1.4,pINF=0,cv=1,ρ0=1,p0=1,cs=1,α=1e-16,μ=1e-3,Pr=3/4)
     ρ = det3(A)
 
     A1 = linearised_distortion(ρ, A, dt, PAR)

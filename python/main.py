@@ -29,7 +29,7 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
-IC = heat_conduction_IC
+IC = viscous_shock_IC
 BC = standard_BC               # CHECK ARGUMENTS
 
 

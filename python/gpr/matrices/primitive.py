@@ -4,7 +4,7 @@ from auxiliary.funcs import L2_1D, L2_2D
 from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2
 from gpr.variables.state import sigma, sigma_A, temperature
-from gpr.variables.vectors import primitive, Cvec_to_Pvec
+from gpr.variables.vectors import primitive
 
 
 def system_primitive(Q, d, PAR, SYS):

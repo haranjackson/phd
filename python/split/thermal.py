@@ -1,21 +1,17 @@
 from numpy import exp, eye, sqrt
 
 from auxiliary.funcs import L2_1D
-from gpr.variables.eos import E_2A, E_3, energy_to_temperature
-from gpr.variables.vectors import primitive
+from gpr.variables.eos import E_2A, E_3, E_J, energy_to_temperature
+from gpr.variables.material_functions import theta_2
 
 
-def jac_J(J, ρ, E, A, PAR):
+def f_J(ρ, E, A, J, PAR):
+    T = energy_to_temperature(E, A, J, PAR)
+    return - E_J(J, PAR.α2) / theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
+
+def jac_J(ρ, E, A, J, PAR):
     T = energy_to_temperature(E, A, J, PAR)
     return -(T * PAR.ρ0) / (PAR.T0 * ρ * PAR.τ1) * eye(3)
-
-def solver_thermal_analytic_constp(ρ, Q, dt, PAR, SYS):
-    """ Returns the analytic solution to the thermal impulse ODE, assuming pressure is constant
-        over the timescale of the ODE.
-        NB This may not be a good assumption.
-    """
-    P0 = primitive(Q, PAR, SYS)
-    return ρ * exp(-(P0.T * PAR.ρ0 * dt)/(PAR.T0 * ρ * PAR.τ2)) * P0.J
 
 def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, PAR):
     """ Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS

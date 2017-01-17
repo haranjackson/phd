@@ -1,10 +1,15 @@
 from numba import jit
-from numpy import arctan, array, dot, einsum, exp, eye, log, pi, prod, sqrt, zeros
+from numpy import arctan, array, dot, einsum, log, prod, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
-from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D, tr
+from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D
+from gpr.variables.eos import E_A
+from gpr.variables.material_functions import theta_1
 
+
+def f_A(A, PAR):
+    return - E_A(A, PAR.cs2).ravel() / theta_1(A, PAR.cs2, PAR.τ1)
 
 def jac_A(A, τ1):
     G = gram(A)
@@ -27,14 +32,6 @@ def jac_A(A, τ1):
     ret *= -3/τ1 * det3(A)**(5/3)
     return ret.reshape([9,9])
 
-def solver_distortion_lin(ρ, A, dt, PAR):
-    """ A linearised solver for the distortion ODE
-    """
-    diff = tr(A)/3 * eye(3)
-    ret1 = 0.5 * (A - A.T) + diff
-    ret2 = 0.5 * (A + A.T) - diff
-    return ret1 + exp(-6*dt/PAR.τ1 * (ρ/PAR.ρ0)**(7/3)) * ret2
-
 @jit
 def f_reduced(y, t0, k, c):
     ret = zeros(2)
@@ -56,12 +53,3 @@ def solver_distortion_reduced(A, dt, PAR):
 
 def bound_f(x, l):
     return log((x**2+l*x+l**2) / (x-l)**2) - 2*sqrt(3)*arctan((2*x+l) / (sqrt(3)*l))
-
-def perturbation_solver(x1,x2,x3,t,stiff=1):
-    m0 = (x1+x2+x3)/3
-    if stiff:
-        exparg = 36*t/5 + 2*pi/sqrt(3) - 2*sqrt(3)*arctan((2*m0+1)/sqrt(3))
-        m = 1 + (m0-1) * sqrt(6 / (2*(m0**2+m0+1)*exp(exparg) - 11*(m0-1)**2))
-        print(m)
-        s2 = odeint(f_reduced, array([x1,x2]), array([0,t]), args=(1,1))[1]
-        print((s2[0]+s2[1]+1/(s2[0]*s2[1]))/3)
