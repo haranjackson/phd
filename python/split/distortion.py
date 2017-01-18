@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import arctan, array, dot, einsum, log, prod, sqrt, zeros
+from numpy import arctan, array, dot, einsum, exp, log, prod, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -53,3 +53,12 @@ def solver_distortion_reduced(A, dt, PAR):
 
 def bound_f(x, l):
     return log((x**2+l*x+l**2) / (x-l)**2) - 2*sqrt(3)*arctan((2*x+l) / (sqrt(3)*l))
+
+def mean_solver(A, dt, PAR):
+    U, s, V = svd(A)
+    s0 = s**2
+    m0 = sum(s0) / 3
+    e0 = ((s0[0]-s0[1])**2 + (s0[1]-s0[2])**2 + (s0[2]-s0[0])**2) / 3
+    k = 2 * prod(s)**(5/3) / PAR.τ1
+    τ = k*dt
+    m = 1 + exp(-9*τ) * (6*(1-m0)+e0+(9*(m0-1)-e0)*exp(3*τ))
