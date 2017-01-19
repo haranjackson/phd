@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import arctan, array, dot, einsum, exp, log, prod, sqrt, zeros
+from numpy import arctan, argsort, array, dot, cos, einsum, exp, isnan, log, prod, sort, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -54,11 +54,30 @@ def solver_distortion_reduced(A, dt, PAR):
 def bound_f(x, l):
     return log((x**2+l*x+l**2) / (x-l)**2) - 2*sqrt(3)*arctan((2*x+l) / (sqrt(3)*l))
 
-def mean_solver(A, dt, PAR):
+def pos(x):
+    return max(0,x)
+
+def solver_approximate_analytic(A, dt, PAR):
     U, s, V = svd(A)
-    s0 = s**2
+    detA3 = prod(s)**(1/3)
+    s0 = (s/detA3)**2
     m0 = sum(s0) / 3
-    e0 = ((s0[0]-s0[1])**2 + (s0[1]-s0[2])**2 + (s0[2]-s0[0])**2) / 3
-    k = 2 * prod(s)**(5/3) / PAR.τ1
+    u0 = ((s0[0]-s0[1])**2 + (s0[1]-s0[2])**2 + (s0[2]-s0[0])**2) / 3
+    k = 2 * detA3**7 / PAR.τ1
     τ = k*dt
-    m = 1 + exp(-9*τ) * (6*(1-m0)+e0+(9*(m0-1)-e0)*exp(3*τ))
+
+    m = 1 + exp(-9*τ)/3 * ((9*m0-u0-9)*exp(3*τ) - (6*m0-u0-6))
+    u = pos( exp(-9*τ) * (2*(9*m0-u0-9)*exp(3*τ) - 3*(6*m0-u0-6)) )
+    Δ = -2*m**3 + m*u + 2
+    arg1 = pos(6*u**3-81*Δ**2)
+    θ = arctan(sqrt(arg1)/max(1e-8,9*Δ))
+
+    x1 = sqrt(6*u)/3 * cos(θ/3) + m
+    temp2 = 3*m - x1
+    arg2 = pos(x1*temp2**2-4)
+    x2 = 0.5 * (sqrt(arg2/x1) + temp2)
+    x3 = 1/(x1*x2)
+
+    s1 = sort(detA3 * sqrt(array([x1,x2,x3])))
+    s = s1[argsort(s)]
+    return dot(U*s,V)

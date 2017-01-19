@@ -5,7 +5,7 @@ from scipy.integrate import odeint
 
 from gpr.variables.eos import E_3
 from gpr.variables.vectors import primitive
-from split.distortion import f_A, jac_A, solver_distortion_reduced
+from split.distortion import f_A, jac_A, solver_distortion_reduced, solver_approximate_analytic
 from split.thermal import f_J, jac_J, solver_thermal_analytic_ideal
 
 
@@ -70,7 +70,7 @@ def ode_stepper_fast(u, dt, PAR, SYS):
         A = Q[5:14].reshape([3,3])
 
         if SYS.viscous:
-            A1 = solver_distortion_reduced(A, dt, PAR)
+            A1 = solver_approximate_analytic(A, dt, PAR)
             Q[5:14] = A1.ravel()
 
         if SYS.thermal:

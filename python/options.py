@@ -3,11 +3,11 @@ import numpy as np
 
 """ Domain Parameters """
 
-tf = 0.5                      # Final time of the simulation
+tf = 0.2                      # Final time of the simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 100                    # Number of cells in x direction
+nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 

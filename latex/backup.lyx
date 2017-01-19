@@ -913,5 +913,403 @@ m^{\left(2\right)}=\frac{1}{10}t^{2}(9e_{0}^{3}t^{3}-45m_{0}e_{0}^{2}t^{2}+\left
 
 \end_layout
 
+\begin_layout Subsection
+Polynomial Root Find
+\end_layout
+
+\begin_layout Standard
+Once 
+\begin_inset Formula $m_{\Delta t}=1+\eta\left(\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\Delta t\right)$
+\end_inset
+
+ has be found, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{x_{i}+x_{j}+x_{k}}{3} & =m_{\Delta t}\\
+x_{i}x_{j}x_{k} & =1\\
+x_{j} & =\frac{c+\sqrt{c^{2}+4\left(1-c\right)x_{i}^{3}}}{2x_{i}^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This yields:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{i}+\frac{c+\sqrt{c^{2}+4\left(1-c\right)x_{i}^{3}}}{2x_{i}^{2}}+\frac{2x_{i}}{c+\sqrt{c^{2}+4\left(1-c\right)x_{i}^{3}}}=3m_{\Delta t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ is the root of the following polynomial in the region 
+\begin_inset Formula $x\in\left[1,x_{i,0}\right]$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x^{6}-6m_{\Delta t}x^{5}+9m_{\Delta t}^{2}x^{4}-\left(4+2C\right)x^{3}+3Cm_{\Delta t}x^{2}-C
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $C=\frac{c^{2}}{1-c}$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{k}$
+\end_inset
+
+ are found from 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{j} & =\frac{1}{2}\left(\sqrt{\frac{x_{i}\left(3m_{\Delta t}-x_{i}\right)^{2}-4}{x_{i}}}+3m_{\Delta t}-x_{i}\right)\\
+x_{k} & =\frac{1}{x_{i}x_{j}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These values yield 
+\begin_inset Formula $a_{1},a_{2},a_{3}$
+\end_inset
+
+.
+ Thus, the calculation of the distortion factors has been reduced to a simple
+ evaluation to obtain 
+\begin_inset Formula $m_{\Delta t}$
+\end_inset
+
+, and a polynomial root find (using e.g.
+ Newton's Method).
+ Note that if 
+\begin_inset Formula $\left|m_{\Delta t}-1\right|<\epsilon_{machine}$
+\end_inset
+
+ then the system can be considered to have converged, rendering the polynomial
+ root-finding unnecessary, and saving more time.
+\end_layout
+
+\begin_layout Standard
+Tighter bounds for the region in which 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ lies are given by the roots of the following equations (corresponding to
+ 
+\begin_inset Formula $c=-\infty$
+\end_inset
+
+ and 
+\begin_inset Formula $c=0$
+\end_inset
+
+, respectively):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+2x_{i}+\frac{1}{x_{i}^{2}} & =3m_{\Delta t}\\
+x_{i}+\frac{2}{\sqrt{x_{i}}} & =3m_{\Delta t}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These have solutions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{i} & =\frac{1}{2}\left(\Delta_{+}+\frac{m_{\Delta t}^{2}}{\Delta_{+}}+m_{\Delta t}\right)\\
+x_{i} & =\Delta_{-}+\frac{m_{\Delta t}^{2}}{\Delta_{-}}+2m_{\Delta t}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Delta_{+} & =\sqrt[3]{2\sqrt{1-m_{\Delta t}^{3}}+\left(m_{\Delta t}^{3}-2\right)}\\
+\Delta_{-} & =\sqrt[3]{2\sqrt{1-m_{\Delta t}^{3}}-\left(m_{\Delta t}^{3}-2\right)}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that by considering the real parts of 
+\begin_inset Formula $\Delta_{\pm}$
+\end_inset
+
+, we see that these are equivalent to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{i} & =m_{\Delta t}\left(\cos\left(\frac{2}{3}\cot^{-1}\left(\sqrt{m_{\Delta t}^{3}-1}\right)\right)+\frac{1}{2}\right)\\
+x_{i} & =2m_{\Delta t}\left(\cos\left(\frac{2}{3}\tan^{-1}\left(\sqrt{m_{\Delta t}^{3}-1}\right)\right)+1\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In practice, the second bound is probably not as useful as just setting
+ the upper bound to 
+\begin_inset Formula $x_{1,0}$
+\end_inset
+
+.
+\end_layout
+
 \end_body
 \end_document
