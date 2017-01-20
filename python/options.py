@@ -3,7 +3,7 @@ import numpy as np
 
 """ Domain Parameters """
 
-tf = 0.2                      # Final time of the simulation
+tf = 0.5                      # Final time of the simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
@@ -39,16 +39,18 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'SPLIT-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
+solver = 'ADER-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
 fullODE = 0                 # Whether to use the linearised ODE solver
+wenoHalfStep = 1            # Whether to step forwards the WENO solver by dt/2
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
+
 convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
 altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
 
 N      = 2                  # Method is order N+1
 CFL    = 0.4                # CFL number
-method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
+method = 'osher'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
 
 """ DG Options """

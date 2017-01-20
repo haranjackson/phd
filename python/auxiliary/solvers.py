@@ -7,7 +7,7 @@ from auxiliary.bc import standard_BC
 from gpr.thermo import thermal_stepper
 from split.homogeneous import weno_midstepper
 from split.ode import ode_stepper_fast, ode_stepper_full
-from options import reconstructPrim, fullODE
+from options import reconstructPrim, fullODE, wenoHalfStep
 
 
 def cookoff_stepper(fluid, fluidBC, dt, PAR):
@@ -23,14 +23,15 @@ def aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     else:
         wh = weno(fluidBC)
     t1 = time()
+    print('WENO:', t1-t0)
 
     qh = dg_launcher(pool, wh, dt, PAR, SYS)
     t2 = time()
+    print('DG:  ', t2-t1)
 
     fluid += fv_launcher(pool, qh, dt, PAR, SYS)
-    t3 = time()
+    print('FV:  ', time()-t2)
 
-    print('WENO:', t1-t0, '\nDG:  ', t2-t1, '\nFV:  ', t3-t2)
     return qh
 
 def split_weno_stepper(pool, fluid, dt, PAR, SYS):
@@ -44,7 +45,8 @@ def split_weno_stepper(pool, fluid, dt, PAR, SYS):
 
     fluidBC = standard_BC(fluid)
     wh = weno(fluidBC)
-    weno_midstepper(wh, dt, PAR, SYS)
+    if wenoHalfStep:
+        weno_midstepper(wh, dt, PAR, SYS)
     t3 = time()
 
     fluid += fv_launcher(pool, wh, dt, PAR, SYS, 1)
