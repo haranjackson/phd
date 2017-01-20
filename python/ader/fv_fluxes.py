@@ -30,17 +30,16 @@ def Aint(pL, pR, qL, qR, d, PAR, SYS):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
     """
     ret = zeros(18, dtype=complex128)
-    qJump = qR - qL
+    Δq = qR - qL
     for i in range(N1):
-        q = qL + nodes[i] * qJump
+        q = qL + nodes[i] * Δq
         J = system_conserved(q, d, PAR, SYS)
-        eigs, R = eig(J, overwrite_a=1, check_finite=0)
+        λ, R = eig(J, overwrite_a=1, check_finite=0)
         if DEBUG:
             if (abs(imag(R)) > 1e-15).any():
                 print("////WARNING//// COMPLEX VALUES IN JACOBIAN")
-        L = diag(abs(eigs))
-        b = solve(R, qJump, overwrite_b=1, check_finite=0)
-        ret += weights[i] * dot(R, dot(L, b))
+        b = solve(R, Δq, check_finite=0)
+        ret += weights[i] * dot(R, abs(λ)*b)
     return ret.real
 
 def Smax(pL, pR, qL, qR, d, PAR, SYS):
@@ -100,9 +99,9 @@ def Dos(xL, xR, d, pos, PAR, SYS):
     pL, pR, qL, qR = input_vectors(xL, xR, PAR, SYS)
 
     if pos:
-        ret = - Aint(qL, qR, d, PAR, SYS)
+        ret = - Aint(pL, pR, qL, qR, d, PAR, SYS)
     else:
-        ret = Aint(qL, qR, d, PAR, SYS)
+        ret = Aint(pL, pR, qL, qR, d, PAR, SYS)
 
     flux_average(ret, pL, pR, qL, qR, d, PAR, SYS)
 
