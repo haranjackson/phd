@@ -42,23 +42,24 @@ def split_weno_stepper(pool, fluid, dt, PAR, SYS):
     else:
         ode_stepper_fast(fluid, dt/2, PAR, SYS)
     t2 = time()
+    print('ODE1:',t2-t1)
 
     fluidBC = standard_BC(fluid)
     wh = weno(fluidBC)
     if wenoHalfStep:
         weno_midstepper(wh, dt, PAR, SYS)
     t3 = time()
+    print('WENO:',t3-t2)
 
     fluid += fv_launcher(pool, wh, dt, PAR, SYS, 1)
     t4 = time()
+    print('FV:  ',t4-t3)
 
     if fullODE:
         ode_stepper_full(fluid, dt/2, PAR, SYS)
     else:
         ode_stepper_fast(fluid, dt/2, PAR, SYS)
-    t5 = time()
-
-    print('ODE1:',t2-t1, '\nWENO:',t3-t2, '\nFV:  ',t4-t3, '\nODE2:',t5-t4)
+    print('ODE2:',time()-t4)
 
 def split_dg_stepper(pool, fluid, dt, PAR, SYS):
     t1 = time()

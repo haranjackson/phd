@@ -5,7 +5,6 @@ from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 from auxiliary.funcs import GdevG, gram
 from gpr.matrices.jacobians import dQdP, dPdQ, jacobian_variables
 from gpr.variables.state import sigma, sigma_A, temperature
-from gpr.variables.vectors import primitive
 from gpr.variables.wavespeeds import c_h
 
 
@@ -105,11 +104,10 @@ def Xi2mat(ρ, p, A, T, γ, α2):
     ret[1, 3] = (γ-1) * α2 * T
     return ret
 
-def primitive_eigs(q, PAR, SYS):
+def primitive_eigs(P, PAR, SYS, left=1, right=1):
     """ Returns eigenvalues and set of left and right eigenvectors of the matrix returned by
         system_primitive_reordered
     """
-    P = primitive(q, PAR, SYS)
     ρ = P.ρ; p = P.p; A = P.A; T = P.T; vd = P.v[0]
     γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
 
@@ -133,58 +131,59 @@ def primitive_eigs(q, PAR, SYS):
     Q = solve(I, Q, overwrite_a=1, check_finite=0)
     DQ = dot(D,Q)
 
-    temp = solve(DQ.T, Ξ2.T, overwrite_a=1, overwrite_b=1, check_finite=0).T
-    temp2 = Q_1
-    R[:5, :4] = temp
-    R[:5, 4:8] = temp
-    R[11:15, :4] = temp2
-    R[11:15, 4:8] = -temp2
+    if right:
+        temp = solve(DQ.T, Ξ2.T, overwrite_a=1, overwrite_b=1, check_finite=0).T
+        temp2 = Q_1
+        R[:5, :4] = temp
+        R[:5, 4:8] = temp
+        R[11:15, :4] = temp2
+        R[11:15, 4:8] = -temp2
 
-    temp = solve(D, dot(Q, Ξ1), overwrite_b=1, check_finite=0)
-    temp2 = -solve(D, dot(Q[:,:3], Π2), overwrite_b=1, check_finite=0) / ρ
-    temp3 = -solve(D, dot(Q[:,:3], Π3), overwrite_b=1, check_finite=0) / ρ
-    temp4 = Q
-    L[:4, :5] = temp
-    L[4:8, :5] = temp
-    L[:4, 5:8] = temp2
-    L[4:8, 5:8] = temp2
-    L[:4, 8:11] = temp3
-    L[4:8, 8:11] = temp3
-    L[:4, 11:15] = temp4
-    L[4:8, 11:15] = -temp4
+        b = array([p+pINF, 0, 0]) - σ0
+        Π1A = dot(Π1, A)
+        c = 2 / (solve(Π1A, b, overwrite_a=1, check_finite=0)[0] - 1)
+        R[0, 8] = c * ρ
+        R[1, 8] = c * (p + pINF)
+        R[2:5, 8] = c * solve(Π1, b, overwrite_b=1, check_finite=0)
 
-    b = array([p+pINF, 0, 0]) - σ0
-    Π1A = dot(Π1, A)
-    c = 2 / (solve(Π1A, b, overwrite_a=1, check_finite=0)[0] - 1)
-    R[0, 8] = c * ρ
-    R[1, 8] = c * (p + pINF)
-    R[2:5, 8] = c * solve(Π1, b, overwrite_b=1, check_finite=0)
+        R[2:5, 9:12] = -2 * solve(Π1, Π2)
+        R[2:5, 12:15] = -2 * solve(Π1, Π3)
+        R[5:11, 9:15] = 2 * eye(6)
+        R[15:18, 15:18] = 2 * eye(3)
 
-    temp = solve(A.T, array([1, 0, 0]), overwrite_b=1, check_finite=0)
-    L[8, 0] = -1 / ρ
-    L[8, 2:5] = temp
-    L[8, 5:8] = dot(temp, solve(Π1, Π2, check_finite=0))
-    L[8, 8:11] = dot(temp, solve(Π1, Π3, check_finite=0))
+    if left:
+        temp = solve(D, dot(Q, Ξ1), overwrite_b=1, check_finite=0)
+        temp2 = -solve(D, dot(Q[:,:3], Π2), overwrite_b=1, check_finite=0) / ρ
+        temp3 = -solve(D, dot(Q[:,:3], Π3), overwrite_b=1, check_finite=0) / ρ
+        temp4 = Q
+        L[:4, :5] = temp
+        L[4:8, :5] = temp
+        L[:4, 5:8] = temp2
+        L[4:8, 5:8] = temp2
+        L[:4, 8:11] = temp3
+        L[4:8, 8:11] = temp3
+        L[:4, 11:15] = temp4
+        L[4:8, 11:15] = -temp4
 
-    R[2:5, 9:12] = -2 * solve(Π1, Π2)
-    R[2:5, 12:15] = -2 * solve(Π1, Π3)
-    R[5:11, 9:15] = 2 * eye(6)
-    R[15:18, 15:18] = 2 * eye(3)
+        temp = solve(A.T, array([1, 0, 0]), overwrite_b=1, check_finite=0)
+        L[8, 0] = -1 / ρ
+        L[8, 2:5] = temp
+        L[8, 5:8] = dot(temp, solve(Π1, Π2, check_finite=0))
+        L[8, 8:11] = dot(temp, solve(Π1, Π3, check_finite=0))
 
-    L[9:15, 5:11] = eye(6)
-    L[15:18, 15:18] = eye(3)
+        L[9:15, 5:11] = eye(6)
+        L[15:18, 15:18] = eye(3)
 
     nonDegenList = [vd+sw[0], vd+sw[1], vd+sw[2], vd+sw[3], vd-sw[0], vd-sw[1], vd-sw[2], vd-sw[3]]
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
 
-def conserved_eigs(q, PAR, SYS):
+def conserved_eigs(P, PAR, SYS):
     """ Returns the eigenvalues and left and right eigenvectors of the conserved system.
         NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
               eigenvectors of the primitive system and transforming them into conserved eigenvectors
               without attempting to put them in the standard ordering.
     """
-    Λ, L, R = primitive_eigs(q, PAR, SYS)
-    P = primitive(q, PAR, SYS)
+    Λ, L, R = primitive_eigs(P, PAR, SYS)
     jacVars = jacobian_variables(P, PAR)
     DPDQ = dPdQ(P, jacVars, PAR, SYS)
     DQDP = dQdP(P, PAR, SYS)

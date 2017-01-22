@@ -23,10 +23,9 @@ def check_star_convergence(QL_, QR_, PARL, PARR, SYS):
 
     return amax(abs(σL_-σR_)) < starTOL and abs(qL_-qR_) < starTOL
 
-def riemann_constraints(q, sgn, PAR, SYS):
+def riemann_constraints(P, sgn, PAR, SYS):
 
-    _, Lhat, _ = primitive_eigs(q, PAR, SYS)
-    P = primitive(q, PAR, SYS)
+    _, Lhat, _ = primitive_eigs(P, PAR, SYS)
     ρ = P.ρ; p = P.p; A = P.A
     pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
 
@@ -53,8 +52,8 @@ def star_stepper(QL, QR, dt, PARL, PARR, SYS, SL=zeros(18), SR=zeros(18)):
 
     PL = primitive(QL, PARL, SYS)
     PR = primitive(QR, PARR, SYS)
-    LL, RL = riemann_constraints(QL, -1, PARL, SYS)
-    LR, RR = riemann_constraints(QR, 1, PARR, SYS)
+    LL, RL = riemann_constraints(PL, -1, PARL, SYS)
+    LR, RR = riemann_constraints(PR, 1, PARR, SYS)
 
     ΘL = zeros([4, 4])
     ΘR = zeros([4, 4])

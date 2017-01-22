@@ -20,8 +20,9 @@ def print_stats(count, t, dt, interfaceLocations, SYS):
     print(count+1)
     print('t  =', t)
     print('dt =', dt)
-    print('Interfaces =', interfaceLocations)
     print('M,V,T,R =', SYS.mechanical, SYS.viscous, SYS.thermal, SYS.reactive)
+    if GFM:
+        print('Interfaces =', interfaceLocations)
 
 def record_data(fluids, inds, t, interfaceLocations, saveArrays):
     """ Appends the latest data and timestep to the recording arrays
