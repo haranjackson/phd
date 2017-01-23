@@ -11,6 +11,9 @@ from gpr.variables.vectors import Cvec_to_Pvec
 from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim, paraFV, ncore
 
 
+altInterfaces = 1
+
+
 nodes, _, weights = quad()
 endVals = end_values()
 derivs = derivative_values()
@@ -167,6 +170,7 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
     xEnd = endpoints(xh0)
     xh0 = xh0.reshape([nx+2, ny+2, nz+2] + idx + [18])
 
+    interface_func = lambda ret, xL, xM, xR, d: interface(ret, xL, xM, xR, d, PAR, SYS)
     center_func = lambda xhijk, t, inds: center(xhijk, t, inds, PAR, SYS, homogeneous)
 
     s = zeros([nx, ny, nz, 18])
@@ -175,7 +179,27 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
         for t, x, y, z in product(range(idx[0]),range(idx[1]),range(idx[2]),range(idx[3])):
             s[i, j, k] += weight[t,x,y,z] * center_func(xhijk, t, [x, y, z])
 
-    s -= 0.5 * alternative_interfaces(xEnd, PAR, SYS)
+    if altInterfaces:
+        s -= 0.5 * alternative_interfaces(xEnd, PAR, SYS)
+
+    else:
+        F = zeros([ndim, nx, ny, nz, 18])
+        for i, j, k in product(range(nx), range(ny), range(nz)):
+            xEndM = xEnd[:, :, i+1, j+1, k+1]
+            xEndL = xEnd[:, :, i,   j+1, k+1]
+            xEndR = xEnd[:, :, i+2, j+1, k+1]
+            interface_func(F[0,i,j,k], xEndL, xEndM, xEndR, 0)
+            if ndim > 1:
+                xEndL = xEnd[:, :, i+1, j,   k+1]
+                xEndR = xEnd[:, :, i+1, j+2, k+1]
+                interface_func(F[1,i,j,k], xEndL, xEndM, xEndR, 1)
+                if ndim > 2:
+                    xEndL = xEnd[:, :, i+1, j+1, k]
+                    xEndR = xEnd[:, :, i+1, j+1, k+2]
+                    interface_func(F[2,i,j,k], xEndL, xEndM, xEndR, 2)
+
+        for d in range(ndim):
+            s -= F[d]
 
     return dt/dx * s
 
