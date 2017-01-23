@@ -121,7 +121,7 @@ def plot_sigma(u, i, j, materialParams, SYS, intLocs=[], style='line', x=None, l
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
             P = primitive(u[l, 0, 0], materialParams[k], SYS)
-            y[l] = sigma(P.r, P.A, materialParams[k].cs2)[i, j]
+            y[l] = sigma(P.ρ, P.A, materialParams[k].cs2)[i, j]
     plot1d(y, style, x, label, color, xlab, ' Viscous Stress Component %d,%d' % (i+1, j+1), sci)
 
 def plot_heat_flux(u, i, materialParams, SYS, intLocs=[], style='line', x=None, label=None,

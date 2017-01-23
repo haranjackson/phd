@@ -5,7 +5,7 @@ from scipy.integrate import odeint
 
 from gpr.variables.eos import E_3
 from gpr.variables.vectors import primitive
-from split.distortion import f_A, jac_A, solver_distortion_reduced, solver_approximate_analytic
+from split.distortion import f_A, jac_A, solver_approximate_analytic
 from split.thermal import f_J, jac_J, solver_thermal_analytic_ideal
 
 
