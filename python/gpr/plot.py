@@ -216,3 +216,12 @@ def plot_dg(qh, var, t=0):
 
     plot(x,y)
     plot(x,y,marker='x')
+
+def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
+    cm = colors(3)
+    if x is not None:
+        plot(x,res,color=cm[1],label=reslab,marker='x',linestyle='none',markersize=5)
+        plot(x,ref,color=cm[0],label=reflab,linewidth=1)
+    else:
+        plot(res,color=cm[1],label=reslab,marker='x',linestyle='none',markersize=5)
+        plot(ref,color=cm[0],label=reflab,linewidth=1)

@@ -173,16 +173,16 @@ Split solver vs ADER-WENO
 \end_layout
 
 \begin_layout Itemize
-Analytical results for GPR split solver
+Application of ADER-WENO to Barton's solid model (with Tome)
+\end_layout
+
+\begin_layout Itemize
+HPR-RGFM paper (solve stationarity of interface solver under some conditions)
 \end_layout
 
 \begin_layout Itemize
 Application of ADER-WENO to equations in other areas of Physics, Biology,
  & Economics
-\end_layout
-
-\begin_layout Itemize
-HPR-RGFM paper (solve stationarity of interface solver under some conditions)
 \end_layout
 
 \begin_layout Chapter
