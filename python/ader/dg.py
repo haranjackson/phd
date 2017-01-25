@@ -20,6 +20,9 @@ derivs = derivative_values()
 stiff = stiff
 
 
+idxDer = [ndim] + [N1]*ndim + [1]*(3-ndim)
+
+
 def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
@@ -76,14 +79,14 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
     """
     q = zeros([N1]*(ndim+1) + [18])
-    qj = w
+    qt = w
 
-    for j in range(N1):
-        dt = dtgaps[j]
-        dqdxj = dot(derivs, qj)
+    for t in range(N1):
+        dt = dtgaps[t]
+        dqdxj = dot(derivs, qt)
 
         for i in range(N1):
-            qij = qj[i]
+            qij = qt[i]
             dqdxij = dqdxj[i]
 
             if reconstructPrim:
@@ -105,11 +108,11 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
                         f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj+source_primitive(X,PAR,SYS))
                     else:
                         f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj+source(X,PAR,SYS))
-                q[j,i] = newton_krylov(f, qij, f_tol=TOL)
+                q[t,i] = newton_krylov(f, qij, f_tol=TOL)
             else:
-                q[j,i] = qij - dt/dx * M + dt * Sj
+                q[t,i] = qij - dt/dx * M + dt * Sj
 
-        qj = q[j]
+        qt = q[t]
     return q.reshape([NT, 18])
 
 def failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous):
