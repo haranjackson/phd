@@ -39,8 +39,43 @@ def first_stokes_problem_IC():
 def first_stokes_problem_exact(x, μ, v0=0.1, t=1):
     return v0 * erf(x / (2 * sqrt(μ * t)))
 
-def viscous_shock_IC():
-    CENTER = 1
+def viscous_shock_exact(x, Ms, PAR, center=0):
+    """ Returns the density, pressure, and velocity of the viscous shock (Mach number Ms) at x
+    """
+    x -= center
+    ρ0 = PAR.ρ0
+    p0 = PAR.p0
+    γ = PAR.γ
+    pINF = PAR.pINF
+    μ = PAR.μ
+
+    if Ms==2:
+        l = 0.3
+    elif Ms==3:
+        l = 0.13
+
+    if x > l:
+        x=l
+    elif x < -l:
+        x=-l
+
+    c0 = c_0(ρ0, p0, γ, pINF)
+    a = 2 / (Ms**2 * (γ+1)) + (γ-1)/(γ+1)
+    Re = ρ0 * c0 * Ms / μ
+    c1 = ((1-a)/2)**(1-a)
+    c2 = 3/4 * Re * (Ms**2-1) / (γ*Ms**2)
+
+    f = lambda z: (1-z)/(z-a)**a - c1 * exp(c2*-x)
+
+    vbar = brentq(f, a+1e-16, 1)
+    p = p0 / vbar * (1 + (γ-1)/2 * Ms**2 * (1-vbar**2))
+    ρ = ρ0 / vbar
+    v = Ms * c0 * vbar
+    v = Ms * c0  - v    # Shock travelling into fluid at rest
+
+    return ρ, p, v
+
+def viscous_shock_IC(center=0):
     γ = 1.4
     pINF = 0
     ρ0 = 1
@@ -49,55 +84,14 @@ def viscous_shock_IC():
 
     PAR = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ0, p0=p0, cs=5, α=5, μ=2e-2, Pr=0.75)
 
-    if Ms==2:
-        x0 = 0.07   # Position of center of shock for shock to start at x = 0
-        l = 0.3
-    elif Ms==3:
-        x0 = 0.04   # Position of center of shock for shock to start at x = 0
-        l = 0.13
+    x = arange(-Lx/2, Lx/2, 1/nx)
+    ρ = zeros(nx)
+    p = zeros(nx)
+    v = zeros(nx)
+    for i in range(nx):
+        ρ[i], p[i], v[i] = viscous_shock_exact(x[i], Ms, PAR, center=center)
 
-    c0 = c_0(ρ0, p0, γ, pINF)
-    a = 2 / (Ms**2 * (γ+1)) + (γ-1)/(γ+1)
-
-    Re = ρ0 * c0 * Ms / μ
-    c1 = ((1-a)/2)**(1-a)
-    c2 = 3/4 * Re * (Ms**2-1) / (γ*Ms**2)
-
-    x = around(arange(-l, l, dx), decimals=14)
-    n = x.size
-    vbar = zeros(n)
-    for i in range(n):
-        f = lambda v: (1-v)/(v-a)**a - c1 * exp(c2*-x[i])
-        vbar[i] = brentq(f, a+1e-16, 1)
-
-    p = p0 / vbar * (1 + (γ-1)/2 * Ms**2 * (1-vbar**2))
-    ρ = ρ0 / vbar
-    v = Ms * c0 * vbar
-    v = Ms * c0  - v    # Shock travelling into fluid at rest
     v -= v[0]           # Velocity in shock 0
-
-    if CENTER:
-        rem = int((nx-n)/2)
-        reps = ones(n)
-        reps[0] = rem+1
-        reps[-1] = rem+1
-        v = v.repeat(reps.astype(int64))
-        p = p.repeat(reps.astype(int64))
-        ρ = ρ.repeat(reps.astype(int64))
-    else:
-        x = x + x0
-        p = p[x>=0]
-        ρ = ρ[x>=0]
-        v = v[x>=0]
-        x = x[x>=0]
-
-        n = x.size
-        reps = ones(n)
-        reps[-1] = nx - n + 1
-        v = v.repeat(reps.astype(int64))
-        p = p.repeat(reps.astype(int64))
-        ρ = ρ.repeat(reps.astype(int64))
-        x = concatenate((x, arange(l+x0, 1, dx)))
 
     u = zeros([nx, 1, 1, 18])
     for i in range(nx):
