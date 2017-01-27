@@ -12,18 +12,18 @@ from options import Lx, nx, ny, ndim
 def plot1d(y, style, x, label, color, xlab, ylab, sci=1):
     if x is None:
         if style == 'line':
-            plot(arange(len(y))+0.5, y, label=label, color=color)
+            plot(arange(len(y))+0.5, y, label=label, color=color, linewidth=1)
         elif style == 'scatter':
             scatter(arange(len(y))+0.5, y, label=label, color=color)
         elif style == 'cross':
-            scatter(arange(len(y))+0.5, y, marker='x', label=label, color=color)
+            scatter(arange(len(y))+0.5, y, marker='x', s=10, label=label, color=color, linewidth=1)
     else:
         if style == 'line':
-            plot(x, y, label=label, color=color)
+            plot(x, y, label=label, color=color, linewidth=1)
         elif style == 'scatter':
             scatter(x, y, label=label, color=color)
         elif style == 'cross':
-            scatter(x, y, marker='x', label=label, color=color)
+            scatter(x, y, marker='x', s=10, label=label, color=color, linewidth=1)
         xlim(x[0], x[-1])
 
     if sci:

@@ -58,7 +58,7 @@ def pos(x):
     return max(0,x)
 
 def solver_approximate_analytic(A, dt, PAR):
-    U, s, V = svd(A)
+    U, s, V = svd(A, overwrite_a=1)
     detA3 = prod(s)**(1/3)
     s0 = (s/detA3)**2
     m0 = sum(s0) / 3

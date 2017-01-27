@@ -1,9 +1,9 @@
 from numpy import amax, inf, log, sqrt, sum
 
 
-def convergence_rate(exact1, exact2, results1, results2, n1, n2, L=2):
-    diff1 = results1 - exact1
-    diff2 = results2 - exact2
+def convergence_rate(exact1, exact2, results1, results2, n1, n2, L=2, var=0):
+    diff1 = (results1 - exact1)[:,0,0,var]
+    diff2 = (results2 - exact2)[:,0,0,var]
 
     if L==1:
         ε1 = sum(abs(diff1)) / n1

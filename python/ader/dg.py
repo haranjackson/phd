@@ -27,27 +27,30 @@ def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
     Tq = dot(T, q)
-    Sq = zeros([NT, 18])
+    ret = zeros([NT, 18])
     Fq = zeros([ndim, NT, 18])
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
         P = Cvec_to_Pvec(q[b], PAR, SYS)
         if not homogeneous:
-            source_ref(Sq[b], P, PAR, SYS)
+            source_ref(ret[b], P, PAR, SYS)
         for d in range(ndim):
             flux_ref(Fq[d,b], P, d, PAR, SYS)
             if SYS.viscous:
                 Bdot(Bq[d,b], Tq[d,b], P[2:5], d)
 
-    ret = dx*Sq
-    for d in range(ndim):
-        ret -= Bq[d]
+    if not homogeneous:
+        ret *= dx
+
+    if SYS.viscous:
+        for d in range(ndim):
+            ret -= Bq[d]
 
     ret *= Z
     for d in range(ndim):
         ret -= dot(V[d], Fq[d])
 
-    return dt/dx * ret + Ww
+    return (dt/dx) * ret + Ww
 
 def rhs_primitive(p, Ww, dt, PAR, SYS, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of ph
@@ -86,31 +89,25 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
         dqdxj = dot(derivs, qt)
 
         for i in range(N1):
-            qij = qt[i]
-            dqdxij = dqdxj[i]
+            qi = qt[i]
+            dqdxi = dqdxj[i]
 
             if reconstructPrim:
                 M = zeros(18)
-                Mdot_ref(M, qij, dqdxij, 0, PAR, SYS)
-                Sj = source_primitive(qij, PAR, SYS)
+                Mdot_ref(M, qi, dqdxi, 0, PAR, SYS)
+                Sj = source_primitive(qi, PAR, SYS)
             else:
-                M = dot(system_conserved(qij, 0, PAR, SYS), dqdxij)
-                Sj = source(qij, PAR, SYS)
+                M = dot(system_conserved(qi, 0, PAR, SYS), dqdxi)
+                Sj = source(qi, PAR, SYS)
 
-            if superStiff:
-                if homogeneous:
-                    if reconstructPrim:
-                        f = lambda X: X - qij + dt/dx * M
-                    else:
-                        f = lambda X: X - qij + dt/dx * M
+            if superStiff and not homogeneous:
+                if reconstructPrim:
+                    f = lambda X: X - qi + dt/dx * M - dt/2 * (Sj+source_primitive(X,PAR,SYS))
                 else:
-                    if reconstructPrim:
-                        f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj+source_primitive(X,PAR,SYS))
-                    else:
-                        f = lambda X: X - qij + dt/dx * M - dt/2 * (Sj+source(X,PAR,SYS))
-                q[t,i] = newton_krylov(f, qij, f_tol=TOL)
+                    f = lambda X: X - qi + dt/dx * M - dt/2 * (Sj+source(X,PAR,SYS))
+                q[t,i] = newton_krylov(f, qi, f_tol=TOL)
             else:
-                q[t,i] = qij - dt/dx * M + dt * Sj
+                q[t,i] = qi - dt/dx * M + dt * Sj
 
         qt = q[t]
     return q.reshape([NT, 18])
