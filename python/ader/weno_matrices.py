@@ -39,6 +39,19 @@ def inv_coeff_mats_1():
     ret2 = 1/r3 * array([[1/2, r3-1/2],[-1/2, r3+1/2]])
     return ret1, ret2
 
+def inv_coeff_mats_2():
+    invML = array([[(2-3*sqrt(15))/60, -1/15+sqrt(3/5), (62-9*sqrt(15))/60],
+                  [-1/24, 1/12, 23/24],
+                  [(2+3*sqrt(15))/60, -1/15-sqrt(3/5), (62+9*sqrt(15))/60]])
+    invMC = array([[(2+3*sqrt(15))/60, 14/15, (2-3*sqrt(15))/60],
+                  [-1/24, 13/12, -1/24],
+                  [(2-3*sqrt(15))/60, 14/15, (2+3*sqrt(15))/60]])
+    invMR = array([[(62+9*sqrt(15))/60, -1/15-sqrt(3/5), (2+3*sqrt(15))/60],
+                  [23/24, 1/12, -1/24],
+                  [(62-9*sqrt(15))/60, -1/15+sqrt(3/5), (2-3*sqrt(15))/60]])
+
+    return invML, invMC, invMR
+
 def oscillation_indicator():
     """ Generate the oscillation indicator matrix
     """

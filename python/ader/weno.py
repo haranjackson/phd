@@ -7,14 +7,19 @@ from scipy.linalg import solve
 
 from options import rc, λc, λs, eps, ndim, N, N1
 from ader.basis import mid_values, end_values, derivative_end_values
-from ader.weno_matrices import coefficient_matrices, inv_coeff_mats_1, oscillation_indicator
+from ader.weno_matrices import coefficient_matrices, oscillation_indicator
+from ader.weno_matrices import inv_coeff_mats_1, inv_coeff_mats_2
 from gpr.variables.vectors import Cvec_to_Pvec
 
 
 Mc = coefficient_matrices()
 McInv1 = inv_coeff_mats_1()
+McInv2L, McInv2C, McInv2R = inv_coeff_mats_2()
 Σ = oscillation_indicator()
+
 midvals = mid_values()
+floorHalfN = int(floor(N/2))
+ceilHalfN = int(ceil(N/2))
 
 
 if N%2:
@@ -59,12 +64,28 @@ def coeffs1(uList):
         numerator += multiply(w, o)
     return numerator / oSum
 
+def coeffs2(u1):
+    """ Calculate coefficients of basis polynomials and weights for N=2
+        NOTE STENCILS ARE IN DIFFERENT ORDER TO OTHER N
+    """
+    wL = dot(McInv2L, u1[0:3])
+    wC = dot(McInv2C, u1[1:4])
+    wR = dot(McInv2R, u1[2:5])
+    ΣwL = dot(Σ, wL)
+    ΣwC = dot(Σ, wC)
+    ΣwR = dot(Σ, wR)
+    σL = einsum('ki,ki->i', wL, ΣwL)
+    σC = einsum('ki,ki->i', wC, ΣwC)
+    σR = einsum('ki,ki->i', wR, ΣwR)
+    oL = λs / (abs(σL) + eps)**rc
+    oC = λc / (abs(σC) + eps)**rc
+    oR = λs / (abs(σR) + eps)**rc
+    return (multiply(wL,oL) + multiply(wC,oC) + multiply(wR,oR)) / (oL+oC+oR)
+
 def weno(u):
     """ Find reconstruction coefficients of u to order N+1
     """
     nx, ny, nz = u.shape[:3]
-    floorHalfN = int(floor(N/2))
-    ceilHalfN = int(ceil(N/2))
 
     Wx = zeros([nx, ny, nz, N1, 18])
     tempu = extend(u, N, 0)
@@ -74,6 +95,9 @@ def weno(u):
             u1 = tempu[ii : ii+2, j, k]
             u2 = tempu[ii-1 : ii+1, j, k]
             Wx[i, j, k] = coeffs1([u1, u2])
+        elif N==2:
+            u1 = tempu[ii-2 : ii+3, j, k]
+            Wx[i, j, k] = coeffs2(u1)
         elif nStencils==3:
             u1 = tempu[ii-floorHalfN : ii+floorHalfN+1, j, k]
             u2 = tempu[ii-N : ii+1, j, k]
@@ -97,6 +121,9 @@ def weno(u):
                 w1 = tempWx[i, jj : jj+2, k, a]
                 w2 = tempWx[i, jj-1 : jj+1, k, a]
                 Wxy[i, j, k, a] = coeffs1([w1, w2])
+            elif N==2:
+                w1 = tempWx[i, jj-2 : jj+3, k, a]
+                Wxy[i, j, k, a] = coeffs(w1)
             elif nStencils==3:
                 w1 = tempWx[i, jj-floorHalfN : jj+floorHalfN+1, k, a]
                 w2 = tempWx[i, jj-N : jj+1, k, a]
@@ -120,6 +147,9 @@ def weno(u):
                 w1 = tempWxy[i, j, kk : kk+2, a, b]
                 w2 = tempWxy[i, j, kk-1 : kk+1, a, b]
                 Wxyz[i, j, k, a, b] = coeffs1([w1, w2])
+            elif N==2:
+                w1 = tempWxy[i, j, kk-2 : kk+3, a, b]
+                Wxyz[i, j, k, a, b] = coeffs2(w1)
             elif nStencils==3:
                 w1 = tempWxy[i, j, kk-floorHalfN : kk+floorHalfN+1, a, b]
                 w2 = tempWxy[i, j, kk-N : kk+1, a, b]
