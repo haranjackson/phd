@@ -3,7 +3,7 @@ import numpy as np
 
 """ Domain Parameters """
 
-tf = 0.5                      # Final time of the simulation
+tf = 1                      # Final time of the simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
@@ -39,25 +39,26 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'ADER-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
-fullODE = 0                 # Whether to use the linearised ODE solver
+solver = 'SPLIT-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
+convertTemp   = 1           # Whether to use constant-pressure approximation in cookoff
+altThermSolve = 1           # Whether to use operator splitting solver for the thermal subsystem
+
+fullODE = 0                 # Whether to use the numerical ODE solver
 wenoHalfStep = 1            # Whether to step forwards the WENO solver by dt/2
+StrangSplit  = 1            # Whether to use a Strang splitting in Split-WENO
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 
-convertTemp     = 1         # Whether to use constant-pressure approximation in cookoff
-altThermSolve   = 1         # Whether to use operator splitting solver for the thermal subsystem
-
 N      = 2                  # Method is order N+1
 CFL    = 0.4                # CFL number
-method = 'osher'          # Method used for intercell fluxes ('osher' or 'rusanov')
+method = 'rusanov'          # Method used for intercell fluxes ('osher' or 'rusanov')
 perronFrob = 0              # Whether to use the Perron-Frobenius approximation to the max eigenval
 
 """ DG Options """
 
-hidalgo    = 0              # Whether to use the Hidalgo initial guess
-stiff      = 0              # Whether source terms are stiff (Newton-Krylov solver is used)
-superStiff = 0              # Whether to use Newton-Krylov to compute the Hidalgo initial guess
+hidalgo    = 1              # Whether to use the Hidalgo initial guess
+stiff      = 1              # Whether source terms are stiff (Newton-Krylov solver is used)
+superStiff = 1              # Whether to use Newton-Krylov to compute the Hidalgo initial guess
 failLim    = 180            # Maximum number of non-stiff solves that are allowed to fail
 TOL        = 6e-6           # Tolerance to which the Galerkin Predictor must converge
 MAX_ITER   = 50             # Maximum number of non-stiff iterations attempted in DG

@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import arctan, argsort, array, dot, cos, einsum, exp, isnan, log, prod, sort, sqrt, zeros
+from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
