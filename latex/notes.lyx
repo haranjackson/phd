@@ -190,6 +190,72 @@ Faster Solvers
 \end_layout
 
 \begin_layout Section
+Improved Multidimensional WENO Oscillation Indicator
+\end_layout
+
+\begin_layout Standard
+Given 2D reconstruction on stencil 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+w_{j}\left(x,y\right)=\tilde{w}_{pq}\psi_{p}\left(x\right)\psi_{q}\left(y\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+the oscillation indicator for this reconstruction is 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Levy1998"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+o_{j} & =\sum_{\left|\alpha\right|=1}^{N}\int_{C_{i}}\left(D^{\alpha}w_{j}\right)^{2}d\boldsymbol{x}\\
+ & =\int_{0}^{1}\left\{ \left(\frac{\partial w_{j}}{\partial x}\right)^{2}+\left(\frac{\partial w_{j}}{\partial y}\right)^{2}+\left(\frac{\partial^{2}w_{j}}{\partial x^{2}}\right)^{2}+\left(\frac{\partial^{2}w_{j}}{\partial y^{2}}\right)^{2}+\left(\frac{\partial^{2}w_{j}}{\partial x\partial y}\right)^{2}\right\} d\boldsymbol{\chi}\nonumber \\
+ & =\int_{0}^{1}\left\{ \left(\tilde{w}_{pq}\psi_{p}^{'}\left(x\right)\psi_{q}\left(y\right)\right)^{2}+\left(\tilde{w}_{pq}\psi_{p}\left(x\right)\psi_{q}^{'}\left(y\right)\right)^{2}+\left(\tilde{w}_{pq}\psi_{p}^{''}\left(x\right)\psi_{q}\left(y\right)\right)^{2}+\left(\tilde{w}_{pq}\psi_{p}\left(x\right)\psi_{q}^{'}\left(y\right)\right)^{2}+\left(\tilde{w}_{pq}\psi_{p}^{'}\left(x\right)\psi_{q}^{'}\left(y\right)\right)^{2}\right\} d\boldsymbol{\chi}\nonumber \\
+ & =\int_{0}^{1}\left\{ \tilde{w}_{p_{1}q_{1}}\psi_{p_{1}}^{'}\left(x\right)\psi_{q_{1}}\left(y\right)\tilde{w}_{p_{2}q_{2}}\psi_{p_{2}}^{'}\left(x\right)\psi_{q_{2}}\left(y\right)+\cdots\right\} d\boldsymbol{\chi}\nonumber \\
+ & =\tilde{w}_{p_{1}q_{1}}\tilde{w}_{p_{2}q_{2}}\int_{C_{i}}\left\{ \psi_{p_{1}}^{'}\left(x\right)\psi_{q_{1}}\left(y\right)\psi_{p_{2}}^{'}\left(x\right)\psi_{q_{2}}\left(y\right)+\psi_{p_{1}}\left(x\right)\psi_{q_{1}}\left(y\right)\psi_{p_{2}}\left(x\right)\psi_{q_{2}}\left(y\right)+\cdots\right\} d\boldsymbol{\chi}\nonumber \\
+ & =\tilde{w}_{p_{1}q_{1}}\tilde{w}_{p_{2}q_{2}}\Sigma_{p_{1}p_{2}q_{1}q_{2}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma & =\Sigma^{\left(1\right)}\otimes\Sigma^{\left(0\right)}+\Sigma^{\left(0\right)}\otimes\Sigma^{\left(1\right)}+\Sigma^{\left(2\right)}\otimes\Sigma^{\left(0\right)}+\Sigma^{\left(0\right)}\otimes\Sigma^{\left(2\right)}+\Sigma^{\left(1\right)}\otimes\Sigma^{\left(1\right)}\\
+\Sigma_{ij}^{\left(\beta\right)} & =\int_{0}^{1}\psi_{i}^{\left(\beta\right)}\psi_{j}^{\left(\beta\right)}dx
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Fast WENO Oscillation Indicator Calculation
 \end_layout
 
