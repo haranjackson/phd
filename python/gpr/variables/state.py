@@ -4,10 +4,10 @@ from numba import jit
 from numpy import dot
 
 from auxiliary.funcs import AdevG, gram
-from gpr.variables.eos import E_1r, E_2A, E_2J, E_3, E_A
+from gpr.variables.eos import E_1r, E_2A, E_2Avec, E_2J, E_3, E_A
 
 
-def pressure(E, v, A, ρ, J, λ, PAR, SYS):
+def pressure(E, v, A, ρ, J, λ, PAR, SYS, vecA=0):
     """ Returns the pressure, given the total energy, velocity, distortion matrix, and density.
         NOTE: Only valid for EOS used for fluids by Dumbser et al.
     """
@@ -15,7 +15,10 @@ def pressure(E, v, A, ρ, J, λ, PAR, SYS):
     γ = PAR.γ
 
     if SYS.viscous:
-        E1 -= E_2A(A, PAR.cs2)
+        if vecA:
+            E1 -= E_2Avec(A, PAR.cs2)
+        else:
+            E1 -= E_2A(A, PAR.cs2)
 
     if SYS.thermal:
         E1 -= E_2J(J, PAR.α2)

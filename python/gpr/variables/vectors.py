@@ -69,23 +69,29 @@ def Pvec_to_Cvec(P, PAR, SYS):
     Q[14:18] *= ρ
     return Q
 
-def Cvec_to_Pvec(Q, PAR, SYS):
+def Cvec_to_Pvec(Q, PAR, SYS, inplace=0):
     """ Returns the vector of primitive variables in standard ordering, given the vector of
         conserved variables.
     """
-    ρ = Q[0]
-    E = Q[1] / Q[0]
-    v = Q[2:5] / ρ
-    A = Q[5:14].reshape([3,3])
-    J = Q[14:17] / ρ
-    λ = Q[17] / ρ
-    p = pressure(E, v, A, ρ, J, λ, PAR, SYS)
+    if inplace:
+        ρ = Q[0]
+        Q[2:5] /= ρ
+        Q[14:18] /= ρ
+        Q[1] = pressure(Q[1], Q[2:5], Q[5:14], ρ, Q[14:17], Q[18], PAR, SYS, vecA=1)
+    else:
+        ρ = Q[0]
+        E = Q[1] / ρ
+        v = Q[2:5] / ρ
+        A = Q[5:14]
+        J = Q[14:17] / ρ
+        λ = Q[17] / ρ
+        p = pressure(E, v, A, ρ, J, λ, PAR, SYS, vecA=1)
 
-    ret = zeros(18)
-    ret[0] = ρ
-    ret[1] = p
-    ret[2:5] = v
-    ret[5:14] = Q[5:14]
-    ret[14:17] = J
-    ret[17] = λ
-    return ret
+        ret = zeros(18)
+        ret[0] = ρ
+        ret[1] = p
+        ret[2:5] = v
+        ret[5:14] = A
+        ret[14:17] = J
+        ret[17] = λ
+        return ret

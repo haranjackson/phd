@@ -3,7 +3,7 @@ from numpy import dot, zeros
 
 from auxiliary.funcs import dot3
 from gpr.matrices.jacobians import jacobian_variables, dFdP, dPdQ
-from gpr.variables.eos import E_A, E_J, total_energy
+from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2, arrhenius_reaction_rate
 from gpr.variables.material_functions import discrete_ignition_temperature_reaction_rate
 from gpr.variables.vectors import Cvec_to_Pvec, primitive
@@ -11,7 +11,7 @@ from gpr.variables.state import sigma, temperature
 from options import reactionType
 
 
-def flux_ref(ret, P, d, PAR, SYS):
+def flux_ref(ret, P, E, d, PAR, SYS):
 
     ρ = P[0]
     p = P[1]
@@ -20,7 +20,6 @@ def flux_ref(ret, P, d, PAR, SYS):
     J = P[14:17]
     λ = P[17]
 
-    E = total_energy(ρ, p, v, A, J, λ, PAR, SYS)
     ρvd = ρ * v[d]
 
     ret[1] += ρvd * E + p * v[d]
@@ -90,8 +89,9 @@ def flux(Q, d, PAR, SYS):
     """ Returns the flux matrix in the kth direction
     """
     P = Cvec_to_Pvec(Q, PAR, SYS)
+    E = Q[1] / Q[0]
     ret = zeros(18)
-    flux_ref(ret, P, d, PAR, SYS)
+    flux_ref(ret, P, E, d, PAR, SYS)
     return ret
 
 def block(v, d, viscous):

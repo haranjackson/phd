@@ -51,7 +51,7 @@ def interfaces(xEnd, PAR, SYS):
     BEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
 
     inpt_lam = lambda xL, xR: input_vectors(xL, xR, PAR, SYS)
-    flux_lam = lambda ftemp, p, d: flux_ref(ftemp, p, d, PAR, SYS)
+    flux_lam = lambda ftemp, p, E, d: flux_ref(ftemp, p, E, d, PAR, SYS)
     s_lam = lambda pL, pR, qL, qR, d: s_func(pL, pR, qL, qR, d, PAR, SYS)
 
     for d in range(ndim):
@@ -69,11 +69,14 @@ def interfaces(xEnd, PAR, SYS):
             BEndTemp = zeros(18)
             for t, x1, x2 in product(range(idxEnd[0]), range(idxEnd[1]), range(idxEnd[2])):
                 pL, pR, qL, qR = inpt_lam(xL0[t, x1, x2], xR0[t, x1, x2])
+                EL = qL[1] / qL[0]
+                ER = qR[1] / qR[0]
+
                 ftemp = zeros(18)
                 weight0 = weightEnd[t, x1, x2]
 
-                flux_lam(ftemp, pL, d)
-                flux_lam(ftemp, pR, d)
+                flux_lam(ftemp, pL, EL, d)
+                flux_lam(ftemp, pR, ER, d)
                 ftemp -= s_lam(pL, pR, qL, qR, d)
                 fEndTemp += weight0 * ftemp
                 BEndTemp += weight0 * Bint(qL, qR, d, SYS.viscous)

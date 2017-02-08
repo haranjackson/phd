@@ -31,11 +31,14 @@ def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
     Fq = zeros([ndim, NT, 18])
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
-        P = Cvec_to_Pvec(q[b], PAR, SYS)
+        qb = q[b]
+        P = Cvec_to_Pvec(qb, PAR, SYS)
+        E = qb[1] / qb[0]
+
         if not homogeneous:
             source_ref(ret[b], P, PAR, SYS)
         for d in range(ndim):
-            flux_ref(Fq[d,b], P, d, PAR, SYS)
+            flux_ref(Fq[d,b], P, E, d, PAR, SYS)
             if SYS.viscous:
                 Bdot(Bq[d,b], Tq[d,b], P[2:5], d)
 
