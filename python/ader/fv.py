@@ -3,7 +3,7 @@ from itertools import product
 from joblib import delayed
 from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
-from ader.fv_fluxes import Dos, Drus, input_vectors, Bint, Aint, Smax
+from ader.fv_fluxes import input_vectors, Bint, Aint, Smax
 from ader.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot
@@ -16,10 +16,8 @@ endVals = end_values()
 derivs = derivative_values()
 
 if method == 'osher':
-    D = Dos
     s_func = Aint
 elif method == 'rusanov':
-    D = Drus
     s_func = Smax
 
 weightList = [weights if timeDim else array([1])] + [weights]*ndim + [array([1])]*(3-ndim)
@@ -47,7 +45,7 @@ def endpoints(xh):
             xEnd[d] = temp
     return xEnd
 
-def alternative_interfaces(xEnd, PAR, SYS):
+def interfaces(xEnd, PAR, SYS):
     nx, ny, nz = xEnd.shape[2:5]
     fEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
     BEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
@@ -99,16 +97,6 @@ def alternative_interfaces(xEnd, PAR, SYS):
         ret += BEnd[2, 1:, 1:, :-1]
         ret += BEnd[2, 1:, 1:,  1:]
     return ret
-
-def interface(ret, xEndL, xEndM, xEndR, d, PAR, SYS):
-    """ Returns flux term and jump term in dth direction at the interface between states xhL, xhR
-    """
-    for t, x1, x2 in product(range(idxEnd[0]), range(idxEnd[1]), range(idxEnd[2])):
-        xL1 = xEndL[d, 1, t, x1, x2]
-        xM0 = xEndM[d, 0, t, x1, x2]
-        xM1 = xEndM[d, 1, t, x1, x2]
-        xR0 = xEndR[d, 0, t, x1, x2]
-        ret += 0.5 * weightEnd[t,x1,x2] * (D(xM1,xR0,d,1,PAR,SYS) + D(xM0,xL1,d,0,PAR,SYS))
 
 def center(xhijk, t, inds, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
@@ -175,7 +163,7 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
         for t, x, y, z in product(range(idx[0]),range(idx[1]),range(idx[2]),range(idx[3])):
             s[i, j, k] += weight[t,x,y,z] * center_func(xhijk, t, [x, y, z])
 
-    s -= 0.5 * alternative_interfaces(xEnd, PAR, SYS)
+    s -= 0.5 * interfaces(xEnd, PAR, SYS)
 
     return dt/dx * s
 

@@ -45,7 +45,7 @@ altThermSolve = 1           # Whether to use operator splitting solver for the t
 
 fullODE = 0                 # Whether to use the numerical ODE solver
 wenoHalfStep = 1            # Whether to step forwards the WENO solver by dt/2
-StrangSplit  = 1            # Whether to use a Strang splitting in Split-WENO
+StrangSplit  = 0            # Whether to use a Strang splitting in Split-WENO
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 
@@ -79,8 +79,6 @@ ncore  = 4                  # Number of cores to use if running in parallel
 """ Debug Options """
 
 NO_WARNING = 1      # Turn off all SciPy/NumPy warnings. Potentially dangerous. Overridden by DEBUG.
-DEBUG      = 0      # In debug mode, warnings are given if complex values are encountered, and
-                    # exceptions are raised if non-numeric values are encountered
 
 
 """ Derived Values """
@@ -112,7 +110,5 @@ if GFM:
     reducedDomain = 0
 
 from numpy import seterr
-if DEBUG:
-    seterr(all='raise')
-elif NO_WARNING:
+if NO_WARNING:
     seterr(all='ignore')
