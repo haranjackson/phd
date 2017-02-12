@@ -190,6 +190,162 @@ Faster Solvers
 \end_layout
 
 \begin_layout Section
+Fast Calculation of Eigenvalues
+\end_layout
+
+\begin_layout Standard
+The eigenvalues of the GPR system in the 
+\begin_inset Formula $x$
+\end_inset
+
+ direction are 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+ and the roots of 
+\begin_inset Formula $\left|\left(v_{1}-\lambda\right)^{2}I-\Xi_{1}\Xi_{2}\right|=0$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $\lambda_{i}=v_{1}\pm\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ where the 
+\begin_inset Formula $\tilde{\lambda_{i}}$
+\end_inset
+
+ are the eigenvalues of the following matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi=\Xi_{1}\Xi_{2}=\left(\begin{array}{cccc}
+\frac{\gamma p}{\rho}+\Omega_{11}^{1} & \Omega_{12}^{1} & \Omega_{13}^{1} & \frac{\left(\gamma-1\right)\alpha^{2}T}{\rho}\\
+\Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1} & 0\\
+\Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1} & 0\\
+\frac{\left(\left(\gamma-1\right)p-p_{\infty}\right)T}{\rho\left(p+p_{\infty}\right)} & 0 & 0 & \frac{\left(\gamma-1\right)\alpha^{2}T^{2}}{\rho\left(p+p_{\infty}\right)}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Omega^{d} & =c_{s}^{2}\left(G\dev\left(G\right)+E^{d}G\dev\left(G\right)+G\dev\left(G\right)E^{d}+G_{dd}G+\frac{1}{3}g^{d}\right)\label{eq:Acoustic-Tensor}\\
+g^{d} & =G_{d}G_{d}^{T}\\
+E^{d} & =\delta_{id}\delta_{jd}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For an ideal gas, with a rescaling that gives 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Xi & =\left(\begin{array}{cccc}
+\frac{\gamma p}{\rho}+\Omega_{11}^{1} & \Omega_{12}^{1} & \Omega_{13}^{1} & \frac{\left(\gamma-1\right)T}{\rho}\\
+\Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1} & 0\\
+\Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1} & 0\\
+\frac{\left(\gamma-1\right)T}{\rho} & 0 & 0 & \frac{\left(\gamma-1\right)T^{2}}{\rho p}
+\end{array}\right)\\
+ & =\left(\begin{array}{cccc}
+\Omega_{11}^{1} & \Omega_{12}^{1} & \Omega_{13}^{1} & 0\\
+\Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1} & 0\\
+\Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1} & 0\\
+0 & 0 & 0 & \frac{\left(\gamma-1\right)T^{2}}{\gamma\rho p}
+\end{array}\right)+\left(\begin{array}{c}
+\sqrt{\frac{\gamma p}{\rho}}\\
+0\\
+0\\
+\frac{\left(\gamma-1\right)T}{\sqrt{\gamma\rho p}}
+\end{array}\right)\left(\begin{array}{cccc}
+\sqrt{\frac{\gamma p}{\rho}} & 0 & 0 & \frac{\left(\gamma-1\right)T}{\sqrt{\gamma\rho p}}\end{array}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a symmetric rank-one update of a symmetric matrix.
+ The eigenvalues of the un-updated matrix are 
+\begin_inset Formula $\frac{\left(\gamma-1\right)T^{2}}{\gamma\rho p}$
+\end_inset
+
+ and the eigenvalues of 
+\begin_inset Formula $\Omega$
+\end_inset
+
+.
+ The bounds found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cheng2014"
+
+\end_inset
+
+ may be of use.
+ The eigenvalues of 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ can be found analytically, as given on the Wikipedia page.
+\end_layout
+
+\begin_layout Section
 Improved Multidimensional WENO Oscillation Indicator
 \end_layout
 
