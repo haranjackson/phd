@@ -37,6 +37,6 @@ def test():
     for i in range(n):
         dt = i*5*1e-9/n
         A[i] = ode_stepper(A0,dt)
-        U[i], Σ[i], V[i] = svd(Amats[i])
+        U[i], Σ[i], V[i] = svd(A[i])
 
     return A, U, Σ, V
