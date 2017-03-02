@@ -2,6 +2,7 @@ from numpy import array, eye
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
+from auxiliary.funcs import dev
 from gpr.variables.eos import E_A
 
 
@@ -11,9 +12,9 @@ from gpr.variables.eos import E_A
 
 τ = 1.45e-9
 
-tScale = 10000
-includeSources = 0
-n = 500
+tScale = 1
+includeSources = 1
+n = 50
 
 
 def f(y, t):
@@ -37,6 +38,7 @@ def test():
         dt = i*5e-9/n * tScale
         A[i] = ode_stepper(eye(3),dt)
         U[i], Σ[i], V[i] = svd(A[i])
+        V[i] = V[i].T
 
     return A, U, Σ, V
 
@@ -47,7 +49,7 @@ def sgn(x):
         return -1
 
 def lim(x):
-    TOL = 1e-8
+    TOL = 1e-10
     if abs(x) < TOL:
         return sgn(x) * TOL
     else:
@@ -72,6 +74,11 @@ def f2(y, t):
     ret[3:6]  = b3*v2 - b2*v3
     ret[6:9]  = b1*v3 - b3*v1
     ret[9:12] = b2*v1 - b1*v2
+
+    if includeSources:
+        Λ = diag(y[:3])
+        ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
+
     return ret
 
 def ode_stepper2(A0, dt):
@@ -103,3 +110,12 @@ def test3():
         l[i],V[i] = ode_stepper2(eye(3),dt)
 
     return l, V
+
+def plot_eigenvec(a, Vold, Vnew):
+    for i in range(3):
+        if i==0:
+            plot(x,Vold[:,i,a],label='Original ODEs',color=cm[0])
+            plot(x,Vnew[:,i,a],label='Eigendecomposition ODEs',marker='x',color=cm[2],linestyle='None')
+        else:
+            plot(x,Vold[:,i,a],color=cm[0])
+            plot(x,Vnew[:,i,a],marker='x',color=cm[2],linestyle='None')
