@@ -1,4 +1,4 @@
-from numpy import array, eye
+from numpy import array, eye, mod, outer
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -80,6 +80,45 @@ def f2(y, t):
         ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
 
     return ret
+
+def rhs1(λ,V):
+    ret = zeros(9)
+    λ1 = λ[0]
+    λ2 = λ[1]
+    λ3 = λ[2]
+    v1 = V[:,0]
+    v2 = V[:,1]
+    v3 = V[:,2]
+
+    b1 = -dot(v3, dot(λ3*ε + λ2*ε.T, v2)) / lim(λ2-λ3)
+    b2 = -dot(v1, dot(λ1*ε + λ3*ε.T, v3)) / lim(λ3-λ1)
+    b3 = -dot(v2, dot(λ2*ε + λ1*ε.T, v1)) / lim(λ1-λ2)
+
+    ret[:3]  = b3*v2 - b2*v3
+    ret[3:6] = b1*v3 - b3*v1
+    ret[6:9] = b2*v1 - b1*v2
+    return ret
+
+def mat(λ,V,i,a):
+    j = mod(i+1,3)
+    k = mod(i+2,3)
+    Vi = V[:,i]
+    Vj = V[:,j]
+    Vk = V[:,k]
+    λi = λ[i]
+    λj = λ[j]
+    λk = λ[k]
+    Mki = λk * Vi[a] * outer(Vk,Vk) + λi * Vk[a] * outer(Vk,Vi)
+    Mij = λi * Vj[a] * outer(Vj,Vi) + λj * Vi[a] * outer(Vj,Vj)
+    return 1/(λk-λi) * Mki - 1/(λi-λj) * Mij
+
+def rhs2(λ,V):
+    ret = zeros(9)
+    for i in range(3):
+        for a in range(3):
+            ret[3*i:3*(i+1)] += dot(mat(λ,V,i,a), ε[:,a])
+    return ret
+
 
 def ode_stepper2(A0, dt):
     t = array([0, dt])
