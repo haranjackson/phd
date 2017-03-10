@@ -1,4 +1,4 @@
-from numpy import array, eye, mod, outer
+from numpy import array, cos, diag, eye, mod, outer, sin, tan
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -49,7 +49,7 @@ def sgn(x):
         return -1
 
 def lim(x):
-    TOL = 1e-10
+    TOL = 1e-11
     if abs(x) < TOL:
         return sgn(x) * TOL
     else:
@@ -147,7 +147,6 @@ def test3():
     for i in range(n):
         dt = i*5e-9/n * tScale
         l[i],V[i] = ode_stepper2(eye(3),dt)
-
     return l, V
 
 def plot_eigenvec(a, Vold, Vnew):
@@ -158,3 +157,67 @@ def plot_eigenvec(a, Vold, Vnew):
         else:
             plot(x,Vold[:,i,a],color=cm[0])
             plot(x,Vnew[:,i,a],marker='x',color=cm[2],linestyle='None')
+
+def rotmat(x,y,z):
+    Rx = array([[1,0,0],[0,cos(x),-sin(x)],[0,sin(x),cos(x)]])
+    Ry = array([[cos(y),0,sin(y)],[0,1,0],[-sin(y),0,cos(y)]])
+    Rz = array([[cos(z),-sin(z),0],[sin(z),cos(z),0],[0,0,1]])
+    return dot(Rz,dot(Ry,Rx))
+
+def sec(x):
+    return 1/lim(cos(x))
+
+def Minv(x,y,z,λ1,λ2,λ3):
+    return array([[cos(x)*tan(y)/lim(λ1-λ2), -sin(x)*tan(y)/lim(λ1-λ3), 1/lim(λ2-λ3)],
+                  [-sin(x)/lim(λ1-λ2),       -cos(x)/lim(λ1-λ3),        0],
+                  [cos(x)*sec(y)/lim(λ1-λ2), -sec(y)*sin(x)/lim(λ1-λ3), 0]])
+
+def b(x,y,z,λ1,λ2,λ3):
+    R = rotmat(x,y,z)
+    Λ = diag([λ1,λ2,λ3])
+    RHS = -(dot(Λ,dot(R.T,dot(ε,R))) + dot(dot(R.T,dot(ε.T,R)),Λ))
+    return array([RHS[0,1], RHS[0,2], RHS[1,2]])
+
+def f_angles(y0, t):
+    λ1 = y0[0]
+    λ2 = y0[1]
+    λ3 = y0[2]
+    x = y0[3]
+    y = y0[4]
+    z = y0[5]
+
+    V = rotmat(x,y,z)
+    v1 = V[:,0]
+    v2 = V[:,1]
+    v3 = V[:,2]
+
+    ret = zeros(6)
+    ret[0] = -2 * dot(v1,dot(ε,v1))
+    ret[1] = -2 * dot(v2,dot(ε,v2))
+    ret[2] = -2 * dot(v3,dot(ε,v3))
+    ret[3:] = dot(Minv(x,y,z,λ1,λ2,λ3), b(x,y,z,λ1,λ2,λ3))
+
+    if includeSources:
+        Λ = diag(y0[:3])
+        ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
+
+    return ret
+
+def ode_stepper_angles(dt):
+    t = array([0, dt])
+    y0 = zeros(6)
+    y0[:3] = ones(3)
+    y0[3:] = zeros(3)
+    ret = odeint(f_angles, y0, t, atol=1e-6,rtol=1e-6)[1]
+    return ret[:3], ret[3:]
+
+def test_angles():
+    l = zeros([n,3])
+    θ = zeros([n,3])
+    for i in range(n):
+        dt = i*5e-9/n * tScale
+        l[i],θ[i] = ode_stepper_angles(dt)
+    return l, θ
+
+def angles2vecs(θ):
+    return array([rotmat(θ[i,0],θ[i,1],θ[i,2]) for i in range(len(θ))])
