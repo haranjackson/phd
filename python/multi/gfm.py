@@ -2,7 +2,7 @@ from numpy import concatenate, int64, remainder, zeros
 from scipy.linalg import det
 
 from solvers.basis import basis_polys
-from auxiliary.bc import temperature_fix_density
+from auxiliary.boundaries import temperature_fix_density
 from gpr.variables.state import density, entropy, temperature
 from gpr.variables.vectors import conserved, primitive
 from multi.approximate_riemann import star_states

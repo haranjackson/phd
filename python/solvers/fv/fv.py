@@ -3,7 +3,7 @@ from itertools import product
 from joblib import delayed
 from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
-from solvers.fv.fv_fluxes import input_vectors, Bint, Aint, Smax
+from solvers.fv.fluxes import input_vectors, Bint, Aint, Smax
 from solvers.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot

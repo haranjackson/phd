@@ -3,7 +3,7 @@ from time import time, sleep
 from joblib import Parallel
 from numpy import array, zeros
 
-from auxiliary.bc import standard_BC, periodic_BC
+from auxiliary.boundaries import standard_BC, periodic_BC
 from tests.d1.cookoff import CKR_BC, fixed_wall_temp_BC
 from tests.d1.cookoff import chapman_jouguet_IC, CKR_IC
 from tests.d1.diffusion import barrier_IC, barrier_BC

@@ -3,7 +3,7 @@ from time import time
 from solvers.fv.fv import fv_launcher
 from solvers.dg.dg import dg_launcher
 from solvers.weno.weno import weno, weno_primitive
-from auxiliary.bc import standard_BC
+from auxiliary.boundaries import standard_BC
 from gpr.thermo import thermal_stepper
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_stepper_fast, ode_stepper_full
