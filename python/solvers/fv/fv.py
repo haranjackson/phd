@@ -3,8 +3,8 @@ from itertools import product
 from joblib import delayed
 from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
-from ader.fv_fluxes import input_vectors, Bint, Aint, Smax
-from ader.basis import quad, end_values, derivative_values
+from solvers.fv.fv_fluxes import input_vectors, Bint, Aint, Smax
+from solvers.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot
 from gpr.variables.vectors import Cvec_to_Pvec

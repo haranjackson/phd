@@ -1,12 +1,12 @@
 from time import time
 
-from ader.fv import fv_launcher
-from ader.dg import dg_launcher
-from ader.weno import weno, weno_primitive
+from solvers.fv.fv import fv_launcher
+from solvers.dg.dg import dg_launcher
+from solvers.weno.weno import weno, weno_primitive
 from auxiliary.bc import standard_BC
 from gpr.thermo import thermal_stepper
-from split.homogeneous import weno_midstepper
-from split.ode import ode_stepper_fast, ode_stepper_full
+from solvers.split.homogeneous import weno_midstepper
+from solvers.split.ode import ode_stepper_fast, ode_stepper_full
 from options import reconstructPrim, fullODE, wenoHalfStep, StrangSplit
 
 

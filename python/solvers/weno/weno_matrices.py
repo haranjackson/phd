@@ -1,6 +1,6 @@
 from numpy import array, ceil, floor, polyint, sqrt, zeros
 
-from ader.basis import basis_polys
+from solvers.basis import basis_polys
 from options import N, N1
 
 

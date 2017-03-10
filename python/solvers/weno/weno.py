@@ -6,9 +6,9 @@ from numpy import ceil, concatenate, dot, einsum, floor, int64, multiply, ones, 
 from scipy.linalg import solve
 
 from options import rc, λc, λs, eps, ndim, N, N1
-from ader.basis import mid_values, end_values, derivative_end_values
-from ader.weno_matrices import coefficient_matrices, oscillation_indicator
-from ader.weno_matrices import inv_coeff_mats_1, inv_coeff_mats_2
+from solvers.basis import mid_values, end_values, derivative_end_values
+from solvers.weno.weno_matrices import coefficient_matrices, oscillation_indicator
+from solvers.weno.weno_matrices import inv_coeff_mats_1, inv_coeff_mats_2
 from gpr.variables.vectors import Cvec_to_Pvec
 
 

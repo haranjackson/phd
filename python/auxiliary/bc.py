@@ -1,5 +1,5 @@
 from options import ndim
-from ader.weno import extend
+from solvers.weno.weno import extend
 
 
 def standard_BC(u, reflect=0):

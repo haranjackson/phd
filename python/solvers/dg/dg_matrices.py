@@ -4,7 +4,7 @@ from numba import jit
 from numpy import array, concatenate, diag, eye, ones, sqrt, zeros
 from scipy.sparse import csc_matrix
 
-from ader.basis import quad, basis_polys, derivative_values
+from solvers.basis import quad, basis_polys, derivative_values
 from auxiliary.funcs import kron_prod
 from options import ndim, N1, NT
 
