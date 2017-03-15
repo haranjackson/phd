@@ -2,7 +2,7 @@ from itertools import product
 
 from numpy import array, eye, zeros
 
-from auxiliary.bc import standard_BC
+from auxiliary.boundaries import standard_BC
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
 from options import nx, ny, nz, SYS

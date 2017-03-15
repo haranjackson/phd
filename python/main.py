@@ -3,7 +3,7 @@ from time import time, sleep
 from joblib import Parallel
 from numpy import array, zeros
 
-from auxiliary.bc import standard_BC, periodic_BC
+from auxiliary.boundaries import standard_BC, periodic_BC
 from tests.d1.cookoff import CKR_BC, fixed_wall_temp_BC
 from tests.d1.cookoff import chapman_jouguet_IC, CKR_IC
 from tests.d1.diffusion import barrier_IC, barrier_BC
@@ -22,8 +22,8 @@ import options
 from auxiliary.adjust import thermal_conversion
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep, check_ignition_started, continue_condition
-from auxiliary.solvers import cookoff_stepper, aderweno_stepper
-from auxiliary.solvers import split_weno_stepper, split_dg_stepper
+from solvers.solvers import cookoff_stepper, aderweno_stepper
+from solvers.solvers import split_weno_stepper, split_dg_stepper
 from auxiliary.save import print_stats, record_data, save_all
 from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve

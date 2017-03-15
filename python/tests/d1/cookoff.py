@@ -1,6 +1,6 @@
 from numpy import array, eye, sqrt, zeros
 
-from auxiliary.bc import temperature_fix_pressure, standard_BC
+from auxiliary.boundaries import temperature_fix_pressure, standard_BC
 from auxiliary.classes import material_parameters
 from gpr.variables.state import temperature
 from gpr.variables.vectors import conserved, primitive

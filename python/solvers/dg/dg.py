@@ -5,8 +5,8 @@ from numpy import absolute, array, concatenate, dot, isnan, zeros
 from scipy.sparse.linalg import spsolve
 from scipy.optimize import newton_krylov
 
-from ader.dg_matrices import system_matrices, UinvDot1
-from ader.basis import quad, derivative_values
+from solvers.dg.matrices import system_matrices, UinvDot1
+from solvers.basis import quad, derivative_values
 from gpr.variables.vectors import Cvec_to_Pvec
 from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_conserved
 from gpr.matrices.primitive import source_primitive_ref, Mdot_ref, source_primitive
