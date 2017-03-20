@@ -15,11 +15,10 @@ def eigvalsn(a, n):
     return w
 
 
-def thermo_acoustic_tensor(ρ, A, p, T, d, PAR, SYS):
+def thermo_acoustic_tensor(ρ, G, p, T, d, PAR, SYS):
     """ Returns the tensor T_dij corresponding to the (i,j) component of the thermo-acoustic tensor
         in the dth direction
     """
-    G = gram(A)
     Gd = G[d]
     ret = zeros([4,4])
 
@@ -57,7 +56,7 @@ def max_abs_eigs(P, d, PAR, SYS):
         return c_h(ρ, T, PAR.α, PAR.cv)
 
     else:
-        O = thermo_acoustic_tensor(ρ, A, p, T, d, PAR, SYS)
+        O = thermo_acoustic_tensor(ρ, gram(A), p, T, d, PAR, SYS)
         lam = sqrt(eigvalsn(O, 4).max())
         if vd > 0:
             return vd + lam
@@ -78,7 +77,7 @@ def perron_frobenius(P, d, PAR, SYS):
         return c_h(ρ, T, PAR.α, PAR.cv)
 
     else:
-        O = thermo_acoustic_tensor(ρ, A, p, T, d, PAR, SYS)
+        O = thermo_acoustic_tensor(ρ, gram(A), p, T, d, PAR, SYS)
         rowSum = [sum(o) for o in O]
 
         lam = sqrt((max(rowSum)+min(rowSum))/2)
@@ -119,7 +118,7 @@ def primitive_eigs(P, PAR, SYS, left=1, right=1):
     Π2 = dσdA[:,:,1]
     Π3 = dσdA[:,:,2]
 
-    O = thermo_acoustic_tensor(ρ, A, p, T, 0, PAR, SYS)
+    O = thermo_acoustic_tensor(ρ, gram(A), p, T, 0, PAR, SYS)
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
     Ξ2 = Xi2mat(ρ, p, A, T, γ, α2)
     w, vl, vr = eig(O, left=1)
