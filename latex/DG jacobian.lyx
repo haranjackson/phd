@@ -1,0 +1,478 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Take a non-homogeneous, non-conservative (and for simplicity, one-dimensional)
+ hyperbolic system of the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:PDE}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider this PDE in cell 
+\begin_inset Formula $\left[x_{i},x_{i+1}\right]\times\left[t_{n},t_{n+1}\right]$
+\end_inset
+
+.
+ Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\chi= & \frac{1}{\Delta x_{i}}\left(x-x_{i}\right)\\
+\tau= & \frac{1}{\Delta\tau_{n}}\left(t-t_{n}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Non-dimensionalise 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:PDE"
+
+\end_inset
+
+ to obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\tau}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial\chi}+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:PDE-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take a nodal basis 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ of 
+\begin_inset Formula $P_{N}$
+\end_inset
+
+ and inner product 
+\begin_inset Formula $\left\langle \cdot,\cdot\right\rangle $
+\end_inset
+
+.
+ Take the following WENO reconstruction of the data at 
+\begin_inset Formula $\tau=0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{w}\left(\chi\right)=\boldsymbol{w_{\gamma}}\psi_{\gamma}\left(\chi\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the set of spatio-temporal nodal basis functions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \theta_{k}\left(\chi,\tau\right)\right\} =\left\{ \psi_{p}\left(\chi\right)\psi_{s}\left(\tau\right):0\leq p,s\leq N\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting the Discontinuous Galerkin predictor in a certain cell by 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, take the following set of approximations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q} & \approx\boldsymbol{q}=\sum_{\beta}\theta_{\beta}\boldsymbol{q_{\beta}}\\
+\boldsymbol{F}\left(\boldsymbol{Q}\right) & \approx\sum_{\beta}\theta_{\beta}\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\equiv\theta_{\beta}\boldsymbol{F_{\beta}}\\
+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi} & \approx\sum_{\beta}\theta_{\beta}B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\\
+ & \equiv\theta_{\beta}B_{\beta}\cdot\left(\Theta_{\beta\gamma}\boldsymbol{q_{\gamma}}\right)\equiv\theta_{\beta}\boldsymbol{B_{\beta}}\nonumber \\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\sum_{\beta}\theta_{\beta}\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)\equiv\theta_{\beta}\boldsymbol{S_{\beta}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For functions 
+\begin_inset Formula $f\left(\chi,\tau\right)=f_{χ}\left(χ\right)f_{τ}\left(τ\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $g\left(\chi,\tau\right)=g_{χ}\left(χ\right)g_{τ}\left(τ\right)$
+\end_inset
+
+, define the following integral operators:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left[f,g\right]^{t} & =f_{τ}\left(t\right)g_{τ}\left(t\right)\left\langle f_{χ},g_{χ}\right\rangle \\
+\left\{ f,g\right\}  & =\left\langle f_{\tau},g_{\tau}\right\rangle \left\langle f_{χ},g_{χ}\right\rangle 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the nodal approximations in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:PDE-1"
+
+\end_inset
+
+, multiplying by test function 
+\begin_inset Formula $\theta_{\alpha}$
+\end_inset
+
+, and integrating over space and time:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} \boldsymbol{q_{\beta}} & =-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}+\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\label{eq:InitialSystem}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:InitialSystem"
+
+\end_inset
+
+ by parts in time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}}=\boldsymbol{W_{\alpha}}-V_{\alpha\beta}\boldsymbol{F_{\beta}}+Z_{\alpha\beta}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \\
+V_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \\
+\boldsymbol{W_{\alpha}} & =\left[\theta_{\alpha},\psi_{\gamma}\right]^{0}\boldsymbol{w_{\gamma}}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $X_{\beta i}$
+\end_inset
+
+ denote the 
+\begin_inset Formula $i$
+\end_inset
+
+th component of vector 
+\begin_inset Formula $\boldsymbol{X}$
+\end_inset
+
+ at note 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+ We wish to find the Jacobian of the following function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{\alpha i}=q_{\alpha i}+K_{\alpha\beta}F_{\beta i}+M_{\alpha\beta}\left(B_{\beta i}-S_{\beta i}\right)-U_{\alpha\beta}^{-1}\boldsymbol{W_{\beta}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $K=U^{-1}V$
+\end_inset
+
+ and 
+\begin_inset Formula $M=U^{-1}Z$
+\end_inset
+
+.
+ Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\Xi_{\alpha i}}{\partial q_{bj}}=\delta_{\alpha b}\delta_{ij}+K_{\alpha b}\partial_{j}F_{i}\left(\boldsymbol{q_{b}}\right)+M_{\alpha b}\left(\partial_{j}B_{i}\left(\boldsymbol{q_{b}}\right)\cdot\left(\Theta_{b\gamma}\boldsymbol{q_{\gamma}}\right)-\partial_{j}S_{i}\left(\boldsymbol{q_{b}}\right)\right)+M_{\alpha\beta}B_{ij}\left(\boldsymbol{q_{\beta}}\right)\Theta_{\beta b}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
