@@ -4,7 +4,7 @@ from numba import jit
 from numpy import dot
 
 from auxiliary.funcs import AdevG, GdevG, gram
-from gpr.variables.eos import E_1r, E_2A, E_2Avec, E_2J, E_3
+from gpr.variables.eos import E_1r, E_2A, E_2Avec, E_2J, E_3, E_A
 
 
 def pressure(E, v, A, ρ, J, λ, PAR, SYS, vecA=0):
@@ -63,8 +63,8 @@ def sigma(ρ, A, cs2):
     """ Returns the symmetric viscous shear stress tensor
     """
     G = gram(A)
-    return -ρ * GdevG(G)
-    # return -ρ * dot(A.T, E_A(A, cs2))     # Generic definition of σ
+    #return -ρ * cs2 * GdevG(G)
+    return -ρ * dot(A.T, E_A(A, cs2))     # Generic definition of σ
 
 def sigma_A(ρ, A, cs2):
     """ Returns the tensor T_ijmn corresponding to the partial derivative of sigma_ij with respect
