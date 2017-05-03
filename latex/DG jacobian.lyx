@@ -474,5 +474,44 @@ where
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Formula $K=\left(C^{-1}\aleph\right)\otimes\left(\aleph^{-1}\beth\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M=\left(C^{-1}\aleph\right)\otimes I$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K_{\alpha b}\partial F\left(q_{b}\right)=\left(\tilde{C}^{-1}\right)\otimes\left(\aleph^{-1}\beth\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M_{\alpha b}\partial S\left(q_{b}\right)=\left(\hat{C}^{-1}\right)\otimes I$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\Xi}{\partial q}=\left(\tilde{C}^{-1}\right)\otimes\left(\aleph^{-1}\beth\right)+\left(\hat{C}^{-1}+I\right)\otimes I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
