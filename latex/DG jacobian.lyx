@@ -513,5 +513,43 @@ where
 
 \end_layout
 
+\begin_layout Standard
+I think if 
+\begin_inset Formula $q=q_{0}+q_{1}x+q_{2}x^{2}+\cdots$
+\end_inset
+
+ then 
+\begin_inset Formula $F\left(q\right)=F_{0}\left(q_{0}\right)+F_{1}\left(q_{0},q_{1}\right)x+F_{2}\left(q_{0},q_{1},q_{2}\right)x^{2}+\cdots$
+\end_inset
+
+ so 
+\begin_inset Formula $\frac{\partial F}{\partial q}$
+\end_inset
+
+ is triangular (as long as 
+\begin_inset Formula $F$
+\end_inset
+
+ is purely algebraic).
+ If a modal basis is taken, 
+\begin_inset Formula $\aleph^{-1}\beth$
+\end_inset
+
+ is upper triangular.
+ Thus, 
+\begin_inset Formula $\aleph^{-1}\beth\frac{\partial F}{\partial q}$
+\end_inset
+
+ may be upper triangular and thus nilpotent, meaning that 
+\begin_inset Formula $I+K\partial F$
+\end_inset
+
+ has inverse 
+\begin_inset Formula $I-K\partial F+\left(K\partial F\right)^{2}-\cdots$
+\end_inset
+
+.
+\end_layout
+
 \end_body
 \end_document
