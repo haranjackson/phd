@@ -7,7 +7,7 @@ tf = 1                      # Final time of the simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 1600                    # Number of cells in x direction
+nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -20,7 +20,6 @@ reactive   = 0              # Whether to include reactivity
 
 """ Problem Parameters """
 
-Ms = 2                      # Mach number of viscous shock
 W  = 1                      # Power input at wall in cook off
 doubleTime = 1e-6           # Time taken for temperature at wall to double
 reactionType = 'a'          # 'a' (Arrhenius) or 'd' (Discrete)
@@ -39,7 +38,7 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'ADER-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
+solver = 'SPLIT-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
 convertTemp   = 1           # Whether to use constant-pressure approximation in cookoff
 altThermSolve = 1           # Whether to use operator splitting solver for the thermal subsystem
 
@@ -56,9 +55,9 @@ perronFrob = 0              # Whether to use the Perron-Frobenius approximation 
 
 """ DG Options """
 
-hidalgo    = 1              # Whether to use the Hidalgo initial guess
-stiff      = 1              # Whether source terms are stiff (Newton-Krylov solver is used)
-superStiff = 1              # Whether to use Newton-Krylov to compute the Hidalgo initial guess
+hidalgo    = 0              # Whether to use the Hidalgo initial guess
+stiff      = 0              # Whether source terms are stiff (Newton-Krylov solver is used)
+superStiff = 0              # Whether to use Newton-Krylov to compute the Hidalgo initial guess
 failLim    = 180            # Maximum number of non-stiff solves that are allowed to fail
 TOL        = 6e-6           # Tolerance to which the Galerkin Predictor must converge
 MAX_ITER   = 50             # Maximum number of non-stiff iterations attempted in DG
@@ -72,13 +71,13 @@ eps  = 1e-14                # Constant ensuring oscillation indicators don't blo
 
 """ Speed-Up Parameters """
 
-paraDG = 1                  # Whether to parallelise the DG step
-paraFV = 1                  # Whether to parallelise the FV step
+paraDG = 0                  # Whether to parallelise the DG step
+paraFV = 0                  # Whether to parallelise the FV step
 ncore  = 4                  # Number of cores to use if running in parallel
 
 """ Debug Options """
 
-NO_WARNING = 1      # Turn off all SciPy/NumPy warnings. Potentially dangerous. Overridden by DEBUG.
+NO_WARNING = 1      # Turn off all SciPy/NumPy warnings. Potentially dangerous.
 
 
 """ Derived Values """

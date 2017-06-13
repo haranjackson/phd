@@ -7,7 +7,7 @@ from scipy.special import erf
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, Ms, dx, Lx, SYS
+from options import nx, ny, nz, dx, Lx, SYS
 
 
 def first_stokes_problem_IC():
@@ -15,7 +15,7 @@ def first_stokes_problem_IC():
         L = 1
     """
     γ = 1.4
-    μ = 1e-2 # 1e-3 # 1e-4
+    μ = 1e-3 # 1e-3 # 1e-4
 
     ρ = 1
     p = 1 / γ
@@ -76,6 +76,7 @@ def viscous_shock_exact(x, Ms, PAR, center=0):
     return ρ, p, v
 
 def viscous_shock_IC(center=0):
+    Ms = 2
     γ = 1.4
     pINF = 0
     ρ0 = 1

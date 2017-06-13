@@ -6,7 +6,7 @@ from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import mechanical, viscous, thermal, reactive
-from options import Ms, W, doubleTime, reactionType, fullBurn, burnProp
+from options import W, doubleTime, reactionType, fullBurn, burnProp
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
 from options import solver, convertTemp, altThermSolve
 from options import fullODE, wenoHalfStep, StrangSplit, approxInterface, reconstructPrim
@@ -52,7 +52,6 @@ def save_config(path):
         f.write('thermal    = %i\n' % thermal)
         f.write('reactive   = %i\n\n' % reactive)
 
-        f.write('Ms = %f\n' % Ms)
         f.write('W  = %e\n' % W)
         f.write('doubleTime = %e\n' % doubleTime)
         f.write('reactionType = %s\n' % reactionType)
