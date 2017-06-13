@@ -7,7 +7,7 @@ tf = 1                      # Final time of the simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 200                    # Number of cells in x direction
+nx = 1600                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -39,13 +39,13 @@ UPDATE_STEP = 5             # Number of timesteps used to update interface locat
 
 """ Solver Options """
 
-solver = 'SPLIT-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
+solver = 'ADER-WENO'        # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
 convertTemp   = 1           # Whether to use constant-pressure approximation in cookoff
 altThermSolve = 1           # Whether to use operator splitting solver for the thermal subsystem
 
 fullODE = 0                 # Whether to use the numerical ODE solver
 wenoHalfStep = 1            # Whether to step forwards the WENO solver by dt/2
-StrangSplit  = 0            # Whether to use a Strang splitting in Split-WENO
+StrangSplit  = 1            # Whether to use a Strang splitting in Split-WENO
 approxInterface = 0         # Whether to calculate fluxes with average value of interface states
 reconstructPrim = 0         # Whether to perform WENO and DG reconstructions in primitive variables
 
@@ -72,8 +72,8 @@ eps  = 1e-14                # Constant ensuring oscillation indicators don't blo
 
 """ Speed-Up Parameters """
 
-paraDG = 0                  # Whether to parallelise the DG step
-paraFV = 0                  # Whether to parallelise the FV step
+paraDG = 1                  # Whether to parallelise the DG step
+paraFV = 1                  # Whether to parallelise the FV step
 ncore  = 4                  # Number of cores to use if running in parallel
 
 """ Debug Options """
@@ -96,11 +96,13 @@ else:
 if not timeDim:
     approxInterface = 0
 
-SYS = type('', (), {})()
-SYS.mechanical = mechanical
-SYS.viscous = viscous
-SYS.thermal = thermal
-SYS.reactive = reactive
+class systems():
+    def __init__(self, mechanical, viscous, thermal, reactive):
+        self.mechanical = mechanical
+        self.viscous = viscous
+        self.thermal = thermal
+        self.reactive = reactive
+SYS = systems(mechanical, viscous, thermal, reactive)
 
 """ Compatibility Settings """
 

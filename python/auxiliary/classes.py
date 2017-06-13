@@ -1,42 +1,76 @@
-from numba import float64, jitclass
+from numba import jitclass, float64 as f64
 from numpy import array, expand_dims
 
+from options import paraDG, paraFV
 from gpr.variables.state import temperature
 
 
-@jitclass([('Rc', float64),
-           ('γ', float64), ('pINF', float64), ('cv', float64), ('ρ0', float64), ('p0', float64),
-           ('T0', float64), ('cs', float64), ('α', float64), ('μ', float64), ('Pr', float64),
-           ('τ1', float64), ('κ', float64), ('τ2', float64), ('Qc', float64), ('Kc', float64),
-           ('Ti', float64), ('Ea', float64), ('Bc', float64), ('cs2', float64), ('α2', float64)])
-class material_params():
-    def __init__(self, Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc):
-        self.Rc = Rc
+if paraDG or paraFV:
+    class material_params():
+        def __init__(self, Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ,
+                     τ1, τ2, Qc, Kc, Ti, Ea, Bc):
+            self.Rc = Rc
 
-        self.γ = γ
-        self.pINF = pINF
-        self.cv = cv
+            self.γ = γ
+            self.pINF = pINF
+            self.cv = cv
 
-        self.ρ0 = ρ0
-        self.p0 = p0
-        self.T0 = T0
+            self.ρ0 = ρ0
+            self.p0 = p0
+            self.T0 = T0
 
-        self.cs = cs
-        self.α = α
-        self.μ = μ
-        self.Pr = Pr
-        self.τ1 = τ1
-        self.κ = κ
-        self.τ2 = τ2
+            self.cs = cs
+            self.α = α
+            self.μ = μ
+            self.Pr = Pr
+            self.τ1 = τ1
+            self.κ = κ
+            self.τ2 = τ2
 
-        self.Qc = Qc
-        self.Kc = Kc
-        self.Ti = Ti
-        self.Ea = Ea
-        self.Bc = Bc
+            self.Qc = Qc
+            self.Kc = Kc
+            self.Ti = Ti
+            self.Ea = Ea
+            self.Bc = Bc
 
-        self.cs2 = self.cs**2
-        self.α2 = self.α**2
+            self.cs2 = self.cs**2
+            self.α2 = self.α**2
+else:
+    @jitclass([('Rc',f64),
+               ('γ', f64),('pINF',f64), ('cv',f64), ('ρ0',f64), ('p0',f64),
+               ('T0',f64), ('cs',f64), ('α',f64), ('μ',f64), ('Pr',f64),
+               ('τ1',f64), ('κ',f64), ('τ2',f64), ('Qc',f64), ('Kc',f64),
+               ('Ti',f64), ('Ea',f64), ('Bc',f64), ('cs2',f64), ('α2',f64)])
+    class material_params():
+        def __init__(self, Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ,
+                     τ1, τ2, Qc, Kc, Ti, Ea, Bc):
+            self.Rc = Rc
+
+            self.γ = γ
+            self.pINF = pINF
+            self.cv = cv
+
+            self.ρ0 = ρ0
+            self.p0 = p0
+            self.T0 = T0
+
+            self.cs = cs
+            self.α = α
+            self.μ = μ
+            self.Pr = Pr
+            self.τ1 = τ1
+            self.κ = κ
+            self.τ2 = τ2
+
+            self.Qc = Qc
+            self.Kc = Kc
+            self.Ti = Ti
+            self.Ea = Ea
+            self.Bc = Bc
+
+            self.cs2 = self.cs**2
+            self.α2 = self.α**2
+
 
 def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None, p0=None, cs=None,
                         α=None, μ=None, κ=None, Pr=None, Qc=None, Kc=None, Ti=None, ε=None, Bc=None):
