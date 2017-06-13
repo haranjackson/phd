@@ -13,8 +13,8 @@ from gpr.variables.vectors import Cvec_to_Pvec
 
 
 Mc = coefficient_matrices()
-McInv1 = inv_coeff_mats_1()
-McInv2L, McInv2C, McInv2R = inv_coeff_mats_2()
+McInv1L, McInv1R = inv_coeff_mats_1()
+McInv2L, McInv2R, McInv2C = inv_coeff_mats_2()
 Σ = oscillation_indicator()
 
 midvals = mid_values()
@@ -22,12 +22,11 @@ floorHalfN = int(floor(N/2))
 ceilHalfN = int(ceil(N/2))
 
 
+lamList = [λs, λs, λc, λc]
 if N%2:
     nStencils = 4
-    lamList = [λc, λc, λs, λs]
 else:
     nStencils = 3
-    lamList = [λc, λs, λs]
 
 
 def extend(inarray, extension, d):
@@ -37,7 +36,37 @@ def extend(inarray, extension, d):
     reps = concatenate(([extension+1], ones(n-2), [extension+1])).astype(int64)
     return inarray.repeat(reps, axis=d)
 
-def coeffs(uList):
+def coeffs1(uL, uR):
+    """ Calculate coefficients of basis polynomials and weights for N=1
+    """
+    wL = dot(McInv1L, uL)
+    wR = dot(McInv1R, uR)
+    ΣwL = dot(Σ, wL)
+    ΣwR = dot(Σ, wR)
+    σL = einsum('ki,ki->i', wL, ΣwL)
+    σR = einsum('ki,ki->i', wR, ΣwR)
+    oL = λs / (abs(σL) + eps)**rc
+    oR = λs / (abs(σR) + eps)**rc
+    return (multiply(wL,oL) + multiply(wR,oR)) / (oL+oR)
+
+def coeffs2(uL, uR, uC):
+    """ Calculate coefficients of basis polynomials and weights for N=2
+    """
+    wL = dot(McInv2L, uL)
+    wR = dot(McInv2R, uR)
+    wC = dot(McInv2C, uC)
+    ΣwL = dot(Σ, wL)
+    ΣwR = dot(Σ, wR)
+    ΣwC = dot(Σ, wC)
+    σL = einsum('ki,ki->i', wL, ΣwL)
+    σR = einsum('ki,ki->i', wR, ΣwR)
+    σC = einsum('ki,ki->i', wC, ΣwC)
+    oL = λs / (abs(σL) + eps)**rc
+    oR = λs / (abs(σR) + eps)**rc
+    oC = λc / (abs(σC) + eps)**rc
+    return (multiply(wL,oL) + multiply(wR,oR) + multiply(wC,oC)) / (oL+oR+oC)
+
+def coeffsX(uList):
     """ Calculate coefficients of basis polynomials and weights
     """
     wList = [solve(Mc[i], uList[i], overwrite_b=1, check_finite=0) for i in range(nStencils)]
@@ -50,37 +79,22 @@ def coeffs(uList):
         numerator += multiply(wList[i], oList[i])
     return numerator / oSum
 
-def coeffs1(uList):
-    """ Calculate coefficients of basis polynomials and weights for N=1
-    """
-    oSum = zeros(18)
-    numerator = zeros([N1, 18])
-    for i in range(2):
-        w = dot(McInv1[i], uList[i])
-        Σw = dot(Σ, w)
-        σ = einsum('ki,ki->i', w, Σw)
-        o = (abs(σ) + eps)**(-rc)
-        oSum += o
-        numerator += multiply(w, o)
-    return numerator / oSum
+def coeffs(ret, u1, u2, u3, u4):
+    if N==1:
+        ret[:] = coeffs1(u1, u2)
+    elif N==2:
+        ret[:] = coeffs2(u1, u2, u3)
+    elif nStencils==3:
+        ret[:] = coeffsX([u1, u2, u3])
+    elif nStencils==4:
+        ret[:] = coeffsX([u1, u2, u3, u4])
 
-def coeffs2(u1):
-    """ Calculate coefficients of basis polynomials and weights for N=2
-        NOTE STENCILS ARE IN DIFFERENT ORDER TO OTHER N
-    """
-    wL = dot(McInv2L, u1[0:3])
-    wC = dot(McInv2C, u1[1:4])
-    wR = dot(McInv2R, u1[2:5])
-    ΣwL = dot(Σ, wL)
-    ΣwC = dot(Σ, wC)
-    ΣwR = dot(Σ, wR)
-    σL = einsum('ki,ki->i', wL, ΣwL)
-    σC = einsum('ki,ki->i', wC, ΣwC)
-    σR = einsum('ki,ki->i', wR, ΣwR)
-    oL = λs / (abs(σL) + eps)**rc
-    oC = λc / (abs(σC) + eps)**rc
-    oR = λs / (abs(σR) + eps)**rc
-    return (multiply(wL,oL) + multiply(wC,oC) + multiply(wR,oR)) / (oL+oC+oR)
+def extract_stencils(arrayRow, ind):
+    u1 = arrayRow[ind-N : ind+1]
+    u2 = arrayRow[ind : ind+N+1]
+    u3 = arrayRow[ind-ceilHalfN : ind+floorHalfN+1]
+    u4 = arrayRow[ind-floorHalfN : ind+ceilHalfN+1]
+    return u1, u2, u3, u4
 
 def weno(u):
     """ Find reconstruction coefficients of u to order N+1
@@ -90,77 +104,27 @@ def weno(u):
     Wx = zeros([nx, ny, nz, N1, 18])
     tempu = extend(u, N, 0)
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        ii = i + N
-        if N==1:
-            u1 = tempu[ii : ii+2, j, k]
-            u2 = tempu[ii-1 : ii+1, j, k]
-            Wx[i, j, k] = coeffs1([u1, u2])
-        elif N==2:
-            u1 = tempu[ii-2 : ii+3, j, k]
-            Wx[i, j, k] = coeffs2(u1)
-        elif nStencils==3:
-            u1 = tempu[ii-floorHalfN : ii+floorHalfN+1, j, k]
-            u2 = tempu[ii-N : ii+1, j, k]
-            u3 = tempu[ii : ii+N+1, j, k]
-            Wx[i, j, k] = coeffs([u1, u2, u3])
-        else:
-            u1 = tempu[ii-floorHalfN : ii+ceilHalfN+1, j, k]
-            u2 = tempu[ii-ceilHalfN : ii+floorHalfN+1, j, k]
-            u3 = tempu[ii-N : ii+1, j, k]
-            u4 = tempu[ii : ii+N+1, j, k]
-            Wx[i, j, k] = coeffs([u1, u2, u3, u4])
+        u1, u2, u3, u4 = extract_stencils(tempu[:,j,k], i+N)
+        coeffs(Wx[i, j, k], u1, u2, u3, u4)
+
     if ndim==1:
         return Wx
 
     Wxy = zeros([nx, ny, nz, N1, N1, 18])
     tempWx = extend(Wx, N, 1)
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        jj = j + N
-        for a in range(N1):
-            if N==1:
-                w1 = tempWx[i, jj : jj+2, k, a]
-                w2 = tempWx[i, jj-1 : jj+1, k, a]
-                Wxy[i, j, k, a] = coeffs1([w1, w2])
-            elif N==2:
-                w1 = tempWx[i, jj-2 : jj+3, k, a]
-                Wxy[i, j, k, a] = coeffs(w1)
-            elif nStencils==3:
-                w1 = tempWx[i, jj-floorHalfN : jj+floorHalfN+1, k, a]
-                w2 = tempWx[i, jj-N : jj+1, k, a]
-                w3 = tempWx[i, jj : jj+N+1, k, a]
-                Wxy[i, j, k, a] = coeffs([w1, w2, w3])
-            else:
-                w1 = tempWx[i, jj-floorHalfN : jj+ceilHalfN+1, k, a]
-                w2 = tempWx[i, jj-ceilHalfN : jj+floorHalfN+1, k, a]
-                w3 = tempWx[i, jj-N : jj+1, k, a]
-                w4 = tempWx[i, jj : jj+N+1, k, a]
-                Wxy[i, j, k, a] = coeffs([w1, w2, w3, w4])
+    for i, j, k, a in product(range(nx), range(ny), range(nz), range(N1)):
+        u1, u2, u3, u4 = extract_stencils(tempWx[i,:,k,a], j+N)
+        coeffs(Wxy[i, j, k, a], u1, u2, u3, u4)
+
     if ndim==2:
         return Wxy
 
     Wxyz = zeros([nx, ny, nz, N1, N1, N1, 18])
     tempWxy = extend(Wxy, N, 2)
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        kk = k + N
-        for a, b in product(range(N1), range(N1)):
-            if N==1:
-                w1 = tempWxy[i, j, kk : kk+2, a, b]
-                w2 = tempWxy[i, j, kk-1 : kk+1, a, b]
-                Wxyz[i, j, k, a, b] = coeffs1([w1, w2])
-            elif N==2:
-                w1 = tempWxy[i, j, kk-2 : kk+3, a, b]
-                Wxyz[i, j, k, a, b] = coeffs2(w1)
-            elif nStencils==3:
-                w1 = tempWxy[i, j, kk-floorHalfN : kk+floorHalfN+1, a, b]
-                w2 = tempWxy[i, j, kk-N : kk+1, a, b]
-                w3 = tempWxy[i, j, kk : kk+N+1, a, b]
-                Wxyz[i, j, k, a, b] = coeffs([w1, w2, w3])
-            else:
-                w1 = tempWxy[i, j, kk-floorHalfN : kk+ceilHalfN+1, a, b]
-                w2 = tempWxy[i, j, kk-ceilHalfN : kk+floorHalfN+1, a, b]
-                w3 = tempWxy[i, j, kk-N : kk+1, a, b]
-                w4 = tempWxy[i, j, kk : kk+N+1, a, b]
-                Wxyz[i, j, k, a, b] = coeffs([w1, w2, w3, w4])
+    for i, j, k, a, b in product(range(nx), range(ny), range(nz), range(N1), range(N1)):
+        u1, u2, u3, u4 = extract_stencils(tempWxy[i,j,:,a,b], k+N)
+        coeffs(Wxyz[i, j, k, a, b], u1, u2, u3, u4)
+
     if ndim==3:
         return Wxyz
 
