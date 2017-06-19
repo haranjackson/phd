@@ -15,7 +15,7 @@ def first_stokes_problem_IC():
         L = 1
     """
     γ = 1.4
-    μ = 1e-3 # 1e-3 # 1e-4
+    μ = 1e-2 # 1e-3 # 1e-4
 
     ρ = 1
     p = 1 / γ
@@ -36,7 +36,9 @@ def first_stokes_problem_IC():
 
     return u, [PAR]*1, []
 
-def first_stokes_problem_exact(x, μ, v0=0.1, t=1):
+def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
+    dx = 1/n
+    x = linspace(-0.5+dx/2, 0.5-dx/2, num=n)
     return v0 * erf(x / (2 * sqrt(μ * t)))
 
 def viscous_shock_exact(x, Ms, PAR, center=0):
