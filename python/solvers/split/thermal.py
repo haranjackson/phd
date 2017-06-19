@@ -22,6 +22,12 @@ def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, PAR):
     c1 *= k
     c2 *= k
 
-    ea = exp(c1*dt)
-    den = ea - c2/c1*(ea-1)*L2_1D(J)
-    return J / sqrt(den)
+#    ea = exp(c1*dt)
+#    den = ea - c2/c1*(ea-1)*L2_1D(J)
+#    return J / sqrt(den)
+
+    # To avoid NaNs if dt>>1
+    ea = exp(-c1*dt/2)
+    den = 1 - c2/c1*(1-ea**2)*L2_1D(J)
+    ret = J / sqrt(den)
+    return ea * ret

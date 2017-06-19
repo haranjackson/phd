@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort, sqrt, zeros
+from numpy import arctan, argsort, array, dot, cos, einsum, exp, eye, log, prod, sort, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -63,11 +63,17 @@ def solver_approximate_analytic(A, dt, PAR):
     s0 = (s/detA3)**2
     m0 = sum(s0) / 3
     u0 = ((s0[0]-s0[1])**2 + (s0[1]-s0[2])**2 + (s0[2]-s0[0])**2) / 3
-    k = 2 * detA3**7 / PAR.τ1
-    τ = k*dt
 
-    m = 1 + exp(-9*τ)/3 * ((9*m0-u0-9)*exp(3*τ) - (6*m0-u0-6))
-    u = pos( exp(-9*τ) * (2*(9*m0-u0-9)*exp(3*τ) - 3*(6*m0-u0-6)) )
+    if u0 == 0:
+        return A
+
+    k = 2 * detA3**7 / PAR.τ1
+    τ = k * dt
+    e_6τ = exp(-6*τ)
+    e_9τ = exp(-9*τ)
+    m = 1 + (3*m0-u0/3-3) * e_6τ - (2*m0-u0/3-2) * e_9τ
+    u = pos((18*m0-2*u0-18) * e_6τ - (18*m0-3*u0-18) * e_9τ)
+
     Δ = -2*m**3 + m*u + 2
     arg1 = pos(6*u**3-81*Δ**2)
     θ = arctan(sqrt(arg1)/max(1e-8,9*Δ))
