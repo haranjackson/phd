@@ -2,98 +2,85 @@ from time import time
 
 from solvers.fv.fv import fv_launcher
 from solvers.dg.dg import dg_launcher
-from solvers.weno.weno import weno, weno_primitive
+from solvers.weno.weno import weno_launcher
 from auxiliary.boundaries import standard_BC
 from gpr.thermo import thermal_stepper
 from solvers.split.homogeneous import weno_midstepper
-from solvers.split.ode import ode_stepper_fast, ode_stepper_full
-from options import reconstructPrim, fullODE, wenoHalfStep, StrangSplit
+from solvers.split.ode import ode_launcher
+from options import wenoHalfStep, StrangSplit
 
 
 def cookoff_stepper(fluid, fluidBC, dt, PAR):
     t0 = time()
     fluid[:] = thermal_stepper(fluidBC, dt, PAR)
+
     print('OS:', time()-t0)
 
 def aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
     t0 = time()
 
-    if reconstructPrim:
-        wh = weno_primitive(fluidBC, PAR, SYS)
-    else:
-        wh = weno(fluidBC)
+    wh = weno_launcher(fluidBC)
     t1 = time()
-    print('WENO:', t1-t0)
 
     qh = dg_launcher(pool, wh, dt, PAR, SYS)
     t2 = time()
-    print('DG:  ', t2-t1)
 
     fluid += fv_launcher(pool, qh, dt, PAR, SYS)
-    print('FV:  ', time()-t2)
+    t3 = time()
+
+    print('WENO:', t1-t0)
+    print('DG:  ', t2-t1)
+    print('FV:  ', t3-t2)
 
     return qh
 
 def split_weno_stepper(pool, fluid, dt, PAR, SYS):
 
-    if StrangSplit:
-        Δt = dt/2
-    else:
-        Δt = dt
+    Δt = dt/2 if StrangSplit else dt
+    t0 = time()
+
+    ode_launcher(fluid, Δt, PAR, SYS)
     t1 = time()
 
-    # First temporal ODE solve
-    if fullODE:
-        ode_stepper_full(fluid, Δt, PAR, SYS)
-    else:
-        ode_stepper_fast(fluid, Δt, PAR, SYS)
-    t2 = time()
-    print('ODE: ',t2-t1)
-
-    # Homogeneous solve
     fluidBC = standard_BC(fluid)
-    wh = weno(fluidBC)
+    wh = weno_launcher(fluidBC)
     if wenoHalfStep:
         weno_midstepper(wh, dt, PAR, SYS)
-    t3 = time()
-    print('WENO:',t3-t2)
-
-    fluid += fv_launcher(pool, wh, dt, PAR, SYS, 1)
-    t4 = time()
-    print('FV:  ',t4-t3)
-
-    # Second temporal ODE solve
-    if StrangSplit:
-        if fullODE:
-            ode_stepper_full(fluid, Δt, PAR, SYS)
-        else:
-            ode_stepper_fast(fluid, Δt, PAR, SYS)
-        t5 = time()
-        print('ODE: ',t5-t4)
-
-def split_dg_stepper(pool, fluid, dt, PAR, SYS):
-    t1 = time()
-
-    if fullODE:
-        ode_stepper_full(fluid, dt/2, PAR, SYS)
-    else:
-        ode_stepper_fast(fluid, dt/2, PAR, SYS)
     t2 = time()
 
-    fluidBC = standard_BC(fluid)
-    wh = weno(fluidBC)
+    fluid += fv_launcher(pool, wh, dt, PAR, SYS, 1)
     t3 = time()
 
+    print('ODE: ', t1-t0)
+    print('WENO:', t2-t1)
+    print('FV:  ', t3-t2)
+
+    if StrangSplit:
+        ode_launcher(fluid, Δt, PAR, SYS)
+        t4 = time()
+        print('ODE: ', t4-t3)
+
+def split_dg_stepper(pool, fluid, dt, PAR, SYS):
+    t0 = time()
+
+    ode_launcher(fluid, dt/2, PAR, SYS)
+    t1 = time()
+
+    fluidBC = standard_BC(fluid)
+    wh = weno_launcher(fluidBC)
+    t2 = time()
+
     qh = dg_launcher(pool, wh, dt, PAR, SYS, 1)
-    t4 = time()
+    t3 = time()
 
     fluid += fv_launcher(pool, qh, dt, PAR, SYS, 1)
+    t4 = time()
+
+    ode_launcher(fluid, dt/2, PAR, SYS)
     t5 = time()
 
-    if fullODE:
-        ode_stepper_full(fluid, dt/2, PAR, SYS)
-    else:
-        ode_stepper_fast(fluid, dt/2, PAR, SYS)
-    t6 = time()
-
-    print('ODE1:',t2-t1, '\nWENO:',t3-t2, '\nDG:  ',t4-t3, '\nFV:  ',t5-t4, '\nODE2:',t6-t5)
+    print('ODE1:', t1-t0)
+    print('WENO:', t2-t1)
+    print('DG:  ', t3-t2)
+    print('FV:  ', t4-t3)
+    print('ODE2:', t5-t4)

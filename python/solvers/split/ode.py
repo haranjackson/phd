@@ -3,6 +3,7 @@ from itertools import product
 from numpy import array, zeros
 from scipy.integrate import odeint
 
+from options import fullODE
 from gpr.variables.eos import E_3
 from gpr.variables.vectors import primitive
 from solvers.split.distortion import f_A, jac_A, solver_approximate_analytic
@@ -79,3 +80,9 @@ def ode_stepper_fast(u, dt, PAR, SYS):
             v = Q[2:5] / ρ
             A2 = (A+A1)/2
             Q[14:17] = ρ * solver_thermal_analytic_ideal(ρ, E, A2, J, v, dt, PAR)
+
+def ode_launcher(u, dt, PAR, SYS, useJac=0):
+    if fullODE:
+        ode_stepper_full(u, dt, PAR, SYS, useJac=useJac)
+    else:
+        ode_stepper_fast(u, dt, PAR, SYS)

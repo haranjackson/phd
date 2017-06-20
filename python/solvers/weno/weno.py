@@ -5,7 +5,7 @@ from itertools import product
 from numpy import ceil, concatenate, dot, einsum, floor, int64, multiply, ones, tensordot, zeros
 from scipy.linalg import solve
 
-from options import rc, λc, λs, eps, ndim, N, N1
+from options import rc, λc, λs, eps, ndim, N, N1, wenoAverage, reconstructPrim
 from solvers.basis import mid_values, end_values, derivative_end_values
 from solvers.weno.matrices import coefficient_matrices, oscillation_indicator
 from solvers.weno.matrices import inv_coeff_mats_1, inv_coeff_mats_2
@@ -142,6 +142,20 @@ def weno_primitive(q, PAR, SYS):
         pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k], PAR, SYS)
     return weno(pav)
 
+def weno_launcher(u):
+
+    if reconstructPrim:
+        weno_func = weno_primitive
+    else:
+        weno_func = weno
+
+    if ndim==2 and wenoAverage:
+        wx = weno_func(u)
+        wy = weno_func(u.swapaxes(0,1)).swapaxes(0,1).swapaxes(3,4)
+        return (wx+wy)/2
+    else:
+        return weno_func(u)
+
 def weno_endpoints(wh):
     """ Returns an array containing the values of the basis polynomials at 0 and 1
         qEnd[d,e,i,j,k,:,:,:,:,:] is the set of coefficients at end e in the dth direction
@@ -156,3 +170,15 @@ def weno_endpoints(wh):
         wEnd[d] = tensordot(endVals, wh0, (0,3+d))
         wDerEnd[d] = tensordot(derEndVals, wh0, (0,3+d))
     return wEnd, wDerEnd
+
+def expand_weno(wh):
+    nx, ny, _, N1, _, nvar = wh.shape
+    ret = zeros([nx*N1, ny*N1, nvar])
+    for i in range(nx):
+        for j in range(ny):
+            for ii in range(N1):
+                for jj in range(N1):
+                    indi = i*N1+ii
+                    indj = j*N1+jj
+                    ret[indi,indj] = wh[i,j,0,ii,jj]
+    return ret

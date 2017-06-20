@@ -9,7 +9,8 @@ from options import mechanical, viscous, thermal, reactive
 from options import W, doubleTime, reactionType, fullBurn, burnProp
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
 from options import solver, convertTemp, altThermSolve
-from options import fullODE, wenoHalfStep, StrangSplit, approxInterface, reconstructPrim
+from options import fullODE, wenoHalfStep, StrangSplit
+from options import approxInterface, reconstructPrim, wenoAverage
 from options import  N, CFL, method, perronFrob
 from options import hidalgo, stiff, superStiff, failLim, TOL
 from options import rc, λc, λs, eps
@@ -71,9 +72,11 @@ def save_config(path):
 
         f.write('fullODE = %i\n' % fullODE)
         f.write('wenoHalfStep = %i\n' % wenoHalfStep)
-        f.write('StrangSplit  = %i\n' % StrangSplit)
+        f.write('StrangSplit  = %i\n\n' % StrangSplit)
+
         f.write('approxInterface = %i\n' % approxInterface)
-        f.write('reconstructPrim = %i\n\n' % reconstructPrim)
+        f.write('reconstructPrim = %i\n' % reconstructPrim)
+        f.write('wenoAverage = %i\n\n' % wenoAverage)
 
         f.write('N      = %i\n' % N)
         f.write('CFL    = %f\n' % CFL)
