@@ -2,15 +2,14 @@ from numba import jit
 from numpy import complex128, dot, zeros
 from scipy.linalg import eig, solve
 
-from solvers.basis import quad, end_values, derivative_values
+from solvers.basis import quad
 from gpr.eig import max_abs_eigs, perron_frobenius
 from gpr.matrices.conserved import Bdot, system_conserved
 from gpr.variables.vectors import Pvec_to_Cvec, Cvec_to_Pvec
 from options import N1, reconstructPrim, perronFrob
 
+
 nodes, _, weights = quad()
-endVals = end_values()
-derivs = derivative_values()
 
 
 @jit
