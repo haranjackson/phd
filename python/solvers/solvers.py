@@ -3,23 +3,22 @@ from time import time
 from solvers.fv.fv import fv_launcher
 from solvers.dg.dg import dg_launcher
 from solvers.weno.weno import weno_launcher
-from auxiliary.boundaries import standard_BC
 from gpr.thermo import thermal_stepper
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_launcher
 from options import wenoHalfStep, StrangSplit
 
 
-def cookoff_stepper(fluid, fluidBC, dt, PAR):
+def cookoff_stepper(fluid, BC, dt, PAR):
     t0 = time()
-    fluid[:] = thermal_stepper(fluidBC, dt, PAR)
+    fluid[:] = thermal_stepper(BC(fluid), dt, PAR)
 
     print('OS:', time()-t0)
 
-def aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
+def aderweno_stepper(pool, fluid, BC, dt, PAR, SYS):
     t0 = time()
 
-    wh = weno_launcher(fluidBC)
+    wh = weno_launcher(BC(fluid))
     t1 = time()
 
     qh = dg_launcher(pool, wh, dt, PAR, SYS)
@@ -34,7 +33,7 @@ def aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS):
 
     return qh
 
-def split_weno_stepper(pool, fluid, dt, PAR, SYS):
+def split_weno_stepper(pool, fluid, BC, dt, PAR, SYS):
 
     Δt = dt/2 if StrangSplit else dt
     t0 = time()
@@ -42,8 +41,7 @@ def split_weno_stepper(pool, fluid, dt, PAR, SYS):
     ode_launcher(fluid, Δt, PAR, SYS)
     t1 = time()
 
-    fluidBC = standard_BC(fluid)
-    wh = weno_launcher(fluidBC)
+    wh = weno_launcher(BC(fluid))
     if wenoHalfStep:
         weno_midstepper(wh, dt, PAR, SYS)
     t2 = time()
@@ -60,14 +58,13 @@ def split_weno_stepper(pool, fluid, dt, PAR, SYS):
         t4 = time()
         print('ODE: ', t4-t3)
 
-def split_dg_stepper(pool, fluid, dt, PAR, SYS):
+def split_dg_stepper(pool, fluid, BC, dt, PAR, SYS):
     t0 = time()
 
     ode_launcher(fluid, dt/2, PAR, SYS)
     t1 = time()
 
-    fluidBC = standard_BC(fluid)
-    wh = weno_launcher(fluidBC)
+    wh = weno_launcher(BC(fluid))
     t2 = time()
 
     qh = dg_launcher(pool, wh, dt, PAR, SYS, 1)

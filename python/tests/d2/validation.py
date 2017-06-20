@@ -6,6 +6,7 @@ from numpy import array, cos, exp, eye, sin, sqrt, tanh, zeros
 from options import SYS, nx, ny, nz, dx, dy, Lx, Ly
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
+from solvers.weno.weno import extend
 
 
 def vortex(x, y, x0, y0, ε, γ, ρ, p):
@@ -17,38 +18,8 @@ def vortex(x, y, x0, y0, ε, γ, ρ, p):
     A = (ρ+dρ)**(1/3) * eye(3)
     return dv, dT, dρ, dp, A
 
-def convected_isentropic_vortex_IC():
-    """ Lx = 10
-        Ly = 10
-        t = 1
-    """
+def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
     ε = 5
-
-    μ = 1e-6
-    κ = 1e-6
-    γ = 1.4
-
-    ρ = 1
-    p = 1
-    v = array([1, 1, 0])
-    J = zeros(3)
-
-    PAR = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ, p0=p, cs=0.5, α=1, μ=μ, κ=κ)
-
-    u = zeros([nx, ny, nz, 18])
-    for i,j,k in product(range(nx), range(ny), range(nz)):
-        x = (i+0.5)*dx
-        y = (j+0.5)*dy
-        dv, dT, dρ, dp, A = vortex(x, y, 5, 5, ε, γ, ρ, p)
-        u[i,j,k] = conserved(ρ+dρ, p+dp, v+dv, A, J, 0, PAR, SYS)
-
-    return u, [PAR]*1, []
-
-def convected_isentropic_vortex_exact(t=1):
-    ε = 5
-
-    μ = 1e-6
-    κ = 1e-6
     γ = 1.4
 
     ρ = 1
@@ -66,7 +37,6 @@ def convected_isentropic_vortex_exact(t=1):
         u[i,j,k] = conserved(ρ+dρ, p+dp, v+dv, A, J, 0, PAR, SYS)
 
     return u, [PAR], []
-
 
 def circular_explosion_IC():
     """ Lx = 2
@@ -178,6 +148,19 @@ def lid_driven_cavity_IC():
         u[i,j,k] = Q
 
     return u, [PAR], []
+
+def lid_driven_cavity_BC(u):
+    ret = extend(u, 1, 0)
+    ret = extend(ret, 1, 1)
+    nx,ny,_,_ = ret.shape
+    for j in range(ny):
+        ret[0,j,0,2] = 0
+        ret[-1,j,0,2] = 0
+    for i in range(nx):
+        ret[i,0,0,2] = ret[i,0,0,0]
+        ret[i,0,0,3] = 0
+        ret[i,-1,0,3] = 0
+    return ret
 
 def double_shear_layer_IC():
     """ Lx = 1

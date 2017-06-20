@@ -14,8 +14,8 @@ from tests.d1.validation import viscous_shock_IC, semenov_IC
 from tests.d1.toro import toro_test1_IC
 from tests.d2.validation import convected_isentropic_vortex_IC, circular_explosion_IC
 from tests.d2.validation import laminar_boundary_layer_IC, hagen_poiseuille_duct_IC
-from tests.d2.validation import lid_driven_cavity_IC, double_shear_layer_IC
-from tests.d2.validation import taylor_green_vortex_IC
+from tests.d2.validation import lid_driven_cavity_IC, lid_driven_cavity_BC
+from tests.d2.validation import double_shear_layer_IC, taylor_green_vortex_IC
 from gpr.plot import *
 
 import options
@@ -29,8 +29,10 @@ from multi.gfm import add_ghost_cells, interface_indices, update_interface_locat
 from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
-IC = convected_isentropic_vortex_IC
-BC = standard_BC               # CHECK ARGUMENTS
+
+### CHECK ARGUMENTS ###
+IC = lid_driven_cavity_IC
+BC = lid_driven_cavity_BC
 
 
 SYS, SFix, TFix = options.SYS, options.SFix, options.TFix
@@ -56,23 +58,21 @@ def run(t, count):
 
         dt = timestep(fluids, count, t, PARs, SYS)
         add_ghost_cells(fluids, inds, PARs, dt, SYS, SFix, TFix)
-        fluidsBC = array([BC(fluid) for fluid in fluids])
 
         print_stats(count, t, dt, interfaceLocations, SYS)
 
         for i in range(m+1):
             fluid = fluids[i]
-            fluidBC = fluidsBC[i]
             PAR = PARs[i]
 
             if altThermSolve and not SYS.mechanical:
-                cookoff_stepper(fluid, fluidBC, dt, PAR)
+                cookoff_stepper(fluid, BC, dt, PAR)
             elif solver == 'ADER-WENO':
-                qh = aderweno_stepper(pool, fluid, fluidBC, dt, PAR, SYS)
+                qh = aderweno_stepper(pool, fluid, BC, dt, PAR, SYS)
             elif solver == 'SPLIT-WENO':
-                split_weno_stepper(pool, fluid, dt, PAR, SYS)
+                split_weno_stepper(pool, fluid, BC, dt, PAR, SYS)
             elif solver == 'SPLIT-DG':
-                split_dg_stepper(pool, fluid, dt, PAR, SYS)
+                split_dg_stepper(pool, fluid, BC, dt, PAR, SYS)
             else:
                 print('SOLVER NOT RECOGNISED')
                 sleep(1)
