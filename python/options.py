@@ -3,12 +3,12 @@ import numpy as np
 
 """ Domain Parameters """
 
-tf = 1                      # Final time of simulation
-Lx = 10                      # Length of domain in x direction
-Ly = 10                      # Length of domain in x direction
+tf = 0.25                      # Final time of simulation
+Lx = 1                      # Length of domain in x direction
+Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 40                    # Number of cells in x direction
-ny = 40                      # Number of cells in y direction
+nx = 200                    # Number of cells in x direction
+ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ Model Options """
@@ -42,16 +42,16 @@ solver = 'SPLIT-WENO'       # 'ADER-WENO', SPLIT-WENO', 'SPLIT-DG'
 convertTemp   = 1           # Use constant-pressure approximation in cookoff
 altThermSolve = 1           # Use operator splitting for thermal subsystem
 
-fullODE = 0                 # Use numerical ODE solver (Split-WENO)
-wenoHalfStep = 0            # Step forwards WENO solver by dt/2 (Split-WENO)
+fullODE = 1                 # Use numerical ODE solver (Split-WENO)
+wenoHalfStep = 1            # Step forwards WENO solver by dt/2 (Split-WENO)
 StrangSplit  = 1            # Use Strang splitting (Split-WENO)
 
 approxInterface = 0         # Calculate fluxes with average value of interface states
 reconstructPrim = 0         # Perform WENO and DG in primitive variables
 wenoAverage = 1             # Average x-then-y and y-then-x WENO reconstruction
 
-N      = 3                  # Method is order N+1
-CFL    = 0.1                # CFL number
+N      = 2                  # Method is order N+1
+CFL    = 0.4                # CFL number
 method = 'rusanov'          # Intercell fluxes ('osher' or 'rusanov')
 perronFrob = 0              # Use Perron-Frobenius approximation to max λ
 

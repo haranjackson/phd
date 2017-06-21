@@ -31,8 +31,8 @@ from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
 
 
 ### CHECK ARGUMENTS ###
-IC = lid_driven_cavity_IC
-BC = lid_driven_cavity_BC
+IC = heat_conduction_IC
+BC = standard_BC
 
 
 SYS, SFix, TFix = options.SYS, options.SFix, options.TFix
