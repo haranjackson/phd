@@ -2,6 +2,10 @@ from matplotlib.pyplot import figure, plot, scatter, axvline, get_cmap, imshow, 
 from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim
 from numpy import arange, zeros, linspace, mgrid, flipud
 
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
 from solvers.basis import quad, basis_polys
 from gpr.variables.state import sigma, entropy, heat_flux
 from gpr.variables.vectors import primitive
@@ -225,3 +229,14 @@ def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
     else:
         plot(res,color=cm[1],label=reslab,marker='x',linestyle='none',markersize=5)
         plot(ref,color=cm[0],label=reflab,linewidth=1)
+
+def anim(data, var):
+    fig = plt.figure()
+
+    im = plt.imshow(data[0][:,:,0,var])
+
+    def animate(i):
+        im.set_array(data[i][:,:,0,var])
+        return im,
+
+    return animation.FuncAnimation(fig, animate, interval=200, repeat=True)
