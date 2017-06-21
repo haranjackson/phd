@@ -150,16 +150,21 @@ def lid_driven_cavity_IC():
     return u, [PAR], []
 
 def lid_driven_cavity_BC(u):
-    ret = extend(u, 1, 0)
-    ret = extend(ret, 1, 1)
+    ret = extend(u, 1, 1)
     nx,ny,_,_ = ret.shape
-    for j in range(ny):
-        ret[0,j,0,2] = 0
-        ret[-1,j,0,2] = 0
     for i in range(nx):
-        ret[i,0,0,2] = ret[i,0,0,0]
-        ret[i,0,0,3] = 0
-        ret[i,-1,0,3] = 0
+        v = 2 - ret[i,1,0,2] / ret[i,1,0,0]
+        ret[i,0,0,2] = ret[i,0,0,0] * v
+        ret[i,0,0,3] *= -1
+        ret[i,-1,0,2:5] *= -1
+    ret = extend(ret, 1, 0)
+    for j in range(ny):
+        ret[0,j,0,2:5] *= -1
+        ret[-1,j,0,2:5] *= -1
+    ret[0,0,0,2:5] *= 0
+    ret[0,-1,0,2:5] *= 0
+    ret[-1,0,0,2:5] *= 0
+    ret[-1,-1,0,2:5] *= 0
     return ret
 
 def double_shear_layer_IC():
