@@ -2,7 +2,7 @@ from itertools import product
 
 from numpy import dot, tensordot, zeros
 
-from options import dx, dy, N1, nx, ny, nz, ndim
+from options import dx, dy, N1, ndim
 from solvers.basis import derivative_values
 from gpr.matrices.conserved import B0dot, flux, system_conserved
 
@@ -23,6 +23,8 @@ def weno_midstepper(wh, dt, PAR, SYS):
     """
     USE_JACOBIAN = 0
 
+    nx,ny,nz = wh.shape[:3]
+
     F = zeros([N1]*ndim+[18])
     G = zeros([N1]*ndim+[18])
     Bdwdx = zeros(18)
@@ -42,7 +44,7 @@ def weno_midstepper(wh, dt, PAR, SYS):
             else:
                 for a in range(N1):
                     F[a] = flux(w[a], 0, PAR, SYS)
-                dFdx = dot(derivs, F)
+                dFdx = derivative(F, 0)
                 for a in range(N1):
                     v = w[a,2:5] / w[a,0]
                     B0dot(Bdwdx, dwdx[a], v)
