@@ -148,9 +148,10 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
-    if ndim < 3:
+    nx,ny,nz = xh.shape[:3]
+    if nx==1:
         xh0 = xh.repeat([3], axis=2)
-    if ndim < 2:
+    if ny==1:
         xh0 = xh.repeat([3], axis=1)
         xh0 = xh0.repeat([3], axis=2)
 

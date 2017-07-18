@@ -107,7 +107,7 @@ def weno(u):
         u1, u2, u3, u4 = extract_stencils(tempu[:,j,k], i+N)
         coeffs(Wx[i, j, k], u1, u2, u3, u4)
 
-    if ndim==1:
+    if ny==1:
         return Wx
 
     Wxy = zeros([nx, ny, nz, N1, N1, 18])
@@ -116,7 +116,7 @@ def weno(u):
         u1, u2, u3, u4 = extract_stencils(tempWx[i,:,k,a], j+N)
         coeffs(Wxy[i, j, k, a], u1, u2, u3, u4)
 
-    if ndim==2:
+    if nz==1:
         return Wxy
 
     Wxyz = zeros([nx, ny, nz, N1, N1, N1, 18])
@@ -125,8 +125,7 @@ def weno(u):
         u1, u2, u3, u4 = extract_stencils(tempWxy[i,j,:,a,b], k+N)
         coeffs(Wxyz[i, j, k, a, b], u1, u2, u3, u4)
 
-    if ndim==3:
-        return Wxyz
+    return Wxyz
 
 def weno_primitive(q, PAR, SYS):
     """ Returns a WENO reconstruction in primitive variables, given the grid of conserved values.
