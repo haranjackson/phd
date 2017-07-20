@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import arctan, argsort, array, dot, cos, einsum, exp, eye, log, prod, sort, sqrt, zeros
+from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
@@ -58,7 +58,7 @@ def pos(x):
     return max(0,x)
 
 def solver_approximate_analytic(A, dt, PAR):
-    U, s, V = svd(A, overwrite_a=1)
+    U, s, V = svd(A)
     detA3 = prod(s)**(1/3)
     s0 = (s/detA3)**2
     m0 = sum(s0) / 3
