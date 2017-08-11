@@ -8,7 +8,7 @@ from solvers.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot
 from gpr.variables.vectors import Cvec_to_Pvec
-from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim, paraFV, ncore
+from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim, paraFV, ncore, VISCOUS
 
 
 nodes, _, weights = quad()
@@ -45,14 +45,14 @@ def endpoints(xh):
             xEnd[d] = temp
     return xEnd
 
-def interfaces(xEnd, PAR, SYS):
+def interfaces(xEnd, PAR):
     nx, ny, nz = xEnd.shape[2:5]
     fEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
     BEnd = zeros([ndim, nx-1, ny-1, nz-1, 18])
 
-    inpt_lam = lambda xL, xR: input_vectors(xL, xR, PAR, SYS)
-    flux_lam = lambda ftemp, p, E, d: flux_ref(ftemp, p, E, d, PAR, SYS)
-    s_lam = lambda pL, pR, qL, qR, d: s_func(pL, pR, qL, qR, d, PAR, SYS)
+    inpt_lam = lambda xL, xR: input_vectors(xL, xR, PAR)
+    flux_lam = lambda ftemp, p, E, d: flux_ref(ftemp, p, E, d, PAR)
+    s_lam = lambda pL, pR, qL, qR, d: s_func(pL, pR, qL, qR, d, PAR)
 
     for d in range(ndim):
         for i, j, k in product(range(nx-1), range(ny-1), range(nz-1)):
@@ -79,7 +79,7 @@ def interfaces(xEnd, PAR, SYS):
                 flux_lam(ftemp, pR, ER, d)
                 ftemp -= s_lam(pL, pR, qL, qR, d)
                 fEndTemp += weight0 * ftemp
-                BEndTemp += weight0 * Bint(qL, qR, d, SYS.viscous)
+                BEndTemp += weight0 * Bint(qL, qR, d)
 
             fEnd[d, i, j, k] = fEndTemp
             BEnd[d, i, j, k] = BEndTemp
@@ -101,7 +101,7 @@ def interfaces(xEnd, PAR, SYS):
         ret += BEnd[2, 1:, 1:,  1:]
     return ret
 
-def center(xhijk, t, inds, PAR, SYS, homogeneous=0):
+def center(xhijk, t, inds, PAR, homogeneous=0):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
     xxi = zeros([ndim, N1, 18])
@@ -125,11 +125,11 @@ def center(xhijk, t, inds, PAR, SYS, homogeneous=0):
         if reconstructPrim:
             p = x
         else:
-            p = Cvec_to_Pvec(x, PAR, SYS)
-        source_ref(ret, p, PAR, SYS)
+            p = Cvec_to_Pvec(x, PAR)
+        source_ref(ret, p, PAR)
         ret *= dx
 
-    if SYS.viscous:
+    if VISCOUS:
         if reconstructPrim:
             v = x[2:5]
         else:
@@ -137,14 +137,14 @@ def center(xhijk, t, inds, PAR, SYS, homogeneous=0):
         for d in range(ndim):
             dxdxi = dot(derivs[inds[d]], xxi[d])
             if reconstructPrim:
-                dxdxi = dQdPdot(x, dxdxi, PAR, SYS)
+                dxdxi = dQdPdot(x, dxdxi, PAR)
             temp = zeros(18)
             Bdot(temp, dxdxi, v, d)
             ret -= temp
 
     return ret
 
-def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
+def fv_terms(xh, dt, PAR, homogeneous=0):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
@@ -159,7 +159,7 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
     xEnd = endpoints(xh0)
     xh0 = xh0.reshape([nx+2, ny+2, nz+2] + idx + [18])
 
-    center_func = lambda xhijk, t, inds: center(xhijk, t, inds, PAR, SYS, homogeneous)
+    center_func = lambda xhijk, t, inds: center(xhijk, t, inds, PAR, homogeneous)
 
     s = zeros([nx, ny, nz, 18])
     for i, j, k in product(range(nx), range(ny), range(nz)):
@@ -167,11 +167,11 @@ def fv_terms(xh, dt, PAR, SYS, homogeneous=0):
         for t, x, y, z in product(range(idx[0]),range(idx[1]),range(idx[2]),range(idx[3])):
             s[i, j, k] += weight[t,x,y,z] * center_func(xhijk, t, [x, y, z])
 
-    s -= 0.5 * interfaces(xEnd, PAR, SYS)
+    s -= 0.5 * interfaces(xEnd, PAR)
 
     return dt/dx * s
 
-def fv_launcher(pool, qh, dt, PAR, SYS, homogeneous=0):
+def fv_launcher(pool, qh, dt, PAR, homogeneous=0):
     """ Controls the parallel computation of the Finite Volume interface terms
     """
     if paraFV:
@@ -181,8 +181,8 @@ def fv_launcher(pool, qh, dt, PAR, SYS, homogeneous=0):
         chunk[0] += 1
         chunk[-1] -= 1
         n = len(chunk) - 1
-        qhList = pool(delayed(fv_terms)(qh[chunk[i]-1:chunk[i+1]+1], dt, PAR, SYS, homogeneous)
+        qhList = pool(delayed(fv_terms)(qh[chunk[i]-1:chunk[i+1]+1], dt, PAR, homogeneous)
                                        for i in range(n))
         return concatenate(qhList)
     else:
-        return fv_terms(qh, dt, PAR, SYS, homogeneous)
+        return fv_terms(qh, dt, PAR, homogeneous)

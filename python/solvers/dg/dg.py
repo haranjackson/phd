@@ -12,6 +12,7 @@ from gpr.matrices.conserved import source, flux_ref, source_ref, Bdot, system_co
 from gpr.matrices.primitive import source_primitive_ref, Mdot_ref, source_primitive
 from options import ndim, dx, N1, NT, reconstructPrim
 from options import stiff, superStiff, hidalgo, TOL, MAX_ITER, failLim, paraDG, ncore
+from options import VISCOUS
 
 
 W, U, V, Z, T = system_matrices()
@@ -23,7 +24,7 @@ stiff = stiff
 idxDer = [ndim] + [N1]*ndim + [1]*(3-ndim)
 
 
-def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
+def rhs_conserved(q, Ww, dt, PAR, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of qh
     """
     Tq = dot(T, q)
@@ -32,20 +33,20 @@ def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
     Bq = zeros([ndim, NT, 18])
     for b in range(NT):
         qb = q[b]
-        P = Cvec_to_Pvec(qb, PAR, SYS)
+        P = Cvec_to_Pvec(qb, PAR)
         E = qb[1] / qb[0]
 
         if not homogeneous:
-            source_ref(ret[b], P, PAR, SYS)
+            source_ref(ret[b], P, PAR)
         for d in range(ndim):
-            flux_ref(Fq[d,b], P, E, d, PAR, SYS)
-            if SYS.viscous:
+            flux_ref(Fq[d,b], P, E, d, PAR)
+            if VISCOUS:
                 Bdot(Bq[d,b], Tq[d,b], P[2:5], d)
 
     if not homogeneous:
         ret *= dx
 
-    if SYS.viscous:
+    if VISCOUS:
         for d in range(ndim):
             ret -= Bq[d]
 
@@ -55,7 +56,7 @@ def rhs_conserved(q, Ww, dt, PAR, SYS, homogeneous):
 
     return (dt/dx) * ret + Ww
 
-def rhs_primitive(p, Ww, dt, PAR, SYS, homogeneous):
+def rhs_primitive(p, Ww, dt, PAR, homogeneous):
     """ Returns the right handside of the linear system governing the coefficients of ph
     """
     Tp = dot(T, p)
@@ -64,9 +65,9 @@ def rhs_primitive(p, Ww, dt, PAR, SYS, homogeneous):
     for b in range(NT):
         P = p[b]
         if not homogeneous:
-            source_primitive_ref(Sp[b], P, PAR, SYS)
+            source_primitive_ref(Sp[b], P, PAR)
         for d in range(ndim):
-            Mdot_ref(Mp[d,b], P, Tp[d,b], d, PAR, SYS)
+            Mdot_ref(Mp[d,b], P, Tp[d,b], d, PAR)
 
     ret = dx*Sp
     for d in range(ndim):
@@ -81,7 +82,7 @@ def standard_initial_guess(w):
     ret = array([w for i in range(N1)])
     return ret.reshape([NT, 18])
 
-def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
+def hidalgo_initial_guess(w, dtgaps, PAR, homogeneous):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
     """
     q = zeros([N1]*(ndim+1) + [18])
@@ -97,17 +98,17 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
 
             if reconstructPrim:
                 M = zeros(18)
-                Mdot_ref(M, qi, dqdxi, 0, PAR, SYS)
-                Sj = source_primitive(qi, PAR, SYS)
+                Mdot_ref(M, qi, dqdxi, 0, PAR)
+                Sj = source_primitive(qi, PAR)
             else:
-                M = dot(system_conserved(qi, 0, PAR, SYS), dqdxi)
-                Sj = source(qi, PAR, SYS)
+                M = dot(system_conserved(qi, 0, PAR), dqdxi)
+                Sj = source(qi, PAR)
 
             if superStiff and not homogeneous:
                 if reconstructPrim:
-                    f = lambda X: X - qi + dt/dx * M - dt/2 * (Sj+source_primitive(X,PAR,SYS))
+                    f = lambda X: X - qi + dt/dx * M - dt/2 * (Sj+source_primitive(X,PAR))
                 else:
-                    f = lambda X: X - qi + dt/dx * M - dt/2 * (Sj+source(X,PAR,SYS))
+                    f = lambda X: X - qi + dt/dx * M - dt/2 * (Sj+source(X,PAR))
                 q[t,i] = newton_krylov(f, qi, f_tol=TOL)
             else:
                 q[t,i] = qi - dt/dx * M + dt * Sj
@@ -115,11 +116,11 @@ def hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous):
         qt = q[t]
     return q.reshape([NT, 18])
 
-def failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous):
-    q = hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous)
+def failed(w, qh, i, j, k, f, dtgaps, PAR, homogeneous):
+    q = hidalgo_initial_guess(w, dtgaps, PAR, homogeneous)
     qh[i, j, k] = newton_krylov(f, q, f_tol=TOL, method='bicgstab')
 
-def predictor(wh, dt, PAR, SYS, homogeneous=0):
+def predictor(wh, dt, PAR, homogeneous=0):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     global stiff
@@ -129,9 +130,9 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
     dtgaps = dt * gaps
 
     if reconstructPrim:
-        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, PAR, SYS, homogeneous)
+        rhs = lambda X, Ww: rhs_primitive(X, Ww, dt, PAR, homogeneous)
     else:
-        rhs = lambda X, Ww: rhs_conserved(X, Ww, dt, PAR, SYS, homogeneous)
+        rhs = lambda X, Ww: rhs_conserved(X, Ww, dt, PAR, homogeneous)
 
     failCount = 0
     for i, j, k in product(range(nx), range(ny), range(nz)):
@@ -141,7 +142,7 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
         f = lambda X: X - spsolve(U, rhs(X, Ww))
 
         if hidalgo:
-            q = hidalgo_initial_guess(w, dtgaps, PAR, SYS, homogeneous)
+            q = hidalgo_initial_guess(w, dtgaps, PAR, homogeneous)
         else:
             q = standard_initial_guess(w)
 
@@ -157,7 +158,7 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
                     qNew = spsolve(U, rhs(q, Ww))
 
                 if isnan(qNew).any():
-                    failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous)
+                    failed(w, qh, i, j, k, f, dtgaps, PAR, homogeneous)
                     failCount += 1
                     break
                 elif (absolute(q-qNew) > TOL * (1 + absolute(q))).any():# Mixed convergence cond.
@@ -167,14 +168,14 @@ def predictor(wh, dt, PAR, SYS, homogeneous=0):
                     qh[i, j, k] = qNew
                     break
             else:
-                failed(w, qh, i, j, k, f, dtgaps, PAR, SYS, homogeneous)
+                failed(w, qh, i, j, k, f, dtgaps, PAR, homogeneous)
 
     if failCount > failLim:
         stiff = 1
         print('Defaulting to Stiff Solver')
     return qh
 
-def dg_launcher(pool, wh, dt, PAR, SYS, homogeneous=0):
+def dg_launcher(pool, wh, dt, PAR, homogeneous=0):
     """ Controls the parallel computation of the Galerkin predictor
     """
     if paraDG:
@@ -182,8 +183,8 @@ def dg_launcher(pool, wh, dt, PAR, SYS, homogeneous=0):
         step = int(nx / ncore)
         chunk = array([i*step for i in range(ncore)] + [nx+1])
         n = len(chunk) - 1
-        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i+1]], dt, PAR, SYS, homogeneous)
+        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i+1]], dt, PAR, homogeneous)
                                         for i in range(n))
         return concatenate(qhList)
     else:
-        return predictor(wh, dt, PAR, SYS, homogeneous)
+        return predictor(wh, dt, PAR, homogeneous)

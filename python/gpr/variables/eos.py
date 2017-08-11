@@ -1,6 +1,7 @@
 from numba import jit
 
 from auxiliary.funcs import AdevG, dev, gram, L2_1D, L2_2D
+from options import VISCOUS, THERMAL, REACTIVE
 
 
 @jit
@@ -11,7 +12,8 @@ def E_1(ρ, p, γ, pINF):
     return (p + γ*pINF) / ((γ-1) * ρ)
 
 def E_1r(λ, Qc):
-    """ Returns the microscale energy corresponding to the chemical energy in a reactive material
+    """ Returns the microscale energy corresponding to the chemical energy in a
+        reactive material
     """
     return Qc * (λ - 1)
 
@@ -43,7 +45,10 @@ def E_2Avec(A, cs2):
 
     tr = (a1+a2+a3)/3
 
-    return cs2/4 * (2*((A11*A12 + A21*A22 + A31*A32)**2 + (A11*A13 + A21*A23 + A31*A33)**2 + (A12*A13 + A22*A23 + A32*A33)**2) + (a1-tr)**2 + (a2-tr)**2 + (a3-tr)**2)
+    return cs2/4 * (2 * (  (A11*A12 + A21*A22 + A31*A32)**2
+                         + (A11*A13 + A21*A23 + A31*A33)**2
+                         + (A12*A13 + A22*A23 + A32*A33)**2)
+                    + (a1-tr)**2 + (a2-tr)**2 + (a3-tr)**2)
 
 @jit
 def E_2J(J, α2):
@@ -57,18 +62,18 @@ def E_3(v):
     """
     return L2_1D(v) / 2
 
-def total_energy(ρ, p, v, A, J, λ, PAR, SYS):
+def total_energy(ρ, p, v, A, J, λ, PAR):
     """ Returns the total energy
     """
     ret = E_1(ρ, p, PAR.γ, PAR.pINF) + E_3(v)
 
-    if SYS.viscous:
+    if VISCOUS:
         ret += E_2A(A, PAR.cs2)
 
-    if SYS.thermal:
+    if THERMAL:
         ret += E_2J(J, PAR.α2)
 
-    if SYS.reactive:
+    if REACTIVE:
         ret += E_1r(λ, PAR.Qc)
 
     return ret
@@ -87,8 +92,8 @@ def E_J(J, α2):
     return α2 * J
 
 def energy_to_temperature(E, A, J, PAR):
-    """ Returns the temperature of an ideal gas, given the energy (minus the kinetic energy or any
-        chemical energy)
+    """ Returns the temperature of an ideal gas, given the energy
+        (minus the kinetic energy or any chemical energy)
     """
     E1 = E - E_2A(A, PAR.cs2) - E_2J(J, PAR.α2)
     return E1 / PAR.cv

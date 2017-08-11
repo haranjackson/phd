@@ -7,7 +7,7 @@ from scipy.special import erf
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved, primitive
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, dx, Lx, SYS
+from options import nx, ny, nz, dx, Lx, GFM
 
 
 def first_stokes_problem_IC():
@@ -25,8 +25,8 @@ def first_stokes_problem_IC():
 
     PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
 
-    QL = conserved(ρ, p, -v, A, J, 0, PAR, SYS)
-    QR = conserved(ρ, p,  v, A, J, 0, PAR, SYS)
+    QL = conserved(ρ, p, -v, A, J, 0, PAR)
+    QR = conserved(ρ, p,  v, A, J, 0, PAR)
     u = zeros([nx, ny, nz, 18])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         if i*dx < Lx/2:
@@ -101,7 +101,7 @@ def viscous_shock_IC(center=0):
         A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
         λ = 1
-        u[i,0,0] = conserved(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, PAR, SYS)
+        u[i,0,0] = conserved(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, PAR)
 
     return u, [PAR], []
 
@@ -122,8 +122,8 @@ def heat_conduction_IC():
 
     PAR = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=p0, cs=1, α=2, μ=1e-2, κ=1e-2)
 
-    QL = conserved(ρL, p0, v0, AL, J0, 0, PAR, SYS)
-    QR = conserved(ρR, p0, v0, AR, J0, 0, PAR, SYS)
+    QL = conserved(ρL, p0, v0, AL, J0, 0, PAR)
+    QR = conserved(ρR, p0, v0, AR, J0, 0, PAR)
     u = zeros([nx, ny, nz, 18])
     x0 = Lx / 2
     for i in range(nx):
@@ -132,7 +132,10 @@ def heat_conduction_IC():
         else:
             u[i,0,0] = QR
 
-    return u, [PAR]*1, []
+    if GFM:
+        return u, [PAR, PAR], [0.5]
+    else:
+        return u, [PAR], []
 
 def semenov_IC():
     Rc = 8.314459848
@@ -153,7 +156,7 @@ def semenov_IC():
 
     PAR = material_parameters(γ=1.4, pINF=0, cv=cv, ρ0=ρ, p0=p, Qc=Qc, ε=ε, Bc=Bc)
 
-    Q = conserved(ρ, p, v, A, J, λ, PAR, SYS)
+    Q = conserved(ρ, p, v, A, J, λ, PAR)
     u = zeros([nx, ny, nz, 18])
     for i in range(nx):
         u[i,0,0] = Q

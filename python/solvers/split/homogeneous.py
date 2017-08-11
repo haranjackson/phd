@@ -18,7 +18,7 @@ def derivative(X, dim):
     elif dim==1:
         return tensordot(derivs, X, (1,1)).swapaxes(0,1) / dy
 
-def weno_midstepper(wh, dt, PAR, SYS):
+def weno_midstepper(wh, dt, PAR):
     """ Steps the WENO reconstruction forwards by dt/2, under the homogeneous system
     """
     USE_JACOBIAN = 0
@@ -39,11 +39,11 @@ def weno_midstepper(wh, dt, PAR, SYS):
 
             if USE_JACOBIAN:
                 for a in range(N1):
-                    Mx = system_conserved(w[a], 0, PAR, SYS)
+                    Mx = system_conserved(w[a], 0, PAR)
                     w[a] -= dt/2 * dot(Mx, dwdx[a])
             else:
                 for a in range(N1):
-                    F[a] = flux(w[a], 0, PAR, SYS)
+                    F[a] = flux(w[a], 0, PAR)
                 dFdx = derivative(F, 0)
                 for a in range(N1):
                     v = w[a,2:5] / w[a,0]
@@ -56,13 +56,13 @@ def weno_midstepper(wh, dt, PAR, SYS):
 
             if USE_JACOBIAN:
                 for a,b in product(range(N1), range(N1)):
-                    Mx = system_conserved(w[a,b], 0, PAR, SYS)
-                    My = system_conserved(w[a,b], 1, PAR, SYS)
+                    Mx = system_conserved(w[a,b], 0, PAR)
+                    My = system_conserved(w[a,b], 1, PAR)
                     w[a,b] -= dt/2 * (dot(Mx, dwdx[a,b]) + dot(My, dwdy[a,b]))
             else:
                 for a,b in product(range(N1), range(N1)):
-                    F[a,b] = flux(w[a,b], 0, PAR, SYS)
-                    G[a,b] = flux(w[a,b], 1, PAR, SYS)
+                    F[a,b] = flux(w[a,b], 0, PAR)
+                    G[a,b] = flux(w[a,b], 1, PAR)
                 dFdx = derivative(F, 0)
                 dGdy = derivative(G, 1)
                 for a,b in product(range(N1), range(N1)):

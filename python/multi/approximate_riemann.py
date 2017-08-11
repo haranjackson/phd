@@ -12,10 +12,10 @@ starTOL = 1e-8
 FIX_Q = 0
 
 
-def check_star_convergence(QL_, QR_, PARL, PARR, SYS):
+def check_star_convergence(QL_, QR_, PARL, PARR):
 
-    PL_ = primitive(QL_, PARL, SYS)
-    PR_ = primitive(QR_, PARR, SYS)
+    PL_ = primitive(QL_, PARL)
+    PR_ = primitive(QR_, PARR)
     σL_ = sigma(PL_.ρ, PL_.A, PARL.cs2)[0]
     σR_ = sigma(PR_.ρ, PR_.A, PARR.cs2)[0]
     qL_ = heat_flux(PL_.T, PL_.J, PARL.α2)[0]
@@ -23,9 +23,9 @@ def check_star_convergence(QL_, QR_, PARL, PARR, SYS):
 
     return amax(abs(σL_-σR_)) < starTOL and abs(qL_-qR_) < starTOL
 
-def riemann_constraints(P, sgn, PAR, SYS):
+def riemann_constraints(P, sgn, PAR):
 
-    _, Lhat, _ = primitive_eigs(P, PAR, SYS)
+    _, Lhat, _ = primitive_eigs(P, PAR)
     ρ = P.ρ; p = P.p; A = P.A
     pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
 
@@ -48,12 +48,12 @@ def riemann_constraints(P, sgn, PAR, SYS):
 
     return Lhat, inv(Lhat)
 
-def star_stepper(QL, QR, dt, PARL, PARR, SYS, SL=zeros(18), SR=zeros(18)):
+def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(18), SR=zeros(18)):
 
-    PL = primitive(QL, PARL, SYS)
-    PR = primitive(QR, PARR, SYS)
-    LL, RL = riemann_constraints(PL, -1, PARL, SYS)
-    LR, RR = riemann_constraints(PR, 1, PARR, SYS)
+    PL = primitive(QL, PARL)
+    PR = primitive(QR, PARR)
+    LL, RL = riemann_constraints(PL, -1, PARL)
+    LR, RR = riemann_constraints(PR, 1, PARR)
 
     ΘL = zeros([4, 4])
     ΘR = zeros([4, 4])
@@ -89,16 +89,16 @@ def star_stepper(QL, QR, dt, PARL, PARR, SYS, SL=zeros(18), SR=zeros(18)):
     PRvec = primitive_vector(PR)
     PL_vec = solve(LL, cL) + PLvec + dt*SL          # NOTE: Maybe incorrect, as LL,LR are calculated
     PR_vec = solve(LR, cR) + PRvec + dt*SR          # using reordered primitive variables
-    QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL, SYS)
-    QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR, SYS)
+    QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL)
+    QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR)
     return QL_, QR_
 
-def star_states(QL, QR, dt, PARL, PARR, SYS):
-#    LL, RL = riemann_constraints(QL, -1, PARL, SYS)
-#    LR, RR = riemann_constraints(QR, 1, PARR, SYS)
+def star_states(QL, QR, dt, PARL, PARR):
+#    LL, RL = riemann_constraints(QL, -1, PARL)
+#    LR, RR = riemann_constraints(QR, 1, PARR)
 #    SL = source_primitive_reordered(QL, PARL)
 #    SR = source_primitive_reordered(QR, PARR)
-    QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR, SYS)
-    while not check_star_convergence(QL_, QR_, PARL, PARR, SYS):
-        QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR, SYS)
+    QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR)
+    while not check_star_convergence(QL_, QR_, PARL, PARR):
+        QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR)
     return QL_, QR_

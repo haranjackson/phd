@@ -3,6 +3,7 @@ from numpy import dot, eye, outer, tensordot, zeros
 from auxiliary.funcs import L2_1D
 from gpr.variables.eos import E_1, E_A, total_energy
 from gpr.variables.state import heat_flux, sigma, sigma_A
+from options import VISCOUS, THERMAL, REACTIVE
 
 
 class jacobian_variables():
@@ -23,7 +24,7 @@ class jacobian_variables():
         self.Φ = ρ * outer(v, ψ).reshape([3,3,3])
         self.Φ -= tensordot(v, dσdA, axes=(0,0))
 
-def dQdP(P, PAR, SYS):
+def dQdP(P, PAR):
     """ Returns the Jacobian of the conserved variables with respect to the primitive variables
     """
     ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E
@@ -36,22 +37,22 @@ def dQdP(P, PAR, SYS):
     ret[2:5, 0] = v
     ret[2:5, 2:5] *= ρ
 
-    if SYS.viscous:
+    if VISCOUS:
         ret[1, 5:14] = ρ * ψ.ravel()
 
-    if SYS.thermal:
+    if THERMAL:
         ret[1, 14:17] = PAR.α2 * ρ * J
         ret[14:17, 0] = J
         ret[14:17, 14:17] *= ρ
 
-    if SYS.reactive:
+    if REACTIVE:
         ret[1, 17] = PAR.Qc * ρ
         ret[17, 0] = λ
         ret[17, 17] *= ρ
 
     return ret
 
-def dQdPdot(P, x, PAR, SYS):
+def dQdPdot(P, x, PAR):
     """ Returns DQ/DP.x where DQ/DP is evaluated at P
     """
     ret = zeros(18)
@@ -64,7 +65,7 @@ def dQdPdot(P, x, PAR, SYS):
     λ = 0
 
     x0 = x[0]
-    E = total_energy(ρ, p, v, A, J, λ, PAR, SYS)
+    E = total_energy(ρ, p, v, A, J, λ, PAR)
     E1 = E_1(ρ, p, PAR.γ, PAR.pINF)
     ψ = E_A(A, PAR.cs2)
 
@@ -77,7 +78,7 @@ def dQdPdot(P, x, PAR, SYS):
 
     return ret
 
-def dPdQ(P, jacVars, PAR, SYS):
+def dPdQ(P, jacVars, PAR):
     """ Returns the Jacobian of the primitive variables with respect to the conserved variables
     """
     ρ = P.ρ; J = P.J; v = P.v; λ = P.λ
@@ -93,16 +94,16 @@ def dPdQ(P, jacVars, PAR, SYS):
     for i in range(2,5):
         ret[i, i] = ρ_1
 
-    if SYS.viscous:
+    if VISCOUS:
         ret[1, 5:14] = -Γ * ρ * ψ.ravel()
 
-    if SYS.thermal:
+    if THERMAL:
         ret[1, 14:17] = -Γ * PAR.α2 * J
         ret[14:17, 0] = -J / ρ
         for i in range(14,17):
             ret[i, i] = ρ_1
 
-    if SYS.reactive:
+    if REACTIVE:
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
         Qc = PAR.Qc
@@ -111,7 +112,7 @@ def dPdQ(P, jacVars, PAR, SYS):
 
     return ret
 
-def dFdP(P, d, jacVars, PAR, SYS):
+def dFdP(P, d, jacVars, PAR):
     """ Returns the Jacobian of the flux vector with respect to the primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
@@ -136,7 +137,7 @@ def dFdP(P, d, jacVars, PAR, SYS):
     ret[2:5, 2+d] += ρ * v
     ret[2+d, 1] = 1
 
-    if SYS.viscous:
+    if VISCOUS:
         ret[1, 5:14] = Φ[d].ravel()
         ret[2:5, 5:14] = -dσdA[d].reshape([3,9])
         ret[5+d, 2:5] = A[0]
@@ -147,7 +148,7 @@ def dFdP(P, d, jacVars, PAR, SYS):
         ret[11+d, 11:14] = v
 
 
-    if SYS.thermal:
+    if THERMAL:
         ret[1, 14:17] = α2 * ρvd * J
         ret[1, 14+d] += α2 * T
         ret[14:17, 0] = v[d] * J
@@ -157,7 +158,7 @@ def dFdP(P, d, jacVars, PAR, SYS):
         for i in range(14,17):
             ret[i, i] = ρvd
 
-    if SYS.reactive:
+    if REACTIVE:
         ret[17, 0] = v[d] * λ
         ret[17, 2+d] = ρ * λ
         ret[17, 17] = ρvd

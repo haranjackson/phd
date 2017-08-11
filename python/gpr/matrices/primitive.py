@@ -5,13 +5,14 @@ from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2
 from gpr.variables.state import sigma, sigma_A, temperature
 from gpr.variables.vectors import primitive
+from options import VISCOUS, THERMAL, REACTIVE
 
 
-def system_primitive(Q, d, PAR, SYS):
-    """ Returns the system matrix in the dth direction for the system of primitive variables,
-        calculated directly
+def system_primitive(Q, d, PAR):
+    """ Returns the system matrix in the dth direction for the system of
+        primitive variables, calculated directly
     """
-    P = primitive(Q, PAR, SYS)
+    P = primitive(Q, PAR)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
     y = PAR.y; pINF = PAR.pINF
     sig = sigma(ρ, A)
@@ -33,17 +34,17 @@ def system_primitive(Q, d, PAR, SYS):
     ret[14+d, 0] = -T / ρ**2
     ret[14+d, 1] = T / (ρ * (p + pINF))
 
-    if not SYS.reactive:
+    if not REACTIVE:
         ret[17, 17] = 0
 
     return ret
 
-def system_primitive_reordered(Q, d, PAR, SYS):
-    """ Returns the system matrix in the dth direction for the system of primitive variables,
-        calculated directly.
+def system_primitive_reordered(Q, d, PAR):
+    """ Returns the system matrix in the dth direction for the system of
+        primitive variables, calculated directly.
         NOTE: Currently in column-major form.
     """
-    P = primitive(Q, PAR, SYS)
+    P = primitive(Q, PAR)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
     γ = PAR.γ; pINF = PAR.pINF
     sig = sigma(ρ, A)
@@ -63,18 +64,18 @@ def system_primitive_reordered(Q, d, PAR, SYS):
     ret[14+d, 0] = -T / ρ**2
     ret[14+d, 1] = T / (ρ * (p + pINF))
 
-    if not SYS.reactive:
+    if not REACTIVE:
         ret[17, 17] = 0
 
     return ret
 
 
-def source_primitive_ref(ret, P, PAR, SYS):
+def source_primitive_ref(ret, P, PAR):
 
     ρ = P[0]
     γ = PAR.γ
 
-    if SYS.viscous:
+    if VISCOUS:
         A = P[5:14].reshape([3,3])
         ψ = E_A(A, PAR.cs2)
         θ1 = theta_1(A, PAR.cs2, PAR.τ1)
@@ -82,7 +83,7 @@ def source_primitive_ref(ret, P, PAR, SYS):
         ret[1] = (γ-1) * ρ * L2_2D(ψ) / θ1
         ret[5:14] = -ψ.ravel() / θ1
 
-    if SYS.thermal:
+    if THERMAL:
         J = P[14:17]
         T = temperature(ρ, P.p, γ, PAR.pINF, PAR.cv)
         H = E_J(J, PAR.α2)
@@ -91,26 +92,26 @@ def source_primitive_ref(ret, P, PAR, SYS):
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
         ret[14:17] = -H / θ2
 
-def source_primitive(P, PAR, SYS):
+def source_primitive(P, PAR):
 
     ret = zeros(18)
-    source_primitive_ref(ret, P, PAR, SYS)
+    source_primitive_ref(ret, P, PAR)
     return ret
 
-def source_primitive_reordered(Q, PAR, SYS):
+def source_primitive_reordered(Q, PAR):
 
     ret = zeros(18)
     P = primitive(Q, PAR)
     ρ = P.ρ; A = P.A
     γ = PAR.γ
 
-    if SYS.viscous:
+    if VISCOUS:
         ψ = E_A(A)
         θ1 = theta_1(A, PAR.cs2, PAR.τ1)
         ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
         ret[2:11] = -ψ.ravel() / θ1
 
-    if SYS.thermal:
+    if THERMAL:
         H = E_J(P.J)
         θ2 = theta_2(ρ, P.T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
@@ -119,7 +120,7 @@ def source_primitive_reordered(Q, PAR, SYS):
     return ret
 
 
-def Mdot_ref(ret, P, x, d, PAR, SYS):
+def Mdot_ref(ret, P, x, d, PAR):
     """ Returns M(P).x
     """
     ρ = P[0]
@@ -132,7 +133,7 @@ def Mdot_ref(ret, P, x, d, PAR, SYS):
     ret[1] += γ * p * x[2+d]
     ret[2+d] += x[1] / ρ
 
-    if SYS.viscous:
+    if VISCOUS:
         A = P[5:14].reshape([3,3])
         cs2 = PAR.cs2
         σ = sigma(ρ, A, cs2)
@@ -144,7 +145,7 @@ def Mdot_ref(ret, P, x, d, PAR, SYS):
         ret[8+d] += dot(A[1],xv)
         ret[11+d] += dot(A[2],xv)
 
-    if SYS.thermal:
+    if THERMAL:
         T = temperature(ρ, p, γ, pINF, PAR.cv)
         ret[1] += (γ-1) * PAR.α2 * T * x[14+d]
         ret[14+d] += T / ρ * (x[1]/(p+pINF) - x[0]/ρ)

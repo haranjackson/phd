@@ -5,10 +5,9 @@ from time import time
 from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
-from options import mechanical, viscous, thermal, reactive
-from options import W, doubleTime, reactionType, fullBurn, burnProp
+from options import VISCOUS, THERMAL, REACTIVE, REACTION_TYPE
 from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
-from options import solver, convertTemp, altThermSolve
+from options import SOLVER
 from options import fullODE, wenoHalfStep, StrangSplit
 from options import approxInterface, reconstructPrim, wenoAverage
 from options import  N, CFL, method, perronFrob
@@ -17,11 +16,10 @@ from options import rc, λc, λs, eps
 from options import MAX_ITER, paraDG, paraFV, ncore
 
 
-def print_stats(count, t, dt, interfaceLocations, SYS):
+def print_stats(count, t, dt, interfaceLocations):
     print(count+1)
     print('t  =', t)
     print('dt =', dt)
-    print('M,V,T,R =', SYS.mechanical, SYS.viscous, SYS.thermal, SYS.reactive)
     if GFM:
         print('Interfaces =', interfaceLocations)
 
@@ -48,16 +46,10 @@ def save_config(path):
         f.write('ny = %i\n' % ny)
         f.write('nz = %i\n\n' % nz)
 
-        f.write('mechanical = %i\n' % mechanical)
-        f.write('viscous    = %i\n' % viscous)
-        f.write('thermal    = %i\n' % thermal)
-        f.write('reactive   = %i\n\n' % reactive)
-
-        f.write('W  = %e\n' % W)
-        f.write('doubleTime = %e\n' % doubleTime)
-        f.write('reactionType = %s\n' % reactionType)
-        f.write('fullBurn = %i\n' % fullBurn)
-        f.write('burnProp = %f\n\n' % burnProp)
+        f.write('VISCOUS  = %i\n' % VISCOUS)
+        f.write('THERMAL  = %i\n' % THERMAL)
+        f.write('REACTIVE = %i\n' % REACTIVE)
+        f.write('REACTION_TYPE = %s\n\n' % REACTION_TYPE)
 
         f.write('GFM  = %i\n' % GFM)
         f.write('RGFM = %i\n' % RGFM)
@@ -66,9 +58,7 @@ def save_config(path):
         f.write('TFix   = %i\n' % TFix)
         f.write('UPDATE_STEP = %i\n\n' % UPDATE_STEP)
 
-        f.write('solver  = %s\n' % solver)
-        f.write('convertTemp   = %i\n' % convertTemp)
-        f.write('altThermSolve = %i\n\n' % altThermSolve)
+        f.write('SOLVER  = %s\n\n' % SOLVER)
 
         f.write('fullODE = %i\n' % fullODE)
         f.write('wenoHalfStep = %i\n' % wenoHalfStep)

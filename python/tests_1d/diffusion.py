@@ -5,7 +5,7 @@ from numpy import array, eye, zeros
 from auxiliary.boundaries import standard_BC
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
-from options import nx, ny, nz, SYS
+from options import nx, ny, nz
 
 
 midx = int(nx/2)
@@ -24,8 +24,8 @@ def defaults():
     λ = 0
 
     PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
-    Q1 = conserved(ρ, p, v, A, J, λ, PAR, SYS)
-    Q2 = conserved(ρ, p, zeros(3), A, J, λ, PAR, SYS)
+    Q1 = conserved(ρ, p, v, A, J, λ, PAR)
+    Q2 = conserved(ρ, p, zeros(3), A, J, λ, PAR)
     return Q1, Q2, PAR
 
 def barrier_IC():

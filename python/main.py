@@ -1,105 +1,84 @@
-from time import time, sleep
+from time import time
 
 from joblib import Parallel
 from numpy import array, zeros
 
 from auxiliary.boundaries import standard_BC, periodic_BC
-from tests.d1.cookoff import CKR_BC, fixed_wall_temp_BC
-from tests.d1.cookoff import chapman_jouguet_IC, CKR_IC
-from tests.d1.diffusion import barrier_IC, barrier_BC
-from tests.d1.multi import sod_shock_IC, water_gas_IC, water_water_IC, helium_bubble_IC
-from tests.d1.multi import helium_heat_transmission_IC
-from tests.d1.validation import first_stokes_problem_IC, heat_conduction_IC
-from tests.d1.validation import viscous_shock_IC, semenov_IC
-from tests.d1.toro import toro_test1_IC
-from tests.d2.validation import convected_isentropic_vortex_IC, circular_explosion_IC
-from tests.d2.validation import laminar_boundary_layer_IC, hagen_poiseuille_duct_IC
-from tests.d2.validation import lid_driven_cavity_IC, lid_driven_cavity_BC
-from tests.d2.validation import double_shear_layer_IC, taylor_green_vortex_IC
+from tests_1d.diffusion import barrier_IC, barrier_BC
+from tests_1d.multi import sod_shock_IC, water_gas_IC, water_water_IC, helium_bubble_IC
+from tests_1d.multi import helium_heat_transmission_IC
+from tests_1d.validation import first_stokes_problem_IC, heat_conduction_IC
+from tests_1d.validation import viscous_shock_IC, semenov_IC
+from tests_1d.toro import toro_test1_IC
+from tests_2d.validation import convected_isentropic_vortex_IC, circular_explosion_IC
+from tests_2d.validation import laminar_boundary_layer_IC, hagen_poiseuille_duct_IC
+from tests_2d.validation import lid_driven_cavity_IC, lid_driven_cavity_BC
+from tests_2d.validation import double_shear_layer_IC, taylor_green_vortex_IC
 from gpr.plot import *
 
-import options
-from auxiliary.adjust import thermal_conversion
 from auxiliary.classes import save_arrays
-from auxiliary.iterator import timestep, check_ignition_started, continue_condition
-from solvers.solvers import cookoff_stepper, aderweno_stepper
-from solvers.solvers import split_weno_stepper, split_dg_stepper
+from auxiliary.iterator import timestep
+from solvers.solvers import aderweno_stepper, split_weno_stepper
 from auxiliary.save import print_stats, record_data, save_all
-from multi.gfm import add_ghost_cells, interface_indices, update_interface_locations
-from options import ncore, convertTemp, nx, NT, GFM, solver, altThermSolve
+from multi.gfm import add_ghost_cells, interface_inds, update_interface_locs
+from options import ncore, nx, NT, GFM, SOLVER, tf
 
 
 
 ### CHECK ARGUMENTS ###
-IC = heat_conduction_IC
+IC = first_stokes_problem_IC
 BC = standard_BC
 
 
-SYS, SFix, TFix = options.SYS, options.SFix, options.TFix
 u, PARs, intLocs = IC()
 saveArrays = save_arrays(u, intLocs)
 
-def run(t, count):
+def run(t, tf, count, saveArrays):
 
     tStart = time()
 
-    global saveArrays, SYS, SFix, TFix
-
-    interfaceLocations = saveArrays.interfaces[count]
-    m = len(interfaceLocations)
-    inds = interface_indices(interfaceLocations, nx)
+    interfaceLocs = saveArrays.interfaces[count]
+    m = len(interfaceLocs)
+    interfaceInds = interface_inds(interfaceLocs, nx)
     fluids = array([saveArrays.data[count] for i in range(m+1)])
     dg = zeros([nx, NT, 18])
 
     pool = Parallel(n_jobs=ncore)
-    while continue_condition(t, fluids):
+    while t < tf:
 
         t0 = time()
 
-        dt = timestep(fluids, count, t, PARs, SYS)
-        add_ghost_cells(fluids, inds, PARs, dt, SYS, SFix, TFix)
+        dt = timestep(fluids, count, t, tf, PARs)
 
-        print_stats(count, t, dt, interfaceLocations, SYS)
+        if GFM:
+            add_ghost_cells(fluids, interfaceInds, PARs, dt)
+
+        print_stats(count, t, dt, interfaceLocs)
 
         for i in range(m+1):
             fluid = fluids[i]
             PAR = PARs[i]
 
-            if altThermSolve and not SYS.mechanical:
-                cookoff_stepper(fluid, BC, dt, PAR)
-            elif solver == 'ADER-WENO':
-                qh = aderweno_stepper(pool, fluid, BC, dt, PAR, SYS)
-            elif solver == 'SPLIT-WENO':
-                split_weno_stepper(pool, fluid, BC, dt, PAR, SYS)
-            elif solver == 'SPLIT-DG':
-                split_dg_stepper(pool, fluid, BC, dt, PAR, SYS)
-            else:
-                print('SOLVER NOT RECOGNISED')
-                sleep(1)
+            if SOLVER == 'ADER-WENO':
+                qh = aderweno_stepper(pool, fluid, BC, dt, PAR)
+            elif SOLVER == 'SPLIT-WENO':
+                split_weno_stepper(pool, fluid, BC, dt, PAR)
 
             if GFM:
-                dg[inds[i]:inds[i+1]] = qh[inds[i]+1:inds[i+1]+1, 0, 0]
+                dg[interfaceInds[i]:interfaceInds[i+1]] \
+                  = qh[interfaceInds[i]+1:interfaceInds[i+1]+1, 0, 0]
 
         if GFM:
-            interfaceLocations = update_interface_locations(dg, interfaceLocations, dt)
-            inds = interface_indices(interfaceLocations, nx)
-
-        if convertTemp and not SYS.mechanical:
-            thermal_conversion(fluids, PARs)
-
-        if not SYS.mechanical:
-            SYS.mechanical, SYS.viscous = check_ignition_started(fluids)
-
-#        if count > 5:
-#            TFix = 0
+            interfaceLocs = update_interface_locs(dg, interfaceLocs, dt)
+            interfaceInds = interface_inds(interfaceLocs, nx)
 
         t += dt
         count += 1
-        record_data(fluids, inds, t, interfaceLocations, saveArrays)
+        record_data(fluids, interfaceInds, t, interfaceLocs, saveArrays)
         print('Total Time:', time()-t0, '\n')
 
     print('TOTAL RUNTIME:', time()-tStart)
 
 if __name__ == "__main__":
-    run(0, 0)
+    run(0, tf, 0, saveArrays)
     save_all(saveArrays)

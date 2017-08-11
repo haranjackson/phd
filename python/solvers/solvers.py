@@ -3,28 +3,21 @@ from time import time
 from solvers.fv.fv import fv_launcher
 from solvers.dg.dg import dg_launcher
 from solvers.weno.weno import weno_launcher
-from gpr.thermo import thermal_stepper
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_launcher
 from options import wenoHalfStep, StrangSplit
 
 
-def cookoff_stepper(fluid, BC, dt, PAR):
-    t0 = time()
-    fluid[:] = thermal_stepper(BC(fluid), dt, PAR)
-
-    print('OS:', time()-t0)
-
-def aderweno_stepper(pool, fluid, BC, dt, PAR, SYS):
+def aderweno_stepper(pool, fluid, BC, dt, PAR):
     t0 = time()
 
     wh = weno_launcher(BC(fluid))
     t1 = time()
 
-    qh = dg_launcher(pool, wh, dt, PAR, SYS)
+    qh = dg_launcher(pool, wh, dt, PAR)
     t2 = time()
 
-    fluid += fv_launcher(pool, qh, dt, PAR, SYS)
+    fluid += fv_launcher(pool, qh, dt, PAR)
     t3 = time()
 
     print('WENO:', t1-t0)
@@ -33,20 +26,20 @@ def aderweno_stepper(pool, fluid, BC, dt, PAR, SYS):
 
     return qh
 
-def split_weno_stepper(pool, fluid, BC, dt, PAR, SYS):
+def split_weno_stepper(pool, fluid, BC, dt, PAR):
 
     Δt = dt/2 if StrangSplit else dt
     t0 = time()
 
-    ode_launcher(fluid, Δt, PAR, SYS)
+    ode_launcher(fluid, Δt, PAR)
     t1 = time()
 
     wh = weno_launcher(BC(fluid))
     if wenoHalfStep:
-        weno_midstepper(wh, dt, PAR, SYS)
+        weno_midstepper(wh, dt, PAR)
     t2 = time()
 
-    fluid += fv_launcher(pool, wh, dt, PAR, SYS, 1)
+    fluid += fv_launcher(pool, wh, dt, PAR, 1)
     t3 = time()
 
     print('ODE: ', t1-t0)
@@ -54,30 +47,6 @@ def split_weno_stepper(pool, fluid, BC, dt, PAR, SYS):
     print('FV:  ', t3-t2)
 
     if StrangSplit:
-        ode_launcher(fluid, Δt, PAR, SYS)
+        ode_launcher(fluid, Δt, PAR)
         t4 = time()
         print('ODE: ', t4-t3)
-
-def split_dg_stepper(pool, fluid, BC, dt, PAR, SYS):
-    t0 = time()
-
-    ode_launcher(fluid, dt/2, PAR, SYS)
-    t1 = time()
-
-    wh = weno_launcher(BC(fluid))
-    t2 = time()
-
-    qh = dg_launcher(pool, wh, dt, PAR, SYS, 1)
-    t3 = time()
-
-    fluid += fv_launcher(pool, qh, dt, PAR, SYS, 1)
-    t4 = time()
-
-    ode_launcher(fluid, dt/2, PAR, SYS)
-    t5 = time()
-
-    print('ODE1:', t1-t0)
-    print('WENO:', t2-t1)
-    print('DG:  ', t3-t2)
-    print('FV:  ', t4-t3)
-    print('ODE2:', t5-t4)

@@ -2,7 +2,7 @@ from numpy import array, eye, sqrt, zeros
 
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
-from options import nx, ny, nz, Lx, dx, SYS
+from options import nx, ny, nz, Lx, dx
 
 
 def sod_shock_IC():
@@ -21,11 +21,12 @@ def sod_shock_IC():
     J = zeros(3)
     λ = 0
 
-    PAR = material_parameters(y=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=1, α=1, μ=5e-4, Pr=2/3)
+    PAR = material_parameters(y=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=1, α=1,
+                              μ=5e-4, Pr=2/3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, v, AL, J, λ, PAR, SYS)
-    QR = conserved(ρR, pR, v, AR, J, λ, PAR, SYS)
+    QL = conserved(ρL, pL, v, AL, J, λ, PAR)
+    QR = conserved(ρR, pR, v, AR, J, λ, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -41,22 +42,22 @@ def water_gas_IC():
     ρL = 1000
     pL = 1e9
     AL = ρL**(1/3) * eye(3)
-    PARL = material_parameters(y=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1, cs=1e-4, α=1e-4, μ=1e-3,
-                               Pr=7)
+    PARL = material_parameters(y=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1, cs=1e-4,
+                               α=1e-4, μ=1e-3, Pr=7)
 
     ρR = 50
     pR = 101325
     AR = ρR**(1/3) * eye(3)
-    PARR = material_parameters(y=1.4, pINF=0, cv=718, ρ0=1.176, p0=101325, cs=55, α=5e2, μ=1.98e-5,
-                               Pr=0.72)
+    PARR = material_parameters(y=1.4, pINF=0, cv=718, ρ0=1.176, p0=101325, cs=55,
+                               α=5e2, μ=1.98e-5, Pr=0.72)
 
     v = zeros(3)
     J = zeros(3)
     λ = 0
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, v, AL, J, λ, PARL, SYS)
-    QR = conserved(ρR, pR, v, AR, J, λ, PARR, SYS)
+    QL = conserved(ρL, pL, v, AL, J, λ, PARL)
+    QR = conserved(ρR, pR, v, AR, J, λ, PARR)
     for i in range(nx):
         if i*dx < 0.7:
             u[i, 0, 0] = QL
@@ -69,8 +70,8 @@ def water_water_IC():
     """ tf = 1.5e-4
         L = 1
     """
-    PAR = material_parameters(y=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1e5, cs=1e-4, α=1e-4, μ=1e-3,
-                              Pr=7)
+    PAR = material_parameters(y=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1e5, cs=1e-4,
+                              α=1e-4, μ=1e-3, Pr=7)
 
     ρL = 1000
     pL = 7e8
@@ -85,8 +86,8 @@ def water_water_IC():
     λ = 0
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, v, AL, J, λ, PAR, SYS)
-    QR = conserved(ρR, pR, v, AR, J, λ, PAR, SYS)
+    QL = conserved(ρL, pL, v, AL, J, λ, PAR)
+    QR = conserved(ρR, pR, v, AR, J, λ, PAR)
     for i in range(nx):
         if i*dx < 0.5:
             u[i, 0, 0] = QL
@@ -99,10 +100,10 @@ def helium_bubble_IC():
     """ tf = 0.0014
         L = 1
     """
-    PAR_air = material_parameters(y=1.4, pINF=0, cv=721, ρ0=1.18, p0=10100, cs=1, α=1, μ=1.85e-5,
-                                  Pr=0.714)
-    PAR_hel = material_parameters(y=1.66, pINF=0, cv=3127, ρ0=0.163, p0=10100, cs=1, α=1, μ=1.99e-5,
-                                  Pr=0.688)
+    PAR_air = material_parameters(y=1.4, pINF=0, cv=721, ρ0=1.18, p0=10100,
+                                  cs=1, α=1, μ=1.85e-5, Pr=0.714)
+    PAR_hel = material_parameters(y=1.66, pINF=0, cv=3127, ρ0=0.163, p0=10100,
+                                  cs=1, α=1, μ=1.99e-5, Pr=0.688)
     ρL = 1.3333
     pL = 1.5e5
     vL = array([35.35*sqrt(10), 0, 0])
@@ -122,9 +123,9 @@ def helium_bubble_IC():
     λ = 0
 
     u = zeros([nx, ny, nz, 18])
-    Q1 = conserved(ρL, pL, vL, AL, J, λ, PAR_air, SYS)
-    Q2 = conserved(ρM, pM, vM, AM, J, λ, PAR_air, SYS)
-    Q3 = conserved(ρR, pR, vR, AR, J, λ, PAR_hel, SYS)
+    Q1 = conserved(ρL, pL, vL, AL, J, λ, PAR_air)
+    Q2 = conserved(ρM, pM, vM, AM, J, λ, PAR_air)
+    Q3 = conserved(ρR, pR, vR, AR, J, λ, PAR_hel)
     for i in range(nx):
         if i*dx < 0.05:
             u[i, 0, 0] = Q1
@@ -151,13 +152,13 @@ def helium_heat_transmission_IC():
     λ = 0
     p0 = 101325
 
-    PAR_air = material_parameters(y=1.4, pINF=0, cv=718, ρ0=ρL, p0=p0, cs=55, α=5e2, μ=1.84e-5,
-                                  Pr=0.715)
-    PAR_hel = material_parameters(y=1.66, pINF=0, cv=3128, ρ0=ρR, p0=p0, cs=55, α=5e2, μ=1.98e-5,
-                                  Pr=0.688)
+    PAR_air = material_parameters(y=1.4, pINF=0, cv=718, ρ0=ρL, p0=p0, cs=55,
+                                  α=5e2, μ=1.84e-5, Pr=0.715)
+    PAR_hel = material_parameters(y=1.66, pINF=0, cv=3128, ρ0=ρR, p0=p0, cs=55,
+                                  α=5e2, μ=1.98e-5, Pr=0.688)
 
-    QL = conserved(ρL, p0, v, A, J, λ, PAR_air, SYS)
-    QR = conserved(ρR, p0, v, A, J, λ, PAR_hel, SYS)
+    QL = conserved(ρL, p0, v, A, J, λ, PAR_air)
+    QR = conserved(ρR, p0, v, A, J, λ, PAR_hel)
     u = zeros([nx, ny, nz, 18])
     x0 = Lx/4
     for i in range(nx):

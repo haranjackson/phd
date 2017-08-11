@@ -2,7 +2,7 @@ from numpy import array, eye, zeros
 
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import conserved
-from options import nx, ny, nz, SYS
+from options import nx, ny, nz
 
 
 PAR = material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1, μ=1e-2, Pr=0.75)
@@ -22,8 +22,8 @@ def toro_test1_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR, SYS)
-    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR, SYS)
+    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -45,8 +45,8 @@ def toro_test2_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR, SYS)
-    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR, SYS)
+    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -68,8 +68,8 @@ def toro_test3_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR, SYS)
-    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR, SYS)
+    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -91,8 +91,8 @@ def toro_test4_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR, SYS)
-    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR, SYS)
+    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -114,8 +114,8 @@ def toro_test5_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR, SYS)
-    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR, SYS)
+    QL = conserved(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = conserved(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
