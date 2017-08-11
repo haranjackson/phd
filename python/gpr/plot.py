@@ -8,7 +8,7 @@ import matplotlib.animation as animation
 from solvers.basis import quad, basis_polys
 from gpr.variables.state import sigma, entropy, heat_flux
 from gpr.variables.vectors import primitive
-from multi.gfm import interface_indices
+from multi.gfm import interface_inds
 from options import Lx, nx, ny, ndim
 
 
@@ -96,7 +96,7 @@ def plot_pressure(u, materialParams, intLocs=[], style='line', x=None,
                   label=None, color=None, sci=0):
     figure(19)
     n = len(u)
-    inds = interface_indices(intLocs, n)
+    inds = interface_inds(intLocs, n)
     y = zeros(n)
 
     for k in range(len(inds)-1):
@@ -108,7 +108,7 @@ def plot_temperature(u, materialParams, intLocs=[], style='line', x=None,
                      label=None, color=None, sci=0):
     figure(20)
     n = len(u)
-    inds = interface_indices(intLocs, n)
+    inds = interface_inds(intLocs, n)
     y = zeros(n)
 
     for k in range(len(inds)-1):
@@ -121,7 +121,7 @@ def plot_sigma(u, i, j, materialParams, intLocs=[], style='line', x=None,
 
     figure(21+i*3+j)
     n = len(u)
-    inds = interface_indices(intLocs, n)
+    inds = interface_inds(intLocs, n)
     y = zeros(n)
 
     for k in range(len(inds)-1):
@@ -135,7 +135,7 @@ def plot_heat_flux(u, i, materialParams, intLocs=[], style='line', x=None,
                    label=None, color=None, sci=0):
     figure(30+i)
     n = len(u)
-    inds = interface_indices(intLocs, n)
+    inds = interface_inds(intLocs, n)
     y = zeros(n)
 
     for k in range(len(inds)-1):
@@ -148,7 +148,7 @@ def plot_entropy(u, materialParams, intLocs=[], style='line', x=None,
                  label=None, color=None, sci=0):
     figure(33)
     n = len(u)
-    inds = interface_indices(intLocs, n)
+    inds = interface_inds(intLocs, n)
     y = zeros(n)
 
     for k in range(len(inds)-1):
