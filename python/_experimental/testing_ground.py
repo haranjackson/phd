@@ -8,9 +8,9 @@ from scipy.linalg import svd
 
 from auxiliary.classes import material_parameters
 from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D
-from gpr.variables.eos import E_A
+from gpr.variables.eos import E_A, total_energy
 from gpr.variables.material_functions import theta_1
-from split.ode import linearised_distortion
+from gpr.variables.vectors import Qvec, Cvec_to_Pvec
 
 
 def jac(y, t0, PAR):
@@ -84,16 +84,6 @@ def stretch_solver2(A, dt, PAR):
     s = array([s2[0], s2[1], c/(s2[0]*s2[1])])
     return dot(U*sqrt(s),V)
 
-def compare_solvers(A, dt):
-    PAR = material_parameters(γ=1.4,pINF=0,cv=1,ρ0=1,p0=1,cs=1,α=1e-16,μ=1e-3,Pr=3/4)
-    ρ = det3(A)
-
-    A1 = linearised_distortion(ρ, A, dt, PAR)
-    A2 = numerical(A, dt, PAR)
-    A3 = stretch_solver(A, dt, PAR)
-    A4 = stretch_solver2(A, dt, PAR)
-    return A1, A2, A3, A4
-
 
 def plot_surfaces():
     fig = plt.figure()
@@ -110,3 +100,35 @@ def plot_surfaces():
     ax.set_xlim(0,2)
     ax.set_ylim(0,2)
     ax.set_zlim(0,2)
+
+
+def generate_pars():
+    γ = 1.4
+    cv = 2.5
+    pinf = 0
+    ρ0 = 1
+    p0 = 1
+    T0 = temperature(ρ0, p0, γ, pinf, cv)
+    cs = 2
+    μ = 1e-3
+    τ1 = 6 * μ / (ρ0 * cs**2)
+    α = 1.5
+    κ = 1e-4
+    τ2 = κ * ρ0 / (T0 * α**2)
+
+    PAR = material_parameters(γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0, cs=cs, α=α,
+                              μ=μ, κ=κ)
+    return PAR
+
+def generate_vecs(PAR):
+    A = rand(3,3)
+    A /= sign(det(A))
+    ρ = det(A)
+    p = rand()
+    v = rand(3)
+    J = rand(3)
+    E = total_energy(ρ, p, v, A, J, 0, PAR)
+
+    Q = Qvec(ρ, p, v, A, J, 0, PAR)
+    P = Cvec_to_Pvec(Q, PAR)
+    return Q, P

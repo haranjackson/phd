@@ -4,7 +4,7 @@ from gpr.variables.eos import total_energy
 from gpr.variables.state import pressure, temperature
 
 
-class primitive():
+class Qvec_to_Pclass():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
     def __init__(self, Q, PAR):
@@ -18,7 +18,7 @@ class primitive():
         self.p = pressure(self.E, self.v, self.A, self.ρ, self.J, self.λ, PAR)
         self.T = temperature(self.ρ, self.p, PAR.γ, PAR.pINF, PAR.cv)
 
-def conserved(ρ, p, v, A, J, λ, PAR):
+def Qvec(ρ, p, v, A, J, λ, PAR):
     """ Returns the vector of conserved variables, given the primitive variables
     """
     Q = zeros(18)
@@ -30,7 +30,7 @@ def conserved(ρ, p, v, A, J, λ, PAR):
     Q[17] = ρ * λ
     return Q
 
-def primitive_vector(P):
+def Pvec(P):
     ret = zeros(18)
     ret[0] = P.ρ
     ret[1] = P.p

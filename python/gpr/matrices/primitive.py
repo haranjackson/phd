@@ -1,10 +1,10 @@
-from numpy import dot, eye, zeros
+from numpy import array, dot, eye, zeros
 
 from auxiliary.funcs import L2_1D, L2_2D
 from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2
 from gpr.variables.state import sigma, sigma_A, temperature
-from gpr.variables.vectors import primitive
+from gpr.variables.vectors import Qvec_to_Pclass
 from options import VISCOUS, THERMAL, REACTIVE
 
 
@@ -12,16 +12,17 @@ def system_primitive(Q, d, PAR):
     """ Returns the system matrix in the dth direction for the system of
         primitive variables, calculated directly
     """
-    P = primitive(Q, PAR)
+    P = Qvec_to_Pclass(Q, PAR)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
-    y = PAR.y; pINF = PAR.pINF
-    sig = sigma(ρ, A)
-    dσdA = sigma_A(ρ, A)
+    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2
+
+    sig = sigma(ρ, A, cs2)
+    dσdA = sigma_A(ρ, A, cs2)
 
     ret = v[d] * eye(18)
     ret[0, 2+d] = ρ
-    ret[1, 2+d] = y * p
-    ret[1, 14+d] = (y-1) * PAR.α2 * T
+    ret[1, 2+d] = γ * p
+    ret[1, 14+d] = (γ-1) * PAR.α2 * T
     ret[2+d, 1] = 1 / ρ
 
     ret[2:5, 0] = -sig[d] / ρ**2
@@ -44,31 +45,9 @@ def system_primitive_reordered(Q, d, PAR):
         primitive variables, calculated directly.
         NOTE: Currently in column-major form.
     """
-    P = primitive(Q, PAR)
-    ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
-    γ = PAR.γ; pINF = PAR.pINF
-    sig = sigma(ρ, A)
-    dsdA = sigma_A(ρ, A)
-
-    ret = v[d] * eye(18)
-    ret[0, 11+d] = ρ
-    ret[1, 11+d] = γ * p
-    ret[1, 14+d] = (γ-1) * PAR.α2 * T
-    ret[2+3*d:5+3*d, 11:14] = A
-    ret[11:14, 0] = -sig[d] / ρ**2
-    ret[11+d, 1] = 1 / ρ
-
-    for i in range(3):
-        ret[11+i, 2:11] = -1 / ρ * dsdA[i,d].ravel(order='F')
-
-    ret[14+d, 0] = -T / ρ**2
-    ret[14+d, 1] = T / (ρ * (p + pINF))
-
-    if not REACTIVE:
-        ret[17, 17] = 0
-
-    return ret
-
+    ret = system_primitive(Q, d, PAR)
+    perm = array([0,1,5,8,11,6,9,12,7,10,13,2,3,4,14,15,16,17])
+    return ret[:,perm][perm,:]
 
 def source_primitive_ref(ret, P, PAR):
 
@@ -101,7 +80,7 @@ def source_primitive(P, PAR):
 def source_primitive_reordered(Q, PAR):
 
     ret = zeros(18)
-    P = primitive(Q, PAR)
+    P = Qvec_to_Pclass(Q, PAR)
     ρ = P.ρ; A = P.A
     γ = PAR.γ
 

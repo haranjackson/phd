@@ -1,7 +1,7 @@
 from numpy import array, eye, sqrt, zeros
 
 from auxiliary.classes import material_parameters
-from gpr.variables.vectors import conserved
+from gpr.variables.vectors import Qvec
 from options import nx, ny, nz, Lx, dx
 
 
@@ -25,8 +25,8 @@ def sod_shock_IC():
                               μ=5e-4, Pr=2/3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, v, AL, J, λ, PAR)
-    QR = conserved(ρR, pR, v, AR, J, λ, PAR)
+    QL = Qvec(ρL, pL, v, AL, J, λ, PAR)
+    QR = Qvec(ρR, pR, v, AR, J, λ, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -56,8 +56,8 @@ def water_gas_IC():
     λ = 0
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, v, AL, J, λ, PARL)
-    QR = conserved(ρR, pR, v, AR, J, λ, PARR)
+    QL = Qvec(ρL, pL, v, AL, J, λ, PARL)
+    QR = Qvec(ρR, pR, v, AR, J, λ, PARR)
     for i in range(nx):
         if i*dx < 0.7:
             u[i, 0, 0] = QL
@@ -86,8 +86,8 @@ def water_water_IC():
     λ = 0
 
     u = zeros([nx, ny, nz, 18])
-    QL = conserved(ρL, pL, v, AL, J, λ, PAR)
-    QR = conserved(ρR, pR, v, AR, J, λ, PAR)
+    QL = Qvec(ρL, pL, v, AL, J, λ, PAR)
+    QR = Qvec(ρR, pR, v, AR, J, λ, PAR)
     for i in range(nx):
         if i*dx < 0.5:
             u[i, 0, 0] = QL
@@ -123,9 +123,9 @@ def helium_bubble_IC():
     λ = 0
 
     u = zeros([nx, ny, nz, 18])
-    Q1 = conserved(ρL, pL, vL, AL, J, λ, PAR_air)
-    Q2 = conserved(ρM, pM, vM, AM, J, λ, PAR_air)
-    Q3 = conserved(ρR, pR, vR, AR, J, λ, PAR_hel)
+    Q1 = Qvec(ρL, pL, vL, AL, J, λ, PAR_air)
+    Q2 = Qvec(ρM, pM, vM, AM, J, λ, PAR_air)
+    Q3 = Qvec(ρR, pR, vR, AR, J, λ, PAR_hel)
     for i in range(nx):
         if i*dx < 0.05:
             u[i, 0, 0] = Q1
@@ -157,8 +157,8 @@ def helium_heat_transmission_IC():
     PAR_hel = material_parameters(y=1.66, pINF=0, cv=3128, ρ0=ρR, p0=p0, cs=55,
                                   α=5e2, μ=1.98e-5, Pr=0.688)
 
-    QL = conserved(ρL, p0, v, A, J, λ, PAR_air)
-    QR = conserved(ρR, p0, v, A, J, λ, PAR_hel)
+    QL = Qvec(ρL, p0, v, A, J, λ, PAR_air)
+    QR = Qvec(ρR, p0, v, A, J, λ, PAR_hel)
     u = zeros([nx, ny, nz, 18])
     x0 = Lx/4
     for i in range(nx):

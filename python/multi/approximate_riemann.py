@@ -3,8 +3,8 @@ from scipy.linalg import solve, inv
 
 from gpr.eig import primitive_eigs
 #from gpr.matrices.primitive import source_primitive_reordered
-from gpr.variables.state import heat_flux, sigma, sigma_A
-from gpr.variables.vectors import primitive, primitive_vector, Pvec_reordered_to_Cvec
+from gpr.variables.state import heat_flux, sigma, sigma_A, temperature
+from gpr.variables.vectors import Qvec_to_Pclass, Pvec, Pvec_reordered_to_Cvec
 from options import dx
 
 
@@ -14,8 +14,8 @@ FIX_Q = 0
 
 def check_star_convergence(QL_, QR_, PARL, PARR):
 
-    PL_ = primitive(QL_, PARL)
-    PR_ = primitive(QR_, PARR)
+    PL_ = Qvec_to_Pclass(QL_, PARL)
+    PR_ = Qvec_to_Pclass(QR_, PARR)
     σL_ = sigma(PL_.ρ, PL_.A, PARL.cs2)[0]
     σR_ = sigma(PR_.ρ, PR_.A, PARR.cs2)[0]
     qL_ = heat_flux(PL_.T, PL_.J, PARL.α2)[0]
@@ -27,9 +27,9 @@ def riemann_constraints(P, sgn, PAR):
 
     _, Lhat, _ = primitive_eigs(P, PAR)
     ρ = P.ρ; p = P.p; A = P.A
-    pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
+    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; cv = PAR.cv
 
-    q0 = heat_flux(P.T, P.J, α2)[0]
+    T = temperature(ρ, p, γ, pINF, cv)
     σ0 = sigma(ρ, A, cs2)[0]
     dσdA = sigma_A(ρ, A, cs2)[0]
     Π1 = dσdA[:,:,0]
@@ -37,21 +37,23 @@ def riemann_constraints(P, sgn, PAR):
     Π3 = dσdA[:,:,2]
 
     Lhat[:4] = 0
-    Lhat[0, 0] = -q0 / ρ
-    Lhat[0, 1] = q0 / (p + pINF)
-    Lhat[0, 14] = α2 * P.T
-    Lhat[1:4, 0] = σ0 / ρ
-    Lhat[1:4, 2:5] = Π1
-    Lhat[1:4, 5:8] = Π2
-    Lhat[1:4, 8:11] = Π3
+    Lhat[:3, 0] = -σ0 / ρ
+    Lhat[0, 1] = 1
+    Lhat[1, 1] = 0
+    Lhat[2, 1] = 0
+    Lhat[:3, 2:5] = -Π1
+    Lhat[:3, 5:8] = -Π2
+    Lhat[:3, 8:11] = -Π3
+    Lhat[3, 0] = -T / ρ
+    Lhat[3, 1] = T / (p+pINF)
     Lhat[4:8, 11:15] *= sgn
 
     return Lhat, inv(Lhat)
 
 def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(18), SR=zeros(18)):
 
-    PL = primitive(QL, PARL)
-    PR = primitive(QR, PARR)
+    PL = Qvec_to_Pclass(QL, PARL)
+    PR = Qvec_to_Pclass(QR, PARR)
     LL, RL = riemann_constraints(PL, -1, PARL)
     LR, RR = riemann_constraints(PR, 1, PARR)
 
@@ -85,8 +87,8 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(18), SR=zeros(18)):
     cL[:4] = x_ - xL
     cR[:4] = x_ - xR
 
-    PLvec = primitive_vector(PL)
-    PRvec = primitive_vector(PR)
+    PLvec = Pvec(PL)
+    PRvec = Pvec(PR)
     PL_vec = solve(LL, cL) + PLvec + dt*SL          # NOTE: Maybe incorrect, as LL,LR are calculated
     PR_vec = solve(LR, cR) + PRvec + dt*SR          # using reordered primitive variables
     QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL)

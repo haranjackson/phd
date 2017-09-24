@@ -96,8 +96,8 @@ def Xi2mat(ρ, p, A, T, γ, α2):
     return ret
 
 def primitive_eigs(P, PAR, left=1, right=1):
-    """ Returns eigenvalues and set of left and right eigenvectors of the matrix returned by
-        system_primitive_reordered
+    """ Returns eigenvalues and set of left and right eigenvectors of the
+        matrix returned by system_primitive_reordered
     """
     ρ = P.ρ; p = P.p; A = P.A; T = P.T; vd = P.v[0]
     γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
