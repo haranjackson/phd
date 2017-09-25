@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import dot
+from numpy import dot, eye
 
 from auxiliary.funcs import AdevG, gram
 from gpr.variables.eos import E_1r, E_2A, E_2Avec, E_2J, E_3, E_A
@@ -39,12 +39,12 @@ def entropy(Q, PAR):
     λ = Q[17] / ρ
 
     p = pressure(E, v, A, ρ, J, λ, PAR)
-    return (p + PAR.pINF) / ρ**PAR.y
+    return (p + PAR.pINF) / ρ**PAR.γ
 
 def density(S, p, PAR):
     """ Returns the density of a stiffened gas, given entropy and pressure
     """
-    return ((p + PAR.pINF) / S) ** (1 / PAR.y)
+    return ((p + PAR.pINF) / S) ** (1 / PAR.γ)
 
 @jit
 def temperature(ρ, p, γ, pINF, cv):
@@ -77,3 +77,8 @@ def sigma_A(ρ, A, cs2):
         ret[i, :, :, i] += AdevGT
         ret[:, i, :, i] += AdevGT
     return -ρ * cs2 * ret
+
+def Sigma(p, ρ, A, cs2):
+    """ Returns the total symmetric stress tensor
+    """
+    return p * eye(3) - sigma(ρ, A, cs2)

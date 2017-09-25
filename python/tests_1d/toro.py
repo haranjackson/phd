@@ -1,7 +1,7 @@
 from numpy import array, eye, zeros
 
 from auxiliary.classes import material_parameters
-from gpr.variables.vectors import Qvec
+from gpr.variables.vectors import Cvec
 from options import nx, ny, nz
 
 
@@ -22,14 +22,14 @@ def toro_test1_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = Qvec(ρL, pL, vL, AL, JL, 0, PAR)
-    QR = Qvec(ρR, pR, vR, AR, JR, 0, PAR)
+    QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
         else:
             u[i, 0, 0] = QR
-    return u, [PAR]*1, []
+    return u, [PAR]*2, [0.5]
 
 def toro_test2_IC():
     ρL = 1
@@ -45,8 +45,8 @@ def toro_test2_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = Qvec(ρL, pL, vL, AL, JL, 0, PAR)
-    QR = Qvec(ρR, pR, vR, AR, JR, 0, PAR)
+    QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -68,8 +68,8 @@ def toro_test3_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = Qvec(ρL, pL, vL, AL, JL, 0, PAR)
-    QR = Qvec(ρR, pR, vR, AR, JR, 0, PAR)
+    QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -91,8 +91,8 @@ def toro_test4_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = Qvec(ρL, pL, vL, AL, JL, 0, PAR)
-    QR = Qvec(ρR, pR, vR, AR, JR, 0, PAR)
+    QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL
@@ -114,8 +114,8 @@ def toro_test5_IC():
     JR = zeros(3)
 
     u = zeros([nx, ny, nz, 18])
-    QL = Qvec(ρL, pL, vL, AL, JL, 0, PAR)
-    QR = Qvec(ρR, pR, vR, AR, JR, 0, PAR)
+    QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
+    QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
         if i < int(nx/2):
             u[i, 0, 0] = QL

@@ -19,14 +19,14 @@ from gpr.plot import *
 from auxiliary.classes import save_arrays
 from auxiliary.iterator import timestep
 from solvers.solvers import aderweno_stepper, split_weno_stepper
-from auxiliary.save import print_stats, record_data, save_all
-from multi.gfm import add_ghost_cells, interface_inds, update_interface_locs
-from options import ncore, nx, NT, GFM, SOLVER, tf
+from auxiliary.save import print_stats, record_data, save_all, make_u
+from multi.gfm import add_ghost_cells, interface_inds
+from options import ncore, nx, GFM, SOLVER, tf
 
 
 
 ### CHECK ARGUMENTS ###
-IC = first_stokes_problem_IC
+IC = heat_conduction_IC
 BC = standard_BC
 
 
@@ -37,21 +37,24 @@ def run(t, tf, count, saveArrays):
 
     tStart = time()
 
+    u = saveArrays.data[count]
     interfaceLocs = saveArrays.interfaces[count]
+
     m = len(interfaceLocs)
     interfaceInds = interface_inds(interfaceLocs, nx)
-    fluids = array([saveArrays.data[count] for i in range(m+1)])
-    dg = zeros([nx, NT, 18])
+    interfaceVels = zeros(m)
 
     pool = Parallel(n_jobs=ncore)
+
     while t < tf:
 
         t0 = time()
 
+        fluids = array([u for i in range(m+1)])
         dt = timestep(fluids, count, t, tf, PARs)
 
         if GFM:
-            add_ghost_cells(fluids, interfaceInds, PARs, dt)
+            add_ghost_cells(fluids, interfaceInds, interfaceVels, PARs, dt)
 
         print_stats(count, t, dt, interfaceLocs)
 
@@ -60,21 +63,19 @@ def run(t, tf, count, saveArrays):
             PAR = PARs[i]
 
             if SOLVER == 'ADER-WENO':
-                qh = aderweno_stepper(pool, fluid, BC, dt, PAR)
+                aderweno_stepper(pool, fluid, BC, dt, PAR)
             elif SOLVER == 'SPLIT-WENO':
                 split_weno_stepper(pool, fluid, BC, dt, PAR)
 
-            if GFM:
-                dg[interfaceInds[i]:interfaceInds[i+1]] \
-                  = qh[interfaceInds[i]+1:interfaceInds[i+1]+1, 0, 0]
-
         if GFM:
-            interfaceLocs = update_interface_locs(dg, interfaceLocs, dt)
+            #interfaceLocs += interfaceVels * dt
             interfaceInds = interface_inds(interfaceLocs, nx)
+
+        u = make_u(fluids, interfaceInds)
 
         t += dt
         count += 1
-        record_data(fluids, interfaceInds, t, interfaceLocs, saveArrays)
+        record_data(u, t, interfaceLocs, saveArrays)
         print('Total Time:', time()-t0, '\n')
 
     print('TOTAL RUNTIME:', time()-tStart)

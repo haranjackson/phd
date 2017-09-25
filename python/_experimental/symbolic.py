@@ -5,7 +5,7 @@ from numpy.random import rand
 from sympy import eye, Matrix, symbols
 
 from auxiliary.common import material_parameters
-from gpr.variables.vectors import Qvec
+from gpr.variables.vectors import Cvec
 from options import reactiveEOS, Qc
 
 
@@ -17,7 +17,7 @@ A0 = np.eye(3) + rand(3,3)
 A0 *= (r0/det(A0))**(1/3)
 J0 = rand(3)
 c0 = rand()
-Q0 = Qvec(r0, p0, v0, A0, J0, c0, defaultParams.y, defaultParams.pINF)
+Q0 = Cvec(r0, p0, v0, A0, J0, c0, defaultParams.y, defaultParams.pINF)
 
 r, p, c, T = symbols('r p c T')
 v1, v2, v3 = symbols('v1 v2 v3')

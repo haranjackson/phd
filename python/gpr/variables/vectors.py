@@ -1,10 +1,10 @@
 from numpy import zeros
 
 from gpr.variables.eos import total_energy
-from gpr.variables.state import pressure, temperature
+from gpr.variables.state import heat_flux, pressure, sigma, temperature
 
 
-class Qvec_to_Pclass():
+class Cvec_to_Pclass():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
     def __init__(self, Q, PAR):
@@ -17,8 +17,15 @@ class Qvec_to_Pclass():
 
         self.p = pressure(self.E, self.v, self.A, self.ρ, self.J, self.λ, PAR)
         self.T = temperature(self.ρ, self.p, PAR.γ, PAR.pINF, PAR.cv)
+        self.PAR = PAR
 
-def Qvec(ρ, p, v, A, J, λ, PAR):
+    def q(self):
+        return heat_flux(self.T, self.J, self.PAR.α2)
+
+    def σ(self):
+        return sigma(self.ρ, self.A, self.PAR.cs2)
+
+def Cvec(ρ, p, v, A, J, λ, PAR):
     """ Returns the vector of conserved variables, given the primitive variables
     """
     Q = zeros(18)
@@ -30,7 +37,7 @@ def Qvec(ρ, p, v, A, J, λ, PAR):
     Q[17] = ρ * λ
     return Q
 
-def Pvec(P):
+def Pvec_reordered(P):
     ret = zeros(18)
     ret[0] = P.ρ
     ret[1] = P.p
@@ -59,7 +66,7 @@ def Pvec_reordered_to_Cvec(P, PAR):
 
 def Pvec_to_Cvec(P, PAR):
     """ Returns the vector of conserved variables, given the vector of
-        (reordered) primitive variables
+        primitive variables
     """
     Q = P.copy()
     ρ = P[0]

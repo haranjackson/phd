@@ -6,7 +6,7 @@ from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import VISCOUS, THERMAL, REACTIVE, REACTION_TYPE
-from options import GFM, RGFM, isoFix, SFix, TFix, UPDATE_STEP
+from options import GFM, RGFM, isoFix, SFix
 from options import SOLVER
 from options import fullODE, wenoHalfStep, StrangSplit
 from options import approxInterface, reconstructPrim, wenoAverage
@@ -23,14 +23,19 @@ def print_stats(count, t, dt, interfaceLocations):
     if GFM:
         print('Interfaces =', interfaceLocations)
 
-def record_data(fluids, inds, t, interfaceLocations, saveArrays):
-    """ Appends the latest data and timestep to the recording arrays
+def make_u(fluids, inds):
+    """ Builds u across the domain, from the different fluids grids
     """
     u = zeros(fluids[0].shape)
     for i in range(len(fluids)):
         l = inds[i]
         r = inds[i+1]
         u[l:r] = fluids[i][l:r]
+    return u
+
+def record_data(u, t, interfaceLocations, saveArrays):
+    """ Appends the latest data and timestep to the recording arrays
+    """
     saveArrays.data = concatenate([saveArrays.data, expand_dims(u, axis=0)])
     saveArrays.time = concatenate([saveArrays.time, array([t])])
     saveArrays.interfaces = concatenate([saveArrays.interfaces,
@@ -54,9 +59,7 @@ def save_config(path):
         f.write('GFM  = %i\n' % GFM)
         f.write('RGFM = %i\n' % RGFM)
         f.write('isoFix = %i\n' % isoFix)
-        f.write('SFix   = %i\n' % SFix)
-        f.write('TFix   = %i\n' % TFix)
-        f.write('UPDATE_STEP = %i\n\n' % UPDATE_STEP)
+        f.write('SFix   = %i\n\n' % SFix)
 
         f.write('SOLVER  = %s\n\n' % SOLVER)
 

@@ -7,7 +7,7 @@ import matplotlib.animation as animation
 
 from solvers.basis import quad, basis_polys
 from gpr.variables.state import sigma, entropy, heat_flux
-from gpr.variables.vectors import Qvec_to_Pclass
+from gpr.variables.vectors import Cvec_to_Pclass
 from multi.gfm import interface_inds
 from options import Lx, nx, ny, ndim
 
@@ -101,7 +101,7 @@ def plot_pressure(u, materialParams, intLocs=[], style='line', x=None,
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            y[l] = Qvec_to_Pclass(u[l, 0, 0], materialParams[k]).p
+            y[l] = Cvec_to_Pclass(u[l, 0, 0], materialParams[k]).p
     plot1d(y, style, x, label, color, 'Pressure', sci=sci)
 
 def plot_temperature(u, materialParams, intLocs=[], style='line', x=None,
@@ -113,7 +113,7 @@ def plot_temperature(u, materialParams, intLocs=[], style='line', x=None,
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            y[l] = Qvec_to_Pclass(u[l, 0, 0], materialParams[k]).T
+            y[l] = Cvec_to_Pclass(u[l, 0, 0], materialParams[k]).T
     plot1d(y, style, x, label, color, 'Temperature', sci=sci)
 
 def plot_sigma(u, i, j, materialParams, intLocs=[], style='line', x=None,
@@ -126,7 +126,7 @@ def plot_sigma(u, i, j, materialParams, intLocs=[], style='line', x=None,
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            P = Qvec_to_Pclass(u[l, 0, 0], materialParams[k])
+            P = Cvec_to_Pclass(u[l, 0, 0], materialParams[k])
             y[l] = sigma(P.ρ, P.A, materialParams[k].cs2)[i, j]
     plot1d(y, style, x, label, color,
            ' Viscous Stress Component %d,%d' % (i+1, j+1), sci=sci)
@@ -140,7 +140,7 @@ def plot_heat_flux(u, i, materialParams, intLocs=[], style='line', x=None,
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            P = Qvec_to_Pclass(u[l, 0, 0], materialParams[k])
+            P = Cvec_to_Pclass(u[l, 0, 0], materialParams[k])
             y[l] = heat_flux(P.T, P.J, materialParams[k].α2)[i]
     plot1d(y, style, x, label, color, 'Heat Flux Component %d' % (i+1), sci=sci)
 
@@ -178,7 +178,7 @@ def plot_interfaces(intLocs, figNum=None, loc=None, color=None):
             ind = int(i*nx/Lx) + 0.5
             axvline(x=ind, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
         else:
-            axvline(i/Lx*loc, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
+            axvline(i/Lx, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
 
 def colors(n):
     cmap = get_cmap('viridis')

@@ -39,11 +39,6 @@ def periodic_BC(u):
         ret[:,:,-1] = ret[:,:,1]
     return ret
 
-def temperature_fix_density(p, T, PAR):
-    """ Calculates the density in Q, given that the cell must be at temperature T
-    """
-    return (p + PAR.pINF) / ((PAR.γ - 1) * T * PAR.cv)
-
 def temperature_fix_pressure(ρ, T, PAR):
     """ Calculates the pressure in Q, given that the cell must be at temperature T
     """

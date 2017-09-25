@@ -4,7 +4,7 @@ from auxiliary.funcs import L2_1D, L2_2D
 from gpr.variables.eos import E_A, E_J
 from gpr.variables.material_functions import theta_1, theta_2
 from gpr.variables.state import sigma, sigma_A, temperature
-from gpr.variables.vectors import Qvec_to_Pclass
+from gpr.variables.vectors import Cvec_to_Pclass, Cvec_to_Pvec
 from options import VISCOUS, THERMAL, REACTIVE
 
 
@@ -12,7 +12,7 @@ def system_primitive(Q, d, PAR):
     """ Returns the system matrix in the dth direction for the system of
         primitive variables, calculated directly
     """
-    P = Qvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, PAR)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
     γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2
 
@@ -64,7 +64,7 @@ def source_primitive_ref(ret, P, PAR):
 
     if THERMAL:
         J = P[14:17]
-        T = temperature(ρ, P.p, γ, PAR.pINF, PAR.cv)
+        T = temperature(ρ, P[1], γ, PAR.pINF, PAR.cv)
         H = E_J(J, PAR.α2)
         θ2 = theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
 
@@ -79,25 +79,10 @@ def source_primitive(P, PAR):
 
 def source_primitive_reordered(Q, PAR):
 
-    ret = zeros(18)
-    P = Qvec_to_Pclass(Q, PAR)
-    ρ = P.ρ; A = P.A
-    γ = PAR.γ
-
-    if VISCOUS:
-        ψ = E_A(A)
-        θ1 = theta_1(A, PAR.cs2, PAR.τ1)
-        ret[1] += (γ-1) * ρ * L2_2D(ψ) / θ1
-        ret[2:11] = -ψ.ravel() / θ1
-
-    if THERMAL:
-        H = E_J(P.J)
-        θ2 = theta_2(ρ, P.T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
-        ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
-        ret[14:17] = -H / θ2
-
-    return ret
-
+    P = Cvec_to_Pvec(Q, PAR)
+    ret = source_primitive(P, PAR)
+    perm = array([0,1,5,8,11,6,9,12,7,10,13,2,3,4,14,15,16,17])
+    return ret[perm]
 
 def Mdot_ref(ret, P, x, d, PAR):
     """ Returns M(P).x

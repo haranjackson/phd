@@ -5,7 +5,7 @@ from scipy.integrate import odeint
 
 from options import fullODE, VISCOUS, THERMAL
 from gpr.variables.eos import E_3
-from gpr.variables.vectors import Qvec_to_Pclass
+from gpr.variables.vectors import Cvec_to_Pclass
 from solvers.split.distortion import f_A, jac_A, solver_approximate_analytic
 from solvers.split.thermal import f_J, jac_J, solver_thermal_analytic_ideal
 
@@ -45,7 +45,7 @@ def ode_stepper_full(u, dt, PAR, useJac=0):
     y0 = zeros([12])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         Q = u[i,j,k]
-        P0 = Qvec_to_Pclass(Q, PAR)
+        P0 = Cvec_to_Pclass(Q, PAR)
         ρ = P0.ρ
         E = P0.E - E_3(P0.v)
 

@@ -1,6 +1,6 @@
 """ Domain Parameters """
 
-tf = 1                      # Final time of simulation
+tf = 0.2                      # Final time of simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
@@ -17,12 +17,10 @@ REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 
 """ GFM Options """
 
-GFM  = 0                    # Use original GFM
+GFM  = 1                    # Use original GFM
 RGFM = 1                    # Use RGFM (requires GFM=1)
 isoFix = 0                  # Use isobaric fix
-SFix   = 1                  # Fix entropy in ghost cells
-TFix   = 1                  # Fix temperature in ghost cells (requries entropyFix=0)
-UPDATE_STEP = 5             # Number of timesteps used to update interface locations
+SFix   = 0                  # Fix entropy in ghost cells
 
 """ Solver Options """
 

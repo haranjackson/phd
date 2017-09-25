@@ -24,8 +24,6 @@ def aderweno_stepper(pool, fluid, BC, dt, PAR):
     print('DG:  ', t2-t1)
     print('FV:  ', t3-t2)
 
-    return qh
-
 def split_weno_stepper(pool, fluid, BC, dt, PAR):
 
     Δt = dt/2 if StrangSplit else dt

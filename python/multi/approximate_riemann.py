@@ -1,31 +1,32 @@
-from numpy import amax, concatenate, dot, zeros
-from scipy.linalg import solve, inv
+from numpy import amax, concatenate, diag, dot, eye, outer, sqrt, zeros
+from scipy.linalg import eig, solve
 
-from gpr.eig import primitive_eigs
-#from gpr.matrices.primitive import source_primitive_reordered
-from gpr.variables.state import heat_flux, sigma, sigma_A, temperature
-from gpr.variables.vectors import Qvec_to_Pclass, Pvec, Pvec_reordered_to_Cvec
-from options import dx
+from auxiliary.funcs import gram
+from gpr.eig import primitive_eigs, Xi1mat, thermo_acoustic_tensor
+from gpr.matrices.primitive import source_primitive_reordered
+from gpr.variables.state import sigma, sigma_A, Sigma, temperature
+from gpr.variables.vectors import Cvec_to_Pclass, Pvec_reordered, Pvec_reordered_to_Cvec
 
 
 starTOL = 1e-8
-FIX_Q = 0
-
+e0 = zeros(3); e0[0]=1
 
 def check_star_convergence(QL_, QR_, PARL, PARR):
 
-    PL_ = Qvec_to_Pclass(QL_, PARL)
-    PR_ = Qvec_to_Pclass(QR_, PARR)
-    σL_ = sigma(PL_.ρ, PL_.A, PARL.cs2)[0]
-    σR_ = sigma(PR_.ρ, PR_.A, PARR.cs2)[0]
-    qL_ = heat_flux(PL_.T, PL_.J, PARL.α2)[0]
-    qR_ = heat_flux(PR_.T, PR_.J, PARR.α2)[0]
+    PL_ = Cvec_to_Pclass(QL_, PARL)
+    PR_ = Cvec_to_Pclass(QR_, PARR)
+    ΣL_ = Sigma(PL_.p, PL_.ρ, PL_.A, PARL.cs2)[0]
+    ΣR_ = Sigma(PR_.p, PR_.ρ, PR_.A, PARR.cs2)[0]
+    TL_ = temperature(PL_.ρ, PL_.p, PARL.γ, PARL.pINF, PARL.cv)
+    TR_ = temperature(PR_.ρ, PR_.p, PARR.γ, PARR.pINF, PARR.cv)
 
-    return amax(abs(σL_-σR_)) < starTOL and abs(qL_-qR_) < starTOL
+    return amax(abs(ΣL_-ΣR_)) < starTOL and abs(TL_-TR_) < starTOL
 
 def riemann_constraints(P, sgn, PAR):
-
-    _, Lhat, _ = primitive_eigs(P, PAR)
+    """ K=R: sgn = -1
+        K=L: sgn = 1
+    """
+    _, Lhat, Rhat = primitive_eigs(P, PAR)
     ρ = P.ρ; p = P.p; A = P.A
     γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; cv = PAR.cv
 
@@ -39,68 +40,88 @@ def riemann_constraints(P, sgn, PAR):
     Lhat[:4] = 0
     Lhat[:3, 0] = -σ0 / ρ
     Lhat[0, 1] = 1
-    Lhat[1, 1] = 0
-    Lhat[2, 1] = 0
     Lhat[:3, 2:5] = -Π1
     Lhat[:3, 5:8] = -Π2
     Lhat[:3, 8:11] = -Π3
     Lhat[3, 0] = -T / ρ
     Lhat[3, 1] = T / (p+pINF)
-    Lhat[4:8, 11:15] *= sgn
+    Lhat[4:8, 11:15] *= -sgn
 
-    return Lhat, inv(Lhat)
+    Z0 = eye(3,4)
+    Z0[0,3] = -(p+pINF)/T
+    Z1 = outer((p+pINF)*e0 - σ0, e0) - dot(Π1, A)
+    Z2 = solve(Z1,Z0)
+    X = dot(A,Z2)
+    a = Z2[0]
+
+    Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
+    O = thermo_acoustic_tensor(ρ, gram(A), p, T, 0, PAR)
+    w, vl, vr = eig(O, left=1)
+    D = diag(sqrt(w.real))
+    Q = vl.T
+    Q_1 = vr
+    I = dot(Q,Q_1)
+    Q = solve(I, Q, overwrite_a=1, check_finite=0)
+
+    Rhat[0,:4] = ρ * a
+    Rhat[1,:4] = (p+pINF) * a
+    Rhat[1,3] += (p+pINF) / T
+    Rhat[2:5, :4] = X
+
+    Y0 = -sgn * dot(Q_1, solve(D, Q))
+    Y = dot(Y0, dot(Ξ1, Rhat[:5,:4]))
+    Rhat[11:15, :4] = Y
+    Rhat[:,4:8] = 0
+    Rhat[11:15, 4:8] = sgn * Q_1
+
+    return Lhat, Rhat
 
 def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(18), SR=zeros(18)):
 
-    PL = Qvec_to_Pclass(QL, PARL)
-    PR = Qvec_to_Pclass(QR, PARR)
-    LL, RL = riemann_constraints(PL, -1, PARL)
-    LR, RR = riemann_constraints(PR, 1, PARR)
+    PL = Cvec_to_Pclass(QL, PARL)
+    PR = Cvec_to_Pclass(QR, PARR)
+    LL, RL = riemann_constraints(PL, 1, PARL)
+    LR, RR = riemann_constraints(PR, -1, PARR)
+    ΘL = RL[11:15, :4]
+    ΘR = RR[11:15, :4]
 
-    ΘL = zeros([4, 4])
-    ΘR = zeros([4, 4])
-    ΘL[0] = RL[1,:4]
-    ΘL[1:4] = RL[11:14, :4]
-    ΘR[0] = RR[1,:4]
-    ΘR[1:4] = RR[11:14, :4]
+    ΣL = Sigma(PL.p, PL.ρ, PL.A, PARL.cs2)[0]
+    ΣR = Sigma(PR.p, PR.ρ, PR.A, PARR.cs2)[0]
+    TL = temperature(PL.ρ, PL.p, PARL.γ, PARL.pINF, PARL.cv)
+    TR = temperature(PR.ρ, PR.p, PARR.γ, PARR.pINF, PARR.cv)
+    xL = concatenate([ΣL, [TL]])
+    xR = concatenate([ΣR, [TR]])
 
-    σL = sigma(PL.ρ, PL.A, PARL.cs2)[0]
-    σR = sigma(PR.ρ, PR.A, PARR.cs2)[0]
-    qL = heat_flux(PL.T, PL.J, PARL.α2)[0]
-    qR = heat_flux(PR.T, PR.J, PARR.α2)[0]
-    xL = concatenate([[qL], σL])
-    xR = concatenate([[qR], σR])
+    OL = thermo_acoustic_tensor(PL.ρ, gram(PL.A), PL.p, PL.T, 0, PARL)
+    OR = thermo_acoustic_tensor(PR.ρ, gram(PR.A), PR.p, PR.T, 0, PARR)
+    _, QL_1 = eig(OL)
+    _, QR_1 = eig(OR)
+    cL = dt * dot(LL, SL)
+    cR = dt * dot(LR, SR)
+    XL = dot(QL_1, cL[4:8])
+    XR = dot(QR_1, cR[4:8])
 
-    if FIX_Q:
-        q_ = 2 * (PL.T - PR.T) / (10 * dx * (1/PARL.κ + 1/PARR.κ))
-        b = PR.v - PL.v + ΘR[1:4,0] * (q_ - qR) - ΘL[1:4,0] * (q_ - qL)
-        b -= (dot(ΘR[1:4,1:], σR) - dot(ΘL[1:4,1:], σL))
-        M = (ΘL - ΘR)[1:,1:]
-        x_ = concatenate([[q_], solve(M, b)])
-    else:
-        yL = concatenate([[PL.p], PL.v])
-        yR = concatenate([[PR.p], PR.v])
-        x_ = solve(ΘL-ΘR, yR-yL + dot(ΘL, xL) - dot(ΘR, xR))
+    yL = concatenate([PL.v, [PL.J[0]]])
+    yR = concatenate([PR.v, [PR.J[0]]])
+    x_ = solve(ΘL-ΘR, yR-yL + dt*(XL+XR) + dot(ΘL,xL) - dot(ΘR,xR))
 
-    cL = zeros(18)
-    cR = zeros(18)
     cL[:4] = x_ - xL
     cR[:4] = x_ - xR
 
-    PLvec = Pvec(PL)
-    PRvec = Pvec(PR)
-    PL_vec = solve(LL, cL) + PLvec + dt*SL          # NOTE: Maybe incorrect, as LL,LR are calculated
-    PR_vec = solve(LR, cR) + PRvec + dt*SR          # using reordered primitive variables
+    PLvec = Pvec_reordered(PL)
+    PRvec = Pvec_reordered(PR)
+    PL_vec = dot(RL, cL) + PLvec
+    PR_vec = dot(RR, cR) + PRvec
     QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL)
     QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR)
     return QL_, QR_
 
 def star_states(QL, QR, dt, PARL, PARR):
-#    LL, RL = riemann_constraints(QL, -1, PARL)
-#    LR, RR = riemann_constraints(QR, 1, PARR)
-#    SL = source_primitive_reordered(QL, PARL)
-#    SR = source_primitive_reordered(QR, PARR)
-    QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR)
+    SL = source_primitive_reordered(QL, PARL)
+    SR = source_primitive_reordered(QR, PARR)
+    QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR, SL, SR)
     while not check_star_convergence(QL_, QR_, PARL, PARR):
-        QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR)
+        SL_ = source_primitive_reordered(QL_, PARL)
+        SR_ = source_primitive_reordered(QR_, PARR)
+        QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR, SL_, SR_)
     return QL_, QR_
