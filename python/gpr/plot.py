@@ -31,6 +31,7 @@ def plot1d(y, style, x, label, color, ylab, xlab='x', sci=1):
 
     xlabel(xlab)
     ylabel(ylab)
+    plt.show()
 
 def plot2d(x, style, y=None):
     if style=='colormap':
