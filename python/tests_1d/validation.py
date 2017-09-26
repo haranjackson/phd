@@ -100,7 +100,7 @@ def viscous_shock_IC(center=0):
     for i in range(nx):
         A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
-        λ = 1
+        λ = 0
         u[i,0,0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, PAR)
 
     return u, [PAR], []
