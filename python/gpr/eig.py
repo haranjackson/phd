@@ -71,8 +71,9 @@ def perron_frobenius(P, d, PAR):
 
     O = thermo_acoustic_tensor(ρ, gram(A), p, T, d, PAR)
     rowSum = [sum(o) for o in O]
+    colSum = [sum(oT) for oT in O.T]
 
-    lam = sqrt((max(rowSum)+min(rowSum))/2)
+    lam = sqrt(min(max(rowSum),max(colSum)))
     if vd > 0:
         return vd + lam
     else:
