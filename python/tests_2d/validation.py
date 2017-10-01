@@ -46,7 +46,7 @@ def circular_explosion_IC():
         t = 0.2
         N = 2
     """
-    R = 0.5 * Lx
+    R = 0.25 * Lx
     PAR = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=0.5, α=0.5, μ=1e-4, κ=1e-4)
     v = zeros([3])
     J = zeros([3])
