@@ -6,6 +6,8 @@ from auxiliary.funcs import dev
 from gpr.variables.eos import E_A
 
 
+### Options ###
+
 ε = array([[0.62,  0.40,  1.14],
            [-0.28, -1.41, 0.59],
            [-0.19, -0.72, -1.28]])
@@ -17,30 +19,7 @@ includeSources = 1
 n = 50
 
 
-def f(y, t):
-    A = y.reshape([3,3])
-    ret = -dot(A,ε)
-    if includeSources:
-        ret -= E_A(A,1)/τ
-    return ret.ravel()
-
-def ode_stepper(A, dt):
-    t = array([0, dt])
-    y0 = A.ravel()
-    return odeint(f, y0, t, rtol=1e-12, atol=1e-12)[1].reshape([3,3])
-
-def test():
-    A = zeros([n,3,3])
-    U = zeros([n,3,3])
-    V = zeros([n,3,3])
-    Σ = zeros([n,3])
-    for i in range(n):
-        dt = i*5e-9/n * tScale
-        A[i] = ode_stepper(eye(3),dt)
-        U[i], Σ[i], V[i] = svd(A[i])
-        V[i] = V[i].T
-
-    return A, U, Σ, V
+### Auxiliary Functions ###
 
 def sgn(x):
     if x >= 0:
@@ -55,7 +34,37 @@ def lim(x):
     else:
         return x
 
-def f2(y, t):
+def sec(x):
+    return 1/lim(cos(x))
+
+def plot_eigenvec(a, Vold, Vnew):
+    for i in range(3):
+        if i==0:
+            plot(x,Vold[:,i,a], label='Original ODEs', color=cm[0])
+            plot(x,Vnew[:,i,a], label='Eigendecomp ODEs', color=cm[2],
+                 marker='x', linestyle='None')
+        else:
+            plot(x,Vold[:,i,a], color=cm[0])
+            plot(x,Vnew[:,i,a], color=cm[2], marker='x', linestyle='None')
+
+### Standard Formulation ###
+
+def f_standard(y, t):
+    A = y.reshape([3,3])
+    ret = -dot(A,ε)
+    if includeSources:
+        ret -= E_A(A,1)/τ
+    return ret.ravel()
+
+def solver_standard(A, dt):
+    t = array([0, dt])
+    y0 = A.ravel()
+    return odeint(f_standard, y0, t, rtol=1e-12, atol=1e-12)[1].reshape([3,3])
+
+
+### Vectors Formulaiton ###
+
+def f_vectors(y, t):
     λ1 = y[0]
     λ2 = y[1]
     λ3 = y[2]
@@ -80,6 +89,228 @@ def f2(y, t):
         ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
 
     return ret
+
+def solver_vectors(A0, dt):
+    t = array([0, dt])
+    G = dot(A0.T,A0)
+    l,V = eig(G)
+    y0 = zeros(12)
+    y0[:3] = l
+    y0[3:] = V.ravel(order='F')
+    ret = odeint(f_vectors, y0, t)[1]
+    return ret[:3], ret[3:].reshape([3,3], order='F')
+
+
+### Angles Formulation ###
+
+def rotmat_angles(x,y,z):
+    Rx = array([[1,0,0],[0,cos(x),-sin(x)],[0,sin(x),cos(x)]])
+    Ry = array([[cos(y),0,sin(y)],[0,1,0],[-sin(y),0,cos(y)]])
+    Rz = array([[cos(z),-sin(z),0],[sin(z),cos(z),0],[0,0,1]])
+    return dot(Rz,dot(Ry,Rx))
+
+def Minv(x,y,z,λ1,λ2,λ3):
+    return array([[cos(x)*tan(y)/lim(λ1-λ2), -sin(x)*tan(y)/lim(λ1-λ3), 1/lim(λ2-λ3)],
+                  [-sin(x)/lim(λ1-λ2),       -cos(x)/lim(λ1-λ3),        0],
+                  [cos(x)*sec(y)/lim(λ1-λ2), -sec(y)*sin(x)/lim(λ1-λ3), 0]])
+
+def b_angles(x,y,z,λ1,λ2,λ3):
+    R = rotmat_angles(x,y,z)
+    Λ = diag([λ1,λ2,λ3])
+    RHS = -(dot(Λ,dot(R.T,dot(ε,R))) + dot(dot(R.T,dot(ε.T,R)),Λ))
+    return array([RHS[0,1], RHS[0,2], RHS[1,2]])
+
+def f_angles(y0, t):
+    λ1 = y0[0]
+    λ2 = y0[1]
+    λ3 = y0[2]
+    x = y0[3]
+    y = y0[4]
+    z = y0[5]
+
+    V = rotmat_angles(x,y,z)
+    v1 = V[:,0]
+    v2 = V[:,1]
+    v3 = V[:,2]
+
+    ret = zeros(6)
+    ret[0] = -2 * λ1 * dot(v1,dot(ε,v1))
+    ret[1] = -2 * λ2 * dot(v2,dot(ε,v2))
+    ret[2] = -2 * λ3 * dot(v3,dot(ε,v3))
+    ret[3:] = dot(Minv(x,y,z,λ1,λ2,λ3), b_angles(x,y,z,λ1,λ2,λ3))
+
+    if includeSources:
+        Λ = diag(y0[:3])
+        ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
+
+    return ret
+
+def solver_angles(dt):
+    t = array([0, dt])
+    y0 = zeros(6)
+    y0[:3] = ones(3)
+    y0[3:] = zeros(3)
+    ret = odeint(f_angles, y0, t, atol=1e-6, rtol=1e-6)[1]
+    return ret[:3], ret[3:]
+
+
+### Quaternions Formulation ###
+
+def rotmat_quaternions(x,y,z):
+    ret = zeros([3,3])
+    x2 = x*x
+    y2 = y*y
+    z2 = z*z
+    s = sqrt(1-x2-y2-z2)
+    xy = x*y
+    yz = y*z
+    zx = z*x
+    sx = s*x
+    sy = s*y
+    sz = s*z
+    ret[0,0] = 0.5 - y2 - z2
+    ret[1,1] = 0.5 - z2 - x2
+    ret[2,2] = 0.5 - x2 - y2
+    ret[0,1] = xy - sz
+    ret[1,0] = xy + sz
+    ret[0,2] = zx + sy
+    ret[2,0] = zx - sy
+    ret[1,2] = yz - sx
+    ret[2,1] = yz + sx
+    ret *= 2
+    return ret
+
+def qaxis(x,y,z):
+    """ Returns the axis of rotation corresponding to quaternion components
+        x, y, z
+    """
+    mod = sqrt(x*x + y*y + z*z)
+    return array([x,y,z]) / mod
+
+def qangle(x,y,z):
+    """ Returns the angle of rotation corresponding to quaternion components
+        x, y, z
+    """
+    s = sqrt(1 - x*x + y*y + z*z)
+    mod = sqrt(x*x + y*y + z*z)
+    return 2 * arctan2(s, mod)
+
+def b_quaternions(x,y,z,λ1,λ2,λ3):
+    R = rotmat_quaternions(x,y,z)
+    Λ = diag([λ1,λ2,λ3])
+    RHS = -(dot(Λ,dot(R.T,dot(ε,R))) + dot(dot(R.T,dot(ε.T,R)),Λ))
+    return array([RHS[1,2], RHS[0,2], RHS[0,1]])
+
+def f_quaternions(y0, t):
+    λ1 = y0[0]
+    λ2 = y0[1]
+    λ3 = y0[2]
+    x = y0[3]
+    y = y0[4]
+    z = y0[5]
+
+    V = rotmat_quaternions(x,y,z)
+    v1 = V[:,0]
+    v2 = V[:,1]
+    v3 = V[:,2]
+    s = sqrt(1 - x*x - y*y - z*z)
+
+    M = -0.5 * array([[s, -z, y],
+                      [z, s, -x],
+                      [-y, x, s]])
+
+    ret = zeros(6)
+    ret[0] = -2 * λ1 * dot(v1,dot(ε,v1))
+    ret[1] = -2 * λ2 * dot(v2,dot(ε,v2))
+    ret[2] = -2 * λ3 * dot(v3,dot(ε,v3))
+    ret[3:] = b_quaternions(x,y,z,λ1,λ2,λ3)
+    ret[3] /= lim(λ2 - λ3)
+    ret[4] /= lim(λ3 - λ1)
+    ret[5] /= lim(λ1 - λ2)
+    ret[3:] = dot(M, ret[3:])
+
+    if includeSources:
+        Λ = diag(y0[:3])
+        ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
+
+    return ret
+
+def solver_quaternions(dt):
+    t = array([0, dt])
+    y0 = zeros(6)
+    y0[:3] = ones(3)
+    y0[3:] = zeros(3)
+    ret = odeint(f_quaternions, y0, t, atol=1e-6, rtol=1e-6)[1]
+    return ret[:3], ret[3:]
+
+
+### Tests ###
+
+def test_standard():
+    l = zeros([n,3])
+    V = zeros([n,3,3])
+    A = zeros([n,3,3])
+    U = zeros([n,3,3])
+    Σ = zeros([n,3])
+    for i in range(n):
+        dt = i*5e-9/n * tScale
+        A[i] = solver_standard(eye(3),dt)
+        U[i], Σ[i], V[i] = svd(A[i])
+        V[i] = V[i].T
+        l[i] = Σ[i]**2
+
+    return l, V, A, U, Σ
+
+def test_vectors(start=1):
+    _, _, A, _, _ = test_standard()
+    A0 = A[start]
+    m = n - start
+    l = zeros([m,3])
+    V = zeros([m,3,3])
+    for i in range(m):
+        dt = i*5e-9/n * tScale
+        l[i], V[i] = solver_vectors(A0,dt)
+    return l, V
+
+def test_angles():
+    l = zeros([n,3])
+    V = zeros([n,3,3])
+    θ = zeros([n,3])
+    for i in range(n):
+        dt = i*5e-9/n * tScale
+        l[i], θ[i] = solver_angles(dt)
+        V[i] = rotmat_angles(θ[i,0],θ[i,1],θ[i,2])
+    return l, V, θ
+
+def test_quaternions():
+    l = zeros([n,3])
+    V = zeros([n,3,3])
+    θ = zeros([n,3])
+    for i in range(n):
+        dt = i*5e-9/n * tScale
+        l[i], θ[i] = solver_quaternions(dt)
+        V[i] = rotmat_quaternions(θ[i,0],θ[i,1],θ[i,2])
+    return l, V, θ
+
+
+### Main ###
+
+if __name__ == "__main__":
+    l,V,_,_,_ = test_standard()
+    figure(0)
+    plot(l)
+    l,V = test_vectors(1)
+    figure(1)
+    plot(l)
+    l,V,_ = test_angles()
+    figure(2)
+    plot(l)
+    l,V,_ = test_quaternions()
+    figure(3)
+    plot(l)
+
+
+"""
 
 def rhs1(λ,V):
     ret = zeros(9)
@@ -119,105 +350,4 @@ def rhs2(λ,V):
             ret[3*i:3*(i+1)] += dot(mat(λ,V,i,a), ε[:,a])
     return ret
 
-
-def ode_stepper2(A0, dt):
-    t = array([0, dt])
-    G = dot(A0.T,A0)
-    l,V = eig(G)
-    y0 = zeros(12)
-    y0[:3] = l
-    y0[3:] = V.ravel(order='F')
-    ret = odeint(f2, y0, t)[1]
-    return ret[:3], ret[3:].reshape([3,3], order='F')
-
-def test2(start=100):
-    A, U, Σ, V = test()
-    A0 = A[start]
-    m = n - start
-    l = zeros([m,3])
-    V = zeros([m,3,3])
-    for i in range(m):
-        dt = i*5e-9/n * tScale
-        l[i], V[i] = ode_stepper2(A0,dt)
-    return l, V
-
-def test3():
-    l = zeros([n,3])
-    V = zeros([n,3,3])
-    for i in range(n):
-        dt = i*5e-9/n * tScale
-        l[i],V[i] = ode_stepper2(eye(3),dt)
-    return l, V
-
-def plot_eigenvec(a, Vold, Vnew):
-    for i in range(3):
-        if i==0:
-            plot(x,Vold[:,i,a],label='Original ODEs',color=cm[0])
-            plot(x,Vnew[:,i,a],label='Eigendecomposition ODEs',marker='x',color=cm[2],linestyle='None')
-        else:
-            plot(x,Vold[:,i,a],color=cm[0])
-            plot(x,Vnew[:,i,a],marker='x',color=cm[2],linestyle='None')
-
-def rotmat(x,y,z):
-    Rx = array([[1,0,0],[0,cos(x),-sin(x)],[0,sin(x),cos(x)]])
-    Ry = array([[cos(y),0,sin(y)],[0,1,0],[-sin(y),0,cos(y)]])
-    Rz = array([[cos(z),-sin(z),0],[sin(z),cos(z),0],[0,0,1]])
-    return dot(Rz,dot(Ry,Rx))
-
-def sec(x):
-    return 1/lim(cos(x))
-
-def Minv(x,y,z,λ1,λ2,λ3):
-    return array([[cos(x)*tan(y)/lim(λ1-λ2), -sin(x)*tan(y)/lim(λ1-λ3), 1/lim(λ2-λ3)],
-                  [-sin(x)/lim(λ1-λ2),       -cos(x)/lim(λ1-λ3),        0],
-                  [cos(x)*sec(y)/lim(λ1-λ2), -sec(y)*sin(x)/lim(λ1-λ3), 0]])
-
-def b(x,y,z,λ1,λ2,λ3):
-    R = rotmat(x,y,z)
-    Λ = diag([λ1,λ2,λ3])
-    RHS = -(dot(Λ,dot(R.T,dot(ε,R))) + dot(dot(R.T,dot(ε.T,R)),Λ))
-    return array([RHS[0,1], RHS[0,2], RHS[1,2]])
-
-def f_angles(y0, t):
-    λ1 = y0[0]
-    λ2 = y0[1]
-    λ3 = y0[2]
-    x = y0[3]
-    y = y0[4]
-    z = y0[5]
-
-    V = rotmat(x,y,z)
-    v1 = V[:,0]
-    v2 = V[:,1]
-    v3 = V[:,2]
-
-    ret = zeros(6)
-    ret[0] = -2 * dot(v1,dot(ε,v1))
-    ret[1] = -2 * dot(v2,dot(ε,v2))
-    ret[2] = -2 * dot(v3,dot(ε,v3))
-    ret[3:] = dot(Minv(x,y,z,λ1,λ2,λ3), b(x,y,z,λ1,λ2,λ3))
-
-    if includeSources:
-        Λ = diag(y0[:3])
-        ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
-
-    return ret
-
-def ode_stepper_angles(dt):
-    t = array([0, dt])
-    y0 = zeros(6)
-    y0[:3] = ones(3)
-    y0[3:] = zeros(3)
-    ret = odeint(f_angles, y0, t, atol=1e-6,rtol=1e-6)[1]
-    return ret[:3], ret[3:]
-
-def test_angles():
-    l = zeros([n,3])
-    θ = zeros([n,3])
-    for i in range(n):
-        dt = i*5e-9/n * tScale
-        l[i],θ[i] = ode_stepper_angles(dt)
-    return l, θ
-
-def angles2vecs(θ):
-    return array([rotmat(θ[i,0],θ[i,1],θ[i,2]) for i in range(len(θ))])
+"""
