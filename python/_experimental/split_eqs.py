@@ -213,7 +213,7 @@ def f_quaternions(y0, t):
     v1 = V[:,0]
     v2 = V[:,1]
     v3 = V[:,2]
-    s = sqrt(1 - x*x - y*y - z*z)
+    s = -sqrt(1 - x*x - y*y - z*z)
 
     M = -0.5 * array([[s, -z, y],
                       [z, s, -x],
@@ -296,18 +296,22 @@ def test_quaternions():
 ### Main ###
 
 if __name__ == "__main__":
-    l,V,_,_,_ = test_standard()
+
+    l_stan, V_stan, _, _ , _ = test_standard()
     figure(0)
-    plot(l)
-    l,V = test_vectors(1)
+    plot(l_stan)
+
+    l_vec, V_vec = test_vectors(1)
     figure(1)
-    plot(l)
-    l,V,_ = test_angles()
+    plot(l_vec)
+
+    l_ang, V_ang, _ = test_angles()
     figure(2)
-    plot(l)
-    l,V,_ = test_quaternions()
+    plot(l_ang)
+
+    l_quat, V_quat, _ = test_quaternions()
     figure(3)
-    plot(l)
+    plot(l_quat)
 
 
 """
