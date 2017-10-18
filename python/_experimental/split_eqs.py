@@ -1,6 +1,7 @@
 from numpy import array, cos, diag, eye, mod, outer, sin, tan
 from scipy.integrate import odeint
 from scipy.linalg import svd
+import matplotlib.pyplot as plt
 
 from auxiliary.funcs import dev
 from gpr.variables.eos import E_A
@@ -11,6 +12,9 @@ from gpr.variables.eos import E_A
 ε = array([[0.62,  0.40,  1.14],
            [-0.28, -1.41, 0.59],
            [-0.19, -0.72, -1.28]])
+
+
+ε = rand(3,3)
 
 τ = 1.45e-9
 
@@ -156,12 +160,12 @@ def solver_angles(dt):
 
 ### Quaternions Formulation ###
 
-def rotmat_quaternions(x,y,z):
+def rotmat_quaternions(x, y, z, s_sign):
     ret = zeros([3,3])
     x2 = x*x
     y2 = y*y
     z2 = z*z
-    s = sqrt(1-x2-y2-z2)
+    s = s_sign * sqrt(1-x2-y2-z2)
     xy = x*y
     yz = y*z
     zx = z*x
@@ -195,10 +199,9 @@ def qangle(x,y,z):
     mod = sqrt(x*x + y*y + z*z)
     return 2 * arctan2(s, mod)
 
-def b_quaternions(x,y,z,λ1,λ2,λ3):
-    R = rotmat_quaternions(x,y,z)
-    Λ = diag([λ1,λ2,λ3])
-    RHS = -(dot(Λ,dot(R.T,dot(ε,R))) + dot(dot(R.T,dot(ε.T,R)),Λ))
+def b_quaternions(V, λ):
+    Λ = diag(λ)
+    RHS = dot(Λ, dot(V.T, dot(ε, V))) + dot( dot(V.T, dot(ε.T, V)), Λ)
     return array([RHS[1,2], RHS[0,2], RHS[0,1]])
 
 def f_quaternions(y0, t):
@@ -209,11 +212,13 @@ def f_quaternions(y0, t):
     y = y0[4]
     z = y0[5]
 
-    V = rotmat_quaternions(x,y,z)
+    S_SIGN = 1
+
+    V = rotmat_quaternions(x, y, z, S_SIGN)
     v1 = V[:,0]
     v2 = V[:,1]
     v3 = V[:,2]
-    s = -sqrt(1 - x*x - y*y - z*z)
+    s = - S_SIGN * sqrt(1 - x*x - y*y - z*z)
 
     M = -0.5 * array([[s, -z, y],
                       [z, s, -x],
@@ -223,7 +228,7 @@ def f_quaternions(y0, t):
     ret[0] = -2 * λ1 * dot(v1,dot(ε,v1))
     ret[1] = -2 * λ2 * dot(v2,dot(ε,v2))
     ret[2] = -2 * λ3 * dot(v3,dot(ε,v3))
-    ret[3:] = b_quaternions(x,y,z,λ1,λ2,λ3)
+    ret[3:] = - b_quaternions(V, y0[:3])
     ret[3] /= lim(λ2 - λ3)
     ret[4] /= lim(λ3 - λ1)
     ret[5] /= lim(λ1 - λ2)
@@ -289,7 +294,7 @@ def test_quaternions():
     for i in range(n):
         dt = i*5e-9/n * tScale
         l[i], θ[i] = solver_quaternions(dt)
-        V[i] = rotmat_quaternions(θ[i,0],θ[i,1],θ[i,2])
+        V[i] = rotmat_quaternions(θ[i,0], θ[i,1], θ[i,2], 1)
     return l, V, θ
 
 
@@ -300,18 +305,22 @@ if __name__ == "__main__":
     l_stan, V_stan, _, _ , _ = test_standard()
     figure(0)
     plot(l_stan)
+    plt.title('Standard')
 
     l_vec, V_vec = test_vectors(1)
     figure(1)
     plot(l_vec)
+    plt.title('Vectors')
 
     l_ang, V_ang, _ = test_angles()
     figure(2)
     plot(l_ang)
+    plt.title('Angles')
 
     l_quat, V_quat, _ = test_quaternions()
     figure(3)
     plot(l_quat)
+    plt.title('Quaternions')
 
 
 """
