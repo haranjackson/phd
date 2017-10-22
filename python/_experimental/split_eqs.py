@@ -9,12 +9,19 @@ from gpr.variables.eos import E_A
 
 ### Options ###
 
-ε = array([[0.62,  0.40,  1.14],
-           [-0.28, -1.41, 0.59],
-           [-0.19, -0.72, -1.28]])
+RAND = True
 
+if RAND:
+    ε = rand(3,3)
+    ε -= 0.5
+    ε *= 2
+    Λ = rand(3)
+else:
+    ε = array([[0.62,  0.40,  1.14],
+               [-0.28, -1.41, 0.59],
+               [-0.19, -0.72, -1.28]])
+    Λ = ones(3)
 
-ε = rand(3,3)
 
 τ = 1.45e-9
 
@@ -149,10 +156,10 @@ def f_angles(y0, t):
 
     return ret
 
-def solver_angles(dt):
+def solver_angles(Λ, dt):
     t = array([0, dt])
     y0 = zeros(6)
-    y0[:3] = ones(3)
+    y0[:3] = Λ
     y0[3:] = zeros(3)
     ret = odeint(f_angles, y0, t, atol=1e-6, rtol=1e-6)[1]
     return ret[:3], ret[3:]
@@ -240,10 +247,10 @@ def f_quaternions(y0, t):
 
     return ret
 
-def solver_quaternions(dt):
+def solver_quaternions(Λ, dt):
     t = array([0, dt])
     y0 = zeros(6)
-    y0[:3] = ones(3)
+    y0[:3] = Λ
     y0[3:] = zeros(3)
     ret = odeint(f_quaternions, y0, t, atol=1e-6, rtol=1e-6)[1]
     return ret[:3], ret[3:]
@@ -251,7 +258,9 @@ def solver_quaternions(dt):
 
 ### Tests ###
 
-def test_standard():
+def test_standard(Λ):
+    A0 = diag(sqrt(Λ))
+
     l = zeros([n,3])
     V = zeros([n,3,3])
     A = zeros([n,3,3])
@@ -259,41 +268,41 @@ def test_standard():
     Σ = zeros([n,3])
     for i in range(n):
         dt = i*5e-9/n * tScale
-        A[i] = solver_standard(eye(3),dt)
+        A[i] = solver_standard(A0, dt)
         U[i], Σ[i], V[i] = svd(A[i])
         V[i] = V[i].T
         l[i] = Σ[i]**2
 
     return l, V, A, U, Σ
 
-def test_vectors(start=1):
-    _, _, A, _, _ = test_standard()
+def test_vectors(Λ, start=1):
+    _, _, A, _, _ = test_standard(Λ)
     A0 = A[start]
     m = n - start
     l = zeros([m,3])
     V = zeros([m,3,3])
     for i in range(m):
         dt = i*5e-9/n * tScale
-        l[i], V[i] = solver_vectors(A0,dt)
+        l[i], V[i] = solver_vectors(A0, dt)
     return l, V
 
-def test_angles():
+def test_angles(Λ):
     l = zeros([n,3])
     V = zeros([n,3,3])
     θ = zeros([n,3])
     for i in range(n):
         dt = i*5e-9/n * tScale
-        l[i], θ[i] = solver_angles(dt)
+        l[i], θ[i] = solver_angles(Λ, dt)
         V[i] = rotmat_angles(θ[i,0],θ[i,1],θ[i,2])
     return l, V, θ
 
-def test_quaternions():
+def test_quaternions(Λ):
     l = zeros([n,3])
     V = zeros([n,3,3])
     θ = zeros([n,3])
     for i in range(n):
         dt = i*5e-9/n * tScale
-        l[i], θ[i] = solver_quaternions(dt)
+        l[i], θ[i] = solver_quaternions(Λ, dt)
         V[i] = rotmat_quaternions(θ[i,0], θ[i,1], θ[i,2], 1)
     return l, V, θ
 
@@ -302,25 +311,50 @@ def test_quaternions():
 
 if __name__ == "__main__":
 
-    l_stan, V_stan, _, _ , _ = test_standard()
-    figure(0)
-    plot(l_stan)
-    plt.title('Standard')
+    print('ε =', ε)
+    print('Λ =', Λ)
 
-    l_vec, V_vec = test_vectors(1)
-    figure(1)
-    plot(l_vec)
-    plt.title('Vectors')
+    f, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
 
-    l_ang, V_ang, _ = test_angles()
-    figure(2)
-    plot(l_ang)
-    plt.title('Angles')
+    l_stan, V_stan, _, _ , _ = test_standard(Λ)
+    ax1.plot(l_stan)
+    ax1.set_title('Standard')
 
-    l_quat, V_quat, _ = test_quaternions()
-    figure(3)
-    plot(l_quat)
-    plt.title('Quaternions')
+    l_vec, V_vec = test_vectors(Λ, 1)
+    ax2.plot(l_vec)
+    ax2.set_title('Vectors')
+
+    l_ang, V_ang, _ = test_angles(Λ)
+    ax3.plot(l_ang)
+    ax3.set_title('Angles')
+
+    l_quat, V_quat, _ = test_quaternions(Λ)
+    ax4.plot(l_quat)
+    ax4.set_title('Quaternions')
+
+    f, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+
+    V_stan_end = V_stan[:, :, argmin(l_stan[-1])]
+    V_vec_end = V_vec[:, :, argmin(l_vec[-1])]
+    V_ang_end = V_ang[:, :, argmin(l_ang[-1])]
+    V_quat_end = V_quat[:, :, argmin(l_quat[-1])]
+
+    V_stan_end *= sgn(V_stan_end[-1,0])
+    V_vec_end *= sgn(V_vec_end[-1,0])
+    V_ang_end *= sgn(V_ang_end[-1,0])
+    V_quat_end *= sgn(V_quat_end[-1,0])
+
+    ax1.plot(V_stan_end)
+    ax1.set_title('Standard')
+    ax2.plot(V_vec_end)
+    ax2.set_title('Vectors')
+    ax3.plot(V_ang_end)
+    ax3.set_title('Angles')
+    ax4.plot(V_quat_end)
+    ax4.set_title('Quaternions')
+
+    ax1.set_ylim([-1.1, 1.1])
+    ax3.set_ylim([-1.1, 1.1])
 
 
 """
