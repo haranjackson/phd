@@ -25,7 +25,7 @@ else:
 
 τ = 1.45e-9
 
-tScale = 1
+tScale = 10
 includeSources = 1
 n = 50
 
@@ -315,6 +315,7 @@ if __name__ == "__main__":
     print('Λ =', Λ)
 
     f, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+    plt.suptitle('Eigenvalues')
 
     l_stan, V_stan, _, _ , _ = test_standard(Λ)
     ax1.plot(l_stan)
@@ -333,6 +334,7 @@ if __name__ == "__main__":
     ax4.set_title('Quaternions')
 
     f, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+    plt.suptitle('Smallest Eigenvector')
 
     V_stan_end = V_stan[:, :, argmin(l_stan[-1])]
     V_vec_end = V_vec[:, :, argmin(l_vec[-1])]
