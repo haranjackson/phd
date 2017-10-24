@@ -12,12 +12,13 @@ import tests_1d.toro
 import tests_2d.validation
 from gpr.plot import *
 
-from auxiliary.classes import save_arrays
+from auxiliary.classes import Data
 from auxiliary.iterator import timestep
-from solvers.solvers import aderweno_stepper, split_weno_stepper
-from auxiliary.save import print_stats, record_data, save_all, make_u
+from solvers.solvers import ader_stepper, split_stepper
+from auxiliary.save import print_stats, save_all, make_u
 from multi.gfm import add_ghost_cells, interface_inds
-from options import NCORE, nx, RGFM, SPLIT, tf
+from options import nx, ny, nz, dx, dy, dz, ndim, N1, tf
+from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
@@ -25,15 +26,26 @@ IC = tests_1d.validation.heat_conduction_IC
 BC = auxiliary.boundaries.standard_BC
 
 
-u, PARs, intLocs = IC()
-saveArrays = save_arrays(u, intLocs)
+u, PARs, interfaceLocs = IC()
+data = [Data(u, interfaceLocs, 0)]
 
-def run(t, tf, count, saveArrays):
+
+if USE_CPP:
+    import GPRpy
+    from auxiliary.classes import CParameters
+    extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
+    ub = zeros(extDims * 17);
+    wh = zeros(extDims * int(pow(N1,ndim)) * 17);
+    qh = zeros(extDims * int(pow(N1,ndim+1)) * 17);
+    cPARs = [CParameters(PAR) for PAR in PARs]
+
+
+def run(t, tf, count, data):
 
     tStart = time()
 
-    u = saveArrays.data[count]
-    interfaceLocs = saveArrays.interfaces[count]
+    u = data[count].grid
+    interfaceLocs = data[count].int
 
     m = len(interfaceLocs)
     interfaceInds = interface_inds(interfaceLocs, nx)
@@ -57,10 +69,26 @@ def run(t, tf, count, saveArrays):
             fluid = fluids[i]
             PAR = PARs[i]
 
-            if SPLIT:
-                split_weno_stepper(pool, fluid, BC, dt, PAR)
+            if USE_CPP:
+                tmp = fluid[:,:,:,:17].ravel()
+                MP = cPARs[i]
+                if SPLIT:
+                    GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
+                                                dt, dx, dy, dz, False,
+                                                bool(STRANG), bool(HALF_STEP),
+                                                bool(PERRON_FROB), MP)
+                else:
+                    GPRpy.solvers.ader_stepper(tmp, ub, wh, qh, ndim, nx, ny, nz,
+                                               dt, dx, dy, dz, False,
+                                               bool(PERRON_FROB), MP)
+
+                fluid[:,:,:,:17] = tmp.reshape([nx,ny,nz,17])
+
             else:
-                aderweno_stepper(pool, fluid, BC, dt, PAR)
+                if SPLIT:
+                    split_stepper(pool, fluid, BC, dt, PAR)
+                else:
+                    ader_stepper(pool, fluid, BC, dt, PAR)
 
         if RGFM:
             interfaceLocs += interfaceVels * dt
@@ -70,11 +98,11 @@ def run(t, tf, count, saveArrays):
 
         t += dt
         count += 1
-        record_data(u, t, interfaceLocs, saveArrays)
+        data.append(Data(u, interfaceLocs, t))
         print('Total Time:', time()-t0, '\n')
 
     print('TOTAL RUNTIME:', time()-tStart)
 
 if __name__ == "__main__":
-    run(0, tf, 0, saveArrays)
-    save_all(saveArrays)
+    run(0, tf, 0, data)
+    save_all(data)

@@ -1,6 +1,6 @@
 """ Domain Parameters """
 
-tf = 0.2                      # Final time of simulation
+tf = 0.3                      # Final time of simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
@@ -10,19 +10,20 @@ nz = 1                      # Number of cells in z direction
 
 """ System Options """
 
-VISCOUS    = 1              # Include viscosity
-THERMAL    = 1              # Include thermal conduction
-REACTIVE   = 0              # Include reactivity
+VISCOUS  = 1                # Include viscosity
+THERMAL  = 1                # Include thermal conduction
+REACTIVE = 0                # Include reactivity
 REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 
 """ GFM Options """
 
-RGFM = 1                    # Use original GFM
-ISO_FIX = 0                 # Use isobaric fix
+RGFM    = 1                 # Use original GFM
+ISO_FIX = 1                 # Use isobaric fix
 
 """ Solver Options """
 
-SPLIT = 0                   # Whether or not to use a split solver
+USE_CPP = 1                 # Whether to use compiled C++
+SPLIT   = 1                 # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)

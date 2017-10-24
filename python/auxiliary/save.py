@@ -2,12 +2,12 @@ from codecs import open
 from os import makedirs, path
 from time import time
 
-from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
+from numpy import array, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import VISCOUS, THERMAL, REACTIVE, REACTION_TYPE
 from options import RGFM, ISO_FIX
-from options import SPLIT
+from options import USE_CPP, SPLIT
 from options import NUM_ODE, HALF_STEP, STRANG
 from options import RECONSTRUCT_PRIM, WENO_AVERAGE
 from options import  N, CFL, OSHER, PERRON_FROB
@@ -33,15 +33,6 @@ def make_u(fluids, inds):
         u[l:r] = fluids[i][l:r]
     return u
 
-def record_data(u, t, interfaceLocations, saveArrays):
-    """ Appends the latest data and timestep to the recording arrays
-    """
-    saveArrays.data = concatenate([saveArrays.data, expand_dims(u, axis=0)])
-    saveArrays.time = concatenate([saveArrays.time, array([t])])
-    saveArrays.interfaces = concatenate([saveArrays.interfaces,
-                                         expand_dims(array(interfaceLocations),
-                                                     axis=0)])
-
 def save_config(path):
     with open(path, 'w+', encoding='utf-8') as f:
         f.write('tf = %e\n' % tf)
@@ -57,17 +48,18 @@ def save_config(path):
         f.write('REACTIVE = %i\n' % REACTIVE)
         f.write('REACTION_TYPE = %s\n\n' % REACTION_TYPE)
 
-        f.write('RGFM = %i\n' % RGFM)
+        f.write('RGFM    = %i\n' % RGFM)
         f.write('ISO_FIX = %i\n\n' % ISO_FIX)
 
-        f.write('SPLIT  = %s\n\n' % SPLIT)
+        f.write('USE_CPP = %i\n' % USE_CPP)
+        f.write('SPLIT   = %i\n\n' % SPLIT)
 
-        f.write('NUM_ODE = %i\n' % NUM_ODE)
+        f.write('NUM_ODE   = %i\n' % NUM_ODE)
         f.write('HALF_STEP = %i\n' % HALF_STEP)
-        f.write('STRANG  = %i\n\n' % STRANG)
+        f.write('STRANG    = %i\n\n' % STRANG)
 
         f.write('RECONSTRUCT_PRIM = %i\n' % RECONSTRUCT_PRIM)
-        f.write('WENO_AVERAGE = %i\n\n' % WENO_AVERAGE)
+        f.write('WENO_AVERAGE     = %i\n\n' % WENO_AVERAGE)
 
         f.write('N     = %i\n' % N)
         f.write('CFL   = %f\n' % CFL)
@@ -88,17 +80,27 @@ def save_config(path):
 
         f.write('PARA_DG = %i\n' % PARA_DG)
         f.write('PARA_FV = %i\n' % PARA_FV)
-        f.write('NCORE  = %i\n\n' % NCORE)
+        f.write('NCORE   = %i\n\n' % NCORE)
 
-def save_all(saveArrays):
+def save_all(data):
+
     if not path.exists('_dump'):
         makedirs('_dump')
-    save('_dump/dataArray%d.npy' % time(), saveArrays.data)
-    save('_dump/timeArray%d.npy' % time(), saveArrays.time)
-    save('_dump/interArray%d.npy' % time(), saveArrays.interfaces)
+
+    gridArray = array([datum.grid for datum in data])
+    timeArray = array([datum.time for datum in data])
+    intArray  = array([datum.int  for datum in data])
+
+    save('_dump/gridArray%d.npy' % time(), gridArray)
+    save('_dump/timeArray%d.npy' % time(), timeArray)
+    save('_dump/intArray%d.npy'  % time(), intArray)
     save_config('_dump/options%d.txt' % time())
 
 def compress_arrays(saveArrays, N):
+
     n = len(saveArrays.time)
     inds = linspace(0,n-1,N,dtype=int64)
-    return [saveArrays.data[inds], saveArrays.time[inds], saveArrays.interfaces[inds]]
+
+    return [saveArrays.data[inds],
+            saveArrays.time[inds],
+            saveArrays.interfaces[inds]]

@@ -1,9 +1,27 @@
 from numba import jitclass, float64 as f64
 from numpy import array, expand_dims
 
-from options import PARA_DG, PARA_FV
+from options import PARA_DG, PARA_FV, USE_CPP
 from gpr.variables.state import temperature
 
+
+if USE_CPP:
+    import GPRpy
+    def CParameters(PAR):
+        MP = GPRpy.classes.Par()
+        MP.gamma = PAR.γ
+        MP.cv = PAR.cv
+        MP.pinf = PAR.pINF
+        MP.r0 = PAR.ρ0
+        MP.p0 = PAR.p0
+        MP.T0 = PAR.T0
+        MP.cs2 = PAR.cs2
+        MP.mu = PAR.μ
+        MP.tau1 = PAR.τ1
+        MP.alpha2 = PAR.α2
+        MP.kappa = PAR.κ
+        MP.tau2 = PAR.τ2
+        return MP
 
 if PARA_DG or PARA_FV:
     class material_params():
@@ -72,8 +90,9 @@ else:
             self.α2 = self.α**2
 
 
-def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None, p0=None, cs=None,
-                        α=None, μ=None, κ=None, Pr=None, Qc=None, Kc=None, Ti=None, ε=None, Bc=None):
+def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None,
+                        p0=None, cs=None, α=None, μ=None, κ=None, Pr=None,
+                        Qc=None, Kc=None, Ti=None, ε=None, Bc=None):
     """ An object to hold the material constants
     """
     if pINF is None:
@@ -114,12 +133,13 @@ def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None, p
     else:
         Ea = Rc * T0 / ε
 
-    return material_params(Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ, τ1, τ2, Qc, Kc, Ti, Ea, Bc)
+    return material_params(Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ,
+                           τ1, τ2, Qc, Kc, Ti, Ea, Bc)
 
-class save_arrays():
+class Data():
     """ An object to hold the arrays in which simulation data are saved
     """
-    def __init__(self, u, intLocs):
-        self.data = expand_dims(u.copy(), axis=0)
-        self.time = array([0])
-        self.interfaces = expand_dims(array(intLocs), axis=0)
+    def __init__(self, u, interfaceLocs, t):
+        self.grid = u.copy()
+        self.time = t
+        self.int = array(interfaceLocs)
