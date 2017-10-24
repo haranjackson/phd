@@ -17,10 +17,8 @@ REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 
 """ GFM Options """
 
-GFM  = 1                    # Use original GFM
-RGFM = 1                    # Use RGFM (requires GFM=1)
+RGFM = 1                    # Use original GFM
 isoFix = 0                  # Use isobaric fix
-SFix   = 0                  # Fix entropy in ghost cells
 
 """ Solver Options """
 

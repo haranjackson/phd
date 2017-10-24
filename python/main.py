@@ -21,7 +21,7 @@ from auxiliary.iterator import timestep
 from solvers.solvers import aderweno_stepper, split_weno_stepper
 from auxiliary.save import print_stats, record_data, save_all, make_u
 from multi.gfm import add_ghost_cells, interface_inds
-from options import ncore, nx, GFM, SOLVER, tf
+from options import ncore, nx, RGFM, SOLVER, tf
 
 
 
@@ -53,7 +53,7 @@ def run(t, tf, count, saveArrays):
         fluids = array([u for i in range(m+1)])
         dt = timestep(fluids, count, t, tf, PARs)
 
-        if GFM:
+        if RGFM:
             add_ghost_cells(fluids, interfaceInds, interfaceVels, PARs, dt)
 
         print_stats(count, t, dt, interfaceLocs)
@@ -67,8 +67,8 @@ def run(t, tf, count, saveArrays):
             elif SOLVER == 'SPLIT-WENO':
                 split_weno_stepper(pool, fluid, BC, dt, PAR)
 
-        if GFM:
-            #interfaceLocs += interfaceVels * dt
+        if RGFM:
+            interfaceLocs += interfaceVels * dt
             interfaceInds = interface_inds(interfaceLocs, nx)
 
         u = make_u(fluids, interfaceInds)

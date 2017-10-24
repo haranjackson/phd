@@ -7,7 +7,7 @@ from scipy.special import erf
 from auxiliary.classes import material_parameters
 from gpr.variables.vectors import Cvec, Cvec_to_Pclass
 from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, dx, Lx, GFM
+from options import nx, ny, nz, dx, Lx, RGFM
 
 
 def first_stokes_problem_IC():
@@ -132,7 +132,7 @@ def heat_conduction_IC():
         else:
             u[i,0,0] = QR
 
-    if GFM:
+    if RGFM:
         return u, [PAR, PAR], [0.5]
     else:
         return u, [PAR], []

@@ -6,7 +6,7 @@ from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import VISCOUS, THERMAL, REACTIVE, REACTION_TYPE
-from options import GFM, RGFM, isoFix, SFix
+from options import RGFM, isoFix
 from options import SOLVER
 from options import fullODE, wenoHalfStep, StrangSplit
 from options import approxInterface, reconstructPrim, wenoAverage
@@ -20,7 +20,7 @@ def print_stats(count, t, dt, interfaceLocations):
     print(count+1)
     print('t  =', t)
     print('dt =', dt)
-    if GFM:
+    if RGFM:
         print('Interfaces =', interfaceLocations)
 
 def make_u(fluids, inds):
@@ -39,7 +39,8 @@ def record_data(u, t, interfaceLocations, saveArrays):
     saveArrays.data = concatenate([saveArrays.data, expand_dims(u, axis=0)])
     saveArrays.time = concatenate([saveArrays.time, array([t])])
     saveArrays.interfaces = concatenate([saveArrays.interfaces,
-                                         expand_dims(array(interfaceLocations), axis=0)])
+                                         expand_dims(array(interfaceLocations),
+                                                     axis=0)])
 
 def save_config(path):
     with open(path, 'w+', encoding='utf-8') as f:
@@ -56,10 +57,8 @@ def save_config(path):
         f.write('REACTIVE = %i\n' % REACTIVE)
         f.write('REACTION_TYPE = %s\n\n' % REACTION_TYPE)
 
-        f.write('GFM  = %i\n' % GFM)
         f.write('RGFM = %i\n' % RGFM)
-        f.write('isoFix = %i\n' % isoFix)
-        f.write('SFix   = %i\n\n' % SFix)
+        f.write('isoFix = %i\n\n' % isoFix)
 
         f.write('SOLVER  = %s\n\n' % SOLVER)
 
