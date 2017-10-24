@@ -6,7 +6,7 @@ from solvers.basis import quad
 from gpr.eig import max_abs_eigs, perron_frobenius
 from gpr.matrices.conserved import Bdot, system_conserved
 from gpr.variables.vectors import Pvec_to_Cvec, Cvec_to_Pvec
-from options import N1, reconstructPrim, perronFrob
+from options import N1, RECONSTRUCT_PRIM, PERRON_FROB
 
 
 nodes, _, weights = quad()
@@ -40,7 +40,7 @@ def Aint(pL, pR, qL, qR, d, PAR):
 
 def Smax(pL, pR, qL, qR, d, PAR):
 
-    if perronFrob:
+    if PERRON_FROB:
         max1 = perron_frobenius(pL, d, PAR)
         max2 = perron_frobenius(pR, d, PAR)
     else:
@@ -51,7 +51,7 @@ def Smax(pL, pR, qL, qR, d, PAR):
 
 def input_vectors(xL, xR, PAR):
 
-    if reconstructPrim:
+    if RECONSTRUCT_PRIM:
         pL = xL
         pR = xR
         qL = Pvec_to_Cvec(pL, PAR)

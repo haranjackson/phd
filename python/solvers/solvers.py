@@ -5,7 +5,7 @@ from solvers.dg.dg import dg_launcher
 from solvers.weno.weno import weno_launcher
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_launcher
-from options import wenoHalfStep, StrangSplit
+from options import HALF_STEP, STRANG
 
 
 def aderweno_stepper(pool, fluid, BC, dt, PAR):
@@ -26,14 +26,14 @@ def aderweno_stepper(pool, fluid, BC, dt, PAR):
 
 def split_weno_stepper(pool, fluid, BC, dt, PAR):
 
-    Δt = dt/2 if StrangSplit else dt
+    Δt = dt/2 if STRANG else dt
     t0 = time()
 
     ode_launcher(fluid, Δt, PAR)
     t1 = time()
 
     wh = weno_launcher(BC(fluid))
-    if wenoHalfStep:
+    if HALF_STEP:
         weno_midstepper(wh, dt, PAR)
     t2 = time()
 
@@ -44,7 +44,7 @@ def split_weno_stepper(pool, fluid, BC, dt, PAR):
     print('WENO:', t2-t1)
     print('FV:  ', t3-t2)
 
-    if StrangSplit:
+    if STRANG:
         ode_launcher(fluid, Δt, PAR)
         t4 = time()
         print('ODE: ', t4-t3)

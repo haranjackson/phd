@@ -3,7 +3,7 @@ from itertools import product
 from numpy import array, zeros
 from scipy.integrate import odeint
 
-from options import fullODE, VISCOUS, THERMAL
+from options import NUM_ODE, VISCOUS, THERMAL
 from gpr.variables.eos import E_3
 from gpr.variables.vectors import Cvec_to_Pclass
 from solvers.split.distortion import f_A, jac_A, solver_approximate_analytic
@@ -38,7 +38,7 @@ def jac(y, t0, ρ, E, PAR):
 
     return ret
 
-def ode_stepper_full(u, dt, PAR, useJac=0):
+def ode_stepper_numerical(u, dt, PAR, useJac=0):
     """ Full numerical solver for the ODE system
     """
     nx,ny,nz = u.shape[:3]
@@ -60,7 +60,7 @@ def ode_stepper_full(u, dt, PAR, useJac=0):
         Q[5:14] = y1[:9]
         Q[14:17] = ρ * y1[9:]
 
-def ode_stepper_fast(u, dt, PAR):
+def ode_stepper_analytical(u, dt, PAR):
     """ Solves the ODE analytically by linearising the distortion equations and providing an
         analytic approximation to the thermal impulse evolution
     """
@@ -82,7 +82,7 @@ def ode_stepper_fast(u, dt, PAR):
             Q[14:17] = ρ * solver_thermal_analytic_ideal(ρ, E, A2, J, v, dt, PAR)
 
 def ode_launcher(u, dt, PAR, useJac=0):
-    if fullODE:
-        ode_stepper_full(u, dt, PAR, useJac=useJac)
+    if NUM_ODE:
+        ode_stepper_numerical(u, dt, PAR, useJac=useJac)
     else:
-        ode_stepper_fast(u, dt, PAR)
+        ode_stepper_analytical(u, dt, PAR)

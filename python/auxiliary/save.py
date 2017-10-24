@@ -6,14 +6,14 @@ from numpy import array, concatenate, expand_dims, linspace, int64, save, zeros
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import VISCOUS, THERMAL, REACTIVE, REACTION_TYPE
-from options import RGFM, isoFix
-from options import SOLVER
-from options import fullODE, wenoHalfStep, StrangSplit
-from options import approxInterface, reconstructPrim, wenoAverage
-from options import  N, CFL, method, perronFrob
-from options import hidalgo, stiff, superStiff, failLim, TOL
+from options import RGFM, ISO_FIX
+from options import SPLIT
+from options import NUM_ODE, HALF_STEP, STRANG
+from options import RECONSTRUCT_PRIM, WENO_AVERAGE
+from options import  N, CFL, OSHER, PERRON_FROB
+from options import HIDALGO, STIFF, SUPER_STIFF, FAIL_LIM, DG_TOL
 from options import rc, λc, λs, eps
-from options import MAX_ITER, paraDG, paraFV, ncore
+from options import MAX_ITER, PARA_DG, PARA_FV, NCORE
 
 
 def print_stats(count, t, dt, interfaceLocations):
@@ -58,38 +58,37 @@ def save_config(path):
         f.write('REACTION_TYPE = %s\n\n' % REACTION_TYPE)
 
         f.write('RGFM = %i\n' % RGFM)
-        f.write('isoFix = %i\n\n' % isoFix)
+        f.write('ISO_FIX = %i\n\n' % ISO_FIX)
 
-        f.write('SOLVER  = %s\n\n' % SOLVER)
+        f.write('SPLIT  = %s\n\n' % SPLIT)
 
-        f.write('fullODE = %i\n' % fullODE)
-        f.write('wenoHalfStep = %i\n' % wenoHalfStep)
-        f.write('StrangSplit  = %i\n\n' % StrangSplit)
+        f.write('NUM_ODE = %i\n' % NUM_ODE)
+        f.write('HALF_STEP = %i\n' % HALF_STEP)
+        f.write('STRANG  = %i\n\n' % STRANG)
 
-        f.write('approxInterface = %i\n' % approxInterface)
-        f.write('reconstructPrim = %i\n' % reconstructPrim)
-        f.write('wenoAverage = %i\n\n' % wenoAverage)
+        f.write('RECONSTRUCT_PRIM = %i\n' % RECONSTRUCT_PRIM)
+        f.write('WENO_AVERAGE = %i\n\n' % WENO_AVERAGE)
 
-        f.write('N      = %i\n' % N)
-        f.write('CFL    = %f\n' % CFL)
-        f.write('method = %s\n' % method)
-        f.write('perronFrob = %i\n\n' % perronFrob)
+        f.write('N     = %i\n' % N)
+        f.write('CFL   = %f\n' % CFL)
+        f.write('OSHER = %i\n' % OSHER)
+        f.write('PERRON_FROB = %i\n\n' % PERRON_FROB)
 
-        f.write('hidalgo    = %i\n' % hidalgo)
-        f.write('stiff      = %i\n' % stiff)
-        f.write('superStiff = %i\n' % superStiff)
-        f.write('failLim    = %i\n' % failLim)
-        f.write('TOL        = %e\n' % TOL)
-        f.write('MAX_ITER   = %i\n\n' % MAX_ITER)
+        f.write('HIDALGO     = %i\n' % HIDALGO)
+        f.write('STIFF       = %i\n' % STIFF)
+        f.write('SUPER_STIFF = %i\n' % SUPER_STIFF)
+        f.write('FAIL_LIM    = %i\n' % FAIL_LIM)
+        f.write('DG_TOL      = %e\n' % DG_TOL)
+        f.write('MAX_ITER    = %i\n\n' % MAX_ITER)
 
         f.write('rc  = %f\n' % rc)
         f.write('λc  = %e\n' % λc)
         f.write('λs  = %e\n' % λs)
         f.write('eps = %e\n\n' % eps)
 
-        f.write('paraDG = %i\n' % paraDG)
-        f.write('paraFV = %i\n' % paraFV)
-        f.write('ncore  = %i\n\n' % ncore)
+        f.write('PARA_DG = %i\n' % PARA_DG)
+        f.write('PARA_FV = %i\n' % PARA_FV)
+        f.write('NCORE  = %i\n\n' % NCORE)
 
 def save_all(saveArrays):
     if not path.exists('_dump'):

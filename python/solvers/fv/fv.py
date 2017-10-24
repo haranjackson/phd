@@ -8,26 +8,33 @@ from solvers.basis import quad, end_values, derivative_values
 from gpr.matrices.conserved import Bdot, source_ref, flux_ref
 from gpr.matrices.jacobians import dQdPdot
 from gpr.variables.vectors import Cvec_to_Pvec
-from options import ndim, dx, N1, method, approxInterface, reconstructPrim, timeDim, paraFV, ncore, VISCOUS
+from options import ndim, dx, N1, OSHER, RECONSTRUCT_PRIM, SPLIT, PARA_FV, NCORE, VISCOUS
 
 
 nodes, _, weights = quad()
 endVals = end_values()
 derivs = derivative_values()
 
-if method == 'osher':
+if OSHER:
     s_func = Aint
-elif method == 'rusanov':
+else:
     s_func = Smax
 
-weightList = [weights if timeDim else array([1])] + [weights]*ndim + [array([1])]*(3-ndim)
-weightListEnd = [weights if timeDim else array([1])] + [weights]*(ndim-1) + [array([1])]*(3-ndim)
+if SPLIT:
+    tWeights = [array([1])]
+    tN = 1
+else:
+    tWeights = [weights]
+    tN = N1
+
+weightList = tWeights + [weights]*ndim + [array([1])]*(3-ndim)
+weightListEnd = tWeights + [weights]*(ndim-1) + [array([1])]*(3-ndim)
 
 weight = einsum('t,x,y,z', weightList[0], weightList[1], weightList[2], weightList[3])
 weightEnd = einsum('t,x,y', weightListEnd[0], weightListEnd[1], weightListEnd[2])
 
-idx = [N1 if timeDim else 1] + [N1]*ndim + [1]*(3-ndim)
-idxEnd = [N1 if (timeDim and not approxInterface) else 1] + [N1]*(ndim-1) + [1]*(3-ndim)
+idx = [tN] + [N1]*ndim + [1]*(3-ndim)
+idxEnd = [tN] + [N1]*(ndim-1) + [1]*(3-ndim)
 
 
 def endpoints(xh):
@@ -39,10 +46,7 @@ def endpoints(xh):
     xEnd = zeros([ndim, 2, nx, ny, nz] + idxEnd + [18])
     for d in range(ndim):
         temp = tensordot(endVals, xh0, (0,4+d))
-        if approxInterface:
-            xEnd[d,:,:,:,:,0] = tensordot(weights, temp, (0,4))
-        else:
-            xEnd[d] = temp
+        xEnd[d] = temp
     return xEnd
 
 def interfaces(xEnd, PAR):
@@ -122,7 +126,7 @@ def center(xhijk, t, inds, PAR, homogeneous=0):
     ret = zeros(18)
 
     if not homogeneous:
-        if reconstructPrim:
+        if RECONSTRUCT_PRIM:
             p = x
         else:
             p = Cvec_to_Pvec(x, PAR)
@@ -130,13 +134,13 @@ def center(xhijk, t, inds, PAR, homogeneous=0):
         ret *= dx
 
     if VISCOUS:
-        if reconstructPrim:
+        if RECONSTRUCT_PRIM:
             v = x[2:5]
         else:
             v = x[2:5] / x[0]
         for d in range(ndim):
             dxdxi = dot(derivs[inds[d]], xxi[d])
-            if reconstructPrim:
+            if RECONSTRUCT_PRIM:
                 dxdxi = dQdPdot(x, dxdxi, PAR)
             temp = zeros(18)
             Bdot(temp, dxdxi, v, d)
@@ -174,10 +178,10 @@ def fv_terms(xh, dt, PAR, homogeneous=0):
 def fv_launcher(pool, qh, dt, PAR, homogeneous=0):
     """ Controls the parallel computation of the Finite Volume interface terms
     """
-    if paraFV:
+    if PARA_FV:
         nx = qh.shape[0]
-        step = int(nx / ncore)
-        chunk = array([i*step for i in range(ncore)] + [nx+1])
+        step = int(nx / NCORE)
+        chunk = array([i*step for i in range(NCORE)] + [nx+1])
         chunk[0] += 1
         chunk[-1] -= 1
         n = len(chunk) - 1

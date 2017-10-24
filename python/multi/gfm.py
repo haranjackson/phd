@@ -2,7 +2,7 @@ from numpy import concatenate, int64
 
 from solvers.basis import basis_polys
 from multi.approximate_riemann import star_states
-from options import dx, isoFix
+from options import dx, ISO_FIX
 
 
 psi, _, _ = basis_polys()
@@ -26,8 +26,8 @@ def add_ghost_cells(fluids, inds, vels, materialParameters, dt):
         PARL = materialParameters[i]
         PARR = materialParameters[i+1]
 
-        QL = uL[ind-1-isoFix, 0, 0]
-        QR = uR[ind+isoFix, 0, 0]
+        QL = uL[ind-1-ISO_FIX, 0, 0]
+        QR = uR[ind+ISO_FIX, 0, 0]
         QL_, QR_ = star_states(QL, QR, dt, PARL, PARR)
 
         for j in range(ind, len(uL)):

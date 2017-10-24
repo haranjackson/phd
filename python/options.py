@@ -18,46 +18,45 @@ REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 """ GFM Options """
 
 RGFM = 1                    # Use original GFM
-isoFix = 0                  # Use isobaric fix
+ISO_FIX = 0                 # Use isobaric fix
 
 """ Solver Options """
 
-SOLVER = 'ADER-WENO'       # 'ADER-WENO', SPLIT-WENO'
+SPLIT = 0                   # Whether or not to use a split solver
 
-fullODE = 0                 # Use numerical ODE solver (Split-WENO)
-wenoHalfStep = 1            # Step forwards WENO solver by dt/2 (Split-WENO)
-StrangSplit  = 1            # Use Strang splitting (Split-WENO)
+NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
+HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
+STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
-approxInterface = 0         # Calculate fluxes with average value of interface states
-reconstructPrim = 0         # Perform WENO and DG in primitive variables
-wenoAverage = 0             # Average x-then-y and y-then-x WENO reconstruction
+RECONSTRUCT_PRIM = 0        # Perform WENO and DG in primitive variables
+WENO_AVERAGE     = 0        # Average x-then-y and y-then-x WENO
 
-N      = 1                  # Method is order N+1
-CFL    = 0.9                # CFL number
-method = 'rusanov'          # Intercell fluxes ('osher' or 'rusanov')
-perronFrob = 0              # Use Perron-Frobenius approximation to max λ
+N   = 1                     # Method is order N+1
+CFL = 0.9                   # CFL number
+OSHER = 0                   # Whether to use Osher flux (else Rusanov flux)
+PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ
 
 """ DG Options """
 
-hidalgo    = 0              # Use Hidalgo initial guess
-stiff      = 0              # Use Newton-Krylov solver
-superStiff = 0              # Use Newton-Krylov solver for Hidalgo initial guess
-failLim    = 180            # Max number of non-stiff solves allowed to fail
-TOL        = 6e-6           # Tolerance to which the predictor must converge
-MAX_ITER   = 50             # Max number of non-stiff iterations attempted
+HIDALGO     = 0             # Use Hidalgo initial guess
+STIFF       = 0             # Use Newton-Krylov
+SUPER_STIFF = 0             # Use Newton-Krylov for Hidalgo initial guess
+FAIL_LIM    = 100           # Max number of non-stiff solves allowed to fail
+DG_TOL      = 1e-6          # Tolerance to which the predictor must converge
+MAX_ITER    = 50            # Max number of non-stiff iterations attempted
 
 """ WENO Parameters """
 
 rc = 8                      # Exponent used in oscillation indicator
-λc = 1e5                    # Coefficient of oscillation indicator of central stencils
-λs = 1                      # Coefficient of oscillation indicator of side stencils
-eps  = 1e-14                # Constant ensuring oscillation indicators don't blow up
+λc = 1e5                    # WENO coefficient of central stencils
+λs = 1                      # WENO coefficient of side stencils
+eps  = 1e-14                # Ensures oscillation indicators don't blow up
 
 """ Speed-Up Parameters """
 
-paraDG = 0                  # Parallelise DG step
-paraFV = 0                  # Parallelise FV step
-ncore  = 4                  # Number of cores used if running in parallel
+PARA_DG = 0                 # Parallelise DG step
+PARA_FV = 0                 # Parallelise FV step
+NCORE   = 4                 # Number of cores used if running in parallel
 
 
 """ Derived Values """
@@ -68,11 +67,3 @@ NT = N1**(ndim+1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
-
-if SOLVER == 'SPLIT-WENO':
-    timeDim = 0
-else:
-    timeDim = 1
-
-if not timeDim:
-    approxInterface = 0

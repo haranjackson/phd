@@ -5,7 +5,7 @@ from itertools import product
 from numpy import ceil, concatenate, dot, einsum, floor, int64, multiply, ones, zeros
 from scipy.linalg import solve
 
-from options import rc, λc, λs, eps, ndim, N, N1, wenoAverage, reconstructPrim
+from options import rc, λc, λs, eps, ndim, N, N1, WENO_AVERAGE, RECONSTRUCT_PRIM
 from solvers.basis import mid_values
 from solvers.weno.matrices import coefficient_matrices, oscillation_indicator
 from solvers.weno.matrices import inv_coeff_mats_1, inv_coeff_mats_2
@@ -144,12 +144,12 @@ def weno_primitive(q, PAR):
 
 def weno_launcher(u):
 
-    if reconstructPrim:
+    if RECONSTRUCT_PRIM:
         weno_func = weno_primitive
     else:
         weno_func = weno
 
-    if ndim==2 and wenoAverage:
+    if ndim==2 and WENO_AVERAGE:
         wx = weno_func(u)
         wy = weno_func(u.swapaxes(0,1)).swapaxes(0,1).swapaxes(3,4)
         return (wx+wy)/2

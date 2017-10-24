@@ -1,11 +1,11 @@
 from numba import jitclass, float64 as f64
 from numpy import array, expand_dims
 
-from options import paraDG, paraFV
+from options import PARA_DG, PARA_FV
 from gpr.variables.state import temperature
 
 
-if paraDG or paraFV:
+if PARA_DG or PARA_FV:
     class material_params():
         def __init__(self, Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ,
                      τ1, τ2, Qc, Kc, Ti, Ea, Bc):
