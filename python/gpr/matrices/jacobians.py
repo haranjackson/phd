@@ -27,11 +27,11 @@ class jacobian_variables():
 def dQdP(P, PAR):
     """ Returns the Jacobian of the conserved variables with respect to the primitive variables
     """
-    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E
-    ψ = E_A(A)
+    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; E = P.E
+    ψ = E_A(A, PAR.cs2)
     ret = eye(18)
 
-    ret[1, 0] = E - E_1(ρ, p, PAR.y, PAR.pINF)
+    ret[1, 0] = E - E_1(ρ, p, PAR.γ, PAR.pINF)
     ret[1, 1] /= PAR.γ - 1
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
@@ -47,7 +47,7 @@ def dQdP(P, PAR):
 
     if REACTIVE:
         ret[1, 17] = PAR.Qc * ρ
-        ret[17, 0] = λ
+        ret[17, 0] = P.λ
         ret[17, 17] *= ρ
 
     return ret

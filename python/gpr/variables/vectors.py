@@ -1,7 +1,8 @@
 from numpy import zeros
 
 from gpr.variables.eos import total_energy
-from gpr.variables.state import heat_flux, pressure, sigma, temperature
+from gpr.variables.state import heat_flux, pressure, temperature
+from gpr.variables.state import sigma, sigma_A, Sigma
 
 
 class Cvec_to_Pclass():
@@ -24,6 +25,12 @@ class Cvec_to_Pclass():
 
     def σ(self):
         return sigma(self.ρ, self.A, self.PAR.cs2)
+
+    def dσdA(self):
+        return sigma_A(self.ρ, self.A, self.PAR.cs2)
+
+    def Σ(self):
+        return Sigma(self.p, self.ρ, self.A, self.PAR.cs2)
 
 def Cvec(ρ, p, v, A, J, λ, PAR):
     """ Returns the vector of conserved variables, given the primitive variables

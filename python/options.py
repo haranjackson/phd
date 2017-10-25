@@ -18,7 +18,7 @@ REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 """ GFM Options """
 
 RGFM    = 1                 # Use original GFM
-ISO_FIX = 1                 # Use isobaric fix
+ISO_FIX = 0                 # Use isobaric fix
 
 """ Solver Options """
 

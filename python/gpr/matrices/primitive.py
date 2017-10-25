@@ -8,32 +8,37 @@ from gpr.variables.vectors import Cvec_to_Pclass, Cvec_to_Pvec
 from options import VISCOUS, THERMAL, REACTIVE
 
 
-def system_primitive(Q, d, PAR):
+def system_primitive(Q, d, PAR, pForm=1):
     """ Returns the system matrix in the dth direction for the system of
         primitive variables, calculated directly
     """
     P = Cvec_to_Pclass(Q, PAR)
     ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
-    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2
-
-    sig = sigma(ρ, A, cs2)
-    dσdA = sigma_A(ρ, A, cs2)
+    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; cv = PAR.cv; α2 = PAR.α2
+    Γ = γ-1
 
     ret = v[d] * eye(18)
     ret[0, 2+d] = ρ
-    ret[1, 2+d] = γ * p
-    ret[1, 14+d] = (γ-1) * PAR.α2 * T
-    ret[2+d, 1] = 1 / ρ
 
-    ret[2:5, 0] = -sig[d] / ρ**2
-    ret[2:5, 5:14] = -1 / ρ * dσdA[d].reshape([3,9])
+    ret[2:5, 0] = -P.σ()[d] / ρ**2
+    ret[2:5, 5:14] = -1 / ρ * P.dσdA()[d].reshape([3,9])
 
     ret[5+d, 2:5] = A[0]
     ret[8+d, 2:5] = A[1]
     ret[11+d, 2:5] = A[2]
 
-    ret[14+d, 0] = -T / ρ**2
-    ret[14+d, 1] = T / (ρ * (p + pINF))
+    if pForm:
+        ret[1, 2+d] = γ * p
+        ret[1, 14+d] = Γ * α2 * T
+        ret[2+d, 1] = 1 / ρ
+        ret[14+d, 0] = -T / ρ**2
+        ret[14+d, 1] = T / (ρ * (p + pINF))
+    else:
+        ret[1, 2+d] = Γ * T
+        ret[1, 14+d] = α2 * T / (cv * ρ)
+        ret[2+d, 0] += Γ * cv * T / ρ
+        ret[2+d, 1] = Γ * cv
+        ret[14+d, 1] = 1 / ρ
 
     if not REACTIVE:
         ret[17, 17] = 0

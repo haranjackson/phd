@@ -15,22 +15,16 @@ def check_star_convergence(QL_, QR_, PARL, PARR):
 
     PL_ = Cvec_to_Pclass(QL_, PARL)
     PR_ = Cvec_to_Pclass(QR_, PARR)
-    ΣL_ = Sigma(PL_.p, PL_.ρ, PL_.A, PARL.cs2)[0]
-    ΣR_ = Sigma(PR_.p, PR_.ρ, PR_.A, PARR.cs2)[0]
-    TL_ = temperature(PL_.ρ, PL_.p, PARL.γ, PARL.pINF, PARL.cv)
-    TR_ = temperature(PR_.ρ, PR_.p, PARR.γ, PARR.pINF, PARR.cv)
-
-    return amax(abs(ΣL_-ΣR_)) < starTOL and abs(TL_-TR_) < starTOL
+    return amax(abs(PL_.Σ()[0]-PR_.Σ()[0])) < starTOL and abs(PL_.T-PR_.T) < starTOL
 
 def riemann_constraints(P, sgn, PAR):
     """ K=R: sgn = -1
         K=L: sgn = 1
     """
     _, Lhat, Rhat = primitive_eigs(P, PAR)
-    ρ = P.ρ; p = P.p; A = P.A
-    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; cv = PAR.cv
+    ρ = P.ρ; p = P.p; A = P.A; T = P.T
+    pINF = PAR.pINF; cs2 = PAR.cs2
 
-    T = temperature(ρ, p, γ, pINF, cv)
     σ0 = sigma(ρ, A, cs2)[0]
     dσdA = sigma_A(ρ, A, cs2)[0]
     Π1 = dσdA[:,:,0]
@@ -116,6 +110,65 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(18), SR=zeros(18)):
     QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR)
     return QL_, QR_
 
+
+def conds(P, sgn, PAR):
+    """ K=R: sgn = -1
+        K=L: sgn = 1
+    """
+    _, Lhat, Rhat = primitive_eigs(P, PAR)
+    ρ = P.ρ; p = P.p; A = P.A; T = P.T
+    pINF = PAR.pINF; cs2 = PAR.cs2
+
+    σ0 = sigma(ρ, A, cs2)[0]
+    dσdA = sigma_A(ρ, A, cs2)[0]
+    q0 = P.q()[0]
+    Π1 = dσdA[:,:,0]
+    Π2 = dσdA[:,:,1]
+    Π3 = dσdA[:,:,2]
+
+    Lhat[:4] = 0
+    Lhat[:3, 0] = -σ0 / ρ
+    Lhat[0, 1] = 1
+    Lhat[:3, 2:5] = -Π1
+    Lhat[:3, 5:8] = -Π2
+    Lhat[:3, 8:11] = -Π3
+    Lhat[3, 0] = -q0 / ρ
+    Lhat[3, 1] = q0 / (p+pINF)
+    Lhat[3, 14] = PAR.α2 * T
+    Lhat[4:8, 11:15] *= -sgn
+
+    return Lhat
+
+def star_stepper2(QL, QR, PARL, PARR, d):
+    PL = Cvec_to_Pclass(QL, PARL)
+    PR = Cvec_to_Pclass(QR, PARR)
+    LL = conds(PL, 1, PARL)
+    LR = conds(PR, -1, PARR)
+
+    ΣL = PL.Σ()
+    ΣR = PR.Σ()
+    Σ_ = (ΣL + ΣR) / 2
+    qL = PL.q()
+    qR = PR.q()
+    q_ = (qL + qR) / 2
+
+    bL = zeros(18)
+    bL[:3] = (Σ_ - ΣL)[d]
+    bL[3] = (q_ - qL)[d]
+    bR = zeros(18)
+    bR[:3] = (Σ_ - ΣR)[d]
+    bR[3] = (q_ - qR)[d]
+
+    PLvec = Pvec_reordered(PL)
+    PRvec = Pvec_reordered(PR)
+
+    PL_vec = solve(LL, bL) + PLvec
+    PR_vec = solve(LR, bL) + PRvec
+    QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL)
+    QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR)
+    return QL_, QR_
+
+
 def star_states(QL, QR, dt, PARL, PARR):
     SL = source_primitive_reordered(QL, PARL)
     SR = source_primitive_reordered(QR, PARR)
@@ -124,4 +177,10 @@ def star_states(QL, QR, dt, PARL, PARR):
         SL_ = source_primitive_reordered(QL_, PARL)
         SR_ = source_primitive_reordered(QR_, PARR)
         QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR, SL_, SR_)
+    return QL_, QR_
+
+def star_states2(QL, QR, dt, PARL, PARR):
+    QL_, QR_ = star_stepper2(QL, QR, PARL, PARR, 0)
+    for i in range(10):
+        QL_, QR_ = star_stepper2(QL_, QR_, PARL, PARR, 0)
     return QL_, QR_
