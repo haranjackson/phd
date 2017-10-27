@@ -32,9 +32,9 @@
 namespace py = pybind11;
 
 
-PYBIND11_PLUGIN(GPRpy)
+PYBIND11_MODULE(GPRpy, m)
 {
-    pybind11::module m("GPRpy", "Python bindings to the GPRcpp library");
+    m.doc() = "Python bindings to the GPRcpp library";
 
     pybind11::module m_classes = m.def_submodule("classes",
                                                  "Classes used by GPRpy");
@@ -131,6 +131,4 @@ PYBIND11_PLUGIN(GPRpy)
     m_solvers_fv.def("Bint", &Bint);
     m_solvers_fv.def("Smax", &Smax);
     m_solvers_fv.def("fv_launcher", &fv_launcher);
-
-    return m.ptr();
 }
