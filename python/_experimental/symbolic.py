@@ -5,7 +5,7 @@ from numpy.random import rand
 from sympy import eye, Matrix, symbols
 
 from auxiliary.common import material_parameters
-from gpr.variables.vectors import Cvec
+from system.gpr.misc.structures import Cvec
 from options import reactiveEOS, Qc
 
 

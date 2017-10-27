@@ -1,18 +1,11 @@
 from numpy import array, diag, dot, eye, outer, sqrt, zeros
 from scipy.linalg import solve, eig
-from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
-from auxiliary.funcs import GdevG, gram
-from gpr.matrices.jacobians import dQdP, dPdQ, jacobian_variables
-from gpr.variables.state import sigma, sigma_A, temperature
-from options import VISCOUS, THERMAL
-
-
-def eigvalsn(a, n):
-    geev, geev_lwork = get_lapack_funcs(('geev', 'geev_lwork'), (a,))
-    lwork = _compute_lwork(geev_lwork, n, compute_vl=0, compute_vr=0)
-    w, _, _, _, _ = geev(a, lwork=lwork, compute_vl=0, compute_vr=0, overwrite_a=1)
-    return w
+from system.gpr.misc.functions import GdevG, gram, eigvalsn
+from system.gpr.misc.structures import Cvec_to_Pclass
+from system.gpr.systems.jacobians import dQdP, dPdQ, jacobian_variables
+from system.gpr.variables.state import sigma, sigma_A
+from options import VISCOUS, THERMAL, nV, PERRON_FROB
 
 
 def thermo_acoustic_tensor(ρ, G, p, T, d, PAR):
@@ -43,37 +36,20 @@ def thermo_acoustic_tensor(ρ, G, p, T, d, PAR):
 
     return ret
 
-def max_abs_eigs(P, d, PAR):
+def max_abs_eigs(Q, d, PAR):
     """ Returns the maximum of the absolute values of the eigenvalues of the GPR system
     """
-    ρ = P[0]
-    p = P[1]
-    vd = P[2+d]
-    A = P[5:14].reshape([3,3])
-    T = temperature(ρ, p, PAR.γ, PAR.pINF, PAR.cv)
+    P = Cvec_to_Pclass(Q, PAR)
+    vd = P.v[d]
+    O = thermo_acoustic_tensor(P.ρ, gram(P.A), P.p, P.T, d, PAR)
 
-    O = thermo_acoustic_tensor(ρ, gram(A), p, T, d, PAR)
-    lam = sqrt(eigvalsn(O, 4).max())
-    if vd > 0:
-        return vd + lam
+    if PERRON_FROB:
+        rowSum = [sum(o) for o in O]
+        colSum = [sum(oT) for oT in O.T]
+        lam = sqrt(min(max(rowSum),max(colSum)))
     else:
-        return lam - vd
+        lam = sqrt(eigvalsn(O, 4).max())
 
-def perron_frobenius(P, d, PAR):
-    """ Returns an estimate of the maximum eigenvalue of the GPR system using an average of the
-        Perron-Frobenius bounds on the maximum eigenvalue of the thermo-acoustic tensor.
-    """
-    ρ = P[0]
-    p = P[1]
-    vd = P[2+d]
-    A = P[5:14].reshape([3,3])
-    T = temperature(ρ, p, PAR.γ, PAR.pINF, PAR.cv)
-
-    O = thermo_acoustic_tensor(ρ, gram(A), p, T, d, PAR)
-    rowSum = [sum(o) for o in O]
-    colSum = [sum(oT) for oT in O.T]
-
-    lam = sqrt(min(max(rowSum),max(colSum)))
     if vd > 0:
         return vd + lam
     else:
@@ -96,15 +72,15 @@ def Xi2mat(ρ, p, A, T, γ, α2):
     ret[1, 3] = (γ-1) * α2 * T
     return ret
 
-def primitive_eigs(P, PAR, left=1, right=1):
+def eig_prim(P, PAR, left=1, right=1):
     """ Returns eigenvalues and set of left and right eigenvectors of the
         matrix returned by system_primitive_reordered
     """
     ρ = P.ρ; p = P.p; A = P.A; T = P.T; vd = P.v[0]
     γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
 
-    L = zeros([18,18])
-    R = zeros([18,18])
+    L = zeros([nV,nV])
+    R = zeros([nV,nV])
     σ0 = sigma(ρ, A, cs2)[0]
     dσdA = sigma_A(ρ, A, cs2)[0]
     Π1 = dσdA[:,:,0]
@@ -141,7 +117,7 @@ def primitive_eigs(P, PAR, left=1, right=1):
         R[2:5, 9:12] = -2 * solve(Π1, Π2)
         R[2:5, 12:15] = -2 * solve(Π1, Π3)
         R[5:11, 9:15] = 2 * eye(6)
-        R[15:18, 15:18] = 2 * eye(3)
+        R[15:17, 15:17] = 2 * eye(2)
 
     if left:
         temp = solve(D, dot(Q, Ξ1), overwrite_b=1, check_finite=0)
@@ -164,18 +140,18 @@ def primitive_eigs(P, PAR, left=1, right=1):
         L[8, 8:11] = dot(temp, solve(Π1, Π3, check_finite=0))
 
         L[9:15, 5:11] = eye(6)
-        L[15:18, 15:18] = eye(3)
+        L[15:17, 15:17] = eye(2)
 
     nonDegenList = [vd+sw[0], vd+sw[1], vd+sw[2], vd+sw[3], vd-sw[0], vd-sw[1], vd-sw[2], vd-sw[3]]
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
 
-def conserved_eigs(P, PAR):
+def eig_cons(P, PAR):
     """ Returns the eigenvalues and left and right eigenvectors of the conserved system.
         NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
               eigenvectors of the primitive system and transforming them into conserved eigenvectors
               without attempting to put them in the standard ordering.
     """
-    Λ, L, R = primitive_eigs(P, PAR)
+    Λ, L, R = eig_prim(P, PAR)
     jacVars = jacobian_variables(P, PAR)
     DPDQ = dPdQ(P, jacVars, PAR)
     DQDP = dQdP(P, PAR)

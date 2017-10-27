@@ -1,8 +1,8 @@
 from numpy import array, eye, zeros
 
-from auxiliary.classes import material_parameters
-from gpr.variables.vectors import Cvec
-from options import nx, ny, nz
+from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.structures import Cvec
+from options import nx, ny, nz, nV
 
 
 PAR = material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1, μ=1e-2, Pr=0.75)
@@ -21,7 +21,7 @@ def toro_test1_IC():
     AR = ρR**(1/3) * eye(3)
     JR = zeros(3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
     QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
@@ -44,7 +44,7 @@ def toro_test2_IC():
     AR = ρR**(1/3) * eye(3)
     JR = zeros(3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
     QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
@@ -67,7 +67,7 @@ def toro_test3_IC():
     AR = ρR**(1/3) * eye(3)
     JR = zeros(3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
     QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
@@ -90,7 +90,7 @@ def toro_test4_IC():
     AR = ρR**(1/3) * eye(3)
     JR = zeros(3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
     QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):
@@ -113,7 +113,7 @@ def toro_test5_IC():
     AR = ρR**(1/3) * eye(3)
     JR = zeros(3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, vL, AL, JL, 0, PAR)
     QR = Cvec(ρR, pR, vR, AR, JR, 0, PAR)
     for i in range(nx):

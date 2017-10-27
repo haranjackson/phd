@@ -3,9 +3,9 @@ from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
-from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D
-from gpr.variables.eos import E_A
-from gpr.variables.material_functions import theta_1
+from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, inv3, L2_2D
+from system.gpr.variables.eos import E_A
+from system.gpr.variables.material_functions import theta_1
 
 
 def f_A(A, PAR):

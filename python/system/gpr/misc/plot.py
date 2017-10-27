@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from solvers.basis import quad, basis_polys
-from gpr.variables.state import sigma, entropy, heat_flux
-from gpr.variables.vectors import Cvec_to_Pclass
+from system.gpr.variables.state import sigma, entropy, heat_flux
+from system.gpr.misc.structures import Cvec_to_Pclass
 from multi.gfm import interface_inds
 from options import Lx, nx, ny, ndim
 

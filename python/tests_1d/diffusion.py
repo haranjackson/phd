@@ -3,8 +3,8 @@ from itertools import product
 from numpy import array, eye, zeros
 
 from auxiliary.boundaries import standard_BC
-from auxiliary.classes import material_parameters
-from gpr.variables.vectors import Cvec
+from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.structures import Cvec
 from options import nx, ny, nz
 
 
@@ -33,7 +33,7 @@ def barrier_IC():
         ny = 60
     """
     Q1, Q2, PAR = defaults()
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i, j in product(range(nx), range(ny)):
         u[i,j,0] = Q1
     for i, j in product(range(midx), range(midy)):

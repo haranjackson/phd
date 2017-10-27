@@ -1,7 +1,7 @@
 from numba import jit
 from numpy import exp
 
-from auxiliary.funcs import det3
+from system.gpr.misc.functions import det3
 
 
 @jit

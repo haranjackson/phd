@@ -1,27 +1,33 @@
 from numpy import amax, concatenate, diag, dot, eye, outer, sqrt, zeros
 from scipy.linalg import eig, solve
 
-from auxiliary.funcs import gram
-from gpr.eig import primitive_eigs, Xi1mat, thermo_acoustic_tensor
-from gpr.matrices.primitive import source_primitive_reordered
-from gpr.variables.state import sigma, sigma_A, Sigma, temperature
-from gpr.variables.vectors import Cvec_to_Pclass, Pvec_reordered, Pvec_reordered_to_Cvec
+from system.eig import eig_prim, Xi1mat, thermo_acoustic_tensor
+from system.gpr.misc.functions import gram
+from system.gpr.misc.structures import Cvec_to_Pclass, Pvec_reordered, Pvec_reordered_to_Cvec
+from system.gpr.systems.primitive import source_prim, reordered
+from system.gpr.variables.state import sigma, sigma_A, Sigma, temperature
+
+from options import nV, STAR_TOL
 
 
-starTOL = 1e-8
 e0 = zeros(3); e0[0]=1
+
 
 def check_star_convergence(QL_, QR_, PARL, PARR):
 
     PL_ = Cvec_to_Pclass(QL_, PARL)
     PR_ = Cvec_to_Pclass(QR_, PARR)
-    return amax(abs(PL_.Σ()[0]-PR_.Σ()[0])) < starTOL and abs(PL_.T-PR_.T) < starTOL
+
+    cond1 = amax(abs(PL_.Σ()[0]-PR_.Σ()[0])) < STAR_TOL
+    cond2 = abs(PL_.T-PR_.T) < STAR_TOL
+
+    return cond1 and cond2
 
 def riemann_constraints(P, sgn, PAR):
     """ K=R: sgn = -1
         K=L: sgn = 1
     """
-    _, Lhat, Rhat = primitive_eigs(P, PAR)
+    _, Lhat, Rhat = eig_prim(P, PAR)
     ρ = P.ρ; p = P.p; A = P.A; T = P.T
     pINF = PAR.pINF; cs2 = PAR.cs2
 
@@ -70,7 +76,7 @@ def riemann_constraints(P, sgn, PAR):
 
     return Lhat, Rhat
 
-def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(18), SR=zeros(18)):
+def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(nV), SR=zeros(nV)):
 
     PL = Cvec_to_Pclass(QL, PARL)
     PR = Cvec_to_Pclass(QR, PARR)
@@ -115,7 +121,7 @@ def conds(P, sgn, PAR):
     """ K=R: sgn = -1
         K=L: sgn = 1
     """
-    _, Lhat, Rhat = primitive_eigs(P, PAR)
+    _, Lhat, Rhat = eig_prim(P, PAR)
     ρ = P.ρ; p = P.p; A = P.A; T = P.T
     pINF = PAR.pINF; cs2 = PAR.cs2
 
@@ -152,10 +158,10 @@ def star_stepper2(QL, QR, PARL, PARR, d):
     qR = PR.q()
     q_ = (qL + qR) / 2
 
-    bL = zeros(18)
+    bL = zeros(nV)
     bL[:3] = (Σ_ - ΣL)[d]
     bL[3] = (q_ - qL)[d]
-    bR = zeros(18)
+    bR = zeros(nV)
     bR[:3] = (Σ_ - ΣR)[d]
     bR[3] = (q_ - qR)[d]
 
@@ -170,12 +176,12 @@ def star_stepper2(QL, QR, PARL, PARR, d):
 
 
 def star_states(QL, QR, dt, PARL, PARR):
-    SL = source_primitive_reordered(QL, PARL)
-    SR = source_primitive_reordered(QR, PARR)
+    SL = reordered(source_prim(QL, PARL))
+    SR = reordered(source_prim(QR, PARR))
     QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR, SL, SR)
     while not check_star_convergence(QL_, QR_, PARL, PARR):
-        SL_ = source_primitive_reordered(QL_, PARL)
-        SR_ = source_primitive_reordered(QR_, PARR)
+        SL_ = reordered(source_prim(QL_, PARL))
+        SR_ = reordered(source_prim(QR_, PARR))
         QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR, SL_, SR_)
     return QL_, QR_
 

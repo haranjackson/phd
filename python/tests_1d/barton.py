@@ -1,7 +1,7 @@
 from numpy import array, dot, exp, zeros, trace as tr, transpose as trans
 from numpy.linalg import det, inv
 
-from options import nx, ny, nz
+from options import nx, ny, nz, nV
 
 TEST = 1
 
@@ -19,7 +19,7 @@ B0 = b0**2
 
 
 def initial_vector(u, F, S):
-    U = zeros(18)
+    U = zeros(nV)
     v = array(u)
     A = inv(array(F))
     ρ = density(A)
@@ -77,7 +77,7 @@ def barton_IC():
     elif TEST==2:
         UL0 = initial_vector([2e3, 0, 100], [[1,0,0],[-0.01,0.95,0.02],[-0.015,0,0.9]], 0)
         UR0 = initial_vector([0, -30, -10], [[1,0,0],[0.015,0.95,0],[-0.01,0,0.9]], 0)
-    ret = zeros([nx, ny, nz, 18])
+    ret = zeros([nx, ny, nz, nV])
     for i in range(nx):
         if i < int(nx/2):
             ret[i,0,0] = UL0

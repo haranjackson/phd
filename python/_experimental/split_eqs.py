@@ -3,8 +3,8 @@ from scipy.integrate import odeint
 from scipy.linalg import svd
 import matplotlib.pyplot as plt
 
-from auxiliary.funcs import dev
-from gpr.variables.eos import E_A
+from system.gpr.misc.functions import dev
+from system.gpr.variables.eos import E_A
 
 
 ### Options ###

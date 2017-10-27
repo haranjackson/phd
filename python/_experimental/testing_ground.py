@@ -6,11 +6,11 @@ from numpy import array, dot, einsum, prod, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd
 
-from auxiliary.classes import material_parameters
-from auxiliary.funcs import AdevG, det3, gram, gram_rev, inv3, L2_2D
-from gpr.variables.eos import E_A, total_energy
-from gpr.variables.material_functions import theta_1
-from gpr.variables.vectors import Cvec, Cvec_to_Pvec
+from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, inv3, L2_2D
+from system.gpr.variables.eos import E_A, total_energy
+from system.gpr.variables.material_functions import theta_1
+from system.gpr.misc.structures import Cvec, Cvec_to_Pvec
 
 
 def jac(y, t0, PAR):

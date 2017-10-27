@@ -9,9 +9,8 @@ from options import VISCOUS, THERMAL, REACTIVE, REACTION_TYPE
 from options import RGFM, ISO_FIX
 from options import USE_CPP, SPLIT
 from options import NUM_ODE, HALF_STEP, STRANG
-from options import RECONSTRUCT_PRIM, WENO_AVERAGE
-from options import  N, CFL, OSHER, PERRON_FROB
-from options import HIDALGO, STIFF, SUPER_STIFF, FAIL_LIM, DG_TOL
+from options import N, CFL, OSHER, PERRON_FROB
+from options import HIDALGO, STIFF, SUPER_STIFF, DG_TOL
 from options import rc, λc, λs, eps
 from options import MAX_ITER, PARA_DG, PARA_FV, NCORE
 
@@ -58,9 +57,6 @@ def save_config(path):
         f.write('HALF_STEP = %i\n' % HALF_STEP)
         f.write('STRANG    = %i\n\n' % STRANG)
 
-        f.write('RECONSTRUCT_PRIM = %i\n' % RECONSTRUCT_PRIM)
-        f.write('WENO_AVERAGE     = %i\n\n' % WENO_AVERAGE)
-
         f.write('N     = %i\n' % N)
         f.write('CFL   = %f\n' % CFL)
         f.write('OSHER = %i\n' % OSHER)
@@ -69,7 +65,6 @@ def save_config(path):
         f.write('HIDALGO     = %i\n' % HIDALGO)
         f.write('STIFF       = %i\n' % STIFF)
         f.write('SUPER_STIFF = %i\n' % SUPER_STIFF)
-        f.write('FAIL_LIM    = %i\n' % FAIL_LIM)
         f.write('DG_TOL      = %e\n' % DG_TOL)
         f.write('MAX_ITER    = %i\n\n' % MAX_ITER)
 
@@ -89,18 +84,22 @@ def save_all(data):
 
     gridArray = array([datum.grid for datum in data])
     timeArray = array([datum.time for datum in data])
-    intArray  = array([datum.int  for datum in data])
+    intfArray = array([datum.intf for datum in data])
 
-    save('_dump/gridArray%d.npy' % time(), gridArray)
-    save('_dump/timeArray%d.npy' % time(), timeArray)
-    save('_dump/intArray%d.npy'  % time(), intArray)
-    save_config('_dump/options%d.txt' % time())
+    save('_dump/grid%d.npy' % time(), gridArray)
+    save('_dump/time%d.npy' % time(), timeArray)
+    save('_dump/intf%d.npy' % time(), intfArray)
+    save_config('_dump/opts%d.txt' % time())
 
-def compress_arrays(saveArrays, N):
+def compress_data(data, N):
+    n = len(data.time)
+    inds = linspace(0, n-1, N, dtype=int64)
+    return [data.grid[inds], data.time[inds], data.intf[inds]]
 
-    n = len(saveArrays.time)
-    inds = linspace(0,n-1,N,dtype=int64)
-
-    return [saveArrays.data[inds],
-            saveArrays.time[inds],
-            saveArrays.interfaces[inds]]
+class Data():
+    """ An object to hold the arrays in which simulation data are saved
+    """
+    def __init__(self, u, interfaceLocs, t):
+        self.grid = u.copy()
+        self.time = t
+        self.intf = array(interfaceLocs)

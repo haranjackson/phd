@@ -4,18 +4,16 @@ from joblib import Parallel
 from numpy import array, zeros
 
 import auxiliary.boundaries
-
 import tests_1d.diffusion
 import tests_1d.multi
 import tests_1d.validation
 import tests_1d.toro
 import tests_2d.validation
-from gpr.plot import *
+from system.gpr.misc.plot import *
 
-from auxiliary.classes import Data
 from auxiliary.iterator import timestep
 from solvers.solvers import ader_stepper, split_stepper
-from auxiliary.save import print_stats, save_all, make_u
+from auxiliary.save import Data, make_u, print_stats, save_all
 from multi.gfm import add_ghost_cells, interface_inds
 from options import nx, ny, nz, dx, dy, dz, ndim, N1, tf
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
@@ -32,12 +30,12 @@ data = [Data(u, interfaceLocs, 0)]
 
 if USE_CPP:
     import GPRpy
-    from auxiliary.classes import CParameters
+    from system.gpr.misc.objects import CParameters
     extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
     ub = zeros(extDims * 17);
     wh = zeros(extDims * int(pow(N1,ndim)) * 17);
     qh = zeros(extDims * int(pow(N1,ndim+1)) * 17);
-    cPARs = [CParameters(PAR) for PAR in PARs]
+    cPARs = [CParameters(GPRpy, PAR) for PAR in PARs]
 
 
 def run(t, tf, count, data):
@@ -45,7 +43,7 @@ def run(t, tf, count, data):
     tStart = time()
 
     u = data[count].grid
-    interfaceLocs = data[count].int
+    interfaceLocs = data[count].intf
 
     m = len(interfaceLocs)
     interfaceInds = interface_inds(interfaceLocs, nx)

@@ -1,6 +1,6 @@
 from numba import jit
 
-from auxiliary.funcs import AdevG, dev, gram, L2_1D, L2_2D
+from system.gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
 from options import VISCOUS, THERMAL, REACTIVE
 
 

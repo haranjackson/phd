@@ -1,5 +1,6 @@
 from numba import jit
 from numpy import cross, dot, empty, eye, kron, zeros
+from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
 
 @jit
@@ -159,3 +160,9 @@ def eigh3_1(M, x, y, z, overwriteM=0):
         where X=(x y z).
     """
     return None
+
+def eigvalsn(a, n):
+    geev, geev_lwork = get_lapack_funcs(('geev', 'geev_lwork'), (a,))
+    lwork = _compute_lwork(geev_lwork, n, compute_vl=0, compute_vr=0)
+    w, _, _, _, _ = geev(a, lwork=lwork, compute_vl=0, compute_vr=0, overwrite_a=1)
+    return w

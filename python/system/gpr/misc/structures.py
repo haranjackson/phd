@@ -1,8 +1,9 @@
 from numpy import zeros
 
-from gpr.variables.eos import total_energy
-from gpr.variables.state import heat_flux, pressure, temperature
-from gpr.variables.state import sigma, sigma_A, Sigma
+from system.gpr.variables.eos import total_energy
+from system.gpr.variables.state import heat_flux, pressure, temperature
+from system.gpr.variables.state import sigma, sigma_A, Sigma
+from options import nV, REACTIVE
 
 
 class Cvec_to_Pclass():
@@ -14,7 +15,11 @@ class Cvec_to_Pclass():
         self.v = Q[2:5] / self.ρ
         self.A = Q[5:14].reshape([3,3])
         self.J = Q[14:17] / self.ρ
-        self.λ = Q[17] / self.ρ
+
+        if REACTIVE:
+            self.λ = Q[17] / self.ρ
+        else:
+            self.λ = 0
 
         self.p = pressure(self.E, self.v, self.A, self.ρ, self.J, self.λ, PAR)
         self.T = temperature(self.ρ, self.p, PAR.γ, PAR.pINF, PAR.cv)
@@ -35,17 +40,21 @@ class Cvec_to_Pclass():
 def Cvec(ρ, p, v, A, J, λ, PAR):
     """ Returns the vector of conserved variables, given the primitive variables
     """
-    Q = zeros(18)
+    Q = zeros(nV)
+
     Q[0] = ρ
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, PAR)
     Q[2:5] = ρ * v
     Q[5:14] = A.ravel()
     Q[14:17] = ρ * J
-    Q[17] = ρ * λ
+
+    if REACTIVE:
+        Q[17] = ρ * λ
+
     return Q
 
 def Pvec_reordered(P):
-    ret = zeros(18)
+    ret = zeros(nV)
     ret[0] = P.ρ
     ret[1] = P.p
     ret[2:11] = P.A.ravel()
@@ -57,18 +66,23 @@ def Pvec_reordered_to_Cvec(P, PAR):
     """ Returns the vector of conserved variables, given the vector of
         (reordered) primitive variables
     """
-    Q = zeros(18)
+    Q = P.copy()
     ρ = P[0]
     p = P[1]
     A = P[2:11].reshape([3,3])
     v = P[11:14]
     J = P[14:17]
-    λ = 0
-    Q[0] = ρ
+
+    if REACTIVE:
+        λ = P[17]
+    else:
+        λ = 0
+
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, PAR)
     Q[2:5] = ρ * v
     Q[5:14] = P[2:11]
-    Q[14:17] = ρ * J
+    Q[14:] *= ρ
+
     return Q
 
 def Pvec_to_Cvec(P, PAR):
@@ -80,32 +94,29 @@ def Pvec_to_Cvec(P, PAR):
     A = P[5:14].reshape([3,3])
     Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], P[17], PAR)
     Q[2:5] *= ρ
-    Q[14:18] *= ρ
+    Q[14:] *= ρ
     return Q
 
-def Cvec_to_Pvec(Q, PAR, inplace=0):
+def Cvec_to_Pvec(Q, PAR):
     """ Returns the vector of primitive variables in standard ordering,
         given the vector of conserved variables.
     """
-    if inplace:
-        ρ = Q[0]
-        Q[2:5] /= ρ
-        Q[14:18] /= ρ
-        Q[1] = pressure(Q[1], Q[2:5], Q[5:14], ρ, Q[14:17], Q[18], PAR, vecA=1)
-    else:
-        ρ = Q[0]
-        E = Q[1] / ρ
-        v = Q[2:5] / ρ
-        A = Q[5:14]
-        J = Q[14:17] / ρ
-        λ = Q[17] / ρ
-        p = pressure(E, v, A, ρ, J, λ, PAR, vecA=1)
+    ρ = Q[0]
+    E = Q[1] / ρ
+    v = Q[2:5] / ρ
+    A = Q[5:14]
+    J = Q[14:17] / ρ
 
-        ret = zeros(18)
-        ret[0] = ρ
-        ret[1] = p
-        ret[2:5] = v
-        ret[5:14] = A
-        ret[14:17] = J
-        ret[17] = λ
-        return ret
+    if REACTIVE:
+        λ = Q[17] / ρ
+    else:
+        λ = 0
+
+    p = pressure(E, v, A, ρ, J, λ, PAR, vecA=1)
+
+    ret = Q.copy()
+    ret[1] = p
+    ret[2:5] /= ρ
+    ret[14:] /= ρ
+
+    return ret

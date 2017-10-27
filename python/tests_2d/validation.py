@@ -3,10 +3,10 @@ from itertools import product
 import numpy as np
 from numpy import array, cos, exp, eye, sin, sqrt, tanh, zeros
 
-from options import nx, ny, nz, dx, dy, Lx, Ly
-from auxiliary.classes import material_parameters
-from gpr.variables.vectors import Cvec
+from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.structures import Cvec
 from solvers.weno.weno import extend
+from options import nx, ny, nz, nV, dx, dy, Lx, Ly
 
 
 def vortex(x, y, x0, y0, ε, γ, ρ, p):
@@ -29,7 +29,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
 
     PAR = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ, p0=p, cs=0.5, α=1, μ=μ, κ=κ)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         x = (i+0.5)*dx
         y = (j+0.5)*dy
@@ -61,7 +61,7 @@ def circular_explosion_IC():
     Ao = 0.5 * eye(3)
     Qo = Cvec(ρo, po, v, Ao, J, 0, PAR)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         x = -Lx/2 + (i+0.5)*dx
         y = -Ly/2 + (j+0.5)*dy
@@ -91,7 +91,7 @@ def laminar_boundary_layer_IC():
 
     PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=1e-3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     Q = Cvec(ρ, p, v, A, J, 0, PAR)
     for i,j,k in product(range(nx), range(ny), range(nz)):
         u[i,j,k] = Q
@@ -117,7 +117,7 @@ def hagen_poiseuille_duct_IC():
     PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=1e-2)
     dp = 4.8
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         pi = p - i/nx*dp
         u[i,j,k] = Cvec(ρ, pi, v, A, J, 0, PAR)
@@ -142,7 +142,7 @@ def lid_driven_cavity_IC():
 
     PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=8, μ=1e-2)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     Q = Cvec(ρ, p, v, A, J, 0, PAR)
     for i,j,k in product(range(nx), range(ny), range(nz)):
         u[i,j,k] = Q
@@ -186,7 +186,7 @@ def double_shear_layer_IC():
     ρ_ = 30
     δ = 0.05
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         x = (i+0.5) * dx
         y = (j+0.5) * dy
@@ -220,7 +220,7 @@ def taylor_green_vortex_IC():
 
     PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=10, μ=1e-2)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         x = (i+0.5) * dx
         y = (j+0.5) * dy

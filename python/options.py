@@ -17,20 +17,18 @@ REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 
 """ GFM Options """
 
-RGFM    = 1                 # Use original GFM
-ISO_FIX = 0                 # Use isobaric fix
+RGFM     = 0                # Use original GFM
+ISO_FIX  = 0                # Use isobaric fix
+STAR_TOL = 1e-6             # Tolerance to which star states converge
 
 """ Solver Options """
 
-USE_CPP = 1                 # Whether to use compiled C++
+USE_CPP = 0                 # Whether to use compiled C++
 SPLIT   = 1                 # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
 STRANG    = 1               # Use Strang splitting (SPLIT=1)
-
-RECONSTRUCT_PRIM = 0        # Perform WENO and DG in primitive variables
-WENO_AVERAGE     = 0        # Average x-then-y and y-then-x WENO
 
 N   = 1                     # Method is order N+1
 CFL = 0.9                   # CFL number
@@ -42,7 +40,6 @@ PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ
 HIDALGO     = 0             # Use Hidalgo initial guess
 STIFF       = 0             # Use Newton-Krylov
 SUPER_STIFF = 0             # Use Newton-Krylov for Hidalgo initial guess
-FAIL_LIM    = 100           # Max number of non-stiff solves allowed to fail
 DG_TOL      = 1e-6          # Tolerance to which the predictor must converge
 MAX_ITER    = 50            # Max number of non-stiff iterations attempted
 
@@ -68,3 +65,5 @@ NT = N1**(ndim+1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
+
+nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(REACTIVE)

@@ -1,8 +1,8 @@
 from numba import jit
 from numpy import dot, eye
 
-from auxiliary.funcs import AdevG, gram
-from gpr.variables.eos import E_1r, E_2A, E_2Avec, E_2J, E_3, E_A
+from system.gpr.misc.functions import AdevG, gram
+from system.gpr.variables.eos import E_1r, E_2A, E_2Avec, E_2J, E_3, E_A
 from options import VISCOUS, THERMAL, REACTIVE
 
 

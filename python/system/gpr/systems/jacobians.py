@@ -1,9 +1,9 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
-from auxiliary.funcs import L2_1D
-from gpr.variables.eos import E_1, E_A, total_energy
-from gpr.variables.state import heat_flux, sigma, sigma_A
-from options import VISCOUS, THERMAL, REACTIVE
+from system.gpr.misc.functions import L2_1D
+from system.gpr.variables.eos import E_1, E_A, total_energy
+from system.gpr.variables.state import heat_flux, sigma, sigma_A
+from options import VISCOUS, THERMAL, REACTIVE, nV
 
 
 class jacobian_variables():
@@ -29,7 +29,7 @@ def dQdP(P, PAR):
     """
     ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; E = P.E
     ψ = E_A(A, PAR.cs2)
-    ret = eye(18)
+    ret = eye(nV)
 
     ret[1, 0] = E - E_1(ρ, p, PAR.γ, PAR.pINF)
     ret[1, 1] /= PAR.γ - 1
@@ -55,7 +55,7 @@ def dQdP(P, PAR):
 def dQdPdot(P, x, PAR):
     """ Returns DQ/DP.x where DQ/DP is evaluated at P
     """
-    ret = zeros(18)
+    ret = zeros(nV)
 
     ρ = P[0]
     p = P[1]
@@ -84,7 +84,7 @@ def dPdQ(P, jacVars, PAR):
     ρ = P.ρ; J = P.J; v = P.v; λ = P.λ
     ρ_1 = 1 / ρ
     ψ = E_A(P.A, PAR.cs2)
-    ret = eye(18)
+    ret = eye(nV)
     Γ, Υ = jacVars.Γ, jacVars.Υ
 
     ret[1, 0] = Υ
@@ -124,7 +124,7 @@ def dFdP(P, d, jacVars, PAR):
     dσdA = sigma_A(ρ, A, PAR.cs2)
     Ψ, Φ, Ω, Γ = jacVars.Ψ, jacVars.Φ, jacVars.Ω, jacVars.Γ
 
-    ret = zeros([18, 18])
+    ret = zeros([nV, nV])
     ret[0, 0] = v[d]
     ret[0, 2+d] = ρ
     ret[1, 0] = Ω[d]

@@ -1,8 +1,8 @@
 from numpy import exp, eye, sqrt
 
-from auxiliary.funcs import L2_1D
-from gpr.variables.eos import E_2A, E_3, E_J, energy_to_temperature
-from gpr.variables.material_functions import theta_2
+from system.gpr.misc.functions import L2_1D
+from system.gpr.variables.eos import E_2A, E_3, E_J, energy_to_temperature
+from system.gpr.variables.material_functions import theta_2
 
 
 def f_J(ρ, E, A, J, PAR):
@@ -22,12 +22,8 @@ def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, PAR):
     c1 *= k
     c2 *= k
 
-#    ea = exp(c1*dt)
-#    den = ea - c2/c1*(ea-1)*L2_1D(J)
-#    return J / sqrt(den)
-
     # To avoid NaNs if dt>>1
     ea = exp(-c1*dt/2)
-    den = 1 - c2/c1*(1-ea**2)*L2_1D(J)
+    den = 1 - c2/c1 * (1-ea**2) * L2_1D(J)
     ret = J / sqrt(den)
     return ea * ret

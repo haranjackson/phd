@@ -4,10 +4,10 @@ from numpy import array, eye, zeros, arange, around, concatenate, exp, int64, on
 from scipy.optimize import brentq
 from scipy.special import erf
 
-from auxiliary.classes import material_parameters
-from gpr.variables.vectors import Cvec, Cvec_to_Pclass
-from gpr.variables.wavespeeds import c_0
-from options import nx, ny, nz, dx, Lx, RGFM
+from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.structures import Cvec, Cvec_to_Pclass
+from system.gpr.variables.wavespeeds import c_0
+from options import nx, ny, nz, nV, dx, Lx, RGFM
 
 
 def first_stokes_problem_IC():
@@ -27,7 +27,7 @@ def first_stokes_problem_IC():
 
     QL = Cvec(ρ, p, -v, A, J, 0, PAR)
     QR = Cvec(ρ, p,  v, A, J, 0, PAR)
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         if i*dx < Lx/2:
             u[i,j,k] = QL
@@ -96,7 +96,7 @@ def viscous_shock_IC(center=0):
 
     v -= v[0]           # Velocity in shock 0
 
-    u = zeros([nx, 1, 1, 18])
+    u = zeros([nx, 1, 1, nV])
     for i in range(nx):
         A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
@@ -124,7 +124,7 @@ def heat_conduction_IC():
 
     QL = Cvec(ρL, p0, v0, AL, J0, 0, PAR)
     QR = Cvec(ρR, p0, v0, AR, J0, 0, PAR)
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     x0 = Lx / 2
     for i in range(nx):
         if i*dx < x0:
@@ -157,7 +157,7 @@ def semenov_IC():
     PAR = material_parameters(γ=1.4, pINF=0, cv=cv, ρ0=ρ, p0=p, Qc=Qc, ε=ε, Bc=Bc)
 
     Q = Cvec(ρ, p, v, A, J, λ, PAR)
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     for i in range(nx):
         u[i,0,0] = Q
 

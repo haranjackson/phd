@@ -1,8 +1,8 @@
 from numpy import array, eye, sqrt, zeros
 
-from auxiliary.classes import material_parameters
-from gpr.variables.vectors import Cvec
-from options import nx, ny, nz, Lx, dx
+from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.structures import Cvec
+from options import nx, ny, nz, nV, Lx, dx
 
 
 def sod_shock_IC():
@@ -24,7 +24,7 @@ def sod_shock_IC():
     PAR = material_parameters(y=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=1, α=1,
                               μ=5e-4, Pr=2/3)
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, v, AL, J, λ, PAR)
     QR = Cvec(ρR, pR, v, AR, J, λ, PAR)
     for i in range(nx):
@@ -55,7 +55,7 @@ def water_gas_IC():
     J = zeros(3)
     λ = 0
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, v, AL, J, λ, PARL)
     QR = Cvec(ρR, pR, v, AR, J, λ, PARR)
     for i in range(nx):
@@ -85,7 +85,7 @@ def water_water_IC():
     J = zeros(3)
     λ = 0
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     QL = Cvec(ρL, pL, v, AL, J, λ, PAR)
     QR = Cvec(ρR, pR, v, AR, J, λ, PAR)
     for i in range(nx):
@@ -122,7 +122,7 @@ def helium_bubble_IC():
     J = zeros(3)
     λ = 0
 
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     Q1 = Cvec(ρL, pL, vL, AL, J, λ, PAR_air)
     Q2 = Cvec(ρM, pM, vM, AM, J, λ, PAR_air)
     Q3 = Cvec(ρR, pR, vR, AR, J, λ, PAR_hel)
@@ -159,7 +159,7 @@ def helium_heat_transmission_IC():
 
     QL = Cvec(ρL, p0, v, A, J, λ, PAR_air)
     QR = Cvec(ρR, p0, v, A, J, λ, PAR_hel)
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, ny, nz, nV])
     x0 = Lx/4
     for i in range(nx):
         if i*dx < x0:
