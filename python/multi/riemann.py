@@ -5,7 +5,7 @@ from system.eig import eig_prim, Xi1mat, thermo_acoustic_tensor
 from system.gpr.misc.functions import gram
 from system.gpr.misc.structures import Cvec_to_Pclass, Pvec_reordered, Pvec_reordered_to_Cvec
 from system.gpr.systems.primitive import source_prim, reordered
-from system.gpr.variables.state import sigma, sigma_A, Sigma, temperature
+from system.gpr.variables.state import sigma, sigma_A
 
 from options import nV, STAR_TOL
 
@@ -85,12 +85,8 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(nV), SR=zeros(nV)):
     ΘL = RL[11:15, :4]
     ΘR = RR[11:15, :4]
 
-    ΣL = Sigma(PL.p, PL.ρ, PL.A, PARL.cs2)[0]
-    ΣR = Sigma(PR.p, PR.ρ, PR.A, PARR.cs2)[0]
-    TL = temperature(PL.ρ, PL.p, PARL.γ, PARL.pINF, PARL.cv)
-    TR = temperature(PR.ρ, PR.p, PARR.γ, PARR.pINF, PARR.cv)
-    xL = concatenate([ΣL, [TL]])
-    xR = concatenate([ΣR, [TR]])
+    xL = concatenate([PL.Σ()[0], [PL.T]])
+    xR = concatenate([PR.Σ()[0], [PR.T]])
 
     OL = thermo_acoustic_tensor(PL.ρ, gram(PL.A), PL.p, PL.T, 0, PARL)
     OR = thermo_acoustic_tensor(PR.ρ, gram(PR.A), PR.p, PR.T, 0, PARR)
@@ -115,6 +111,19 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(nV), SR=zeros(nV)):
     QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL)
     QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR)
     return QL_, QR_
+
+def star_states(QL, QR, dt, PARL, PARR):
+    SL = reordered(source_prim(QL, PARL))
+    SR = reordered(source_prim(QR, PARR))
+    QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR, SL, SR)
+    while not check_star_convergence(QL_, QR_, PARL, PARR):
+        SL_ = reordered(source_prim(QL_, PARL))
+        SR_ = reordered(source_prim(QR_, PARR))
+        QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR, SL_, SR_)
+    return QL_, QR_
+
+
+###### EXPERIMENTAL ######
 
 
 def conds(P, sgn, PAR):
@@ -172,17 +181,6 @@ def star_stepper2(QL, QR, PARL, PARR, d):
     PR_vec = solve(LR, bL) + PRvec
     QL_ = Pvec_reordered_to_Cvec(PL_vec, PARL)
     QR_ = Pvec_reordered_to_Cvec(PR_vec, PARR)
-    return QL_, QR_
-
-
-def star_states(QL, QR, dt, PARL, PARR):
-    SL = reordered(source_prim(QL, PARL))
-    SR = reordered(source_prim(QR, PARR))
-    QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR, SL, SR)
-    while not check_star_convergence(QL_, QR_, PARL, PARR):
-        SL_ = reordered(source_prim(QL_, PARL))
-        SR_ = reordered(source_prim(QR_, PARR))
-        QL_, QR_ = star_stepper(QL_, QR_, dt, PARL, PARR, SL_, SR_)
     return QL_, QR_
 
 def star_states2(QL, QR, dt, PARL, PARR):
