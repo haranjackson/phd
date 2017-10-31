@@ -14,16 +14,7 @@ Mc = coefficient_matrices()
 
 fHalfN = int(floor(N/2))
 cHalfN = int(ceil(N/2))
-
-
 LAMS = [λs, λs, λc, λc]
-
-if N==1:
-    nStencils = 2
-elif N%2:
-    nStencils = 4
-else:
-    nStencils = 3
 
 
 def extend(inarray, extension, d):
@@ -33,33 +24,47 @@ def extend(inarray, extension, d):
     reps = concatenate(([extension+1], ones(n-2), [extension+1])).astype(int64)
     return inarray.repeat(reps, axis=d)
 
-def calculate_coeffs(uList):
+def calculate_coeffs(uList, L=0, R=0):
     """ Calculate coefficients of basis polynomials and weights
     """
-    wList = [solve(Mc[i], uList[i], overwrite_b=1, check_finite=0) for i in range(nStencils)]
+    n = len(uList)
+    if L:
+        wList = [solve(Mc[0], uList[0], overwrite_b=1, check_finite=0)]
+    elif R:
+        wList = [solve(Mc[1], uList[0], overwrite_b=1, check_finite=0)]
+    else:
+        wList = [solve(Mc[i], uList[i], overwrite_b=1, check_finite=0)
+                 for i in range(n)]
+
     σList = [((w.T).dot(Σ).dot(w)).diagonal() for w in wList]
-    oList = [LAMS[i]  / (abs(σList[i]) + eps)**rc for i in range(nStencils)]
+    oList = [LAMS[i]  / (abs(σList[i]) + eps)**rc for i in range(n)]
     oSum = zeros(nV)
     numerator = zeros([N1, nV])
-    for i in range(nStencils):
+    for i in range(n):
         oSum += oList[i]
         numerator += multiply(wList[i], oList[i])
     return numerator / oSum
 
-def coeffs(ret, u1, u2, u3, u4):
+def coeffs(ret, uL, uR, uCL, uCR, L=0, R=0):
+
+    if L:
+        ret[:] = calculate_coeffs([uL], L=1)
+    elif R:
+        ret[:] = calculate_coeffs([uR], R=1)
+
     if N==1:
-        ret[:] = calculate_coeffs([u1, u2])
-    elif nStencils==3:
-        ret[:] = calculate_coeffs([u1, u2, u3])
+        ret[:] = calculate_coeffs([uL, uR])
+    elif not N%2:
+        ret[:] = calculate_coeffs([uL, uR, uCL])
     else:
-        ret[:] = calculate_coeffs([u1, u2, u3, u4])
+        ret[:] = calculate_coeffs([uL, uR, uCL, uCR])
 
 def extract_stencils(arrayRow, ind):
-    u1 = arrayRow[ind-N : ind+1]
-    u2 = arrayRow[ind : ind+N+1]
-    u3 = arrayRow[ind-cHalfN : ind+fHalfN+1]
-    u4 = arrayRow[ind-fHalfN : ind+cHalfN+1]
-    return u1, u2, u3, u4
+    uL = arrayRow[ind-N : ind+1]
+    uR = arrayRow[ind : ind+N+1]
+    uCL = arrayRow[ind-cHalfN : ind+fHalfN+1]
+    uCR = arrayRow[ind-fHalfN : ind+cHalfN+1]
+    return uL, uR, uCL, uCR
 
 def weno_launcher(u):
     """ Find reconstruction coefficients of u to order N+1
@@ -69,17 +74,21 @@ def weno_launcher(u):
     Wx = zeros([nx, ny, nz, N1, nV])
     tempu = extend(u, N, 0)
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        u1, u2, u3, u4 = extract_stencils(tempu[:,j,k], i+N)
-        coeffs(Wx[i, j, k], u1, u2, u3, u4)
-
+        uL, uR, uCL, uCR = extract_stencils(tempu[:,j,k], i+N)
+        if i < 2*N-1:
+            coeffs(Wx[i, j, k], uL, uR, uCL, uCR, R=1)
+        elif i > nx:
+            coeffs(Wx[i, j, k], uL, uR, uCL, uCR, L=1)
+        else:
+            coeffs(Wx[i, j, k], uL, uR, uCL, uCR)
     if ny==1:
         return Wx
 
     Wxy = zeros([nx, ny, nz, N1, N1, nV])
     tempWx = extend(Wx, N, 1)
     for i, j, k, a in product(range(nx), range(ny), range(nz), range(N1)):
-        u1, u2, u3, u4 = extract_stencils(tempWx[i,:,k,a], j+N)
-        coeffs(Wxy[i, j, k, a], u1, u2, u3, u4)
+        uL, uR, uCL, uCR = extract_stencils(tempWx[i,:,k,a], j+N)
+        coeffs(Wxy[i, j, k, a], uL, uR, uCL, uCR)
 
     if nz==1:
         return Wxy
@@ -87,8 +96,8 @@ def weno_launcher(u):
     Wxyz = zeros([nx, ny, nz, N1, N1, N1, nV])
     tempWxy = extend(Wxy, N, 2)
     for i, j, k, a, b in product(range(nx), range(ny), range(nz), range(N1), range(N1)):
-        u1, u2, u3, u4 = extract_stencils(tempWxy[i,j,:,a,b], k+N)
-        coeffs(Wxyz[i, j, k, a, b], u1, u2, u3, u4)
+        uL, uR, uCL, uCR = extract_stencils(tempWxy[i,j,:,a,b], k+N)
+        coeffs(Wxyz[i, j, k, a, b], uL, uR, uCL, uCR)
 
     return Wxyz
 

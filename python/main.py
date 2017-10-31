@@ -15,7 +15,7 @@ from auxiliary.iterator import timestep
 from solvers.solvers import ader_stepper, split_stepper
 from auxiliary.save import Data, make_u, print_stats, save_all
 from multi.gfm import add_ghost_cells, interface_inds
-from options import nx, ny, nz, dx, dy, dz, ndim, N1, tf
+from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1, tf
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
@@ -68,7 +68,7 @@ def run(t, tf, count, data):
             PAR = PARs[i]
 
             if USE_CPP:
-                tmp = fluid[:,:,:,:17].ravel()
+                tmp = fluid.ravel()
                 MP = cPARs[i]
                 if SPLIT:
                     GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
@@ -80,7 +80,7 @@ def run(t, tf, count, data):
                                                dt, dx, dy, dz, False,
                                                bool(PERRON_FROB), MP)
 
-                fluid[:,:,:,:17] = tmp.reshape([nx,ny,nz,17])
+                fluid = tmp.reshape([nx,ny,nz,nV])
 
             else:
                 if SPLIT:
