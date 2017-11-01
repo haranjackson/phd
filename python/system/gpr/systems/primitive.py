@@ -66,9 +66,6 @@ def system_prim(Q, d, PAR, pForm=1):
         ret[2+d, 1] = Γ * cv
         ret[14+d, 1] = 1 / ρ
 
-    if not REACTIVE:
-        ret[17, 17] = 0
-
     return ret
 
 def reordered(X, perm=array([0,1,5,8,11,6,9,12,7,10,13,2,3,4,14,15,16])):

@@ -32,9 +32,9 @@ if USE_CPP:
     import GPRpy
     from system.gpr.misc.objects import CParameters
     extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
-    ub = zeros(extDims * 17);
-    wh = zeros(extDims * int(pow(N1,ndim)) * 17);
-    qh = zeros(extDims * int(pow(N1,ndim+1)) * 17);
+    ub = zeros(extDims * nV);
+    wh = zeros(extDims * int(pow(N1,ndim)) * nV);
+    qh = zeros(extDims * int(pow(N1,ndim+1)) * nV);
     cPARs = [CParameters(GPRpy, PAR) for PAR in PARs]
 
 
@@ -88,11 +88,11 @@ def run(t, tf, count, data):
                 else:
                     ader_stepper(pool, fluid, BC, dt, PAR)
 
+        u = make_u(fluids, interfaceInds)
+
         if RGFM:
             interfaceLocs += interfaceVels * dt
             interfaceInds = interface_inds(interfaceLocs, nx)
-
-        u = make_u(fluids, interfaceInds)
 
         t += dt
         count += 1

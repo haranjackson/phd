@@ -3,7 +3,7 @@ from numpy import zeros
 from system.gpr.variables.eos import total_energy
 from system.gpr.variables.state import heat_flux, pressure, temperature
 from system.gpr.variables.state import sigma, sigma_A, Sigma
-from options import nV, REACTIVE
+from options import nV, THERMAL, REACTIVE
 
 
 class Cvec_to_Pclass():
@@ -46,7 +46,9 @@ def Cvec(ρ, p, v, A, J, λ, PAR):
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, PAR)
     Q[2:5] = ρ * v
     Q[5:14] = A.ravel()
-    Q[14:17] = ρ * J
+
+    if THERMAL:
+        Q[14:17] = ρ * J
 
     if REACTIVE:
         Q[17] = ρ * λ
