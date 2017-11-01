@@ -4,12 +4,12 @@ from scipy.integrate import odeint
 from scipy.linalg import svd
 
 from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, inv3, L2_2D
-from system.gpr.variables.eos import E_A
+from system.gpr.variables.eos import dEdA
 from system.gpr.variables.material_functions import theta_1
 
 
 def f_A(A, PAR):
-    return - E_A(A, PAR.cs2).ravel() / theta_1(A, PAR.cs2, PAR.τ1)
+    return - dEdA(A, PAR.cs2).ravel() / theta_1(A, PAR.cs2, PAR.τ1)
 
 def jac_A(A, τ1):
     G = gram(A)

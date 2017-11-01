@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from solvers.basis import quad, basis_polys
-from system.gpr.variables.state import sigma, entropy, heat_flux
 from system.gpr.misc.structures import Cvec_to_Pclass
 from multi.gfm import interface_inds
 from options import Lx, nx, ny, ndim
@@ -128,7 +127,7 @@ def plot_sigma(u, i, j, materialParams, intLocs=[], style='line', x=None,
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
             P = Cvec_to_Pclass(u[l, 0, 0], materialParams[k])
-            y[l] = sigma(P.ρ, P.A, materialParams[k].cs2)[i, j]
+            y[l] = P.σ[i, j]
     plot1d(y, style, x, label, color,
            ' Viscous Stress Component %d,%d' % (i+1, j+1), sci=sci)
 
@@ -142,7 +141,7 @@ def plot_heat_flux(u, i, materialParams, intLocs=[], style='line', x=None,
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
             P = Cvec_to_Pclass(u[l, 0, 0], materialParams[k])
-            y[l] = heat_flux(P.T, P.J, materialParams[k].α2)[i]
+            y[l] = P.q[i]
     plot1d(y, style, x, label, color, 'Heat Flux Component %d' % (i+1), sci=sci)
 
 def plot_entropy(u, materialParams, intLocs=[], style='line', x=None,
@@ -154,7 +153,8 @@ def plot_entropy(u, materialParams, intLocs=[], style='line', x=None,
 
     for k in range(len(inds)-1):
         for l in range(inds[k], inds[k+1]):
-            y[l] = entropy(u[l, 0, 0], materialParams[k])
+            P = Cvec_to_Pclass(u[l, 0, 0], materialParams[k])
+            y[l] = P.s()
     plot1d(y, style, x, label, color, 'Entropy', sci=sci)
 
 def plot_variable(u, var, style='line', x=None, label=None, color=None, sci=0):

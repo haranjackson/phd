@@ -1,53 +1,60 @@
-from numpy import array, dot, eye, zeros
+from numpy import array, eye, zeros
 
 from system.gpr.misc.functions import L2_1D, L2_2D
-from system.gpr.variables.eos import E_A, E_J
-from system.gpr.variables.material_functions import theta_1, theta_2
-from system.gpr.variables.state import sigma, sigma_A, temperature
-from system.gpr.misc.structures import Cvec_to_Pclass, Cvec_to_Pvec
-from options import nV, VISCOUS, THERMAL, REACTIVE
+from system.gpr.misc.structures import Cvec_to_Pclass
+from options import nV, VISCOUS, THERMAL
 
 
-def source_prim_ref(ret, Q, PAR):
+def source_prim_ref(ret, P):
 
-    P = Cvec_to_Pvec(Q, PAR)
-    ρ = P[0]
+    ρ = P.ρ
+
+    ψ = P.ψ()
+    H = P.H()
+    θ1 = P.θ1()
+    θ2 = P.θ2()
+
+    PAR = P.PAR
     γ = PAR.γ
 
     if VISCOUS:
-        A = P[5:14].reshape([3,3])
-        ψ = E_A(A, PAR.cs2)
-        θ1 = theta_1(A, PAR.cs2, PAR.τ1)
-
         ret[1] = (γ-1) * ρ * L2_2D(ψ) / θ1
         ret[5:14] = -ψ.ravel() / θ1
 
     if THERMAL:
-        J = P[14:17]
-        T = temperature(ρ, P[1], γ, PAR.pINF, PAR.cv)
-        H = E_J(J, PAR.α2)
-        θ2 = theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
-
         ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
         ret[14:17] = -H / θ2
 
 def source_prim(Q, PAR):
     ret = zeros(nV)
-    source_prim_ref(ret, Q, PAR)
+    P = Cvec_to_Pclass(Q, PAR)
+    source_prim_ref(ret, P)
     return ret
 
 def system_prim(Q, d, PAR, pForm=1):
 
     P = Cvec_to_Pclass(Q, PAR)
-    ρ = P.ρ; p = P.p; A = P.A; v = P.v; T = P.T
-    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; cv = PAR.cv; α2 = PAR.α2
+
+    ρ = P.ρ
+    p = P.p
+    A = P.A
+    v = P.v
+    T = P.T
+    σ = P.σ
+
+    dσdA = P.dσdA()
+
+    γ = PAR.γ
+    pINF = PAR.pINF
+    cv = PAR.cv
+    α2 = PAR.α2
     Γ = γ-1
 
     ret = v[d] * eye(nV)
     ret[0, 2+d] = ρ
 
-    ret[2:5, 0] = -P.σ()[d] / ρ**2
-    ret[2:5, 5:14] = -1 / ρ * P.dσdA()[d].reshape([3,9])
+    ret[2:5, 0] = -σ[d] / ρ**2
+    ret[2:5, 5:14] = -1 / ρ * dσdA[d].reshape([3,9])
 
     ret[5+d, 2:5] = A[0]
     ret[8+d, 2:5] = A[1]

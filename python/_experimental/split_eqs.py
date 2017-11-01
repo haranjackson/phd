@@ -4,7 +4,7 @@ from scipy.linalg import svd
 import matplotlib.pyplot as plt
 
 from system.gpr.misc.functions import dev
-from system.gpr.variables.eos import E_A
+from system.gpr.variables.eos import dEdA
 
 
 ### Options ###
@@ -64,7 +64,7 @@ def f_standard(y, t):
     A = y.reshape([3,3])
     ret = -dot(A,ε)
     if includeSources:
-        ret -= E_A(A,1)/τ
+        ret -= dEdA(A,1)/τ
     return ret.ravel()
 
 def solver_standard(A, dt):

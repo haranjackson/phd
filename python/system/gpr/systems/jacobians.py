@@ -1,38 +1,54 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
 from system.gpr.misc.functions import L2_1D
-from system.gpr.variables.eos import E_1, E_A, total_energy
-from system.gpr.variables.state import heat_flux, sigma, sigma_A
 from options import VISCOUS, THERMAL, REACTIVE, nV
 
 
 class jacobian_variables():
 
-    def __init__(self, prims, PAR):
-        ρ = prims.ρ; p = prims.p; A = prims.A; J = prims.J; v = prims.v; E = prims.E
-        γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
+    def __init__(self, P):
+        ρ = P.ρ
+        J = P.J
+        v = P.v
+        E = P.E
+        q = P.q
+        σ = P.σ
 
-        q = heat_flux(prims.T, J, α2)
-        σ = sigma(ρ, A, cs2)
-        dσdA = sigma_A(ρ, A, cs2)
-        ψ = E_A(A, cs2)
+        E1 = P.E1()
+        dσdA = P.dσdA()
+        ψ = P.ψ()
+
+        PAR = P.PAR
+        γ = PAR.γ
+        α2 = PAR.α2
 
         self.Γ = γ - 1
         self.Ψ = ρ * outer(v, v) - σ
-        self.Ω = (E - E_1(ρ, p, γ, pINF)) * v - (dot(σ, v) + q) / ρ
-        self.Υ = self.Γ * (L2_1D(v) + α2 * L2_1D(J) + E_1(ρ, p, γ, pINF) - E)
+        self.Ω = (E - E1) * v - (dot(σ, v) + q) / ρ
+        self.Υ = self.Γ * (L2_1D(v) + α2 * L2_1D(J) + E1 - E)
         self.Φ = ρ * outer(v, ψ).reshape([3,3,3])
         self.Φ -= tensordot(v, dσdA, axes=(0,0))
 
-def dQdP(P, PAR):
+def dQdP(P):
     """ Returns the Jacobian of the conserved variables with respect to the primitive variables
     """
-    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; E = P.E
-    ψ = E_A(A, PAR.cs2)
     ret = eye(nV)
 
-    ret[1, 0] = E - E_1(ρ, p, PAR.γ, PAR.pINF)
-    ret[1, 1] /= PAR.γ - 1
+    ρ = P.ρ
+    J = P.J
+    v = P.v
+    E = P.E
+
+    E1 = P.E1()
+    ψ = P.ψ()
+
+    PAR = P.PAR
+    γ = PAR.γ
+    α2 = PAR.α2
+    Qc = PAR.Qc
+
+    ret[1, 0] = E - E1
+    ret[1, 1] /= γ - 1
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
     ret[2:5, 2:5] *= ρ
@@ -41,88 +57,91 @@ def dQdP(P, PAR):
         ret[1, 5:14] = ρ * ψ.ravel()
 
     if THERMAL:
-        ret[1, 14:17] = PAR.α2 * ρ * J
+        ret[1, 14:17] = α2 * ρ * J
         ret[14:17, 0] = J
         ret[14:17, 14:17] *= ρ
 
     if REACTIVE:
-        ret[1, 17] = PAR.Qc * ρ
+        ret[1, 17] = Qc * ρ
         ret[17, 0] = P.λ
         ret[17, 17] *= ρ
 
     return ret
 
-def dQdPdot(P, x, PAR):
-    """ Returns DQ/DP.x where DQ/DP is evaluated at P
-    """
-    ret = zeros(nV)
-
-    ρ = P[0]
-    p = P[1]
-    v = P[2:5]
-    A = P[5:14].reshape([3,3])
-    J = P[14:17]
-    λ = 0
-
-    x0 = x[0]
-    E = total_energy(ρ, p, v, A, J, λ, PAR)
-    E1 = E_1(ρ, p, PAR.γ, PAR.pINF)
-    ψ = E_A(A, PAR.cs2)
-
-    ret[0] = x0
-    ret[1] = x0*(E-E1) + x[1]/(PAR.γ-1)
-    ret[1] += ρ * (dot(v,x[2:5]) + dot(ψ.ravel(),x[5:14]) + PAR.α2*dot(J,x[14:17]))
-    ret[2:5] = x0 * v + ρ * x[2:5]
-    ret[5:14] = x[5:14]
-    ret[14:17] = x0 * J + ρ * x[14:17]
-
-    return ret
-
-def dPdQ(P, jacVars, PAR):
+def dPdQ(P):
     """ Returns the Jacobian of the primitive variables with respect to the conserved variables
     """
-    ρ = P.ρ; J = P.J; v = P.v; λ = P.λ
-    ρ_1 = 1 / ρ
-    ψ = E_A(P.A, PAR.cs2)
     ret = eye(nV)
-    Γ, Υ = jacVars.Γ, jacVars.Υ
+
+    ρ = P.ρ
+    v = P.v
+    J = P.J
+    λ = P.λ
+
+    ψ = P.ψ()
+
+    PAR = P.PAR
+    α2 = PAR.α2
+    Qc = PAR.Qc
+
+    jacVars = jacobian_variables(P)
+    Γ = jacVars.Γ
+    Υ = jacVars.Υ
 
     ret[1, 0] = Υ
     ret[1, 1] = Γ
     ret[1, 2:5] = -Γ * v
     ret[2:5, 0] = -v / ρ
+
     for i in range(2,5):
-        ret[i, i] = ρ_1
+        ret[i, i] = 1 / ρ
 
     if VISCOUS:
         ret[1, 5:14] = -Γ * ρ * ψ.ravel()
 
     if THERMAL:
-        ret[1, 14:17] = -Γ * PAR.α2 * J
+        ret[1, 14:17] = -Γ * α2 * J
         ret[14:17, 0] = -J / ρ
         for i in range(14,17):
-            ret[i, i] = ρ_1
+            ret[i, i] = 1 / ρ
 
     if REACTIVE:
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
-        Qc = PAR.Qc
         ret[1, 0] += Γ * Qc * λ
         ret[1, 17] -= Γ * Qc
 
     return ret
 
-def dFdP(P, d, jacVars, PAR):
+def dFdP(P, d):
     """ Returns the Jacobian of the flux vector with respect to the primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
-    ρ = P.ρ; p = P.p; A = P.A; J = P.J; v = P.v; λ = P.λ; E = P.E; T = P.T
-    γ = PAR.γ; pINF = PAR.pINF; α2 = PAR.α2
+    ρ = P.ρ
+    p = P.p
+    v = P.v
+    A = P.A
+    J = P.J
+    λ = P.λ
+    E = P.E
+    T = P.T
+    q = P.q
+
+    dσdA = P.dσdA()
+
+    PAR = P.PAR
+    γ = PAR.γ
+    pINF = PAR.pINF
+    α2 = PAR.α2
+    Qc = PAR.Qc
+
     ρvd = ρ * v[d]
 
-    q = heat_flux(T, J, α2)
-    dσdA = sigma_A(ρ, A, PAR.cs2)
-    Ψ, Φ, Ω, Γ = jacVars.Ψ, jacVars.Φ, jacVars.Ω, jacVars.Γ
+    jacVars = jacobian_variables(P)
+    Ψ = jacVars.Ψ
+    Φ = jacVars.Φ
+    Ω = jacVars.Ω
+    Γ = jacVars.Γ
 
     ret = zeros([nV, nV])
     ret[0, 0] = v[d]
@@ -162,6 +181,6 @@ def dFdP(P, d, jacVars, PAR):
         ret[17, 0] = v[d] * λ
         ret[17, 2+d] = ρ * λ
         ret[17, 17] = ρvd
-        ret[1, 17] += PAR.Qc * ρvd
+        ret[1, 17] += Qc * ρvd
 
     return ret

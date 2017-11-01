@@ -25,32 +25,6 @@ def E_2A(A, cs2):
     return cs2 / 4 * L2_2D(dev(G))
 
 @jit
-def E_2Avec(A, cs2):
-    """ Returns the mesoscale energy dependent on the distortion
-        NOTE: A must be in row-major vector form
-    """
-    A11 = A[0]
-    A12 = A[1]
-    A13 = A[2]
-    A21 = A[3]
-    A22 = A[4]
-    A23 = A[5]
-    A31 = A[6]
-    A32 = A[7]
-    A33 = A[8]
-
-    a1 = A11**2 + A21**2 + A31**2
-    a2 = A12**2 + A22**2 + A32**2
-    a3 = A13**2 + A23**2 + A33**2
-
-    tr = (a1+a2+a3)/3
-
-    return cs2/4 * (2 * (  (A11*A12 + A21*A22 + A31*A32)**2
-                         + (A11*A13 + A21*A23 + A31*A33)**2
-                         + (A12*A13 + A22*A23 + A32*A33)**2)
-                    + (a1-tr)**2 + (a2-tr)**2 + (a3-tr)**2)
-
-@jit
 def E_2J(J, α2):
     """ Returns the mesoscale energy dependent on the thermal impulse
     """
@@ -79,19 +53,19 @@ def total_energy(ρ, p, v, A, J, λ, PAR):
     return ret
 
 @jit
-def E_A(A, cs2):
+def dEdA(A, cs2):
     """ Returns the partial derivative of E by A
     """
     G = gram(A)
     return cs2 * AdevG(A,G)
 
 @jit
-def E_J(J, α2):
+def dEdJ(J, α2):
     """ Returns the partial derivative of E by J
     """
     return α2 * J
 
-def energy_to_temperature(E, A, J, PAR):
+def E_to_T(E, A, J, PAR):
     """ Returns the temperature of an ideal gas, given the energy
         (minus the kinetic energy or any chemical energy)
     """

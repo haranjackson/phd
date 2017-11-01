@@ -1,10 +1,7 @@
 from numba import jit
 from numpy import dot, zeros
 
-from system.gpr.misc.functions import dot3
-from system.gpr.systems.jacobians import jacobian_variables, dFdP, dPdQ
-from system.gpr.variables.eos import E_A, E_J
-from system.gpr.variables.material_functions import theta_1, theta_2
+from system.gpr.systems.jacobians import dFdP, dPdQ
 from system.gpr.variables.material_functions import arrhenius_reaction_rate
 from system.gpr.variables.material_functions import discrete_reaction_rate
 from system.gpr.misc.structures import Cvec_to_Pclass
@@ -15,28 +12,40 @@ def flux_cons_ref(ret, Q, d, PAR):
 
     P = Cvec_to_Pclass(Q, PAR)
 
-    vd = P.v[d]
-    ρvd = P.ρ * P.v[d]
+    ρ = P.ρ
+    p = P.p
+    E = P.E
+    v = P.v
+    A = P.A
+    J = P.J
+    T = P.T
+    σ = P.σ
+    q = P.q
+
+    vd = v[d]
+    ρvd = ρ * v[d]
+
+    α2 = PAR.α2
 
     ret[0] += ρvd
-    ret[1] += ρvd * P.E + P.p * vd
-    ret[2:5] += ρvd * P.v
-    ret[2+d] += P.p
+    ret[1] += ρvd * E + p * vd
+    ret[2:5] += ρvd * v
+    ret[2+d] += p
 
     if VISCOUS:
-        σd = P.σ()[d]
-        ret[1] -= dot3(σd, P.v)
+        σd = σ[d]
+        ret[1] -= dot(σd, v)
         ret[2:5] -= σd
 
-        Av = dot(P.A, P.v)
+        Av = dot(A, v)
         ret[5+d] += Av[0]
         ret[8+d] += Av[1]
         ret[11+d] += Av[2]
 
     if THERMAL:
-        ret[1] += PAR.α2 * P.T * P.J[d]
-        ret[14:17] += ρvd * P.J
-        ret[14+d] += P.T
+        ret[1] += q[d]
+        ret[14:17] += ρvd * J
+        ret[14+d] += T
 
     if REACTIVE:
         ret[17] += vd * Q[17]
@@ -55,17 +64,22 @@ def block_cons_ref(ret, Q, d):
 def source_cons_ref(ret, Q, PAR):
 
     P = Cvec_to_Pclass(Q, PAR)
-    cs2 = PAR.cs2; α2 = PAR.α2
+
+    ρ = P.ρ
+
+    ψ = P.ψ()
+    H = P.H()
+    θ1 = P.θ1()
+    θ2 = P.θ2()
+
+    cs2 = PAR.cs2
+    α2 = PAR.α2
 
     if VISCOUS:
-        theta1 = theta_1(P.A, cs2, PAR.τ1)
-        Asource = - E_A(P.A, cs2) / theta1
-        ret[5:14] = Asource.ravel()
+        ret[5:14] = - ψ.ravel() / θ1
 
     if THERMAL:
-        theta2 = theta_2(P.ρ, P.T, PAR.ρ0, PAR.T0, α2, PAR.τ2)
-        Jsource = - P.ρ * E_J(P.J, α2) / theta2
-        ret[14:17] = Jsource
+        ret[14:17] = - ρ * H / θ2
 
     if REACTIVE:
         if REACTION_TYPE == 'a':
@@ -132,9 +146,8 @@ def system_cons(Q, d, PAR):
     """ Returns the Jacobian in the dth direction
     """
     P = Cvec_to_Pclass(Q, PAR)
-    jacVars = jacobian_variables(P, PAR)
-    DFDP = dFdP(P, d, jacVars, PAR)
-    DPDQ = dPdQ(P, jacVars, PAR)
+    DFDP = dFdP(P, d)
+    DPDQ = dPdQ(P)
     B = zeros([nV, nV])
     block_cons_ref(B, Q, d)
     return dot(DFDP, DPDQ) + B

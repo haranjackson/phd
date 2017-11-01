@@ -8,7 +8,7 @@ from scipy.linalg import svd
 
 from system.gpr.misc.objects import material_parameters
 from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, inv3, L2_2D
-from system.gpr.variables.eos import E_A, total_energy
+from system.gpr.variables.eos import dEdA, total_energy
 from system.gpr.variables.material_functions import theta_1
 from system.gpr.misc.structures import Cvec, Cvec_to_Pvec
 
@@ -37,7 +37,7 @@ def jac(y, t0, PAR):
 
 def f(y, t0, PAR):
     A = y.reshape([3,3])
-    Asource = - E_A(A, PAR.cs2) / theta_1(A, PAR.cs2, PAR.τ1)
+    Asource = - dEdA(A, PAR.cs2) / theta_1(A, PAR.cs2, PAR.τ1)
     return Asource.ravel()
 
 def numerical(A, dt, PAR):

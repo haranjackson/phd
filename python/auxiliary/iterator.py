@@ -1,6 +1,6 @@
 from itertools import product
 
-from system.eig import max_abs_eigs
+from system.eigenvalues import max_abs_eigs
 from options import nx, ny, nz, CFL, dx, dy, dz, ndim
 
 

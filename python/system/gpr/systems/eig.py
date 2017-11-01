@@ -1,59 +1,10 @@
-from numpy import array, diag, dot, eye, outer, sqrt, zeros
+from numpy import array, diag, dot, eye, sqrt, zeros
 from scipy.linalg import solve, eig
 
-from system.gpr.misc.functions import GdevG, gram, eigvalsn
-from system.gpr.misc.structures import Cvec_to_Pclass
-from system.gpr.systems.jacobians import dQdP, dPdQ, jacobian_variables
-from system.gpr.variables.state import sigma, sigma_A
-from options import VISCOUS, THERMAL, nV, PERRON_FROB
+from system.eigenvalues import thermo_acoustic_tensor
+from system.gpr.systems.jacobians import dQdP, dPdQ
+from options import nV
 
-
-def thermo_acoustic_tensor(ρ, G, p, T, d, PAR):
-    """ Returns the tensor T_dij corresponding to the (i,j) component of the thermo-acoustic tensor
-        in the dth direction
-    """
-    Gd = G[d]
-    ret = zeros([4,4])
-
-    γ = PAR.γ; pINF = PAR.pINF
-
-    if VISCOUS:
-        O = GdevG(G)
-        O[:, d] *= 2
-        O[d] *= 2
-        O[d, d] *= 3/4
-        O += Gd[d] * G + 1/3 * outer(Gd, Gd)
-        O *= PAR.cs2
-        ret[:3, :3] = O
-
-    ret[d, d] += γ * p / ρ
-
-    if THERMAL:
-        ret[3, 0] = ((γ-1) * p - pINF) * T / (ρ * (p+pINF))
-        temp = (γ-1) * PAR.α2 * T / ρ
-        ret[0, 3] = temp
-        ret[3, 3] = temp * T / (p+pINF)
-
-    return ret
-
-def max_abs_eigs(Q, d, PAR):
-    """ Returns the maximum of the absolute values of the eigenvalues of the GPR system
-    """
-    P = Cvec_to_Pclass(Q, PAR)
-    vd = P.v[d]
-    O = thermo_acoustic_tensor(P.ρ, gram(P.A), P.p, P.T, d, PAR)
-
-    if PERRON_FROB:
-        rowSum = [sum(o) for o in O]
-        colSum = [sum(oT) for oT in O.T]
-        lam = sqrt(min(max(rowSum),max(colSum)))
-    else:
-        lam = sqrt(eigvalsn(O, 4).max())
-
-    if vd > 0:
-        return vd + lam
-    else:
-        return lam - vd
 
 def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
     ret = zeros([4, 5])
@@ -72,22 +23,32 @@ def Xi2mat(ρ, p, A, T, γ, α2):
     ret[1, 3] = (γ-1) * α2 * T
     return ret
 
-def eig_prim(P, PAR, left=1, right=1):
+def eig_prim(P, left=1, right=1):
     """ Returns eigenvalues and set of left and right eigenvectors of the
         matrix returned by system_primitive_reordered
     """
-    ρ = P.ρ; p = P.p; A = P.A; T = P.T; vd = P.v[0]
-    γ = PAR.γ; pINF = PAR.pINF; cs2 = PAR.cs2; α2 = PAR.α2
-
     L = zeros([nV,nV])
     R = zeros([nV,nV])
-    σ0 = sigma(ρ, A, cs2)[0]
-    dσdA = sigma_A(ρ, A, cs2)[0]
-    Π1 = dσdA[:,:,0]
-    Π2 = dσdA[:,:,1]
-    Π3 = dσdA[:,:,2]
 
-    O = thermo_acoustic_tensor(ρ, gram(A), p, T, 0, PAR)
+    ρ = P.ρ
+    p = P.p
+    A = P.A
+    T = P.T
+
+    vd = P.v[0]
+    σ0 = P.σ[0]
+    dσdA0 = P.dσdA()[0]
+
+    PAR = P.PAR
+    γ = PAR.γ
+    pINF = PAR.pINF
+    α2 = PAR.α2
+
+    Π1 = dσdA0[:,:,0]
+    Π2 = dσdA0[:,:,1]
+    Π3 = dσdA0[:,:,2]
+
+    O = thermo_acoustic_tensor(P, 0)
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
     Ξ2 = Xi2mat(ρ, p, A, T, γ, α2)
     w, vl, vr = eig(O, left=1)
@@ -145,14 +106,13 @@ def eig_prim(P, PAR, left=1, right=1):
     nonDegenList = [vd+sw[0], vd+sw[1], vd+sw[2], vd+sw[3], vd-sw[0], vd-sw[1], vd-sw[2], vd-sw[3]]
     return array(nonDegenList + [vd]*10).real, L, 0.5 * R
 
-def eig_cons(P, PAR):
+def eig_cons(P):
     """ Returns the eigenvalues and left and right eigenvectors of the conserved system.
         NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
               eigenvectors of the primitive system and transforming them into conserved eigenvectors
               without attempting to put them in the standard ordering.
     """
-    Λ, L, R = eig_prim(P, PAR)
-    jacVars = jacobian_variables(P, PAR)
-    DPDQ = dPdQ(P, jacVars, PAR)
-    DQDP = dQdP(P, PAR)
+    Λ, L, R = eig_prim(P)
+    DPDQ = dPdQ(P)
+    DQDP = dQdP(P)
     return Λ, dot(L, DPDQ), dot(DQDP, R)

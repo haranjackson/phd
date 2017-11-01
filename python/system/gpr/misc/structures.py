@@ -1,8 +1,10 @@
 from numpy import zeros
 
-from system.gpr.variables.eos import total_energy
-from system.gpr.variables.state import heat_flux, pressure, temperature
-from system.gpr.variables.state import sigma, sigma_A, Sigma
+from system.gpr.misc.functions import gram
+from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
+from system.gpr.variables.material_functions import theta_1, theta_2
+from system.gpr.variables.state import heat_flux, pressure, temperature, entropy
+from system.gpr.variables.state import sigma, dsigmadA, Sigma
 from options import nV, THERMAL, REACTIVE
 
 
@@ -23,19 +25,39 @@ class Cvec_to_Pclass():
 
         self.p = pressure(self.E, self.v, self.A, self.ρ, self.J, self.λ, PAR)
         self.T = temperature(self.ρ, self.p, PAR.γ, PAR.pINF, PAR.cv)
+        self.q = heat_flux(self.T, self.J, PAR.α2)
+        self.σ = sigma(self.ρ, self.A, PAR.cs2)
+
         self.PAR = PAR
 
-    def q(self):
-        return heat_flux(self.T, self.J, self.PAR.α2)
-
-    def σ(self):
-        return sigma(self.ρ, self.A, self.PAR.cs2)
+    def s(self):
+        return entropy(self.ρ, self.p, self.PAR)
 
     def dσdA(self):
-        return sigma_A(self.ρ, self.A, self.PAR.cs2)
+        return dsigmadA(self.ρ, self.A, self.PAR.cs2)
 
     def Σ(self):
         return Sigma(self.p, self.ρ, self.A, self.PAR.cs2)
+
+    def ψ(self):
+        return dEdA(self.A, self.PAR.cs2)
+
+    def H(self):
+        return dEdJ(self.J, self.PAR.α2)
+
+    def G(self):
+        return gram(self.A)
+
+    def θ1(self):
+        return theta_1(self.A, self.PAR.cs2, self.PAR.τ1)
+
+    def θ2(self):
+        return theta_2(self.ρ, self.T, self.PAR.ρ0, self.PAR.T0, self.PAR.α2,
+                       self.PAR.τ2)
+
+    def E1(self):
+        return E_1(self.ρ, self.p, self.PAR.γ, self.PAR.pINF)
+
 
 def Cvec(ρ, p, v, A, J, λ, PAR):
     """ Returns the vector of conserved variables, given the primitive variables
@@ -106,7 +128,7 @@ def Cvec_to_Pvec(Q, PAR):
     ρ = Q[0]
     E = Q[1] / ρ
     v = Q[2:5] / ρ
-    A = Q[5:14]
+    A = Q[5:14].reshape([3,3])
     J = Q[14:17] / ρ
 
     if REACTIVE:
@@ -114,7 +136,7 @@ def Cvec_to_Pvec(Q, PAR):
     else:
         λ = 0
 
-    p = pressure(E, v, A, ρ, J, λ, PAR, vecA=1)
+    p = pressure(E, v, A, ρ, J, λ, PAR)
 
     ret = Q.copy()
     ret[1] = p

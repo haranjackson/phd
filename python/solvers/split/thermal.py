@@ -1,16 +1,16 @@
 from numpy import exp, eye, sqrt
 
 from system.gpr.misc.functions import L2_1D
-from system.gpr.variables.eos import E_2A, E_3, E_J, energy_to_temperature
+from system.gpr.variables.eos import E_2A, E_3, dEdJ, E_to_T
 from system.gpr.variables.material_functions import theta_2
 
 
 def f_J(ρ, E, A, J, PAR):
-    T = energy_to_temperature(E, A, J, PAR)
-    return - E_J(J, PAR.α2) / theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
+    T = E_to_T(E, A, J, PAR)
+    return - dEdJ(J, PAR.α2) / theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
 
 def jac_J(ρ, E, A, J, PAR):
-    T = energy_to_temperature(E, A, J, PAR)
+    T = E_to_T(E, A, J, PAR)
     return -(T * PAR.ρ0) / (PAR.T0 * ρ * PAR.τ1) * eye(3)
 
 def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, PAR):

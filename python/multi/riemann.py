@@ -1,11 +1,10 @@
 from numpy import amax, concatenate, diag, dot, eye, outer, sqrt, zeros
 from scipy.linalg import eig, solve
 
-from system.eig import eig_prim, Xi1mat, thermo_acoustic_tensor
-from system.gpr.misc.functions import gram
+from system.eigenvalues import thermo_acoustic_tensor
+from system.gpr.systems.eig import eig_prim, Xi1mat
 from system.gpr.misc.structures import Cvec_to_Pclass, Pvec_reordered, Pvec_reordered_to_Cvec
 from system.gpr.systems.primitive import source_prim, reordered
-from system.gpr.variables.state import sigma, sigma_A
 
 from options import nV, STAR_TOL
 
@@ -27,15 +26,21 @@ def riemann_constraints(P, sgn, PAR):
     """ K=R: sgn = -1
         K=L: sgn = 1
     """
-    _, Lhat, Rhat = eig_prim(P, PAR)
-    ρ = P.ρ; p = P.p; A = P.A; T = P.T
-    pINF = PAR.pINF; cs2 = PAR.cs2
+    _, Lhat, Rhat = eig_prim(P)
 
-    σ0 = sigma(ρ, A, cs2)[0]
-    dσdA = sigma_A(ρ, A, cs2)[0]
-    Π1 = dσdA[:,:,0]
-    Π2 = dσdA[:,:,1]
-    Π3 = dσdA[:,:,2]
+    ρ = P.ρ
+    p = P.p
+    A = P.A
+    T = P.T
+
+    σ0 = P.σ[0]
+    dσdA0 = P.dσdA()[0]
+
+    pINF = PAR.pINF
+
+    Π1 = dσdA0[:,:,0]
+    Π2 = dσdA0[:,:,1]
+    Π3 = dσdA0[:,:,2]
 
     Lhat[:4] = 0
     Lhat[:3, 0] = -σ0 / ρ
@@ -55,7 +60,7 @@ def riemann_constraints(P, sgn, PAR):
     a = Z2[0]
 
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
-    O = thermo_acoustic_tensor(ρ, gram(A), p, T, 0, PAR)
+    O = thermo_acoustic_tensor(P, 0)
     w, vl, vr = eig(O, left=1)
     D = diag(sqrt(w.real))
     Q = vl.T
@@ -88,8 +93,8 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(nV), SR=zeros(nV)):
     xL = concatenate([PL.Σ()[0], [PL.T]])
     xR = concatenate([PR.Σ()[0], [PR.T]])
 
-    OL = thermo_acoustic_tensor(PL.ρ, gram(PL.A), PL.p, PL.T, 0, PARL)
-    OR = thermo_acoustic_tensor(PR.ρ, gram(PR.A), PR.p, PR.T, 0, PARR)
+    OL = thermo_acoustic_tensor(PL, 0)
+    OR = thermo_acoustic_tensor(PR, 0)
     _, QL_1 = eig(OL)
     _, QR_1 = eig(OR)
     cL = dt * dot(LL, SL)
@@ -130,16 +135,22 @@ def conds(P, sgn, PAR):
     """ K=R: sgn = -1
         K=L: sgn = 1
     """
-    _, Lhat, Rhat = eig_prim(P, PAR)
-    ρ = P.ρ; p = P.p; A = P.A; T = P.T
-    pINF = PAR.pINF; cs2 = PAR.cs2
+    _, Lhat, Rhat = eig_prim(P)
 
-    σ0 = sigma(ρ, A, cs2)[0]
-    dσdA = sigma_A(ρ, A, cs2)[0]
-    q0 = P.q()[0]
-    Π1 = dσdA[:,:,0]
-    Π2 = dσdA[:,:,1]
-    Π3 = dσdA[:,:,2]
+    ρ = P.ρ
+    p = P.p
+    T = P.T
+
+    q0 = P.q[0]
+    σ0 = P.σ[0]
+    dσdA0 = P.dσdA()[0]
+
+    pINF = PAR.pINF
+    α2 = PAR.α2
+
+    Π1 = dσdA0[:,:,0]
+    Π2 = dσdA0[:,:,1]
+    Π3 = dσdA0[:,:,2]
 
     Lhat[:4] = 0
     Lhat[:3, 0] = -σ0 / ρ
@@ -149,7 +160,7 @@ def conds(P, sgn, PAR):
     Lhat[:3, 8:11] = -Π3
     Lhat[3, 0] = -q0 / ρ
     Lhat[3, 1] = q0 / (p+pINF)
-    Lhat[3, 14] = PAR.α2 * T
+    Lhat[3, 14] = α2 * T
     Lhat[4:8, 11:15] *= -sgn
 
     return Lhat
