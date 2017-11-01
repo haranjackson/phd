@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import cross, dot, empty, eye, kron, zeros
+from numpy import array, cross, dot, empty, eye, kron, zeros
 from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
 
@@ -87,6 +87,16 @@ def kron_prod(matList):
     for i in range(1, len(matList)):
         ret = kron(ret, matList[i])
     return ret
+
+def reorder(X, order='typical'):
+    """ Reorders the columns of X
+    """
+    if order=='typical':
+        perm = array([0,1,11,12,13,2,5,8,3,6,9,4,7,10,14,15,16])
+    elif order=='atypical':
+        perm = array([0,1,5,8,11,6,9,12,7,10,13,2,3,4,14,15,16])
+
+    return X[perm]
 
 @jit
 def eigvalsh3(M, overwriteM=0):

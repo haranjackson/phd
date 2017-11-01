@@ -2,6 +2,7 @@ from numpy import array, diag, dot, eye, sqrt, zeros
 from scipy.linalg import solve, eig
 
 from system.eigenvalues import thermo_acoustic_tensor
+from system.gpr.misc.functions import reorder
 from system.gpr.systems.jacobians import dQdP, dPdQ
 from options import nV
 
@@ -25,7 +26,7 @@ def Xi2mat(ρ, p, A, T, γ, α2):
 
 def eig_prim(P, left=1, right=1):
     """ Returns eigenvalues and set of left and right eigenvectors of the
-        matrix returned by system_primitive_reordered
+        matrix returned by system_prim
     """
     L = zeros([nV,nV])
     R = zeros([nV,nV])
@@ -103,14 +104,12 @@ def eig_prim(P, left=1, right=1):
         L[9:15, 5:11] = eye(6)
         L[15:17, 15:17] = eye(2)
 
-    nonDegenList = [vd+sw[0], vd+sw[1], vd+sw[2], vd+sw[3], vd-sw[0], vd-sw[1], vd-sw[2], vd-sw[3]]
-    return array(nonDegenList + [vd]*10).real, L, 0.5 * R
+    l = array([vd+s for s in sw] + [vd-s for s in sw] + [vd]*9).real
+    return l, reorder(L.T).T, reorder(0.5 * R)
 
 def eig_cons(P):
-    """ Returns the eigenvalues and left and right eigenvectors of the conserved system.
-        NOTE: This doesn't currently appear to be implemented properly. It is taking the reordered
-              eigenvectors of the primitive system and transforming them into conserved eigenvectors
-              without attempting to put them in the standard ordering.
+    """ Returns the eigenvalues and left and right eigenvectors of the
+        conserved system
     """
     Λ, L, R = eig_prim(P)
     DPDQ = dPdQ(P)

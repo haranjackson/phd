@@ -1,4 +1,4 @@
-from numpy import array, eye, zeros
+from numpy import eye, zeros
 
 from system.gpr.misc.functions import L2_1D, L2_2D
 from system.gpr.misc.structures import Cvec_to_Pclass
@@ -74,9 +74,3 @@ def system_prim(Q, d, PAR, pForm=1):
         ret[14+d, 1] = 1 / ρ
 
     return ret
-
-def reordered(X, perm=array([0,1,5,8,11,6,9,12,7,10,13,2,3,4,14,15,16])):
-    if len(X.shape) == 1:
-        return X[perm]
-    else:
-        return X[:,perm][perm,:]

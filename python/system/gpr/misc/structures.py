@@ -77,37 +77,14 @@ def Cvec(ρ, p, v, A, J, λ, PAR):
 
     return Q
 
-def Pvec_reordered(P):
+def Pvec(P):
     ret = zeros(nV)
     ret[0] = P.ρ
     ret[1] = P.p
-    ret[2:11] = P.A.ravel()
-    ret[11:14] = P.v
+    ret[2:5] = P.v
+    ret[5:14] = P.A.ravel()
     ret[14:17] = P.J
     return ret
-
-def Pvec_reordered_to_Cvec(P, PAR):
-    """ Returns the vector of conserved variables, given the vector of
-        (reordered) primitive variables
-    """
-    Q = P.copy()
-    ρ = P[0]
-    p = P[1]
-    A = P[2:11].reshape([3,3])
-    v = P[11:14]
-    J = P[14:17]
-
-    if REACTIVE:
-        λ = P[17]
-    else:
-        λ = 0
-
-    Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, PAR)
-    Q[2:5] = ρ * v
-    Q[5:14] = P[2:11]
-    Q[14:] *= ρ
-
-    return Q
 
 def Pvec_to_Cvec(P, PAR):
     """ Returns the vector of conserved variables, given the vector of
@@ -116,7 +93,13 @@ def Pvec_to_Cvec(P, PAR):
     Q = P.copy()
     ρ = P[0]
     A = P[5:14].reshape([3,3])
-    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], P[17], PAR)
+
+    if REACTIVE:
+        λ = P[17]
+    else:
+        λ = 0
+
+    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, PAR)
     Q[2:5] *= ρ
     Q[14:] *= ρ
     return Q
