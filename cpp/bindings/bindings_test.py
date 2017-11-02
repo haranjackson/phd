@@ -57,7 +57,7 @@ def generate_vector():
     E = total_energy(ρ, p, v, A, J, 0, PAR)
     return Cvec(ρ, p, v, A, J, 0, PAR)
 
-def generate_reconstruction(recDims, FACTOR=10):
+def generate_reconstruction(recDims, FACTOR=100):
 
     NX = nx+2
     NY = ny+2 if ny>1 else 1
@@ -211,14 +211,16 @@ SOURCES = not SPLIT
 
 rec_py, rec_cp = generate_reconstruction(ndim+TIME)
 
-FV_cp = zeros([nx*nV])
 FV_py = fv_terms(rec_py, dt, PAR, HOMOGENEOUS)
+FV_cp = zeros([nx*nV])
 GPRpy.solvers.fv.fv_launcher(FV_cp, rec_cp, 1, nx, 1, 1, dt, dx, 1, 1,
                              SOURCES, TIME, False, MP)
 
 FV_cp = FV_cp.reshape([nx,nV])
 FV_py = FV_py.reshape([nx,nV])
 
+# NOTE: Differences occur in cells where the reconstuction given is non-physical
+# This arises because the max_abs_eigs functions are slightly different
 print("FV   diff =", diff(FV_cp, FV_py))
 
 
