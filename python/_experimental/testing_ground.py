@@ -45,3 +45,10 @@ def generate_vecs(PAR=None):
     P = Cvec_to_Pvec(Q, PAR)
     Pc = Cvec_to_Pclass(Q, PAR)
     return Q, P, Pc
+
+def cons_to_class(QL,QR,QL_,QR_,PARs):
+    PL = Cvec_to_Pclass(QL,PARs[0])
+    PR = Cvec_to_Pclass(QR,PARs[1])
+    PL_ = Cvec_to_Pclass(QL_,PARs[0])
+    PR_ = Cvec_to_Pclass(QR_,PARs[1])
+    return PL, PR, PL_, PR_
