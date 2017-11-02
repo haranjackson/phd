@@ -15,20 +15,20 @@ from options import rc, λc, λs, eps
 from options import PARA_DG, PARA_FV, NCORE
 
 
-def print_stats(count, t, dt, interfaceLocations):
+def print_stats(count, t, dt, intfLocs):
     print(count+1)
     print('t  =', t)
     print('dt =', dt)
     if RGFM:
-        print('Interfaces =', interfaceLocations)
+        print('Interfaces =', intfLocs)
 
-def make_u(fluids, inds):
+def make_u(fluids, intfInds):
     """ Builds u across the domain, from the different fluids grids
     """
     u = zeros(fluids[0].shape)
     for i in range(len(fluids)):
-        l = inds[i]
-        r = inds[i+1]
+        l = intfInds[i]
+        r = intfInds[i+1]
         u[l:r] = fluids[i][l:r]
     return u
 
@@ -101,7 +101,7 @@ def compress_data(data, N):
 class Data():
     """ An object to hold the arrays in which simulation data are saved
     """
-    def __init__(self, u, interfaceLocs, t):
+    def __init__(self, u, intfLocs, t):
         self.grid = u.copy()
         self.time = t
-        self.intf = array(interfaceLocs)
+        self.intf = array(intfLocs)

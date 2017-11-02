@@ -43,11 +43,11 @@ def run(t, tf, count, data):
     tStart = time()
 
     u = data[count].grid
-    interfaceLocs = data[count].intf
+    intfLocs = data[count].intf
 
-    m = len(interfaceLocs)
-    interfaceInds = interface_inds(interfaceLocs, nx)
-    interfaceVels = zeros(m)
+    m = len(intfLocs)
+    intfInds = interface_inds(intfLocs, nx)
+    intfVels = zeros(m)
 
     pool = Parallel(n_jobs=NCORE)
 
@@ -59,9 +59,9 @@ def run(t, tf, count, data):
         dt = timestep(fluids, count, t, tf, PARs)
 
         if RGFM:
-            add_ghost_cells(fluids, interfaceInds, interfaceVels, PARs, dt)
+            add_ghost_cells(fluids, intfInds, intfVels, PARs, dt)
 
-        print_stats(count, t, dt, interfaceLocs)
+        print_stats(count, t, dt, intfLocs)
 
         for i in range(m+1):
             fluid = fluids[i]
@@ -88,12 +88,12 @@ def run(t, tf, count, data):
                 else:
                     ader_stepper(pool, fluid, BC, dt, PAR)
 
-        u = make_u(fluids, interfaceInds)
-        data.append(Data(u, interfaceLocs, t))
+        u = make_u(fluids, intfInds)
+        data.append(Data(u, intfLocs, t))
 
         if RGFM:
-            interfaceLocs += interfaceVels * dt
-            interfaceInds = interface_inds(interfaceLocs, nx)
+            intfLocs += intfVels * dt
+            intfInds = interface_inds(intfLocs, nx)
 
         t += dt
         count += 1
