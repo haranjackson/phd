@@ -11,7 +11,7 @@ import tests_1d.toro
 import tests_2d.validation
 from system.gpr.misc.plot import *
 
-from auxiliary.iterator import timestep
+from auxiliary.iterator import bound_index, timestep
 from solvers.solvers import ader_stepper, split_stepper
 from auxiliary.save import Data, make_u, print_stats, save_all
 from multi.gfm import add_ghost_cells, interface_inds
@@ -24,8 +24,8 @@ IC = tests_1d.validation.heat_conduction_IC
 BC = auxiliary.boundaries.standard_BC
 
 
-u, PARs, interfaceLocs = IC()
-data = [Data(u, interfaceLocs, 0)]
+u, PARs, intfLocs = IC()
+data = [Data(u, intfLocs, 0)]
 
 
 if USE_CPP:
@@ -64,12 +64,13 @@ def run(t, tf, count, data):
         print_stats(count, t, dt, intfLocs)
 
         for i in range(m+1):
-            fluid = fluids[i]
-            PAR = PARs[i]
 
             if USE_CPP:
+
+                fluid = fluids[i]
                 tmp = fluid.ravel()
                 MP = cPARs[i]
+
                 if SPLIT:
                     GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
                                                 dt, dx, dy, dz, False,
@@ -83,6 +84,11 @@ def run(t, tf, count, data):
                 fluid = tmp.reshape([nx,ny,nz,nV])
 
             else:
+                idx1 = bound_index(intfInds[i]-2, nx)
+                idx2 = bound_index(intfInds[i+1]+2, nx)
+                fluid = fluid[idx1:idx2]
+                PAR = PARs[i]
+
                 if SPLIT:
                     split_stepper(pool, fluid, BC, dt, PAR)
                 else:

@@ -4,6 +4,13 @@ from system.eigenvalues import max_abs_eigs
 from options import nx, ny, nz, CFL, dx, dy, dz, ndim
 
 
+def bound_index(ind, n):
+    if ind < 0:
+        return 0
+    if ind > n:
+        return n
+    return ind
+
 def timestep(fluids, count, t, tf, PARs):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
