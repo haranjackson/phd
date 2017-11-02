@@ -1,3 +1,4 @@
+from scipy.optimize import newton_krylov
 from numpy import amax, concatenate, diag, dot, eye, outer, sqrt, zeros
 from scipy.linalg import eig, solve
 
@@ -7,7 +8,7 @@ from system.gpr.misc.functions import reorder
 from system.gpr.misc.structures import Cvec_to_Pclass, Cvec_to_Pvec, Pvec, Pvec_to_Cvec
 from system.gpr.systems.primitive import source_prim
 
-from options import nV, STAR_TOL
+from options import nV, STAR_TOL, STIFF_RGFM
 
 
 e0 = zeros(3); e0[0]=1
@@ -23,10 +24,16 @@ def check_star_convergence(QL_, QR_, PARL, PARR):
 
     return cond1 and cond2
 
-def riemann_constraints(P, sgn, PAR):
+def riemann_constraints1(P, sgn, PAR):
     """ K=R: sgn = -1
         K=L: sgn = 1
         NOTE: Uses atypical ordering
+
+        Extra constraints are:
+        dΣ = dΣ/dρ * dρ + dΣ/dp * dp + dΣ/dA * dA
+        dT = dT/dρ * dρ + dT/dp * dp
+        v*L = v*R
+        J*L = J*R
     """
     _, Lhat, Rhat = eig_prim(P)
     Lhat = reorder(Lhat.T, order='atypical').T
@@ -89,8 +96,8 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(nV), SR=zeros(nV)):
 
     PL = Cvec_to_Pclass(QL, PARL)
     PR = Cvec_to_Pclass(QR, PARR)
-    LL, RL = riemann_constraints(PL, 1, PARL)
-    LR, RR = riemann_constraints(PR, -1, PARR)
+    LL, RL = riemann_constraints1(PL, 1, PARL)
+    LR, RR = riemann_constraints1(PR, -1, PARR)
     YL = RL[11:15, :4]
     YR = RR[11:15, :4]
 
@@ -121,7 +128,7 @@ def star_stepper(QL, QR, dt, PARL, PARR, SL=zeros(nV), SR=zeros(nV)):
     QR_ = Pvec_to_Cvec(reorder(PR_vec), PARR)
     return QL_, QR_
 
-def star_states(QL, QR, dt, PARL, PARR):
+def star_states_iterative(QL, QR, dt, PARL, PARR):
     SL = source_prim(QL, PARL)
     SR = source_prim(QR, PARR)
     QL_, QR_ = star_stepper(QL, QR, dt, PARL, PARR, SL, SR)
@@ -132,20 +139,13 @@ def star_states(QL, QR, dt, PARL, PARR):
     return QL_, QR_
 
 
-###### EXPERIMENTAL ######
-
-
-from scipy.optimize import newton_krylov
-
-
-def conds(P, side, PAR):
-    """ K=R: sgn = -1
-        K=L: sgn = 1
-
-        CHECK ORDERING
+def riemann_constraints2(P, side, PAR):
+    """ Extra constraints are:
+        dΣ = dΣ/dρ * dρ + dΣ/dp * dp + dΣ/dA * dA
+        dq = dq/dρ * dρ + dq/dp * dp + dq/dJ * dJ
+        v*L = v*R
+        T*L = T*R
     """
-    assert(side in ['L', 'R'])
-
     _, Lhat, _ = eig_prim(P)
 
     ρ = P.ρ
@@ -190,8 +190,8 @@ def star_stepper_obj(x, QL, QR, dt, PARL, PARR):
     pL_ = Cvec_to_Pvec(QL_, PARL)
     pR_ = Cvec_to_Pvec(QR_, PARR)
 
-    ML = conds(PL, 'L', PARL)
-    MR = conds(PR, 'R', PARR)
+    ML = riemann_constraints2(PL, 'L', PARL)
+    MR = riemann_constraints2(PR, 'R', PARR)
 
     xL_ = X[0,17:]
     xR_ = X[1,17:]
@@ -227,59 +227,25 @@ def star_stepper_obj(x, QL, QR, dt, PARL, PARR):
 
     return ret.ravel()
 
-def star_stepper_new(QL, QR, dt, PARL, PARR):
+def star_states_stiff(QL, QR, dt, PARL, PARR):
 
     PL = Cvec_to_Pclass(QL, PARL)
     PR = Cvec_to_Pclass(QR, PARR)
 
-    Q_0 = (QL + QR) / 2
-    Σ_0 = (PL.Σ()[0] + PR.Σ()[0]) / 2
-    q_0 = (PL.q[0] + PR.q[0]) / 2
-
     x0 = zeros(42)
-    #x0[:21] = concatenate([Q_0, Σ_0, [q_0]])
-    #x0[21:] = concatenate([Q_0, Σ_0, [q_0]])
     x0[:21] = concatenate([QL, PL.Σ()[0], [PL.q[0]]])
     x0[21:] = concatenate([QR, PR.Σ()[0], [PR.q[0]]])
 
     obj = lambda x: star_stepper_obj(x, QL, QR, dt, PARL, PARR)
 
-    ret = newton_krylov(obj, x0, f_tol=1, f_rtol=1, method='bicgstab').reshape([2,21])
+    ret = newton_krylov(obj, x0).reshape([2,21])
 
     return ret[0,:17], ret[1,:17]
 
 
-def star_stepper2(QL, QR, PARL, PARR, d):
-    PL = Cvec_to_Pclass(QL, PARL)
-    PR = Cvec_to_Pclass(QR, PARR)
-    LL = conds(PL, 1, PARL)
-    LR = conds(PR, -1, PARR)
+def star_states(QL, QR, dt, PARL, PARR):
 
-    ΣL = PL.Σ()
-    ΣR = PR.Σ()
-    Σ_ = (ΣL + ΣR) / 2
-    qL = PL.q()
-    qR = PR.q()
-    q_ = (qL + qR) / 2
-
-    bL = zeros(nV)
-    bL[:3] = (Σ_ - ΣL)[d]
-    bL[3] = (q_ - qL)[d]
-    bR = zeros(nV)
-    bR[:3] = (Σ_ - ΣR)[d]
-    bR[3] = (q_ - qR)[d]
-
-    PLvec = Pvec(PL)
-    PRvec = Pvec(PR)
-
-    PL_vec = solve(LL, bL) + PLvec
-    PR_vec = solve(LR, bL) + PRvec
-    QL_ = Pvec_to_Cvec(PL_vec, PARL)
-    QR_ = Pvec_to_Cvec(PR_vec, PARR)
-    return QL_, QR_
-
-def star_states2(QL, QR, dt, PARL, PARR):
-    QL_, QR_ = star_stepper2(QL, QR, PARL, PARR, 0)
-    for i in range(10):
-        QL_, QR_ = star_stepper2(QL_, QR_, PARL, PARR, 0)
-    return QL_, QR_
+    if STIFF_RGFM:
+        return star_states_stiff(QL, QR, dt, PARL, PARR)
+    else:
+        return star_states_iterative(QL, QR, dt, PARL, PARR)

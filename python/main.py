@@ -89,6 +89,7 @@ def run(t, tf, count, data):
                     ader_stepper(pool, fluid, BC, dt, PAR)
 
         u = make_u(fluids, interfaceInds)
+        data.append(Data(u, interfaceLocs, t))
 
         if RGFM:
             interfaceLocs += interfaceVels * dt
@@ -96,7 +97,6 @@ def run(t, tf, count, data):
 
         t += dt
         count += 1
-        data.append(Data(u, interfaceLocs, t))
         print('Total Time:', time()-t0, '\n')
 
     print('TOTAL RUNTIME:', time()-tStart)

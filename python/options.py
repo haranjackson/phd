@@ -17,13 +17,14 @@ REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
 
 """ GFM Options """
 
-RGFM     = 0                # Use original GFM
+RGFM     = 1                # Use original GFM
 ISO_FIX  = 0                # Use isobaric fix
 STAR_TOL = 1e-6             # Tolerance to which star states converge
+STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 
 """ Solver Options """
 
-USE_CPP = 0                 # Whether to use compiled C++
+USE_CPP = 1                 # Whether to use compiled C++
 SPLIT   = 1                 # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)

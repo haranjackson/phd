@@ -26,7 +26,6 @@ def add_ghost_cells(fluids, inds, vels, materialParameters, dt):
         QR = uR[ind+ISO_FIX, 0, 0]
         QL_, QR_ = star_states(QL, QR, dt, PARL, PARR)
 
-
         for j in range(ind, len(uL)):
             uL[j] = QL_
         for j in range(ind):
