@@ -49,3 +49,9 @@ def derivative_values():
         for j in range(N1):
             ret[i,j] = psiDer[1][j](nodes[i])
     return ret
+
+def end_polys():
+    nodes, _, _ = quad()
+    psiL = lagrange(concatenate((nodes, [1])), [0]*N1+[1])
+    psiR = lagrange(concatenate(([0], nodes)), [1]+[0]*N1)
+    return psiL, psiR

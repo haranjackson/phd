@@ -1,7 +1,7 @@
-from numpy import dot, zeros
-from scipy.optimize import newton_krylov, root, leastsq
+from numpy import array, dot, zeros
+from scipy.optimize import newton_krylov, leastsq, root, anderson
 
-from solvers.basis import end_values
+from solvers.basis import end_values, quad
 from solvers.dg.dg import rhs
 from solvers.dg.matrices import system_matrices
 from system.gpr.misc.objects import material_parameters
@@ -11,6 +11,7 @@ from options import nV, N1, NT
 
 W, U, _, _, _ = system_matrices()
 ENDVALS = end_values()
+NODES, _, _ = quad()
 
 
 def obj(x, WwL, WwR, dt, PARL, PARR):
@@ -46,7 +47,7 @@ def obj(x, WwL, WwR, dt, PARL, PARR):
         ΣR_[i] = PR_.Σ()[0]
 
     ret[2*nX : 2*nX+3*N1]      = (vL_-vR_).ravel()
-    #ret[2*nX+3*N1 : 2*nX+6*N1] = (ΣL_-ΣR_).ravel()
+    ret[2*nX+3*N1 : 2*nX+6*N1] = (ΣL_-ΣR_).ravel()
 
     return ret
 
@@ -54,6 +55,7 @@ if __name__ == "__main__":
 
     PAR = material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1,
                               μ=1e-2, Pr=0.75)
+    """
     ρL = 1
     pL = 1
     vL = zeros(3)
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     JL = zeros(3)
     PARL = PAR
 
-    ρR = 0.125
+    ρR = 0.1
     pR = 0.1
     vR = zeros(3)
     AR = ρR**(1/3) * eye(3)
@@ -70,11 +72,28 @@ if __name__ == "__main__":
 
     QL = Cvec(ρL, pL, vL, AL, JL, 0, PARR)
     QR = Cvec(ρR, pR, vR, AR, JR, 0, PARL)
+
     PL = Cvec_to_Pclass(QL, PARL)
     PR = Cvec_to_Pclass(QR, PARL)
 
     wL = array([QL for i in range(N1)])
     wR = array([QR for i in range(N1)])
+    """
+
+    wL = zeros([N1,nV])
+    wR = zeros([N1,nV])
+    v0 = zeros(3)
+    J0 = zeros(3)
+    for i in range(N1):
+        ρL = 3-NODES[i]
+        pL = ρL
+        AL = ρL**(1/3) * eye(3)
+        ρR = 2-NODES[i]
+        pR = ρR
+        AR = ρR**(1/3) * eye(3)
+        wL[i] = Cvec(ρL, pL, v0, AL, J0, 0, PAR)
+        wR[i] = Cvec(ρR, pR, v0, AR, J0, 0, PAR)
+
     WwL = dot(W, wL)
     WwR = dot(W, wR)
     qL0 = array([wL for i in range(N1)])
@@ -88,9 +107,15 @@ if __name__ == "__main__":
     dt = 0.01
 
     f = lambda x : obj(x, WwL, WwR, dt, PAR, PAR)
-    ret = newton_krylov(f, x0)
+    #ret = newton_krylov(f, x0)
+    #ret = root(f, x0)
+    #ret = anderson(f, x0)
+    ret = leastsq(f, x0)[0]
 
     qL  = ret[0 : nX].reshape([N1,N1,nV])
     qR  = ret[nX : 2*nX].reshape([N1,N1,nV])
     ρvL = ret[2*nX : 2*nX+3*N1].reshape([N1,3])
     ρvR = ret[2*nX+3*N1 : 2*nX+6*N1].reshape([N1,3])
+
+    qL[abs(qL)<1e-12] = 0
+    qR[abs(qR)<1e-12] = 0
