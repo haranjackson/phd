@@ -27,10 +27,8 @@ def add_ghost_cells(fluids, intfInds, intfVels, PARs, dt):
         QL_, QR_ = star_states(QL, QR, dt, PARL, PARR)
 
         for j in range(ind, len(uL)):
-            uL[ind] = QL_
-            uL[ind+1] = QR_
+            uL[j] = QL_
         for j in range(ind):
-            uR[ind-2] = QL_
-            uR[ind-1] = QR_
+            uR[j] = QR_
 
         intfVels[i] = (QL_[2] / QL_[0] + QR_[2] / QR_[0]) / 2   # average v*
