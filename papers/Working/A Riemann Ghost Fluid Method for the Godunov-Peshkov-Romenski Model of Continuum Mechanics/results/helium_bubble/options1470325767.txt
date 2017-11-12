@@ -1,0 +1,49 @@
+tf = 1.400000e-03
+L  = 1.000000e+00
+nx = 200
+ny = 1
+nz = 1
+
+mechanical = 1
+viscous    = 1
+thermal    = 1
+reactive   = 0
+
+Ms = 3.000000
+reactionType = a
+reactiveEOS  = 1
+W  = 1.000000e+00
+doubleTime = 1.000000e-07
+fullBurn = 0
+
+GFM    = 1
+RGFM   = 1
+isoFix     = 1
+entropyFix = 1
+tempFix    = 0
+UPDATE_STEP = 100
+
+N      = 1
+CFL    = 0.900000
+method = rusanov
+renormaliseRho = 0
+convertTemp    = 1
+NOISE_LIM = 1.000000e-16
+
+hidalgo    = 0
+stiff      = 0
+superStiff = 0
+failLim    = 180
+TOL        = 6.000000e-06
+MAX_ITER   = 50
+
+rc   = 8.000000
+lam  = 1.000000e+05
+lams = 1.000000e+00
+eps  = 1.000000e-14
+
+minParaDGLen = 500
+minParaFVLen = 500
+ncore = 4
+reducedDomain = 0
+

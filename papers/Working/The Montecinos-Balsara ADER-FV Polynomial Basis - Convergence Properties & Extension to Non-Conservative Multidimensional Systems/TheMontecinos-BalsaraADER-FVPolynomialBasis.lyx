@@ -1,0 +1,1852 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+\journal{Computers and Fluids}
+
+% Remove subsection in left header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{The Montecinos-Balsara ADER-FV Polynomial Basis:\\ Convergence Properties \& Extension to Non-Conservative Multidimensional Systems}
+\fancyhead[R]{\thepage}
+\end_preamble
+\options final,5p,times,twocolumn
+\use_default_options false
+\begin_modules
+theorems-std
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+The Montecinos-Balsara ADER-FV Polynomial Basis: Convergence Properties
+ & Extension to Non-Conservative Multidimensional Systems
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\end_layout
+
+\begin_layout Email
+hj305@cam.ac.uk
+\end_layout
+
+\begin_layout Address
+Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\end_layout
+
+\begin_layout Abstract
+Hyperbolic systems of PDEs can be solved to arbitrary orders of accuracy
+ by using the ADER Finite Volume method.
+ These PDE systems may be non-conservative and non-homogeneous, and contain
+ stiff source terms.
+ ADER-FV requires a spatio-temporal polynomial reconstruction of the data
+ in each spacetime cell, at each time step.
+ This reconstruction is obtained as the root of a nonlinear system, resulting
+ from the use of a Galerkin method.
+ It was proved in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jackson2017"
+
+\end_inset
+
+ that for traditional choices of basis polynomials, the eigenvalues of certain
+ matrices appearing in these nonlinear systems are always 0, regardless
+ of the number of spatial dimensions of the PDEs or the chosen order of
+ accuracy of the ADER-FV method.
+ This guarantees fast convergence to the Galerkin root for certain classes
+ of PDEs.
+\end_layout
+
+\begin_layout Abstract
+In 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Montecinos2017"
+
+\end_inset
+
+ a new, more efficient class of basis polynomials for the one-dimensional
+ ADER-FV method was presented.
+ This new class of basis polynomials, originally presented for conservative
+ systems, is extended to multidimensional, non-conservative systems here,
+ and the corresponding property regarding the eigenvalues of the Galerkin
+ matrices is proved.
+\end_layout
+
+\begin_layout Keywords
+ADER 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Finite Volume 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Galerkin 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Eigenvalues 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Convergence
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Standard
+ADER-FV methods were first devised by Toro and collaborators (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Millington2001"
+
+\end_inset
+
+).
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2008"
+
+\end_inset
+
+ obviated the need for the cumbersome analytic work required by the Cauchy-Kowal
+esky procedure by use of a Galerkin predictor.
+ Although ADER-FV methods have been very successful in solving a large variety
+ of different hyperbolic systems (e.g.
+ see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2016a,Balsara2009,Hidalgo2011,Zanotti2016"
+
+\end_inset
+
+), they remain relatively computationally expensive.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Montecinos2017"
+
+\end_inset
+
+ have proposed a new, more efficient class of basis polynomials.
+ While the method was given for conservative, one-dimensional systems in
+ the original paper, it is extended here to general non-conservative, multidimen
+sional systems.
+\end_layout
+
+\begin_layout Section
+Extension of the Montecinos-Balsara Formulation
+\end_layout
+
+\begin_layout Standard
+Take a non-homogeneous, non-conservative, hyperbolic system of the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\overrightarrow{\boldsymbol{F}}\left(\boldsymbol{Q}\right)+\overrightarrow{\boldsymbol{B}}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:system}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ is the vector of conserved variables, 
+\begin_inset Formula $\overrightarrow{\boldsymbol{F}}=\left(\boldsymbol{F_{1},F_{2},F_{3}}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\overrightarrow{\boldsymbol{B}}=\left(B_{1},B_{2},B_{3}\right)$
+\end_inset
+
+ are respectively the conservative nonlinear fluxes and matrices corresponding
+ to the purely non-conservative components of the system, and 
+\begin_inset Formula $\boldsymbol{S}\left(\boldsymbol{Q}\right)$
+\end_inset
+
+ is the algebraic source vector.
+\end_layout
+
+\begin_layout Standard
+Define spatial variables 
+\begin_inset Formula $x^{\left(1\right)},x^{\left(2\right)},x^{\left(3\right)}$
+\end_inset
+
+.
+ Take the space-time cell 
+\begin_inset Formula $C=\left[x_{i_{1}}^{\left(1\right)},x_{i_{1}+1}^{\left(1\right)}\right]\times\left[x_{i_{2}}^{\left(2\right)},x_{i_{2}+1}^{\left(2\right)}\right]\times\left[x_{i_{3}}^{\left(3\right)},x_{i_{3}+1}^{\left(3\right)}\right]\times\left[t_{n},t_{n+1}\right]$
+\end_inset
+
+.
+ Define the scaled spatial and temporal variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+χ^{\left(k\right)}=\frac{x^{\left(k\right)}-x_{i_{k}}^{\left(k\right)}}{x_{i_{k}+1}^{\left(k\right)}-x_{i_{k}}^{\left(k\right)}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+τ=\frac{t-t_{n}}{t_{n+1}-t_{n}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset Formula $C$
+\end_inset
+
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\text{χ^{\left(1\right)},χ^{\left(2\right)},χ^{\left(3\right)},\tau}\right)\in\left[0,1\right]^{4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By rescaling 
+\begin_inset Formula $\overrightarrow{\boldsymbol{F}},\overrightarrow{\boldsymbol{B}},\boldsymbol{S}$
+\end_inset
+
+ by the appropriate constant factors, and defining 
+\begin_inset Formula $\tilde{\nabla}=\left(\partial_{χ^{\left(1\right)}},\partial_{χ^{\left(2\right)}},\partial_{χ^{\left(3\right)}}\right)$
+\end_inset
+
+, within 
+\begin_inset Formula $C$
+\end_inset
+
+ equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:system"
+
+\end_inset
+
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\tau}+\tilde{\boldsymbol{\nabla}}\cdot\overrightarrow{\boldsymbol{F}}\left(\boldsymbol{Q}\right)+\overrightarrow{\boldsymbol{B}}\left(\boldsymbol{Q}\right)\cdot\tilde{\nabla}\boldsymbol{Q}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:system rescaled}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A basis 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ of 
+\begin_inset Formula $P_{N}$
+\end_inset
+
+ and inner product 
+\begin_inset Formula $\left\langle \cdot,\cdot\right\rangle $
+\end_inset
+
+ are now required to produce a polynomial reconstruction of 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ within 
+\begin_inset Formula $C$
+\end_inset
+
+.
+ Traditionally, this basis has been chosen to be either nodal (
+\begin_inset Formula $\psi_{i}\left(α_{j}\right)=\delta_{ij}$
+\end_inset
+
+ where 
+\begin_inset Formula $\left\{ α_{0},\ldots,α_{N}\right\} $
+\end_inset
+
+ are a set of nodes, e.g.
+ the Gauss-Legendre abscissae - see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2008"
+
+\end_inset
+
+), or modal (e.g.
+ the Legendre polynomials - see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Balsara2009"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Montecinos2017"
+
+\end_inset
+
+ take the following approach.
+ 
+\begin_inset Formula $\left\langle \cdot,\cdot\right\rangle $
+\end_inset
+
+ is taken to be the usual integral product on 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+.
+ Supposing that 
+\begin_inset Formula $N=2n+1$
+\end_inset
+
+ for some 
+\begin_inset Formula $n\in\mathbb{N}$
+\end_inset
+
+, Gauss-Legendre nodes 
+\begin_inset Formula $\left\{ α_{0},\ldots,α_{n}\right\} $
+\end_inset
+
+ are taken.
+ The basis 
+\begin_inset Formula $\Psi=\left\{ \psi_{0},...,\psi_{N}\right\} \subset P_{N}$
+\end_inset
+
+ is taken with the following properties for 
+\begin_inset Formula $i=0,\ldots,n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+\psi_{i}\left(α_{j}\right)=\delta_{ij} & \psi'_{i}\left(α_{j}\right)=0\\
+\psi_{n+1+i}\left(α_{j}\right)=0 & \psi'_{n+1+i}\left(α_{j}\right)=\delta_{ij}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the following subsets:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Psi^{0} & =\left\{ \psi_{i}:0\leq i\leq n\right\} \\
+\Psi^{1} & =\left\{ \psi_{i}:n+1\leq i\leq2n+1\right\} 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The WENO method (as used in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2013"
+
+\end_inset
+
+) produces an order-
+\begin_inset Formula $N$
+\end_inset
+
+ polynomial reconstruction 
+\begin_inset Formula $w\left(χ^{\left(1\right)},χ^{\left(2\right)},χ^{\left(3\right)}\right)$
+\end_inset
+
+ of the data at time 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ in 
+\begin_inset Formula $\left[x_{i_{1}}^{\left(1\right)},x_{i_{1}+1}^{\left(1\right)}\right]\times\left[x_{i_{2}}^{\left(2\right)},x_{i_{2}+1}^{\left(2\right)}\right]\times\left[x_{i_{3}}^{\left(3\right)},x_{i_{3}+1}^{\left(3\right)}\right]$
+\end_inset
+
+.
+ It is used as initial data in the problem of finding the Galerkin predictor.
+ Taking representation 
+\begin_inset Formula $w=w_{abc}\psi_{a}\left(χ^{\left(1\right)}\right)\psi_{b}\left(χ^{\left(2\right)}\right)\psi_{c}\left(χ^{\left(3\right)}\right)$
+\end_inset
+
+ we have for 
+\begin_inset Formula $0\leq i,j,k\leq n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+w_{ijk} & =w\left(α_{i},α_{j},α_{k}\right)\\
+w_{\left(n+i+1\right)jk} & =\partial_{χ^{\left(1\right)}}w\left(α_{i},α_{j},α_{k}\right)\\
+w_{i\left(n+j+1\right)k} & =\partial_{χ^{\left(2\right)}}w\left(α_{i},α_{j},α_{k}\right)\\
+w_{ij\left(n+k+1\right)} & =\partial_{χ^{\left(3\right)}}w\left(α_{i},α_{j},α_{k}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the following temporal nodes, where 
+\begin_inset Formula $\tau_{1},\ldots,\tau_{N}$
+\end_inset
+
+ are the usual Legendre-Gauss nodes on 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau_{0}=0$
+\end_inset
+
+ or 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+ if we are performing a Continuous Galerkin / Discontinuous Galerkin reconstruct
+ion, respectively:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \tau_{0},\dots,\tau_{N}\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define 
+\begin_inset Formula $\Phi=\left\{ \phi_{0},...,\phi_{N}\right\} \subset P_{N}$
+\end_inset
+
+ to be the set of Lagrange interpolating polynomials on the temporal nodes.
+ We now define the spatio-temporal polynomial basis 
+\begin_inset Formula $\Theta=\Phi\otimes\Psi\otimes\Psi\otimes\Psi=\left\{ \theta_{\beta}\right\} $
+\end_inset
+
+ for 
+\begin_inset Formula $0\leq\beta\leq\left(N+1\right)^{4}-1$
+\end_inset
+
+.
+ Define subsets 
+\begin_inset Formula $\Theta^{ιξκ}=\Phi\otimes\Psi^{ι}\otimes\Psi^{ξ}\otimes\Psi^{κ}=\left\{ \theta_{\mu}^{ιξκ}\right\} $
+\end_inset
+
+ where 
+\begin_inset Formula $ι,ξ,κ\in\left\{ 0,1\right\} $
+\end_inset
+
+ for 
+\begin_inset Formula $0\leq\mu\leq\left(N+1\right)\left(n+1\right)^{3}-1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Denoting the Galerkin predictor by 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, take the following set of approximations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q} & \approx\theta_{\beta}\boldsymbol{q}_{\beta}=\theta_{\mu}^{ιξκ}\boldsymbol{q}_{\mu}^{ιξκ}\\
+\overrightarrow{\boldsymbol{F}}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\overrightarrow{\boldsymbol{F}}_{\beta}=\theta_{\mu}^{ιξκ}\overrightarrow{\boldsymbol{F}}_{\mu}^{ιξκ}\label{eq:F representation}\\
+\overrightarrow{\boldsymbol{B}}\left(\boldsymbol{Q}\right)\cdot\tilde{\nabla}\boldsymbol{Q} & \approx\theta_{\beta}\boldsymbol{B}_{\beta}=\theta_{\mu}^{ιξκ}\boldsymbol{B}_{\mu}^{ιξκ}\label{eq:B representation}\\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S}_{\beta}=\theta_{\mu}^{ιξκ}\boldsymbol{S}_{\mu}^{ιξκ}\label{eq:S representation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for some coefficients 
+\begin_inset Formula $\boldsymbol{q}_{\beta},\overrightarrow{\boldsymbol{F}}_{\beta},\boldsymbol{B}_{\beta},\boldsymbol{S}_{\beta}$
+\end_inset
+
+.
+ The 
+\shape italic
+nodal basis representation
+\shape default
+ is used for the coefficients of 
+\begin_inset Formula $\Theta^{000}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\overrightarrow{\boldsymbol{F}}_{\mu}^{000} & =\overrightarrow{\boldsymbol{F}}\left(\boldsymbol{q}_{\mu}^{000}\right)\\
+\boldsymbol{B}_{\mu}^{000} & =B_{1}\left(\boldsymbol{q}_{\mu}^{000}\right)\boldsymbol{q}_{\mu}^{100}+B_{2}\left(\boldsymbol{q}_{\mu}^{000}\right)\boldsymbol{q}_{\mu}^{010}+B_{3}\left(\boldsymbol{q}_{\mu}^{000}\right)\boldsymbol{q}_{\mu}^{001}\\
+\boldsymbol{S}_{\mu}^{000} & =\boldsymbol{S}\left(\boldsymbol{q}_{\mu}^{000}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\overrightarrow{\boldsymbol{F}}_{\mu}^{ιξκ} & =\partial_{χ}^{ι}\partial_{υ}^{ξ}\partial_{ζ}^{κ}\left(\overrightarrow{\boldsymbol{F}}\left(\boldsymbol{Q}\right)\right)\\
+\boldsymbol{B}_{\mu}^{ιξκ} & =\partial_{χ}^{ι}\partial_{υ}^{ξ}\partial_{ζ}^{κ}\left(\overrightarrow{\boldsymbol{B}}\left(\boldsymbol{Q}\right)\cdot\tilde{\nabla}\boldsymbol{Q}\right)\\
+\boldsymbol{S}_{\mu}^{ιξκ} & =\partial_{χ}^{ι}\partial_{υ}^{ξ}\partial_{ζ}^{κ}\left(\boldsymbol{S}\left(\boldsymbol{Q}\right)\right)\label{eq:S coeffs}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the right-hand-side is evaluated at the nodal point corresponding
+ to 
+\begin_inset Formula $\mu$
+\end_inset
+
+.
+ The full expressions are omitted here for brevity's sake, but note that
+ for a one-dimensional system:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{F}_{1}{}_{\mu}^{100} & =\frac{\partial\boldsymbol{F}\left(\boldsymbol{q}_{\mu}^{000}\right)}{\partial\boldsymbol{Q}}\cdot\boldsymbol{q}_{\mu}^{100}\\
+\boldsymbol{B}_{\mu}^{100} & =\left(\frac{\partial B_{1}\left(\boldsymbol{q}_{\mu}^{000}\right)}{\partial\boldsymbol{Q}}\cdot\boldsymbol{q}_{\mu}^{100}\right)\cdot\boldsymbol{q}_{\mu}^{100}\\
+ & +B_{1}\left(\boldsymbol{q}_{\mu}^{000}\right)\cdot\left(\frac{\partial^{2}\theta_{\kappa}^{000}\left(\chi_{\mu},\tau_{\mu}\right)}{\partial\chi^{2}}\boldsymbol{q}_{\mu}^{000}+\frac{\partial^{2}\theta_{\kappa}^{100}\left(\chi_{\mu},\tau_{\mu}\right)}{\partial\chi^{2}}\boldsymbol{q}_{\mu}^{100}\right)\nonumber \\
+\boldsymbol{S}_{\mu}^{100} & =\frac{\partial\boldsymbol{S}\left(\boldsymbol{q}_{\mu}^{000}\right)}{\partial\boldsymbol{Q}}\cdot\boldsymbol{q}_{\mu}^{100}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\chi_{\mu},\tau_{\mu}$
+\end_inset
+
+ are the spatial and temporal coordinates where 
+\begin_inset Formula $\theta_{\mu}^{100}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\partial_{\chi}\theta_{\mu}^{100}=1$
+\end_inset
+
+.
+ Note that 
+\begin_inset Formula $\frac{\partial B_{1}}{\partial\boldsymbol{Q}}$
+\end_inset
+
+ is a rank 3 tensor.
+\end_layout
+
+\begin_layout Standard
+Consider functions 
+\begin_inset Formula $f,g$
+\end_inset
+
+ of the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+f\left(\tau,\chi^{\left(1\right)},\chi^{\left(2\right)},\chi^{\left(3\right)}\right) & =f_{\tau}\left(\tau\right)f_{1}\left(\chi^{\left(1\right)}\right)f_{2}\left(\chi^{\left(2\right)}\right)f_{3}\left(\chi^{\left(3\right)}\right)\\
+g\left(\tau,\chi^{\left(1\right)},\chi^{\left(2\right)},\chi^{\left(3\right)}\right) & =g_{\tau}\left(\tau\right)g_{1}\left(\chi^{\left(1\right)}\right)g_{2}\left(\chi^{\left(2\right)}\right)g_{3}\left(\chi^{\left(3\right)}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the following integral operators:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left[f,g\right]^{t} & =f_{τ}\left(t\right)g_{τ}\left(t\right)\left\langle f_{1},g_{1}\right\rangle \left\langle f_{2},g_{2}\right\rangle \left\langle f_{3},g_{3}\right\rangle \\
+\left\{ f,g\right\}  & =\left\langle f_{\tau},g_{\tau}\right\rangle \left\langle f_{1},g_{1}\right\rangle \left\langle f_{2},g_{2}\right\rangle \left\langle f_{3},g_{3}\right\rangle 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:F representation"
+
+\end_inset
+
+ by test function 
+\begin_inset Formula $\theta_{\alpha}$
+\end_inset
+
+, using the polynomial approximations for 
+\begin_inset Formula $\boldsymbol{Q},\overrightarrow{\boldsymbol{F}},\overrightarrow{\boldsymbol{B}},\boldsymbol{S}$
+\end_inset
+
+, and integrating over space and time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} \boldsymbol{q}_{\beta}=\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S}_{\beta}-\boldsymbol{B}_{\beta}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partialχ^{\left(k\right)}}\right\} \boldsymbol{F}_{k}{}_{\beta}\label{eq:conditions}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The Discontinuous Galerkin Method
+\end_layout
+
+\begin_layout Standard
+This method of computing the Galerkin predictor allows solutions to be discontin
+uous at temporal cell boundaries, and is also suitable for stiff source
+ terms.
+ Integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:conditions"
+
+\end_inset
+
+ by parts in time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \right)\boldsymbol{q}_{\beta} & =\left[\theta_{\alpha},\boldsymbol{w}\right]^{0}+\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S}_{\beta}-\boldsymbol{B}_{\beta}\right)\\
+ & -\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partialχ^{\left(k\right)}}\right\} \boldsymbol{F}_{k}{}_{\beta}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{w}$
+\end_inset
+
+ is the reconstruction obtained at the start of the time step with the WENO
+ method.
+ Take the following ordering:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\theta_{\left(N+1\right)^{3}h+\left(N+1\right)^{2}i+\left(N+1\right)j+k}\left(\tau,χ,υ,ζ\right)=\phi_{h}\left(\tau\right)\psi_{i}\left(χ\right)\psi_{j}\left(υ\right)\psi_{k}\left(ζ\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $0\leq h,i,j,k\leq N$
+\end_inset
+
+.
+ Thus, define the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} =\left(R^{1}-M^{\tau,1}\right)\otimes\left(M^{χ}\right)^{3}\\
+V_{\alpha\beta}^{k} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{\left(k\right)}}\right\} =M^{\tau}\otimes\left(M^{χ}\right)^{k-1}\otimes M^{χ,1}\otimes\left(M^{χ}\right)^{3-k}\\
+\boldsymbol{W}_{\alpha} & =\left[\theta_{\alpha},\Psi_{\gamma}\right]^{0}\boldsymbol{w}_{\gamma}=R^{0}\otimes\left(M^{χ}\right)^{3}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} =M^{\tau}\otimes\left(M^{χ}\right)^{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\left\{ \Psi_{\gamma}\right\} =\Psi\otimes\Psi\otimes\Psi$
+\end_inset
+
+ and:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+M_{ij}^{\tau}=\left\langle \phi_{i},\phi_{j}\right\rangle  & M_{ij}^{\tau,1}=\left\langle \phi_{i}^{'},\phi_{j}\right\rangle \\
+M_{ij}^{χ}=\left\langle \psi_{i},\psi_{j}\right\rangle  & M_{ij}^{χ,1}=\left\langle \psi_{i},\psi_{j}^{'}\right\rangle \\
+R_{ij}^{1}=\phi_{i}\left(1\right)\phi_{j}\left(1\right) & \boldsymbol{R_{i}^{0}}=\phi_{i}\left(0\right)
+\end{cases}\label{eq:inner product matrices}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q}_{\beta}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\boldsymbol{S}_{\beta}-\boldsymbol{B}_{\beta}\right)-V_{\alpha\beta}^{\left(k\right)}\boldsymbol{F}_{k}{}_{\beta}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the definitions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+D & =\left(M^{χ}\right)^{-1}M^{χ,1}\\
+E & =\left(R^{1}-M^{\tau,1}\right)
+\end{cases}\label{eq:compound matrices}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $E\boldsymbol{1}=\boldsymbol{R^{0}}$
+\end_inset
+
+, we have, by inversion of 
+\begin_inset Formula $U$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{q} & =\left(\boldsymbol{1}\otimes I^{3}\right)\boldsymbol{w}+\left(E^{-1}M^{\tau}\otimes I^{3}\right)\left(\boldsymbol{S}-\boldsymbol{B}\right)\\
+ & -\left(E^{-1}M^{\tau}\otimes I^{k-1}\otimes D\otimes I^{3-k}\right)\boldsymbol{F}_{k}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{q}_{hijk} & =\boldsymbol{w}_{ijk}+\left(E^{-1}M^{\tau}\right)_{hm}\left(\boldsymbol{S}_{mijk}-\boldsymbol{B}_{mijk}\right)\label{eq:q system}\\
+ & -\left(E^{-1}M^{\tau}\right)_{hm}\left(D_{in}\left(\boldsymbol{F}_{1}\right)_{mnjk}+D_{jn}\left(\boldsymbol{F}_{2}\right)_{mink}+D_{kn}\left(\boldsymbol{F}_{3}\right)_{mijn}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note then that 
+\begin_inset Formula $\boldsymbol{q}^{ιξκ}$
+\end_inset
+
+ is a function of 
+\begin_inset Formula $\boldsymbol{S}^{ιξκ},\boldsymbol{B}^{ιξκ},\overrightarrow{\boldsymbol{F}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{q}^{ιξκ}=\mathcal{F}\left(\boldsymbol{S}^{ιξκ}\right)+\mathcal{F}\left(\boldsymbol{B}^{ιξκ}\right)+\mathcal{G_{ιξκ}}\left(\overrightarrow{\boldsymbol{F}}^{000},\ldots,\overrightarrow{\boldsymbol{F}}^{111}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\mathcal{F},\mathcal{G_{ιξκ}}$
+\end_inset
+
+ are linear functions.
+ Note in turn that, by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:S coeffs"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{S}^{ιξκ}=\mathcal{H}\left(\bigcup_{\begin{array}{c}
+\left(0,0,0\right)\leq\left(a,b,c\right)\leq\left(ι,ξ,κ\right)\end{array}}\boldsymbol{q}^{abc}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\mathcal{H}$
+\end_inset
+
+ is a nonlinear function.
+\end_layout
+
+\begin_layout Standard
+In the case of stiff source terms, the following Picard iteration procedure
+ can be used to solve 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q system"
+
+\end_inset
+
+, as adapted from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Montecinos2017"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\boldsymbol{q}^{ιξκ}\right)_{m+1} & =\mathcal{F}\left(\mathcal{H}\left(\left(\boldsymbol{q}^{ιξκ}\right)_{m+1}\cup\bigcup_{\begin{array}{c}
+\left(0,0,0\right)\leq\left(a,b,c\right)\leq\left(ι,ξ,κ\right)\\
+\left(a,b,c\right)\neq\left(ι,ξ,κ\right)
+\end{array}}\left(\boldsymbol{q}^{abc}\right)_{m}\right)\right)\\
+ & +\mathcal{F}\left(\left(\boldsymbol{B}^{ιξκ}\right)_{m}\right)+\mathcal{G_{ιξκ}}\left(\left(\overrightarrow{\boldsymbol{F}}^{000}\right)_{m},\ldots,\left(\overrightarrow{\boldsymbol{F}}^{111}\right)_{m}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The Continuous Galerkin Method
+\end_layout
+
+\begin_layout Standard
+This method of computing the Galerkin predictor is not suitable for stiff
+ source terms, but is less computationally expensive and ensures continuity
+ across temporal cell boundaries.
+ The first 
+\begin_inset Formula $N+1$
+\end_inset
+
+ elements of 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+ are fixed by imposing the following condition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{q}\left(\chi,0\right)=\boldsymbol{w}\left(\chi\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For 
+\begin_inset Formula $\boldsymbol{v}\in\mathbb{R}^{\left(N+1\right)^{2}}$
+\end_inset
+
+ and 
+\begin_inset Formula $X\in M_{\left(N+1\right)^{2},\left(N+1\right)^{2}}\left(\mathbb{R}\right)$
+\end_inset
+
+, let 
+\begin_inset Formula $\boldsymbol{v}=\left(\boldsymbol{v^{0}},\boldsymbol{v^{1}}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $X=\left(\begin{array}{cc}
+X^{00} & X^{01}\\
+X^{10} & X^{11}
+\end{array}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{v^{0}},X^{00}$
+\end_inset
+
+ are the components relating solely to the first 
+\begin_inset Formula $N+1$
+\end_inset
+
+ components of 
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+.
+ We only need to find the latter components of 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, and thus, from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:conditions"
+
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} ^{11}\boldsymbol{q}_{\beta}^{1} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{11}\left(\boldsymbol{S}_{\beta}^{1}-\boldsymbol{B}_{\beta}^{1}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{\left(k\right)}}\right\} ^{11}\boldsymbol{F}_{k}{}_{\beta}^{1}\\
+ & +\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S}_{\beta}^{0}-\boldsymbol{B}_{\beta}^{0}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{\left(k\right)}}\right\} ^{10}\boldsymbol{F}_{k}{}_{\beta}^{0}\nonumber 
+\end{align}
+
+\end_inset
+
+Define the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} ^{11}\\
+V_{\alpha\beta}^{k} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{\left(k\right)}}\right\} ^{11}\\
+\boldsymbol{W}_{\alpha} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S}_{\beta}-\boldsymbol{B}_{\beta}\right)^{0}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{\left(k\right)}}\right\} ^{10}\boldsymbol{F}_{k}{}_{\beta}^{0}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{11}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q}_{\beta}^{1}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\boldsymbol{S}_{\beta}^{1}-\boldsymbol{B}_{\beta}^{1}\right)-V_{\alpha\beta}^{k}\boldsymbol{F}_{k}{}_{\beta}^{1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, as with the discontinuous Galerkin method, 
+\begin_inset Formula $\boldsymbol{W}$
+\end_inset
+
+ has no dependence on the degrees of freedom in 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+.
+ As the source terms are not stiff, the following iteration is used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\left(\boldsymbol{q}_{\beta}^{1}\right)_{m+1}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\left(\boldsymbol{S}_{\beta}^{1}\right)_{m}-\left(\boldsymbol{B}_{\beta}^{1}\right)_{m}\right)-V_{\alpha\beta}^{k}\left(\boldsymbol{F}_{k}{}_{\beta}^{1}\right)_{m}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Convergence Properties
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jackson2017"
+
+\end_inset
+
+ it was proved that for traditional choices of polynomial bases, the eigenvalues
+ of 
+\begin_inset Formula $U^{-1}V^{i}$
+\end_inset
+
+ are all 0 for any 
+\begin_inset Formula $N\in\mathbb{N}$
+\end_inset
+
+, for 
+\begin_inset Formula $i=1,2,3$
+\end_inset
+
+.
+ This implies that in the conservative, homogeneous case (
+\begin_inset Formula $\overrightarrow{\boldsymbol{B}}=\boldsymbol{S}=\boldsymbol{0}$
+\end_inset
+
+), owing to the Banach Fixed Point Theorem, existence and uniqueness of
+ a solution are established, and convergence to this solution is guaranteed.
+ As noted in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2009a"
+
+\end_inset
+
+, in the linear case it is implied that the iterative procedure converges
+ after at most 
+\begin_inset Formula $N+1$
+\end_inset
+
+ iterations.
+ A proof of this result for the Montecinos-Balsara polynomial basis class
+ is now provided here.
+ For the theory in linear algebra required for this section, please consult
+ a standard textbook on the subject, such as 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nering1970"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Take the definitions 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:inner product matrices"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:compound matrices"
+
+\end_inset
+
+.
+ Consider that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U^{-1}V^{k}=E^{-1}M^{\tau}\otimes I^{k-1}\otimes D\otimes I^{3-k}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(U^{-1}V^{k}\right)^{m}=\left(E^{-1}M^{\tau}\right)^{m}\otimes\left(I^{k-1}\right)^{m}\otimes D^{m}\otimes\left(I^{3-k}\right)^{m}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ is nilpotent (
+\begin_inset Formula $X^{k}=0$
+\end_inset
+
+ for some 
+\begin_inset Formula $k\in\mathbb{N}$
+\end_inset
+
+) if and only if all its eigenvalues are 0.
+ Note that 
+\begin_inset Formula $U^{-1}V^{k}$
+\end_inset
+
+ is nilpotent if 
+\begin_inset Formula $D^{m}=0$
+\end_inset
+
+ for some 
+\begin_inset Formula $m\in\mathbb{N}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Note that if 
+\begin_inset Formula $p\in P_{N}$
+\end_inset
+
+ then 
+\begin_inset Formula $p=a_{j}\psi_{j}$
+\end_inset
+
+ for some unique coefficient vector 
+\begin_inset Formula $\boldsymbol{a}$
+\end_inset
+
+.
+ Thus, taking inner products with 
+\begin_inset Formula $\psi_{i}$
+\end_inset
+
+, we have 
+\begin_inset Formula $\left\langle \psi_{i},\psi_{j}\right\rangle a_{j}=\left\langle \psi_{i},p\right\rangle $
+\end_inset
+
+ for 
+\begin_inset Formula $i=0,...,N$
+\end_inset
+
+.
+ This produces the following result:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=a_{j}\psi_{j}\Leftrightarrow\boldsymbol{a}=\left(M^{χ}\right)^{-1}\boldsymbol{x},\;x_{i}=\left\langle \psi_{i},p\right\rangle \label{eq:gramCoeffs}
+\end{equation}
+
+\end_inset
+
+ Taking 
+\begin_inset Formula $\boldsymbol{a}\in\mathbb{R}^{N+1}$
+\end_inset
+
+, define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=a_{0}\psi_{0}+\ldots+a_{N}\psi_{N}\in P_{N}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(M^{χ,1}\boldsymbol{a}\right)_{i}=\left\langle \psi_{i},\psi_{0}^{'}\right\rangle a_{0}+\ldots+\left\langle \psi_{i},\psi_{N}^{'}\right\rangle a_{N}=\left\langle \psi_{i},p^{'}\right\rangle 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:gramCoeffs"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\left(M^{χ}\right)^{-1}M^{χ,1}\boldsymbol{a}\right)_{i}\psi_{i}=\left(D\boldsymbol{a}\right)_{i}\psi_{i}=p'
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By induction:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(D^{m}\boldsymbol{a}\right)_{i}\psi_{i}=p^{\left(m\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for any 
+\begin_inset Formula $m\in\mathbb{N}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $p\in P_{N}$
+\end_inset
+
+, 
+\begin_inset Formula $D^{N+1}\boldsymbol{a}=\boldsymbol{0}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $\boldsymbol{a}$
+\end_inset
+
+ was chosen arbitrarily, 
+\begin_inset Formula $D^{N+1}=0$
+\end_inset
+
+.
+ No specific choice has been made for 
+\begin_inset Formula $N\in\mathbb{N}$
+\end_inset
+
+ and thus the result holds in general.
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "refs"
+options "bibtotoc,elsarticle-harv"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+I acknowledge financial support from the EPSRC Centre for Doctoral Training
+ in Computational Methods for Materials Science under grant EP/L015552/1.
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,2125 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+\journal{Journal of Computational Physics}
+
+% displayquote function
+\usepackage{csquotes}
+
+% Remove subsection in left header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics}
+\fancyhead[R]{\thepage}
+
+\usepackage[printwatermark]{xwatermark}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\newwatermark[allpages,color=gray!20,angle=45,scale=4,xpos=0,ypos=0]{DRAFT}
+\end_preamble
+\options 3p,times
+\use_default_options false
+\begin_modules
+theorems-std
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+A Solver Based on Eigendecomposition of the Cauchy Tensor for Godunov-Romenski-T
+ype Continuum Models
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\begin_inset Flex CorAuthormark
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex CorAuthormark
+status collapsed
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Email
+hj305@cam.ac.uk
+\end_layout
+
+\begin_layout Author
+Geraint Harcombe
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Principal corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+A formulation of the Godunov-Peshkov-Romenski model of continuum mechanics
+ based upon the Cauchy deformation tensor, rather than the distortion tensor,
+ is used to model simple laminar flow.
+ Rather than evolving the Cauchy deformation tensor itself, evolution equations
+ are presented and solved for its eigendecomposition.
+ This form of the model obviates the repeated calculations that are required
+ in the canonical model to find the eigenvalues of the full system.
+ Thus, a significant speedup is obtained, as demonstrated numerically in
+ this study.
+\end_layout
+
+\begin_layout Keywords
+Godunov-Peshkov-Romenski 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ GPR 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Continuum Mechanics 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Distortion Tensor 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Cauchy Deformation Tensor 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Eigendecomposition
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{\mathrm{tr}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\sym}{\operatorname{sym}}
+{\mathrm{sym}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\sign}{\operatorname{sign}}
+{\mathrm{sign}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Motivation
+\end_layout
+
+\begin_layout Standard
+Motivation goes here.
+\end_layout
+
+\begin_layout Subsection
+The GPR Model
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:The-GPR-Model"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GPR model, first introduced in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+, has its roots in Godunov and Romenski's 1970s model of elastoplastic deformati
+on (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Godunov1974"
+
+\end_inset
+
+).
+ It was expanded upon in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2016a"
+
+\end_inset
+
+ to include thermal conduction.
+ This expanded model takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\rho$
+\end_inset
+
+,
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+,
+\begin_inset Formula $p$
+\end_inset
+
+,
+\begin_inset Formula $\delta$
+\end_inset
+
+,
+\begin_inset Formula $\sigma$
+\end_inset
+
+,
+\begin_inset Formula $T$
+\end_inset
+
+,
+\begin_inset Formula $E$
+\end_inset
+
+,
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+ retain their usual meanings.
+ 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ are positive scalar functions, chosen according to the properties of the
+ material being modeled.
+ 
+\begin_inset Formula $A$
+\end_inset
+
+ is the distortion tensor (containing information about the deformation
+ and rotation of material elements), 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is the thermal impulse vector (a thermal analogue of momentum), 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ is the strain dissipation time, and 
+\begin_inset Formula $\tau_{2}$
+\end_inset
+
+ is the thermal impulse relaxation time.
+ 
+\begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The following definitions are given:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+p & =\rho^{2}\frac{\partial E}{\partial\rho}\\
+\sigma & =-\rho A^{T}\frac{\partial E}{\partial A}\\
+T & =\frac{\partial E}{\partial s}\\
+\boldsymbol{q} & =\frac{\partial E}{\partial s}\frac{\partial E}{\partial\boldsymbol{J}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To close the system, the equation of state must be specified, from which
+ the above quantities and the sources can be derived.
+ 
+\begin_inset Formula $E$
+\end_inset
+
+ is the sum of the contributions of the energies at the molecular scale
+ (microscale), the material element
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The concept of a 
+\shape italic
+material element
+\shape default
+ corresponds to that of a fluid parcel from fluid dynamics, applied to both
+ fluids and solids.
+\end_layout
+
+\end_inset
+
+ scale (mesoscale), and the flow scale (macroscale):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}\left(\rho,p\right)+E_{2}\left(A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EOS}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For an ideal or stiffened gas, 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p+\gamma p_{\infty}}{\left(\gamma-1\right)\rho}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $p_{\infty}=0$
+\end_inset
+
+ for an ideal gas.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{2}$
+\end_inset
+
+ is chosen to have the following quadratic form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{2}=\frac{c_{s}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is the characteristic velocity of propagation of transverse perturbations.
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is a constant related to the characteristic velocity of propagation of
+ heat waves:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{h}=\frac{\alpha}{\rho}\sqrt{\frac{T}{c_{v}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ is the Gramian matrix of the distortion tensor, and 
+\begin_inset Formula $\dev\left(G\right)$
+\end_inset
+
+ is the deviator (trace-free part) of 
+\begin_inset Formula $G$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{3}$
+\end_inset
+
+ is the usual specific kinetic energy per unit mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following forms are chosen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1}\left(\tau_{1}\right) & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
+\theta_{2}\left(\tau_{2}\right) & =\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau_{1} & =\frac{6\mu}{\rho_{0}c_{s}^{2}}\\
+\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The justification of these choices is that classical Navier–Stokes–Fourier
+ theory is recovered in the stiff limit 
+\begin_inset Formula $\tau_{1},\tau_{2}\rightarrow0$
+\end_inset
+
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2016a"
+
+\end_inset
+
+).
+ This results in the following relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
+\boldsymbol{q} & =\alpha^{2}T\boldsymbol{J}\\
+-\frac{\psi}{\theta_{1}\left(\tau_{1}\right)} & =-\frac{3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
+-\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following constraint also holds (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GPR model and Godunov and Romenski's 1970s model of elastoplastic deformatio
+n are very similar in structure.
+ The differences lie in the physical interpretation of 
+\begin_inset Formula $A$
+\end_inset
+
+, the appearance of algebraic source terms in the evolution equations for
+ 
+\begin_inset Formula $A$
+\end_inset
+
+, and the inclusion of thermal conduction by the evolution of 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+.
+ Whereas the earlier model described only solids, the new model seeks to
+ describe fluids as well.
+ In the former, 
+\begin_inset Formula $A$
+\end_inset
+
+ was viewed as describing the global deformation of the medium; it is now
+ regarded as describing the local distortion of the material elements comprising
+ the medium, containing information about their rotation and deformation.
+ Unlike in previous continuum models, material elements have not only finite
+ size, but also internal structure.
+\end_layout
+
+\begin_layout Standard
+The strain dissipation time 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ of the HPR model is a continuous analogue of Frenkel's 
+\begin_inset Quotes eld
+\end_inset
+
+particle settled life time
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jacovfrenkel1947"
+
+\end_inset
+
+; the characteristic time taken for a particle to move by a distance of
+ the same order of magnitude as the particle's size.
+ Thus, 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ characterizes the time taken for a material element to rearrange with its
+ neighbors.
+ 
+\begin_inset Formula $\tau_{1}=\infty$
+\end_inset
+
+ for solids and 
+\begin_inset Formula $\tau_{1}=0$
+\end_inset
+
+ for inviscid fluids.
+ It is in this way that the HPR model seeks to describe all three major
+ phases of matter, as long as a continuum description is appropriate for
+ the material at hand.
+\end_layout
+
+\begin_layout Standard
+The evolution equation for 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ and its contribution to the energy of the system are derived from Romenski's
+ model of hyperbolic heat transfer, originally proposed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Malyshev1984,Romenski1988"
+
+\end_inset
+
+, and implemented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Romenski2007,Romenski2010"
+
+\end_inset
+
+.
+ In this model, 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ is effectively defined as the variable conjugate to the entropy flux, in
+ the sense that the latter is the derivative of the specific internal energy
+ with respect to 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+.
+ Romenski remarks that it is more convenient to evolve 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ and 
+\begin_inset Formula $E$
+\end_inset
+
+ than the heat flux or the entropy flux, and thus the equations take the
+ form given here.
+ 
+\begin_inset Formula $\tau_{2}$
+\end_inset
+
+ characterizes the speed of relaxation of the thermal impulse due to heat
+ exchange between material elements.
+\end_layout
+
+\begin_layout Subsection
+The Cauchy Deformation Tensor
+\end_layout
+
+\begin_layout Standard
+It is noted by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Peshkov2016"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{displayquote}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As long as a fluid under consideration is simple and a flow is laminar,
+ the information about rotations of fluid particles stored in the distortion
+ 
+\begin_inset Formula $A$
+\end_inset
+
+ can be ignored and, for example, the [Cauchy] deformation tensor 
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ can be used as the state variable instead of 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ The situation becomes quite different if we consider complex fluids, e.g.,
+ liquid crystals, where the orientation of particles plays an important
+ role, and therefore, particle rotations cannot be ignored.
+ One may expect that the same is true for turbulent flows of simple Newtonian
+ fluid.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{displayquote}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, for simple laminar flows, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+ can be replaced with the following evolution equation for 
+\begin_inset Formula $G$
+\end_inset
+
+, which is easily derived from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial G_{ij}}{\partial t}+v_{k}\frac{\partial G_{ij}}{\partial x_{k}}+G_{ik}\frac{\partial v_{k}}{\partial x_{j}}+G_{jk}\frac{\partial v_{k}}{\partial x_{i}}=\frac{2\sigma_{ij}}{\rho\theta_{1}(\tau_{1})}\label{eq:G-Evolution}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ortega et al.
+ [REF] advise against using this formulation in the context of elastic-plastic
+ solid mechanics, owing to the fact that this formulation is not fully conservat
+ive, leading to the incorrect weak solution across discontinuities.
+ However...
+ [talk about DLM].
+\end_layout
+
+\begin_layout Section
+Evolution Equations for the Eigendecomposition
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Evolution-Equations-for"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Decoupling the Eigenvalues and Eigenvectors
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $G$
+\end_inset
+
+ is symmetric positive definite, it has the following eigendecomposition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+G=U\Lambda U^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Lambda$
+\end_inset
+
+ is the diagonal matrix of eigenvalues and 
+\begin_inset Formula $U$
+\end_inset
+
+ is orthonormal.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+G\dev\left(G\right)=U\Lambda U^{T}\left(U\Lambda U^{T}-\frac{\tr\left(U\Lambda U^{T}\right)}{3}I\right)=U\Lambda\dev\left(\Lambda\right)U^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:G-Evolution"
+
+\end_inset
+
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{U}\Lambda U^{T}+U\dot{\Lambda}U^{T}+U\Lambda\dot{U^{T}}+U\Lambda U^{T}\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}U\Lambda U^{T}=\frac{-2c_{s}^{2}}{\theta_{1}\left(\tau_{1}\right)}U\Lambda\dev\left(\Lambda\right)U^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\dot{X}$
+\end_inset
+
+ is the material derivative of quantity 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U^{T}\dot{U}\Lambda+\dot{\Lambda}+\Lambda\dot{U^{T}}U+\Lambda U^{T}\nabla\boldsymbol{v}U+U^{T}\nabla\boldsymbol{v}^{T}U\Lambda=\frac{-2c_{s}^{2}}{\theta_{1}\left(\tau_{1}\right)}\Lambda\dev\left(\Lambda\right)\label{eq:ULU-Evolution}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ULU-Evolution"
+
+\end_inset
+
+ is equivalent to the set of six equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\dot{\Lambda}_{ii}+\left(\Lambda U^{T}\nabla\boldsymbol{v}U+U^{T}\nabla\boldsymbol{v}^{T}U\Lambda\right)_{ii} & =\frac{-2c_{s}^{2}}{\theta_{1}\left(\tau_{1}\right)}\left(\Lambda\dev\left(\Lambda\right)\right)_{ii}\\
+\left(U^{T}\dot{U}\Lambda+\Lambda\dot{U^{T}}U\right)_{jk}+\left(\Lambda U^{T}\nabla\boldsymbol{v}U+U^{T}\nabla\boldsymbol{v}^{T}U\Lambda\right)_{jk} & =0\label{eq:eigenvec equations}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $i=1,2,3$
+\end_inset
+
+ and 
+\begin_inset Formula $\left(j,k\right)=\left(1,2\right),\left(1,3\right),\left(2,3\right)$
+\end_inset
+
+.
+ Note that these equations can be written in the more succint form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\dot{\lambda}_{i}+\lambda_{i}\left\Vert \boldsymbol{u_{i}}\right\Vert _{\sym\left(\nabla\boldsymbol{v}\right)}^{2} & =\frac{-2c_{s}^{2}}{\theta_{1}\left(\tau_{1}\right)}\lambda_{i}\left(\lambda_{i}-\bar{\lambda}\right)\label{eq:dλ/dt}\\
+\sym\left(U^{T}\dot{U}\Lambda\right)_{jk}+\sym\left(\Lambda U^{T}\nabla\boldsymbol{v}U\right)_{jk} & =0\label{eq:dU/dt}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\bar{x} & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+\sym\left(X\right) & =X+X^{T}\\
+\left\Vert \boldsymbol{u}\right\Vert _{X}^{2} & =\boldsymbol{u}^{T}X\boldsymbol{u}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that as we have 
+\begin_inset Formula $U_{i}^{T}U_{j}=\delta_{ij}$
+\end_inset
+
+, we have 
+\begin_inset Formula $\dot{U_{i}^{T}}U_{j}+U_{i}^{T}\dot{U_{j}}=0$
+\end_inset
+
+ for 
+\begin_inset Formula $i,j=1,2,3$
+\end_inset
+
+.
+ Combining these 6 independent relations with the 3 relations found in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dU/dt"
+
+\end_inset
+
+ we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{ccccccccc}
+u_{12} & u_{22} & u_{32} & u_{11} & u_{21} & u_{31} & 0 & 0 & 0\\
+u_{13} & u_{23} & u_{33} & 0 & 0 & 0 & u_{11} & u_{21} & u_{31}\\
+0 & 0 & 0 & u_{13} & u_{23} & u_{33} & u_{12} & u_{22} & u_{32}\\
+u_{11} & u_{21} & u_{31} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & u_{12} & u_{22} & u_{32} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & u_{13} & u_{23} & u_{33}\\
+u_{12}\lambda_{1} & u_{22}\lambda_{1} & u_{32}\lambda_{1} & u_{11}\lambda_{2} & u_{21}\lambda_{2} & u_{31}\lambda_{2} & 0 & 0 & 0\\
+u_{13}\lambda_{1} & u_{23}\lambda_{1} & u_{33}\lambda_{1} & 0 & 0 & 0 & u_{11}\lambda_{3} & u_{21}\lambda_{3} & u_{31}\lambda_{3}\\
+0 & 0 & 0 & u_{13}\lambda_{2} & u_{23}\lambda_{2} & u_{33}\lambda_{2} & u_{12}\lambda_{3} & u_{22}\lambda_{3} & u_{32}\lambda_{3}
+\end{array}\right)\frac{d}{dt}\left(\begin{array}{c}
+u_{11}\\
+u_{21}\\
+u_{31}\\
+u_{12}\\
+u_{22}\\
+u_{32}\\
+u_{13}\\
+u_{23}\\
+u_{33}
+\end{array}\right)=\left(\begin{array}{c}
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+u_{1}^{T}\left(\lambda_{1}\nabla\boldsymbol{v}+\lambda_{2}\nabla\boldsymbol{v}^{T}\right)u_{2}\\
+u_{3}^{T}\left(\lambda_{3}\nabla\boldsymbol{v}+\lambda_{1}\nabla\boldsymbol{v}^{T}\right)u_{1}\\
+u_{2}^{T}\left(\lambda_{2}\nabla\boldsymbol{v}+\lambda_{3}\nabla\boldsymbol{v}^{T}\right)u_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is straightforward to verify that the inverse of this system matrix is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{ccccccccc}
+-\frac{u_{12}\lambda_{2}}{\lambda_{1}-\lambda_{2}} & -\frac{u_{13}\lambda_{3}}{\lambda_{1}-\lambda_{3}} & 0 & u_{11} & 0 & 0 & \frac{u_{12}}{\lambda_{1}-\lambda_{2}} & \frac{u_{13}}{\lambda_{1}-\lambda_{3}} & 0\\
+-\frac{u_{22}\lambda_{2}}{\lambda_{1}-\lambda_{2}} & -\frac{u_{23}\lambda_{3}}{\lambda_{1}-\lambda_{3}} & 0 & u_{21} & 0 & 0 & \frac{u_{22}}{\lambda_{1}-\lambda_{2}} & \frac{u_{23}}{\lambda_{1}-\lambda_{3}} & 0\\
+-\frac{u_{32}\lambda_{2}}{\lambda_{1}-\lambda_{2}} & -\frac{u_{33}\lambda_{3}}{\lambda_{1}-\lambda_{3}} & 0 & u_{31} & 0 & 0 & \frac{u_{32}}{\lambda_{1}-\lambda_{2}} & \frac{u_{33}}{\lambda_{1}-\lambda_{3}} & 0\\
+\frac{u_{11}\lambda_{1}}{\lambda_{1}-\lambda_{2}} & 0 & -\frac{u_{13}\lambda_{3}}{\lambda_{2}-\lambda_{3}} & 0 & u_{12} & 0 & -\frac{u_{11}}{\lambda_{1}-\lambda_{2}} & 0 & \frac{u_{13}}{\lambda_{2}-\lambda_{3}}\\
+\frac{u_{21}\lambda_{1}}{\lambda_{1}-\lambda_{2}} & 0 & -\frac{u_{23}\lambda_{3}}{\lambda_{2}-\lambda_{3}} & 0 & u_{22} & 0 & -\frac{u_{21}}{\lambda_{1}-\lambda_{2}} & 0 & \frac{u_{23}}{\lambda_{2}-\lambda_{3}}\\
+\frac{u_{31}\lambda_{1}}{\lambda_{1}-\lambda_{2}} & 0 & -\frac{u_{33}\lambda_{3}}{\lambda_{2}-\lambda_{3}} & 0 & u_{32} & 0 & -\frac{u_{31}}{\lambda_{1}-\lambda_{2}} & 0 & \frac{u_{33}}{\lambda_{2}-\lambda_{3}}\\
+0 & \frac{u_{11}\lambda_{1}}{\lambda_{1}-\lambda_{3}} & \frac{u_{12}\lambda_{2}}{\lambda_{2}-\lambda_{3}} & 0 & 0 & u_{13} & 0 & -\frac{u_{11}}{\lambda_{1}-\lambda_{3}} & -\frac{u_{12}}{\lambda_{2}-\lambda_{3}}\\
+0 & \frac{u_{21}\lambda_{1}}{\lambda_{1}-\lambda_{3}} & \frac{u_{22}\lambda_{2}}{\lambda_{2}-\lambda_{3}} & 0 & 0 & u_{23} & 0 & -\frac{u_{21}}{\lambda_{1}-\lambda_{3}} & -\frac{u_{22}}{\lambda_{2}-\lambda_{3}}\\
+0 & \frac{u_{31}\lambda_{1}}{\lambda_{1}-\lambda_{3}} & \frac{u_{32}\lambda_{2}}{\lambda_{2}-\lambda_{3}} & 0 & 0 & u_{33} & 0 & -\frac{u_{31}}{\lambda_{1}-\lambda_{3}} & -\frac{u_{32}}{\lambda_{2}-\lambda_{3}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+b_{1} & =u_{2}^{T}\left(\lambda_{2}\nabla\boldsymbol{v}+\lambda_{3}\nabla\boldsymbol{v}^{T}\right)u_{3}\\
+b_{2} & =u_{3}^{T}\left(\lambda_{3}\nabla\boldsymbol{v}+\lambda_{1}\nabla\boldsymbol{v}^{T}\right)u_{1}\\
+b_{3} & =u_{1}^{T}\left(\lambda_{1}\nabla\boldsymbol{v}+\lambda_{2}\nabla\boldsymbol{v}^{T}\right)u_{2}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus,we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d}{dt}\left(\begin{array}{c}
+u_{11}\\
+u_{21}\\
+u_{31}\\
+u_{12}\\
+u_{22}\\
+u_{32}\\
+u_{13}\\
+u_{23}\\
+u_{33}
+\end{array}\right)=\left(\begin{array}{c}
+\frac{b_{3}u_{12}}{\lambda_{1}-\lambda_{2}}+\frac{b_{2}u_{13}}{\lambda_{1}-\lambda_{3}}\\
+\frac{b_{3}u_{22}}{\lambda_{1}-\lambda_{2}}+\frac{b_{2}u_{23}}{\lambda_{1}-\lambda_{3}}\\
+\frac{b_{3}u_{32}}{\lambda_{1}-\lambda_{2}}+\frac{b_{2}u_{33}}{\lambda_{1}-\lambda_{3}}\\
+\frac{b_{1}u_{13}}{\lambda_{2}-\lambda_{3}}-\frac{b_{3}u_{11}}{\lambda_{1}-\lambda_{2}}\\
+\frac{b_{1}u_{23}}{\lambda_{2}-\lambda_{3}}-\frac{b_{3}u_{21}}{\lambda_{1}-\lambda_{2}}\\
+\frac{b_{1}u_{33}}{\lambda_{2}-\lambda_{3}}-\frac{b_{3}u_{31}}{\lambda_{1}-\lambda_{2}}\\
+-\frac{b_{2}u_{11}}{\lambda_{1}-\lambda_{3}}-\frac{b_{1}u_{12}}{\lambda_{2}-\lambda_{3}}\\
+-\frac{b_{2}u_{21}}{\lambda_{1}-\lambda_{3}}-\frac{b_{1}u_{22}}{\lambda_{2}-\lambda_{3}}\\
+-\frac{b_{2}u_{31}}{\lambda_{1}-\lambda_{3}}-\frac{b_{1}u_{32}}{\lambda_{2}-\lambda_{3}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be expressed succinctly as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du_{i}}{dt} & =u_{i}\times B\\
+B_{i} & =\frac{u_{j}^{T}\left(\lambda_{j}\nabla\boldsymbol{v}+\lambda_{k}\nabla\boldsymbol{v}^{T}\right)u_{k}}{\lambda_{j}-\lambda_{k}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $i,j,k$
+\end_inset
+
+ should be taken to be cyclic permutations of 
+\begin_inset Formula $1,2,3$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Whilst it is possible to use this equation to calculate the components of
+ 
+\begin_inset Formula $U$
+\end_inset
+
+, it is unnecessarily computationally expensive.
+ As an orthogonal matrix, 
+\begin_inset Formula $U$
+\end_inset
+
+ represents a rotation of 
+\begin_inset Formula $\mathbb{R}^{3}$
+\end_inset
+
+, and thus only has 3 degrees of freedom.
+ Calculating 
+\begin_inset Formula $U$
+\end_inset
+
+ in matrix forms requires the computation of 9 components.
+ Whilst it is tempting to devise instead evolution equations for the Euler
+ angles that specify 
+\begin_inset Formula $U$
+\end_inset
+
+, one runs into the Gimbal lock [REF], making certain calculations impossible.
+ Thus, these evolution equations will now be formulated in terms of quaternions.
+\end_layout
+
+\begin_layout Subsection
+The Quaternion Representation
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\boldsymbol{q}=s+x\boldsymbol{i}+y\boldsymbol{j}+z\boldsymbol{k}$
+\end_inset
+
+ be the unit quaternion (so that 
+\begin_inset Formula $s^{2}+x^{2}+y^{2}+z^{2}=1$
+\end_inset
+
+) corresponding to the rotation matrix 
+\begin_inset Formula $U$
+\end_inset
+
+.
+ Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U=\left(\begin{array}{ccc}
+1-2y^{2}-2z^{2} & 2xy-2sz & 2zx+2sy\\
+2xy+2sz & 1-2z^{2}-2x^{2} & 2yz-2sx\\
+2zx-2sy & 2yz+2sx & 1-2x^{2}-2y^{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $s\dot{s}+x\dot{x}+y\dot{y}+z\dot{z}=0$
+\end_inset
+
+, it is straightforward to confirm that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U^{T}\dot{U}\Lambda+\Lambda\dot{U^{T}}U=2\left(\begin{array}{ccc}
+0 & \left(s\dot{z}-z\dot{s}+y\dot{x}-x\dot{y}\right)\left(\lambda_{1}-\lambda_{2}\right) & \left(s\dot{y}-y\dot{s}+x\dot{z}-z\dot{x}\right)\left(\lambda_{3}-\lambda_{1}\right)\\
+\left(s\dot{z}-z\dot{s}+y\dot{x}-x\dot{y}\right)\left(\lambda_{1}-\lambda_{2}\right) & 0 & \left(s\dot{x}-x\dot{s}+z\dot{y}-y\dot{z}\right)\left(\lambda_{2}-\lambda_{3}\right)\\
+\left(s\dot{y}-y\dot{s}+x\dot{z}-z\dot{x}\right)\left(\lambda_{3}-\lambda_{1}\right) & \left(s\dot{x}-x\dot{s}+z\dot{y}-y\dot{z}\right)\left(\lambda_{2}-\lambda_{3}\right) & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Elements 
+\begin_inset Formula $\left(2,3\right),\left(1,3\right),\left(1,2\right)$
+\end_inset
+
+ of 
+\begin_inset Formula $\sym\left(U^{T}\dot{U}\Lambda\right)$
+\end_inset
+
+ can be written in the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+2\left(\begin{array}{c}
+\left(s\dot{x}-x\dot{s}+z\dot{y}-y\dot{z}\right)\left(\lambda_{2}-\lambda_{3}\right)\\
+\left(s\dot{y}-y\dot{s}+x\dot{z}-z\dot{x}\right)\left(\lambda_{3}-\lambda_{1}\right)\\
+\left(s\dot{z}-z\dot{s}+y\dot{x}-x\dot{y}\right)\left(\lambda_{1}-\lambda_{2}\right)
+\end{array}\right)=2\left(\begin{array}{c}
+\left(s\dot{x}+x\frac{x\dot{x}+y\dot{y}+z\dot{z}}{s}+z\dot{y}-y\dot{z}\right)\left(\lambda_{2}-\lambda_{3}\right)\\
+\left(s\dot{y}+y\frac{x\dot{x}+y\dot{y}+z\dot{z}}{s}+x\dot{z}-z\dot{x}\right)\left(\lambda_{3}-\lambda_{1}\right)\\
+\left(s\dot{z}+z\frac{x\dot{x}+y\dot{y}+z\dot{z}}{s}+y\dot{x}-x\dot{y}\right)\left(\lambda_{1}-\lambda_{2}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting elements 
+\begin_inset Formula $\left(2,3\right),\left(1,3\right),\left(1,2\right)$
+\end_inset
+
+ of 
+\begin_inset Formula $\sym\left(\Lambda U^{T}\nabla\boldsymbol{v}U\right)$
+\end_inset
+
+ by 
+\begin_inset Formula $\boldsymbol{b}$
+\end_inset
+
+, from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:eigenvec equations"
+
+\end_inset
+
+ we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+2\left(\begin{array}{ccc}
+\lambda_{2}-\lambda_{3} & 0 & 0\\
+0 & \lambda_{3}-\lambda_{1} & 0\\
+0 & 0 & \lambda_{1}-\lambda_{2}
+\end{array}\right)\left(\begin{array}{ccc}
+\frac{x^{2}}{s}+s & \frac{xy}{s}+z & \frac{xz}{s}-y\\
+\frac{yx}{s}-z & \frac{y^{2}}{s}+s & \frac{yz}{s}+x\\
+\frac{zx}{s}+y & \frac{zy}{s}-x & \frac{z^{2}}{s}+s
+\end{array}\right)\left(\begin{array}{c}
+\dot{x}\\
+\dot{y}\\
+\dot{z}
+\end{array}\right)=-\boldsymbol{b}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, using the fact that 
+\begin_inset Formula $s^{2}+x^{2}+y^{2}+z^{2}=1$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\begin{array}{c}
+\dot{x}\\
+\dot{y}\\
+\dot{z}
+\end{array}\right) & =-\frac{1}{2}\left(\begin{array}{ccc}
+s & -z & y\\
+z & s & -x\\
+-y & x & s
+\end{array}\right)\left(\begin{array}{ccc}
+\frac{1}{\lambda_{2}-\lambda_{3}} & 0 & 0\\
+0 & \frac{1}{\lambda_{3}-\lambda_{1}} & 0\\
+0 & 0 & \frac{1}{\lambda_{1}-\lambda_{2}}
+\end{array}\right)\boldsymbol{b}\label{eq:dq/dt}\\
+ & =-\frac{1}{2}\left(\begin{array}{ccc}
+s & -z & y\\
+z & s & -x\\
+-y & x & s
+\end{array}\right)\left(\begin{array}{c}
+\frac{U_{2}^{T}\left(\lambda_{2}\nabla\boldsymbol{v}+\lambda_{3}\nabla\boldsymbol{v}^{T}\right)U_{\text{3}}}{\lambda_{2}-\lambda_{3}}\\
+\frac{U_{3}^{T}\left(\lambda_{3}\nabla\boldsymbol{v}+\lambda_{1}\nabla\boldsymbol{v}^{T}\right)U_{1}}{\lambda_{3}-\lambda_{1}}\\
+\frac{U_{1}^{T}\left(\lambda_{1}\nabla\boldsymbol{v}+\lambda_{2}\nabla\boldsymbol{v}^{T}\right)U_{\text{2}}}{\lambda_{1}-\lambda_{2}}
+\end{array}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In non-conservative block-matrix form, this is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\dot{x}\\
+\dot{y}\\
+\dot{z}
+\end{array}\right)=-\frac{1}{2}\left(\begin{array}{ccc}
+s & -z & y\\
+z & s & -x\\
+-y & x & s
+\end{array}\right)\left(\begin{array}{ccc}
+\frac{1}{\lambda_{2}-\lambda_{3}} & 0 & 0\\
+0 & \frac{1}{\lambda_{3}-\lambda_{1}} & 0\\
+0 & 0 & \frac{1}{\lambda_{1}-\lambda_{2}}
+\end{array}\right)\left(\begin{array}{c}
+\lambda_{2}U_{i2}U_{k3}+\lambda_{3}U_{i3}U_{k2}\\
+\lambda_{3}U_{i3}U_{k1}+\lambda_{1}U_{i1}U_{k3}\\
+\lambda_{1}U_{i1}U_{k2}+\lambda_{2}U_{i2}U_{k1}
+\end{array}\right)\partial_{k}\boldsymbol{v}_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The six equations contained in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dλ/dt"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dq/dt"
+
+\end_inset
+
+ will in this study be used to replace the nine equations contained in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+.
+ The advantage of this is that the eigendecomposition of 
+\begin_inset Formula $G$
+\end_inset
+
+ is readily calculated as part of the evolution of the system, rather than
+ having to be calculated separately at each time step.
+\end_layout
+
+\begin_layout Standard
+It should be noted that the right hand side of 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:dq/dt"
+
+\end_inset
+
+ is undefined when 
+\begin_inset Formula $\lambda_{i}=\lambda_{j}$
+\end_inset
+
+ for some 
+\begin_inset Formula $i\neq j$
+\end_inset
+
+.
+ This is because the eigenvectors of 
+\begin_inset Formula $G$
+\end_inset
+
+ are not uniquely defined when one or more eigenvalues take the same value
+ (as the corresponding eigenspaces have dimension 
+\begin_inset Formula $d>1$
+\end_inset
+
+).
+ This issue is treated numerically by taking:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\lambda_{i}-\lambda_{j}}\approx\sign\left(\frac{1}{\lambda_{i}-\lambda_{j}}\right)\times\min\left(\left|\frac{1}{\lambda_{i}-\lambda_{j}}\right|,\Theta\right)\label{eq:1/(λi-λj)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ is a large number, less than or equal to the largest representable number
+ available on the computational platform being used.
+\end_layout
+
+\begin_layout Subsection
+Bounds on the Eigenvalues of the GPR System
+\end_layout
+
+\begin_layout Section
+Numerical Results
+\end_layout
+
+\begin_layout Subsection
+Validation of the Eigendecomposition ODEs
+\end_layout
+
+\begin_layout Standard
+This test case is undertaken to determine the results of using the split
+ evolution equations for the eigenvalues and eigenvectors of 
+\begin_inset Formula $G$
+\end_inset
+
+ (as given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Evolution-Equations-for"
+
+\end_inset
+
+), under a flow with a constant strain rate tensor.
+ The value of the strain rate tensor was taken from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Peshkov2016"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial v_{i}}{\partial x_{j}}=\left(\begin{array}{ccc}
+0.62 & 0.40 & 1.14\\
+-0.28 & -1.41 & 0.59\\
+-0.19 & -0.72 & -1.28
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These values were determined randomly in the cited paper, and they are used
+ here only for comparability.
+ The particle settled life time was 
+\begin_inset Formula $\tau=1.45\times10^{-9}s$
+\end_inset
+
+.
+ The results of this test are presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-evolution-of"
+
+\end_inset
+
+.
+ As can be seen, the obtained values for the eigenvalues exactly match those
+ obtained with the original ODEs.
+ Under the original formulation, as soon as the flow starts, the eigenvectors
+ 
+\begin_inset Quotes eld
+\end_inset
+
+snap
+\begin_inset Quotes erd
+\end_inset
+
+ to their constant values after the first time step.
+ Under the new formulation, the eigenvectors relax to their true values
+ in a continuous manner.
+ The larger the parameter 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:1/(λi-λj)"
+
+\end_inset
+
+, the faster this relaxation occurs, but the stiffer the ODEs that need
+ to be solved become.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/Peshkov-Romenski.png
+	lyxscale 40
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/PR_eigenvectors1.png
+	lyxscale 40
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/PR_eigenvectors2.png
+	lyxscale 40
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/PR_eigenvectors3.png
+	lyxscale 40
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-evolution-of"
+
+\end_inset
+
+The evolution of the eigenvalues and eigenvectors of the Cauchy Deformation
+ Tensor using the canonical ODEs and the new ODEs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Stokes' First Problem
+\end_layout
+
+\begin_layout Subsection
+Viscous Shock Problem
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+Conclusions go here.
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/misc_refs,../../refs"
+options "elsarticle-harv"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+I acknowledge financial support from the EPSRC Centre for Doctoral Training
+ in Computational Methods for Materials Science under grant EP/L015552/1.
+\end_layout
+
+\begin_layout Section
+Appendix
+\end_layout
+
+\begin_layout Subsection
+System Matrices for the GPR Model
+\end_layout
+
+\end_body
+\end_document

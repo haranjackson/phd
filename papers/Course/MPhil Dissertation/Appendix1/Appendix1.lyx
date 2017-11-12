@@ -1,0 +1,320 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Derivatives of Dependent Variables
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Derivatives of Dependent Variables"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following results are used in later sections of the appendix.
+\end_layout
+
+\begin_layout Section*
+Spatial Derivatives
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial T}{\partial x_{k}} & =\frac{1}{c_{v}\left(\gamma-1\right)\rho}\frac{\partial p}{\partial x_{k}}-\frac{p+p_{\infty}}{c_{v}\left(\gamma-1\right)\rho^{2}}\frac{\partial\rho}{\partial x_{k}}\label{eq:dTdx}\\
+ & =\frac{T}{p+p_{\infty}}\frac{\partial p}{\partial x_{k}}-\frac{T}{\rho}\frac{\partial\rho}{\partial x_{k}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial q_{i}}{\partial x_{k}} & =\alpha^{2}\frac{\partial T}{\partial x_{k}}J_{i}+\alpha^{2}T\frac{\partial J_{i}}{\partial x_{k}}\label{eq:dqdx}\\
+ & =\frac{\alpha^{2}TJ_{i}}{p+p_{\infty}}\frac{\partial p}{\partial x_{k}}-\frac{\alpha^{2}TJ_{i}}{\rho}\frac{\partial\rho}{\partial x_{k}}+\alpha^{2}T\frac{\partial J_{i}}{\partial x_{k}}\nonumber \\
+ & =\frac{q_{i}}{p+p_{\infty}}\frac{\partial p}{\partial x_{k}}-\frac{q_{i}}{\rho}\frac{\partial\rho}{\partial x_{k}}+\alpha^{2}T\frac{\partial J_{i}}{\partial x_{k}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Additionally, with 
+\begin_inset Formula $E$
+\end_inset
+
+ defined as in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyDefinition"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial E}{\partial x_{k}}=\frac{1}{\left(\gamma-1\right)\rho}\frac{\partial p}{\partial x_{i}}-\frac{E_{1}}{\rho}\frac{\partial\rho}{\partial x_{k}}+\psi_{mn}\frac{\partial A_{mn}}{\partial x_{k}}+\alpha^{2}J_{m}\frac{\partial J_{m}}{\partial x_{k}}+v_{m}\frac{\partial v_{m}}{\partial x_{k}}\label{eq:dEdx}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $\frac{\partial E}{\partial A}$
+\end_inset
+
+ is a function of 
+\begin_inset Formula $A$
+\end_inset
+
+ only, 
+\begin_inset Formula $\frac{\partial\sigma}{\partial\rho}=\frac{\sigma}{\rho}$
+\end_inset
+
+, giving:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\sigma_{ik}}{\partial x_{k}} & =\frac{\partial\sigma_{ik}}{\partial\rho}\frac{\partial\rho}{\partial x_{k}}+\frac{\partial\sigma_{ik}}{\partial A_{mn}}\frac{\partial A_{mn}}{\partial x_{k}}\label{eq:dsigma/dx}\\
+ & =\frac{\sigma_{ik}}{\rho}\frac{\partial\rho}{\partial x_{k}}+\frac{\partial\sigma_{ik}}{\partial A_{mn}}\frac{\partial A_{mn}}{\partial x_{k}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Derivatives with Respect to the Distortion Tensor
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial A_{ki}A_{kj}}{\partial A_{mn}}=\frac{\partial A_{ki}}{\partial A_{mn}}A_{kj}+A_{ki}\frac{\partial A_{kj}}{\partial A_{mn}}=\delta_{km}\delta_{in}A_{kj}+A_{ki}\delta_{km}\delta_{jn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $G_{ij}=\left(A^{T}A\right)_{j}=A_{ki}A_{kj}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial G_{ij}}{\partial A_{mn}} & =\delta_{in}A_{mj}+\delta_{jn}A_{mi}\\
+\frac{\partial\tr\left(G\right)}{\partial A_{mn}}=\frac{\partial G_{kk}}{\partial A_{mn}} & =2A_{mn}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining these results:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\dev\left(G\right)_{ij}}{\partial A_{mn}}=\delta_{in}A_{mj}+\delta_{jn}A_{mi}-\frac{2}{3}\delta_{ij}A_{mn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(G\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\frac{\partial G_{it}}{\partial A_{mn}}\dev\left(G\right)_{tj}+G_{it}\frac{\partial\dev\left(G\right)_{tj}}{\partial A_{mn}}\\
+ & =\left(\delta_{in}A_{mt}+\delta_{tn}A_{mi}\right)\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)\nonumber \\
+ & \quad+\left(A_{ki}A_{kt}\right)\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)\nonumber \\
+ & =\delta_{in}\left(A_{mt}A_{kt}A_{kj}-\frac{1}{3}A_{mj}A_{kl}A_{kl}\right)+\delta_{jn}\left(A_{ki}A_{kt}A_{mt}-\frac{1}{3}A_{mi}A_{kl}A_{kl}\right)\nonumber \\
+ & \quad+A_{mi}A_{kn}A_{kj}+A_{ki}A_{kn}A_{mj}-\frac{2}{3}A_{ki}A_{kj}A_{mn}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, as 
+\begin_inset Formula $\sigma=-\rho c_{s}^{2}G\dev\left(G\right)$
+\end_inset
+
+, the partial derivative of 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $A$
+\end_inset
+
+, holding 
+\begin_inset Formula $\rho$
+\end_inset
+
+ constant, is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\sigma_{ij}}{\partial A_{mn}}=-c_{s}^{2}\rho\left(\delta_{in}\left(A\dev\left(G\right)\right)_{mj}+\delta_{jn}\left(A\dev\left(G\right)\right)_{mi}+A_{mi}G_{jn}+A_{mj}G_{in}-\frac{2}{3}G_{ij}A_{mn}\right)\label{eq:dsigma/dA}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

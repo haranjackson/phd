@@ -1,0 +1,1594 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage,12pt,numbered
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\branch ChildOnly
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Numerical Results: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+mbox{Cookoff}
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Numerical-Results-Cookoff"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Viscous Shock-Induced Detonation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Viscous-Shock-Induced-Detonation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The HPR model is now combined with discrete ignition temperature reaction
+ kinetics to model a ZND detonation wave
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Zel'dovich 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zeldovich1940"
+
+\end_inset
+
+, von Neumann 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Neumann1942"
+
+\end_inset
+
+, and Döring 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Doring1943"
+
+\end_inset
+
+ independently proposed this detonation model, whereby reactive gas is compresse
+d to high pressure by an infinitely thin shock wave into a 
+\shape italic
+von Neumann spike
+\shape default
+, initiating the reaction.
+ The reaction zone is located behind the spike.
+ In the reference frame of the shock, the gas moves supersonically ahead
+ of the shock, subsonically in the reaction zone, and sonically in the region
+ behind the reaction zone (which is described by the Chapman-Jouget state
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chapman1899,Jouget1905"
+
+\end_inset
+
+.
+ The energy released in the reaction is transported acoustically to the
+ shock to support it.
+\end_layout
+
+\end_inset
+
+ in a viscous, reactive, ideal gas.
+ The test consists of a CJ wave with speed 1, traveling into a region of
+ totally unburnt gas.
+ The initial conditions are taken from Helzel et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Helzel2000"
+
+\end_inset
+
+ and are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:DiscreteIgnitionTemperatureKinetics"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "ZND"
+description "Zel'dovich-Neumann-Döring"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "CJ"
+description "Chapman–Jouguet"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0.25$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{1.4}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\geq0.25$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.887565$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.191709$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\text{−}0.577350,0,0\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{0.887565}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:DiscreteIgnitionTemperatureKinetics"
+
+\end_inset
+
+Initial conditions for the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $p_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.75$
+\end_inset
+
+, 
+\begin_inset Formula $Q_{c}=1$
+\end_inset
+
+, 
+\begin_inset Formula $K_{0}=250$
+\end_inset
+
+, 
+\begin_inset Formula $T_{i}=0.25$
+\end_inset
+
+.
+ The results for grids of 400 and 1600 cells at time 
+\begin_inset Formula $t=0.5$
+\end_inset
+
+ are found in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+.
+ They are to be compared with those by Hidalgo and Dumbser 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+.
+ The simulation with 400 cells corresponds well with that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+, and the simulation with 1600 cells is very close to Hidalgo's total variation
+ diminishing reference solution calculated with 10,000 cells.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is well resolved, with the thin reaction zone behind
+ it (corresponding to the region in which the concentration decreases from
+ 1 to 0).
+ The CJ state is maintained correctly behind the reaction zone.
+ The spurious wave in the density is explained in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+ as being due to initialisation errors occurring as a result of using exact
+ algebraic conditions for an ideal (infinitely thin) CJ detonation wave,
+ which are solved with a viscous model with finite reaction rate.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/hidalgo/p.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/hidalgo/r.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/hidalgo/c.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/hidalgo/v.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+Pressure, density, concentration of reactant, and velocity (in the reference
+ frame of the shock) in the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Heating-Induced Deflagration
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a step towards modeling the slow cooking off problem, the HPR model is
+ now applied to the situation presented by Clarke, Kassoy and Riley 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1984,Clarke1986,Clarke1990"
+
+\end_inset
+
+.
+ Here, the domain 
+\begin_inset Formula $x\in\left[0,8.5\times10^{-6}\right]$
+\end_inset
+
+ is occupied by an ideal gas with initial conditions 
+\begin_inset Formula $\rho=\rho_{0}=1.176$
+\end_inset
+
+, 
+\begin_inset Formula $p=p_{0}=101325$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+ and material parameters 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=55$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=500$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.98\times10^{-5}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.72$
+\end_inset
+
+.
+ These values are chosen to be similar to air at room temperature.
+\end_layout
+
+\begin_layout Standard
+Thermal energy is added at the left boundary at a high power of 
+\begin_inset Formula $\frac{\gamma p_{0}c_{0}}{P_{r}\left(\gamma-1\right)}$
+\end_inset
+
+ (around 
+\begin_inset Formula $1.7\times10^{8}Wm^{-2}$
+\end_inset
+
+).
+ The test is performed with both a combustible and an inert gas.
+ In the former case, the initial concentration is set to 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+.
+ Arrhenius reaction kinetics are used, with 
+\begin_inset Formula $Q_{c}=6\gamma c_{v}T_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{c}=7\times10^{10}$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon=\frac{1}{20}$
+\end_inset
+
+.
+ The subsequent evolutions of the systems for 400 cells are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:CKR"
+
+\end_inset
+
+.
+ Nondimensionalised time and length variables 
+\begin_inset Formula $t^{*},x^{*}$
+\end_inset
+
+ are used, as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1986"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+t & =\frac{\mu}{p_{0}\gamma}t^{*}\\
+x & =\frac{\mu c_{0}}{p_{0}\gamma}x^{*}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are no analogues for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ in the models used by Clarke et al.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is given the experimentally-derived value for 
+\begin_inset Formula $CH_{3}Cl$
+\end_inset
+
+ at 30°C given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is chosen by trial and error so that the HPR results corresponded with
+ those in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1986"
+
+\end_inset
+
+.
+ The results presented here are thus close, but not identical to those of
+ Clarke et al.
+\end_layout
+
+\begin_layout Standard
+Note that heating the inert gas produces an acoustic wave of constant pressure,
+ propagating ahead of the temperature curve.
+ This pressure wave is also present in the heating of the combustible gas,
+ where it proceeds in front of the combustion wave.
+ The temperature increase accompanying this acoustic wave is not enough
+ to ignite the reactive gas, and the thin reaction zone lags behind the
+ acoustic wavefront.
+ Although the combustion wave is referred to as a detonation wave in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1986"
+
+\end_inset
+
+, it would now commonly be called a deflagration wave, as it travels subsonicall
+y and is not coincident with the shock wave.
+ This phenomenon of a second, faster shock overtaking the combustion wave
+ demonstrated experimentally by Kapila et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kapila2002"
+
+\end_inset
+
+, with a full mathematical analysis provided by Short 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Short1997"
+
+\end_inset
+
+, where it is shown to result from the steep temperature gradient at the
+ time of ignition.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/ckr/non_reactive/T.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/ckr/reactive/T.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/ckr/non_reactive/p.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/ckr/reactive/p.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/ckr/non_reactive/c.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/ckr/reactive/c.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:CKR"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ deflagration test with inert gas (left) / reactive gas (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Heating-Induced Detonation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Heating-Induced-Detonation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is now demonstrated that the heating-induced deflagration test can result
+ in detonation if the temperature gradient upon ignition is less steep.
+ This test is identical to the previous test, with one exception: 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is given the higher value of 
+\begin_inset Formula $\frac{1}{15}$
+\end_inset
+
+.
+ Thus, the activation energy is effectively lower, or equivalently, the
+ whole gas volume is relatively closer to the ignition temperature when
+ the gas at the left boundary ignites.
+ The results of this test are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is present and well resolved, with a thin reaction
+ zone appearing behind it in the concentration plot.
+ Unlike in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Viscous-Shock-Induced-Detonation"
+
+\end_inset
+
+, the system does not relax to the CJ state behind the detonation wave,
+ as thermal energy is continually added to the reflective left boundary.
+ The region behind the reaction zone is thus complex.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/detonation/epsilon=15^-1/ckr_BC/nx=400/T.png
+	lyxscale 50
+	height 30theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/detonation/epsilon=15^-1/ckr_BC/nx=400/p.png
+	lyxscale 50
+	height 30theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/detonation/epsilon=15^-1/ckr_BC/nx=400/c.png
+	lyxscale 50
+	height 30theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Slow Cookoff
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Slow Cookoff"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The performance of the isobaric cookoff technique presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Slow Cookoff on Bounded Domains"
+
+\end_inset
+
+ will now be investigated.
+ The initial conditions for a combustible gas are taken from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+.
+ There is a time-dependent fixed-temperature boundary condition on the left,
+ as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+, and the right boundary is reflective.
+ The temperature at the left boundary is given by 
+\begin_inset Formula $T=T_{0}\left(1+t\cdot10^{6}\right)$
+\end_inset
+
+.
+ Thus, this test can still be considered a quick cookoff in most contexts,
+ but the heating process is four orders of magnitude slower than in the
+ previous two tests; slow enough to demonstrate the isobaric cookoff technique.
+\end_layout
+
+\begin_layout Standard
+Unlike in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+, as the heating rate is relatively low, the temperature gradient is fairly
+ shallow at ignition, resulting in detonation rather than deflagration.
+ The detonation wave reaches the end of the domain at about 
+\begin_inset Formula $t=8.6\times10^{-7}$
+\end_inset
+
+, with the long heating phase taking up most of this time.
+ The detonation wave forms at around 
+\begin_inset Formula $8.5\times10^{-7}$
+\end_inset
+
+.
+ When using the isobaric cookoff technique, the full system is only calculated
+ from around 
+\begin_inset Formula $t=7\times10^{-7}$
+\end_inset
+
+ onward.
+\end_layout
+
+\begin_layout Standard
+The heating phase is shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Slow-Heating-1"
+
+\end_inset
+
+ at 9 equispaced points in time.
+ The temperature profiles between the reduced and full system are very close.
+ The constant pressure assumption works very well, as the heating rate is
+ slow enough for the pressure differences it generates to equilibrate, and
+ the domain is short enough that any acoustic waves emitted from the left
+ boundary rebound into the domain.
+ The pressure at each time step is slightly higher in the full system than
+ the reduced system.
+ This is due to the non-zero fluid velocities present in the full system
+ (but not the reduced system) carrying heated material away from the left
+ boundary, meaning that slightly more energy enters this system, as the
+ boundary is held at a fixed, time-dependent value.
+\end_layout
+
+\begin_layout Standard
+The zero velocities of the reduced system do not affect the shape of the
+ final detonation wave, as the velocities in the full system are relatively
+ small, but the indirect effect of this discrepancy on the total energy
+ of the system means that the reduced system detonates about 
+\begin_inset Formula $6.55\times10^{-9}s$
+\end_inset
+
+ later than the full system
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Detonation is defined here as the point at which 2.5% of reactant in any
+ cell has burned; a fairly arbitrary measure, to be discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:The-Isobaric-Cookoff-Technique"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+.
+ The subsequent evolution of the systems are almost indistinguishable (see
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Slow-Heating-2"
+
+\end_inset
+
+).
+ Proposals to rectify the discrepancy in the total energies of the systems
+ are discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:The-Isobaric-Cookoff-Technique"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+During the heating phase, the average time step for the reduced system was
+ 
+\begin_inset Formula $\Delta t=5.758\times10^{-11}$
+\end_inset
+
+, as opposed to 
+\begin_inset Formula $\Delta t=4.447\times10^{-11}$
+\end_inset
+
+ for the full system.
+ This relatively small difference is attributed to the fact that the heat
+ characteristics are relatively fast with the values of the material parameters
+ used (chosen to match those used in the heating-induced deflagration test).
+ However, the WENO, DG, and FV steps took on average 0.0703s, 0.8355s, and
+ 0.9326s respectively per iteration of the full system.
+ The operator splitting solver took on average 0.0001522s per iteration of
+ the reduced system (a speed-up of over 4 orders of magnitude).
+ In both cases, the auxiliary functions (such as those applying the boundary
+ conditions) took on average 0.01547s per iteration
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+All times quoted here resulted from running a single-threaded implementation
+ of the solver on an Intel Core i7 4910-MQ.
+\end_layout
+
+\end_inset
+
+.
+ Thus, the heating phase took a total of 25740s with the full system, and
+ 168s with the reduced system (a roughly 150-fold speed-up).
+ Of course, these results are very implementation- and hardware-specific,
+ and alternative implementations, running on different platforms may yield
+ very different results.
+ This is discussed further in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:The-Isobaric-Cookoff-Technique"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/reduced/T_early.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/full/T_early.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/reduced/p_early.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/full/p_early.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/reduced/v_early.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/full/v_early.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Slow-Heating-1"
+
+\end_inset
+
+Temperature, pressure, and velocity in the heating phase of the slow cookoff
+ test for the reduced system (left) / full system (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/reduced/p_late.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/full/p_late.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/reduced/T_late.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/full/T_late.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/reduced/c_late.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/cookoff/slow/doubleTime=1e-6/full/c_late.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Slow-Heating-2"
+
+\end_inset
+
+Pressure, temperature, and concentration of reactant in the detonation phase
+ of the slow cookoff test for the reduced system (left) / full system (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch ChildOnly
+status collapsed
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../references"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

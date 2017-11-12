@@ -1,0 +1,1766 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+\journal{Journal of Computational Physics}
+\end_preamble
+\options final,5p,times,twocolumn
+\use_default_options false
+\begin_modules
+theorems-std
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+On the Eigenvalues of the ADER-WENO Galerkin Predictor
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\end_layout
+
+\begin_layout Email
+hj305@cam.ac.uk
+\end_layout
+
+\begin_layout Address
+Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\end_layout
+
+\begin_layout Abstract
+ADER-WENO methods represent an effective set of techniques for solving hyperboli
+c systems of PDEs.
+ These systems may be non-conservative and non-homogeneous, and contain
+ stiff source terms.
+ The methods require a spatio-temporal reconstruction of the data in each
+ spacetime cell, at each time step.
+ This reconstruction is obtained as the root of a nonlinear system, resulting
+ from the use of a Galerkin method.
+ It is proved here that the eigenvalues of certain matrices appearing in
+ these nonlinear systems are always 0, regardless of the number of spatial
+ dimensions of the PDEs, or the chosen order of accuracy of the ADER-WENO
+ method.
+ This guarantees fast convergence to the Galerkin root for certain classes
+ of PDEs.
+\end_layout
+
+\begin_layout Keywords
+ADER-WENO 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Galerkin 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Eigenvalues 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Convergence
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Standard
+ADER-WENO methods have proved extremely useful in obtaining arbitrarily
+ high-order solutions to problems involving hyperbolic systems of PDEs.
+ For example, it has been demonstrated that for the same computational cost
+ as a Runge-Kutta scheme of a certain order, one can obtain an ADER scheme
+ of one higher order of accuracy (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Balsara2013"
+
+\end_inset
+
+).
+ Additionally, Runge-Kutta schemes suffer from the presence of Butcher barriers
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Butcher2009"
+
+\end_inset
+
+), limiting the order of temporal accuracy that one can comfortably achieve.
+ There are no such limitations present in ADER-WENO schemes.
+\end_layout
+
+\begin_layout Standard
+The cumbersome analytical derivation of the temporal derivatives of the
+ solution required by the original ADER formulation (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Toro2009"
+
+\end_inset
+
+) has been replaced by the use of a cell-wise local Galerkin predictor.
+ The predictor can take either a discontinuous or a continuous form (see
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2008"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Balsara2009"
+
+\end_inset
+
+, respectively).
+ The Galerkin predictor is a high-order polynomial reconstruction of the
+ data in both space and time, found as the root of a non-linear system.
+\end_layout
+
+\begin_layout Standard
+It has been conjectured that the eigenvalues of certain matrices appearing
+ in these non-linear systems are always zero, leading to desirable system
+ properties for certain classes of PDEs.
+ It is proved here that this is in deed the case for any number of spatial
+ dimensions and any desired order of accuracy, for both the discontinuous
+ and continuous Galerkin variants.
+ This result is independent of the choice of reconstruction basis polynomials.
+\end_layout
+
+\begin_layout Standard
+The Einstein summation convention is to be assumed throughout this paper.
+\end_layout
+
+\begin_layout Section
+The ADER-WENO Method
+\end_layout
+
+\begin_layout Standard
+Take a non-homogeneous, non-conservative (and for simplicity, one-dimensional)
+ hyperbolic system of the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:NonConservativeSystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ is the vector of conserved variables, 
+\begin_inset Formula $\boldsymbol{F}$
+\end_inset
+
+ is the conservative nonlinear flux, 
+\begin_inset Formula $B$
+\end_inset
+
+ is the matrix corresponding to the purely non-conservative component of
+ the system, and 
+\begin_inset Formula $\boldsymbol{S}\left(\boldsymbol{Q}\right)$
+\end_inset
+
+ is the algebraic source vector.
+\end_layout
+
+\begin_layout Standard
+Take the set of grid points 
+\begin_inset Formula $x_{0}<x_{1}<\ldots<x_{K}$
+\end_inset
+
+ and define 
+\begin_inset Formula $\Delta x_{i}=x_{i+1}-x_{i}$
+\end_inset
+
+.
+ Take the time steps 
+\begin_inset Formula $t_{0}<t_{1}<\ldots$
+\end_inset
+
+ while defining 
+\begin_inset Formula $\Delta t_{n}=t_{n+1}-t_{n}$
+\end_inset
+
+.
+ Following the formulations presented in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2009,Dumbser2014,Balsara2009"
+
+\end_inset
+
+, the WENO method and Galerkin method produce at each time step 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ a local polynomial approximation to 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ on each space-time cell 
+\begin_inset Formula $\left[x_{i},x_{i+1}\right]\times\left[t_{n},t_{n+1}\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Define the scaled space variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\chi^{i}=\frac{1}{\Delta x_{i}}\left(x-x_{i}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take a basis 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ of 
+\begin_inset Formula $P_{N}$
+\end_inset
+
+ and inner product 
+\begin_inset Formula $\left\langle \cdot,\cdot\right\rangle $
+\end_inset
+
+.
+ This basis can either be nodal (
+\begin_inset Formula $\psi_{i}\left(\chi_{j}\right)=\delta_{ij}$
+\end_inset
+
+ where 
+\begin_inset Formula $\left\{ \chi_{0},\ldots,\chi_{N}\right\} $
+\end_inset
+
+ are a set of nodal points, such as the Gauss-Legendre abscissae), or modal
+ (such as the Jacobi polynomials).
+\end_layout
+
+\begin_layout Standard
+The WENO method (as used in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2013"
+
+\end_inset
+
+) produces an order-
+\begin_inset Formula $N$
+\end_inset
+
+ polynomial reconstruction of the data at time 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ in cell 
+\begin_inset Formula $\left[x_{i},x_{i+1}\right]$
+\end_inset
+
+, using 
+\begin_inset Formula $\left\{ \psi_{0},\ldots,\psi_{N}\right\} $
+\end_inset
+
+ as a basis.
+ This is denoted:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{w}\left(x\right)=\boldsymbol{w_{\gamma}}\psi_{\gamma}\left(\chi^{i}\left(x\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This spatial reconstruction at the start of the time step is to be used
+ as initial data in the problem of finding the Galerkin predictor.
+\end_layout
+
+\begin_layout Standard
+Now define the scaled time variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau^{n}=\frac{1}{\Delta t_{n}}\left(t-t_{n}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem"
+
+\end_inset
+
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\tau^{n}}+\frac{\partial\boldsymbol{F^{*}}\left(\boldsymbol{Q}\right)}{\partial\chi^{i}}+B^{*}\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi^{i}}=\boldsymbol{S^{*}}\left(\boldsymbol{Q}\right)\label{eq:NonDimensionalNonConservativeSystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F^{*}}=\frac{\Delta t_{n}}{\Delta x}\boldsymbol{F}\qquad B^{*}=\frac{\Delta t_{n}}{\Delta x}B\qquad\boldsymbol{S^{*}}=\Delta t_{n}\boldsymbol{S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The non-dimensionalization notation and spacetime cell indexing notation
+ will be dropped for simplicity in what follows.
+ Now define the set of spatio-temporal basis functions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \theta_{k}\left(\chi,\tau\right)\right\} =\left\{ \psi_{p}\left(\chi\right)\psi_{s}\left(\tau\right):0\leq p,s\leq N\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting the Galerkin predictor by 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, take the following set of approximations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q} & \approx\boldsymbol{q}=\theta_{\beta}\boldsymbol{q_{\beta}}\\
+\boldsymbol{F}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{F_{\beta}}\\
+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi} & \approx\theta_{\beta}\boldsymbol{B_{\beta}}\\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S_{\beta}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for some coefficients 
+\begin_inset Formula $\boldsymbol{q_{\beta}},\boldsymbol{F_{\beta}},\boldsymbol{B_{\beta}},\boldsymbol{S_{\beta}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ is a nodal basis, the 
+\shape italic
+nodal basis representation
+\shape default
+ may be used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{F_{\beta}} & =\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
+\boldsymbol{B_{\beta}} & =B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\\
+\boldsymbol{S_{\beta}} & =\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\left(\chi_{\beta},\tau_{\beta}\right)$
+\end_inset
+
+ are the coordinates of the node corresponding to basis function 
+\begin_inset Formula $\theta_{\beta}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If a modal basis is used, 
+\begin_inset Formula $\boldsymbol{F_{\beta}},\boldsymbol{B_{\beta}},\boldsymbol{S_{\beta}}$
+\end_inset
+
+ may be found from the previous values of 
+\begin_inset Formula $\boldsymbol{q_{\beta}}$
+\end_inset
+
+ in the iterative processes described below.
+\end_layout
+
+\begin_layout Standard
+For functions 
+\begin_inset Formula $f\left(\chi,\tau\right)=f_{χ}\left(χ\right)f_{τ}\left(τ\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $g\left(\chi,\tau\right)=g_{χ}\left(χ\right)g_{τ}\left(τ\right)$
+\end_inset
+
+, define the following integral operators:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left[f,g\right]^{t} & =f_{τ}\left(t\right)g_{τ}\left(t\right)\left\langle f_{χ},g_{χ}\right\rangle \\
+\left\{ f,g\right\}  & =\left\langle f_{\tau},g_{\tau}\right\rangle \left\langle f_{χ},g_{χ}\right\rangle 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonDimensionalNonConservativeSystem"
+
+\end_inset
+
+ by test function 
+\begin_inset Formula $\theta_{\alpha}$
+\end_inset
+
+, using the polynomial approximations for 
+\begin_inset Formula $\boldsymbol{Q},\boldsymbol{F},\boldsymbol{B},\boldsymbol{S}$
+\end_inset
+
+, and integrating over space and time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} \boldsymbol{q_{\beta}} & =-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}+\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\label{eq:InitialSystem}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The Discontinuous Galerkin Method
+\end_layout
+
+\begin_layout Standard
+This method of computing the Galerkin predictor allows solutions to be discontin
+uous at temporal cell boundaries, and is also suitable for stiff source
+ terms.
+\end_layout
+
+\begin_layout Standard
+Integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:InitialSystem"
+
+\end_inset
+
+ by parts in time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \right)\boldsymbol{q_{\beta}} & =\left[\theta_{\alpha},\boldsymbol{w}\right]^{0}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}\\
+ & +\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{w}$
+\end_inset
+
+ is the reconstruction obtained at the start of the time step with the WENO
+ method.
+ Define the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \\
+V_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \\
+\boldsymbol{W_{\alpha}} & =\left[\theta_{\alpha},\psi_{\gamma}\right]^{0}\boldsymbol{w_{\gamma}}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}}=\boldsymbol{W_{\alpha}}-V_{\alpha\beta}\boldsymbol{F_{\beta}}+Z_{\alpha\beta}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This nonlinear system in 
+\begin_inset Formula $\boldsymbol{q_{\beta}}$
+\end_inset
+
+ is solved by a Newton method.
+ The source terms must be solved implicitly if they are stiff.
+ Note that 
+\begin_inset Formula $\boldsymbol{W}$
+\end_inset
+
+ has no dependence on 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+The Continuous Galerkin Method
+\end_layout
+
+\begin_layout Standard
+This method of computing the Galerkin predictor is not suitable for stiff
+ source terms, but it provides substantial savings on computational cost
+ and ensures continuity across temporal cell boundaries.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ must be chosen in such a way that the first 
+\begin_inset Formula $N+1$
+\end_inset
+
+ elements of 
+\begin_inset Formula $\left\{ \theta_{\beta}\right\} $
+\end_inset
+
+ have only a spatial dependence.
+ The first 
+\begin_inset Formula $N+1$
+\end_inset
+
+ elements of 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+ are then fixed by demanding continuity at 
+\begin_inset Formula $\tau=0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{q}\left(\chi,0\right)=\boldsymbol{w}\left(\chi\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{w}$
+\end_inset
+
+ is spatial the reconstruction obtained at the start of the time step with
+ the WENO method.
+\end_layout
+
+\begin_layout Standard
+For a given vector 
+\begin_inset Formula $\boldsymbol{v}\in\mathbb{R}^{\left(N+1\right)^{2}}$
+\end_inset
+
+ and matrix 
+\begin_inset Formula $X\in M_{\left(N+1\right)^{2},\left(N+1\right)^{2}}\left(\mathbb{R}\right)$
+\end_inset
+
+, let 
+\begin_inset Formula $\boldsymbol{v}=\left(\boldsymbol{v^{0}},\boldsymbol{v^{1}}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $X=\left(\begin{array}{cc}
+X^{00} & X^{01}\\
+X^{10} & X^{11}
+\end{array}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{v^{0}},X^{00}$
+\end_inset
+
+ are the components relating solely to the first 
+\begin_inset Formula $N+1$
+\end_inset
+
+ components of 
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+.
+ We only need to find the latter components of 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, and thus, from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:InitialSystem"
+
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} ^{11}\boldsymbol{q_{\beta}^{1}} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{11}\left(\boldsymbol{S_{β}^{1}}-\boldsymbol{B_{β}^{1}}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{11}\boldsymbol{F_{\beta}^{1}}\\
+ & +\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S_{β}^{0}}-\boldsymbol{B_{β}^{0}}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{10}\boldsymbol{F_{\beta}^{0}}\nonumber 
+\end{align}
+
+\end_inset
+
+Define the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} ^{11}\\
+V_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{11}\\
+\boldsymbol{W_{\alpha}} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)^{0}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{10}\boldsymbol{F_{\beta}^{0}}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{11}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}^{1}}=\boldsymbol{W_{\alpha}}-V_{\alpha\beta}\boldsymbol{F_{\beta}^{1}}+Z_{\alpha\beta}\left(\boldsymbol{S_{β}^{1}}-\boldsymbol{B_{β}^{1}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, as with the discontinuous Galerkin method, 
+\begin_inset Formula $\boldsymbol{W}$
+\end_inset
+
+ has no dependence on the degrees of freedom in 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Conjecture
+\end_layout
+
+\begin_layout Standard
+Extending the Galerkin method described in the previous section to three
+ dimensions, the following system must be solved for 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta}\boldsymbol{q_{\beta}} & =\boldsymbol{W_{\alpha}}-V_{\alpha\beta}^{1}\boldsymbol{F_{\beta}}-V_{\alpha\beta}^{2}\boldsymbol{G_{\beta}}-V_{\alpha\beta}^{3}\boldsymbol{H_{\beta}}\label{eq:DGIteration}\\
+ & +Z_{\alpha\beta}\left(\boldsymbol{S_{\beta}}-\boldsymbol{B_{\beta}}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where now we have the 3 scaled spatial variables 
+\begin_inset Formula $\chi_{1},\chi_{2},\chi_{3}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{G,H}$
+\end_inset
+
+ are the flux components in the second and third spatial directions, respectivel
+y.
+ In the case of the continuous Galerkin method, it is assumed that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DGIteration"
+
+\end_inset
+
+ is to be solved for only the non-fixed degrees of freedom in 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+.
+ The matrices 
+\begin_inset Formula $V_{\alpha\beta}^{i}$
+\end_inset
+
+ are defined thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{\alpha\beta}^{i}=\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi_{i}}\right\rangle 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the discontinuous Galerkin method, 
+\begin_inset Formula $\boldsymbol{W_{\alpha}}$
+\end_inset
+
+ now takes the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{W_{\alpha}}=\left[\theta_{\alpha},\Psi_{\gamma}\right]^{0}\boldsymbol{w_{\gamma}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Psi_{\gamma}\left(\chi_{1},\chi_{2},\chi_{3}\right)$
+\end_inset
+
+ is an element of the following set, enumerated by 
+\begin_inset Formula $\gamma$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \psi_{i}\left(\chi_{1}\right)\psi_{j}\left(\chi_{2}\right)\psi_{c}\left(\chi_{3}\right):0\leq i,j,k\leq N\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the continuous Galerkin method, 
+\begin_inset Formula $\boldsymbol{W_{\alpha}}$
+\end_inset
+
+ now takes the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{W_{\alpha}} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)^{0}\\
+ & -\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{1}}\right\} ^{10}\boldsymbol{F_{\beta}^{0}}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{2}}\right\} ^{10}\boldsymbol{G_{\beta}^{0}}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{2}}\right\} ^{10}\boldsymbol{H_{\beta}^{0}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2008"
+
+\end_inset
+
+ remark that for the continuous Galerkin case, the eigenvalues of 
+\begin_inset Formula $U^{-1}V^{i}$
+\end_inset
+
+ are all 0 for 
+\begin_inset Formula $0\leq N\leq5$
+\end_inset
+
+, for 
+\begin_inset Formula $i=1,2,3$
+\end_inset
+
+.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2009a"
+
+\end_inset
+
+ state the same result for the discontinuous Galerkin case.
+ This implies that in the conservative, homogeneous case (
+\begin_inset Formula $\boldsymbol{B}=\boldsymbol{S}=\boldsymbol{0}$
+\end_inset
+
+), owing to the Banach Fixed Point Theorem, existence and uniqueness of
+ a solution are established, and convergence to this solution is guaranteed.
+ As noted in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2009a"
+
+\end_inset
+
+, in the linear case it is implied that the iterative procedure converges
+ after at most 
+\begin_inset Formula $N+1$
+\end_inset
+
+ iterations.
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2008"
+
+\end_inset
+
+ it is conjectured that the result concerning the eigenvalues of 
+\begin_inset Formula $U^{-1}V^{i}$
+\end_inset
+
+ holds for any 
+\begin_inset Formula $N$
+\end_inset
+
+, and any number of spatial dimensions.
+ A solution to this conjecture is provided here.
+ For the theory in linear algebra required for this section, please consult
+ a standard textbook on the subject, such as 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nering1970"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+The Discontinuous Galerkin Case
+\end_layout
+
+\begin_layout Standard
+First, given the basis polynomials 
+\begin_inset Formula $\left\{ \psi_{0},\ldots,\psi_{N}\right\} $
+\end_inset
+
+, define the following matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\aleph_{ij} & =\left\langle \psi_{i},\psi_{j}\right\rangle \\
+\beth_{ij} & =\left\langle \psi_{i},\psi_{j}^{'}\right\rangle 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $\aleph$
+\end_inset
+
+ is the Gram matrix, which by linear independence of 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ is invertible.
+ Note also that if 
+\begin_inset Formula $p\in P_{N}$
+\end_inset
+
+ then 
+\begin_inset Formula $p=a_{j}\psi_{j}$
+\end_inset
+
+ for some unique coefficient vector 
+\begin_inset Formula $\boldsymbol{a}$
+\end_inset
+
+.
+ Thus, taking inner products with 
+\begin_inset Formula $\psi_{i}$
+\end_inset
+
+, we have 
+\begin_inset Formula $\left\langle \psi_{i},\psi_{j}\right\rangle a_{j}=\left\langle \psi_{i},p\right\rangle $
+\end_inset
+
+ for 
+\begin_inset Formula $i=0,...,N$
+\end_inset
+
+.
+ This produces the following result:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=a_{j}\psi_{j}\Leftrightarrow\boldsymbol{a}=\aleph^{-1}\boldsymbol{x},\;x_{i}=\left\langle \psi_{i},p\right\rangle \label{eq:gramCoeffs}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Without loss of generality, take the ordering:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\alpha=\alpha_{t}\left(N+1\right)^{3}+\alpha_{x}\left(N+1\right)^{2}+\alpha_{y}\left(N+1\right)+\alpha_{z}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $0\leq\alpha_{t},\alpha_{x},\alpha_{y},\alpha_{z}\leq N$
+\end_inset
+
+.
+ Using the same ordering for 
+\begin_inset Formula $\beta$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left(\psi_{\alpha_{t}}\left(1\right)\psi_{\beta_{t}}\left(1\right)-\beth_{\beta_{t}\alpha_{t}}\right)\cdot\aleph_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}\\
+V_{\alpha\beta}^{1} & =\aleph_{\alpha_{t}\beta_{t}}\cdot\beth_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U & =C\otimes\aleph\otimes\aleph\otimes\aleph\\
+V^{1} & =\aleph\otimes\beth\otimes\aleph\otimes\aleph
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $C_{ij}=\psi_{i}\left(1\right)\psi_{j}\left(1\right)-\beth_{ji}$
+\end_inset
+
+.
+ Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U^{-1}V^{1}=\left(C^{-1}\aleph\right)\otimes\left(\aleph^{-1}\beth\right)\otimes I\otimes I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(U^{-1}V^{1}\right)^{k}=\left(C^{-1}\aleph\right)^{k}\otimes\left(\aleph^{-1}\beth\right)^{k}\otimes I\otimes I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ is nilpotent (
+\begin_inset Formula $X^{k}=0$
+\end_inset
+
+ for some 
+\begin_inset Formula $k\in\mathbb{N}$
+\end_inset
+
+) if and only if all its eigenvalues are 0.
+ The conjecture will be proved if it is shown that 
+\begin_inset Formula $\left(\aleph^{-1}\beth\right)^{k}=0$
+\end_inset
+
+ for some 
+\begin_inset Formula $k\in\mathbb{N}$
+\end_inset
+
+, as this would imply that 
+\begin_inset Formula $\left(U^{-1}V^{1}\right)^{k}=0$
+\end_inset
+
+, and thus all eigenvalues of 
+\begin_inset Formula $U^{-1}V^{1}$
+\end_inset
+
+ are 0.
+\end_layout
+
+\begin_layout Standard
+Taking 
+\begin_inset Formula $\boldsymbol{a}\in\mathbb{R}^{N+1}$
+\end_inset
+
+, define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=a_{0}\psi_{0}+\ldots+a_{N}\psi_{N}\in P_{N}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\beth\boldsymbol{a}\right)_{i}=\left\langle \psi_{i},\psi_{0}^{'}\right\rangle a_{0}+\ldots+\left\langle \psi_{i},\psi_{N}^{'}\right\rangle a_{N}=\left\langle \psi_{i},p^{'}\right\rangle 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:gramCoeffs"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\aleph^{-1}\beth\boldsymbol{a}\right)_{i}\psi_{i}=p'
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By induction:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\left(\aleph^{-1}\beth\right)^{k}\boldsymbol{a}\right)_{i}\psi_{i}=p^{\left(k\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for any 
+\begin_inset Formula $k\in\mathbb{N}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $p\in P_{N}$
+\end_inset
+
+, 
+\begin_inset Formula $\left(\aleph^{-1}\beth\right)^{N+1}\boldsymbol{a}=\boldsymbol{0}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $\boldsymbol{a}$
+\end_inset
+
+ was chosen arbitrarily, 
+\begin_inset Formula $\left(\aleph^{-1}\beth\right)^{N+1}=0$
+\end_inset
+
+.
+ Thus, the conjecture is solved.
+\end_layout
+
+\begin_layout Standard
+This proof is easily adapted to show that 
+\begin_inset Formula $U^{-1}V^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $U^{-1}V^{3}$
+\end_inset
+
+ are nilpotent, and clearly extends to any number of spatial dimensions.
+ No specific choice has been made for 
+\begin_inset Formula $N\in\mathbb{N}$
+\end_inset
+
+ and thus the result holds in general.
+\end_layout
+
+\begin_layout Subsection
+The Continuous Galerkin Case
+\end_layout
+
+\begin_layout Standard
+In addition to 
+\begin_inset Formula $\aleph,\beth$
+\end_inset
+
+, we now define 
+\begin_inset Formula $\aleph',\beth'$
+\end_inset
+
+ where each new matrix is equal to the original, with its first row and
+ column removed (the row and column corresponding to the constant-term polynomia
+l 
+\begin_inset Formula $\psi_{0}$
+\end_inset
+
+).
+ Take the following ordering:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\alpha=\alpha_{t}\left(N+1\right)^{3}+\alpha_{x}\left(N+1\right)^{2}+\alpha_{y}\left(N+1\right)+\alpha_{z}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where now 
+\begin_inset Formula $0\leq\alpha_{x},\alpha_{y},\alpha_{z}\leq N$
+\end_inset
+
+ and 
+\begin_inset Formula $0\leq\alpha_{t}\leq N-1$
+\end_inset
+
+.
+ Using the same ordering for 
+\begin_inset Formula $\beta$
+\end_inset
+
+, we now have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\beth'_{\alpha_{t}\beta_{t}}\cdot\aleph_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}\\
+V_{\alpha\beta}^{1} & =\aleph'_{\alpha_{t}\beta_{t}}\cdot\beth_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The proof for the continuous case follows in the same manner as the proof
+ for the discontinuous case, with:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U^{-1}V^{1}=\left(\left(\beth'\right)^{-1}\aleph'\right)\otimes\left(\aleph^{-1}\beth\right)\otimes I\otimes I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "ref/refs"
+options "bibtotoc,elsarticle-harv"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+I acknowledge financial support from the EPSRC Centre for Doctoral Training
+ in Computational Methods for Materials Science under grant EP/L015552/1.
+\end_layout
+
+\end_body
+\end_document

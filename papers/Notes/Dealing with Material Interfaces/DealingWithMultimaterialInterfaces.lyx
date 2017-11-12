@@ -1,0 +1,1755 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Dealing with Multimaterial Interfaces
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\end_layout
+
+\begin_layout Abstract
+Presented here is an idea for a framework for dealing with sharp interfaces
+ between two different materials/phases.
+ The problem of calculating the evolution of both the materials and the
+ position of the interface between them is solved implicity, although in
+ a local manner, avoiding the large computational cost associated with global
+ implicit schemes.
+ The state variables of the materials and the positions and velocity of
+ the interface are represented by arbitrarily-high order polynomials, hopefully
+ leading to higher fidelty of solutions.
+ Boundary conditions at the interface are enforced as part of the implicit
+ problem.
+\end_layout
+
+\begin_layout Abstract
+This new framework is based on the ADER-WENO framework, and is in particular
+ inspired by the ALE ADER-WENO formulation.
+ The continuum model used here is the Godunov-Peshkov-Romenski model, although
+ this framework should be applicable to other hyperbolic models of fluids/solids
+ that include evolution equations for velocity and a form for the stress
+ tensor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{\mathrm{tr}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The GPR Model
+\end_layout
+
+\begin_layout Standard
+The GPR model takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EntropyEquation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\rho$
+\end_inset
+
+,
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+,
+\begin_inset Formula $p$
+\end_inset
+
+,
+\begin_inset Formula $\delta$
+\end_inset
+
+,
+\begin_inset Formula $\sigma$
+\end_inset
+
+,
+\begin_inset Formula $T$
+\end_inset
+
+,
+\begin_inset Formula $E$
+\end_inset
+
+,
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+ retain their usual meanings.
+ 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ are positive scalar functions, chosen according to the properties of the
+ material being modeled.
+ 
+\begin_inset Formula $A$
+\end_inset
+
+ is the distortion tensor (containing information about the deformation
+ and rotation of material elements), 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is the thermal impulse vector (a thermal analogue of momentum), 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ is the strain dissipation time, and 
+\begin_inset Formula $\tau_{2}$
+\end_inset
+
+ is the thermal impulse relaxation time.
+ 
+\begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The following definitions are given:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+p & =\rho^{2}\frac{\partial E}{\partial\rho}\\
+\sigma & =-\rho A^{T}\frac{\partial E}{\partial A}\\
+T & =\frac{\partial E}{\partial s}\\
+\boldsymbol{q} & =\frac{\partial E}{\partial s}\frac{\partial E}{\partial\boldsymbol{J}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To close the system, the equation of state (EOS) must be specified, from
+ which the above quantities and the sources can be derived.
+ 
+\begin_inset Formula $E$
+\end_inset
+
+ is the sum of the contributions of the energies at the molecular scale
+ (microscale), the material element
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The concept of a 
+\shape italic
+material element
+\shape default
+ corresponds to that of a fluid parcel from fluid dynamics, applied to both
+ fluids and solids.
+\end_layout
+
+\end_inset
+
+ scale (mesoscale), and the flow scale (macroscale):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}\left(\rho,p\right)+E_{2}\left(A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EOS}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For example, for an ideal or stiffened gas, 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p+\gamma p_{\infty}}{\left(\gamma-1\right)\rho}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $p_{\infty}=0$
+\end_inset
+
+ for an ideal gas.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{2}$
+\end_inset
+
+ is chosen to have the following quadratic form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{2}=\frac{c_{s}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is the characteristic velocity of propagation of transverse perturbations.
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is a constant related to the characteristic velocity of propagation of
+ heat waves:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{h}=\frac{\alpha}{\rho}\sqrt{\frac{T}{c_{v}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ is the Gramian matrix of the distortion tensor, and 
+\begin_inset Formula $\dev\left(G\right)$
+\end_inset
+
+ is the deviator (trace-free part) of 
+\begin_inset Formula $G$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{3}$
+\end_inset
+
+ is the usual specific kinetic energy per unit mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The ADER-WENO Method
+\end_layout
+
+\begin_layout Standard
+Take a non-homogeneous, non-conservative (and for simplicity, one-dimensional)
+ hyperbolic system of the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:NonConservativeSystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ is the vector of conserved variables, 
+\begin_inset Formula $\boldsymbol{F}$
+\end_inset
+
+ is the conservative nonlinear flux, 
+\begin_inset Formula $B$
+\end_inset
+
+ is the matrix corresponding to the purely non-conservative component of
+ the system, and 
+\begin_inset Formula $\boldsymbol{S}\left(\boldsymbol{Q}\right)$
+\end_inset
+
+ is the algebraic source vector.
+ Note that the GPR model is of this form.
+\end_layout
+
+\begin_layout Standard
+Take the set of grid points 
+\begin_inset Formula $x_{0}<x_{1}<\ldots<x_{K}$
+\end_inset
+
+ and define 
+\begin_inset Formula $\Delta x_{i}=x_{i+1}-x_{i}$
+\end_inset
+
+.
+ Take the time steps 
+\begin_inset Formula $t_{0}<t_{1}<\ldots$
+\end_inset
+
+ while defining 
+\begin_inset Formula $\Delta t_{n}=t_{n+1}-t_{n}$
+\end_inset
+
+.
+ The WENO method and Galerkin method produce at each time step 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ a local polynomial approximation to 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ on each space-time cell 
+\begin_inset Formula $\left[x_{i},x_{i+1}\right]\times\left[t_{n},t_{n+1}\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Define the scaled space variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\chi^{i}=\frac{1}{\Delta x_{i}}\left(x-x_{i}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the basis 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ of 
+\begin_inset Formula $P_{N}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\psi_{i}\left(\chi_{j}\right)=\delta_{ij}$
+\end_inset
+
+ where 
+\begin_inset Formula $\left\{ \chi_{0},\ldots,\chi_{N}\right\} $
+\end_inset
+
+ are the Gauss-Legendre abscissae.
+ Other bases can be used in traditional ADER-WENO methods, but only this
+ basis can be used in the framework here, as explained [LATER].
+ The order of accuracy of the following method will be 
+\begin_inset Formula $N+1$
+\end_inset
+
+ in both space and time.
+\end_layout
+
+\begin_layout Standard
+The WENO method (as used in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2013"
+
+\end_inset
+
+) produces an order-
+\begin_inset Formula $N$
+\end_inset
+
+ polynomial reconstruction of the data at time 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ in cell 
+\begin_inset Formula $\left[x_{i},x_{i+1}\right]$
+\end_inset
+
+, using 
+\begin_inset Formula $\left\{ \psi_{0},\ldots,\psi_{N}\right\} $
+\end_inset
+
+ as a basis.
+ This is denoted:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{w}\left(x\right)=\boldsymbol{w_{\gamma}}\psi_{\gamma}\left(\chi^{i}\left(x\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This spatial reconstruction at the start of the time step is to be used
+ as initial data in the problem of finding the Galerkin predictor.
+\end_layout
+
+\begin_layout Standard
+Now define the scaled time variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau^{n}=\frac{1}{\Delta t_{n}}\left(t-t_{n}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem"
+
+\end_inset
+
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\tau^{n}}+\frac{\partial\boldsymbol{F^{*}}\left(\boldsymbol{Q}\right)}{\partial\chi^{i}}+B^{*}\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi^{i}}=\boldsymbol{S^{*}}\left(\boldsymbol{Q}\right)\label{eq:NonDimensionalNonConservativeSystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F^{*}}=\frac{\Delta t_{n}}{\Delta x}\boldsymbol{F}\qquad B^{*}=\frac{\Delta t_{n}}{\Delta x}B\qquad\boldsymbol{S^{*}}=\Delta t_{n}\boldsymbol{S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The non-dimensionalization notation and spacetime cell indexing notation
+ will be dropped for simplicity in what follows.
+ Now define the set of spatio-temporal basis functions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \theta_{k}\left(\chi,\tau\right)\right\} =\left\{ \psi_{p}\left(\chi\right)\psi_{s}\left(\tau\right):0\leq p,s\leq N\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A representation of the solution local to each spacetime cell, known as
+ the Discontinuous Galerkin predictor, is now constructed.
+ Denoting the DG predictor by 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, take the following set of approximations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q} & \approx\boldsymbol{q}=\theta_{\beta}\boldsymbol{q_{\beta}}\\
+\boldsymbol{F}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{F_{\beta}}\\
+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi} & \approx\theta_{\beta}\boldsymbol{B_{\beta}}\\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S_{\beta}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{F_{\beta}} & =\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
+\boldsymbol{B_{\beta}} & =B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\\
+\boldsymbol{S_{\beta}} & =\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\left(\chi_{\beta},\tau_{\beta}\right)$
+\end_inset
+
+ are the coordinates of the node corresponding to basis function 
+\begin_inset Formula $\theta_{\beta}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For functions 
+\begin_inset Formula $f\left(\chi,\tau\right)=f_{χ}\left(χ\right)f_{τ}\left(τ\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $g\left(\chi,\tau\right)=g_{χ}\left(χ\right)g_{τ}\left(τ\right)$
+\end_inset
+
+, define the following integral operators:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left[f,g\right]^{t} & =f_{τ}\left(t\right)g_{τ}\left(t\right)\left\langle f_{χ},g_{χ}\right\rangle \\
+\left\{ f,g\right\}  & =\left\langle f_{\tau},g_{\tau}\right\rangle \left\langle f_{χ},g_{χ}\right\rangle 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonDimensionalNonConservativeSystem"
+
+\end_inset
+
+ by test function 
+\begin_inset Formula $\theta_{\alpha}$
+\end_inset
+
+, using the polynomial approximations for 
+\begin_inset Formula $\boldsymbol{Q},\boldsymbol{F},\boldsymbol{B},\boldsymbol{S}$
+\end_inset
+
+, and integrating over space and time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} \boldsymbol{q_{\beta}} & =-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}+\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\label{eq:InitialSystem}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:InitialSystem"
+
+\end_inset
+
+ by parts in time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \right)\boldsymbol{q_{\beta}} & =\left[\theta_{\alpha},\boldsymbol{w}\right]^{0}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}\\
+ & +\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{w}$
+\end_inset
+
+ is the reconstruction obtained at the start of the time step with the WENO
+ method.
+ Define the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \\
+V_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \\
+\boldsymbol{W_{\alpha}} & =\left[\theta_{\alpha},\psi_{\gamma}\right]^{0}\boldsymbol{w_{\gamma}}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}}=\boldsymbol{W_{\alpha}}-V_{\alpha\beta}\boldsymbol{F_{\beta}}+Z_{\alpha\beta}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This nonlinear system in 
+\begin_inset Formula $\boldsymbol{q_{\beta}}$
+\end_inset
+
+ is solved by a Newton method.
+\end_layout
+
+\begin_layout Standard
+We now perform the following Finite Volume update:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{i}^{n+1}}=\boldsymbol{Q_{i}^{n}}+\Delta t_{n}\left(\boldsymbol{S_{i}^{n}}-\boldsymbol{P_{i}^{n}}\right)-\frac{\Delta t_{n}}{\Delta x}\left(\boldsymbol{D_{i+1}^{n}}-\boldsymbol{D_{i}^{n}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q_{i}^{n}} & =\frac{1}{\Delta x}\int_{x_{i}}^{x_{i+1}}\boldsymbol{Q}\left(x,t_{n}\right)dx\\
+\boldsymbol{S_{i}^{n}} & =\frac{1}{\Delta t_{n}\Delta x}\int_{t_{n}}^{t_{n+1}}\int_{x_{i}}^{x_{i+1}}\boldsymbol{S}\left(\boldsymbol{Q}\right)dxdt\\
+\boldsymbol{P_{i}^{n}} & =\frac{1}{\Delta t_{n}\Delta x}\int_{t_{n}}^{t_{n+1}}\int_{x_{i}}^{x_{i+1}}B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}dxdt\\
+\boldsymbol{D_{i}^{n}} & =\frac{1}{\Delta t_{n}}\int_{t_{n}}^{t_{n+1}}\boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}}\left(x_{i},t\right),\boldsymbol{Q^{+}}\left(x_{i},t\right)\right)dt
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\boldsymbol{Q^{-},Q^{+}}$
+\end_inset
+
+ are the left and right extrapolated states of the DG predictors of the
+ left and right cells at the 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ boundary.
+ 
+\begin_inset Formula $\boldsymbol{S_{i}^{n}},\boldsymbol{P_{i}^{n}},\boldsymbol{D_{i}^{n}}$
+\end_inset
+
+ are calculated using an 
+\begin_inset Formula $N+1$
+\end_inset
+
+-point Gauss-Legendre quadrature, replacing 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ with 
+\begin_inset Formula $\boldsymbol{q_{h}}$
+\end_inset
+
+.
+ We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\mathcal{D}}\left(\boldsymbol{q^{-}},\boldsymbol{q^{+}}\right)=\frac{1}{2}\left(\boldsymbol{F}\left(\boldsymbol{q^{-}}\right)+\boldsymbol{F}\left(\boldsymbol{q^{+}}\right)+\hat{B}\cdot\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)-\hat{M}\cdot\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{B}$
+\end_inset
+
+ takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{B}=\int_{0}^{1}B\left(\boldsymbol{q^{-}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q}^{-}\right)\right)dz
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{M}$
+\end_inset
+
+ is chosen to correspond to a Rusanov/Lax-Friedrichs flux (other choices
+ are available):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\max\left(\max\left|\Lambda\left(\boldsymbol{q^{-}}\right)\right|,\max\left|\Lambda\left(\boldsymbol{q^{+}}\right)\right|\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The ALE Formulation
+\end_layout
+
+\begin_layout Standard
+In the ALE (arbitrary-Lagranian-Eulerian) framework, the grid cells are
+ allowed to move.
+ Let 
+\begin_inset Formula $\boldsymbol{\chi}=\left(\chi,\tau\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{x}=\left(x,t\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\chi,\tau\in\left[0,1\right]$
+\end_inset
+
+ and:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x & =\theta_{\alpha}\left(\chi,\tau\right)\hat{x}_{\alpha}\label{eq:x representation}\\
+t & =t_{n}+\tau\Delta t
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for some constants 
+\begin_inset Formula $\hat{x}_{\alpha}$
+\end_inset
+
+.
+ We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\boldsymbol{x}}{\partial\boldsymbol{\chi}} & =\left(\begin{array}{cc}
+x_{\chi} & x_{\tau}\\
+0 & \Delta t
+\end{array}\right)\\
+\frac{\partial\boldsymbol{\chi}}{\partial\boldsymbol{x}} & =\left(\frac{\partial\boldsymbol{x}}{\partial\boldsymbol{\chi}}\right)^{-1}=\left(\begin{array}{cc}
+\chi_{x} & \chi_{t}\\
+0 & \frac{1}{\Delta t}
+\end{array}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem"
+
+\end_inset
+
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\tau}+\Delta t\left(\frac{\partial\boldsymbol{Q}}{\partial\chi}\frac{\partial\chi}{\partial t}+\left(\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial\chi}+B\left(\boldsymbol{Q}\right)\frac{\partial\boldsymbol{Q}}{\partial\chi}\right)\frac{\partial\chi}{\partial x}\right)=\Delta t\boldsymbol{S}\left(\boldsymbol{Q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{H}=\frac{\partial\boldsymbol{Q}}{\partial\chi}\frac{\partial\chi}{\partial t}+\left(\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial\chi}+B\left(\boldsymbol{Q}\right)\frac{\partial\boldsymbol{Q}}{\partial\chi}\right)\frac{\partial\chi}{\partial x}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and using the nodal representation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q} & \approx\boldsymbol{q}=\theta_{\beta}\boldsymbol{q_{\beta}}\\
+\boldsymbol{H}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{H}\left(\boldsymbol{q_{\beta}}\right)\\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we arrive at:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}}=\boldsymbol{W_{\alpha}}+\Delta tZ_{\alpha\beta}\left(\boldsymbol{S_{β}}-\boldsymbol{H_{β}}\right)\label{eq:q system}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this is a nonlinear system of equations in variables 
+\begin_inset Formula $\boldsymbol{q_{\beta},}x_{\beta}$
+\end_inset
+
+.
+ It is currently underdetermined.
+ We have the following evolution equation for the mesh:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx}{dt}=\tilde{v}\left(\boldsymbol{Q},x,t\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\tilde{v}$
+\end_inset
+
+ is the local mesh velocity (not necessarily the material velocity).
+ Thus, using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:x representation"
+
+\end_inset
+
+ and taking the representation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{v}\approx\theta_{\beta}\tilde{v}_{\beta}\left(\boldsymbol{q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we arrive at:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\hat{x}_{\beta}=\left[\theta_{\alpha},x\left(\chi,t_{n}\right)\right]^{0}+\Delta tZ_{\alpha\beta}\tilde{v}_{\beta}\label{eq:x system}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q system"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:x system"
+
+\end_inset
+
+ are solved simulaneously to obtain 
+\begin_inset Formula $\boldsymbol{q_{\beta},}x_{\beta}$
+\end_inset
+
+ which are then used to perform a finite-volume update, as described in
+ [Boscheri et al].
+\end_layout
+
+\begin_layout Section
+Treatment of Material Interfaces
+\end_layout
+
+\begin_layout Standard
+Consider the one-dimensional situation in the figure below.
+ Materials 
+\begin_inset Formula $M_{L},M_{R}$
+\end_inset
+
+ are both governed by the GPR model, but may have differents EOSs and strain
+ relaxation functions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename interface.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take 
+\begin_inset Formula $\psi^{L},\psi^{R}\in P_{N+1}$
+\end_inset
+
+ with 
+\begin_inset Formula $\psi^{L}\left(\chi_{i}\right),\psi^{R}\left(\chi_{i}\right)=1$
+\end_inset
+
+ for 
+\begin_inset Formula $i=0,\ldots,N$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi^{L}\left(1\right),\psi^{R}\left(0\right)=1$
+\end_inset
+
+.
+ Take 
+\begin_inset Formula $\Psi=\left\{ \psi_{0},\ldots,\psi_{N}\right\} $
+\end_inset
+
+ and 
+\begin_inset Formula $\Psi^{K}=\Psi\cup\left\{ \psi^{K}\right\} $
+\end_inset
+
+ for 
+\begin_inset Formula $K=L,R$
+\end_inset
+
+.
+ Take 
+\begin_inset Formula $\Theta=\left\{ \psi_{i}\left(\chi\right)\psi_{j}\left(\tau\right):\psi_{i}\in\Psi,\psi_{j}\in\Psi\right\} $
+\end_inset
+
+.
+ 
+\begin_inset Formula $\Theta^{K}=\left\{ \psi_{i}\left(\chi\right)\psi_{j}\left(\tau\right):\psi_{i}\in\Psi^{K},\psi_{j}\in\Psi\right\} $
+\end_inset
+
+.
+ Note that, as 
+\begin_inset Formula $n$
+\end_inset
+
+-point Gaussian quadrature is exact for polynomials of order 
+\begin_inset Formula $\leq2n-1$
+\end_inset
+
+, we have for 
+\begin_inset Formula $i=0,\ldots,N$
+\end_inset
+
+ and 
+\begin_inset Formula $K=L,R$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{1}\psi^{K}\psi_{i}d\chi=w_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left[x_{i},x^{*}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[x^{*},x_{i+1}\right]$
+\end_inset
+
+ are considered to be separate cells.
+ The reconstruction procedure is performed in both.
+ Use the nodal representation 
+\begin_inset Formula $\boldsymbol{Q}\approx\boldsymbol{q}$
+\end_inset
+
+ as before, where all variables in 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+ are represented under basis 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ but the velocity uses basis 
+\begin_inset Formula $\Theta^{L}$
+\end_inset
+
+ if the cell under consideration is a boundary cell on the left, and 
+\begin_inset Formula $\Theta^{R}$
+\end_inset
+
+ if it is a boundary cell on the right.
+ The roots of the systems 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q system"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:x system"
+
+\end_inset
+
+ are found for each material at the same time, along with the conditions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+v^{L}\left(x^{*}\left(t\right),t\right) & =v^{R}\left(x^{*}\left(t\right),t\right)\\
+\Sigma_{1}^{L}\left(x^{*}\left(t\right),t\right) & =\Sigma_{1}^{R}\left(x^{*}\left(t\right),t\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Sigma_{1}^{K}$
+\end_inset
+
+ is the first column of the total stress tensor (
+\begin_inset Formula $pI-\sigma$
+\end_inset
+
+) on the 
+\begin_inset Formula $K$
+\end_inset
+
+th side.
+ It is possible to enforce these boundary conditions due to the extra degrees
+ of freedom produced by the extension of the basis for the velocities.
+ 
+\end_layout
+
+\begin_layout Standard
+It remains to specify 
+\begin_inset Formula $\tilde{v}_{\beta}\left(\boldsymbol{q}\right)$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $\theta_{\beta}=\psi_{i}\left(\chi\right)\psi_{j}\left(\tau\right)$
+\end_inset
+
+.
+ The velocity of the interface at time 
+\begin_inset Formula $\tau=\tau_{j}$
+\end_inset
+
+ is 
+\begin_inset Formula $v^{*}=\theta_{\beta}^{L}\left(1,\tau_{j}\right)v_{\beta}^{L}=\theta_{\beta}^{R}\left(0,\tau_{j}\right)v_{\beta}^{R}$
+\end_inset
+
+.
+ On the left side, the velocity of node 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is set to be 
+\begin_inset Formula $\chi_{i}v^{*}$
+\end_inset
+
+.
+ On the right side, it is set to be 
+\begin_inset Formula $\left(1-\chi_{i}\right)v^{*}$
+\end_inset
+
+.
+ This is so that as the cell expands/contracts due to the movement of the
+ interface over time, the distances between the spatial locations of the
+ nodes expand/contract accordingly, with the positions of the left boundary
+ of the left cell and the right boundary of the right stay remaining constant.
+ Expansion of the left cell is shown in the diagram below.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename stretching.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the order of accuracy of the reconstruction is still 
+\begin_inset Formula $N+1$
+\end_inset
+
+, with the position of the boundary in time computed to the same high order
+ of accuracy.
+ Note that the materials on either side do not need to be governed by the
+ same set of equations, as long as they are both hyperbolic systems, with
+ evolution equations for velocity and a form of the stress tensor that can
+ be computed.
+\end_layout
+
+\begin_layout Section
+Tracking Interface Positions
+\end_layout
+
+\begin_layout Standard
+The framework presented here does not require the use of interface tracking
+ methods such as level sets.
+ However, complications can arise in the geometry of the interface when
+ performing simulations in multiple dimensions.
+ This has been an area of active research for a while and the plan is to
+ integrate some extant solutions to this problem into the framework here.
+\end_layout
+
+\end_body
+\end_document

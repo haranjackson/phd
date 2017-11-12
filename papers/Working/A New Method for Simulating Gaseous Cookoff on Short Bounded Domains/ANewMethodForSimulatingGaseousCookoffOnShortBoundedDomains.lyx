@@ -1,0 +1,4272 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+\journal{Example Journal}
+%\usepackage{draftwatermark}
+
+% Remove subsection in left header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{A New Method for Simulating Gaseous Cookoff on Short Bounded Domains}
+\fancyhead[R]{\thepage}
+
+\usepackage[printwatermark]{xwatermark}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\newwatermark[allpages,color=gray!20,angle=45,scale=4,xpos=0,ypos=0]{DRAFT}
+\end_preamble
+\options 5p,times,twocolumn,numbered
+\use_default_options false
+\begin_modules
+theorems-std
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+A New Method for Simulating Gaseous Cookoff on Short Bounded Domains
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\begin_inset Flex CorAuthormark
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex CorAuthormark
+status collapsed
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Email
+hj305@cam.ac.uk
+\end_layout
+
+\begin_layout Author
+Nikos Nikiforakis
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Principal corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+In this study, an Arrhenius reaction model is combined with the GPR model
+ of continuum mechanics 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016,Dumbser2016a"
+
+\end_inset
+
+ and the feasibility of simulating cookoff within this framework is demonstrated.
+ A new method is then proposed for significantly accelerating the simulation
+ of slow cookoff on short, bounded domains.
+ The acoustic components of the system are approximated by assuming that
+ the pressure equilibrates on a faster time scale than the other processes
+ of the system, and only a reduced subsystem is solved.
+ This development is assessed numerically and shown to be effective.
+\end_layout
+
+\begin_layout Abstract
+The GPR model is able to describe both solids and fluids (viscous and inviscid,
+ Newtonian and non-Newtonian) in the same framework, with thermal conduction.
+ It should be well suited to simulating cookoff, where multiple materials
+ and phases of matter may be present, and current models rely on coupling
+ different sets of equations to describe the different materials.
+ The hyperbolicity of the GPR system also makes it amenable to large-scale
+ parallelisation, and it does not suffer from the appearance of nonphysical
+ infinite-speed waves, unlike the parabolic Navier-Stokes equations, or
+ the classical Fourier law of heat conduction.
+\end_layout
+
+\begin_layout Keywords
+Cookoff 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ GPR 
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{\mathrm{tr}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To Do:
+\end_layout
+
+\begin_layout Itemize
+Read Clarke & Cant method of determining onset
+\end_layout
+
+\begin_layout Itemize
+Find way of defining "fast" and "slow" cookoff
+\end_layout
+
+\begin_layout Itemize
+Sort out spikes in concentration
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Cookoff
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Cookoff"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The term 
+\begin_inset Quotes eld
+\end_inset
+
+cookoff
+\begin_inset Quotes erd
+\end_inset
+
+ is used to denote the process by which explosives deflagrate or detonate
+ unintentionally, due to ambient heat from the surrounding environment.
+ It is imperative that this process is properly understood, to avoid repeats
+ of the many fatal and destructive civil and military accidents that have
+ occurred over the years.
+\end_layout
+
+\begin_layout Standard
+Cookoff is extremely complicated, with many different stages.
+ Many different materials and phases may be present at the same time.
+ Large costs, difficulty in experimental design, and safety issues mean
+ that computational modeling has become of paramount importance in predicting
+ the cookoff behavior of different materials in different scenarios.
+ Computational modeling presents a whole new set of challenges, however.
+\end_layout
+
+\begin_layout Standard
+Despite extensive algorithmic optimization, computational techniques such
+ as adaptive mesh refinement, and a roughly 1000-fold increase in maximum
+ attained computing power between 2006 and 2016 (~100 TFlop/s - ~100PFlop/s
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "TOP500"
+
+\end_inset
+
+), cookoff simulations remain relatively computationally challenging.
+ As detailed by Asay 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Asay2010"
+
+\end_inset
+
+, we are still a long way from being able to perform accurate large-scale
+ simulations of the full systems of equations governing such phenomena on
+ less than a time scale on the order of days.
+ It is noted that computational error is linearly dependent on domain size,
+ and CPU time depends non-linearly.
+ Thus an increase of 3 orders of magnitude in computational power yields
+ only a tenfold decrease in error in 2D simulations, and a decrease of only
+ 5.6 times in 3D.
+ There is a clear need for new fundamentally-different ways of reducing
+ the computational effort required.
+\end_layout
+
+\begin_layout Standard
+If the time step of the computational method used to model cookoff is restricted
+ by a CFL condition based on the speed of sound, the heating phase will
+ take an excessively long time to calculate, even though the dominating
+ process is thermal conduction; a slow, smooth process.
+ A strict CFL condition will be required to accurately resolve the deflagration/
+detonation phase, but this phase represents a small fraction of the total
+ time.
+ There have been several attempts to circumvent this issue, described here.
+\end_layout
+
+\begin_layout Standard
+Selesovský 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Selesovsky2010"
+
+\end_inset
+
+ models the thermal loading of explosives using the Frank-Kamenetskii model
+ of thermal conduction with Arrhenius reaction kinetics 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Frank1955"
+
+\end_inset
+
+ (disregarding the non-conductive features of the process, such as flow
+ and acoustics).
+ The time step in the heating phase is chosen according to a standard stability
+ condition according to the parabolic nature of the system.
+ Once thermal runaway occurs, the time step is reduced by an amount obtained
+ through trial-and-error (building upon results from Sućeska and Matečić-Muśanić
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Suceska2004"
+
+\end_inset
+
+) ensuring that the latter stages of the process are resolved correctly.
+ This reduction is not actually required for numerical stability; it is
+ required for accuracy.
+ Clearly, it is not desirable to obtain the time step experimentally for
+ every reactive process one wishes to model.
+\end_layout
+
+\begin_layout Standard
+A huge amount of the work on cookoff modeling has been performed at the
+ Lawrence Livermore (and to a lesser extent, Sandia) National Laboratories.
+ Much of the work at LLNL has gone into their ALE3D multiphysics code 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ALE3D"
+
+\end_inset
+
+.
+ One of the methods employed in the ALE3D code to circumvent the time step
+ restriction in the heating phase is variable mass scaling.
+ Implemented by Yoh et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yoh2003,Yoh2003a,Yoh2004"
+
+\end_inset
+
+, this technique is based on the work of Prior 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Prior1994"
+
+\end_inset
+
+.
+ The system is integrated explicitly and the density of the materials in
+ the system is scaled higher so as to reduce the effective speed of sound,
+ and thus artificially increase the time step permitted by the standard
+ CFL condition.
+ In practice, the desired time step is fixed and the density is scaled to
+ its required value.
+ At the transition between the heating and combustion phases, the scaling
+ is reduced incrementally to its natural value.
+ Despite its success in increasing the computational efficiency of the calculati
+ons - especially when inertia effects are negligible - this technique appears
+ to have fallen out of favor in recent years in simulations involving large
+ amounts of fluid flow, owing to the associated spurious oscillations in
+ the motions of the heated materials detailed by Howard et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Howard2006"
+
+\end_inset
+
+.
+ It is still used in more static thermal heating problems (see for example
+ Khairallah and Anderson 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Khairallah2014"
+
+\end_inset
+
+, who obtain a 3- to 10-fold speed up using this method).
+\end_layout
+
+\begin_layout Standard
+Lately, a different method has been used by Nichols and Schofield 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nichols2014"
+
+\end_inset
+
+ and McClelland et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mcclelland2014"
+
+\end_inset
+
+.
+ In the heating phase, the fluid is modeled with the incompressible Navier-Stoke
+s equations, which are solved using the semi-implicit pressure projection
+ method presented by Gresho 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gresho1990a,Gresho1990"
+
+\end_inset
+
+.
+ This removes the stringent CFL condition based on the speed of sound.
+ Although each iteration is more computationally taxing, much larger time
+ steps can be taken than with an explicit solution method.
+ At each step, the advection of the reactive species is calculated with
+ an explicit forward Euler scheme and its diffusion is calculated with an
+ implicit backward Euler scheme.
+ Only one iteration of both of these schemes is performed at each step,
+ meaning that the time step for all processes is in fact limited by a CFL
+ condition based on the velocity of the fluid.
+ These velocities tend to be small in slow cookoff situations, leading to
+ a large time step at this stage.
+ 
+\begin_inset Formula $C_{cfl}=0.1$
+\end_inset
+
+ was used in the cited studies.
+ The system governing the chemical reaction is also iterated at each time
+ step.
+\end_layout
+
+\begin_layout Standard
+In the early stages of the simulation the aforementioned method is efficient,
+ but as the material heats up the time step will reduce to the point that
+ it is faster to perform a full explicit calculation at each step.
+ This was determined experimentally in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nichols2014"
+
+\end_inset
+
+ to occur roughly when the implicit time step is less than 100 times larger
+ than the explicit time step.
+ A complex transition to the explicit solver is then undertaken.
+ Neighboring nodal values for the chemical composition are linearly interpolated
+ to give element-centered values.
+ The density and internal energy are found iteratively from the average
+ fluid pressure, the averaged temperature, and the compositional state.
+ This is done as inconsistencies in these variables can be introduced in
+ the preceding stages.
+ The velocity field can become chaotic under the implicit solver so this
+ is set to zero everywhere.
+ Owing to the complexity of the transition, the CFL time step is reduced
+ by a factor of 1000 to allow local equilibration of the system and to avoid
+ any macro-scale aberrations.
+\end_layout
+
+\begin_layout Standard
+This transition process introduces large changes to the system at the most
+ critical point in determining its subsequent violent evolution.
+ The time of transition and the time step reduction factor have to be set
+ by trial-and-error, meaning that they may need to be tested for each new
+ simulation set-up.
+ A process of this sort will always be necessary, however, if the heating
+ phase is solved implicitly.
+ In addition to the schemes outlined here, in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mcclelland2014"
+
+\end_inset
+
+ the diffusivity of the species was artificially increased (by trial-and-error)
+ to avoid numerical instabilities.
+ The fluid viscosity was also increased ten-fold to slow the flow and increase
+ the time step given by the velocity CFL condition on the advection of the
+ species.
+ Clearly, adjustments such as these are not desirable.
+\end_layout
+
+\begin_layout Standard
+The method presented in this study seeks to resolve the issues detailed
+ here, at least in the physical situations to which it is applicable (discussed
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:ANewMethodForSimulatingCookoff"
+
+\end_inset
+
+).
+ The same mathematical model is used in all stages of the cookoff process,
+ and the choice of solvers in the early and late stages does not necessitate
+ a complex reconciliation of state variables at transition.
+ The transition point is identified using an objective measure, ensuring
+ that no trial-and-error studies are required to ascertain empirical parameters
+ governing the transition process (as required by some extant methods).
+ While overcoming these issues, the new method still provides a significant
+ computational speedup, as discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SlowCookoff"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Parabolic vs Hyperbolic Systems
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:ParabolicVsHyperbolicSystems"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Information in parabolic systems of partial differential equations travels
+ at infinite speed, and a perturbation in the condition of the system at
+ one point has an effect at all other points instantaneously.
+ Thus, parabolic systems (such as the Navier-Stokes equations or the classical
+ Fourier equations of heat transfer) are not amenable to parallelisation.
+ By contrast, solutions to hyperbolic systems are wave-like in structure,
+ with finite speeds of propagation of information.
+ Solutions on different parts of the domain can be calculated independently,
+ leveraging the great advances that have been made recently in parallel
+ computing technologies, particularly in the burgeoning field of general
+ purpose GPU computing.
+ The use of hyperbolic models also allows for the utilization of Riemann
+ solvers, on which there has been a great deal of work over the years (see
+ Toro 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+
+\end_inset
+
+ for a broad overview).
+\end_layout
+
+\begin_layout Standard
+Even disregarding the practical benefit of employing hyperbolic schemes,
+ there is the more profound issue that we live in a causal universe, and
+ ultimately parabolic systems cannot be a 
+\begin_inset Quotes eld
+\end_inset
+
+true
+\begin_inset Quotes erd
+\end_inset
+
+ description of reality.
+ Although this discrepancy often does not matter in practice, there are
+ problems to which parabolic models are particularly unsuited (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FukuamaMasafumi2013,Gomez2010,Gomez2007,Compte1997"
+
+\end_inset
+
+ among many others).
+\end_layout
+
+\begin_layout Standard
+In addition to the problems already discussed, in the case of the Navier-Stokes
+ formulation in particular, the stress tensor is derived from empirical
+ observation of the macroscopic behavior of steady, homogeneous flows, rather
+ than from a first-principles microscopic description.
+ As shown by Yakhot 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yakhot"
+
+\end_inset
+
+, this can result in problems when modeling essentially unsteady and non-equilib
+rium flow.
+ On top of this, the NS equations are second order, making them more sensitive
+ to the quality of the computational mesh than a first order system.
+\end_layout
+
+\begin_layout Standard
+Several attempts to produce a hyperbolic formulation of viscous fluid dynamics
+ have been made (see for example 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bampi1980,Geroch1995,Gomez2007,Israel1979,Montecinos2014,Nishikawa2010,Romatschke2010"
+
+\end_inset
+
+).
+ However, as noted by Peshkov and Romenski 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+, the systems described all essentially take the following form for some
+ model-specific dissipative quantity 
+\begin_inset Formula $X$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{X}=-\frac{1}{\beta}\left(X-X_{NS}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is a relaxation parameter and 
+\begin_inset Formula $X_{NS}$
+\end_inset
+
+ is the value obtained from the Navier-Stokes equations.
+ This is a hyperbolic relaxation model, constructed as a first-order extension
+ to the second order NS equations.
+\end_layout
+
+\begin_layout Standard
+These models are all based on the series expansion of the distribution function
+ with respect to a set of moments.
+ The physical meanings of the moments are largely ignored, and they have
+ neither microscopic counterparts, nor are they defined as volume-averaged
+ quantities.
+ Additionally, a naive model of the form above is not frame invariant.
+ Often this is remedied by introducing an objective stress rate 
+\begin_inset Formula $\dot{X}$
+\end_inset
+
+, but as this can be defined in many ways, this results in different solutions
+ to the model, along with violation of the second law of thermodynamics
+ and loss of well-posedness of the initial value problem 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The recently proposed model of Peshkov and Romenski benefits from the advantages
+ of hyperbolicity, while avoiding the deficits inherent in the existing
+ hyperbolic models.
+ It is derived fundamentally from a microscopic description of the continuum
+ phenomena it describes.
+ It is also able to model different materials and phases of matter in the
+ same framework.
+ This feature makes it well-suited to simulating the process of cookoff.
+\end_layout
+
+\begin_layout Subsection
+The Model of Godunov, Peshkov and Romenski
+\end_layout
+
+\begin_layout Standard
+The GPR model, first introduced by Peshkov and Romenski 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+ and expanded upon by Dumbser et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+, takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho s\right)}{\partial t}+\frac{\partial\left(\rho sv_{k}+H_{k}\right)}{\partial x_{k}} & =\frac{\rho}{\theta_{1}\left(\tau_{1}\right)T}\psi_{kl}\psi_{kl}\label{eq:EntropyEquation}\\
+ & +\frac{\rho}{\theta_{2}\left(\tau_{2}\right)T}H_{k}H_{k}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ are positive scalar functions, and 
+\begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
+\end_inset
+
+.
+ Entropy does not decrease during the dissipative time evolution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\left(\rho s\right)}{\partial t}+\frac{\partial\left(\rho sv_{k}+H_{k}\right)}{\partial x_{k}}\geq0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EntropyEquation"
+
+\end_inset
+
+ can be replaced with the following equation, which will be used instead
+ when solving the model in this study:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}}=0\label{eq:EnergyEquation}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DensityEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MomentumEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyEquation"
+
+\end_inset
+
+ can be written in the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}+\boldsymbol{B}\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following definitions are given:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+p & =\rho^{2}\frac{\partial E}{\partial\rho}\\
+\sigma & =-\rho A^{T}\frac{\partial E}{\partial A}\\
+T & =\frac{\partial E}{\partial s}\\
+\boldsymbol{q} & =\frac{\partial E}{\partial s}\frac{\partial E}{\partial\boldsymbol{J}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To close the system, the EOS must be specified, from which the above quantities
+ and the sources can be derived.
+ 
+\begin_inset Formula $E$
+\end_inset
+
+ is the sum of the contributions of the energies at the molecular scale
+ (microscale), the material element
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The concept of a 
+\shape italic
+material element
+\shape default
+ corresponds to that of a fluid parcel from fluid dynamics, applied to both
+ fluids and solids.
+\end_layout
+
+\end_inset
+
+ scale (mesoscale), and the flow scale (macroscale):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}\left(\rho,s\right)+E_{2}\left(A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this study, 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is taken to correspond to an ideal or stiffened gas:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p+\gamma p_{\infty}}{\left(\gamma-1\right)\rho}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $p_{\infty}=0$
+\end_inset
+
+ for an ideal gas.
+ The temperature is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T=\frac{p+p_{\infty}}{\left(\gamma-1\right)c_{v}\rho}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the speed of sound by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{0}=\sqrt{\frac{\gamma\left(p+p_{\infty}\right)}{\rho}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{2}$
+\end_inset
+
+ is chosen to have the following quadratic form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{2}=\frac{c_{s}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is a constant related to the characteristic velocity of propagation of
+ heat waves:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{h}=\frac{\alpha}{\rho}\sqrt{\frac{T}{c_{v}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ is the Gramian matrix of the distortion tensor, and 
+\begin_inset Formula $\dev\left(G\right)$
+\end_inset
+
+ is the deviator (trace-free part) of 
+\begin_inset Formula $G$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{3}$
+\end_inset
+
+ is the usual specific kinetic energy per unit mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following forms are chosen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1}\left(\tau_{1}\right) & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
+\theta_{2}\left(\tau_{2}\right) & =\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau_{1} & =\frac{6\mu}{\rho_{0}c_{s}^{2}}\\
+\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The justification of these choices is that classical Navier–Stokes–Fourier
+ theory is recovered in the stiff limit 
+\begin_inset Formula $\tau_{1},\tau_{2}\rightarrow0$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+.
+ This results in the following relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
+\boldsymbol{q} & =\alpha^{2}T\boldsymbol{J}\\
+-\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
+-\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following constraint also holds 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The model as presented here has its roots in Godunov and Romenski's 1970s
+ model of elastoplastic deformation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Godunov1974"
+
+\end_inset
+
+.
+ The two models are very similar in structure.
+ The differences lie in the physical interpretation of 
+\begin_inset Formula $A$
+\end_inset
+
+, the appearance of algebraic source terms in the evolution equations for
+ 
+\begin_inset Formula $A$
+\end_inset
+
+, and the inclusion of thermal conduction by the evolution of 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+.
+ Whereas the earlier model described only solids, the new model seeks to
+ describe fluids as well.
+ In the former, 
+\begin_inset Formula $A$
+\end_inset
+
+ was viewed as describing the global deformation of the medium; it is now
+ regarded as describing the local deformability of the material elements
+ comprising the medium, containing information about their rotation and
+ deformation.
+ Unlike in previous continuum models, material elements have not only finite
+ size, but also internal structure.
+\end_layout
+
+\begin_layout Standard
+The strain dissipation time 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ of the GPR model is a continuous analogue of Frenkel's 
+\begin_inset Quotes eld
+\end_inset
+
+particle settled life time
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jacovfrenkel1947"
+
+\end_inset
+
+; the characteristic time taken for a particle to move by a distance of
+ the same order of magnitude as the particle's size.
+ Thus, 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ characterizes the time taken for a material element to rearrange with its
+ neighbors.
+ 
+\begin_inset Formula $\tau_{1}=\infty$
+\end_inset
+
+ for solids and 
+\begin_inset Formula $\tau_{1}=0$
+\end_inset
+
+ for inviscid fluids.
+ It is in this way that the GPR model seeks to describe all three major
+ phases of matter, as long as a continuum description is appropriate for
+ the material at hand.
+\end_layout
+
+\begin_layout Standard
+The evolution equation for 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ and its contribution to the energy of the system are derived from Romenski's
+ model of hyperbolic heat transfer, originally proposed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Malyshev1984,Romenski1988"
+
+\end_inset
+
+ and implemented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Romenski2007,Romenski2010"
+
+\end_inset
+
+.
+ In this model, 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ is effectively defined as the variable conjugate to the entropy flux, in
+ the sense that the latter is the derivative of the specific internal energy
+ with respect to 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+.
+ Romenski remarks that it is more convenient to evolve 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ and 
+\begin_inset Formula $E$
+\end_inset
+
+ than the heat flux or the entropy flux, and thus the equations take the
+ form given here.
+ 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ can intuitively be thought of as a thermal analogue of momentum.
+ 
+\begin_inset Formula $\tau_{2}$
+\end_inset
+
+ characterizes the speed of relaxation of the thermal impulse due to heat
+ exchange between material elements.
+\end_layout
+
+\begin_layout Subsection
+Modeling Reactive Processes
+\end_layout
+
+\begin_layout Standard
+In this study, when modeling reactive gases, the following equation is introduce
+d alongside 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DensityEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MomentumEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyEquation"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\left(\rho\lambda\right)}{\partial t}+\frac{\partial\left(\rho\lambda v_{k}\right)}{\partial x_{k}}=-\rho\lambda K\left(T\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K$
+\end_inset
+
+ is the rate of reaction - a function of temperature, whose form depends
+ on the type of reaction kinetics used.
+ The EOS 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyDefinition"
+
+\end_inset
+
+ is modified to include:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{r}\left(\lambda\right)=-Q_{c}\left(1-\lambda\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In discrete ignition temperature reaction kinetics, no reaction occurs below
+ the ignition temperature, 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+.
+ Above 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+, the reaction proceeds at a constant rate 
+\begin_inset Formula $K_{0}>0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K\left(T\right)=\begin{cases}
+K_{0} & T\geq T_{i}\\
+0 & T<T_{i}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more sophisticated model of reaction kinetics was devised by Svante Arrhenius
+ in 1889 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "arrhenius1889dissociationswarme,arrhenius1889reaktionsgeschwindigkeit"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K\left(T\right)=B_{c}e^{-E_{a}/\left(R_{c}T\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $B_{c}$
+\end_inset
+
+ is some pre-exponential (with units of frequency), and 
+\begin_inset Formula $E_{a}$
+\end_inset
+
+ is the activation energy of the reactive species.
+ Often, the system is characterized by the dimensionless inverse activation
+ energy:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\epsilon=\frac{R_{c}T_{0}}{E_{a}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Numerical Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Numerical-Methods"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GPR model, being non-conservative, with stiff source terms, represents
+ a particularly challenging set of PDEs.
+ In this study they are solved by an ADER-WENO method.
+ First, the cell-wise constant state variable data from the current time
+ step is reconstructed using high-order spatial polynomials according to
+ the WENO method.
+ This reconstruction is then extended to a reconstruction in both space
+ and time for each individual cell in the domain, using the Discontinuous
+ Galerkin method.
+ A finite volume solver is then used to couple neighboring cells and produce
+ the cell-wise constant data at the next time step.
+ In this study, all simulations were performed in 1D.
+ The methods presented here are extensible to higher dimensions, however
+ (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a,Boscheri2016"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Time Step and Boundary Conditions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\Lambda_{i}^{n}$
+\end_inset
+
+ be the set of eigenvalues of the GPR system evaluated at 
+\begin_inset Formula $\boldsymbol{Q_{i}^{n}}.$
+\end_inset
+
+ 
+\begin_inset Formula $C_{cfl}<1$
+\end_inset
+
+ is a constant (usually taken to be 
+\begin_inset Formula $0.9$
+\end_inset
+
+, unless the problem being simulated is particularly demanding, requiring
+ a lower value).
+ The eigenvalues determine the speed of propagation of information in the
+ solution to the Riemann Problem at the cell interfaces, and the time step
+ is chosen to ensure that the characteristics do not enter into other cells
+ between 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{n+1}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta t_{n}=\frac{C_{cfl}\cdot\Delta x}{\max_{i}\left|\Lambda_{i}^{n}\right|}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Transmissive boundary conditions (allowing material and heat to pass through)
+ are implemented by setting the state variables in the boundary cells to
+ the same value as their non-boundary neighbors.
+ Reflective boundary conditions are implemented in the same way, except
+ that the directions of the velocity and thermal impulse vectors in the
+ boundary cells are reversed.
+ Where fixed temperature boundary conditions are used, reflective boundary
+ conditions are first imposed, after which the pressure is altered so that
+ the boundary cell has the desired temperature 
+\begin_inset Formula $T_{fixed}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho\left(\gamma-1\right)c_{v}T_{fixed}-p_{\infty}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where a fixed boundary heat flux 
+\begin_inset Formula $q$
+\end_inset
+
+ is specified, the quantity 
+\begin_inset Formula $\frac{q\cdot\Delta t}{\Delta x}$
+\end_inset
+
+ is added to the value of 
+\begin_inset Formula $\rho E$
+\end_inset
+
+ in the boundary cell.
+ It may be appropriate to also fix 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ in the boundary cell in accordance with the specified heat flux (as 
+\begin_inset Formula $\boldsymbol{q}=\alpha^{2}T\boldsymbol{J}$
+\end_inset
+
+), but this was not done here, as no analogous procedure was undertaken
+ in the studies with which this study compares its results.
+ The effect of this measure is a potential area of further research.
+\end_layout
+
+\begin_layout Subsection
+Operator Splitting
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:OperatorSplitting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An operator splitting method is used when solving the reduced GPR system
+ in slow cookoff simulations (detailed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:ANewMethodForSimulatingCookoff"
+
+\end_inset
+
+).
+ Take the following conservative hyperbolic system with sources:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At time step 
+\begin_inset Formula $n$
+\end_inset
+
+, using 
+\begin_inset Formula $\boldsymbol{Q^{n}}$
+\end_inset
+
+ as initial data, the homogeneous system is evolved by time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ to produce an intermediate state 
+\begin_inset Formula $\tilde{\boldsymbol{Q}}^{n+1}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}=\boldsymbol{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There exist many methods with which to accomplish this (see Toro for an
+ overview 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+
+\end_inset
+
+).
+ In this study, the following scheme is used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{\boldsymbol{Q_{i}}}^{n+1}=\boldsymbol{Q_{i}^{n}}+\frac{\Delta t}{\Delta x}\left(\boldsymbol{F_{i+\frac{1}{2}}}-\boldsymbol{F_{i-\frac{1}{2}}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The subscript 
+\begin_inset Formula $i+\frac{1}{2}$
+\end_inset
+
+ is used to denote the value between cells 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $i+1$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\boldsymbol{F_{i+\frac{1}{2}}}$
+\end_inset
+
+ was chosen to be the first-order First-Order Centered flux of Toro 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro1996glimm"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F_{i+\frac{1}{2}}}=\frac{1}{2}\left(\boldsymbol{F_{i+\frac{1}{2}}^{LF}}+\boldsymbol{F_{i+\frac{1}{2}}^{RI}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{F_{i+\frac{1}{2}}^{LF}}$
+\end_inset
+
+ is the Lax-Friedrichs flux:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F_{i+\frac{1}{2}}^{LF}}=\frac{1}{2}\left(\boldsymbol{F}\left(\boldsymbol{Q_{i}}\right)+\boldsymbol{F}\left(\boldsymbol{Q_{i+1}}\right)\right)+\frac{1}{2}\frac{\Delta x}{\Delta t}\left(\boldsymbol{Q_{i}}-\boldsymbol{Q_{i+1}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and 
+\begin_inset Formula $\boldsymbol{F_{i+\frac{1}{2}}^{RI}}$
+\end_inset
+
+ is the Richtmyer flux 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ritchtmyer1957difference"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q_{i+\frac{1}{2}}^{RI}} & =\frac{1}{2}\left(\boldsymbol{Q_{i}}+\boldsymbol{Q_{i+1}}\right)+\frac{1}{2}\frac{\Delta t}{\Delta x}\left(\boldsymbol{F}\left(\boldsymbol{Q_{i}}\right)-\boldsymbol{F}\left(\boldsymbol{Q_{i+1}}\right)\right)\\
+\boldsymbol{F_{i+\frac{1}{2}}^{RI}} & =\boldsymbol{F}\left(\boldsymbol{Q_{i+\frac{1}{2}}^{RI}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next, 
+\begin_inset Formula $\tilde{\boldsymbol{Q_{i}^{n+1}}}$
+\end_inset
+
+ is used as initial data to the following system of ODEs.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\boldsymbol{Q}}{dt}=\boldsymbol{S}\left(\boldsymbol{Q}\left(t\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This system is evolved by time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ to produce 
+\begin_inset Formula $\boldsymbol{Q_{i}^{n+1}}$
+\end_inset
+
+.
+ There are many ways to achieve this, both analytical and numerical.
+ Only analytical methods are used in this study, as described in the next
+ section.
+\end_layout
+
+\begin_layout Section
+New Method for Simulating Cookoff
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:ANewMethodForSimulatingCookoff"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take domain 
+\begin_inset Formula $x\in\left[0,L\right]$
+\end_inset
+
+ with heating at the left boundary using either a fixed temperature or a
+ fixed heat flux boundary condition, as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+.
+ If the heating phase of the cookoff process (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Cookoff"
+
+\end_inset
+
+) takes time 
+\begin_inset Formula $t^{*}$
+\end_inset
+
+, we require 
+\begin_inset Formula $L\ll c_{0}\cdot t^{*}$
+\end_inset
+
+.
+ This requirement is explained in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Limitations"
+
+\end_inset
+
+.
+ The domain is initially occupied by a reactive fluid with concentration
+ 1.
+ The following technique accelerates the computation of the long heating
+ phase.
+\end_layout
+
+\begin_layout Standard
+Take the reactive thermal subsystem of the motionless reactive GPR model:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial T}{\partial x_{i}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial q_{k}}{\partial x_{k}} & =0\\
+\frac{\partial\left(\rho\lambda\right)}{\partial t} & =-\rho\lambda K\left(T\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=\frac{p+\gamma p_{\infty}}{\left(\gamma-1\right)\rho}+\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}-Q_{c}\left(1-\lambda\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+ it is shown that the heat characteristic of this system has speed:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{h}=\frac{\alpha}{\rho}\sqrt{\frac{T}{c_{v}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is also demonstrated that around equilibrium (
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=I$
+\end_inset
+
+, 
+\series bold
+
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+
+\series default
+), the largest eigenvalue of the full GPR system has the following magnitude:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sqrt{\frac{C\rho+\sqrt{C^{2}-4\rho^{2}c_{h}^{2}\left(p+\frac{4}{3}c_{s}^{2}\right)}}{2\rho}},\quad C=c_{0}^{2}+c_{h}^{2}+\frac{4}{3}c_{s}^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For example, with the conditions 
+\begin_inset Formula $\rho=1$
+\end_inset
+
+, 
+\begin_inset Formula $p=1$
+\end_inset
+
+ and parameters 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+ (as featured in many of the numerical tests in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+), the heat characteristic has speed 
+\begin_inset Formula $c_{h}=\sqrt{\frac{2}{5}}\approx0.632$
+\end_inset
+
+, and the largest eigenvalue of the full system is approximately 2.20.
+ Thus, by the definition in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+, the time step used in an explicit solver for the reduced system will be
+ around 3.5 times larger than that for the full system.
+ In this study, it is proposed that in simulating slow cookoff, the thermal
+ subsystem alone is solved (similarly to the method employed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mccallen2003"
+
+\end_inset
+
+).
+ Unlike in the cited paper, however, the full reactive GPR system will be
+ employed when the rate of the chemical reaction becomes critical, to capture
+ the full dynamics of the violent combustion.
+\end_layout
+
+\begin_layout Standard
+The chemical reaction is determined to be proceeding at a critical rate
+ when the temperature curve leading away from the heated boundary develops
+ an inflection point.
+ The rationale behind this criterion is that this phenomenon indicates that
+ the chemical reaction has become the dominant heating process in the system,
+ over the boundary heating.
+ Points further away from the boundary are approaching temperatures close
+ to the boundary temperature, leading to an inflection in the temperature
+ curve.
+\end_layout
+
+\begin_layout Standard
+The reduced system is still hyperbolic.
+ Unlike the full system, however, it is also conservative.
+ The ADER-WENO solver is no longer necessary, and a less expensive operator
+ splitting scheme can be used, as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:OperatorSplitting"
+
+\end_inset
+
+.
+ The homogeneous subsystem is solved to first order, as higher-order accuracy
+ is not needed here, owing to the smooth dynamics of the heating process.
+\end_layout
+
+\begin_layout Standard
+The ODE subsystem is: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dJ_{i}}{dt} & =-\frac{\alpha^{2}}{\theta_{2}\left(\tau_{2}\right)}J_{i}\\
+\frac{d\lambda}{dt} & =-K\left(T\right)\lambda
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\rho$
+\end_inset
+
+ is treated as constant in time in the reduced system and 
+\begin_inset Formula $p$
+\end_inset
+
+ does not evolve over the time step of the ODE subsystem, so 
+\begin_inset Formula $T$
+\end_inset
+
+ is constant over this period, giving the analytical solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+J_{i}^{n+1} & =\exp\left(-\frac{\alpha^{2}\Delta t}{\theta_{2}\left(\tau_{2}\right)}\right)\tilde{J_{i}}^{n+1}\\
+\lambda^{n+1} & =\exp\left(-K\left(\tilde{T}^{n+1}\right)\Delta t\right)\tilde{\lambda}^{n+1}\label{eq:ConcentrationSolution}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The reduced system does not contain evolution terms for the density.
+ It produces roughly the correct temperature profile, but 
+\begin_inset Formula $\rho$
+\end_inset
+
+ remains static, with pressure given by 
+\begin_inset Formula $p=\left(\gamma-1\right)c_{v}T\rho-p_{\infty}$
+\end_inset
+
+.
+ On the timescale produced by the slow heating rate, the pressure in the
+ full system in fact tends to equilibrate across the domain quickly.
+ A process is required to calculate 
+\begin_inset Formula $\rho,p$
+\end_inset
+
+ correctly from 
+\begin_inset Formula $T$
+\end_inset
+
+ in the reduced system.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $p$
+\end_inset
+
+ is approximated as being spatially constant, and the velocity as 
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+.
+ The velocity of the fluid in the heating phase is shown to have little
+ effect on the combustive process in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mcclelland2014"
+
+\end_inset
+
+.
+ This is confirmed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SlowCookoff"
+
+\end_inset
+
+, where the constant pressure assumption is also shown to work well.
+ The average specific microscale energy in each cell is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\overline{\rho E_{1}}=\frac{1}{n}\sum_{i}\rho_{i}\left(E_{i}-\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J_{i}}\right\Vert ^{2}+Q_{c}\left(1-\lambda_{i}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\bar{p} & =\left(\gamma-1\right)\overline{\rho E_{1}}-\gamma p_{\infty}\\
+\rho_{i} & =\frac{\bar{p}+p_{\infty}}{\left(\gamma-1\right)c_{v}T_{i}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pressure and density are recalculated at every time step.
+ This approximation is very computationally cheap, and works well under
+ the circumstances investigated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SlowCookoff"
+
+\end_inset
+
+.
+ Not only is the time restriction based on the characteristic speeds of
+ the system reduced, but the computational cost is reduced by solving a
+ much smaller system.
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+ it is shown that 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ can be derived experimentally from:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{s}=\sqrt{\frac{3}{4}\left(c_{\infty}^{2}-c_{0}^{2}\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly, it is suggested that 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is derived experimentally by measuring 
+\begin_inset Formula $c_{h}$
+\end_inset
+
+.
+ Thus, the factor gain in the time step as a result of this procedure depends
+ on the properties of the material being modeled, and may be significantly
+ better or worse than the example value given here.
+ Even in the worst-case scenario where the characteristics of the heat waves
+ travel faster than those of the longitudinal pressure waves (and so there
+ is not improvement in the time step), the computational cost is still greatly
+ reduced.
+\end_layout
+
+\begin_layout Standard
+For the purpose of this study, this procedure will be referred to as 
+\shape italic
+the isobaric cookoff technique
+\shape default
+.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Viscous Shock-Induced Detonation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Viscous-Shock-Induced-Detonation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GPR model is now combined with discrete ignition temperature reaction
+ kinetics to model a ZND detonation wave
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Zel'dovich 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zeldovich1940"
+
+\end_inset
+
+, von Neumann 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Neumann1942"
+
+\end_inset
+
+, and Döring 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Doring1943"
+
+\end_inset
+
+ independently proposed this detonation model, whereby reactive gas is compresse
+d to high pressure by an infinitely thin shock wave into a 
+\shape italic
+von Neumann spike
+\shape default
+, initiating the reaction.
+ The reaction zone is located behind the spike.
+ In the reference frame of the shock, the gas moves supersonically ahead
+ of the shock, subsonically in the reaction zone, and sonically in the region
+ behind the reaction zone (which is described by the Chapman-Jouget state
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chapman1899,Jouget1905"
+
+\end_inset
+
+.
+ The energy released in the reaction is transported acoustically to the
+ shock to support it.
+\end_layout
+
+\end_inset
+
+ in a viscous, reactive, ideal gas.
+ There is currently no published work in which the GPR model is integrated
+ with a combustion model, and this test case serves to demonstrate that
+ this combination reproduces well-established results.
+\end_layout
+
+\begin_layout Standard
+The test consists of a Chapman-Jouget wave with speed 1, traveling into
+ a region of totally unburnt gas.
+ The initial conditions are taken from Helzel et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Helzel2000"
+
+\end_inset
+
+.
+ On 
+\begin_inset Formula $x<0.25$
+\end_inset
+
+ we have 
+\begin_inset Formula $\rho=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $p=1$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=\sqrt[3]{1.4}\cdot I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda=0$
+\end_inset
+
+.
+ On 
+\begin_inset Formula $x\geq0.25$
+\end_inset
+
+ we have 
+\begin_inset Formula $\rho=0.887565$
+\end_inset
+
+, 
+\begin_inset Formula $p=0.191709$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\left(\text{−}0.577350,0,0\right)$
+\end_inset
+
+, 
+\begin_inset Formula $A=\sqrt[3]{0.887565}\cdot I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $p_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.75$
+\end_inset
+
+, 
+\begin_inset Formula $Q_{c}=1$
+\end_inset
+
+, 
+\begin_inset Formula $K_{0}=250$
+\end_inset
+
+, 
+\begin_inset Formula $T_{i}=0.25$
+\end_inset
+
+.
+ The results for grids of 400 and 1600 cells at time 
+\begin_inset Formula $t=0.5$
+\end_inset
+
+ are found in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+.
+ They are to be compared with those by Hidalgo and Dumbser 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+.
+ The simulation with 400 cells corresponds well with that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+, and the simulation with 1600 cells is very close to Hidalgo's total variation
+ diminishing reference solution calculated with 10,000 cells.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is well resolved, with the thin reaction zone behind
+ it (corresponding to the region in which the concentration decreases from
+ 1 to 0).
+ The CJ state is maintained correctly behind the reaction zone.
+ The spurious wave in the density is explained in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+ as being due to initialization errors occurring as a result of using exact
+ algebraic conditions for an ideal (infinitely thin) CJ detonation wave,
+ which are solved with a viscous model with finite reaction rate.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement t
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename results/hidalgo/p.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/hidalgo/r.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename results/hidalgo/c.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/hidalgo/v.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+Pressure, density, concentration of reactant, and velocity (in the reference
+ frame of the shock) in the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Heating-Induced Deflagration
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a step towards modeling the slow cooking off problem, the GPR model is
+ now applied to the situation presented by Clarke, Kassoy and Riley 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1984,Clarke1986,Clarke1990"
+
+\end_inset
+
+.
+ Here, the domain 
+\begin_inset Formula $x\in\left[0,8.5\times10^{-6}\right]$
+\end_inset
+
+ is occupied by an ideal gas with initial conditions 
+\begin_inset Formula $\rho=\rho_{0}=1.176$
+\end_inset
+
+, 
+\begin_inset Formula $p=p_{0}=101325$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+ and material parameters 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=55$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=500$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.98\times10^{-5}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.72$
+\end_inset
+
+.
+ These values are chosen to be similar to air at room temperature.
+\end_layout
+
+\begin_layout Standard
+Thermal energy is added at the left boundary at a high power of 
+\begin_inset Formula $\frac{\gamma p_{0}c_{0}}{P_{r}\left(\gamma-1\right)}$
+\end_inset
+
+ (around 
+\begin_inset Formula $1.7\times10^{8}Wm^{-2}$
+\end_inset
+
+).
+ The test is performed with both a combustible and an inert gas.
+ In the former case, the initial concentration is set to 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+.
+ Arrhenius reaction kinetics are used, with 
+\begin_inset Formula $Q_{c}=6\gamma c_{v}T_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{c}=7\times10^{10}$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon=\frac{1}{20}$
+\end_inset
+
+.
+ The subsequent evolutions of the systems for 400 cells are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:CKR"
+
+\end_inset
+
+.
+ Nondimensionalized time and length variables 
+\begin_inset Formula $t^{*},x^{*}$
+\end_inset
+
+ are used, as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1986"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+t & =\frac{\mu}{p_{0}\gamma}t^{*}\\
+x & =\frac{\mu c_{0}}{p_{0}\gamma}x^{*}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are no analogues for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ in the models used by Clarke et al.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is given the experimentally-derived value for 
+\begin_inset Formula $CH_{3}Cl$
+\end_inset
+
+ at 30°C given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is chosen so that the GPR results corresponded with those in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1986"
+
+\end_inset
+
+.
+ The results presented here are thus close, but not identical to those of
+ Clarke et al.
+\end_layout
+
+\begin_layout Standard
+Note that heating the inert gas produces an acoustic wave of constant pressure,
+ propagating ahead of the temperature curve.
+ This pressure wave is also present in the heating of the combustible gas,
+ where it proceeds in front of the combustion wave.
+ The temperature increase accompanying this acoustic wave is not enough
+ to ignite the reactive gas, and the thin reaction zone lags behind the
+ acoustic wavefront.
+ Although the combustion wave is referred to as a detonation wave in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clarke1986"
+
+\end_inset
+
+, it would now commonly be called a deflagration wave, as it travels subsonicall
+y and is not coincident with the shock wave.
+ This phenomenon of a second, faster shock overtaking the combustion wave
+ demonstrated experimentally by Kapila et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kapila2002"
+
+\end_inset
+
+, with a full mathematical analysis provided by Short 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Short1997"
+
+\end_inset
+
+, where it is shown to result from the steep temperature gradient at the
+ time of ignition.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/ckr/non_reactive/T.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/ckr/reactive/T.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/ckr/non_reactive/p.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/ckr/reactive/p.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/ckr/non_reactive/c.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/ckr/reactive/c.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:CKR"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ deflagration test with inert gas (left) / reactive gas (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Heating-Induced Detonation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Heating-Induced-Detonation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is now demonstrated that the heating-induced deflagration test can result
+ in detonation if the temperature gradient upon ignition is less steep.
+ This test is identical to the previous test, with one exception: 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is given the higher value of 
+\begin_inset Formula $\frac{1}{15}$
+\end_inset
+
+.
+ Thus, the activation energy is effectively lower, or equivalently, the
+ whole gas volume is relatively closer to the ignition temperature when
+ the gas at the left boundary ignites.
+ The results of this test are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is present and well resolved, with a thin reaction
+ zone appearing behind it in the concentration plot.
+ Unlike in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Viscous-Shock-Induced-Detonation"
+
+\end_inset
+
+, the system does not relax to the CJ state behind the detonation wave,
+ as thermal energy is continually added to the reflective left boundary.
+ The region behind the reaction zone is thus complex.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename results/detonation/T.png
+	lyxscale 50
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename results/detonation/p.png
+	lyxscale 50
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename results/detonation/c.png
+	lyxscale 50
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Slow Cookoff
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:SlowCookoff"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The performance of the isobaric cookoff technique presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:ANewMethodForSimulatingCookoff"
+
+\end_inset
+
+ will now be investigated.
+ The initial conditions for a combustible gas are taken from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+.
+ There is a time-dependent fixed-temperature boundary condition on the left,
+ as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+, and the right boundary is reflective.
+ The temperature at the left boundary is given by 
+\begin_inset Formula $T=T_{0}\left(1+t\cdot10^{6}\right)$
+\end_inset
+
+.
+ Thus, this test can still be considered a quick cookoff in most contexts,
+ but the heating process is four orders of magnitude slower than in the
+ previous two tests; slow enough to demonstrate the isobaric cookoff technique.
+\end_layout
+
+\begin_layout Standard
+Unlike in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+, as the heating rate is relatively low, the temperature gradient is fairly
+ shallow at ignition, resulting in detonation rather than deflagration.
+ The detonation wave reaches the end of the domain at about 
+\begin_inset Formula $t=8.6\times10^{-7}$
+\end_inset
+
+, with the long heating phase taking up most of this time.
+ The detonation wave forms at around 
+\begin_inset Formula $8.5\times10^{-7}$
+\end_inset
+
+.
+ When using the isobaric cookoff technique, the full system is only calculated
+ from around 
+\begin_inset Formula $t=7\times10^{-7}$
+\end_inset
+
+ onward.
+\end_layout
+
+\begin_layout Standard
+The heating phase is shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Slow-Heating-1"
+
+\end_inset
+
+ at 9 equispaced points in time.
+ The temperature profiles between the reduced and full system are very close.
+ The constant pressure assumption works very well, as the heating rate is
+ slow enough for the pressure differences it generates to equilibrate, and
+ the domain is short enough that any acoustic waves emitted from the left
+ boundary rebound into the domain.
+ The pressure at each time step is slightly higher in the full system than
+ the reduced system.
+ This is due to the non-zero fluid velocities present in the full system
+ (but not the reduced system) carrying heated material away from the left
+ boundary, meaning that slightly more energy enters this system, as the
+ boundary is held at a fixed, time-dependent value.
+\end_layout
+
+\begin_layout Standard
+The zero velocities of the reduced system do not affect the shape of the
+ final detonation wave, as the velocities in the full system are relatively
+ small, but the indirect effect of this discrepancy on the total energy
+ of the system means that the reduced system detonates about 
+\begin_inset Formula $6.55\times10^{-9}s$
+\end_inset
+
+ later than the full system
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Detonation is defined here as the point at which 2.5% of reactant in any
+ cell has burned; a fairly arbitrary measure, to be discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Potential-Improvements"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+.
+ The subsequent evolution of the systems are almost indistinguishable (see
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Slow-Heating-2"
+
+\end_inset
+
+).
+ Proposals to rectify the discrepancy in the total energies of the systems
+ are discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Potential-Improvements"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+During the heating phase, the average time step for the reduced system was
+ 
+\begin_inset Formula $\Delta t=5.758\times10^{-11}$
+\end_inset
+
+, as opposed to 
+\begin_inset Formula $\Delta t=4.447\times10^{-11}$
+\end_inset
+
+ for the full system.
+ This relatively small difference is attributed to the fact that the heat
+ characteristics are relatively fast with the values of the material parameters
+ used (chosen to match those used in the heating-induced deflagration test).
+ However, the WENO, DG, and FV steps took on average 0.0703s, 0.8355s, and
+ 0.9326s respectively per iteration of the full system.
+ The operator splitting solver took on average 0.0001522s per iteration of
+ the reduced system (a speed-up of over 4 orders of magnitude).
+ In both cases, the auxiliary functions (such as those applying the boundary
+ conditions) took on average 0.01547s per iteration
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+All times quoted here resulted from running a single-threaded implementation
+ of the solver on an Intel Core i7 4910-MQ.
+\end_layout
+
+\end_inset
+
+.
+ Thus, the heating phase took a total of 25740s with the full system, and
+ 168s with the reduced system (a roughly 150-fold speed-up).
+ Of course, these results are very implementation- and hardware-specific,
+ and alternative implementations, running on different platforms may yield
+ different results.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/slow/reduced/T_early.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/slow/full/T_early.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/slow/reduced/p_early.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/slow/full/p_early.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/slow/reduced/v_early.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/slow/full/v_early.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Slow-Heating-1"
+
+\end_inset
+
+Temperature, pressure, and velocity in the heating phase of the slow cookoff
+ test for the reduced system (left) / full system (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/slow/reduced/p_late.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/slow/full/p_late.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/slow/reduced/T_late.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/slow/full/T_late.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/slow/reduced/c_late.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/slow/full/c_late.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Slow-Heating-2"
+
+\end_inset
+
+Pressure, temperature, and concentration of reactant in the detonation phase
+ of the slow cookoff test for the reduced system (left) / full system (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+It has been demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Viscous-Shock-Induced-Detonation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced-Detonation"
+
+\end_inset
+
+ that the GPR model coupled with Arrhenius reaction kinetics is capable
+ of accurately modeling the deflagration and detonation phenomena required
+ to simulate combustion.
+ This system carries the benefits of being hyperbolic, as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:ParabolicVsHyperbolicSystems"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The EOS used in this study was in every case either that of an ideal gas
+ or a stiffened gas.
+ Thus, solids could not be properly modeled.
+ Although in the early days of cookoff simulation, generally only gases
+ were considered, the focus now is very much on solids and the fluids that
+ they interact with and produce over the course of the process.
+ The isotropic hyperelastic EOS from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Titarev2008"
+
+\end_inset
+
+ and the Mie-Grüneisen EOS are used with the GPR model in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boscheri2016"
+
+\end_inset
+
+, providing some reference results against which to validate a future solid
+ cookoff implementation.
+ One outstanding problem regarding the GPR model is that of deriving a physicall
+y-relevant form of the function 
+\begin_inset Formula $\theta_{1}\left(\tau_{1}\right)$
+\end_inset
+
+ that controls the evolution of the distortion tensor for each type of fluid
+ or solid that one wishes to simulate.
+ The form of 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ used in this study works well for Newtonian fluids
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A Newtonian fluid is one in which the shear rate is directly proportional
+ to the shear stress.
+\end_layout
+
+\end_inset
+
+, but is not appropriate for non-Newtonian fluids (where rate of strain
+ is not directly proportional to shear stress) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a"
+
+\end_inset
+
+.
+ As of the time of writing, no other forms of 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ have been proposed, and this could form the basis of a future study.
+\end_layout
+
+\begin_layout Standard
+Only a very simple one-step, single-phase reaction model was used in this
+ study.
+ In reality, reaction pathways are extremely complicated, and depending
+ on the chemical species being modeled, this level of simplification may
+ be highly inadequate.
+ For example, Meredith et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Meredith2015"
+
+\end_inset
+
+ recently simulated the ignition of HMX using a condensed-phase model consisting
+ of two irreversible decomposition pathways and several subphases with different
+ physical properties, and a gas-phase model with 45 species and 231 elementary
+ reaction steps.
+ In principle, the author sees no reason that the GPR model would not cope
+ just as well with these processes as the models used in the cited paper.
+ Transitioning between different phases would mean only varying the strain
+ dissipation time, and perhaps the EOS; a great simplification to the multi-mode
+l frameworks typically used.
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SlowCookoff"
+
+\end_inset
+
+ it was demonstrated that the method proposed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:ANewMethodForSimulatingCookoff"
+
+\end_inset
+
+ can be used to significantly reduce the computational time in the heating
+ phase of cookoff simulations on short bounded domains.
+ An example of a real-world setup benefiting from this technique would be
+ the constant-pressure HMX heating experiments of Renlund et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Renlund1997"
+
+\end_inset
+
+.
+ Some examples of numerical experiments benefiting from this technique would
+ be the heating phase of the simulations of Kapila, Schwendeman, et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kapila2002,Schwendeman2002"
+
+\end_inset
+
+, where the detonation response to different temperature gradients at constant
+ pressure is investigated.
+\end_layout
+
+\begin_layout Standard
+The isobaric cookoff technique is, in a sense, similar to existing techniques
+ used in modeling solid cookoff, where the material is assumed not to flow
+ in the heating phase 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nichols2014"
+
+\end_inset
+
+.
+ The governing system of equations and its method of solution are, however,
+ very different, and these previous models do not transform into a flow
+ model upon detonation.
+ The crucial realization here is that fluid cookoff can be modeled in the
+ same way if the acoustic wave generated by the heating hits bounding wall
+ relatively early and pressure equilibrates over a relatively short period
+ of time.
+\end_layout
+
+\begin_layout Standard
+The isobaric cookoff technique is similar to the mass scaling technique
+ described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Cookoff"
+
+\end_inset
+
+, in that both produce an approximate, explicitly-solved system with a larger
+ time step.
+ Both techniques achieve a similar time step increment.
+ Whilst the mass scaling technique applies not just to constant-pressure
+ flows, the technique here is much more computationally efficient, retains
+ the hyperbolic character of the thermal conduction, and does not produce
+ spurious oscillations in the motions of the heated materials (as the materials
+ are assumed to be motionless while only the reduced system is calculated).
+\end_layout
+
+\begin_layout Subsection
+Limitations
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Limitations"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Firstly, all tests were carried out in 1D.
+ Several multidimensional test cases are presented for the GPR model in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a,Boscheri2016"
+
+\end_inset
+
+, including the circular explosion problem, the 3D Taylor-Green vortex,
+ and the viscous double Mach reflection problem of Woodward and Colella
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Woodward1984"
+
+\end_inset
+
+, among others.
+ However, several aspects of combustion are inherently multidimensional
+ phenomena (such as hotspot formation, which can induce inhomogeneities
+ in the profiles of combustion waves 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schwendeman2002"
+
+\end_inset
+
+, or gas intrusions and channeling, which are important in deflagration-to-deton
+ation processes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Asay2010"
+
+\end_inset
+
+).
+ The GPR model thus far has not been tested with any consideration of these
+ phenomena, and this remains to be done.
+\end_layout
+
+\begin_layout Standard
+The results of Gross et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gross2015"
+
+\end_inset
+
+ suggest that the isobaric cookoff technique would still be applicable to
+ mixtures of fluids, as pressures still tend to equilibrate, but this is
+ a complication that needs to be borne in mind.
+\end_layout
+
+\begin_layout Standard
+The isobaric cookoff technique only works on bounded domains which are relativel
+y short in comparison to the speed of sound in the medium.
+ This is because if the initial acoustic wave generated in the heating process
+ does not reach the end of the domain early on in the simulation, the constant-p
+ressure assumption will not be a realistic approximation to the system,
+ leading to an incorrect calculation of the density (derived from the very
+ accurate calculation of the temperature by the thermal subsystem).
+\end_layout
+
+\begin_layout Standard
+Another problem with the method in its current form is that it assumes that
+ the reactive material is structurally homogeneous.
+ Whilst this may be a fair assumption in some situations for relatively
+ inviscid gases, it is very unlikely to be realistic in many situations
+ involving modeling detonations in solids, where gaps and thermal damage
+ (porosity and cracks) develop over the long heating phase 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yoh2003"
+
+\end_inset
+
+.
+ Inhomogeneities in the reactive materials can lead to very different outcomes,
+ as demonstrated by Schwendeman and Kapila 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schwendeman2002"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Potential Improvements
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Potential-Improvements"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are some potential improvements that could be made to the isobaric
+ cookoff technique.
+ Leveque's 
+\shape italic
+Large Time Step Method
+\shape default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leveque1985"
+
+\end_inset
+
+ may present a further technique to speed up the calculation of the heating
+ phase.
+ This would require solution of the Riemann Problem of the thermal conduction
+ subsystem of the GPR model.
+ This is a relatively simple, conservative hyperbolic system with sources.
+ Whilst there does not appear to be any published exact solutions available,
+ there are a variety of techniques that could be applied to solve a Riemann
+ Problem such as this (see Montecinos et al.
+ for a recent overview 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montecinos2012"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+It may be that larger speed-ups than those demonstrated here could be achieved
+ by the use of an implicit solver for the reduced system, owing to the larger
+ time steps that this would permit.
+ See Clutter 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clutter2013"
+
+\end_inset
+
+ for some benchmark tests of explicit and implicit solvers for reactive
+ systems.
+ Implicit-Explicit (IMEX) methods are another technique 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ascher1995,Ascher1997"
+
+\end_inset
+
+, involving solving the acoustic terms implicitly to avoid the acoustic
+ CFL condition, while solving the advection and conduction terms explicitly,
+ similarly to the method proposed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mccallen2003"
+
+\end_inset
+
+.
+ The explicit solves could be subcycled (repeated many times for each larger
+ time step of the implicit solver), permitting the use of the larger implicit
+ time steps.
+ IMEX methods would allow the simulation of systems displaying non-constant
+ pressure, acoustic waves, and flow.
+\end_layout
+
+\begin_layout Standard
+Solving the equations at least partly implicitly requires the iterative
+ solution of a non-linear system.
+ This requires more algorithmic machinery and often tailored preconditioners
+ to achieve good convergence speeds.
+ The domain of dependence of the solution becomes the whole domain, in some
+ sense destroying the localized nature of the hyperbolic system (and the
+ associated benefits detailed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:ParabolicVsHyperbolicSystems"
+
+\end_inset
+
+), and making impossible the trivial parallelisation inherent to the original
+ system.
+ This may prove more costly for very large grids, whereas the cost-per-iteration
+ of an explicit solver to the hyperbolic system will not increase substantially,
+ as long as additional computational cores are available.
+ The performance of a method such as this, compared with that proposed in
+ this study, will depend to some extent on both algorithmic, software, and
+ hardware implementations, and benchmarking for the desired usage cases
+ should be performed to decide which is more desirable.
+ It must also be borne in mind that the method proposed in this study is
+ much simpler to implement, and the transition period from the reduced to
+ the full system does not present any of the myriad issues commonly associated
+ with implicit methods, discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Cookoff"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It was noted in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SlowCookoff"
+
+\end_inset
+
+ that the reduced system detonates slightly later than the full system,
+ owing to the fact that the convection of warm material away from the heated
+ left boundary (a process ignored by the reduced system) results in slightly
+ more energy being pumped into the full system, as the boundary is held
+ at a fixed temperature.
+ To ensure that exactly the same amount of energy has entered both systems
+ at each point in time, a fixed flux boundary condition (as described in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+) could be used.
+ It's important to note, however, that in the rudimentary implementation
+ of this condition presented here, at each time step all the additional
+ thermal energy resulting from the heat flux is added to just one boundary
+ cell.
+ If a very fine grid is used, this will result in very large, nonphysical
+ values for the temperature at the boundary.
+ It may be possible to rectify this problem by smearing out the additional
+ thermal energy at each time step over a layer a few cells thick at the
+ boundary.
+ Caution must be taken in deciding which proportions of the total additional
+ energy to add to which cells, however, so that a physically-relevant solution
+ is obtained.
+ It may be instructive to obtain some analytical results regarding the depth
+ of penetration of the heat flux over the time step, which would be available
+ for the classical Fourier law of heat conduction in some situations.
+ Alternatively, a subcycle of the thermal conduction system of the GPR model
+ could be perform at the beginning of every time step to determine how far
+ the heat flux penetrates the medium, given the temperature and density
+ distribution around the boundary.
+\end_layout
+
+\begin_layout Standard
+A second-order accurate solver for the GPR model has recently been proposed
+ by Jackson 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jackson2017a"
+
+\end_inset
+
+.
+ It has been demonstrated to be 5-15 times faster than the equivalent ADER-WENO
+ method on a variety of problems.
+ Thus, it may be possible to attain this order of speedup in computing the
+ later stages of the cookoff process, when the full GPR system is employed.
+ The method presented in the referenced study relies on an operator splitting,
+ of the kind described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:OperatorSplitting"
+
+\end_inset
+
+.
+ It would be straightforward to incorporate into this framework the analytical
+ solution 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ConcentrationSolution"
+
+\end_inset
+
+ for the time evolution of the reactive species.
+ It is not immediately clear, however, how more complicated reaction dynamics
+ would be integrated into the framework, and this method is unable to provide
+ the arbitrarily high-order solutions that the ADER-WENO method is capable
+ of, which may be important to accurately capture the complex evolution
+ of the phenomena arising in cookoff problems.
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "misc_refs,../../refs"
+options "bibtotoc,siam"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

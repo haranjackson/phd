@@ -1,0 +1,2658 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamerposter
+\begin_preamble
+\newcommand{\bottomLeftText}{Author: Haran Jackson}
+\newcommand{\bottomRightText}{Supervisor: Dr N Nikiforakis}
+\newcommand{\posterSize}{a0} % a0,a1,a2
+\newcommand{\nCols}{3} % 2,3
+
+
+\usetheme{Madrid}
+\usepackage[orientation=portrait,size=\posterSize]{beamerposter}
+\usepackage[labelfont={scriptsize,color={darkblue}},font=scriptsize,labelformat=simple]{caption}
+
+\setbeamertemplate{navigation symbols}{}  % no navigation on a poster 
+\setbeamertemplate{caption}[numbered]
+
+\setbeamerfont{normal text}{family=helvet}
+\setbeamerfont{local structure}{family=helvet}
+
+\definecolor{lightblue}{rgb}{0.0,0.45,0.81}
+\definecolor{lighterblue}{rgb}{0.415,0.678,0.894}
+\definecolor{darkblue}{rgb}{0,0.243,0.447}
+\definecolor{vdarkblue}{rgb}{0,0.162,0.298}
+
+\setbeamercolor*{author in head/foot}{bg=darkblue}
+\setbeamercolor*{logo in head/foot}{bg=darkblue,fg=white}
+\setbeamercolor*{title in head/foot}{bg=lightblue,fg=vdarkblue}
+\setbeamercolor*{date in head/foot}{bg=darkblue,fg=white}
+\setbeamercolor{title}{bg=darkblue}
+\setbeamercolor{headline}{bg=lightblue,fg=white}
+\setbeamercolor{frametitle}{bg=lightblue,fg=white}
+\setbeamercolor{frametitle}{bg=darkblue}
+\setbeamercolor{under headline}{bg=lighterblue,fg=darkblue}
+\setbeamercolor{footline}{bg=darkblue}
+\setbeamercolor{block title}{bg=lighterblue,fg=vdarkblue}
+\setbeamercolor{lower separation line head}{bg=darkblue}
+
+\setbeamertemplate{bibliography item}{\insertbiblabel}  % Numbered bibliography
+
+%%% Each bibliography entry runs on just 1 line %%%
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+
+\setbeamercolor{bibliography item}{fg=black}
+\setbeamercolor*{bibliography entry title}{fg=black}
+\setbeamercolor*{bibliography entry author}{fg=black}
+\setbeamercolor*{bibliography entry location}{fg=black}
+\setbeamercolor*{bibliography entry note}{fg=black}
+
+%%% Equation labels resize according to equation size %%%
+\makeatletter
+\def\maketag@@@#1{\hbox{\m@th#1}}
+\makeatother
+
+%%% Set column width according to number of columns %%%
+\newif\ifThreeCols
+\ifnum \nCols=2
+\newcommand{\colWidth}{.45\paperwidth}
+\ThreeColsfalse
+\else
+\newcommand{\colWidth}{.3\paperwidth}
+\ThreeColstrue
+\fi
+
+
+\newenvironment{fcolumn}
+{
+  \begin{column}[t]{\colWidth}
+}
+{
+  \end{column}
+}
+
+
+\newenvironment{fblock}[1]
+{
+  \begin{block}{#1}
+    \centering
+    \begin{minipage}{0.95\linewidth}
+    \setlength{\parskip}{.005\paperheight}
+}
+{      
+    \end{minipage}
+  \end{block}
+}
+
+
+%%% HEADLINE %%%
+\setbeamertemplate{headline}
+{
+  \leavevmode%
+  \vskip0.015\paperwidth
+  \hskip0.015\paperwidth
+  \hbox
+  {%
+    \begin{beamercolorbox}[wd=.32\paperwidth,ht=.05\paperheight,left]{logo in head/foot}%
+    \vbox to.05\paperheight{\vfil\includegraphics[height=.035\paperheight]{figs/CambridgeLogo}\vfil}%
+    \end{beamercolorbox}%
+    
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=.05\paperheight,center]{date in head/foot}%
+    % Empty middle box
+    \end{beamercolorbox}%
+    
+    \begin{beamercolorbox}[wd=.32\paperwidth,ht=.05\paperheight,right]{date in head/foot}%
+    \vbox to.05\paperheight{\vfil\includegraphics[height=.04\paperheight]{figs/MaxwellLogo}\vfil}%
+    \end{beamercolorbox}%
+  }%
+
+  \hbox
+  {%
+    \hskip0.015\paperwidth
+    \begin{beamercolorbox}[wd=0.97\paperwidth,ht=.05\paperheight,center]{under headline}%
+    \usebeamerfont{title in head/foot}%
+    \vbox to.05\paperheight{\vfil\inserttitle\vfil}%
+    \end{beamercolorbox}%
+  }
+}
+
+
+%%% BLOCK %%%
+\setbeamertemplate{block begin}
+{
+  \begin{beamercolorbox}[ht=.03\paperheight,leftskip=.005\paperwidth]%
+  {block title}%
+  \vbox to.03\paperheight{\vfil\usebeamerfont*{block title}\insertblocktitle\vfil}%
+  \end{beamercolorbox}%
+
+  \usebeamerfont{block body}%
+  \begin{beamercolorbox}[sep=.011\paperwidth]%
+  {block body}%
+}
+\setbeamertemplate{block end}
+{
+  \end{beamercolorbox}
+  \vspace{.02\paperwidth}
+}
+
+
+%%% FOOTER %%%
+\setbeamertemplate{footline}
+{  
+  \leavevmode%
+  \hskip 0.015\paperwidth
+  \hbox
+  {%
+    \begin{beamercolorbox}[wd=.32\paperwidth,ht=.045\paperheight,center]{logo in head/foot}%
+    \vbox to.045\paperheight{\vfil\usebeamerfont{date in head/foot}\bottomLeftText\vfil}%
+    \end{beamercolorbox}%
+    
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=.045\paperheight,center]{date in head/foot}%
+    \vbox to.045\paperheight{\vfil\includegraphics[height=.035\paperheight]{figs/EPSRCLogo}\vfil}%
+    \end{beamercolorbox}%
+    
+    \begin{beamercolorbox}[wd=.32\paperwidth,ht=.045\paperheight,center]{date in head/foot}%
+    \vbox to.042\paperheight{\vfil\usebeamerfont{date in head/foot}\bottomRightText\vfil}%
+    \end{beamercolorbox}%
+  }%
+  \hskip0.015\paperwidth
+  \vskip0.015\paperwidth%
+}
+
+
+%%% Set spacing around equations %%%
+\expandafter\def\expandafter\normalsize\expandafter{%
+    \normalsize
+    \setlength\abovedisplayskip{-5pt}
+    \setlength\belowdisplayskip{5pt}
+    \setlength\abovedisplayshortskip{-5pt}
+    \setlength\belowdisplayshortskip{5pt}
+}
+
+
+%%% Set font sizes according to page size %%%
+\ifnum\pdfstrcmp{\posterSize}{a2}=0
+\setbeamerfont*{caption name}{size=\fontsize{24pt}{28pt}}
+\setbeamerfont*{caption}{size=\fontsize{24pt}{28pt}}
+\setbeamerfont*{block body}{size=\fontsize{20pt}{24pt}}
+\setbeamerfont*{block title}{size=\fontsize{36pt}{40pt}}
+\setbeamerfont*{title in head/foot}{size=\fontsize{40pt}{44pt}}
+\setbeamerfont*{date in head/foot}{size=\fontsize{28pt}{32pt}}
+
+\else \ifnum\pdfstrcmp{\posterSize}{a1}=0
+\setbeamerfont*{caption name}{size=\fontsize{28pt}{32pt}}
+\setbeamerfont*{caption}{size=\fontsize{28pt}{32pt}}
+\setbeamerfont*{block body}{size=\fontsize{24pt}{28pt}}
+\setbeamerfont*{block title}{size=\fontsize{40pt}{44pt}}
+\setbeamerfont*{title in head/foot}{size=\fontsize{48pt}{52pt}}
+\setbeamerfont*{date in head/foot}{size=\fontsize{40pt}{44pt}}
+
+\else
+\setbeamerfont*{caption name}{size=\fontsize{32pt}{36pt}}
+\setbeamerfont*{caption}{size=\fontsize{32pt}{36pt}}
+\setbeamerfont*{block body}{size=\fontsize{28pt}{32pt}}
+\setbeamerfont*{block title}{size=\fontsize{52pt}{56pt}}
+\setbeamerfont*{title in head/foot}{size=\fontsize{72pt}{76pt}}
+\setbeamerfont*{date in head/foot}{size=\fontsize{52pt}{56pt}}
+\fi\fi
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 0
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+An Operator Splitting Solver for the GPR Model of Continuum Mechanics
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{columns}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fcolumn}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fblock}{Background}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+The GPR model is a hyperbolic set of PDEs, capable of describing the action
+ of both fluids and solids.
+ It is based on the solid model of Godunov & Romenski 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Godunov1974"
+
+\end_inset
+
+ and was first presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+
+\end_inset
+
+ and expanded upon in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+
+\end_inset
+
+ to include heat conduction:
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{1}{\theta_{1}(\tau_{1})}\frac{\partial E}{\partial A_{ij}}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho}{\theta_{2}\left(\tau_{2}\right)}\frac{\partial E}{\partial J_{i}}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula $\rho,\mathbf{v},p,\delta,\sigma,T,\boldsymbol{q},E$
+\end_inset
+
+ retain their usual meanings.
+ 
+\begin_inset Formula $A$
+\end_inset
+
+ is the distortion tensor (containing information about the deformation
+ and rotation of material elements), 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is the thermal impulse vector (the conjugate of the entropy flux with respect
+ to 
+\begin_inset Formula $E$
+\end_inset
+
+), 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ is the strain dissipation time, 
+\begin_inset Formula $\tau_{2}$
+\end_inset
+
+ is the thermal impulse relaxation time.
+ 
+\begin_inset Formula $\theta_{1},\theta_{2}>0$
+\end_inset
+
+ are chosen according to the properties of the medium and 
+\begin_inset Formula $E\left(\rho,p,A,\boldsymbol{J},\boldsymbol{v}\right)$
+\end_inset
+
+ depends on the equation of state chosen for the material.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+The model was solved in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boscheri2016,Dumbser2016"
+
+\end_inset
+
+ using the ADER-WENO method.
+ Whilst this method provides arbitrarily-high-order solutions, it is relatively
+ computationally expensive, especially if only 2nd-order accurate solutions
+ are required.
+ A computationally cheaper 2nd-order method was developed in this study.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fblock}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fblock}{Formulation}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+The GPR model takes the following form:
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}\left(\boldsymbol{Q}\right)+\boldsymbol{B}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}\left(\boldsymbol{Q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+In the new method, the homogeneous system and temporal ODE system resulting
+ from the source terms are solved separately:
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}\left(\boldsymbol{Q}\right)+\boldsymbol{B}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q} & =\boldsymbol{0}\label{eq:homogeneous}\\
+\frac{d\boldsymbol{Q}}{dt} & =\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:odes}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Denoting the discrete action of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:homogeneous"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:odes"
+
+\end_inset
+
+ over time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ by the operators 
+\begin_inset Formula $H^{\Delta t}$
+\end_inset
+
+ and 
+\begin_inset Formula $S^{\Delta t}$
+\end_inset
+
+ respectively, the discrete solution to the GPR system is advanced from
+ 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ to 
+\begin_inset Formula $t_{n+1}$
+\end_inset
+
+ by the following second-order scheme, based on a Strang splitting 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{q_{n+1}}=S^{\Delta t/2}H^{\Delta t}S^{\Delta t/2}\boldsymbol{q_{n}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula $H^{\Delta t}$
+\end_inset
+
+ is computed by performing a 2nd order WENO reconstruction of the data and
+ advancing this reconstruction by 
+\begin_inset Formula $\frac{\Delta t}{2}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Frame
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{w_{p}^{n+\frac{1}{2}}}=\boldsymbol{w_{p}^{n}}-\frac{\Delta t}{2\Delta x}\left(\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\psi_{k}\left(\boldsymbol{\chi_{p}}\right)+\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+where 
+\begin_inset Formula $\psi_{p}$
+\end_inset
+
+ is the 
+\begin_inset Formula $p$
+\end_inset
+
+th basis polynomial, 
+\begin_inset Formula $\boldsymbol{w_{p}^{n}}$
+\end_inset
+
+ is the WENO reconstruction coefficient of 
+\begin_inset Formula $\psi_{p}$
+\end_inset
+
+ at time 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+, and 
+\begin_inset Formula $\boldsymbol{\chi_{p}}$
+\end_inset
+
+ is interpolation point of 
+\begin_inset Formula $\psi_{p}$
+\end_inset
+
+.
+ Cell values are then updated using the finite volume formula given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+
+\end_inset
+
+, using the path-conservative Rusanov formulation for the interface jump
+ terms.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+In computing 
+\begin_inset Formula $S^{\Delta t}$
+\end_inset
+
+, note that the ODEs governing 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ have the analytic solution:
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{J}\left(t\right)=\boldsymbol{J}\left(0\right)\sqrt{\frac{1}{e^{at}-\frac{b}{a}\left(e^{at}-1\right)\left\Vert \boldsymbol{J}\left(0\right)\right\Vert ^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+for constants 
+\begin_inset Formula $a,b$
+\end_inset
+
+ given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jackson2017a"
+
+\end_inset
+
+.
+ In the same paper, an approximate analytic solution for the ODEs governing
+ 
+\begin_inset Formula $A$
+\end_inset
+
+ is derived, valid when the arithmetic mean of the singular values of 
+\begin_inset Formula $A$
+\end_inset
+
+ is close to the geometric mean, as is true for moderate flows.
+ If this condition does not hold, a stiff ODE solver is used instead.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+Thus, the computationally expensive Discontinuous Galerkin predictor required
+ in the ADER-WENO method is avoided.
+ The WENO matrices (given in the appendix of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jackson2017a"
+
+\end_inset
+
+) are precomputed and so the WENO reconstruction is relatively computationally
+ cheap, and the analytical solution to 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:odes"
+
+\end_inset
+
+ is of negligible cost to calculate.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fblock}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fcolumn}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fcolumn}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fblock}{Results}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+The approximate analytic solver for the ODEs governing 
+\begin_inset Formula $A$
+\end_inset
+
+ is compared here with a stiff numerical ODE solver.
+ Initial data is taken from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Barton2010"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Frame
+\begin_inset Formula 
+\begin{equation}
+A_{0}=\left(\begin{array}{ccc}
+1 & 0 & 0\\
+-0.01 & 0.95 & 0.02\\
+-0.015 & 0 & 0.9
+\end{array}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+The resulting evolution of the stress tensor and energy (the macroscopic
+ variables depending on 
+\begin_inset Formula $A$
+\end_inset
+
+) are shown below for the two methods.
+ As can be seen, the approximate analytic solver performs well with this
+ initial data, at a fraction of the computational cost.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/σ11_σ22_σ33.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/energy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+The following tests are taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+
+\end_inset
+
+.
+ The results below show the ADER-WENO method compared with the new Split-WENO
+ method for: Stokes' First Problem with 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+ (top); the Viscous Shock Problem (middle); and the Heat Conduction Problem
+ (bottom).
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/stokes_ader_weno.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/stokes_split_weno.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/viscous_shock_ader_weno.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/viscous_shock_split_weno.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figs/heat_conduction_temperature.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figs/heat_conduction_heat_flux.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+The tables below show: the run times for various tests (top); the convergence
+ rates for the ADER-WENO method on the viscous shock test (middle); and
+ the corresponding convergence rates for the new method (bottom).
+ A significant speedup is attained with little loss of accuracy.
+ In fact, convergence is better in all norms with the new method, for the
+ test used.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\size small
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+ADER-WENO
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+New Method
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Speedup
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Stokes' First Problem, 
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+265s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+48s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+5.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Stokes' First Problem, 
+\begin_inset Formula $\mu=10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+294s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+48s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+6.1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Stokes' First Problem, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+536s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+48s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+11.1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Viscous Shock Problem
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+297s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+70s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+4.2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Heat Conduction Problem
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+544s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+117s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+4.6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\size small
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Cells
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\epsilon\left(L_{1}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\epsilon\left(L_{2}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\epsilon\left(L_{\infty}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $O\left(L_{1}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $O\left(L_{2}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $O\left(L_{\infty}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $3.40\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $8.84\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $3.67\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $5.42\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.54\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $7.45\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.65
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.52
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.30
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $2.47\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $6.43\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $3.34\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.94
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.16
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.98
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.58\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $3.85\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.97\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.56
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.78
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+1.84
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\size small
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+Cells
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\epsilon\left(L_{1}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\epsilon\left(L_{2}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $\epsilon\left(L_{\infty}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $O\left(L_{1}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $O\left(L_{2}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $O\left(L_{\infty}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $7.20\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.59\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $5.86\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.30\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $3.36\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.44\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.47
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.24
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.02
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $4.68\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $1.30\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $5.74\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.52
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.35
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.27
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $2.48\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $6.81\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+\begin_inset Formula $3.19\times10^{-4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.24
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size small
+2.04
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fblock}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fcolumn}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fcolumn}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fblock}{Discussion}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+It has been demonstrated that this new method is able to produce results
+ of high fidelity in a range of situations.
+ It is significantly faster than the other currently available methods,
+ and easier to implement.
+ The author would however recommend that if very high order-of-accuracy
+ is required, and computational cost is not of paramount importance, ADER-WENO
+ methods may present a better option, as by design the Split-WENO method
+ cannot achieve better than second-order accuracy.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+It should be noted that the assumption used to derive the approximate analytical
+ solver for the distortion ODEs may break down for situations where the
+ flow is compressed heavily in one direction but not the others.
+ The reason for this is that one of the singular values of the distortion
+ tensor will be much larger than the others, and the mean of the squares
+ of the singular values will not be close to its geometric mean, meaning
+ that the subsequent linearization of the ODE governing the mean of the
+ singular values fails.
+ It should be noted that none of the situations covered in this study presented
+ problems for the approximate analytical solver, and situations which may
+ be problematic are in some sense unusual.
+ In any case, a stiff ODE solver can be used to solve the system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:odes"
+
+\end_inset
+
+ if necessary, and in these situations the Split-WENO method is still fast
+ and accurate, though slightly slower.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+It should be noted that both the ADER-WENO and Split-WENO methods, as described
+ in this study, are trivially parallelizable on a cell-wise basis.
+ Thus, given a large number of computational cores, deficiencies in the
+ Split-WENO method in terms of its order of accuracy may be overcome by
+ utilizing a larger number of computational cells and cores.
+ The computational cost of each time step is significantly smaller than
+ with the ADER-WENO method, and the number of grid cells that can be used
+ scales roughly linearly with number of cores, at constant run time per
+ iteration.
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fblock}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fblock}{References}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-
+\backslash
+topsep}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../../refs"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fblock}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{fblock}{Acknowledgements}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+I acknowledge financial support from the EPSRC Centre for Doctoral Training
+ in Computational Methods for Materials Science under grant EP/L015552/1.
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fblock}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{fcolumn}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{columns}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

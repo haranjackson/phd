@@ -1,0 +1,1170 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage,12pt,numbered
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\branch ChildOnly
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Conclusions
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Conclusions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It has been demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Viscous-Shock-Induced-Detonation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced Deflagration"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Heating-Induced-Detonation"
+
+\end_inset
+
+ that the HPR model coupled with Arrhenius reaction kinetics is capable
+ of accurately modeling the deflagration and detonation phenomena required
+ to simulate combustion.
+ This system carries the benefits of being hyperbolic, as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Background"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The two main novel developments of this study (the isobaric cookoff technique,
+ and the HPR-RGFM) are discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:The-Isobaric-Cookoff-Technique"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:HPR-RGFM"
+
+\end_inset
+
+ respectively, along with their limitations and potential improvements.
+ Before discussing these specifics, it should be noted that there are several
+ limitations applicable to this study as a whole.
+ Firstly, all tests were carried out in 1D.
+ Several multidimensional test cases are presented for the HPR model in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015,Boscheri2016"
+
+\end_inset
+
+, including the circular explosion problem, the 3D Taylor-Green vortex,
+ and the viscous double Mach reflection problem of Woodward and Colella
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Woodward1984"
+
+\end_inset
+
+, among others.
+ However, several aspects of combustion are inherently multidimensional
+ phenomena (such as hotspot formation, which can induce inhomogeneities
+ in the profiles of combustion waves 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schwendeman2002"
+
+\end_inset
+
+, or gas intrusions and channeling, which are important in deflagration-to-deton
+ation processes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Asay2010"
+
+\end_inset
+
+).
+ The HPR model thus far has not been tested with any consideration of these
+ phenomena, and this remains to be done.
+\end_layout
+
+\begin_layout Standard
+The EOS used in this study was in every case either that of an ideal gas
+ or a stiffened gas.
+ Thus, solids could not be properly modeled.
+ Although in the early days of cookoff simulation, generally only gases
+ were considered, the focus now is very much on solids and the fluids that
+ they interact with and produce over the course of the process.
+ The isotropic hyperelastic EOS from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Titarev2008"
+
+\end_inset
+
+ and the Mie-Grüneisen EOS are used with the HPR model in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boscheri2016"
+
+\end_inset
+
+, providing some reference results against which to validate a future solid
+ cookoff implementation.
+ One outstanding problem regarding the HPR model is that of deriving a physicall
+y-relevant form of the function 
+\begin_inset Formula $\theta_{1}\left(\tau_{1}\right)$
+\end_inset
+
+ that controls the evolution of the distortion tensor for each type of fluid
+ or solid that one wishes to simulate.
+ The form of 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ used in this study works well for Newtonian fluids
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A Newtonian fluid is one in which the shear rate is directly proportional
+ to the shear stress.
+\end_layout
+
+\end_inset
+
+, but is not appropriate for non-Newtonian fluids (where rate of strain
+ is not directly proportional to shear stress) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+.
+ As of the time of writing, no other forms of 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ have been proposed, and this could form the basis of a future study.
+\end_layout
+
+\begin_layout Standard
+Only a very simple one-step, single-phase reaction model was used in this
+ study.
+ In reality, reaction pathways are extremely complicated, and depending
+ on the chemical species being modeled, this level of simplification may
+ be highly inadequate.
+ For example, Meredith et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Meredith2015"
+
+\end_inset
+
+ recently simulated the ignition of HMX using a condensed-phase model consisting
+ of two irreversible decomposition pathways and several subphases with different
+ physical properties, and a gas-phase model with 45 species and 231 elementary
+ reaction steps.
+ In principle, the author sees no reason that the HPR model would not cope
+ just as well with these processes as the models used in the cited paper.
+ Transitioning between different phases would mean only varying the strain
+ dissipation time, and perhaps the EOS; a great simplification to the multi-mode
+l frameworks typically used.
+ Additionally, the interface dynamics could be treated with the HPR-RGFM,
+ rather than the simplified, static interfaces used by Meredith et al.
+\end_layout
+
+\begin_layout Standard
+Throughout this study, the various fluids have been assumed to be immiscible.
+ Whilst this is a common assumption in situations where mixing is low or
+ practically non-existent, there are many problems which may require it.
+ It should be fairly straightforward to implement a mixture model such as
+ that proposed by Romenski et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Romenski2007,Romenski2010"
+
+\end_inset
+
+, which uses the same thermal conduction system as the HPR model.
+ The results of Gross et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gross2015"
+
+\end_inset
+
+ suggest that the isobaric cookoff technique would still be applicable to
+ mixtures of fluids, as pressures still tend to equilibrate, but this is
+ a complication that needs to be borne in mind.
+\end_layout
+
+\begin_layout Section
+The Isobaric Cookoff Technique
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:The-Isobaric-Cookoff-Technique"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Slow Cookoff"
+
+\end_inset
+
+ it was demonstrated that the method proposed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Slow Cookoff on Bounded Domains"
+
+\end_inset
+
+ can be used to significantly reduce the computational time in the heating
+ phase of cookoff simulations on short bounded domains.
+ An example of a real-world setup benefiting from this technique would be
+ the constant-pressure HMX heating experiments of Renlund et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Renlund1997"
+
+\end_inset
+
+.
+ Some examples of numerical experiments benefiting from this technique would
+ be the heating phase of the simulations of Kapila, Schwendeman, et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kapila2002,Schwendeman2002"
+
+\end_inset
+
+, where the detonation response to different temperature gradients at constant
+ pressure is investigated.
+\end_layout
+
+\begin_layout Standard
+The isobaric cookoff technique is, in a sense, similar to existing techniques
+ used in modeling solid cookoff, where the material is assumed not to flow
+ in the heating phase 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Nichols2014"
+
+\end_inset
+
+.
+ The governing system of equations and its method of solution are, however,
+ very different, and these previous models do not transform into a flow
+ model upon detonation.
+ The crucial realisation here is that fluid cookoff can be modeled in the
+ same way if the acoustic wave generated by the heating hits bounding wall
+ relatively early and pressure equilibrates over a relatively short period
+ of time.
+\end_layout
+
+\begin_layout Standard
+The isobaric cookoff technique is similar to the mass scaling technique
+ described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Background"
+
+\end_inset
+
+, in that both produce an approximate, explicitly-solved system with a larger
+ time step.
+ Both techniques achieve a similar time step increment.
+ Whilst the mass scaling technique applies not just to constant-pressure
+ flows, the technique here is much more computationally efficient, retains
+ the hyperbolic character of the thermal conduction, and does not produce
+ spurious oscillations in the motions of the heated materials (as the materials
+ are assumed to be motionless while only the reduced system is calculated).
+\end_layout
+
+\begin_layout Subsection*
+Limitations
+\end_layout
+
+\begin_layout Standard
+The isobaric cookoff technique only works on bounded domains which are relativel
+y short in comparison to the speed of sound in the medium.
+ This is because if the initial acoustic wave generated in the heating process
+ does not reach the end of the domain early on in the simulation, the constant-p
+ressure assumption will not be a realistic approximation to the system,
+ leading to an incorrect calculation of the density (derived from the very
+ accurate calculation of the temperature by the thermal subsystem).
+\end_layout
+
+\begin_layout Standard
+Another problem with the method in its current form is that it assumes that
+ the reactive material is structurally homogeneous.
+ Whilst this may be a fair assumption in some situations for relatively
+ inviscid gases, it is very unlikely to be realistic in many situations
+ involving modeling detonations in solids, where gaps and thermal damage
+ (porosity and cracks) develop over the long heating phase 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yoh2003"
+
+\end_inset
+
+.
+ Inhomogeneities in the reactive materials can lead to very different outcomes,
+ as demonstrated by Schwendeman and Kapila 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schwendeman2002"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Potential Improvements
+\end_layout
+
+\begin_layout Standard
+There are several improvements that can be made to the isobaric cookoff
+ technique.
+ Firstly, the current method of switching to the full system when 2.5% of
+ the reactant has burnt is primitive.
+ Choosing this level did not seem to incur any discrepancies in the results
+ of 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Slow Cookoff"
+
+\end_inset
+
+, but at the very least it should be determined whether this level is optimal
+ by a parameter study.
+ A higher threshold would be desirable, as more of the process could be
+ simulated with the quicker reduced system.
+\end_layout
+
+\begin_layout Standard
+Leveque's 
+\shape italic
+Large Time Step Method
+\shape default
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leveque1985"
+
+\end_inset
+
+ may present a further technique to speed up the calculation of the heating
+ phase.
+ This would require solution of the Riemann Problem of the thermal conduction
+ subsystem of the HPR model.
+ This is a relatively simple, conservative hyperbolic system with sources.
+ Whilst there does not appear to be any published exact solutions available,
+ there are a variety of techniques that could be applied to solve a Riemann
+ Problem such as this (see Montecinos et al.
+ for a recent overview 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Montecinos2012"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+It may be that larger speed-ups than those demonstrated here could be achieved
+ by the use of an implicit solver for the reduced system, owing to the larger
+ time steps that this would permit.
+ See Clutter 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clutter2013"
+
+\end_inset
+
+ for some benchmark tests of explicit and implicit solvers for reactive
+ systems.
+ Implicit-Explicit (IMEX) methods are another technique 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ascher1995,Ascher1997"
+
+\end_inset
+
+, involving solving the acoustic terms implicitly to avoid the acoustic
+ CFL condition, while solving the advection and conduction terms explicitly,
+ similarly to the method proposed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mccallen2003"
+
+\end_inset
+
+.
+ The explicit solves could be subcycled (repeated many times for each larger
+ time step of the implicit solver), permitting the use of the larger implicit
+ time steps.
+ IMEX methods would allow the simulation of systems displaying non-constant
+ pressure, acoustic waves, and flow.
+\end_layout
+
+\begin_layout Standard
+Solving the equations at least partly implicitly requires the iterative
+ solution of a non-linear system.
+ This requires more algorithmic machinery and often tailored preconditioners
+ to achieve good convergence speeds.
+ The domain of dependence of the solution becomes the whole domain, in some
+ sense destroying the localised nature of the hyperbolic system (and the
+ associated benefits detailed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Mathematical Models"
+
+\end_inset
+
+), and making impossible the trivial parallelisation inherent to the original
+ system.
+ This may prove more costly for very large grids, whereas the cost-per-iteration
+ of an explicit solver to the hyperbolic system will not increase substantially,
+ as long as additional computational cores are available.
+ The performance of a method such as this, compared with that proposed in
+ this study, will depend to some extent on both algorithmic, software, and
+ hardware implementations, and benchmarking for the desired usage cases
+ should be performed to decide which is more desirable.
+ It must also be borne in mind that the method proposed in this study is
+ much simpler to implement, and the transition period from the reduced to
+ the full system does not present any of the myriad issues commonly associated
+ with implicit methods, discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Background"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Noting the large speed-up produced by the operator-splitting solver applied
+ to the reduced system, it may be that the full system could be solved more
+ quickly using a similar technique.
+ Better-than-first-order accuracy has proved elusive so far with these methods
+ applied to the HPR system, however 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "knutsverdrup2016"
+
+\end_inset
+
+.
+ This is critical for cookoff simulations, where the detonation waves and
+ other phenomena will not be properly resolved with low-order methods.
+ In any case, as noted in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Numerical-Methods"
+
+\end_inset
+
+, the ADER-WENO schemes used in this study intuitively seem more expensive
+ than necessary, and the development of less expensive methods is desirable.
+\end_layout
+
+\begin_layout Standard
+It was noted in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Slow Cookoff"
+
+\end_inset
+
+ that the reduced system detonates slightly later than the full system,
+ owing to the fact that the convection of warm material away from the heated
+ left boundary (a process ignored by the reduced system) results in slightly
+ more energy being pumped into the full system, as the boundary is held
+ at a fixed temperature.
+ To ensure that exactly the same amount of energy has entered both systems
+ at each point in time, a fixed flux boundary condition (as described in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+) could be used.
+ It's important to note, however, that in the rudimentary implementation
+ of this condition presented here, at each time step all the additional
+ thermal energy resulting from the heat flux is added to just one boundary
+ cell.
+ If a very find grid is used, this will result in very large, nonphysical
+ values for the temperature at the boundary.
+ It may be possible to rectify this problem by smearing out the additional
+ thermal energy at each time step over a layer a few cells thick at the
+ boundary.
+ Caution must be taken in deciding which proportions of the total additional
+ energy to add to which cells, however, so that a physically-relevant solution
+ is obtained.
+ It may be instructive to obtain some analytical results regarding the depth
+ of penetration of the heat flux over the time step, which would be available
+ for the classical Fourier law of heat conduction in some situations.
+ Alternatively, a subcycle of the thermal conduction system of the HPR model
+ could be perform at the beginning of every time step to determine how far
+ the heat flux penetrates the medium, given the temperature and density
+ distribution around the boundary.
+\end_layout
+
+\begin_layout Section
+HPR-RGFM
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:HPR-RGFM"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Riemann Ghost Fluid Method presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:An HPR Riemann Ghost Fluid Method"
+
+\end_inset
+
+ has been demonstrated to be a viable way of accurately simulating the interface
+s between different materials described by the HPR model.
+ Unlike in many existing implementations, heat conduction across the interface
+ was simulated accurately.
+ This greatly simplifies the conceptual framework required for multiphase
+ interactions, as described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Background"
+
+\end_inset
+
+.
+ Implementation should be easier and quicker, and future work can be more
+ focused on a single model, rather than several fundamentally different
+ frameworks.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Limitations
+\end_layout
+
+\begin_layout Standard
+The truncation of the Taylor series expansions 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q* Taylor Series"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sigma* Taylor Series"
+
+\end_inset
+
+ used to find the star states of the heat flux and the viscous stress tensor
+ implicitly assumes that there are only small differences between the side
+ states and the star states of the variables upon which 
+\begin_inset Formula $q_{1}^{*},\boldsymbol{\sigma_{1}^{*}}$
+\end_inset
+
+ depend (
+\begin_inset Formula $\rho$
+\end_inset
+
+, 
+\begin_inset Formula $p$
+\end_inset
+
+, 
+\begin_inset Formula $J_{1}$
+\end_inset
+
+, and 
+\begin_inset Formula $\boldsymbol{A_{1}}$
+\end_inset
+
+).
+ If this is the case, higher order terms of the expansion can be neglected.
+ If it is not, however, the method may fail.
+\end_layout
+
+\begin_layout Standard
+The linearised nature of the HPR-RGFM solver also implicitly assumes that
+ all waves of interest present in the Riemann Problem are shocks.
+ Thus, strong rarefactions may cause the method to fail.
+ An example of this is the failure of the HPR-RGFM on the water-gas shock
+ tube test (taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Chinnayya2004"
+
+\end_inset
+
+).
+ The domain 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+ is initially occupied on 
+\begin_inset Formula $\left[0,0.7\right]$
+\end_inset
+
+ by water (with material parameters given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Water-Water Interface"
+
+\end_inset
+
+) and on 
+\begin_inset Formula $\left(0.7,1\right]$
+\end_inset
+
+ by air (with material parameters given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Helium-Bubble"
+
+\end_inset
+
+).
+ The water initially has density 
+\begin_inset Formula $1000$
+\end_inset
+
+ and pressure 
+\begin_inset Formula $10^{9}$
+\end_inset
+
+.
+ The air initially has density 
+\begin_inset Formula $50$
+\end_inset
+
+ and pressure 
+\begin_inset Formula $101325$
+\end_inset
+
+.
+ The exact density and pressure resulting from simulating the problem with
+ the Euler equations to time 
+\begin_inset Formula $t=237.44\times10^{-6}$
+\end_inset
+
+ are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Water-Gas Shock Tube Results"
+
+\end_inset
+
+.
+ The material interface is located at 
+\begin_inset Formula $x=0.8146$
+\end_inset
+
+.
+ Note the strong rarefaction on the left, and the large disparity between
+ 
+\begin_inset Formula $p_{L}=10^{9}$
+\end_inset
+
+ and 
+\begin_inset Formula $p^{*}\approx1.4\times10^{7}$
+\end_inset
+
+, and similarly on the right side with 
+\begin_inset Formula $p_{R}\approx10^{5}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Results/gfm/water_air/r_exact.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/gfm/water_air/p_exact.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Water-Gas Shock Tube Results"
+
+\end_inset
+
+Density and pressure for the exact solution to the Euler equations for the
+ water-gas shock tube test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Potential Improvements
+\end_layout
+
+\begin_layout Standard
+An obvious improvement to the HPR-RGFM method presented would be to use
+ a better Riemann solver than the iterative, linearised solver devised in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:An HPR Riemann Ghost Fluid Method"
+
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $L$
+\end_inset
+
+ be the matrix of left eigenvectors of the primitive system.
+ As noted previously, the solver relies upon the fact that each of the following
+ relations holds along the characteristic to which it corresponds:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L\cdot\frac{d\boldsymbol{P}}{dt}=L\cdot\boldsymbol{S}\label{eq:along-characteristics}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The right hand side was set to zero in the approximation process, but 
+\begin_inset Formula $\boldsymbol{S}$
+\end_inset
+
+ can become arbitrarily stiff, as 
+\begin_inset Formula $\mu\rightarrow0$
+\end_inset
+
+.
+ Thus, although no issues were raised in this study, there may well be times
+ at which the source terms cannot be neglected.
+ It may be that some numerical method is required to integrate 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:along-characteristics"
+
+\end_inset
+
+ from the left and right interface boundary states to their respective star
+ states.
+\end_layout
+
+\begin_layout Standard
+Alternatively, a completely different approximate Riemann solver could be
+ employed, such as the universal HLLEM solver of Dumbser et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+
+\end_inset
+
+.
+ This path-conservative formulation of the HLLEM solver works for general
+ non-conservative systems (such as the HPR model) and is simple to implement.
+ It's based upon a new path-conservative HLL method (building on the original
+ method of Harten, Lax, and van Leer 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Harten1983"
+
+\end_inset
+
+) but is claimed to be able to represent linearly degenerate intermediate
+ waves 
+\begin_inset Quotes eld
+\end_inset
+
+with a minimum of smearing
+\begin_inset Quotes erd
+\end_inset
+
+ by evaluating the eigenvalues and eigenvectors of the intermediate characterist
+ic fields (given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenstructure of the HPR Model"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+There are iterative exact Riemann solvers for the equations of non-linear
+ elasticity (to which the HPR model reduces as 
+\begin_inset Formula $\tau_{1}\rightarrow\infty$
+\end_inset
+
+).
+ Thus, they will work for applications of the HPR model to solids problems
+ (and perhaps to very viscous fluids problems too).
+ Although these solvers are computationally expensive, they are only used
+ once at each material interface point at each time step, and thus the added
+ accuracy that they provide may be desirable.
+ There are two ways to formulate the equations of non-linear elasticity:
+ one in which the deformation tensor (the analogue of the inverse of the
+ HPR model's distortion tensor) is evolved in time, and one in which its
+ inverse (the analogue of 
+\begin_inset Formula $A$
+\end_inset
+
+) is evolved instead.
+ Miller's exact solver 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Miller2004"
+
+\end_inset
+
+ uses the first formulation and the solver of Barton et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2009"
+
+\end_inset
+
+ uses the second.
+ The former can be used to evolve 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+, from which 
+\begin_inset Formula $A$
+\end_inset
+
+ can be calculated.
+ Unfortunately, both solvers critically assume that the source terms of
+ the system vanish, and so are unlikely to produce the correct boundary
+ conditions for the HPR-RGFM when modeling relatively inviscid fluids.
+ It should also be noted that they cannot be used for problems involving
+ heat conduction across material interfaces, and they do not take the thermal
+ conduction subsystem of the HPR model into account.
+\end_layout
+
+\begin_layout Standard
+If a different EOS is used in order to model solids, the derivations of
+ the primitive systems matrices of the HPR model (given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Matrix Forms of the HPR Model"
+
+\end_inset
+
+) will have to be performed again for each EOS, and the form of the eigenvectors
+ will change (along with the systems solved to obtain the linearised approximati
+ons to the star states for use in the HPR-RGFM).
+ Although this is tedious, it is a straightforward derivation to perform.
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Intermaterial Heat Conduction"
+
+\end_inset
+
+ it was noted that the HPR-RGFM produces aberrations in the heat flux around
+ the material interface, when using the temperature fix described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:An HPR Riemann Ghost Fluid Method"
+
+\end_inset
+
+.
+ Without using a better Riemann solver, a possible way to remedy this may
+ be to specify the desired value of the heat flux in the star state, based
+ on physical considerations, rather than obtaining it using the procedure
+ detailed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:An HPR Riemann Ghost Fluid Method"
+
+\end_inset
+
+.
+ For example, take two different materials in thermal contact, with lengths
+ 
+\begin_inset Formula $\Delta x_{1}$
+\end_inset
+
+,
+\begin_inset Formula $\Delta x_{2}$
+\end_inset
+
+ and temperatures 
+\begin_inset Formula $T_{1}$
+\end_inset
+
+,
+\begin_inset Formula $T_{2}$
+\end_inset
+
+ at their respective ends.
+ If 
+\begin_inset Formula $k_{i}$
+\end_inset
+
+ is the thermal conductivity of material 
+\begin_inset Formula $i$
+\end_inset
+
+, then by conservation of energy, the heat flux through the interface is
+ given by the following equation, where 
+\begin_inset Formula $h_{c}$
+\end_inset
+
+ is the thermal conductance coefficient between the two materials:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+q=\frac{T_{1}-T_{2}}{\frac{\Delta x_{1}}{k_{1}}+\frac{\Delta x_{2}}{k_{2}}+\frac{1}{h_{c}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Usually, 
+\begin_inset Formula $\frac{1}{h_{c}}\approx0$
+\end_inset
+
+, and in fact it has been implicitly assumed to vanish in the models presented
+ in this study.
+ Introducing this fix for the heat flux could make the models more accurate
+ in situations where 
+\begin_inset Formula $\frac{1}{h_{c}}$
+\end_inset
+
+ diverges significantly from 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+Although mass appears to be conserved well in , mass conservation is a well-reco
+gnised problem with level set methods , and further investigation is required
+ to determine the extent to which the HPR-RGFM may suffer from this, especially
+ in multiple dimensions.
+ There has been a great deal of work in this area in recent years, and there
+ are many potential solutions applicable to the formulation used in this
+ study, should there be any issue [REF].
+\end_layout
+
+\begin_layout Plain Layout
+Must be extended to 3D - stresses operate differently in 3D.
+\end_layout
+
+\begin_layout Plain Layout
+GFM for detonation waves
+\end_layout
+
+\begin_layout Plain Layout
+Try ALE from Boscheri et al.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch ChildOnly
+status collapsed
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../references"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

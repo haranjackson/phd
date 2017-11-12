@@ -1,0 +1,1878 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage,12pt,numbered
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\branch ChildOnly
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Numerical Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Numerical-Methods"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The HPR model, being non-conservative, with stiff source terms, represents
+ a particularly challenging set of PDEs.
+ In this study they are solved by an ADER-WENO method.
+ First, the cell-wise constant state variable data from the current time
+ step is reconstructed using high-order spatial polynomials according to
+ the WENO method.
+ This reconstruction is then extended to a reconstruction in both space
+ and time for each individual cell in the domain, using the Discontinuous
+ Galerkin method.
+ A finite volume solver is then used to couple neighbouring cells and produce
+ the cell-wise constant data at the next time step.
+ In this study, all simulations were performed in 1D.
+ The methods presented here are easily extensible to higher dimensions,
+ however.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "WENO"
+description "Weighted Essentially Non-Oscillatory"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "DG"
+description "Discontinuous Galerkin"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "FV"
+description "Finite Volume"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although this process has been demonstrated to be effective in solving the
+ HPR system 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015,Boscheri2016"
+
+\end_inset
+
+, it was originally designed for problems involving moving meshes, and is
+ probably more involved than necessary to perform the simulations in this
+ study.
+ The DG step in particular is relatively computationally taxing.
+ The purpose of this study, however, was not to investigate more efficient
+ solution methods for this particular system (see Sverdrup 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "knutsverdrup2016"
+
+\end_inset
+
+ for the latest work on this problem).
+ It was therefore decided that this procedure would be used, being the only
+ confirmed method of solution publicly available.
+\end_layout
+
+\begin_layout Section
+The WENO Reconstruction
+\end_layout
+
+\begin_layout Standard
+First introduced by Liu et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Liu1994"
+
+\end_inset
+
+ and developed by Jiang and Shu 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jiang1996"
+
+\end_inset
+
+, WENO methods are used to produce high order polynomial approximations
+ to piece-wise constant data.
+ In this study, the modified method of Dumbser et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2013"
+
+\end_inset
+
+ is used.
+\end_layout
+
+\begin_layout Standard
+Consider the domain 
+\begin_inset Formula $\left[0,L\right]$
+\end_inset
+
+.
+ Take 
+\begin_inset Formula $K,N\in\mathbb{N}$
+\end_inset
+
+.
+ Take the set of grid points 
+\begin_inset Formula $x_{i}=\frac{i\cdot L}{K}$
+\end_inset
+
+ for 
+\begin_inset Formula $i=0,\ldots,K$
+\end_inset
+
+ and let 
+\begin_inset Formula $\Delta x=\frac{L}{K}$
+\end_inset
+
+.
+ Denote cell 
+\begin_inset Formula $\left[x_{i},x_{i+1}\right]$
+\end_inset
+
+ by 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+.
+ Given cell-wise constant data 
+\begin_inset Formula $u$
+\end_inset
+
+ on 
+\begin_inset Formula $\left[0,L\right]$
+\end_inset
+
+, an order 
+\begin_inset Formula $N+1$
+\end_inset
+
+ accurate polynomial reconstruction of 
+\begin_inset Formula $u$
+\end_inset
+
+ in 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ will be performed.
+ Define the scaled space variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\chi^{i}=\frac{1}{\Delta x}\left(x-x_{i}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting the Gauss-Legendre abscissae on 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+ by 
+\begin_inset Formula $\left\{ \chi_{0},\ldots,\chi_{N}\right\} $
+\end_inset
+
+, define the nodal basis of order 
+\begin_inset Formula $N$
+\end_inset
+
+: the Lagrange interpolating polynomials 
+\begin_inset Formula $\left\{ \psi_{0},\ldots,\psi_{N}\right\} $
+\end_inset
+
+ with the following property:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\psi_{i}\left(\chi_{j}\right)=\delta_{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $N$
+\end_inset
+
+ is even, take the stencils:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+S_{1} & =\left\{ C_{i-\frac{N}{2}},\ldots,C_{i+\frac{N}{2}}\right\} \\
+S_{2} & =\left\{ C_{i-N},\ldots,C_{i}\right\} \\
+S_{3} & =\left\{ C_{i},\ldots,C_{i+N}\right\} 
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $N$
+\end_inset
+
+ is odd, take the stencils:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+S_{1} & =\left\{ C_{i-\left\lfloor \frac{N}{2}\right\rfloor },\ldots,C_{i+\left\lceil \frac{N}{2}\right\rceil }\right\} \\
+S_{2} & =\left\{ C_{i-\left\lceil \frac{N}{2}\right\rceil },\ldots,C_{i+\left\lfloor \frac{N}{2}\right\rfloor }\right\} \\
+S_{3} & =\left\{ C_{i-N},\ldots,C_{i}\right\} \\
+S_{4} & =\left\{ C_{i},\ldots,C_{i+N}\right\} 
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The data is reconstructed on 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sum_{p}\psi_{p}\left(\chi^{i}\left(x\right)\right)\hat{w}_{p}^{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the 
+\begin_inset Formula $\hat{w}_{p}^{ij}$
+\end_inset
+
+ are solutions to the following linear system:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\Delta x}\int_{x_{k}}^{x_{k+1}}\psi_{p}\left(\chi^{k}\left(x\right)\right)\hat{w}_{p}^{ij}dx=u_{k}\qquad\forall C_{k}\in S_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ is the value of 
+\begin_inset Formula $u$
+\end_inset
+
+ in 
+\begin_inset Formula $C_{k}$
+\end_inset
+
+.
+ Define the oscillation indicator matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Sigma_{mn}=\sum_{\alpha=1}^{N}\int_{0}^{1}\psi_{m}^{\left(\alpha\right)}\psi_{n}^{\left(\alpha\right)}d\chi
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the oscillation indicator for each stencil:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+o_{j}=\Sigma_{mn}\hat{w}_{m}^{ij}\hat{w}_{n}^{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The full reconstruction in 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+w_{i}\left(x\right)=\sum_{p}\psi_{p}\left(\chi^{i}\left(x\right)\right)\hat{w}_{p}^{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\hat{w}_{p}^{i}=\omega_{j}\hat{w}_{p}^{ij}$
+\end_inset
+
+ is the weighted coefficient of the 
+\begin_inset Formula $p$
+\end_inset
+
+th basis function, with weights:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\omega_{j}=\frac{\tilde{\omega}_{j}}{\sum_{k}\tilde{\omega}_{k}}\qquad\tilde{\omega}_{j}=\frac{\zeta_{j}}{\left(o_{s}+\varepsilon\right)^{r}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this study, 
+\begin_inset Formula $r=8$
+\end_inset
+
+, 
+\begin_inset Formula $\varepsilon=10^{-14}$
+\end_inset
+
+, 
+\begin_inset Formula $\zeta_{j}=10^{5}$
+\end_inset
+
+ if 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ is a central stencil, and 
+\begin_inset Formula $\zeta_{j}=1$
+\end_inset
+
+ if 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ is a side stencil, as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2014"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+The Discontinuous Galerkin Predictor 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:The Discontinuous Galerkin Predictor"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take a non-conservative, hyperbolic system of the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:NonConservativeSystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ is the vector of conserved variables, 
+\begin_inset Formula $\boldsymbol{F}$
+\end_inset
+
+ is the conservative nonlinear flux, 
+\begin_inset Formula $B$
+\end_inset
+
+ is the block matrix corresponding to the purely non-conservative component
+ of the system, and 
+\begin_inset Formula $\boldsymbol{S}\left(\boldsymbol{Q}\right)$
+\end_inset
+
+ is the algebraic source vector.
+ Defining 
+\begin_inset Formula $M=\frac{\partial\boldsymbol{F}}{\partial\boldsymbol{Q}}+B$
+\end_inset
+
+ this becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+M\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:NonConservativeSystem2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the grid for the previous section, and time steps 
+\begin_inset Formula $t_{0}<t_{1}<\ldots$
+\end_inset
+
+ while defining 
+\begin_inset Formula $\Delta t_{n}=t_{n+1}-t_{n}$
+\end_inset
+
+.
+ Combining the techniques presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2009,Dumbser2014"
+
+\end_inset
+
+, the Discontinuous Galerkin method produces at each time step 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ a local polynomial approximation to 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ on each space-time cell 
+\begin_inset Formula $C_{i}\times\left[t_{n},t_{n+1}\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Define the scaled time variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau^{n}=\frac{1}{\Delta t_{n}}\left(t-t_{n}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using these variables gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial\tau^{n}}+\frac{\partial\boldsymbol{F^{*}}\left(\boldsymbol{Q}\right)}{\partial\chi^{i}}+B^{*}\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi^{i}}=\boldsymbol{S^{*}}\left(\boldsymbol{Q}\right)\label{eq:NonDimensionalNonConservativeSystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F^{*}}=\frac{\Delta t_{n}}{\Delta x}\boldsymbol{F}\qquad B^{*}=\frac{\Delta t_{n}}{\Delta x}B\qquad\boldsymbol{S^{*}}=\Delta t_{n}\boldsymbol{S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The non-dimensionalisation notation and spacetime cell indexing notation
+ will be dropped for simplicity in what follows.
+ Using the same nodal basis as in the previous section, define the set of
+ spatio-temporal basis functions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \theta_{k}\left(\chi,\tau\right)=\psi_{p}\left(\chi\right)\psi_{s}\left(\tau\right):0\leq p,s\leq N\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\shape italic
+nodal basis representation
+\shape default
+ is the following set of approximations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q} & \approx\boldsymbol{q_{h}}=\theta_{\beta}\boldsymbol{q_{\beta}}\\
+\boldsymbol{F}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi} & \approx\theta_{\beta}B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\left(\chi_{\beta},\tau_{\beta}\right)$
+\end_inset
+
+ are the coordinates of the Legendre node corresponding to basis function
+ 
+\begin_inset Formula $\theta_{\beta}$
+\end_inset
+
+.
+ Define the integral operators:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left[f,g\right]^{\tau} & =\int_{0}^{1}f\left(\chi,\tau\right)g\left(\chi,\tau\right)d\chi\\
+\left\langle f,g\right\rangle  & =\int_{0}^{1}\int_{0}^{1}f\left(\chi,\tau\right)g\left(\chi,\tau\right)d\chi d\tau
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the nodal basis representation, multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonDimensionalNonConservativeSystem"
+
+\end_inset
+
+ by test function 
+\begin_inset Formula $\theta_{\alpha}$
+\end_inset
+
+ and integrating over space and time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\rangle \boldsymbol{q_{\beta}} & =-\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\rangle \boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
+ & \quad+\left\langle \theta_{\alpha},\theta_{\beta}\right\rangle \left(\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)-B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Integrating by parts in time gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\langle \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\rangle \right)\boldsymbol{q_{\beta}} & =\left[\theta_{\alpha},\boldsymbol{w}\right]^{0}-\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\rangle \boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
+ & \quad+\left\langle \theta_{\alpha},\theta_{\beta}\right\rangle \left(\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)-B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{w}=\boldsymbol{w_{\gamma}}\psi_{\gamma}$
+\end_inset
+
+ is the reconstruction obtained at the start of the time step with the WENO
+ method.
+ Define the following notation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\langle \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\rangle \\
+V_{\alpha\beta} & =\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\rangle \\
+W_{\alpha\gamma} & =\left[\theta_{\alpha},\psi_{\gamma}\right]^{0}\\
+Z_{\alpha\beta} & =\left\langle \theta_{\alpha},\theta_{\beta}\right\rangle 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}}=W_{\alpha\gamma}\boldsymbol{w_{\gamma}}-V_{\alpha\beta}\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)+Z_{\alpha\beta}\left(\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)-B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This nonlinear system in 
+\begin_inset Formula $\boldsymbol{q_{\beta}}$
+\end_inset
+
+ is solved by a Newton method.
+ The source terms must be solved implicitly if they are stiff.
+ 
+\end_layout
+
+\begin_layout Subsection*
+The Predictor Initial Guess
+\end_layout
+
+\begin_layout Standard
+Let the initial guess for the nonlinear system of the DG predictor be 
+\begin_inset Formula $\boldsymbol{q_{h}^{0}}=\theta_{k}\boldsymbol{\hat{q}_{k}}$
+\end_inset
+
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2010"
+
+\end_inset
+
+ this is taken to be the WENO reconstruction, i.e.
+ 
+\begin_inset Formula $\boldsymbol{q_{h}^{0}}\left(\chi,\tau\right)=\boldsymbol{w}\left(\chi\right)$
+\end_inset
+
+ for 
+\begin_inset Formula $\tau\in\left[0,1\right]$
+\end_inset
+
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hidalgo2011"
+
+\end_inset
+
+, a more sophisticated initial guess is used for systems of the form 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem"
+
+\end_inset
+
+ with 
+\begin_inset Formula $B=0$
+\end_inset
+
+.
+ Denote the Gauss-Legendre abscissae on 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+ by 
+\begin_inset Formula $\left\{ \tau_{0},\ldots,\tau_{N}\right\} $
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $\Delta\tau_{j}=\tau_{j+1}-\tau_{j}$
+\end_inset
+
+.
+ Letting 
+\begin_inset Formula $\boldsymbol{q_{h}^{0}}=\psi_{i}\left(\chi\right)\psi_{j}\left(\tau\right)\boldsymbol{\hat{q}_{ij}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\hat{q}_{i,j+1}} & =\boldsymbol{\hat{q}_{ij}}-\Delta\tau_{j}\frac{\partial\boldsymbol{F}\left(\boldsymbol{\hat{q}_{ij}}\right)}{\partial x}+\frac{\Delta\tau_{j}}{2}\left(\boldsymbol{S}\left(\boldsymbol{\hat{q}_{i,j+1}}\right)+\boldsymbol{S}\left(\boldsymbol{\hat{q}_{ij}}\right)\right)\\
+\boldsymbol{\hat{q}_{i0}} & =\boldsymbol{w_{i}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An explicit second order Taylor method is used to solve the flux term, combined
+ with a second order Crank–Nicholson scheme for the stiff source term.
+ In this study, this method was adapted to deal with the non-conservative
+ terms:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\hat{q}_{i,j+1}} & =\boldsymbol{\hat{q}_{ij}}-\Delta\tau_{j}M\left(\boldsymbol{\hat{q}_{ij}}\right)\cdot\left(\frac{\partial\psi_{k}}{\partial\chi}\boldsymbol{\hat{q}_{kj}}\right)+\frac{\Delta\tau_{j}}{2}\left(\boldsymbol{S}\left(\boldsymbol{\hat{q}_{i,j+1}}\right)+\boldsymbol{S}\left(\boldsymbol{\hat{q}_{ij}}\right)\right)\\
+\boldsymbol{\hat{q}_{i0}} & =\boldsymbol{w_{i}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $M$
+\end_inset
+
+ is given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem2"
+
+\end_inset
+
+.
+ The Taylor method for the flux term is no longer necessary.
+ The system was solved by a Newton method to deal with the stiff source
+ term.
+\end_layout
+
+\begin_layout Standard
+It was found that the more sophisticated initial guess would reduce overall
+ computation times on some problems, owing to a faster convergence of the
+ DG calculation.
+ On other problems, the total computation time would increase, owing to
+ the added cost of calculating the initial guess.
+ See 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2008,Dumbser2008a,Dumbser2009a"
+
+\end_inset
+
+ for other choices for the initial guess.
+\end_layout
+
+\begin_layout Section
+The Finite Volume Scheme
+\end_layout
+
+\begin_layout Standard
+Following the formulation of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2014"
+
+\end_inset
+
+, integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem"
+
+\end_inset
+
+ over 
+\begin_inset Formula $\left[t_{n},t_{n+1}\right]\times C_{i}$
+\end_inset
+
+ gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{i}^{n+1}}=\boldsymbol{Q_{i}^{n}}+\Delta t_{n}\left(\boldsymbol{S_{i}^{n}}-\boldsymbol{P_{i}^{n}}\right)-\frac{\Delta t_{n}}{\Delta x}\left(\boldsymbol{D_{i+1}^{n}}-\boldsymbol{D_{i}^{n}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q_{i}^{n}} & =\frac{1}{\Delta x}\int_{x_{i}}^{x_{i+1}}\boldsymbol{Q}\left(x,t_{n}\right)dx\\
+\boldsymbol{S_{i}^{n}} & =\frac{1}{\Delta t_{n}\Delta x}\int_{t_{n}}^{t_{n+1}}\int_{x_{i}}^{x_{i+1}}\boldsymbol{S}\left(\boldsymbol{Q}\right)dxdt\\
+\boldsymbol{P_{i}^{n}} & =\frac{1}{\Delta t_{n}\Delta x}\int_{t_{n}}^{t_{n+1}}\int_{x_{i}}^{x_{i+1}}B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}dxdt\\
+\boldsymbol{D_{i}^{n}} & =\frac{1}{\Delta t_{n}}\int_{t_{n}}^{t_{n+1}}\boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}}\left(x_{i},t\right),\boldsymbol{Q^{+}}\left(x_{i},t\right)\right)dt
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\boldsymbol{Q^{-},Q^{+}}$
+\end_inset
+
+ are the left and right extrapolated states at the 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ boundary.
+ 
+\begin_inset Formula $\boldsymbol{S_{i}^{n}},\boldsymbol{P_{i}^{n}},\boldsymbol{D_{i}^{n}}$
+\end_inset
+
+ are calculated using an 
+\begin_inset Formula $N+1$
+\end_inset
+
+-point Gauss-Legendre quadrature, replacing 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ with 
+\begin_inset Formula $\boldsymbol{q_{h}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M$
+\end_inset
+
+, as defined in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:The Discontinuous Galerkin Predictor"
+
+\end_inset
+
+, is a diagonalisable matrix with decomposition 
+\begin_inset Formula $M=R\Lambda R^{-1}$
+\end_inset
+
+ where the columns of 
+\begin_inset Formula $R$
+\end_inset
+
+ are the right eigenvectors and 
+\begin_inset Formula $\Lambda$
+\end_inset
+
+ is the diagonal matrix of eigenvalues.
+ Define the following matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|M\right|=R\left|\Lambda\right|R^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using these definitions, the interface terms arising in the FV formula have
+ the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\mathcal{D}}\left(\boldsymbol{q^{-}},\boldsymbol{q^{+}}\right)=\frac{1}{2}\left(\boldsymbol{F}\left(\boldsymbol{q^{-}}\right)+\boldsymbol{F}\left(\boldsymbol{q^{+}}\right)+\hat{B}\cdot\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)-\hat{M}\cdot\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{M}$
+\end_inset
+
+ is chosen to either correspond to a Rusanov/Lax-Friedrichs flux 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\max\left(\max\left|\Lambda\left(\boldsymbol{q^{-}}\right)\right|,\max\left|\Lambda\left(\boldsymbol{q^{+}}\right)\right|\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or a simplified Osher–Solomon flux 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2011,Dumbser2011a"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\int_{0}^{1}\left|M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)\right|dz
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{B}$
+\end_inset
+
+ takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{B}=\int_{0}^{1}B\left(\boldsymbol{q^{-}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q}^{-}\right)\right)dz
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It was found that the Osher-Solomon flux would often produce slightly less
+ diffusive results, but that it was more computationally expensive, and
+ also had a greater tendency to introduce numerical artefacts.
+\end_layout
+
+\begin_layout Section
+Time Step and Boundary Conditions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Time Step and Boundary Conditions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\Lambda_{i}^{n}$
+\end_inset
+
+ be the set of eigenvalues of the HPR system evaluated at 
+\begin_inset Formula $\boldsymbol{Q_{i}^{n}}.$
+\end_inset
+
+ 
+\begin_inset Formula $C_{cfl}<1$
+\end_inset
+
+ is a constant (usually taken to be 
+\begin_inset Formula $0.9$
+\end_inset
+
+, unless the problem being simulated is particularly demanding, requiring
+ a lower value).
+ A semi-analytic form for 
+\begin_inset Formula $\Lambda$
+\end_inset
+
+ is given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenstructure of the HPR Model"
+
+\end_inset
+
+.
+ The eigenvalues determine the speed of propagation of information in the
+ solution to the Riemann Problem at the cell interfaces, and the time step
+ is chosen to ensure that the characteristics do not enter into other cells
+ between 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{n+1}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta t_{n}=\frac{C_{cfl}\cdot\Delta x}{\max_{i}\left|\Lambda_{i}^{n}\right|}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Transmissive boundary conditions (allowing material and heat to pass through)
+ are implemented by setting the state variables in the boundary cells to
+ the same value as their non-boundary neighbours.
+ Reflective boundary conditions are implemented in the same way, except
+ that the directions of the velocity and thermal impulse vectors in the
+ boundary cells are reversed.
+ Where fixed temperature boundary conditions are used, reflective boundary
+ conditions are first imposed, after which the pressure is altered so that
+ the boundary cell has the desired temperature 
+\begin_inset Formula $T_{fixed}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho\left(\gamma-1\right)c_{v}T_{fixed}-p_{\infty}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where a fixed boundary heat flux 
+\begin_inset Formula $q$
+\end_inset
+
+ is specified, the quantity 
+\begin_inset Formula $\frac{q\cdot\Delta t}{\Delta x}$
+\end_inset
+
+ is added to the value of 
+\begin_inset Formula $\rho E$
+\end_inset
+
+ in the boundary cell.
+ It may be appropriate to also fix 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ in the boundary cell in accordance with the specified heat flux (as 
+\begin_inset Formula $\boldsymbol{q}=\alpha^{2}T\boldsymbol{J}$
+\end_inset
+
+), but this was not done here, as no analogous procedure was undertaken
+ in the studies with which this study compares its results.
+ The effect of this measure is a potential area of further research.
+\end_layout
+
+\begin_layout Section
+Operator Splitting
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Operator-Splitting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although not applicable to the full HPR system in the form given here, the
+ operator splitting method is used when solving the reduced HPR system in
+ slow cookoff simulations.
+ Take the following conservative hyperbolic system with sources:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At time step 
+\begin_inset Formula $n$
+\end_inset
+
+, using 
+\begin_inset Formula $\boldsymbol{Q^{n}}$
+\end_inset
+
+ as initial data, the homogeneous system is evolved by time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ to produce an intermediate state 
+\begin_inset Formula $\tilde{\boldsymbol{Q}}^{n+1}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}=\boldsymbol{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There exist many methods with which to accomplish this (see Toro for an
+ overview 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+
+\end_inset
+
+).
+ In this study, the following scheme is used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{\boldsymbol{Q_{i}}}^{n+1}=\boldsymbol{Q_{i}^{n}}+\frac{\Delta t}{\Delta x}\left(\boldsymbol{F_{i+\frac{1}{2}}}-\boldsymbol{F_{i-\frac{1}{2}}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The subscript 
+\begin_inset Formula $i+\frac{1}{2}$
+\end_inset
+
+ is used to denote the value between cells 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $i+1$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\boldsymbol{F_{i+\frac{1}{2}}}$
+\end_inset
+
+ was chosen to be the first-order First-Order Centred flux of Toro 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro1996glimm"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F_{i+\frac{1}{2}}}=\frac{1}{2}\left(\boldsymbol{F_{i+\frac{1}{2}}^{LF}}+\boldsymbol{F_{i+\frac{1}{2}}^{RI}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{F_{i+\frac{1}{2}}^{LF}}$
+\end_inset
+
+ is the Lax-Friedrichs flux:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{F_{i+\frac{1}{2}}^{LF}}=\frac{1}{2}\left(\boldsymbol{F}\left(\boldsymbol{Q_{i}}\right)+\boldsymbol{F}\left(\boldsymbol{Q_{i+1}}\right)\right)+\frac{1}{2}\frac{\Delta x}{\Delta t}\left(\boldsymbol{Q_{i}}-\boldsymbol{Q_{i+1}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and 
+\begin_inset Formula $\boldsymbol{F_{i+\frac{1}{2}}^{RI}}$
+\end_inset
+
+ is the Richtmyer flux 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ritchtmyer1957difference"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q_{i+\frac{1}{2}}^{RI}} & =\frac{1}{2}\left(\boldsymbol{Q_{i}}+\boldsymbol{Q_{i+1}}\right)+\frac{1}{2}\frac{\Delta t}{\Delta x}\left(\boldsymbol{F}\left(\boldsymbol{Q_{i}}\right)-\boldsymbol{F}\left(\boldsymbol{Q_{i+1}}\right)\right)\\
+\boldsymbol{F_{i+\frac{1}{2}}^{RI}} & =\boldsymbol{F}\left(\boldsymbol{Q_{i+\frac{1}{2}}^{RI}}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next, 
+\begin_inset Formula $\tilde{\boldsymbol{Q_{i}^{n+1}}}$
+\end_inset
+
+ is used as initial data to the following system of ODEs.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "ODE"
+description "Ordinary Differential Equation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\boldsymbol{Q}}{dt}=\boldsymbol{S}\left(\boldsymbol{Q}\left(t\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This system is evolved by time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ to produce 
+\begin_inset Formula $\boldsymbol{Q_{i}^{n+1}}$
+\end_inset
+
+.
+ There are many ways to achieve this, both analytical and numerical.
+ Only analytical methods are used in this study.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Section
+Computational Considerations
+\end_layout
+
+\begin_layout Standard
+The solution of the nonlinear Discontinuous Galerkin system and the calculation
+ of the Finite Volume interface terms are the most computationally taxing
+ parts of the ADER-WENO scheme.
+ Luckily, they are also trivially parallelisable.
+ The DG predictor is calculated locally to each cell, so once the WENO reconstru
+ction has been produced across the domain, each cell can be assigned to
+ a core and no inter-process communication is required.
+ To perform the FV step for a cell, information from its neighbours is required.
+ Thus, blocks of cells are assigned to each core, with overlapping sections
+ one cell thick, as demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:FV-cores"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename FV_cores.png
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:FV-cores"
+
+\end_inset
+
+Overlapping groups of cells assigned to different computational cores during
+ the Discontinuous Galerkin and Finite Volume steps
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The WENO and DG system matrices are precalculated and stored, to avoid having
+ to calculate them at every time step.
+ Analytic forms of various quantities (such as 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Acoustic-Tensor"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Eigenvectors"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors"
+
+\end_inset
+
+, or those found in the appendices) are used wherever possible, for reasons
+ of speed and accuracy.
+\end_layout
+
+\begin_layout Standard
+The algorithmic implementations in this study were performed using the Python
+ programming language, as the resulting speed and ease of development were
+ desirable when dealing with the large amount of new theoretical material
+ encountered.
+ Heavy use was made of the NumPy library for its data structures, and the
+ SciPy library 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jones"
+
+\end_inset
+
+ for its multidimensional root finding algorithms.
+ Both libraries were compiled against the Intel Math Kernel Library 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "intel-mkl"
+
+\end_inset
+
+ for speed.
+ Performance-critical sections of code were either compiled to machine code
+ using the Numba library 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Lam2015"
+
+\end_inset
+
+, or were implemented using direct calls to the relevant BLAS and LAPACK
+ functions.
+ Thus, much of the usual performance hits associated with using Python rather
+ than a lower-level language such as C++ or Fortran were avoided.
+ The joblib library was used to parallelise the DG and FV calculations,
+ and the SymPy library (part of the SciPy/NumPy stack) was used to confirm
+ the analytic forms of the system matrices and eigenstructure of the HPR
+ model, given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Explicit Forms of System Matrices"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenstructure of the HPR Model"
+
+\end_inset
+
+, respectively.
+ The plots in this dissertation were generated with the matplotlib library.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch ChildOnly
+status collapsed
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../references"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

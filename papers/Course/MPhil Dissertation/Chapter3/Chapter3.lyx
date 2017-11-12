@@ -1,0 +1,1651 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage,12pt,numbered
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\branch ChildOnly
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\erf}{\operatorname{erf}}
+{\mathrm{\mathrm{erf}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Validation of Numerical Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Validation-of-Numerical-Methods"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Slow Opposing Shear Flow
+\end_layout
+
+\begin_layout Standard
+This problem, incorrectly referred to as Stokes' First Problem in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See the original papers of Stokes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Stokes1850"
+
+\end_inset
+
+ and Rayleigh 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rayleigh1911"
+
+\end_inset
+
+, and the analysis of Schlichting 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schlichting1979"
+
+\end_inset
+
+ for Stokes' First Problem, which is similar to the problem presented here,
+ and also has an analytic solution for the Navier-Stokes equations.
+\end_layout
+
+\end_inset
+
+, is one of the few test cases with an analytic solution for the Navier-Stokes
+ equations.
+ The problem consists of two ideal gases in an infinite domain, meeting
+ at the plane 
+\begin_inset Formula $x=0$
+\end_inset
+
+, initially flowing with equal and opposite velocity 
+\begin_inset Formula $\pm0.1$
+\end_inset
+
+ in the 
+\begin_inset Formula $y$
+\end_inset
+
+-axis.
+ The initial conditions are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:SlowOpposingShearFlow"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1/\gamma$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(0,-0.1,0\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\geq0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1/\gamma$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(0,0.1,0\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:SlowOpposingShearFlow"
+
+\end_inset
+
+Initial conditions for the slow opposing shear flow test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The flow has a low Mach number of 0.1, and this test case is designed to
+ demonstrate the efficacy of the numerical methods in this flow regime.
+ The exact solution to the Navier-Stokes equations is given by
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In this problem, the Navier-Stokes equations reduce to 
+\begin_inset Formula $v_{t}=\mu v_{xx}$
+\end_inset
+
+.
+ Defining 
+\begin_inset Formula $\eta=\frac{x}{2\sqrt{\mu t}}$
+\end_inset
+
+, and assuming 
+\begin_inset Formula $v=f\left(\eta\right)$
+\end_inset
+
+, this becomes 
+\begin_inset Formula $f^{''}+2\eta f^{'}=0$
+\end_inset
+
+.
+ The result follows by solving this equation with the boundary conditions
+ 
+\begin_inset Formula $v\left(\pm\infty\right)=\pm v_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+v=v_{0}\erf\left(\frac{x}{2\sqrt{\mu t}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The viscosity is variously taken to be 
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-3}$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+.
+ Heat conduction is neglected, and 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+.
+ The results of simulations with 200 cells at time 
+\begin_inset Formula $t=1$
+\end_inset
+
+ are presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:SlowOpposingShearFlow"
+
+\end_inset
+
+.
+ The HPR results closely match the exact Navier-Stokes solution.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/first_stokes_problem/mu=1e-2/v.png
+	lyxscale 50
+	height 30theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/first_stokes_problem/mu=1e-3/v.png
+	lyxscale 50
+	height 30theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/first_stokes_problem/mu=1e-4/v.png
+	lyxscale 50
+	height 30theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SlowOpposingShearFlow"
+
+\end_inset
+
+Velocity component 2 for the slow opposing shear flow test for viscosities
+ 
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-3}$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+ (from top to bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Viscous Shock
+\end_layout
+
+\begin_layout Standard
+This test is designed to demonstrate that the numerical methods used are
+ also able to cope with fast flows.
+ First demonstrated by Becker 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beker1929"
+
+\end_inset
+
+, the Navier-Stokes equations have an analytic solution for 
+\begin_inset Formula $P_{r}=0.75$
+\end_inset
+
+ (see Johnson 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Johnson2013"
+
+\end_inset
+
+ for a full analysis).
+ As noted by Dumbser 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+, if the wave has nondimensionalised upstream velocity 
+\begin_inset Formula $\bar{v}=1$
+\end_inset
+
+ and Mach number 
+\begin_inset Formula $M_{c}$
+\end_inset
+
+, then its nondimensionalised downstream velocity is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+a=\frac{1+\frac{\gamma-1}{2}M_{c}^{2}}{\frac{\gamma+1}{2}M_{c}^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$P_r$"
+description "Prandtl number, equal to $\\frac{c_p\\cdot\\mu}{\\kappa}$"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The wave's velocity profile 
+\begin_inset Formula $\bar{v}\left(x\right)$
+\end_inset
+
+ is given by the roots of the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{1-\bar{v}}{\left(\bar{v}-a\right)^{a}} & =c_{1}\exp\left(-c_{2}x\right)\\
+c_{1} & =\left(\frac{1-a}{2}\right)^{1-a}\\
+c_{2} & =\frac{3}{4}R_{e}\frac{M_{c}^{2}-1}{\gamma M_{c}^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$R_e$"
+description "Reynolds number"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $c_{1},c_{2}$
+\end_inset
+
+ are constants that affect the position of the center of the wave, and its
+ stretch factor, respectively.
+ Following the analysis of Morduchow and Libby 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Morduchow"
+
+\end_inset
+
+, the nondimensional pressure and density profiles are given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\bar{p}=\frac{1}{\bar{v}}\left(1+\frac{\gamma-1}{2}M_{c}^{2}\left(1-\bar{v}^{2}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\bar{\rho}=\frac{1}{\bar{v}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To obtain an unsteady shock traveling into a region at rest, a constant
+ velocity field 
+\begin_inset Formula $v=M_{c}c_{0}$
+\end_inset
+
+ is imposed on the traveling wave solution presented here.
+ Thus, if 
+\begin_inset Formula $p_{0},\rho_{0}$
+\end_inset
+
+ are the downstream (reference) values for pressure and density:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+v & =Mc_{0}\left(1-\bar{v}\right)\\
+p & =p_{0}\bar{p}\\
+\rho & =\rho_{0}\bar{\rho}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$p_0$"
+description "Reference pressure"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These functions are used as initial conditions, along with 
+\begin_inset Formula $A=\sqrt[3]{\bar{\rho}}I$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+.
+ The downstream density and pressure are taken to be 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{0}=\frac{1}{\gamma}$
+\end_inset
+
+ (so that 
+\begin_inset Formula $c_{0}=1$
+\end_inset
+
+).
+ 
+\begin_inset Formula $M_{c}=2$
+\end_inset
+
+ and 
+\begin_inset Formula $R_{e}=100$
+\end_inset
+
+.
+ The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $p_{\infty}=0$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=5$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=5$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=2\times10^{-2}$
+\end_inset
+
+, 
+\begin_inset Formula $\kappa=\frac{28}{3}\times10^{-2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The results of a simulation with 200 cells at time 
+\begin_inset Formula $t=0.2$
+\end_inset
+
+ are presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:ViscousShock"
+
+\end_inset
+
+.
+ The shock was initially centered at 
+\begin_inset Formula $x=0.25$
+\end_inset
+
+, reaching 
+\begin_inset Formula $x=0.65$
+\end_inset
+
+ at the final time.
+ The results match very well those found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+, except that the spurious wave appearing in that study does not seem to
+ appear here.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/viscous_shock/r.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/validation/viscous_shock/v.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/viscous_shock/p.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/viscous_shock/s.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/validation/viscous_shock/q.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ViscousShock"
+
+\end_inset
+
+Density, velocity, pressure, viscous stress, and heat flux for the viscous
+ shock test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Heat Conduction
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Heat Conduction"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a simple test case to ensure that the heat transfer terms in the
+ implementation are working correctly.
+ Two ideal gases at different temperatures are initially in contact at position
+ 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+ The initial conditions for this problem are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:HeatConduction"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{2}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\geq0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1}{\sqrt[3]{2}}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:HeatConduction"
+
+\end_inset
+
+Initial conditions for the heat conduction test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $p_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=2$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+, 
+\begin_inset Formula $\kappa=10^{-2}$
+\end_inset
+
+.
+ The results of a simulation with 200 cells at time 
+\begin_inset Formula $t=1$
+\end_inset
+
+ are presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HeatConduction"
+
+\end_inset
+
+.
+ Note the excellent agreement with the results in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+ for both the HPR model, and the Navier-Stokes equations with the classical
+ Fourier heat flux equation.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/heat_conduction/T.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../Results/validation/heat_conduction/q.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HeatConduction"
+
+\end_inset
+
+Temperature and heat flux for the heat conduction test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Semenov's Explosion Test
+\end_layout
+
+\begin_layout Standard
+This test ensures that the Arrhenius reaction terms are working correctly.
+ The test consists of a homogeneous, combustible, ideal gas at rest, initially
+ at a temperature at which an Arrhenius reaction will start to occur, eventually
+ leading to full combustion.
+ The test was performed at 
+\begin_inset Formula $\epsilon=\frac{1}{10},\frac{1}{15},\frac{1}{20}$
+\end_inset
+
+ with initial conditions 
+\begin_inset Formula $\rho=1$
+\end_inset
+
+, 
+\begin_inset Formula $p=1$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+.
+ Viscous effects and heat conduction were neglected.
+ The material parameters were chosen to be 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $T_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $Q_{c}=4$
+\end_inset
+
+.
+ To match the scaling used by Sharpe and Short 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Sharpe2004"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+B_{c}=\frac{c_{v}R_{c}}{E_{a}Q_{c}}\exp\left(\frac{E_{a}}{R_{c}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results displayed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Semenov"
+
+\end_inset
+
+ should be compared with figure 1a in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Sharpe2004"
+
+\end_inset
+
+.
+ There is perfect agreement between the studies.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../Results/validation/semenov/T.png
+	lyxscale 50
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Semenov"
+
+\end_inset
+
+Temperature against time for Semenov's explosion test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch ChildOnly
+status open
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../references"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
