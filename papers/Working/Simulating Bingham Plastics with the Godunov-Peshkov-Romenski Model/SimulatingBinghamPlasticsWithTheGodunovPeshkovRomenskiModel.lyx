@@ -957,7 +957,7 @@ Following analysis in Dumbser et al, take evolution equation for G.
 \end_layout
 
 \begin_layout Standard
-[need to change EOS]
+[maybe change EOS]
 \end_layout
 
 \begin_layout Standard
@@ -1094,6 +1094,34 @@ Thus:
 
 \begin_layout Standard
 or something like that...
+\end_layout
+
+\begin_layout Standard
+This formulation means that the RHS of the evolution equation for 
+\begin_inset Formula $G$
+\end_inset
+
+ is not traceless though.
+ Instead, you could use:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma\left(1+\frac{\tanh\left|\sigma\right|}{\left|\sigma\right|}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\left|\sigma\right|=\sqrt{\tr\sigma^{T}\sigma}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
