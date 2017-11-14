@@ -2,16 +2,17 @@ from numba import jit
 from numpy import dot, zeros
 
 from system.gpr.systems.jacobians import dFdP, dPdQ
-from system.gpr.variables.material_functions import arrhenius_reaction_rate
-from system.gpr.variables.material_functions import discrete_reaction_rate
+from system.gpr.variables.material_functions import K_arr, K_dis, K_ing
 from system.gpr.misc.structures import Cvec_to_Pclass
-from options import REACTION_TYPE, VISCOUS, THERMAL, REACTIVE, nV
+from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV
 
 
 def flux_cons_ref(ret, Q, d, PAR):
 
     P = Cvec_to_Pclass(Q, PAR)
 
+    ρ1 = P.ρ1
+    ρ2 = P.ρ2
     ρ = P.ρ
     p = P.p
     E = P.E
@@ -21,13 +22,15 @@ def flux_cons_ref(ret, Q, d, PAR):
     T = P.T
     σ = P.σ
     q = P.q
+    λ = P.λ
+    z = P.z
 
     vd = v[d]
-    ρvd = ρ * v[d]
+    ρvd = ρ * vd
 
     α2 = PAR.α2
 
-    ret[0] += ρvd
+    ret[0] += z * ρ1 * vd
     ret[1] += ρvd * E + p * vd
     ret[2:5] += ρvd * v
     ret[2+d] += p
@@ -47,13 +50,18 @@ def flux_cons_ref(ret, Q, d, PAR):
         ret[14:17] += ρvd * J
         ret[14+d] += T
 
-    if REACTIVE:
-        ret[17] += vd * Q[17]
+    if MULTI:
+        ret[17] += (1-z) * ρ2 * vd
+        ret[18] += ρvd * z
+        if REACTIVE:
+            ret[19] += (1-z) * ρ2 * vd * λ
 
 @jit
 def block_cons_ref(ret, Q, d):
 
-    v = Q[2:5] / Q[0]
+    P = Cvec_to_Pclass(Q, PAR)
+
+    v = P.v
     vd = v[d]
     for i in range(5,14):
         ret[i,i] = vd
@@ -66,14 +74,11 @@ def source_cons_ref(ret, Q, PAR):
     P = Cvec_to_Pclass(Q, PAR)
 
     ρ = P.ρ
-
+    ρ2 = P.ρ2
     ψ = P.ψ()
     H = P.H()
     θ1 = P.θ1()
     θ2 = P.θ2()
-
-    cs2 = PAR.cs2
-    α2 = PAR.α2
 
     if VISCOUS:
         ret[5:14] = - ψ.ravel() / θ1
@@ -82,11 +87,15 @@ def source_cons_ref(ret, Q, PAR):
         ret[14:17] = - ρ * H / θ2
 
     if REACTIVE:
-        if REACTION_TYPE == 'a':
-            K = arrhenius_reaction_rate(P.ρ, P.λ, P.T, PAR.Ea, PAR.Bc, PAR.Rc)
-        elif REACTION_TYPE == 'd':
-            K = discrete_reaction_rate(P.ρ, P.λ, P.T, PAR.Kc, PAR.Ti)
-        ret[17] = -K
+
+        if PAR.REACTION == 'a':
+            K = - K_arr(P, PAR)
+        elif PAR.REACTION == 'd':
+            K = - K_dis(P, PAR)
+        elif PAR.REACTION == 'i':
+            K = - K_ing(P, PAR)
+
+        ret[19] = (1-z) * ρ2 * K
 
 @jit
 def B0dot(ret, x, v):
@@ -134,7 +143,9 @@ def B2dot(ret, x, v):
     ret[13] = - v0 * x[11] - v1 * x[12]
 
 def Bdot_cons(ret, x, Q, d):
-    v = Q[2:5] / Q[0]
+
+    P = Cvec_to_Pclass(Q, PAR)
+    v = P.v
     if d==0:
         B0dot(ret, x, v)
     elif d==1:

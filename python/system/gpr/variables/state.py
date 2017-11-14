@@ -2,17 +2,16 @@ from numba import jit
 from numpy import dot, eye
 
 from system.gpr.misc.functions import AdevG, gram
-from system.gpr.variables.eos import E_1r, E_2A, E_2J, E_3, dEdA
+from system.gpr.variables.eos import e_ref, E_2A, E_2J, E_3, E_R, dEdA
 from options import VISCOUS, THERMAL, REACTIVE
 
 
-def pressure(E, v, A, ρ, J, λ, PAR):
+def pressure(ρ, E, v, A, J, PAR, λ=None):
     """ Returns the pressure, given the total energy, velocity,
         distortion matrix, and density.
         NOTE: Only valid for EOS used for fluids by Dumbser et al.
     """
     E1 = E - E_3(v)
-    γ = PAR.γ
 
     if VISCOUS:
         E1 -= E_2A(A, PAR.cs2)
@@ -21,9 +20,13 @@ def pressure(E, v, A, ρ, J, λ, PAR):
         E1 -= E_2J(J, PAR.α2)
 
     if REACTIVE:
-        E1 -= E_1r(λ, PAR.Qc)
+        E1 -= E_R(λ, PAR.Qc)
 
-    return (γ-1) * ρ * E1 - γ * PAR.pINF
+    Γ = Γ_MG(ρ, PAR)
+    p0 = p_ref(ρ, PAR)
+    e0 = e_ref(p0, PAR)
+
+    return (E1 - e0) * ρ * Γ + p0
 
 def entropy(ρ, p, PAR):
     """ Returns the entropy of a stiffened gas, given density and pressure
@@ -36,10 +39,12 @@ def density(S, p, PAR):
     return ((p + PAR.pINF) / S) ** (1 / PAR.γ)
 
 @jit
-def temperature(ρ, p, γ, pINF, cv):
+def temperature(ρ, p, PAR):
     """ Returns the temperature for an stiffened gas
     """
-    return (p + pINF) / ((γ-1) * ρ * cv)
+    Γ = Γ_MG(ρ, PAR)
+    p0 = p_ref(ρ, PAR)
+    return (p - p0) / (ρ * Γ * cv)
 
 @jit
 def heat_flux(T, J, α2):

@@ -12,8 +12,8 @@ nz = 1                      # Number of cells in z direction
 
 VISCOUS  = 1                # Include viscosity
 THERMAL  = 1                # Include thermal conduction
-REACTIVE = 0                # Include reactivity
-REACTION_TYPE = 'a'         # 'a' (Arrhenius) or 'd' (Discrete)
+MULTI    = 0                # Include a second (potentially-reactive) fluid
+REACTIVE = 0                # Second fluid is reactive
 
 """ GFM Options """
 
@@ -67,4 +67,4 @@ dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
 
-nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(REACTIVE)
+nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(MULTI) * 2 + int(REACTIVE)

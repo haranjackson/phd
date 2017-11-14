@@ -1,32 +1,46 @@
 from numpy import zeros
 
 from system.gpr.misc.functions import gram
-from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
+from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1SG, E_1MG
 from system.gpr.variables.material_functions import theta_1, theta_2
 from system.gpr.variables.state import heat_flux, pressure, temperature, entropy
 from system.gpr.variables.state import sigma, dsigmadA, Sigma
-from options import nV, THERMAL, REACTIVE
+from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
 
 
 class Cvec_to_Pclass():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
     def __init__(self, Q, PAR):
-        self.ρ = Q[0]
-        self.E = Q[1] / self.ρ
-        self.v = Q[2:5] / self.ρ
-        self.A = Q[5:14].reshape([3,3])
-        self.J = Q[14:17] / self.ρ
+
+        if MULTI:
+            self.ρ = Q[0] + Q[17]
+            self.z = Q[18] / self.ρ
+            self.ρ1 = Q[0] / self.z
+            self.ρ2 = Q[17] / self.z
+            if REACTIVE:
+                self.λ = Q[19] / Q[17]
+        else:
+            self.ρ = Q[0]
+
+        self.E  = Q[1] / self.ρ
+        self.v  = Q[2:5] / self.ρ
 
         if REACTIVE:
-            self.λ = Q[17] / self.ρ
+            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, PAR,
+                              self.λ)
         else:
-            self.λ = 0
+            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, PAR)
 
-        self.p = pressure(self.E, self.v, self.A, self.ρ, self.J, self.λ, PAR)
-        self.T = temperature(self.ρ, self.p, PAR.γ, PAR.pINF, PAR.cv)
-        self.q = heat_flux(self.T, self.J, PAR.α2)
-        self.σ = sigma(self.ρ, self.A, PAR.cs2)
+        self.T = temperature(self.ρ, self.p, PAR)
+
+        if VISCOUS:
+            self.A  = Q[5:14].reshape([3,3])
+            self.σ = sigma(self.ρ, self.A, PAR.cs2)
+
+        if THERMAL:
+            self.J  = Q[14:17] / self.ρ
+            self.q = heat_flux(self.T, self.J, PAR.α2)
 
         self.PAR = PAR
 
@@ -49,31 +63,39 @@ class Cvec_to_Pclass():
         return gram(self.A)
 
     def θ1(self):
-        return theta_1(self.A, self.PAR.cs2, self.PAR.τ1)
+        return theta_1(self.A, self.PAR)
 
     def θ2(self):
-        return theta_2(self.ρ, self.T, self.PAR.ρ0, self.PAR.T0, self.PAR.α2,
-                       self.PAR.τ2)
+        return theta_2(self.ρ, self.T, self.PAR)
 
     def E1(self):
-        return E_1(self.ρ, self.p, self.PAR.γ, self.PAR.pINF)
+        return E_1(self.ρ, self.p, self.PAR)
 
 
-def Cvec(ρ, p, v, A, J, λ, PAR):
+def Cvec(ρ1, p, v, A, J, PAR, ρ2=None, z=1, λ=None):
     """ Returns the vector of conserved variables, given the primitive variables
     """
     Q = zeros(nV)
 
-    Q[0] = ρ
+    if MULTI:
+        ρ = z * ρ1 + (1-z) * ρ2
+        Q[0] = z * ρ1
+        Q[17] = (1-z) * ρ2
+        Q[18] = z * ρ
+        if REACTIVE:
+            Q[19] = (1-z) * ρ2 * λ
+    else:
+        ρ = ρ1
+        Q[0] = ρ
+
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, PAR)
     Q[2:5] = ρ * v
-    Q[5:14] = A.ravel()
+
+    if VISCOUS:
+        Q[5:14] = A.ravel()
 
     if THERMAL:
         Q[14:17] = ρ * J
-
-    if REACTIVE:
-        Q[17] = ρ * λ
 
     return Q
 
@@ -117,9 +139,9 @@ def Cvec_to_Pvec(Q, PAR):
     if REACTIVE:
         λ = Q[17] / ρ
     else:
-        λ = 0
+        λ = None
 
-    p = pressure(E, v, A, ρ, J, λ, PAR)
+    p = pressure(ρ, E, v, A, J, λ, PAR)
 
     ret = Q.copy()
     ret[1] = p

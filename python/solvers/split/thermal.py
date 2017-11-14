@@ -7,7 +7,7 @@ from system.gpr.variables.material_functions import theta_2
 
 def f_J(ρ, E, A, J, PAR):
     T = E_to_T(E, A, J, PAR)
-    return - dEdJ(J, PAR.α2) / theta_2(ρ, T, PAR.ρ0, PAR.T0, PAR.α2, PAR.τ2)
+    return - dEdJ(J, PAR.α2) / theta_2(ρ, T, PAR)
 
 def jac_J(ρ, E, A, J, PAR):
     T = E_to_T(E, A, J, PAR)

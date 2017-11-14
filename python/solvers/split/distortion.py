@@ -9,7 +9,7 @@ from system.gpr.variables.material_functions import theta_1
 
 
 def f_A(A, PAR):
-    return - dEdA(A, PAR.cs2).ravel() / theta_1(A, PAR.cs2, PAR.τ1)
+    return - dEdA(A, PAR.cs2).ravel() / theta_1(A, PAR)
 
 def jac_A(A, τ1):
     G = gram(A)

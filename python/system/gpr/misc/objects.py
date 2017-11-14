@@ -16,78 +16,135 @@ def CParameters(GPRpy, PAR):
     MP.tau2 = PAR.τ2
     return MP
 
-class material_params():
-    def __init__(self, Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ,
-                 τ1, τ2, Qc, Kc, Ti, Ea, Bc):
-        self.Rc = Rc
-
+class EOS_params():
+    def __init__(self, ρ0, cv, γ, pINF):
+        self.ρ0 = ρ0
+        self.cv = cv
         self.γ = γ
         self.pINF = pINF
-        self.cv = cv
+
+class params():
+    def __init__(self, Rc, EOS, ρ0, p0, T0, cv,
+                 γ, pINF,
+                 c0, Γ0, s,
+                 A, B, R1, R2,
+                 cs, μ, τ1, σY, n, PLASTIC,
+                 α, κ, τ2,
+                 REACTION, Qc,
+                 Kc, Ti,
+                 Bc, Ea,
+                 I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2):
+
+        self.Rc = Rc
+        self.EOS = EOS
 
         self.ρ0 = ρ0
+        self.v0 = 1 / ρ0
         self.p0 = p0
         self.T0 = T0
+        self.cv = cv
 
-        self.cs = cs
-        self.α = α
+        if EOS == 'sg':
+            self.γ = γ
+            self.pINF = pINF
+
+        elif EOS == 'jwl':
+            self.Γ0 = Γ0
+            self.A = A
+            self.B = B
+            self.R1 = R1
+            self.R2 = R2
+
+        elif EOS == 'smg':
+            self.Γ0 = Γ0
+            self.c02 = c0**2
+            self.s = s
+
+        self.cs2 = self.cs**2
         self.μ = μ
-        self.Pr = Pr
         self.τ1 = τ1
+
+        self.PLASTIC = PLASTIC
+        if PLASTIC:
+            self.σY = σY
+            self.n = n
+
+        self.α2 = self.α**2
         self.κ = κ
         self.τ2 = τ2
 
-        self.Qc = Qc
-        self.Kc = Kc
-        self.Ti = Ti
-        self.Ea = Ea
-        self.Bc = Bc
+        if REACTION is not None:
+            self.REACTION = REACTION
+            self.Qc = Qc
 
-        self.cs2 = self.cs**2
-        self.α2 = self.α**2
+        if REACTION == 'd':
+            self.Kc = Kc
+            self.Ti = Ti
 
-def material_parameters(Rc=8.314459848, γ=None, pINF=None, cv=None, ρ0=None,
-                        p0=None, cs=None, α=None, μ=None, κ=None, Pr=None,
-                        Qc=None, Kc=None, Ti=None, ε=None, Bc=None):
+        elif REACTION == 'a':
+            self.Ea = Ea
+            self.Bc = Bc
+
+        elif REACTION == 'i':
+            self.I = I
+            self.G1 = G1
+            self.G2 = G2
+            self.a = a
+            self.b = b
+            self.c = c
+            self.d = d
+            self.e = e
+            self.g = g
+            self.x = x
+            self.y = y
+            self.z = z
+            self.φIG = φIG
+            self.φG1 = φG1
+            self.φG2 = φG2
+
+def material_parameters(EOS, ρ0, cv, p0=None,
+                        γ=None, pINF=None,
+                        c0=None, Γ0=None, s=None,
+                        A=None, B=None, R1=None, R2=None,
+                        cs=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
+                        α=None, κ=None, Pr=None,
+                        Qc=None, Kc=None, Ti=None, ε=None, Bc=None,
+                        I=None, G1=None, G2=None, a=None, b=None, c=None,
+                        d=None, e=None, g=None, x=None, y=None, z=None,
+                        φIG=None, φG1=None, φG2=None,
+                        REACTION=None, Rc=8.31445985):
+
     """ An object to hold the material constants
     """
+    assert(EOS in ['sg', 'jwl', 'smg'])
+    assert(REACTION in ['a', 'd', 'ig', None])
+
     if pINF is None:
         pINF = 0
 
-    T0 = temperature(ρ0, p0, γ, pINF, cv)
+    P = EOS_params(ρ0, cv, γ, pINF)
+    T0 = temperature(ρ0, p0, P)
 
-    if cs is not None:
+    if cs is not None and τ1 is None:
         τ1 = 6 * μ / (ρ0 * cs**2)
-    else:
-        cs = 0
-        τ1 = 0
 
     if α is not None:
         if Pr is None:
             κ = κ
-            Pr = μ * γ * cv / κ
         else:
             κ = μ * γ * cv / Pr
         τ2 = κ * ρ0 / (T0 * α**2)
-    else:
-        α = 0
-        Pr = 0
-        κ = 0
-        τ2 = 0
 
-    if Qc is None:
-        Qc = 0
-    if Kc is None:
-        Kc = 0
-    if Ti is None:
-        Ti = 0
-    if Bc is None:
-        Bc = 0
-
-    if ε is None:
-        Ea = 0
-    else:
+    if ε is not None:
         Ea = Rc * T0 / ε
 
-    return material_params(Rc, γ, pINF, cv, ρ0, p0, T0, cs, α, μ, Pr, κ,
-                           τ1, τ2, Qc, Kc, Ti, Ea, Bc)
+    return params(Rc, EOS, ρ0, p0, T0, cv,
+                  γ, pINF,
+                  c0, Γ0, s,
+                  A, B, R1, R2,
+                  cs, μ, τ1, σY, n, PLASTIC,
+                  α, κ, τ2,
+                  REACTION, Qc,
+                  Kc, Ti,
+                  Bc, Ea,
+                  I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2)
