@@ -12,17 +12,10 @@ def flux_cons_ref(ret, Q, d, PAR):
     P = Cvec_to_Pclass(Q, PAR)
 
     ρ1 = P.ρ1
-    ρ2 = P.ρ2
     ρ = P.ρ
     p = P.p
     E = P.E
     v = P.v
-    A = P.A
-    J = P.J
-    T = P.T
-    σ = P.σ
-    q = P.q
-    λ = P.λ
     z = P.z
 
     vd = v[d]
@@ -36,6 +29,10 @@ def flux_cons_ref(ret, Q, d, PAR):
     ret[2+d] += p
 
     if VISCOUS:
+
+        A = P.A
+        σ = P.σ
+
         σd = σ[d]
         ret[1] -= dot(σd, v)
         ret[2:5] -= σd
@@ -46,18 +43,27 @@ def flux_cons_ref(ret, Q, d, PAR):
         ret[11+d] += Av[2]
 
     if THERMAL:
+
+        J = P.J
+        T = P.T
+        q = P.q
+
         ret[1] += q[d]
         ret[14:17] += ρvd * J
         ret[14+d] += T
 
     if MULTI:
+
+        λ = P.λ
+        ρ2 = P.ρ2
+
         ret[17] += (1-z) * ρ2 * vd
         ret[18] += ρvd * z
         if REACTIVE:
             ret[19] += (1-z) * ρ2 * vd * λ
 
 @jit
-def block_cons_ref(ret, Q, d):
+def block_cons_ref(ret, Q, d, PAR):
 
     P = Cvec_to_Pclass(Q, PAR)
 
@@ -74,7 +80,6 @@ def source_cons_ref(ret, Q, PAR):
     P = Cvec_to_Pclass(Q, PAR)
 
     ρ = P.ρ
-    ρ2 = P.ρ2
     ψ = P.ψ()
     H = P.H()
     θ1 = P.θ1()
@@ -87,6 +92,9 @@ def source_cons_ref(ret, Q, PAR):
         ret[14:17] = - ρ * H / θ2
 
     if REACTIVE:
+
+        z = P.z
+        ρ2 = P.ρ2
 
         if PAR.REACTION == 'a':
             K = - K_arr(P, PAR)
@@ -142,7 +150,7 @@ def B2dot(ret, x, v):
     ret[12] = v2 * x[12]
     ret[13] = - v0 * x[11] - v1 * x[12]
 
-def Bdot_cons(ret, x, Q, d):
+def Bdot_cons(ret, x, Q, d, PAR):
 
     P = Cvec_to_Pclass(Q, PAR)
     v = P.v
@@ -160,5 +168,5 @@ def system_cons(Q, d, PAR):
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
     B = zeros([nV, nV])
-    block_cons_ref(B, Q, d)
+    block_cons_ref(B, Q, d, PAR)
     return dot(DFDP, DPDQ) + B

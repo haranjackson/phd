@@ -5,7 +5,8 @@ from system.gpr.misc.structures import Cvec
 from options import nx, ny, nz, nV
 
 
-PAR = material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1, μ=1e-2, Pr=0.75)
+PAR = material_parameters(EOS='sg', ρ0=1, cv=1, γ=1.4, p0=1,
+                          cs=1, α=1, μ=1e-2, Pr=0.75)
 
 
 def toro_test1_IC():

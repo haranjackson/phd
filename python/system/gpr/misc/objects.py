@@ -17,11 +17,20 @@ def CParameters(GPRpy, PAR):
     return MP
 
 class EOS_params():
-    def __init__(self, ρ0, cv, γ, pINF):
+    def __init__(self, EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2):
+        self.EOS = EOS
         self.ρ0 = ρ0
         self.cv = cv
+        self.p0 = p0
         self.γ = γ
         self.pINF = pINF
+        self.c0 = c0
+        self.Γ0 = Γ0
+        self.s = s
+        self.A = A
+        self.B = B
+        self.R1 = R1
+        self.R2 = R2
 
 class params():
     def __init__(self, Rc, EOS, ρ0, p0, T0, cv,
@@ -60,7 +69,7 @@ class params():
             self.c02 = c0**2
             self.s = s
 
-        self.cs2 = self.cs**2
+        self.cs2 = cs**2
         self.μ = μ
         self.τ1 = τ1
 
@@ -69,7 +78,7 @@ class params():
             self.σY = σY
             self.n = n
 
-        self.α2 = self.α**2
+        self.α2 = α**2
         self.κ = κ
         self.τ2 = τ2
 
@@ -108,11 +117,13 @@ def material_parameters(EOS, ρ0, cv, p0=None,
                         A=None, B=None, R1=None, R2=None,
                         cs=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
                         α=None, κ=None, Pr=None,
-                        Qc=None, Kc=None, Ti=None, ε=None, Bc=None,
+                        REACTION=None, Qc=None,
+                        Kc=None, Ti=None,
+                        ε=None, Bc=None, Ea=None,
                         I=None, G1=None, G2=None, a=None, b=None, c=None,
                         d=None, e=None, g=None, x=None, y=None, z=None,
                         φIG=None, φG1=None, φG2=None,
-                        REACTION=None, Rc=8.31445985):
+                        Rc=8.31445985):
 
     """ An object to hold the material constants
     """
@@ -122,7 +133,7 @@ def material_parameters(EOS, ρ0, cv, p0=None,
     if pINF is None:
         pINF = 0
 
-    P = EOS_params(ρ0, cv, γ, pINF)
+    P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2)
     T0 = temperature(ρ0, p0, P)
 
     if cs is not None and τ1 is None:

@@ -11,10 +11,10 @@ def theta_1(A, PAR):
     """
     cs2 = PAR.cs2
     τ1 = PAR.τ1
-    σY = PAR.σY
-    n = PAR.n
 
     if PAR.PLASTIC:
+        σY = PAR.σY
+        n = PAR.n
         σ = sigma(ρ, A, cs2)
         τ = τ1 * (σY / L2_2D(dev(σ))) ** n
     else:

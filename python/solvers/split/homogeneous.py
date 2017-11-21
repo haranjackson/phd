@@ -47,7 +47,7 @@ def weno_midstepper(wh, dt, PAR):
                     F[a] = flux(w[a], 0, PAR)
                 dFdx = derivative(F, 0)
                 for a in range(N1):
-                    Bdot(Bdwdx, dwdx[a], w[a], 0)
+                    Bdot(Bdwdx, dwdx[a], w[a], 0, PAR)
                     w[a] -= dt/2 * (dFdx[a] + Bdwdx)
 
         elif ndim==2:
@@ -66,6 +66,6 @@ def weno_midstepper(wh, dt, PAR):
                 dFdx = derivative(F, 0)
                 dGdy = derivative(G, 1)
                 for a,b in product(range(N1), range(N1)):
-                    Bdot(Bdwdx, dwdx[a,b], w[a,b], 0)
-                    Bdot(Bdwdy, dwdy[a,b], w[a,b], 1)
+                    Bdot(Bdwdx, dwdx[a,b], w[a,b], 0, PAR)
+                    Bdot(Bdwdy, dwdy[a,b], w[a,b], 1, PAR)
                     w[a,b] -= dt/2 * (dFdx[a,b] + dGdy[a,b] + Bdwdx + Bdwdy)

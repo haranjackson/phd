@@ -8,8 +8,8 @@ from options import nV
 def flux_ref(ret, Q, d, PAR):
     flux_cons_ref(ret, Q, d, PAR)
 
-def block_ref(ret, Q, d):
-    block_cons_ref(ret, Q, d)
+def block_ref(ret, Q, d, PAR):
+    block_cons_ref(ret, Q, d, PAR)
 
 def source_ref(ret, Q, PAR):
     source_cons_ref(ret, Q, PAR)
@@ -19,9 +19,9 @@ def flux(Q, d, PAR):
     flux_ref(ret, Q, d, PAR)
     return ret
 
-def block(Q, d):
+def block(Q, d, PAR):
     ret = zeros([nV, nV])
-    block_ref(ret, Q, d)
+    block_ref(ret, Q, d, PAR)
     return ret
 
 def source(Q, PAR):
@@ -29,8 +29,8 @@ def source(Q, PAR):
     source_ref(ret, Q, PAR)
     return ret
 
-def Bdot(ret, x, Q, d):
-    Bdot_cons(ret, x, Q, d)
+def Bdot(ret, x, Q, d, PAR):
+    Bdot_cons(ret, x, Q, d, PAR)
 
 def system(Q, d, PAR):
     return system_cons(Q, d, PAR)

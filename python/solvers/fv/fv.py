@@ -77,7 +77,7 @@ def interfaces(qEnd, PAR):
                 flux_ref(ftemp, qR_, d, PAR)
                 ftemp -= s_func(qL_, qR_, d, PAR)
                 fEndTemp += wghtEnd[t, x1, x2] * ftemp
-                BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d)
+                BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, PAR)
 
             fEnd[d, i, j, k] = fEndTemp
             BEnd[d, i, j, k] = BEndTemp
@@ -117,7 +117,7 @@ def center(qhi, t, inds, PAR, HOMOGENEOUS):
     for d in range(ndim):
         dxdxi = dot(DERVALS[inds[d]], qi[d])
         temp = zeros(nV)
-        Bdot(temp, dxdxi, q, d)
+        Bdot(temp, dxdxi, q, d, PAR)
         ret -= temp
 
     return ret

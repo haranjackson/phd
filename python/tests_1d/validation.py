@@ -23,10 +23,11 @@ def first_stokes_problem_IC():
     A = eye(3)
     J = zeros(3)
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=1, ρ0=ρ, p0=p, cs=1, α=1e-16, μ=μ, Pr=0.75)
+    PAR = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, pINF=0,
+                              cs=1, α=1e-16, μ=μ, Pr=0.75)
 
-    QL = Cvec(ρ, p, -v, A, J, 0, PAR)
-    QR = Cvec(ρ, p,  v, A, J, 0, PAR)
+    QL = Cvec(ρ, p, -v, A, J, PAR)
+    QR = Cvec(ρ, p,  v, A, J, PAR)
     u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
         if i*dx < Lx/2:
@@ -42,7 +43,8 @@ def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
     return v0 * erf(x / (2 * sqrt(μ * t)))
 
 def viscous_shock_exact(x, Ms, PAR, center=0):
-    """ Returns the density, pressure, and velocity of the viscous shock (Mach number Ms) at x
+    """ Returns the density, pressure, and velocity of the viscous shock
+        (Mach number Ms) at x
     """
     x -= center
     ρ0 = PAR.ρ0
@@ -85,7 +87,8 @@ def viscous_shock_IC(center=0):
     p0 = 1 / γ
     μ = 2e-2
 
-    PAR = material_parameters(γ=γ, pINF=0, cv=2.5, ρ0=ρ0, p0=p0, cs=5, α=5, μ=2e-2, Pr=0.75)
+    PAR = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
+                              cs=5, α=5, μ=2e-2, Pr=0.75)
 
     x = arange(-Lx/2, Lx/2, 1/nx)
     ρ = zeros(nx)
@@ -101,7 +104,7 @@ def viscous_shock_IC(center=0):
         A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
         λ = 0
-        u[i,0,0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, λ, PAR)
+        u[i,0,0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, PAR)
 
     return u, [PAR], []
 
@@ -120,10 +123,11 @@ def heat_conduction_IC():
     AR = ρR**(1/3) * eye(3)
     J0 = zeros(3)
 
-    PAR = material_parameters(γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=p0, cs=1, α=2, μ=1e-2, κ=1e-2)
+    PAR = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=p0, γ=1.4, pINF=0,
+                              cs=1, α=2, μ=1e-2, κ=1e-2)
 
-    QL = Cvec(ρL, p0, v0, AL, J0, 0, PAR)
-    QR = Cvec(ρR, p0, v0, AR, J0, 0, PAR)
+    QL = Cvec(ρL, p0, v0, AL, J0, PAR)
+    QR = Cvec(ρR, p0, v0, AR, J0, PAR)
     u = zeros([nx, ny, nz, nV])
     x0 = Lx / 2
     for i in range(nx):
@@ -136,33 +140,3 @@ def heat_conduction_IC():
         return u, [PAR, PAR], [0.5]
     else:
         return u, [PAR], []
-
-def semenov_IC():
-    Rc = 8.314459848
-
-    cv = 2.5
-    T0 = 1
-    Qc = 4
-    ε = 1/20 # 1/15 # 1/10
-    Ea = Rc * 1 / ε
-    Bc = (cv * T0**2 * Rc) / (Ea * Qc) * exp(Ea/(Rc*T0))
-
-    ρ = 1
-    p = 1
-    v = zeros(3)
-    A = ρ**(1/3) * eye(3)
-    J = zeros(3)
-    λ = 1
-
-    PAR = material_parameters(γ=1.4, pINF=0, cv=cv, ρ0=ρ, p0=p, Qc=Qc, ε=ε, Bc=Bc)
-
-    Q = Cvec(ρ, p, v, A, J, λ, PAR)
-    u = zeros([nx, ny, nz, nV])
-    for i in range(nx):
-        u[i,0,0] = Q
-
-    return u, [PAR], []
-
-def semenov_temp(dataArray, PAR):
-    states = [da[0, 0, 0] for da in dataArray]
-    return [Cvec_to_Pclass(state, PAR, 0, 0, 1).T for state in states]

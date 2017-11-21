@@ -1,7 +1,7 @@
 from numpy import zeros
 
 from system.gpr.misc.functions import gram
-from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1SG, E_1MG
+from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
 from system.gpr.variables.material_functions import theta_1, theta_2
 from system.gpr.variables.state import heat_flux, pressure, temperature, entropy
 from system.gpr.variables.state import sigma, dsigmadA, Sigma
@@ -22,9 +22,18 @@ class Cvec_to_Pclass():
                 self.λ = Q[19] / Q[17]
         else:
             self.ρ = Q[0]
+            self.ρ1 = self.ρ
+            self.z = 1
 
         self.E  = Q[1] / self.ρ
         self.v  = Q[2:5] / self.ρ
+
+        if VISCOUS:
+            self.A  = Q[5:14].reshape([3,3])
+            self.σ = sigma(self.ρ, self.A, PAR.cs2)
+
+        if THERMAL:
+            self.J  = Q[14:17] / self.ρ
 
         if REACTIVE:
             self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, PAR,
@@ -34,12 +43,7 @@ class Cvec_to_Pclass():
 
         self.T = temperature(self.ρ, self.p, PAR)
 
-        if VISCOUS:
-            self.A  = Q[5:14].reshape([3,3])
-            self.σ = sigma(self.ρ, self.A, PAR.cs2)
-
         if THERMAL:
-            self.J  = Q[14:17] / self.ρ
             self.q = heat_flux(self.T, self.J, PAR.α2)
 
         self.PAR = PAR
@@ -141,7 +145,7 @@ def Cvec_to_Pvec(Q, PAR):
     else:
         λ = None
 
-    p = pressure(ρ, E, v, A, J, λ, PAR)
+    p = pressure(ρ, E, v, A, J, PAR, λ)
 
     ret = Q.copy()
     ret[1] = p

@@ -2,7 +2,8 @@ from numba import jit
 from numpy import dot, eye
 
 from system.gpr.misc.functions import AdevG, gram
-from system.gpr.variables.eos import e_ref, E_2A, E_2J, E_3, E_R, dEdA
+from system.gpr.variables.eos import e_ref, p_ref, Γ_MG
+from system.gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA
 from options import VISCOUS, THERMAL, REACTIVE
 
 
@@ -44,6 +45,7 @@ def temperature(ρ, p, PAR):
     """
     Γ = Γ_MG(ρ, PAR)
     p0 = p_ref(ρ, PAR)
+    cv = PAR.cv
     return (p - p0) / (ρ * Γ * cv)
 
 @jit

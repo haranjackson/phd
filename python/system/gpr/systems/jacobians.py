@@ -76,13 +76,11 @@ def dPdQ(P):
     ρ = P.ρ
     v = P.v
     J = P.J
-    λ = P.λ
 
     ψ = P.ψ()
 
     PAR = P.PAR
     α2 = PAR.α2
-    Qc = PAR.Qc
 
     jacVars = jacobian_variables(P)
     Γ = jacVars.Γ
@@ -106,6 +104,8 @@ def dPdQ(P):
             ret[i, i] = 1 / ρ
 
     if REACTIVE:
+        λ = P.λ
+        Qc = PAR.Qc
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
         ret[1, 0] += Γ * Qc * λ
@@ -122,7 +122,6 @@ def dFdP(P, d):
     v = P.v
     A = P.A
     J = P.J
-    λ = P.λ
     E = P.E
     T = P.T
     q = P.q
@@ -133,7 +132,6 @@ def dFdP(P, d):
     γ = PAR.γ
     pINF = PAR.pINF
     α2 = PAR.α2
-    Qc = PAR.Qc
 
     ρvd = ρ * v[d]
 
@@ -178,6 +176,8 @@ def dFdP(P, d):
             ret[i, i] = ρvd
 
     if REACTIVE:
+        λ = P.λ
+        Qc = PAR.Qc
         ret[17, 0] = v[d] * λ
         ret[17, 2+d] = ρ * λ
         ret[17, 17] = ρvd

@@ -30,7 +30,7 @@ def rhs(q, Ww, dt, PAR, HOMOGENEOUS):
             source_ref(ret[b], qb, PAR)
         for d in range(ndim):
             flux_ref(Fq[d,b], qb, d, PAR)
-            Bdot(Bq[d,b], Tq[d,b], qb, d)
+            Bdot(Bq[d,b], Tq[d,b], qb, d, PAR)
 
     if not HOMOGENEOUS:
         ret *= dx

@@ -4,7 +4,6 @@ from joblib import Parallel
 from numpy import array, zeros
 
 import auxiliary.boundaries
-import tests_1d.diffusion
 import tests_1d.multi
 import tests_1d.validation
 import tests_1d.toro
@@ -65,9 +64,9 @@ def run(t, tf, count, data):
 
         for i in range(m+1):
 
-            if USE_CPP:
+            fluid = fluids[i]
 
-                fluid = fluids[i]
+            if USE_CPP:
                 tmp = fluid.ravel()
                 MP = cPARs[i]
 
