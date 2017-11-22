@@ -1,7 +1,7 @@
 from numpy import array, dot, zeros
 from scipy.optimize import newton_krylov, leastsq, root, anderson
 
-from solvers.basis import end_values, quad
+from solvers.basis import end_values, derivative_values, quad
 from solvers.dg.dg import rhs
 from solvers.dg.matrices import system_matrices
 from system.gpr.misc.objects import material_parameters
@@ -11,10 +11,11 @@ from options import nV, N1, NT
 
 W, U, _, _, _ = system_matrices()
 ENDVALS = end_values()
+DERVALS = derivative_values()
 NODES, _, _ = quad()
 
 
-def obj(x, WwL, WwR, dt, PARL, PARR):
+def obj_eul(x, WwL, WwR, dt, PARL, PARR):
 
     nX = NT*nV
 
@@ -51,10 +52,19 @@ def obj(x, WwL, WwR, dt, PARL, PARR):
 
     return ret
 
+def dΧ(xh, dt):
+    """ returns dΧ/dx and dΧ/dt at spatial node i and temporal node j
+    """
+    dxdΧ = dot(DERVALS, xh)
+    dxdτ = dot(xh, DERVALS.T)
+    dΧdx = 1 / dxdΧ
+    dΧdt = -dxdτ / (dxdΧ * dt)
+    return dΧdx, dΧdt
+
 if __name__ == "__main__":
 
-    PAR = material_parameters(γ=1.4, pINF=0, cv=1, ρ0=1, p0=1, cs=1, α=1,
-                              μ=1e-2, Pr=0.75)
+    PAR = material_parameters(EOS='sg', ρ0=1, cv=1, γ=1.4, pINF=0, p0=1,
+                              cs=1, α=1, μ=1e-2, Pr=0.75)
     """
     ρL = 1
     pL = 1
@@ -70,8 +80,8 @@ if __name__ == "__main__":
     JR = zeros(3)
     PARR = PAR
 
-    QL = Cvec(ρL, pL, vL, AL, JL, 0, PARR)
-    QR = Cvec(ρR, pR, vR, AR, JR, 0, PARL)
+    QL = Cvec(ρL, pL, vL, AL, JL, PARR)
+    QR = Cvec(ρR, pR, vR, AR, JR, PARL)
 
     PL = Cvec_to_Pclass(QL, PARL)
     PR = Cvec_to_Pclass(QR, PARL)
@@ -91,8 +101,8 @@ if __name__ == "__main__":
         ρR = 2-NODES[i]
         pR = ρR
         AR = ρR**(1/3) * eye(3)
-        wL[i] = Cvec(ρL, pL, v0, AL, J0, 0, PAR)
-        wR[i] = Cvec(ρR, pR, v0, AR, J0, 0, PAR)
+        wL[i] = Cvec(ρL, pL, v0, AL, J0, PAR)
+        wR[i] = Cvec(ρR, pR, v0, AR, J0, PAR)
 
     WwL = dot(W, wL)
     WwR = dot(W, wR)
