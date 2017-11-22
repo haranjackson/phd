@@ -2,7 +2,8 @@ from numpy import array, eye, sqrt, zeros
 
 from system.gpr.misc.objects import material_parameters
 from system.gpr.misc.structures import Cvec
-from options import nx, ny, nz, nV, Lx, dx
+from tests_1d.common import riemann_IC
+from options import nx, ny, nz, nV, dx
 
 
 def sod_shock_IC():
@@ -11,29 +12,16 @@ def sod_shock_IC():
     """
     ρL = 1
     pL = 1
-    AL = ρL**(1/3) * eye(3)
+    vL = zeros(3)
 
     ρR = 0.125
     pR = 0.1
-    AR = ρR**(1/3) * eye(3)
+    vR = zeros(3)
 
-    v = zeros(3)
-    J = zeros(3)
-    λ = 0
+    PAR = material_parameters(EOS='sg', γ=1.4, pINF=0, cv=2.5, ρ0=1, p0=1,
+                              cs=1, α=1, μ=5e-4, Pr=2/3)
 
-    PAR = material_parameters(y=1.4, pINF=0, cv=2.5, ρ0=1, p0=1, cs=1, α=1,
-                              μ=5e-4, Pr=2/3)
-
-    u = zeros([nx, ny, nz, nV])
-    QL = Cvec(ρL, pL, v, AL, J, λ, PAR)
-    QR = Cvec(ρR, pR, v, AR, J, λ, PAR)
-    for i in range(nx):
-        if i < int(nx/2):
-            u[i, 0, 0] = QL
-        else:
-            u[i, 0, 0] = QR
-
-    return u, [PAR]*2, [Lx/2]
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
 
 def water_gas_IC():
     """ tf = 237.44e-6
@@ -41,68 +29,43 @@ def water_gas_IC():
     """
     ρL = 1000
     pL = 1e9
-    AL = ρL**(1/3) * eye(3)
-    PARL = material_parameters(y=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1, cs=1e-4,
-                               α=1e-4, μ=1e-3, Pr=7)
+    vL = zeros(3)
 
     ρR = 50
     pR = 101325
-    AR = ρR**(1/3) * eye(3)
-    PARR = material_parameters(y=1.4, pINF=0, cv=718, ρ0=1.176, p0=101325, cs=55,
-                               α=5e2, μ=1.98e-5, Pr=0.72)
+    vR = zeros(3)
 
-    v = zeros(3)
-    J = zeros(3)
-    λ = 0
+    PARR = material_parameters(EOS='sg', γ=1.4, pINF=0, cv=718, ρ0=1.176, p0=101325,
+                               cs=55, α=5e2, μ=1.98e-5, Pr=0.72)
+    PARL = material_parameters(EOS='sg', γ=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1,
+                               cs=1e-4, α=1e-4, μ=1e-3, Pr=7)
 
-    u = zeros([nx, ny, nz, nV])
-    QL = Cvec(ρL, pL, v, AL, J, λ, PARL)
-    QR = Cvec(ρR, pR, v, AR, J, λ, PARR)
-    for i in range(nx):
-        if i*dx < 0.7:
-            u[i, 0, 0] = QL
-        else:
-            u[i, 0, 0] = QR
-
-    return u, [PARL, PARR], [0.7]
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PARL, PARR, 0.7)
 
 def water_water_IC():
     """ tf = 1.5e-4
         L = 1
     """
-    PAR = material_parameters(y=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1e5, cs=1e-4,
-                              α=1e-4, μ=1e-3, Pr=7)
+    PAR = material_parameters(EOS='sg', γ=4.4, pINF=6e8, cv=950, ρ0=1000, p0=1e5,
+                              cs=1e-4, α=1e-4, μ=1e-3, Pr=7)
 
     ρL = 1000
     pL = 7e8
-    AL = ρL**(1/3) * eye(3)
+    vL = zeros(3)
 
     ρR = 1000
     pR = pL / 7000
-    AR = ρR**(1/3) * eye(3)
+    vR = zeros(3)
 
-    v = zeros(3)
-    J = zeros(3)
-    λ = 0
-
-    u = zeros([nx, ny, nz, nV])
-    QL = Cvec(ρL, pL, v, AL, J, λ, PAR)
-    QR = Cvec(ρR, pR, v, AR, J, λ, PAR)
-    for i in range(nx):
-        if i*dx < 0.5:
-            u[i, 0, 0] = QL
-        else:
-            u[i, 0, 0] = QR
-
-    return u, [PAR]*2, [0.5]
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
 
 def helium_bubble_IC():
     """ tf = 0.0014
         L = 1
     """
-    PAR_air = material_parameters(y=1.4, pINF=0, cv=721, ρ0=1.18, p0=10100,
+    PAR_air = material_parameters(EOS='sg', γ=1.4, pINF=0, cv=721, ρ0=1.18, p0=10100,
                                   cs=1, α=1, μ=1.85e-5, Pr=0.714)
-    PAR_hel = material_parameters(y=1.66, pINF=0, cv=3127, ρ0=0.163, p0=10100,
+    PAR_hel = material_parameters(EOS='sg', γ=1.66, pINF=0, cv=3127, ρ0=0.163, p0=10100,
                                   cs=1, α=1, μ=1.99e-5, Pr=0.688)
     ρL = 1.3333
     pL = 1.5e5
@@ -120,51 +83,25 @@ def helium_bubble_IC():
     AR = ρR**(1/3) * eye(3)
 
     J = zeros(3)
-    λ = 0
 
     u = zeros([nx, ny, nz, nV])
-    Q1 = Cvec(ρL, pL, vL, AL, J, λ, PAR_air)
-    Q2 = Cvec(ρM, pM, vM, AM, J, λ, PAR_air)
-    Q3 = Cvec(ρR, pR, vR, AR, J, λ, PAR_hel)
+    Q1 = Cvec(ρL, pL, vL, AL, J, PAR_air)
+    Q2 = Cvec(ρM, pM, vM, AM, J, PAR_air)
+    Q3 = Cvec(ρR, pR, vR, AR, J, PAR_hel)
+
     for i in range(nx):
+
+        u[i, 0, 0, -3] = i*dx - 0.05
+        u[i, 0, 0, -2] = i*dx - 0.4
+        u[i, 0, 0, -1] = i*dx - 0.6
+
         if i*dx < 0.05:
-            u[i, 0, 0] = Q1
+            u[i, 0, 0, :-3] = Q1
         elif i*dx < 0.4:
-            u[i, 0, 0] = Q2
+            u[i, 0, 0, :-3] = Q2
         elif i*dx < 0.6:
-            u[i, 0, 0] = Q3
+            u[i, 0, 0, :-3] = Q3
         else:
-            u[i, 0, 0] = Q2
+            u[i, 0, 0, :-3] = Q2
 
-    return u, [PAR_air, PAR_hel, PAR_air], [0.4, 0.6]
-
-def helium_heat_transmission_IC():
-    """ tf = 5e-9
-        L = 4.25e-6
-        nx = 400
-        W = 1
-    """
-    ρL = 1.18
-    ρR = 0.164
-    v = zeros(3)
-    A = eye(3)
-    J = zeros(3)
-    λ = 0
-    p0 = 101325
-
-    PAR_air = material_parameters(y=1.4, pINF=0, cv=718, ρ0=ρL, p0=p0, cs=55,
-                                  α=5e2, μ=1.84e-5, Pr=0.715)
-    PAR_hel = material_parameters(y=1.66, pINF=0, cv=3128, ρ0=ρR, p0=p0, cs=55,
-                                  α=5e2, μ=1.98e-5, Pr=0.688)
-
-    QL = Cvec(ρL, p0, v, A, J, λ, PAR_air)
-    QR = Cvec(ρR, p0, v, A, J, λ, PAR_hel)
-    u = zeros([nx, ny, nz, nV])
-    x0 = Lx/4
-    for i in range(nx):
-        if i*dx < x0:
-            u[i] = QL
-        else:
-            u[i] = QR
-
-    return u, [PAR_air, PAR_hel], [x0]
+    return u, [PAR_air, PAR_air, PAR_hel, PAR_air]

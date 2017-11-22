@@ -1,34 +1,41 @@
-from numpy import concatenate, int64
-
 from multi.riemann import star_states
-from options import dx, ISO_FIX
+from options import ISO_FIX
 
 
-def interface_inds(intfLocs, n):
-    ret = []
-    for x0 in intfLocs:
-        for i in range(n):
-            if (i+0.5) * dx >= x0:
-                ret.append(i)
-                break
-    return concatenate([[0], ret, [n]]).astype(int64)
+def get_levelset_root(u, i, m):
+    """ return the location of interface i
+    """
+    φ = u[:,:,:,i-(m-1)]
+    n = len(φ)
+    for j in range(n):
+        if φ[j] > 0:
+            return j
+    return n
 
-def add_ghost_cells(fluids, intfInds, intfVels, PARs, dt):
+def add_ghost_cells(fluids, PARs, dt):
 
-    for i in range(len(fluids)-1):
+    m = len(PARs)
+    for i in range(m-1):
         uL = fluids[i]
         uR = fluids[i+1]
-        ind = intfInds[i+1]
+        ind = get_levelset_root(uL, i, m)
         PARL = PARs[i]
         PARR = PARs[i+1]
 
-        QL = uL[ind-1-ISO_FIX, 0, 0]
-        QR = uR[ind+ISO_FIX, 0, 0]
+        QL = uL[ind-1-ISO_FIX, 0, 0, :-(m-1)]
+        QR = uR[ind+ISO_FIX, 0, 0, :-(m-1)]
         QL_, QR_ = star_states(QL, QR, dt, PARL, PARR)
 
         for j in range(ind, len(uL)):
-            uL[j] = QL_
+            uL[j, 0, 0, :-(m-1)] = QL_
         for j in range(ind):
-            uR[j] = QR_
+            uR[j, 0, 0, :-(m-1)] = QR_
 
-        intfVels[i] = (QL_[2] / QL_[0] + QR_[2] / QR_[0]) / 2   # average v*
+def get_material_index(Q, PARs):
+    nV = len(Q)
+    LSETS = len(PARs) - 1
+    N = nV - LSETS
+    for i in range(LSETS):
+        if Q[N+i] > 0:
+            return i+1
+    return 0

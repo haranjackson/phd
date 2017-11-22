@@ -10,21 +10,21 @@ import tests_1d.toro
 import tests_2d.validation
 from system.gpr.misc.plot import *
 
-from auxiliary.iterator import bound_index, timestep
+from auxiliary.iterator import timestep, make_u
 from solvers.solvers import ader_stepper, split_stepper
-from auxiliary.save import Data, make_u, print_stats, save_all
-from multi.gfm import add_ghost_cells, interface_inds
+from auxiliary.save import Data, print_stats, save_all
+from multi.gfm import add_ghost_cells
 from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1, tf
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = tests_1d.validation.heat_conduction_IC
+IC = tests_1d.multi.sod_shock_IC
 BC = auxiliary.boundaries.standard_BC
 
 
-u, PARs, intfLocs = IC()
-data = [Data(u, intfLocs, 0)]
+u, PARs = IC()
+data = [Data(u, 0)]
 
 
 if USE_CPP:
@@ -42,11 +42,7 @@ def run(t, tf, count, data):
     tStart = time()
 
     u = data[count].grid
-    intfLocs = data[count].intf
-
-    m = len(intfLocs)
-    intfInds = interface_inds(intfLocs, nx)
-    intfVels = zeros(m)
+    m = len(PARs)
 
     pool = Parallel(n_jobs=NCORE)
 
@@ -54,15 +50,15 @@ def run(t, tf, count, data):
 
         t0 = time()
 
-        fluids = array([u for i in range(m+1)])
+        fluids = array([u for i in range(m)])
         dt = timestep(fluids, count, t, tf, PARs)
 
         if RGFM:
-            add_ghost_cells(fluids, intfInds, intfVels, PARs, dt)
+            add_ghost_cells(fluids, PARs, dt)
 
-        print_stats(count, t, dt, intfLocs)
+        print_stats(count, t, dt)
 
-        for i in range(m+1):
+        for i in range(m):
 
             fluid = fluids[i]
 
@@ -83,9 +79,6 @@ def run(t, tf, count, data):
                 fluid = tmp.reshape([nx,ny,nz,nV])
 
             else:
-                idx1 = bound_index(intfInds[i]-2, nx)
-                idx2 = bound_index(intfInds[i+1]+2, nx)
-                fluid = fluid[idx1:idx2]
                 PAR = PARs[i]
 
                 if SPLIT:
@@ -93,12 +86,12 @@ def run(t, tf, count, data):
                 else:
                     ader_stepper(pool, fluid, BC, dt, PAR)
 
-        u = make_u(fluids, intfInds)
-        data.append(Data(u, intfLocs, t))
+        u = make_u(fluids)
+        data.append(Data(u, t))
 
         if RGFM:
-            intfLocs += intfVels * dt
-            intfInds = interface_inds(intfLocs, nx)
+            # reinitialize level sets
+            pass
 
         t += dt
         count += 1

@@ -1,15 +1,25 @@
 from itertools import product
 
+from numpy import sum
+
+from multi.gfm import get_levelset_root
 from system.eigenvalues import max_abs_eigs
-from options import nx, ny, nz, CFL, dx, dy, dz, ndim
+from options import nx, ny, nz, CFL, dx, dy, dz, ndim, nV
 
 
-def bound_index(ind, n):
-    if ind < 0:
-        return 0
-    if ind > n:
-        return n
-    return ind
+def make_u(fluids):
+    """ Builds u across the domain, from the different fluids grids
+    """
+    m = len(fluids)
+    u = fluids[0]
+    N = nV - (m-1)
+    u[:,:,:,N:] = sum([fluid[:,:,:,N:] for fluid in fluids], axis=0) / m
+
+    for i in range(1, m):
+        ind = get_levelset_root(u, i-1, m)
+        u[ind:,:,:,:N] = fluids[i][ind:,:,:,:N]
+
+    return u
 
 def timestep(fluids, count, t, tf, PARs):
     """ Calculates dt, based on the maximum wavespeed across the domain

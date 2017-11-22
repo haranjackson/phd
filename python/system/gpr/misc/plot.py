@@ -1,27 +1,29 @@
-from matplotlib.pyplot import figure, plot, scatter, axvline, get_cmap, imshow, colorbar, streamplot
+from matplotlib.pyplot import figure, plot, scatter, get_cmap, imshow, colorbar, streamplot
 from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim
 from numpy import arange, zeros, linspace, mgrid, flipud
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+from multi.gfm import get_material_index
 from solvers.basis import quad, basis_polys
 from system.gpr.misc.structures import Cvec_to_Pclass
-from multi.gfm import interface_inds
-from options import Lx, nx, ny, ndim, N1, nV
+from options import nx, ny, ndim
 
 
-def plot1d(y, style, x, label, color, ylab, xlab='x', sci=1):
+def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
 
     if x is None:
         x = arange(len(y))+0.5
 
-    if style == 'line':
-        plot(x, y, label=label, color=color, linewidth=1)
-    elif style == 'scatter':
-        scatter(x, y, label=label, color=color)
-    elif style == 'cross':
-        scatter(x, y, marker='x', s=10, label=label, color=color, linewidth=1)
+    if style == '-':
+        plot(x, y, label=lab, color=col, linewidth=1)
+
+    elif style == '.':
+        scatter(x, y, label=lab, color=col)
+
+    elif style == 'x':
+        scatter(x, y, marker='x', s=10, label=lab, color=col, linewidth=1)
 
     xlim(x[0], x[-1])
 
@@ -40,152 +42,137 @@ def plot2d(x, style, y=None):
         Y, X = mgrid[0:nx, 0:ny]
         streamplot(X, Y, flipud(y), flipud(x))
 
-def plot_density(u, style='line', x=None, label=None, color=None, sci=0):
+def plot_density(u, style='-', x=None, lab=None, col=None, sci=0):
     figure(0)
     if ndim==1:
         y = u[:, 0, 0, 0]
-        plot1d(y, style, x, label, color, 'Density', sci=sci)
+        plot1d(y, style, x, lab, col, 'Density', sci=sci)
     elif ndim==2:
         y = u[:, :, 0, 0]
         plot2d(y, 'colormap')
 
-def plot_energy(u, style='line', x=None, label=None, color=None, sci=0):
+def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0):
     figure(1)
     if ndim==1:
         y = u[:, 0, 0, 1] / u[:, 0, 0, 0]
-        plot1d(y, style, x, label, color, 'Total Energy', sci=sci)
+        plot1d(y, style, x, lab, col, 'Total Energy', sci=sci)
     elif ndim==2:
         y = u[:, 0, :, 1] / u[:, 0, :, 0]
         plot2d(y, 'colormap')
 
-def plot_velocity(u, i=0, style='line', x=None, label=None, color=None, sci=0,
+def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
                   offset=0, dims=None):
     figure(2+i)
     if dims==None:
         dims = ndim
     if dims==1:
         y = u[:, 0, 0, 2+i] / u[:, 0, 0, 0] + offset
-        plot1d(y, style, x, label, color, 'Velocity Component %d' % (i+1),
+        plot1d(y, style, x, lab, col, 'Velocity Component %d' % (i+1),
                sci=sci)
     elif dims==2:
         x = u[:, :, 0, 2] / u[:, :, 0, 0] + offset
         y = u[:, :, 0, 3] / u[:, :, 0, 0] + offset
         plot2d(x, 'streams', y)
 
-def plot_distortion(u, i, j, style='line', x=None, label=None, color=None,
-                    sci=0):
+def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0):
     figure(5+i*3+j)
     y = u[:, 0, 0, 5+3*j+i]
-    plot1d(y, style, x, label, color, 'Distortion Component %d,%d' % (i+1, j+1),
+    plot1d(y, style, x, lab, col, 'Distortion Component %d,%d' % (i+1, j+1),
            sci=sci)
 
-def plot_thermal_impulse(u, i, style='line', x=None, label=None, color=None,
-                         sci=0):
+def plot_thermal_impulse(u, i, style='-', x=None, lab=None, col=None, sci=0):
     figure(14+i)
     y = u[:, 0, 0, 14+i] / u[:, 0, 0, 0]
-    plot1d(y, style, x, label, color, 'Thermal Impulse Component %d' % (i+1),
+    plot1d(y, style, x, lab, col, 'Thermal Impulse Component %d' % (i+1),
            sci=sci)
 
-def plot_concentration(u, style='line', x=None, label=None, color=None, sci=0):
+def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0):
     figure(18)
     y = u[:, 0, 0, 17] / u[:, 0, 0, 0]
-    plot1d(y, style, x, label, color, 'Concentration', sci=sci)
 
-def plot_pressure(u, PARs, intfLocs=[], style='line', x=None, label=None,
-                  color=None, sci=0):
+    plot1d(y, style, x, lab, col, 'Concentration', sci=sci)
+
+def plot_pressure(u, PARs, style='-', x=None, lab=None, col=None, sci=0):
     figure(19)
     n = len(u)
-    inds = interface_inds(intfLocs, n)
     y = zeros(n)
 
-    for k in range(len(inds)-1):
-        for l in range(inds[k], inds[k+1]):
-            y[l] = Cvec_to_Pclass(u[l, 0, 0], PARs[k]).p
-    plot1d(y, style, x, label, color, 'Pressure', sci=sci)
+    for i in range(n):
+        Q = u[i, 0, 0]
+        j = get_material_index(Q, PARs)
+        y[i] = Cvec_to_Pclass(Q, PARs[j]).p
 
-def plot_temperature(u, PARs, intfLocs=[], style='line', x=None, label=None,
-                     color=None, sci=0):
+    plot1d(y, style, x, lab, col, 'Pressure', sci=sci)
+
+def plot_temperature(u, PARs, style='-', x=None, lab=None, col=None, sci=0):
     figure(20)
     n = len(u)
-    inds = interface_inds(intfLocs, n)
     y = zeros(n)
 
-    for k in range(len(inds)-1):
-        for l in range(inds[k], inds[k+1]):
-            y[l] = Cvec_to_Pclass(u[l, 0, 0], PARs[k]).T
-    plot1d(y, style, x, label, color, 'Temperature', sci=sci)
+    for i in range(n):
+        Q = u[i, 0, 0]
+        j = get_material_index(Q, PARs)
+        y[i] = Cvec_to_Pclass(Q, PARs[j]).T
 
-def plot_sigma(u, i, j, PARs, intfLocs=[], style='line', x=None, label=None,
-               color=None, sci=0):
+    plot1d(y, style, x, lab, col, 'Temperature', sci=sci)
 
+def plot_sigma(u, i, j, PARs, style='-', x=None, lab=None, col=None, sci=0):
     figure(21+i*3+j)
     n = len(u)
-    inds = interface_inds(intfLocs, n)
     y = zeros(n)
 
-    for k in range(len(inds)-1):
-        for l in range(inds[k], inds[k+1]):
-            P = Cvec_to_Pclass(u[l, 0, 0], PARs[k])
-            y[l] = P.σ[i, j]
-    plot1d(y, style, x, label, color,
-           ' Viscous Stress Component %d,%d' % (i+1, j+1), sci=sci)
+    for k in range(n):
+        Q = u[k, 0, 0]
+        j = get_material_index(Q, PARs)
+        y[k] = Cvec_to_Pclass(Q, PARs[j]).σ[i, j]
 
-def plot_heat_flux(u, i, PARs, intfLocs=[], style='line', x=None, label=None,
-                   color=None, sci=0):
+    plot1d(y, style, x, lab, col,
+           'Viscous Stress Component %d,%d' % (i+1, j+1), sci=sci)
+
+def plot_heat_flux(u, i, PARs, style='-', x=None, lab=None, col=None, sci=0):
     figure(30+i)
     n = len(u)
-    inds = interface_inds(intfLocs, n)
     y = zeros(n)
 
-    for k in range(len(inds)-1):
-        for l in range(inds[k], inds[k+1]):
-            P = Cvec_to_Pclass(u[l, 0, 0], PARs[k])
-            y[l] = P.q[i]
-    plot1d(y, style, x, label, color, 'Heat Flux Component %d' % (i+1), sci=sci)
+    for k in range(n):
+        Q = u[k, 0, 0]
+        j = get_material_index(Q, PARs)
+        y[k] = Cvec_to_Pclass(Q, PARs[j]).q[i]
 
-def plot_entropy(u, PARs, intfLocs=[], style='line', x=None, label=None,
-                 color=None, sci=0):
+    plot1d(y, style, x, lab, col, 'Heat Flux Component %d' % (i+1), sci=sci)
+
+def plot_entropy(u, PARs, style='-', x=None, lab=None, col=None, sci=0):
     figure(33)
     n = len(u)
-    inds = interface_inds(intfLocs, n)
     y = zeros(n)
 
-    for k in range(len(inds)-1):
-        for l in range(inds[k], inds[k+1]):
-            P = Cvec_to_Pclass(u[l, 0, 0], PARs[k])
-            y[l] = P.s()
-    plot1d(y, style, x, label, color, 'Entropy', sci=sci)
+    for i in range(n):
+        Q = u[i, 0, 0]
+        j = get_material_index(Q, PARs)
+        y[i] = Cvec_to_Pclass(Q, PARs[j]).s()
 
-def plot_variable(u, var, style='line', x=None, label=None, color=None, sci=0):
+    plot1d(y, style, x, lab, col, 'Entropy', sci=sci)
 
+def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0):
     figure(34)
     y = u[:, 0, 0, var]
-    plot1d(y, style, x, label, color, 'Variable %d' % var, sci=sci)
+    plot1d(y, style, x, lab, col, 'Variable %d' % var, sci=sci)
 
-def plot_primitives(u, PARs, intfLocs=[], style='line', x=None):
-
+def plot_primitives(u, PARs, style='-', x=None):
     plot_density(u, style=style, x=x)
     plot_velocity(u, 0, style=style, x=x)
-    plot_pressure(u, PARs, intfLocs=intfLocs, style=style, x=x)
+    plot_pressure(u, PARs, style=style, x=x)
 
-def plot_interfaces(intfLocs, figNum=None, loc=None, color=None):
-    if figNum is not None:
-        figure(figNum)
-    for i in intfLocs:
-        if loc=='true':
-            axvline(x=i, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
-        elif loc=='cell':
-            ind = int(i*nx/Lx) + 0.5
-            axvline(x=ind, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
-        else:
-            axvline(i/Lx, ymin=-1e16, ymax=1e16, linestyle='--', color=color)
+def plot_interfaces(u, figNum=None, loc=None, col=None):
+    # use axvline
+    return "Not implemented"
 
 def colors(n):
     cmap = get_cmap('viridis')
     return [cmap.colors[i] for i in linspace(0, 255, n, dtype=int)]
 
 def plot_weno(wh, var, PARs=None):
-    n = len(wh)
+    n, _, _, N1, nV = wh.shape
     x = zeros(N1*n)
     u = zeros([N1*n,1,1,nV])
     NODES, _, _ = quad()
@@ -206,7 +193,7 @@ def plot_weno(wh, var, PARs=None):
 
 def plot_dg(qh, var, t, PARs=None):
     psi, _, _ = basis_polys()
-    n = len(qh)
+    n, _, _, N1, _, nV = qh.shape
     wh = zeros([n,1,1,N1,nV])
     for i in range(n):
         for j in range(N1):
@@ -218,13 +205,13 @@ def plot_dg(qh, var, t, PARs=None):
 def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
     cm = colors(3)
     if x is not None:
-        plot(x, res, color=cm[1], label=reslab, marker='x', linestyle='none',
+        plot(x, res, col=cm[1], label=reslab, marker='x', linestyle='none',
              markersize=5)
-        plot(x, ref, color=cm[0], label=reflab, linewidth=1)
+        plot(x, ref, col=cm[0], label=reflab, linewidth=1)
     else:
-        plot(res, color=cm[1], label=reslab, marker='x', linestyle='none',
+        plot(res, col=cm[1], label=reslab, marker='x', linestyle='none',
              markersize=5)
-        plot(ref, color=cm[0], label=reflab, linewidth=1)
+        plot(ref, col=cm[0], label=reflab, linewidth=1)
 
 def anim(data, var):
     fig = plt.figure()

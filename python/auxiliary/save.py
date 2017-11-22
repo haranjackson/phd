@@ -2,7 +2,7 @@ from codecs import open
 from os import makedirs, path
 from time import time
 
-from numpy import array, linspace, int64, save, zeros
+from numpy import array, linspace, int64, save
 
 from options import tf, Lx, Ly, Lz, nx, ny, nz
 from options import VISCOUS, THERMAL, REACTIVE
@@ -15,22 +15,10 @@ from options import rc, λc, λs, eps
 from options import PARA_DG, PARA_FV, NCORE
 
 
-def print_stats(count, t, dt, intfLocs):
+def print_stats(count, t, dt):
     print(count+1)
     print('t  =', t)
     print('dt =', dt)
-    if RGFM:
-        print('Interfaces =', intfLocs)
-
-def make_u(fluids, intfInds):
-    """ Builds u across the domain, from the different fluids grids
-    """
-    u = zeros(fluids[0].shape)
-    for i in range(len(fluids)):
-        l = intfInds[i]
-        r = intfInds[i+1]
-        u[l:r] = fluids[i][l:r]
-    return u
 
 def save_config(path):
     with open(path, 'w+', encoding='utf-8') as f:
@@ -85,22 +73,19 @@ def save_all(data):
 
     gridArray = array([datum.grid for datum in data])
     timeArray = array([datum.time for datum in data])
-    intfArray = array([datum.intf for datum in data])
 
     save('_dump/grid%d.npy' % time(), gridArray)
     save('_dump/time%d.npy' % time(), timeArray)
-    save('_dump/intf%d.npy' % time(), intfArray)
     save_config('_dump/opts%d.txt' % time())
 
 def compress_data(data, N):
     n = len(data.time)
     inds = linspace(0, n-1, N, dtype=int64)
-    return [data.grid[inds], data.time[inds], data.intf[inds]]
+    return [data.grid[inds], data.time[inds]]
 
 class Data():
     """ An object to hold the arrays in which simulation data are saved
     """
-    def __init__(self, u, intfLocs, t):
+    def __init__(self, u, t):
         self.grid = u.copy()
         self.time = t
-        self.intf = array(intfLocs)

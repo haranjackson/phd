@@ -190,8 +190,8 @@ def star_stepper_obj(x, QL, QR, dt, PARL, PARR):
     pL_ = Cvec_to_Pvec(QL_, PARL)
     pR_ = Cvec_to_Pvec(QR_, PARR)
 
-    ML = riemann_constraints2(PL, 'L', PARL)
-    MR = riemann_constraints2(PR, 'R', PARR)
+    ML = riemann_constraints2(PL, 'L', PARL)[:17,:17]
+    MR = riemann_constraints2(PR, 'R', PARR)[:17,:17]
 
     xL_ = X[0,17:]
     xR_ = X[1,17:]
@@ -207,10 +207,10 @@ def star_stepper_obj(x, QL, QR, dt, PARL, PARR):
     ret[0,:4] = dot(ML[:4], pL_-pL) - (xL_-xL)
     ret[1,:4] = dot(MR[:4], pR_-pR) - (xR_-xR)
 
-    SL = source_prim(QL, PARL)
-    SR = source_prim(QR, PARR)
-    SL_ = source_prim(QL_, PARL)
-    SR_ = source_prim(QR_, PARR)
+    SL = source_prim(QL, PARL)[:17]
+    SR = source_prim(QR, PARR)[:17]
+    SL_ = source_prim(QL_, PARL)[:17]
+    SR_ = source_prim(QR_, PARR)[:17]
 
     ret[0,4:17] = dot(ML[4:], (pL_ - pL) - dt/2 * (SL + SL_))
     ret[1,4:17] = dot(MR[4:], (pR_ - pR) - dt/2 * (SR + SR_))

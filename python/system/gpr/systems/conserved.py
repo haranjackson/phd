@@ -4,7 +4,7 @@ from numpy import dot, zeros
 from system.gpr.systems.jacobians import dFdP, dPdQ
 from system.gpr.variables.material_functions import K_arr, K_dis, K_ing
 from system.gpr.misc.structures import Cvec_to_Pclass
-from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV
+from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV, LSETS
 
 
 def flux_cons_ref(ret, Q, d, PAR):
@@ -69,11 +69,15 @@ def block_cons_ref(ret, Q, d, PAR):
 
     v = P.v
     vd = v[d]
+
     for i in range(5,14):
         ret[i,i] = vd
     ret[5+d, 5+d:8+d] -= v
     ret[8+d, 8+d:11+d] -= v
     ret[11+d, 11+d:14+d] -= v
+
+    for i in range(1, LSETS+1):
+        ret[-i,-i] = vd
 
 def source_cons_ref(ret, Q, PAR):
 
@@ -120,6 +124,9 @@ def B0dot(ret, x, v):
     ret[12] = v0 * x[12]
     ret[13] = v0 * x[13]
 
+    for i in range(1, LSETS+1):
+        ret[-i] = v0 * x[-i]
+
 @jit
 def B1dot(ret, x, v):
     v0 = v[0]
@@ -135,6 +142,9 @@ def B1dot(ret, x, v):
     ret[12] = - v0 * x[11] - v2 * x[13]
     ret[13] = v1 * x[13]
 
+    for i in range(1, LSETS+1):
+        ret[-i] = v1 * x[-i]
+
 @jit
 def B2dot(ret, x, v):
     v0 = v[0]
@@ -149,6 +159,9 @@ def B2dot(ret, x, v):
     ret[11] = v2 * x[11]
     ret[12] = v2 * x[12]
     ret[13] = - v0 * x[11] - v1 * x[12]
+
+    for i in range(1, LSETS+1):
+        ret[-i] = v2 * x[-i]
 
 def Bdot_cons(ret, x, Q, d, PAR):
 

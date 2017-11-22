@@ -1,6 +1,6 @@
 """ Domain Parameters """
 
-tf = 0.3                      # Final time of simulation
+tf = 0.2                      # Final time of simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
@@ -17,7 +17,8 @@ REACTIVE = 0                # Second fluid is reactive
 
 """ GFM Options """
 
-RGFM     = 0                # Use Riemann GFM
+LSETS    = 1                # Number of level sets
+RGFM     = 1                # Use Riemann GFM
 ISO_FIX  = 0                # Use isobaric fix
 STAR_TOL = 1e-6             # Tolerance to which star states converge
 STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
@@ -25,7 +26,7 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 """ Solver Options """
 
 USE_CPP = 0                 # Whether to use compiled C++
-SPLIT   = 1                 # Whether or not to use a split solver
+SPLIT   = 0                # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
@@ -67,4 +68,4 @@ dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
 
-nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(MULTI) * 2 + int(REACTIVE)
+nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(MULTI) * 2 + int(REACTIVE) + LSETS
