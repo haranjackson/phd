@@ -4,8 +4,9 @@ from joblib import Parallel
 from numpy import array, zeros
 
 import auxiliary.boundaries
+import tests_1d.fluids
+import tests_1d.solids
 import tests_1d.multi
-import tests_1d.validation
 import tests_1d.toro
 import tests_2d.validation
 from system.gpr.misc.plot import *

@@ -1,5 +1,6 @@
 from system.gpr.variables.state import temperature
 
+
 def CParameters(GPRpy, PAR):
     MP = GPRpy.classes.Par()
     MP.gamma = PAR.γ
@@ -159,3 +160,14 @@ def material_parameters(EOS, ρ0, cv, p0=None,
                   Kc, Ti,
                   Bc, Ea,
                   I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2)
+
+class hyperelastic_params():
+    def __init__(self, ρ0, α, β, γ, cv, T0, b0, c0):
+        self.ρ0 = ρ0
+        self.α = α
+        self.β = β
+        self.γ = γ
+        self.cv = cv
+        self.T0 = T0
+        self.K0 = c0**2 - 4/3 * b0**2
+        self.B0 = b0**2
