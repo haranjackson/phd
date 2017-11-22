@@ -20,7 +20,7 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = tests_1d.multi.sod_shock_IC
+IC = tests_1d.fluids.heat_conduction_IC
 BC = auxiliary.boundaries.standard_BC
 
 

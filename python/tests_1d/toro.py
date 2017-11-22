@@ -1,11 +1,6 @@
 from numpy import array, zeros
 
-from system.gpr.misc.objects import material_parameters
-from tests_1d.common import riemann_IC
-
-
-PAR = material_parameters(EOS='sg', ρ0=1, cv=1, γ=1.4, p0=1,
-                          cs=1, α=1, μ=1e-4, Pr=0.75)
+from tests_1d.common import riemann_IC, PAR_AIR
 
 
 def toro1_IC():
@@ -20,7 +15,7 @@ def toro1_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
 
 def toro2_IC():
     """ tf = 0.15
@@ -34,7 +29,7 @@ def toro2_IC():
     pR = 0.4
     vR = array([2, 0, 0])
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
 
 def toro3_IC():
     """ tf = 0.012
@@ -48,7 +43,7 @@ def toro3_IC():
     pR = 0.01
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
 
 def toro4_IC():
     """ tf = 0.035
@@ -62,7 +57,7 @@ def toro4_IC():
     pR = 100
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
 
 def toro_test5_IC():
     """ tf = 0.035
@@ -76,4 +71,4 @@ def toro_test5_IC():
     pR = 46.095
     vR = array([-6.19633, 0, 0])
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)

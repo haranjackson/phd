@@ -1,6 +1,7 @@
 from itertools import product
 
-from numpy import inv, zeros
+from numpy import zeros
+from numpy.linalg import inv
 
 from options import nx, ny, nz, nV
 from system.gpr.misc.objects import hyperelastic_params, material_parameters
@@ -17,12 +18,6 @@ def hyperelastic_to_gpr(v, A, S, HYP):
     return Q
 
 def barton_IC():
-
-    HYP = hyperelastic_params(ρ0=8.93, α=1, β=3, γ=2, cv=4e-4, T0=300,
-                              b0=2.1, c0=4.6)
-
-    PAR = material_parameters(EOS='smg', ρ0=8.93, cv=4e-4,
-                              c0=0.394, Γ0=2, s=1.48, cs=0.219, τ1=inf)
 
     vL = array([2e3, 0, 100])
     FL = array([[1,      0,    0   ],

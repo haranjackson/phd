@@ -7,7 +7,7 @@ from scipy.special import erf
 from system.gpr.misc.objects import material_parameters
 from system.gpr.misc.structures import Cvec, Cvec_to_Pclass
 from system.gpr.variables.wavespeeds import c_0
-from tests_1d.common import riemann_IC
+from tests_1d.common import riemann_IC, PAR_AIR
 from options import nx, ny, nz, nV, dx, Lx, RGFM
 
 
@@ -26,7 +26,7 @@ def heat_conduction_IC():
     PAR = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
                               cs=1, α=2, μ=1e-2, κ=1e-2)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
 
 def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
     dx = 1/n
