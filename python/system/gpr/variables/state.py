@@ -2,7 +2,7 @@ from numba import jit
 from numpy import dot, eye
 
 from system.gpr.misc.functions import AdevG, gram
-from system.gpr.variables.eos import e_ref, p_ref, Γ_MG
+from system.gpr.variables.mg import e_ref, p_ref, Γ_MG
 from system.gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA
 from options import VISCOUS, THERMAL, REACTIVE
 

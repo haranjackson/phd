@@ -1,66 +1,17 @@
 from numba import jit
 from numpy import exp
 
+from system.gpr.variables.mg import Γ_MG, e_ref, p_ref
 from system.gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
 from options import VISCOUS, THERMAL, REACTIVE
 
-
-def Γ_MG(ρ, PAR):
-    """ Returns the Mie-Gruneisen parameter
-    """
-    if PAR.EOS == 'sg':
-        return PAR.γ - 1
-    elif PAR.EOS == 'jwl':
-        return PAR.Γ0
-    elif PAR.EOS == 'smg':
-        return PAR.Γ0 * PAR.ρ0 / ρ
-
-def p_ref(ρ, PAR):
-    """ Returns the reference pressure in the Mie-Gruneisen EOS
-    """
-    if PAR.EOS == 'sg':
-        return - PAR.γ * PAR.pINF
-    elif PAR.EOS == 'jwl':
-        A = PAR.A
-        B = PAR.B
-        R1 = PAR.R1
-        R2 = PAR.R2
-        ρ0 = PAR.ρ0
-        v_ = - ρ0 / ρ
-        return A * exp(R1 * v_) + B * exp(R2 * v_)
-    elif PAR.EOS == 'smg':
-        c02 = PAR.c02
-        v0 = PAR.v0
-        s = PAR.s
-        v = 1 / ρ
-        return c02 * (v0 - v) / (v0 - s * (v0 - v))**2
-
-def e_ref(ρ, PAR):
-    """ Returns the reference energy for the Mie-Gruneisen EOS
-    """
-    if PAR.EOS == 'sg':
-        return 0
-    elif PAR.EOS == 'jwl':
-        A = PAR.A
-        B = PAR.B
-        R1 = PAR.R1
-        R2 = PAR.R2
-        ρ0 = PAR.ρ0
-        v0 = PAR.v0
-        v_ = - ρ0 / ρ
-        return A * v0 * exp(R1 * v_) / R1  +  B * v0 * exp(R2 * v_) / R2
-    elif PAR.EOS == 'smg':
-        v0 = PAR.v0
-        v = 1 / ρ
-        p0 = p_ref(ρ, PAR)
-        return 0.5 * p0 * (v0 - v)
 
 def E_1(ρ, p, PAR):
     """ Returns the microscale energy for the Mie-Gruneisen EOS
     """
     Γ = Γ_MG(ρ, PAR)
     p0 = p_ref(ρ, PAR)
-    e0 = e_ref(p0, PAR)
+    e0 = e_ref(ρ, PAR)
     return e0 + (p - p0) / (ρ * Γ)
 
 @jit

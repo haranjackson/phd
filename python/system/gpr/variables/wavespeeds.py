@@ -1,19 +1,20 @@
-from numba import jit
 from numpy import sqrt
 
+from system.gpr.variables.mg import dedρ, dedp
 
-@jit
-def c_0(ρ, p, γ, pINF):
-    """ Returns the adiabatic sound speed of a stiffened gas.
-        NOTE: The result for an ideal gas is obtained if pINF=0.
+
+def c_0(ρ, p, PAR):
+    """ Returns the adiabatic sound speed for the Mie-Gruneisen EOS
     """
-    return sqrt(γ * (p+pINF) / ρ)
+    de_dρ = dedρ(ρ, p, PAR)
+    de_dp = dedp(ρ, PAR)
+    return sqrt((p / ρ**2 - de_dρ) / de_dp)
 
-@jit
-def c_inf(ρ, p, γ, pINF, cs2):
+def c_inf(ρ, p, PAR):
     """ Returns the longitudinal characteristic speed
     """
-    c0 = c_0(ρ, p, γ, pINF)
+    c0 = c_0(ρ, p, PAR)
+    cs2 = PAR.cs2
     return sqrt(c0**2 + 4/3 * cs2)
 
 def c_h(ρ, T, α, cv):
