@@ -34,14 +34,9 @@ def entropy(ρ, p, PAR):
     """
     return (p + PAR.pINF) / ρ**PAR.γ
 
-def density(S, p, PAR):
-    """ Returns the density of a stiffened gas, given entropy and pressure
-    """
-    return ((p + PAR.pINF) / S) ** (1 / PAR.γ)
-
 @jit
 def temperature(ρ, p, PAR):
-    """ Returns the temperature for an stiffened gas
+    """ Returns the temperature under the Mie-Gruneisen EOS
     """
     Γ = Γ_MG(ρ, PAR)
     p0 = p_ref(ρ, PAR)

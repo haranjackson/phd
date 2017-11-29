@@ -1,17 +1,17 @@
 """ Domain Parameters """
 
-tf = 0.2                      # Final time of simulation
+tf = 0.6e-6                      # Final time of simulation
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 200                    # Number of cells in x direction
+nx = 500                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
 """ System Options """
 
 VISCOUS  = 1                # Include viscosity
-THERMAL  = 1                # Include thermal conduction
+THERMAL  = 0                # Include thermal conduction
 MULTI    = 0                # Include a second (potentially-reactive) fluid
 REACTIVE = 0                # Second fluid is reactive
 
@@ -25,7 +25,7 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 
 """ Solver Options """
 
-USE_CPP = 1                 # Whether to use compiled C++
+USE_CPP = 0                 # Whether to use compiled C++
 SPLIT   = 1                # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)

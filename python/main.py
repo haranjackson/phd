@@ -3,12 +3,9 @@ from time import time
 from joblib import Parallel
 from numpy import array, zeros
 
-import auxiliary.boundaries
-import tests_1d.fluids
-import tests_1d.solids
-import tests_1d.multi
-import tests_1d.toro
-import tests_2d.validation
+from auxiliary import boundaries
+from tests_1d import fluids, solids, multi, toro
+from tests_2d import validation
 from system.gpr.misc.plot import *
 
 from auxiliary.iterator import timestep, make_u
@@ -20,8 +17,8 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = tests_1d.fluids.heat_conduction_IC
-BC = auxiliary.boundaries.standard_BC
+IC = solids.barton_IC
+BC = boundaries.standard_BC
 
 
 u, PARs = IC()

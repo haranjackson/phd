@@ -1,8 +1,8 @@
 from itertools import product
 
-from numpy import eye, zeros
+from numpy import eye, inf, zeros
 
-from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.objects import material_parameters, hyperelastic_params
 from system.gpr.misc.structures import Cvec
 from options import nx, ny, nz, nV, dx, RGFM
 
@@ -60,15 +60,18 @@ PAR_AIR2 = material_parameters(EOS='sg', ρ0=1.18, cv=721, p0=10100, γ=1.4, pIN
 PAR_HEL2 = material_parameters(EOS='sg', ρ0=0.163, cv=3127, p0=10100, γ=1.66, pINF=0,
                                cs=1, α=1, μ=1.99e-5, Pr=0.688)
 
+
 HYP_COP = hyperelastic_params(ρ0=8.93, α=1, β=3, γ=2, cv=4e-4, T0=300,
                               b0=2.1, c0=4.6)
 
 HYP_ALU = hyperelastic_params(ρ0=2.71, α=1, β=3.577, γ=2.088, cv=9e-4, T0=300,
                               b0=3.16, c0=6.22)
 
+
 PAR_COP = material_parameters(EOS='smg', ρ0=8.93, cv=4e-4, p0=0,
-                              c0=0.394, Γ0=2, s=1.48, cs=0.219, τ1=inf)
+                              c0=0.394, Γ0=2, s=1.48,
+                              cs=0.219, σY=9e-4, τ1=inf, n=10, PLASTIC=True)
 
 PAR_COP2 = material_parameters(EOS='smg', ρ0=8.93, cv=1, p0=0,
                                c0=0.394, Γ0=2, s=1.48,
-                               cs=0.219, σ0=9e-4, τ1=0.1, n=10)
+                               cs=0.219, σY=9e-4, τ1=0.1, n=10, PLASTIC=True)

@@ -34,6 +34,8 @@ class Cvec_to_Pclass():
 
         if THERMAL:
             self.J  = Q[14:17] / self.ρ
+        else:
+            self.J = zeros(3)
 
         if REACTIVE:
             self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, PAR,

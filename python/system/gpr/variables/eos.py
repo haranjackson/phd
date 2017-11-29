@@ -13,7 +13,7 @@ def Γ_MG(ρ, PAR):
     elif PAR.EOS == 'jwl':
         return PAR.Γ0
     elif PAR.EOS == 'smg':
-        return PAR.Γ0 * PAR.ρ0 / P.ρ
+        return PAR.Γ0 * PAR.ρ0 / ρ
 
 def p_ref(ρ, PAR):
     """ Returns the reference pressure in the Mie-Gruneisen EOS
@@ -35,7 +35,7 @@ def p_ref(ρ, PAR):
         v = 1 / ρ
         return c02 * (v0 - v) / (v0 - s * (v0 - v))**2
 
-def e_ref(p0, PAR):
+def e_ref(ρ, PAR):
     """ Returns the reference energy for the Mie-Gruneisen EOS
     """
     if PAR.EOS == 'sg':
@@ -52,6 +52,7 @@ def e_ref(p0, PAR):
     elif PAR.EOS == 'smg':
         v0 = PAR.v0
         v = 1 / ρ
+        p0 = p_ref(ρ, PAR)
         return 0.5 * p0 * (v0 - v)
 
 def E_1(ρ, p, PAR):

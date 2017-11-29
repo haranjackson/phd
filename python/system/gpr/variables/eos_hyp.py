@@ -1,4 +1,5 @@
-from numpy import dot, trace
+from numpy import dot, exp, trace
+from numpy.linalg import det
 
 
 def I_1(G):
