@@ -1,27 +1,26 @@
 from itertools import product
 
 from joblib import delayed
-from numpy import absolute, array, concatenate, dot, isnan, zeros
+from numpy import absolute, array, concatenate, dot, zeros
 from scipy.linalg import solve
 from scipy.optimize import newton_krylov
 
-from solvers.dg.matrices import system_matrices
-from solvers.basis import quad, derivative_values
+from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_Z, DG_T
+from solvers.basis import GAPS, DERVALS
 from system.system import source, flux_ref, source_ref, Bdot, system
 from options import ndim, dx, N1, NT, nV
 from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, MAX_ITER, PARA_DG, NCORE
 
 
-W, U, V, Z, T = system_matrices()
-_, GAPS, _ = quad()
-DERIVS = derivative_values()
+MAX_TOL = 1e16  # values above this level will cause an error
 
 
 def rhs(q, Ww, dt, PAR, HOMOGENEOUS):
-    """ Returns the right handside of the linear system governing the coefficients of qh
+    """ Returns the right-handside of the system governing coefficients of qh
     """
-    Tq = dot(T, q)
     ret = zeros([NT, nV])
+
+    Tq = dot(DG_T, q)
     Fq = zeros([ndim, NT, nV])
     Bq = zeros([ndim, NT, nV])
     for b in range(NT):
@@ -38,9 +37,9 @@ def rhs(q, Ww, dt, PAR, HOMOGENEOUS):
     for d in range(ndim):
         ret -= Bq[d]
 
-    ret *= Z
+    ret *= DG_Z
     for d in range(ndim):
-        ret -= dot(V[d], Fq[d])
+        ret -= dot(DG_V[d], Fq[d])
 
     return (dt/dx) * ret + Ww
 
@@ -58,7 +57,7 @@ def hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS):
 
     for t in range(N1):
         dt = dtGAPS[t]
-        dqdxj = dot(DERIVS, qt)
+        dqdxj = dot(DERVALS, qt)
 
         for i in range(N1):
             qi = qt[i]
@@ -76,11 +75,11 @@ def hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS):
         qt = q[t]
     return q.reshape([NT, nV])
 
-def failed(w, qh, i, j, k, f, dtGAPS, PAR, HOMOGENEOUS):
+def failed(w, f, dtGAPS, PAR, HOMOGENEOUS):
     q = hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS)
-    qh[i, j, k] = newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
+    return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
 
-def converged(q, qNew):
+def unconverged(q, qNew):
     """ Mixed convergence condition
     """
     return (absolute(q-qNew) > DG_TOL * (1 + absolute(q))).any()
@@ -96,8 +95,8 @@ def predictor(wh, dt, PAR, HOMOGENEOUS=0):
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
         w = wh[i, j, k]
-        Ww = dot(W, w)
-        obj = lambda X: dot(U,X) - rhs(X, Ww, dt, PAR, HOMOGENEOUS)
+        Ww = dot(DG_W, w)
+        obj = lambda X: dot(DG_U,X) - rhs(X, Ww, dt, PAR, HOMOGENEOUS)
 
         if HIDALGO:
             q = hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS)
@@ -110,19 +109,20 @@ def predictor(wh, dt, PAR, HOMOGENEOUS=0):
         else:
             for count in range(MAX_ITER):
 
-                qNew = solve(U, rhs(q, Ww, dt, PAR, HOMOGENEOUS))
+                qNew = solve(DG_U, rhs(q, Ww, dt, PAR, HOMOGENEOUS),
+                             check_finite=False)
 
-                if isnan(qNew).any():
-                    failed(w, qh, i, j, k, obj, dtGAPS, PAR, HOMOGENEOUS)
+                if (absolute(qNew) > MAX_TOL).any():
+                    qh[i, j, k] = failed(w, obj, dtGAPS, PAR, HOMOGENEOUS)
                     break
-                elif converged(q, qNew):
+                elif unconverged(q, qNew):
                     q = qNew
                     continue
                 else:
                     qh[i, j, k] = qNew
                     break
             else:
-                failed(w, qh, i, j, k, obj, dtGAPS, PAR, HOMOGENEOUS)
+                qh[i, j, k] = failed(w, obj, dtGAPS, PAR, HOMOGENEOUS)
 
     return qh
 

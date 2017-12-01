@@ -57,7 +57,7 @@ class params():
                  γ, pINF,
                  c0, Γ0, s,
                  A, B, R1, R2,
-                 cs, τ1, σY, n, PLASTIC,
+                 cs, τ1, μ, σY, n, PLASTIC,
                  α, τ2,
                  REACTION, Qc,
                  Kc, Ti,
@@ -96,6 +96,8 @@ class params():
             if PLASTIC:
                 self.σY = σY
                 self.n = n
+            else:
+                self.μ = μ
 
         if α is not None:
             self.α2 = α**2
@@ -169,7 +171,7 @@ def material_parameters(EOS, ρ0, cv, p0=None,
                   γ, pINF,
                   c0, Γ0, s,
                   A, B, R1, R2,
-                  cs, τ1, σY, n, PLASTIC,
+                  cs, τ1, μ, σY, n, PLASTIC,
                   α, τ2,
                   REACTION, Qc,
                   Kc, Ti,

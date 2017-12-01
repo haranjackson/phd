@@ -2,7 +2,7 @@ from numba import jit
 from numpy import dot, zeros
 
 from system.gpr.systems.jacobians import dFdP, dPdQ
-from system.gpr.variables.material_functions import K_arr, K_dis, K_ing
+from system.gpr.variables.sources import K_arr, K_dis, K_ing
 from system.gpr.misc.structures import Cvec_to_Pclass
 from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV, LSETS
 
@@ -84,16 +84,16 @@ def source_cons_ref(ret, Q, PAR):
     P = Cvec_to_Pclass(Q, PAR)
 
     ρ = P.ρ
-    ψ = P.ψ()
-    H = P.H()
-    θ1 = P.θ1()
-    θ2 = P.θ2()
 
     if VISCOUS:
-        ret[5:14] = - ψ.ravel() / θ1
+        ψ = P.ψ()
+        θ1_1 = P.θ1_1()
+        ret[5:14] = - ψ.ravel() * θ1_1
 
     if THERMAL:
-        ret[14:17] = - ρ * H / θ2
+        H = P.H()
+        θ2_1 = P.θ2_1()
+        ret[14:17] = - ρ * H * θ2_1
 
     if REACTIVE:
 

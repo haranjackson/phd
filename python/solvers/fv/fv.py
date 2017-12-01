@@ -4,20 +4,16 @@ from joblib import delayed
 from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
 from solvers.fv.fluxes import Bint, Aint, Smax
-from solvers.basis import quad, end_values, derivative_values
+from solvers.basis import WGHTS, ENDVALS, DERVALS
 from system.system import Bdot, source_ref, flux_ref
 from options import ndim, nV, dx, N1, OSHER, SPLIT, PARA_FV, NCORE
 
 
-NODES, _, WGHTS = quad()
-ENDVALS = end_values()
-DERVALS = derivative_values()
-
-
 if OSHER:
-    s_func = Aint
+    S_FUNC = Aint
 else:
-    s_func = Smax
+    S_FUNC = Smax
+
 
 if SPLIT:
     tWGHTS = [array([1])]
@@ -25,6 +21,7 @@ if SPLIT:
 else:
     tWGHTS = [WGHTS]
     tN = N1
+
 
 wghtList = tWGHTS + [WGHTS]*ndim + [array([1])]*(3-ndim)
 wghtListEnd = tWGHTS + [WGHTS]*(ndim-1) + [array([1])]*(3-ndim)
@@ -75,7 +72,7 @@ def interfaces(qEnd, PAR):
                 ftemp = zeros(nV)
                 flux_ref(ftemp, qL_, d, PAR)
                 flux_ref(ftemp, qR_, d, PAR)
-                ftemp -= s_func(qL_, qR_, d, PAR)
+                ftemp -= S_FUNC(qL_, qR_, d, PAR)
                 fEndTemp += wghtEnd[t, x1, x2] * ftemp
                 BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, PAR)
 

@@ -2,12 +2,9 @@ from itertools import product
 
 from numpy import dot, tensordot, zeros
 
-from solvers.basis import derivative_values
+from solvers.basis import DERVALS
 from system.system import Bdot, flux, system
 from options import nV, dx, dy, N1, ndim
-
-
-DERIVS = derivative_values()
 
 
 def derivative(X, dim):
@@ -15,9 +12,9 @@ def derivative(X, dim):
         dimension dim. X can be of shape (N1,...) or (N1,N1,...)
     """
     if dim==0:
-        return tensordot(DERIVS, X, (1,0)) / dx
+        return tensordot(DERVALS, X, (1,0)) / dx
     elif dim==1:
-        return tensordot(DERIVS, X, (1,1)).swapaxes(0,1) / dy
+        return tensordot(DERVALS, X, (1,1)).swapaxes(0,1) / dy
 
 def weno_midstepper(wh, dt, PAR):
     """ Steps the WENO reconstruction forwards by dt/2, under the homogeneous system

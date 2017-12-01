@@ -6,52 +6,39 @@ from scipy.interpolate import lagrange
 from options import N1
 
 
-def quad():
-    """ Returns Legendre-Gauss nodes and weights, scaled to [0,1]
-    """
-    nodes, weights = leggauss(N1)
-    nodes += 1
-    nodes /= 2
-    weights /= 2
-    gaps = nodes - concatenate(([0], nodes[:-1]))
-    return nodes, gaps, weights
+# The Legendre-Gauss nodes and weights, scaled to [0,1]
+NODES, WGHTS = leggauss(N1)
+NODES += 1
+NODES /= 2
+WGHTS /= 2
 
-def basis_polys():
-    """ Returns basis polynomials and their derivatives and antiderivatives
-    """
-    nodes, _, _ = quad()
-    psi = [lagrange(nodes,eye(N1)[i]) for i in range(N1)]
-    psiDer = [[polyder(psip, m=a) for psip in psi] for a in range(N1+1)]
-    psiInt = [polyint(psip) for psip in psi]
-    return psi, psiDer, psiInt
+# The gaps between successive nodes
+GAPS = NODES - concatenate(([0], NODES[:-1]))
 
-def end_values():
-    """ Returns the values of th basis functions at 0,1
-    """
-    psi, _, _ = basis_polys()
-    ret = zeros([N1, 2])
-    for i in range(N1):
-        ret[i,0] = psi[i](0)
-        ret[i,1] = psi[i](1)
-    return ret
+# The basis polynomials
+PSI = [lagrange(NODES, eye(N1)[i]) for i in range(N1)]
 
-def mid_values():
-    psi, _, _ = basis_polys()
-    return array([psii(0.5) for psii in psi])
+# The ith derivative of the jth basis polynomial
+PSID = [[polyder(ψ, m=i) for ψ in PSI] for i in range(N1+1)]
 
-def derivative_values():
-    """ Returns the value of the derivative of the jth basis function at the ith node
-    """
-    nodes, _, _ = quad()
-    _, psiDer, _ = basis_polys()
-    ret = zeros([N1, N1])
-    for i in range(N1):
-        for j in range(N1):
-            ret[i,j] = psiDer[1][j](nodes[i])
-    return ret
+# The integrals of the basis polynomials
+PSII = [polyint(ψ) for ψ in PSI]
 
-def end_polys():
-    nodes, _, _ = quad()
-    psiL = lagrange(concatenate((nodes, [1])), [0]*N1+[1])
-    psiR = lagrange(concatenate(([0], nodes)), [1]+[0]*N1)
-    return psiL, psiR
+# The value of the ith basis function at j=0 and j=1
+ENDVALS = zeros([N1, 2])
+for i in range(N1):
+    ENDVALS[i,0] = PSI[i](0)
+    ENDVALS[i,1] = PSI[i](1)
+
+# The values of the basis polynomials at x=0.5
+MIDVALS = array([ψ(0.5) for ψ in PSI])
+
+# The value of the derivative of the jth basis function at the ith node
+DERVALS = zeros([N1, N1])
+for i in range(N1):
+    for j in range(N1):
+        DERVALS[i,j] = PSID[1][j](NODES[i])
+
+# The left and right end polynomials used in the implicit interfaces method
+PSIL = lagrange(concatenate((NODES, [1])), [0]*N1+[1])
+PSIR = lagrange(concatenate(([0], NODES)), [1]+[0]*N1)

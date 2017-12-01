@@ -128,6 +128,10 @@ def dTdρ(ρ, p, PAR):
         with respect to ρ
     """
     cv = PAR.cv
+    Γ = Γ_MG(ρ, PAR)
+    dΓ  = dΓ_MG(ρ, PAR)
+    p0  =  p_ref(ρ, PAR)
+    dp0 = dp_ref(ρ, PAR)
     return - (dp0*ρ*Γ + (Γ+ρ*dΓ)*(p-p0)) / (ρ*Γ)**2 / cv
 
 def dTdp(ρ, PAR):

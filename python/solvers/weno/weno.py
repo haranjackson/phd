@@ -1,19 +1,14 @@
-""" Implements the WENO method used in Dumbser et al (DOI 10.1016/j.cma.2013.09.022)
+""" Implements WENO method used in Dumbser et al, DOI 10.1016/j.cma.2013.09.022
 """
 from itertools import product
 
 from numpy import ceil, concatenate, floor, int64, multiply, ones, zeros
 from scipy.linalg import solve
 
-from solvers.weno.matrices import coefficient_matrices, oscillation_indicator
+from solvers.weno.matrices import fHalfN, cHalfN, WN_M, WN_Σ
 from options import rc, λc, λs, eps, ndim, N, N1, nV
 
 
-Mc = coefficient_matrices()
-Σ = oscillation_indicator()
-
-fHalfN = int(floor(N/2))
-cHalfN = int(ceil(N/2))
 LAMS = [λs, λs, λc, λc]
 
 
@@ -29,14 +24,14 @@ def calculate_coeffs(uList, L=0, R=0):
     """
     n = len(uList)
     if L:
-        wList = [solve(Mc[0], uList[0], overwrite_b=1, check_finite=0)]
+        wList = [solve(WN_M[0], uList[0], overwrite_b=1, check_finite=0)]
     elif R:
-        wList = [solve(Mc[1], uList[0], overwrite_b=1, check_finite=0)]
+        wList = [solve(WN_M[1], uList[0], overwrite_b=1, check_finite=0)]
     else:
-        wList = [solve(Mc[i], uList[i], overwrite_b=1, check_finite=0)
+        wList = [solve(WN_M[i], uList[i], overwrite_b=1, check_finite=0)
                  for i in range(n)]
 
-    σList = [((w.T).dot(Σ).dot(w)).diagonal() for w in wList]
+    σList = [((w.T).dot(WN_Σ).dot(w)).diagonal() for w in wList]
     oList = [LAMS[i]  / (abs(σList[i]) + eps)**rc for i in range(n)]
     oSum = zeros(nV)
     numerator = zeros([N1, nV])
@@ -104,12 +99,12 @@ def weno_launcher(u):
 
 ######  EXPERIMENTAL  ######
 
+
 from numpy import dot
 
-from solvers.basis import mid_values
+from solvers.basis import MIDVALS
 from system.gpr.misc.structures import Cvec_to_Pvec
 
-MIDVALS = mid_values()
 
 def weno_primitive(q, PAR):
     """ Returns a WENO reconstruction in primitive variables, given the grid of

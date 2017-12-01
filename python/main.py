@@ -17,8 +17,8 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.purely_elastic1_IC
-BC = boundaries.standard_BC
+IC = solids.piston_IC
+BC = solids.piston_BC
 
 
 u, PARs = IC()
@@ -26,6 +26,7 @@ data = [Data(u, 0)]
 m = len(PARs)
 
 pool = Parallel(n_jobs=NCORE)
+
 
 if USE_CPP:
     import GPRpy

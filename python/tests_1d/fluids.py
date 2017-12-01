@@ -74,7 +74,7 @@ def viscous_shock_exact(x, Ms, PAR, center=0):
     elif x < -l:
         x=-l
 
-    c0 = c_0(ρ0, p0, γ, pINF)
+    c0 = c_0(ρ0, p0, PAR)
     a = 2 / (Ms**2 * (γ+1)) + (γ-1)/(γ+1)
     Re = ρ0 * c0 * Ms / μ
     c1 = ((1-a)/2)**(1-a)
@@ -94,6 +94,9 @@ def viscous_shock_exact_x(n, M=2, t=0.2):
     return arange(M*t-0.25, M*t+0.75, 1/n)
 
 def viscous_shock_IC(center=0):
+    """ tf = 0.2
+        L = 1
+    """
     Ms = 2
     γ = 1.4
     pINF = 0

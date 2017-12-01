@@ -2,7 +2,7 @@ from numpy import zeros
 
 from system.gpr.misc.functions import gram
 from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
-from system.gpr.variables.material_functions import theta_1, theta_2
+from system.gpr.variables.sources import theta1inv, theta2inv
 from system.gpr.variables.state import heat_flux, pressure, temperature, entropy
 from system.gpr.variables.state import sigma, dsigmadA, Sigma
 from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
@@ -68,11 +68,11 @@ class Cvec_to_Pclass():
     def G(self):
         return gram(self.A)
 
-    def θ1(self):
-        return theta_1(self.A, self.PAR)
+    def θ1_1(self):
+        return theta1inv(self.A, self.PAR)
 
-    def θ2(self):
-        return theta_2(self.ρ, self.T, self.PAR)
+    def θ2_1(self):
+        return theta2inv(self.ρ, self.T, self.PAR)
 
     def E1(self):
         return E_1(self.ρ, self.p, self.PAR)

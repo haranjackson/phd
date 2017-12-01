@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from multi.gfm import get_material_index
-from solvers.basis import quad, basis_polys
+from solvers.basis import NODES, PSI
 from system.gpr.misc.structures import Cvec_to_Pclass
 from options import nx, ny, ndim
 
@@ -175,7 +175,6 @@ def plot_weno(wh, var, PARs=None):
     n, _, _, N1, nV = wh.shape
     x = zeros(N1*n)
     u = zeros([N1*n,1,1,nV])
-    NODES, _, _ = quad()
     for i in range(n):
         ind = N1*i
         for j in range(N1):
@@ -192,13 +191,12 @@ def plot_weno(wh, var, PARs=None):
         plot_pressure(u, PARs, x=x)
 
 def plot_dg(qh, var, t, PARs=None):
-    psi, _, _ = basis_polys()
     n, _, _, N1, _, nV = qh.shape
     wh = zeros([n,1,1,N1,nV])
     for i in range(n):
         for j in range(N1):
             for k in range(N1):
-                wh[i,0,0,j] += psi[k](t) * qh[i,0,0,k,j]
+                wh[i,0,0,j] += PSI[k](t) * qh[i,0,0,k,j]
 
     plot_weno(wh, var, PARs)
 

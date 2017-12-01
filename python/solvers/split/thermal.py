@@ -2,12 +2,12 @@ from numpy import exp, eye, sqrt
 
 from system.gpr.misc.functions import L2_1D
 from system.gpr.variables.eos import E_2A, E_3, dEdJ, E_to_T
-from system.gpr.variables.material_functions import theta_2
+from system.gpr.variables.sources import theta2inv
 
 
 def f_J(ρ, E, A, J, PAR):
     T = E_to_T(E, A, J, PAR)
-    return - dEdJ(J, PAR.α2) / theta_2(ρ, T, PAR)
+    return - dEdJ(J, PAR.α2) * theta2inv(ρ, T, PAR)
 
 def jac_J(ρ, E, A, J, PAR):
     T = E_to_T(E, A, J, PAR)

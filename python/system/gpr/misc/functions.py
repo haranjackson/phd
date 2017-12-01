@@ -1,7 +1,19 @@
 from numba import jit
-from numpy import array, cross, dot, empty, eye, kron, zeros
+from numpy import array, cross, dot, empty, eye, kron, sqrt, zeros
 from scipy.linalg.lapack import get_lapack_funcs, _compute_lwork
 
+
+def lim(x):
+    """ Enforces abs(x) > TOL
+    """
+    TOL = 1e-11
+    if abs(x) < TOL:
+        if x >= 0:
+            return TOL
+        else:
+            return -TOL
+    else:
+        return x
 
 @jit
 def tr(X):
@@ -43,6 +55,13 @@ def L2_2D(X):
     return ( X[0,0]**2 + X[0,1]**2 + X[0,2]**2
            + X[1,0]**2 + X[1,1]**2 + X[1,2]**2
            + X[2,0]**2 + X[2,1]**2 + X[2,2]**2)
+
+def sigma_norm(σ):
+    """ Returns the norm defined in Boscheri et al
+    """
+    tmp1 = (σ[0,0]-σ[1,1])**2 + (σ[1,1]-σ[2,2])**2 + (σ[2,2]-σ[0,0])**2
+    tmp2 = σ[0,1]**2 + σ[1,2]**2 + σ[2,0]**2
+    return sqrt(0.5*tmp1 + 3*tmp2)
 
 @jit
 def dev(G):

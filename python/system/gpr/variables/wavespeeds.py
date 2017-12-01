@@ -20,6 +20,6 @@ def c_inf(ρ, p, PAR):
 def c_h(ρ, T, PAR):
     """ Returns the velocity of the heat characteristic at equilibrium
     """
-    α = PAR.α
+    α2 = PAR.α2
     cv = PAR.cv
-    return α / ρ * sqrt(T / cv)
+    return sqrt(α2 * T / cv) / ρ

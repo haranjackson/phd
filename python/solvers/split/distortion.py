@@ -5,11 +5,11 @@ from scipy.linalg import svd
 
 from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, inv3, L2_2D
 from system.gpr.variables.eos import dEdA
-from system.gpr.variables.material_functions import theta_1
+from system.gpr.variables.sources import theta1inv
 
 
 def f_A(A, PAR):
-    return - dEdA(A, PAR.cs2).ravel() / theta_1(A, PAR)
+    return - dEdA(A, PAR.cs2).ravel() * theta1inv(A, PAR)
 
 def jac_A(A, τ1):
     G = gram(A)

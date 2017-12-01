@@ -1,10 +1,10 @@
 """ Domain Parameters """
 
-tf = 0.6e-6                      # Final time of simulation
-Lx = 1e-2                      # Length of domain in x direction
+tf = 1.5                      # Final time of simulation
+Lx = 1.5                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 200                    # Number of cells in x direction
+nx = 300                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -26,14 +26,14 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 """ Solver Options """
 
 USE_CPP = 0                 # Whether to use compiled C++
-SPLIT   = 1                # Whether or not to use a split solver
+SPLIT   = 1                 # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
 STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
 N   = 1                     # Method is order N+1
-CFL = 0.9                   # CFL number
+CFL = 0.6                   # CFL number
 OSHER = 0                   # Whether to use Osher flux (else Rusanov flux)
 PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ
 
@@ -42,7 +42,7 @@ PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ
 HIDALGO     = 0             # Use Hidalgo initial guess
 STIFF       = 0             # Use Newton-Krylov
 SUPER_STIFF = 0             # Use Newton-Krylov for Hidalgo initial guess
-DG_TOL      = 1e-6          # Tolerance to which the predictor must converge
+DG_TOL      = 6e-6          # Tolerance to which the predictor must converge
 MAX_ITER    = 50            # Max number of non-stiff iterations attempted
 
 """ WENO Parameters """

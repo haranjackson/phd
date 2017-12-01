@@ -3,7 +3,7 @@ from scipy.integrate import odeint
 from scipy.linalg import svd
 import matplotlib.pyplot as plt
 
-from system.gpr.misc.functions import dev
+from system.gpr.misc.functions import dev, lim
 from system.gpr.variables.eos import dEdA
 
 
@@ -37,13 +37,6 @@ def sgn(x):
         return 1
     else:
         return -1
-
-def lim(x):
-    TOL = 1e-11
-    if abs(x) < TOL:
-        return sgn(x) * TOL
-    else:
-        return x
 
 def sec(x):
     return 1/lim(cos(x))

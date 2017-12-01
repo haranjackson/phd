@@ -11,19 +11,19 @@ def source_prim_ref(ret, P):
 
     ψ = P.ψ()
     H = P.H()
-    θ1 = P.θ1()
-    θ2 = P.θ2()
+    θ1_1 = P.θ1_1()
+    θ2_1 = P.θ2_1()
 
     PAR = P.PAR
     γ = PAR.γ
 
     if VISCOUS:
-        ret[1] = (γ-1) * ρ * L2_2D(ψ) / θ1
-        ret[5:14] = -ψ.ravel() / θ1
+        ret[1] = (γ-1) * ρ * L2_2D(ψ) * θ1_1
+        ret[5:14] = -ψ.ravel() * θ1_1
 
     if THERMAL:
-        ret[1] += (γ-1) * ρ * L2_1D(H) / θ2
-        ret[14:17] = -H / θ2
+        ret[1] += (γ-1) * ρ * L2_1D(H) * θ2_1
+        ret[14:17] = -H * θ2_1
 
 def source_prim(Q, PAR):
     ret = zeros(nV)
