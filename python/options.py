@@ -1,10 +1,10 @@
 """ Domain Parameters """
 
 tf = 0.6e-6                      # Final time of simulation
-Lx = 1                      # Length of domain in x direction
+Lx = 1e-2                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 500                    # Number of cells in x direction
+nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 

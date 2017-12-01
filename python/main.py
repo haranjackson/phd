@@ -17,13 +17,15 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.barton_IC
+IC = solids.purely_elastic1_IC
 BC = boundaries.standard_BC
 
 
 u, PARs = IC()
 data = [Data(u, 0)]
+m = len(PARs)
 
+pool = Parallel(n_jobs=NCORE)
 
 if USE_CPP:
     import GPRpy
@@ -38,30 +40,26 @@ if USE_CPP:
 def run(t, tf, count, data):
 
     tStart = time()
-
     u = data[count].grid
-    m = len(PARs)
-
-    pool = Parallel(n_jobs=NCORE)
 
     while t < tf:
 
         t0 = time()
 
-        fluids = array([u for i in range(m)])
-        dt = timestep(fluids, count, t, tf, PARs)
+        mats = array([u for i in range(m)])
+        dt = timestep(mats, count, t, tf, PARs)
 
         if RGFM:
-            add_ghost_cells(fluids, PARs, dt)
+            add_ghost_cells(mats, PARs, dt)
 
         print_stats(count, t, dt)
 
         for i in range(m):
 
-            fluid = fluids[i]
+            mat = mats[i]
 
             if USE_CPP:
-                tmp = fluid.ravel()
+                tmp = mat.ravel()
                 MP = cPARs[i]
 
                 if SPLIT:
@@ -74,17 +72,17 @@ def run(t, tf, count, data):
                                                dt, dx, dy, dz, False,
                                                bool(PERRON_FROB), MP)
 
-                fluid = tmp.reshape([nx,ny,nz,nV])
+                mat = tmp.reshape([nx,ny,nz,nV])
 
             else:
                 PAR = PARs[i]
 
                 if SPLIT:
-                    split_stepper(pool, fluid, BC, dt, PAR)
+                    split_stepper(pool, mat, BC, dt, PAR)
                 else:
-                    ader_stepper(pool, fluid, BC, dt, PAR)
+                    ader_stepper(pool, mat, BC, dt, PAR)
 
-        u = make_u(fluids)
+        u = make_u(mats)
         data.append(Data(u, t))
 
         if RGFM:

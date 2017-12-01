@@ -82,7 +82,6 @@ def dp_ref(ρ, PAR):
         c02 = PAR.c02
         ρ0 = PAR.ρ0
         s = PAR.s
-        v = 1 / ρ
         return c02 * ρ0**2 * (s*(ρ0-ρ) - ρ) / (s*(ρ-ρ0) - ρ)**3
 
 def de_ref(ρ, PAR):
@@ -100,23 +99,22 @@ def de_ref(ρ, PAR):
         v_ = - ρ0 / ρ
         return (A * exp(R1 * v_)  +  B * exp(R2 * v_)) / ρ**2
     elif PAR.EOS == 'smg':
-        v0 = PAR.v0
-        v = 1 / ρ
-        p0 = p_ref(ρ, PAR)
-        dp0 = dp_ref(ρ, PAR)
-        return 0.5 * (dp0 * (v0 - v) + p0 / ρ**2)
+        c02 = PAR.c02
+        ρ0 = PAR.ρ0
+        s = PAR.s
+        return - (ρ-ρ0) * ρ0 * c02 / (s * (ρ-ρ0) - ρ)**3
 
 def dedρ(ρ, p, PAR):
     """ Returns the derivative of the Mie-Gruneisen internal energy
         with respect to ρ
     """
     Γ = Γ_MG(ρ, PAR)
-    dΓ = dΓ_MG(ρ, PAR)
-    p0 = p_ref(ρ, PAR)
+    dΓ  = dΓ_MG(ρ, PAR)
+    p0  =  p_ref(ρ, PAR)
     dp0 = dp_ref(ρ, PAR)
-    e0 = e_ref(ρ, PAR)
+    e0  =  e_ref(ρ, PAR)
     de0 = de_ref(ρ, PAR)
-    return de0 + (dp0*ρ*Γ - (Γ+ρ*dΓ)*(p-p0)) / (ρ*Γ)**2
+    return de0 - (dp0*ρ*Γ + (Γ+ρ*dΓ)*(p-p0)) / (ρ*Γ)**2
 
 def dedp(ρ, PAR):
     """ Returns the derivative of the Mie-Gruneisen internal energy
@@ -130,7 +128,7 @@ def dTdρ(ρ, p, PAR):
         with respect to ρ
     """
     cv = PAR.cv
-    return (dedρ(ρ, p, PAR) - de_ref(ρ, PAR)) / cv
+    return - (dp0*ρ*Γ + (Γ+ρ*dΓ)*(p-p0)) / (ρ*Γ)**2 / cv
 
 def dTdp(ρ, PAR):
     """ Returns the derivative of the Mie-Gruneisen temperature

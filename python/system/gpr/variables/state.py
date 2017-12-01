@@ -8,9 +8,7 @@ from options import VISCOUS, THERMAL, REACTIVE
 
 
 def pressure(ρ, E, v, A, J, PAR, λ=None):
-    """ Returns the pressure, given the total energy, velocity,
-        distortion matrix, and density.
-        NOTE: Only valid for EOS used for fluids by Dumbser et al.
+    """ Returns the pressure under the Mie-Gruneisen EOS
     """
     E1 = E - E_3(v)
 
@@ -25,7 +23,7 @@ def pressure(ρ, E, v, A, J, PAR, λ=None):
 
     Γ = Γ_MG(ρ, PAR)
     p0 = p_ref(ρ, PAR)
-    e0 = e_ref(p0, PAR)
+    e0 = e_ref(ρ, PAR)
 
     return (E1 - e0) * ρ * Γ + p0
 
@@ -53,7 +51,7 @@ def heat_flux(T, J, α2):
 def sigma(ρ, A, cs2):
     """ Returns the symmetric viscous shear stress tensor
     """
-    return -ρ * dot(A.T, dEdA(A, cs2))     # Generic definition of σ
+    return -ρ * dot(A.T, dEdA(A, cs2))
 
 def dsigmadA(ρ, A, cs2):
     """ Returns the tensor T_ijmn corresponding to the partial derivative of

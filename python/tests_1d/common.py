@@ -70,8 +70,8 @@ HYP_ALU = hyperelastic_params(ρ0=2.71, α=1, β=3.577, γ=2.088, cv=9e-4, T0=30
 
 PAR_COP = material_parameters(EOS='smg', ρ0=8.93, cv=4e-4, p0=0,
                               c0=0.394, Γ0=2, s=1.48,
-                              cs=0.219, σY=9e-4, τ1=inf, n=10, PLASTIC=True)
+                              cs=0.219, σY=4e-3, τ1=inf, n=10, PLASTIC=True)
 
-PAR_COP2 = material_parameters(EOS='smg', ρ0=8.93, cv=1, p0=0,
+PAR_COP2 = material_parameters(EOS='smg', ρ0=8.93, cv=4e-4, p0=0,
                                c0=0.394, Γ0=2, s=1.48,
-                               cs=0.219, σY=9e-4, τ1=0.1, n=10, PLASTIC=True)
+                               cs=0.219, σY=4e-3, τ1=0.1, n=10, PLASTIC=True)

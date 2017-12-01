@@ -1,5 +1,4 @@
 from numba import jit
-from numpy import exp
 
 from system.gpr.variables.mg import Γ_MG, e_ref, p_ref
 from system.gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D

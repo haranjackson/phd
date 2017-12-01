@@ -3,7 +3,6 @@ from itertools import product
 from numpy import array, zeros
 from numpy.linalg import inv
 
-from system.gpr.misc.objects import hyperelastic_params, material_parameters
 from system.gpr.variables.eos_hyp import total_energy_hyp, density_hyp
 from tests_1d.common import PAR_COP, HYP_COP
 from options import nx, ny, nz, nV, dx
@@ -19,7 +18,7 @@ def hyperelastic_to_gpr(v, A, S, HYP):
     return Q
 
 def barton_IC():
-    """ tf = 0.6e-6
+    """ tf = 0.6
         L = 1
     """
     vL = array([2e3, 0, 100])
@@ -41,7 +40,7 @@ def barton_IC():
     u = zeros([nx, ny, nz, nV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        if i*dx < 0.5:
+        if i*dx < 5e-3:
             u[i,j,k] = QL
         else:
             u[i,j,k] = QR
@@ -52,16 +51,26 @@ def purely_elastic1_IC():
     """ tf = 0.06
         L = 1
     """
-    ρL = 8.93
     AL = array([[0.95, 0, 0],
-                [0,    0, 0],
+                [0,    1, 0],
                 [0,    0, 1]])
     vL = zeros(3)
     SL = 0.001
 
-    ρR = 8.93
     AR = array([[1, 0, 0],
                 [0, 1, 0],
                 [0, 0, 1]])
     vR = zeros(3)
     SR = 0
+
+    QL = hyperelastic_to_gpr(vL, AL, SL, HYP_COP)
+    QR = hyperelastic_to_gpr(vR, AR, SR, HYP_COP)
+    u = zeros([nx, ny, nz, nV])
+
+    for i, j, k in product(range(nx), range(ny), range(nz)):
+        if i*dx < 5e-3:
+            u[i,j,k] = QL
+        else:
+            u[i,j,k] = QR
+
+    return u, [PAR_COP]

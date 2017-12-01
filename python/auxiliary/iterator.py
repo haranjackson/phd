@@ -7,28 +7,28 @@ from system.eigenvalues import max_abs_eigs
 from options import nx, ny, nz, CFL, dx, dy, dz, ndim, nV
 
 
-def make_u(fluids):
-    """ Builds u across the domain, from the different fluids grids
+def make_u(mats):
+    """ Builds u across the domain, from the different material grids
     """
-    m = len(fluids)
-    u = fluids[0]
+    m = len(mats)
+    u = mats[0]
     N = nV - (m-1)
-    u[:,:,:,N:] = sum([fluid[:,:,:,N:] for fluid in fluids], axis=0) / m
+    u[:,:,:,N:] = sum([mat[:,:,:,N:] for mat in mats], axis=0) / m
 
     for i in range(1, m):
         ind = get_levelset_root(u, i-1, m)
-        u[ind:,:,:,:N] = fluids[i][ind:,:,:,:N]
+        u[ind:,:,:,:N] = mats[i][ind:,:,:,:N]
 
     return u
 
-def timestep(fluids, count, t, tf, PARs):
+def timestep(mats, count, t, tf, PARs):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
-    m = len(fluids)
+    m = len(mats)
     MAX = 0
     for ind in range(m):
 
-        u = fluids[ind]
+        u = mats[ind]
         PAR = PARs[ind]
 
         for i,j,k in product(range(nx), range(ny), range(nz)):
@@ -40,7 +40,7 @@ def timestep(fluids, count, t, tf, PARs):
                 if ndim > 2:
                     MAX = max(MAX, max_abs_eigs(Q, 2, PAR) / dz)
 
-    dt = CFL / MAX
+    dt = min(dx,dy,dz) * CFL / MAX
     if count <= 5:
         dt *= 0.2
     if t + dt > tf:

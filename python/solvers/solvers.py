@@ -8,36 +8,36 @@ from solvers.split.ode import ode_launcher
 from options import HALF_STEP, STRANG
 
 
-def ader_stepper(pool, fluid, BC, dt, PAR):
+def ader_stepper(pool, mat, BC, dt, PAR):
     t0 = time()
 
-    wh = weno_launcher(BC(fluid))
+    wh = weno_launcher(BC(mat))
     t1 = time()
 
     qh = dg_launcher(pool, wh, dt, PAR)
     t2 = time()
 
-    fluid += fv_launcher(pool, qh, dt, PAR)
+    mat += fv_launcher(pool, qh, dt, PAR)
     t3 = time()
 
     print('WENO:', t1-t0)
     print('DG:  ', t2-t1)
     print('FV:  ', t3-t2)
 
-def split_stepper(pool, fluid, BC, dt, PAR):
+def split_stepper(pool, mat, BC, dt, PAR):
 
     Δt = dt/2 if STRANG else dt
     t0 = time()
 
-    ode_launcher(fluid, Δt, PAR)
+    ode_launcher(mat, Δt, PAR)
     t1 = time()
 
-    wh = weno_launcher(BC(fluid))
+    wh = weno_launcher(BC(mat))
     if HALF_STEP:
         weno_midstepper(wh, dt, PAR)
     t2 = time()
 
-    fluid += fv_launcher(pool, wh, dt, PAR, 1)
+    mat += fv_launcher(pool, wh, dt, PAR, 1)
     t3 = time()
 
     print('ODE: ', t1-t0)
@@ -45,6 +45,6 @@ def split_stepper(pool, fluid, BC, dt, PAR):
     print('FV:  ', t3-t2)
 
     if STRANG:
-        ode_launcher(fluid, Δt, PAR)
+        ode_launcher(mat, Δt, PAR)
         t4 = time()
         print('ODE: ', t4-t3)

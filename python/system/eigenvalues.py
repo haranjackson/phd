@@ -2,6 +2,8 @@ from numpy import outer, sqrt, zeros
 
 from system.gpr.misc.functions import GdevG, eigvalsn
 from system.gpr.misc.structures import Cvec_to_Pclass
+from system.gpr.variables.mg import dTdρ, dTdp
+from system.gpr.variables.wavespeeds import c_0, c_h
 from options import VISCOUS, THERMAL, PERRON_FROB
 
 
@@ -19,10 +21,7 @@ def thermo_acoustic_tensor(P, d):
     Gd = G[d]
 
     PAR = P.PAR
-    γ = PAR.γ
     cs2 = PAR.cs2
-    α2 = PAR.α2
-    pINF = PAR.pINF
 
     if VISCOUS:
         O = GdevG(G)
@@ -33,13 +32,17 @@ def thermo_acoustic_tensor(P, d):
         O *= cs2
         ret[:3, :3] = O
 
-    ret[d, d] += γ * p / ρ
+    c0 = c_0(ρ, p, PAR)
+    ret[d, d] += c0**2
 
     if THERMAL:
-        ret[3, 0] = ((γ-1) * p - pINF) * T / (ρ * (p+pINF))
-        tmp = (γ-1) * α2 * T / ρ
-        ret[0, 3] = tmp
-        ret[3, 3] = tmp * T / (p+pINF)
+        Tρ = dTdρ(ρ, p, PAR)
+        Tp = dTdp(ρ, PAR)
+        ch = c_h(ρ, T, PAR)
+
+        ret[3, 0] = Tρ + Tp * c0**2
+        ret[0, 3] = ch**2 / Tp
+        ret[3, 3] = ch**2
 
     return ret
 

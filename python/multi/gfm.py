@@ -12,12 +12,12 @@ def get_levelset_root(u, i, m):
             return j
     return n
 
-def add_ghost_cells(fluids, PARs, dt):
+def add_ghost_cells(mats, PARs, dt):
 
     m = len(PARs)
     for i in range(m-1):
-        uL = fluids[i]
-        uR = fluids[i+1]
+        uL = mats[i]
+        uR = mats[i+1]
         ind = get_levelset_root(uL, i, m)
         PARL = PARs[i]
         PARR = PARs[i+1]

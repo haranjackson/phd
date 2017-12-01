@@ -21,8 +21,6 @@ def flux_cons_ref(ret, Q, d, PAR):
     vd = v[d]
     ρvd = ρ * vd
 
-    α2 = PAR.α2
-
     ret[0] += z * ρ1 * vd
     ret[1] += ρvd * E + p * vd
     ret[2:5] += ρvd * v
@@ -43,6 +41,8 @@ def flux_cons_ref(ret, Q, d, PAR):
         ret[11+d] += Av[2]
 
     if THERMAL:
+
+        α2 = PAR.α2
 
         J = P.J
         T = P.T

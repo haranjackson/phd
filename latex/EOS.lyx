@@ -519,7 +519,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{\partial e}{\partial\rho} & =e_{ref}^{'}\left(\rho\right)+\frac{p_{ref}^{'}\left(\rho\right)\rho\Gamma\left(\rho\right)-\left(\Gamma\left(\rho\right)+\rho\Gamma^{'}\left(\rho\right)\right)\left(p-p_{ref}\left(\rho\right)\right)}{\left(\rho\Gamma\left(\rho\right)\right)^{2}}\\
+\frac{\partial e}{\partial\rho} & =e_{ref}^{'}\left(\rho\right)-\frac{p_{ref}^{'}\left(\rho\right)\rho\Gamma\left(\rho\right)+\left(\Gamma\left(\rho\right)+\rho\Gamma^{'}\left(\rho\right)\right)\left(p-p_{ref}\left(\rho\right)\right)}{\left(\rho\Gamma\left(\rho\right)\right)^{2}}\\
 \frac{\partial e}{\partial p} & =\frac{1}{\rho\Gamma\left(\rho\right)}
 \end{align}
 
