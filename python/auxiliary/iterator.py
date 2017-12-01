@@ -40,7 +40,7 @@ def timestep(mats, count, t, tf, PARs):
                 if ndim > 2:
                     MAX = max(MAX, max_abs_eigs(Q, 2, PAR) / dz)
 
-    dt = min(dx,dy,dz) * CFL / MAX
+    dt = CFL / MAX
     if count <= 5:
         dt *= 0.2
     if t + dt > tf:
