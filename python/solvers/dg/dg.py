@@ -76,7 +76,8 @@ def hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS):
     return q.reshape([NT, nV])
 
 def failed(w, f, dtGAPS, PAR, HOMOGENEOUS):
-    q = hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS)
+    #q = hidalgo_initial_guess(w, dtGAPS, PAR, HOMOGENEOUS)
+    q = standard_initial_guess(w)
     return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
 
 def unconverged(q, qNew):

@@ -111,7 +111,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 e\left(\rho,p\right) & =e_{ref}\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\\
-T & =\frac{e-e_{ref}}{c_{v}}=\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}
+T & =T_{0}+\frac{e-e_{ref}}{c_{v}}=T_{0}+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}
 \end{align}
 
 \end_inset
@@ -256,8 +256,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-p_{ref} & =\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}\\
-e_{ref} & =\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\\
+p_{ref} & =p_{0}+\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}\\
+e_{ref} & =e_{0}+\frac{p_{ref}+p_{0}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\\
 \Gamma & =\Gamma_{0}\frac{\rho_{0}}{\rho}
 \end{align}
 

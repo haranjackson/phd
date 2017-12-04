@@ -22,10 +22,19 @@ def pressure(ρ, E, v, A, J, PAR, λ=None):
         E1 -= E_R(λ, PAR.Qc)
 
     Γ = Γ_MG(ρ, PAR)
-    p0 = p_ref(ρ, PAR)
-    e0 = e_ref(ρ, PAR)
+    pr = p_ref(ρ, PAR)
+    er = e_ref(ρ, PAR)
 
-    return (E1 - e0) * ρ * Γ + p0
+    return (E1 - er) * ρ * Γ + pr
+
+def pressure2(ρ, T, PAR):
+    """ Returns pressure from density and temperature,
+        under Mie-Gruneisen EOS
+    """
+    cv = PAR.cv
+    Γ = Γ_MG(ρ, PAR)
+    pr = p_ref(ρ, PAR)
+    return T * ρ * Γ * cv + pr
 
 def entropy(ρ, p, PAR):
     """ Returns the entropy of a stiffened gas, given density and pressure
@@ -37,9 +46,9 @@ def temperature(ρ, p, PAR):
     """ Returns the temperature under the Mie-Gruneisen EOS
     """
     Γ = Γ_MG(ρ, PAR)
-    p0 = p_ref(ρ, PAR)
+    pr = p_ref(ρ, PAR)
     cv = PAR.cv
-    return (p - p0) / (ρ * Γ * cv)
+    return (p - pr) / (ρ * Γ * cv)
 
 @jit
 def heat_flux(T, J, α2):

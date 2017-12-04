@@ -17,8 +17,8 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.piston_IC
-BC = solids.piston_BC
+IC = solids.elastic1_IC
+BC = boundaries.standard_BC
 
 
 u, PARs = IC()

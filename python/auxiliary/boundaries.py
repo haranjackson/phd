@@ -38,8 +38,3 @@ def periodic_BC(u):
         ret[:,:,0] = ret[:,:,-2]
         ret[:,:,-1] = ret[:,:,1]
     return ret
-
-def temperature_fix_pressure(ρ, T, PAR):
-    """ Calculates the pressure in Q, given that the cell must be at temperature T
-    """
-    return ρ *(PAR.γ-1) * T * PAR.cv - PAR.pINF

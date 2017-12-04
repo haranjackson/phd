@@ -9,9 +9,9 @@ def E_1(ρ, p, PAR):
     """ Returns the microscale energy for the Mie-Gruneisen EOS
     """
     Γ = Γ_MG(ρ, PAR)
-    p0 = p_ref(ρ, PAR)
-    e0 = e_ref(ρ, PAR)
-    return e0 + (p - p0) / (ρ * Γ)
+    pr = p_ref(ρ, PAR)
+    er = e_ref(ρ, PAR)
+    return er + (p - pr) / (ρ * Γ)
 
 @jit
 def E_2A(A, cs2):

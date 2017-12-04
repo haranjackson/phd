@@ -29,16 +29,20 @@ class hyperelastic_params():
         self.B0 = b0**2
 
 class EOS_params():
-    def __init__(self, EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2):
+    def __init__(self, EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2, ε1, ε2):
         self.EOS = EOS
         self.ρ0 = ρ0
-        self.v0 = 1 / ρ0
         self.cv = cv
         self.p0 = p0
 
         if EOS == 'sg':
             self.γ = γ
             self.pINF = pINF
+
+        elif EOS == 'smg':
+            self.Γ0 = Γ0
+            self.c02 = c0**2
+            self.s = s
 
         elif EOS == 'jwl':
             self.Γ0 = Γ0
@@ -47,16 +51,18 @@ class EOS_params():
             self.R1 = R1
             self.R2 = R2
 
-        elif EOS == 'smg':
+        elif EOS == 'cc':
             self.Γ0 = Γ0
-            self.c02 = c0**2
-            self.s = s
+            self.A = A
+            self.B = B
+            self.ε1 = ε1
+            self.ε2 = ε2
 
 class params():
     def __init__(self, Rc, EOS, ρ0, p0, T0, cv,
                  γ, pINF,
-                 c0, Γ0, s,
-                 A, B, R1, R2,
+                 c0, Γ0, s, e0,
+                 A, B, R1, R2, ε1, ε2,
                  cs, τ1, μ, σY, n, PLASTIC,
                  α, τ2,
                  REACTION, Qc,
@@ -68,7 +74,6 @@ class params():
         self.EOS = EOS
 
         self.ρ0 = ρ0
-        self.v0 = 1 / ρ0
         self.p0 = p0
         self.T0 = T0
         self.cv = cv
@@ -77,6 +82,12 @@ class params():
             self.γ = γ
             self.pINF = pINF
 
+        elif EOS == 'smg':
+            self.Γ0 = Γ0
+            self.c02 = c0**2
+            self.s = s
+            self.e0 = e0
+
         elif EOS == 'jwl':
             self.Γ0 = Γ0
             self.A = A
@@ -84,10 +95,12 @@ class params():
             self.R1 = R1
             self.R2 = R2
 
-        elif EOS == 'smg':
+        elif EOS == 'cc':
             self.Γ0 = Γ0
-            self.c02 = c0**2
-            self.s = s
+            self.A = A
+            self.B = B
+            self.ε1 = ε1
+            self.ε2 = ε2
 
         if cs is not None:
             self.cs2 = cs**2
@@ -134,8 +147,8 @@ class params():
 
 def material_parameters(EOS, ρ0, cv, p0=None,
                         γ=None, pINF=None,
-                        c0=None, Γ0=None, s=None,
-                        A=None, B=None, R1=None, R2=None,
+                        c0=None, Γ0=None, s=None, e0=None,
+                        A=None, B=None, R1=None, R2=None, ε1=None, ε2=None,
                         cs=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
                         α=None, κ=None, Pr=None,
                         REACTION=None, Qc=None,
@@ -148,16 +161,16 @@ def material_parameters(EOS, ρ0, cv, p0=None,
 
     """ An object to hold the material constants
     """
-    assert(EOS in ['sg', 'jwl', 'smg'])
+    assert(EOS in ['sg', 'smg', 'jwl', 'cc'])
     assert(REACTION in ['a', 'd', 'ig', None])
 
-    if pINF is None:
+    if (γ is not None) and (pINF is None):
         pINF = 0
 
-    P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2)
+    P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2, ε1, ε2)
     T0 = temperature(ρ0, p0, P)
 
-    if cs is not None and not PLASTIC:
+    if (cs is not None) and (not PLASTIC) and (τ1 is None):
         τ1 = 6 * μ / (ρ0 * cs**2)
 
     if α is not None:
@@ -169,8 +182,8 @@ def material_parameters(EOS, ρ0, cv, p0=None,
 
     return params(Rc, EOS, ρ0, p0, T0, cv,
                   γ, pINF,
-                  c0, Γ0, s,
-                  A, B, R1, R2,
+                  c0, Γ0, s, e0,
+                  A, B, R1, R2, ε1, ε2,
                   cs, τ1, μ, σY, n, PLASTIC,
                   α, τ2,
                   REACTION, Qc,
