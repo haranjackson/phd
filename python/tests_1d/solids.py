@@ -38,6 +38,9 @@ def barton_IC():
     AR = inv(FR)
     SR = 0
 
+    ρL = HYP.ρ0 * det(AL)
+    ρR = HYP.ρ0 * det(AR)
+
     QL = hyperelastic_to_gpr(vL, AL, SL, HYP_COP)
     QR = hyperelastic_to_gpr(vR, AR, SR, HYP_COP)
     u = zeros([nx, ny, nz, nV])
@@ -78,6 +81,9 @@ def elastic1_IC():
     pL = pressure2(ρL, TL, PAR)
     pR = pressure2(ρR, TR, PAR)
 
+    pL = 37.41
+    pR = 0
+
     QL = Cvec(ρL, pL, vL, AL, J, PAR)
     QR = Cvec(ρR, pR, vR, AR, J, PAR)
 
@@ -95,9 +101,9 @@ def elastic2_IC():
     """ tf = 0.06
         L = 1
     """
-    AL = array([[0.95, 0, 0],
-                [0.05, 1, 0],
-                [0,    0, 1]])
+    AL = inv(array([[0.95, 0, 0],
+                    [0.05, 1, 0],
+                    [0,    0, 1]]))
     vL = array([0,1,0])
     SL = 0.001
 

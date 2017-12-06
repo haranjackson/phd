@@ -1,6 +1,7 @@
 from numpy import outer, sqrt, zeros
+from numpy.linalg import eigvals
 
-from system.gpr.misc.functions import GdevG, eigvalsn
+from system.gpr.misc.functions import GdevG
 from system.gpr.misc.structures import Cvec_to_Pclass
 from system.gpr.variables.mg import dTdρ, dTdp
 from system.gpr.variables.wavespeeds import c_0, c_h
@@ -58,7 +59,7 @@ def max_abs_eigs(Q, d, PAR):
         colSum = [sum(oT) for oT in O.T]
         lam = sqrt(min(max(rowSum),max(colSum)))
     else:
-        lam = sqrt(eigvalsn(O, 4).max())
+        lam = sqrt(eigvals(O).max())
 
     if vd > 0:
         return vd + lam

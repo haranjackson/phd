@@ -1,9 +1,9 @@
 from numba import jit
 from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort, sqrt, zeros
 from scipy.integrate import odeint
-from scipy.linalg import svd
+from scipy.linalg import svd, inv
 
-from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, inv3, L2_2D
+from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, L2_2D
 from system.gpr.variables.eos import dEdA
 from system.gpr.variables.sources import theta1inv
 
@@ -15,7 +15,7 @@ def jac_A(A, τ1):
     G = gram(A)
     Grev = gram_rev(A)
     A_devG = AdevG(A,G)
-    AinvT = inv3(A).T
+    AinvT = inv(A).T
     AA = einsum('ij,mn', A, A)
     L2A = L2_2D(A)
 
