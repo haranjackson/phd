@@ -1,48 +1,43 @@
 from itertools import product
 
-from numpy import array, eye, zeros
+from numpy import array, eye, trace, zeros
 from numpy.linalg import det, inv
 
 from auxiliary.boundaries import standard_BC
 from system.gpr.misc.structures import Cvec
-from system.gpr.variables.eos_hyp import total_energy_hyp, temperature_hyp
-from system.gpr.variables.state import pressure2
+from system.gpr.misc.functions import gram
+from system.gpr.variables.eos_hyp import Sigma_hyp
+from system.gpr.variables.state import sigma
 from tests_1d.common import HYP_COP, PAR_COP_SMG, PAR_COP_SMG_P, PAR_COP_CC
 from options import nx, ny, nz, nV, dx
 
 
-def hyperelastic_to_gpr(v, A, S, HYP):
-    Q = zeros(nV)
-    ρ = HYP.ρ0 * det(A)
-    Q[0] = ρ
-    Q[1] = ρ * total_energy_hyp(A, S, v, HYP)
-    Q[2:5] = ρ * v
-    Q[5:14] = A.ravel()
-    return Q
-
-def barton_IC():
-    """ tf = 0.6
-        L = 1
+def hyperelastic_vars(F, S, HYP, PAR):
+    """ Returns the GPR variables corresponding to the hyperelastic variables
     """
-    vL = array([2e3, 0, 100])
-    FL = array([[1,      0,    0   ],
-                [-0.01,  0.95, 0.02],
-                [-0.015, 0,    0.9 ]])
-    AL = inv(FL)
-    SL = 0
+    A = inv(F)
+    ρ = HYP.ρ0 * det(A)
+    Σ = Sigma_hyp(ρ, A, S, HYP)
 
-    vR = array([0, -30, -10])
-    FR = array([[1,     0,    0  ],
-                [0.015, 0.95, 0  ],
-                [-0.01, 0,    0.9]])
-    AR = inv(FR)
-    SR = 0
+    G = gram(A)
+    I3 = det(G)
+    B0 = HYP.B0
+    β = HYP.β
 
-    ρL = HYP.ρ0 * det(AL)
-    ρR = HYP.ρ0 * det(AR)
+    σ = sigma(ρ, A, PAR.cs2)
+    p = trace(σ-Σ)/3
+    return ρ, p, A
 
-    QL = hyperelastic_to_gpr(vL, AL, SL, HYP_COP)
-    QR = hyperelastic_to_gpr(vR, AR, SR, HYP_COP)
+def solid_IC(vL, vR, FL, FR, SL, SR, HYP, PAR):
+
+    ρL, pL, AL = hyperelastic_vars(FL, SL, HYP, PAR)
+    ρR, pR, AR = hyperelastic_vars(FR, SR, HYP, PAR)
+
+    J = zeros(3)
+
+    QL = Cvec(ρL, pL, vL, AL, J, PAR)
+    QR = Cvec(ρR, pR, vR, AR, J, PAR)
+
     u = zeros([nx, ny, nz, nV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
@@ -51,92 +46,61 @@ def barton_IC():
         else:
             u[i,j,k] = QR
 
-    return u, [PAR_COP_SMG]
+    return u, [PAR]
+
+def barton_IC():
+    """ tf = 0.06
+        L = 1
+    """
+    vL = array([2, 0, 0.1])
+    FL = array([[1,      0,    0   ],
+                [-0.01,  0.95, 0.02],
+                [-0.015, 0,    0.9 ]])
+    SL = 0
+
+    vR = array([0, -0.03, -0.01])
+    FR = array([[1,     0,    0  ],
+                [0.015, 0.95, 0  ],
+                [-0.01, 0,    0.9]])
+    SR = 0
+
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
 
 def elastic1_IC():
     """ tf = 0.06
         L = 1
     """
-    AL = inv(array([[0.95, 0, 0],
-                    [0,    1, 0],
-                    [0,    0, 1]]))
+    FL = array([[0.95, 0, 0],
+                [0,    1, 0],
+                [0,    0, 1]])
     vL = zeros(3)
     SL = 0.001
 
-    AR = inv(array([[1, 0, 0],
-                    [0, 1, 0],
-                    [0, 0, 1]]))
-    vR = zeros(3)
-    SR = 0
-
-    J = zeros(3)
-
-    PAR = PAR_COP_CC
-    HYP = HYP_COP
-
-    ρL = PAR.ρ0 * det(AL)
-    ρR = PAR.ρ0 * det(AR)
-    TL = temperature_hyp(SL, AL, HYP)
-    TR = temperature_hyp(SR, AR, HYP)
-    pL = pressure2(ρL, TL, PAR)
-    pR = pressure2(ρR, TR, PAR)
-
-    pL = 37.41
-    pR = 0
-
-    QL = Cvec(ρL, pL, vL, AL, J, PAR)
-    QR = Cvec(ρR, pR, vR, AR, J, PAR)
-
-    u = zeros([nx, ny, nz, nV])
-
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        if i*dx < 0.5:
-            u[i,j,k] = QL
-        else:
-            u[i,j,k] = QR
-
-    return u, [PAR]
-
-def elastic2_IC():
-    """ tf = 0.06
-        L = 1
-    """
-    AL = inv(array([[0.95, 0, 0],
-                    [0.05, 1, 0],
-                    [0,    0, 1]]))
-    vL = array([0,1,0])
-    SL = 0.001
-
-    AR = array([[1, 0, 0],
+    FR = array([[1, 0, 0],
                 [0, 1, 0],
                 [0, 0, 1]])
     vR = zeros(3)
     SR = 0
 
-    J = zeros(3)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_CC)
 
-    PAR = PAR_COP_CC
-    HYP = HYP_COP
+def elastic2_IC():
+    """ tf = 0.06
+        L = 1
+    """
+    FL = array([[0.95, 0, 0],
+                [0.05, 1, 0],
+                [0,    0, 1]])
+    vL = array([0,1,0])
+    SL = 0.001
 
-    ρL = PAR.ρ0 * det(AL)
-    ρR = PAR.ρ0 * det(AR)
-    TL = temperature_hyp(SL, AL, HYP)
-    TR = temperature_hyp(SR, AR, HYP)
-    pL = pressure2(ρL, TL, PAR)
-    pR = pressure2(ρR, TR, PAR)
+    FR = array([[1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1]])
+    vR = zeros(3)
+    SR = 0
 
-    QL = Cvec(ρL, pL, vL, AL, J, PAR)
-    QR = Cvec(ρR, pR, vR, AR, J, PAR)
-
-    u = zeros([nx, ny, nz, nV])
-
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        if i*dx < 0.5:
-            u[i,j,k] = QL
-        else:
-            u[i,j,k] = QR
-
-    return u, [PAR]
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_CC)
 
 def piston_IC():
     """ tf = 1.5

@@ -65,8 +65,8 @@ def total_energy_hyp(A, S, v, HYP):
     I3 = I_3(G)
     return U_1(I3, HYP) + U_2(I3, S, HYP) + W(I1, I2, I3, HYP) + dot(v,v) / 2
 
-def sigma_hyp(ρ, A, S, HYP):
-    """ Returns the stress tensor
+def Sigma_hyp(ρ, A, S, HYP):
+    """ Returns the total stress tensor
     """
     G = dot(A.T, A)
     I1 = I_1(G)

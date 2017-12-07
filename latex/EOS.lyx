@@ -84,7 +84,7 @@ GPR Equations of State
 \end_layout
 
 \begin_layout Section
-EOSs
+Mie-Gruneisen
 \end_layout
 
 \begin_layout Standard
@@ -962,6 +962,51 @@ where
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Section
+Godunov-Romenski EOS
+\end_layout
+
+\begin_layout Standard
+The G-R EOS is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,S,A\right)=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}+c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)+\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}E_{\rho}=\rho\left(2\alpha\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)+\beta\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma=-\rho A^{T}E_{A}=-\rho c_{s}^{2}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}G\dev\left(G\right)
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \end_body
