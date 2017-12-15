@@ -1,4 +1,3 @@
-from numba import jit
 from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort, sqrt, zeros
 from scipy.integrate import odeint
 from scipy.linalg import svd, inv
@@ -9,7 +8,7 @@ from system.gpr.variables.sources import theta1inv
 
 
 def f_A(A, PAR):
-    return - dEdA(A, PAR.cs2).ravel() * theta1inv(A, PAR)
+    return - dEdA(A, PAR).ravel() * theta1inv(A, PAR)
 
 def jac_A(A, τ1):
     G = gram(A)
@@ -32,7 +31,6 @@ def jac_A(A, τ1):
     ret *= -3/τ1 * det3(A)**(5/3)
     return ret.reshape([9,9])
 
-@jit
 def f_reduced(y, t0, k, c):
     ret = zeros(2)
     y0 = y[0]

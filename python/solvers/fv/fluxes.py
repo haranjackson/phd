@@ -1,4 +1,3 @@
-from numba import jit
 from numpy import complex128, dot, zeros
 from scipy.linalg import eig, solve
 
@@ -8,7 +7,6 @@ from system.system import Bdot, system
 from options import N1, nV
 
 
-@jit
 def Bint(qL, qR, d, PAR):
     """ Returns the jump matrix for B, in the dth direction.
     """

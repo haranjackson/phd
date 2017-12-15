@@ -1,4 +1,3 @@
-from numba import jit
 from numpy import dot, zeros
 
 from system.gpr.systems.jacobians import dFdP, dPdQ
@@ -62,7 +61,6 @@ def flux_cons_ref(ret, Q, d, PAR):
         if REACTIVE:
             ret[19] += (1-z) * ρ2 * vd * λ
 
-@jit
 def block_cons_ref(ret, Q, d, PAR):
 
     P = Cvec_to_Pclass(Q, PAR)
@@ -109,7 +107,6 @@ def source_cons_ref(ret, Q, PAR):
 
         ret[19] = (1-z) * ρ2 * K
 
-@jit
 def B0dot(ret, x, v):
     v0 = v[0]
     v1 = v[1]
@@ -127,7 +124,6 @@ def B0dot(ret, x, v):
     for i in range(1, LSETS+1):
         ret[-i] = v0 * x[-i]
 
-@jit
 def B1dot(ret, x, v):
     v0 = v[0]
     v1 = v[1]
@@ -145,7 +141,6 @@ def B1dot(ret, x, v):
     for i in range(1, LSETS+1):
         ret[-i] = v1 * x[-i]
 
-@jit
 def B2dot(ret, x, v):
     v0 = v[0]
     v1 = v[1]

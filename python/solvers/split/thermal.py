@@ -6,17 +6,17 @@ from system.gpr.variables.sources import theta2inv
 
 
 def f_J(ρ, E, A, J, PAR):
-    T = E_to_T(E, A, J, PAR)
-    return - dEdJ(J, PAR.α2) * theta2inv(ρ, T, PAR)
+    T = E_to_T(ρ, E, A, J, PAR)
+    return - dEdJ(J, PAR) * theta2inv(ρ, T, PAR)
 
 def jac_J(ρ, E, A, J, PAR):
-    T = E_to_T(E, A, J, PAR)
+    T = E_to_T(ρ, E, A, J, PAR)
     return -(T * PAR.ρ0) / (PAR.T0 * ρ * PAR.τ1) * eye(3)
 
 def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, PAR):
     """ Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS
     """
-    c1 = E - E_2A(A, PAR.cs2) - E_3(v)
+    c1 = E - E_2A(ρ, A, PAR) - E_3(v)
     c2 = PAR.α2 / 2
     k = 2 * PAR.ρ0 / (PAR.τ2 * PAR.T0 * ρ * PAR.cv)
     c1 *= k

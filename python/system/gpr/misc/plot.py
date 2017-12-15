@@ -141,18 +141,6 @@ def plot_heat_flux(u, i, PARs, style='-', x=None, lab=None, col=None, sci=0):
 
     plot1d(y, style, x, lab, col, 'Heat Flux Component %d' % (i+1), sci=sci)
 
-def plot_entropy(u, PARs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(33)
-    n = len(u)
-    y = zeros(n)
-
-    for i in range(n):
-        Q = u[i, 0, 0]
-        j = get_material_index(Q, PARs)
-        y[i] = Cvec_to_Pclass(Q, PARs[j]).s()
-
-    plot1d(y, style, x, lab, col, 'Entropy', sci=sci)
-
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0):
     figure(34)
     y = u[:, 0, 0, var]

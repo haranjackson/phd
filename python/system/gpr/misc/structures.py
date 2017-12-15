@@ -3,7 +3,7 @@ from numpy import zeros
 from system.gpr.misc.functions import gram
 from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
 from system.gpr.variables.sources import theta1inv, theta2inv
-from system.gpr.variables.state import heat_flux, pressure, temperature, entropy
+from system.gpr.variables.state import heat_flux, pressure, temperature
 from system.gpr.variables.state import sigma, dsigmadA, Sigma
 from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
 
@@ -30,7 +30,7 @@ class Cvec_to_Pclass():
 
         if VISCOUS:
             self.A  = Q[5:14].reshape([3,3])
-            self.σ = sigma(self.ρ, self.A, PAR.cs2)
+            self.σ = sigma(self.ρ, self.A, PAR)
 
         if THERMAL:
             self.J  = Q[14:17] / self.ρ
@@ -46,24 +46,21 @@ class Cvec_to_Pclass():
         self.T = temperature(self.ρ, self.p, PAR)
 
         if THERMAL:
-            self.q = heat_flux(self.T, self.J, PAR.α2)
+            self.q = heat_flux(self.T, self.J, PAR)
 
         self.PAR = PAR
 
-    def s(self):
-        return entropy(self.ρ, self.p, self.PAR)
-
     def dσdA(self):
-        return dsigmadA(self.ρ, self.A, self.PAR.cs2)
+        return dsigmadA(self.ρ, self.A, self.PAR)
 
     def Σ(self):
-        return Sigma(self.p, self.ρ, self.A, self.PAR.cs2)
+        return Sigma(self.p, self.ρ, self.A, self.PAR)
 
     def ψ(self):
-        return dEdA(self.A, self.PAR.cs2)
+        return dEdA(self.ρ, self.A, self.PAR)
 
     def H(self):
-        return dEdJ(self.J, self.PAR.α2)
+        return dEdJ(self.J, self.PAR)
 
     def G(self):
         return gram(self.A)

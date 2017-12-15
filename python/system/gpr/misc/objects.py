@@ -63,7 +63,7 @@ class params():
                  γ, pINF,
                  c0, Γ0, s, e0,
                  A, B, R1, R2, ε1, ε2,
-                 cs, τ1, μ, σY, n, PLASTIC,
+                 cs, β, τ1, μ, σY, n, PLASTIC,
                  α, τ2,
                  REACTION, Qc,
                  Kc, Ti,
@@ -104,6 +104,7 @@ class params():
 
         if cs is not None:
             self.cs2 = cs**2
+            self.β = β
             self.τ1 = τ1
             self.PLASTIC = PLASTIC
             if PLASTIC:
@@ -149,7 +150,7 @@ def material_parameters(EOS, ρ0, cv, p0=None,
                         γ=None, pINF=None,
                         c0=None, Γ0=None, s=None, e0=None,
                         A=None, B=None, R1=None, R2=None, ε1=None, ε2=None,
-                        cs=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
+                        cs=None, β=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
                         α=None, κ=None, Pr=None,
                         REACTION=None, Qc=None,
                         Kc=None, Ti=None,
@@ -170,8 +171,11 @@ def material_parameters(EOS, ρ0, cv, p0=None,
     P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2, ε1, ε2)
     T0 = temperature(ρ0, p0, P)
 
-    if (cs is not None) and (not PLASTIC) and (τ1 is None):
-        τ1 = 6 * μ / (ρ0 * cs**2)
+    if cs is not None:
+        if (not PLASTIC) and (τ1 is None):
+            τ1 = 6 * μ / (ρ0 * cs**2)
+        if β is None:
+            β = 0
 
     if α is not None:
         if Pr is not None:
@@ -184,7 +188,7 @@ def material_parameters(EOS, ρ0, cv, p0=None,
                   γ, pINF,
                   c0, Γ0, s, e0,
                   A, B, R1, R2, ε1, ε2,
-                  cs, τ1, μ, σY, n, PLASTIC,
+                  cs, β, τ1, μ, σY, n, PLASTIC,
                   α, τ2,
                   REACTION, Qc,
                   Kc, Ti,

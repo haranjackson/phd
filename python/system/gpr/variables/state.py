@@ -1,4 +1,3 @@
-from numba import jit
 from numpy import dot, eye
 
 from system.gpr.misc.functions import AdevG, gram
@@ -13,13 +12,13 @@ def pressure(ρ, E, v, A, J, PAR, λ=None):
     E1 = E - E_3(v)
 
     if VISCOUS:
-        E1 -= E_2A(A, PAR.cs2)
+        E1 -= E_2A(ρ, A, PAR)
 
     if THERMAL:
-        E1 -= E_2J(J, PAR.α2)
+        E1 -= E_2J(J, PAR)
 
     if REACTIVE:
-        E1 -= E_R(λ, PAR.Qc)
+        E1 -= E_R(λ, PAR)
 
     Γ = Γ_MG(ρ, PAR)
     pr = p_ref(ρ, PAR)
@@ -27,56 +26,44 @@ def pressure(ρ, E, v, A, J, PAR, λ=None):
 
     return (E1 - er) * ρ * Γ + pr
 
-def pressure2(ρ, T, PAR):
-    """ Returns pressure from density and temperature,
-        under Mie-Gruneisen EOS
-    """
-    cv = PAR.cv
-    Γ = Γ_MG(ρ, PAR)
-    pr = p_ref(ρ, PAR)
-    return T * ρ * Γ * cv + pr
-
-def entropy(ρ, p, PAR):
-    """ Returns the entropy of a stiffened gas, given density and pressure
-    """
-    return (p + PAR.pINF) / ρ**PAR.γ
-
-@jit
 def temperature(ρ, p, PAR):
     """ Returns the temperature under the Mie-Gruneisen EOS
     """
+    cv = PAR.cv
     Γ = Γ_MG(ρ, PAR)
     pr = p_ref(ρ, PAR)
-    cv = PAR.cv
     return (p - pr) / (ρ * Γ * cv)
 
-@jit
-def heat_flux(T, J, α2):
+def heat_flux(T, J, PAR):
     """ Returns the heat flux vector
     """
+    α2 = PAR.α2
     return α2 * T * J
 
-@jit
-def sigma(ρ, A, cs2):
+def sigma(ρ, A, PAR):
     """ Returns the symmetric viscous shear stress tensor
     """
-    return -ρ * dot(A.T, dEdA(A, cs2))
+    return -ρ * dot(A.T, dEdA(ρ, A, PAR))
 
-def dsigmadA(ρ, A, cs2):
-    """ Returns the tensor T_ijmn corresponding to the partial derivative of
-        sigma_ij with respect to A_mn, holding r constant.
-        NOTE: Only valid for EOS with E_2A = cs2/4 * (devG)**2
+def dsigmadA(ρ, A, PAR):
+    """ Returns T_ijmn = dσ_ij / dA_mn, holding ρ constant.
+        NOTE: Only valid for EOS with E_2A = cs2/4 * (ρ/ρ0)**(β/2) * (devG)**2
     """
+    cs2 = PAR.cs2
+    β = PAR.β
+
     G = gram(A)
     AdevGT = AdevG(A,G).T
     GA = dot(G[:,:,None], A[:,None])
     ret = GA.swapaxes(0,3) + GA.swapaxes(1,3) - 2/3 * GA
+
     for i in range(3):
         ret[i, :, :, i] += AdevGT
         ret[:, i, :, i] += AdevGT
-    return -ρ * cs2 * ret
 
-def Sigma(p, ρ, A, cs2):
+    return -ρ * cs2 * (ρ/ρ0)**β * ret
+
+def Sigma(p, ρ, A, PAR):
     """ Returns the total symmetric stress tensor
     """
-    return p * eye(3) - sigma(ρ, A, cs2)
+    return p * eye(3) - sigma(ρ, A, PAR)

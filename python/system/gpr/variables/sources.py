@@ -1,11 +1,9 @@
-from numba import jit
 from numpy import exp, inf
 
 from system.gpr.misc.functions import det3, sigma_norm
 from system.gpr.variables.state import sigma
 
 
-@jit
 def theta1inv(A, PAR):
     """ Returns 1/θ1
     """
@@ -19,7 +17,7 @@ def theta1inv(A, PAR):
         σY = PAR.σY
         n = PAR.n
         ρ = det3(A) * PAR.ρ0
-        σ = sigma(ρ, A, cs2)
+        σ = sigma(ρ, A, PAR)
         sn = sigma_norm(σ)
         if sn == 0:
             return 0
@@ -29,7 +27,6 @@ def theta1inv(A, PAR):
 
     return 3 * det3(A)**(5/3) / (cs2 * τ)
 
-@jit
 def theta2inv(ρ, T, PAR):
     """ Returns 1/θ2
     """
@@ -40,7 +37,6 @@ def theta2inv(ρ, T, PAR):
 
     return 1 / (α2 * τ2 * (ρ / ρ0) * (T0 / T))
 
-@jit
 def K_arr(P, PAR):
     """ Returns the rate of reaction according to Arrhenius kinetics
     """

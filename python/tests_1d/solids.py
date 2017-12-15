@@ -5,7 +5,6 @@ from numpy.linalg import det, inv
 
 from auxiliary.boundaries import standard_BC
 from system.gpr.misc.structures import Cvec
-from system.gpr.misc.functions import gram
 from system.gpr.variables.eos_hyp import Sigma_hyp
 from system.gpr.variables.state import sigma
 from tests_1d.common import HYP_COP, PAR_COP_SMG, PAR_COP_SMG_P, PAR_COP_CC
@@ -19,12 +18,7 @@ def hyperelastic_vars(F, S, HYP, PAR):
     ρ = HYP.ρ0 * det(A)
     Σ = Sigma_hyp(ρ, A, S, HYP)
 
-    G = gram(A)
-    I3 = det(G)
-    B0 = HYP.B0
-    β = HYP.β
-
-    σ = sigma(ρ, A, PAR.cs2)
+    σ = sigma(ρ, A, PAR)
     p = trace(σ-Σ)/3
     return ρ, p, A
 
