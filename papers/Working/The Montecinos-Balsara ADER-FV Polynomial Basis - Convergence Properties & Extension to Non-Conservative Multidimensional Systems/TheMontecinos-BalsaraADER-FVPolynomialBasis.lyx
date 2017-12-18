@@ -214,7 +214,14 @@ Background
 ADER-FV methods were first devised by Toro and collaborators (see 
 \begin_inset CommandInset citation
 LatexCommand citet
-key "Millington2001"
+key "toro2001towards"
+
+\end_inset
+
+ and also 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "toro2002solution,titarev2002ader"
 
 \end_inset
 
@@ -227,7 +234,7 @@ key "Dumbser2008"
 \end_inset
 
  obviated the need for the cumbersome analytic work required by the Cauchy-Kowal
-esky procedure by use of a Galerkin predictor.
+ewski procedure by use of a Galerkin predictor.
  Although ADER-FV methods have been very successful in solving a large variety
  of different hyperbolic systems (e.g.
  see 
@@ -1220,7 +1227,7 @@ Thus:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-U_{\alpha\beta}\boldsymbol{q}_{\beta}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\boldsymbol{S}_{\beta}-\boldsymbol{B}_{\beta}\right)-V_{\alpha\beta}^{\left(k\right)}\boldsymbol{F}_{k}{}_{\beta}
+U_{\alpha\beta}\boldsymbol{q}_{\beta}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\boldsymbol{S}_{\beta}-\boldsymbol{B}_{\beta}\right)-V_{\alpha\beta}^{\left(k\right)}\boldsymbol{F}_{k}{}_{\beta}\label{eq:DGit}
 \end{equation}
 
 \end_inset
@@ -1521,7 +1528,7 @@ Thus:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-U_{\alpha\beta}\boldsymbol{q}_{\beta}^{1}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\boldsymbol{S}_{\beta}^{1}-\boldsymbol{B}_{\beta}^{1}\right)-V_{\alpha\beta}^{k}\boldsymbol{F}_{k}{}_{\beta}^{1}
+U_{\alpha\beta}\boldsymbol{q}_{\beta}^{1}=\boldsymbol{W}_{\alpha}+Z_{\alpha\beta}\left(\boldsymbol{S}_{\beta}^{1}-\boldsymbol{B}_{\beta}^{1}\right)-V_{\alpha\beta}^{k}\boldsymbol{F}_{k}{}_{\beta}^{1}\label{eq:CGit}
 \end{equation}
 
 \end_inset
@@ -1824,6 +1831,29 @@ for any
  and thus the result holds in general.
 \end_layout
 
+\begin_layout Standard
+Thus, in the case that 
+\begin_inset Formula $\overrightarrow{\boldsymbol{B}}=\boldsymbol{S}=\boldsymbol{0}$
+\end_inset
+
+, existence and uniqueness of a solution are established, and convergence
+ to this solution is guaranteed for the iterative solution to 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DGit"
+
+\end_inset
+
+ in the Discontinuous Galerkin case, and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CGit"
+
+\end_inset
+
+ in the Continuous Galerkin case.
+\end_layout
+
 \begin_layout Section
 References
 \end_layout
@@ -1831,7 +1861,7 @@ References
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "refs"
+bibfiles "refs,extra"
 options "bibtotoc,elsarticle-harv"
 
 \end_inset

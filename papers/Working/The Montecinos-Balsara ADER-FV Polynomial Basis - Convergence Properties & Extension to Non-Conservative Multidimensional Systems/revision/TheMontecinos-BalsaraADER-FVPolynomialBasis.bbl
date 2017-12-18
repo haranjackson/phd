@@ -1,0 +1,72 @@
+\begin{thebibliography}{13}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+
+\bibitem[{Balsara et~al.(2009)Balsara, Rumpf, Dumbser, and Munz}]{Balsara2009}
+Balsara, D.~S., Rumpf, T., Dumbser, M., Munz, C.~D., 2009. {Efficient, high
+  accuracy ADER-WENO schemes for hydrodynamics and divergence-free
+  magnetohydrodynamics}. Journal of Computational Physics 228, 2480--2516.
+
+\bibitem[{Dumbser et~al.(2008)Dumbser, Balsara, Toro, and Munz}]{Dumbser2008}
+Dumbser, M., Balsara, D.~S., Toro, E.~F., Munz, C.~D., 2008. {A unified
+  framework for the construction of one-step finite volume and discontinuous
+  Galerkin schemes on unstructured meshes}. Journal of Computational Physics
+  227~(18), 8209--8253.
+
+\bibitem[{Dumbser et~al.(2016)Dumbser, Peshkov, Romenski, and
+  Zanotti}]{Dumbser2016a}
+Dumbser, M., Peshkov, I., Romenski, E., Zanotti, O., 2016. {High order ADER
+  schemes for a unified first order hyperbolic formulation of continuum
+  mechanics: Viscous heat-conducting fluids and elastic solids}. Journal of
+  Computational Physics 314, 824--862.
+
+\bibitem[{Dumbser and Zanotti(2009)}]{Dumbser2009a}
+Dumbser, M., Zanotti, O., 2009. Very high order pnpm schemes on unstructured
+  meshes for the resistive relativistic mhd equations. Journal of Computational
+  Physics 228, 6991--7006.
+
+\bibitem[{Dumbser et~al.(2013)Dumbser, Zanotti, Hidalgo, and
+  Balsara}]{Dumbser2013}
+Dumbser, M., Zanotti, O., Hidalgo, A., Balsara, D.~S., 2013. Ader-weno finite
+  volume schemes with space-time adaptive mesh refinement. Journal of
+  Computational Physics 248, 257--286.
+
+\bibitem[{Hidalgo and Dumbser(2011)}]{Hidalgo2011}
+Hidalgo, A., Dumbser, M., 2011. {ADER schemes for nonlinear systems of stiff
+  advection-diffusion-reaction equations}. Journal of Scientific Computing 48,
+  173--189.
+
+\bibitem[{Jackson(2017)}]{Jackson2017}
+Jackson, H., 2017. {On the Eigenvalues of the ADER-WENO Galerkin Predictor}.
+  Journal of Computational Physics 333, 409--413.
+
+\bibitem[{Montecinos and Balsara(2017)}]{Montecinos2017}
+Montecinos, G.~I., Balsara, D.~S., 2017. {A cell-centered polynomial basis for
+  efficient Galerkin predictors in the context of ADER finite volume schemes.
+  The one-dimensional case}. Computers {\&} Fluids 156, 220--238.
+
+\bibitem[{Nering(1970)}]{Nering1970}
+Nering, E.~D., 1970. Linear Algebra and Matrix Theory. John Wiley \& Sons.
+
+\bibitem[{Titarev and Toro(2002)}]{titarev2002ader}
+Titarev, V.~A., Toro, E.~F., 2002. Ader: Arbitrary high order godunov approach.
+  Journal of Scientific Computing 17~(1), 609--618.
+
+\bibitem[{Toro et~al.(2001)Toro, Millington, and Nejad}]{toro2001towards}
+Toro, E., Millington, R., Nejad, L., 2001. Towards very high order godunov
+  schemes. In: Godunov methods. Springer, pp. 907--940.
+
+\bibitem[{Toro and Titarev(2002)}]{toro2002solution}
+Toro, E., Titarev, V., 2002. Solution of the generalized riemann problem for
+  advection--reaction equations. In: Proceedings of the Royal Society of London
+  A: Mathematical, Physical and Engineering Sciences. Vol. 458. The Royal
+  Society, pp. 271--281.
+
+\bibitem[{Zanotti and Dumbser(2016)}]{Zanotti2016}
+Zanotti, O., Dumbser, M., 2016. {Efficient conservative ADER schemes based on
+  WENO reconstruction and space-time predictor in primitive variables}.
+  Computational Astrophysics and Cosmology 3, 1.
+
+\end{thebibliography}
