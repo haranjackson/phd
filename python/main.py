@@ -3,22 +3,22 @@ from time import time
 from joblib import Parallel
 from numpy import array, zeros
 
-from auxiliary import boundaries
+from etc import boundaries
 from tests_1d import fluids, solids, multi, toro
 from tests_2d import validation
 from system.gpr.misc.plot import *
 
-from auxiliary.iterator import timestep, make_u
+from etc.iterator import timestep, make_u
+from etc.save import Data, print_stats, save_all
 from solvers.solvers import ader_stepper, split_stepper
-from auxiliary.save import Data, print_stats, save_all
 from multi.gfm import add_ghost_cells
 from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1, tf
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.piston_IC
-BC = solids.piston_BC
+IC = solids.bartonB_IC
+BC = boundaries.standard_BC
 
 
 u, PARs = IC()

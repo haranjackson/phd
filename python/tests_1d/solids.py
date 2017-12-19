@@ -3,11 +3,11 @@ from itertools import product
 from numpy import array, eye, trace, zeros
 from numpy.linalg import det, inv
 
-from auxiliary.boundaries import standard_BC
+from etc.boundaries import standard_BC
 from system.gpr.misc.structures import Cvec
 from system.gpr.variables.eos_hyp import Sigma_hyp
 from system.gpr.variables.state import sigma
-from tests_1d.common import HYP_COP, PAR_COP_SMG, PAR_COP_SMG_P, PAR_COP_CC
+from tests_1d.common import HYP_COP, PAR_COP_SMG, PAR_COP_SMG_P
 from options import nx, ny, nz, nV, dx
 
 
@@ -42,7 +42,25 @@ def solid_IC(vL, vR, FL, FR, SL, SR, HYP, PAR):
 
     return u, [PAR]
 
-def barton_IC():
+def bartonA_IC():
+    """ tf = 0.06
+        L = 1
+    """
+    vL = array([0, 0.5, 1])
+    FL = array([[0.98, 0, 0  ],
+                [0.02, 1, 0.1],
+                [0,    0, 1  ]])
+    SL = 0.001
+
+    vR = array([0, 0, 0])
+    FR = array([[1, 0, 0  ],
+                [0, 1, 0.1],
+                [0, 0, 1  ]])
+    SR = 0
+
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
+
+def bartonB_IC():
     """ tf = 0.06
         L = 1
     """
@@ -76,7 +94,7 @@ def elastic1_IC():
     vR = zeros(3)
     SR = 0
 
-    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_CC)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
 
 def elastic2_IC():
     """ tf = 0.06
@@ -94,11 +112,11 @@ def elastic2_IC():
     vR = zeros(3)
     SR = 0
 
-    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_CC)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
 
 def piston_IC():
     """ tf = 1.5
-        L = 1.5
+        L = 1
     """
     PAR = PAR_COP_SMG_P
     ρ = PAR.ρ0
