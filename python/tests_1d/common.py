@@ -64,11 +64,11 @@ PAR_HEL2 = material_parameters(EOS='sg', ρ0=0.163, cv=3127, p0=10100, γ=1.66, 
 HYP_ALU = hyperelastic_params(ρ0=2.71, α=1, β=3.577, γ=2.088, cv=9e-4, T0=300,
                               b0=3.16, c0=6.22)
 
-HYP_COP = hyperelastic_params(ρ0=8.9, α=1, β=3, γ=2, cv=0.4, T0=300,
+HYP_COP = hyperelastic_params(ρ0=8.9, α=1, β=3, γ=2, cv=4e-4, T0=300,
                               b0=2.1, c0=4.6)
 
 
-PAR_COP_SMG = material_parameters(EOS='smg', ρ0=8.9, cv=0.4, p0=0,
+PAR_COP_SMG = material_parameters(EOS='smg', ρ0=8.9, cv=4e-4, p0=0,
                                   c0=3.909, Γ0=1.99, s=1.5,
                                   cs=2.1, τ1=inf, β=3)
 
@@ -76,6 +76,6 @@ PAR_COP_SMG_P = material_parameters(EOS='smg', ρ0=8.93, cv=1, p0=0,
                                     c0=0.394, Γ0=2, s=1.48,
                                     cs=0.219, σY=9e-4, τ1=0.1, n=10, PLASTIC=True)
 
-PAR_COP_CC = material_parameters(EOS='cc', ρ0=8.9, cv=0.4, p0=0,
+PAR_COP_CC = material_parameters(EOS='cc', ρ0=8.9, cv=4e-4, p0=0,
                                  Γ0=2, A=1.4567, B=0.1287, ε1=2.99, ε2=4.1,
                                  cs=2.1, τ1=inf, β=3)

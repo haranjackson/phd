@@ -42,7 +42,7 @@ def solid_IC(vL, vR, FL, FR, SL, SR, HYP, PAR):
 
     return u, [PAR]
 
-def bartonA_IC():
+def barton1_IC():
     """ tf = 0.06
         L = 1
     """
@@ -60,7 +60,7 @@ def bartonA_IC():
 
     return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
 
-def bartonB_IC():
+def barton2_IC():
     """ tf = 0.06
         L = 1
     """
