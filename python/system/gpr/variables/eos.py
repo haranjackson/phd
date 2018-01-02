@@ -71,7 +71,7 @@ def dEdJ(J, PAR):
     α2 = PAR.α2
     return α2 * J
 
-def E_to_T(E, A, J, PAR):
+def E_to_T(ρ, E, A, J, PAR):
     """ Returns the temperature of an ideal gas, given the energy
         (minus the kinetic energy or any chemical energy)
     """

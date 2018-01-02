@@ -38,7 +38,7 @@ if USE_CPP:
     cPARs = [CParameters(GPRpy, PAR) for PAR in PARs]
 
 
-def run(t, tf, count, data):
+def main(t, tf, count, data):
 
     tStart = time()
     u = data[count].grid
@@ -97,5 +97,5 @@ def run(t, tf, count, data):
     print('TOTAL RUNTIME:', time()-tStart)
 
 if __name__ == "__main__":
-    run(0, tf, 0, data)
+    main(0, tf, 0, data)
     save_all(data)
