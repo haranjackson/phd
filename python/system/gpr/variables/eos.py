@@ -3,27 +3,27 @@ from system.gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
 from options import VISCOUS, THERMAL, REACTIVE
 
 
-def E_1(ρ, p, PAR):
+def E_1(ρ, p, MP):
     """ Returns the microscale energy for the Mie-Gruneisen EOS
     """
-    Γ = Γ_MG(ρ, PAR)
-    pr = p_ref(ρ, PAR)
-    er = e_ref(ρ, PAR)
+    Γ = Γ_MG(ρ, MP)
+    pr = p_ref(ρ, MP)
+    er = e_ref(ρ, MP)
     return er + (p - pr) / (ρ * Γ)
 
-def E_2A(ρ, A, PAR):
+def E_2A(ρ, A, MP):
     """ Returns the mesoscale energy dependent on the distortion
     """
-    cs2 = PAR.cs2
-    ρ0 = PAR.ρ0
-    β = PAR.β
+    cs2 = MP.cs2
+    ρ0 = MP.ρ0
+    β = MP.β
     G = gram(A)
     return cs2/4 * (ρ/ρ0)**β * L2_2D(dev(G))
 
-def E_2J(J, PAR):
+def E_2J(J, MP):
     """ Returns the mesoscale energy dependent on the thermal impulse
     """
-    α2 = PAR.α2
+    α2 = MP.α2
     return α2 / 2 * L2_1D(J)
 
 def E_3(v):
@@ -31,49 +31,49 @@ def E_3(v):
     """
     return L2_1D(v) / 2
 
-def E_R(λ, PAR):
+def E_R(λ, MP):
     """ Returns the microscale energy corresponding to the chemical energy in a
         reactive material
     """
-    Qc = PAR.Qc
+    Qc = MP.Qc
     return Qc * (λ - 1)
 
-def total_energy(ρ, p, v, A, J, λ, PAR):
+def total_energy(ρ, p, v, A, J, λ, MP):
     """ Returns the total energy
     """
-    ret = E_1(ρ, p, PAR)
+    ret = E_1(ρ, p, MP)
 
     if VISCOUS:
-        ret += E_2A(ρ, A, PAR)
+        ret += E_2A(ρ, A, MP)
 
     if THERMAL:
-        ret += E_2J(J, PAR)
+        ret += E_2J(J, MP)
 
     if REACTIVE:
-        ret += E_R(λ, PAR)
+        ret += E_R(λ, MP)
 
     ret += E_3(v)
 
     return ret
 
-def dEdA(ρ, A, PAR):
+def dEdA(ρ, A, MP):
     """ Returns the partial derivative of E by A
     """
-    ρ0 = PAR.ρ0
-    cs2 = PAR.cs2
-    β = PAR.β
+    ρ0 = MP.ρ0
+    cs2 = MP.cs2
+    β = MP.β
     G = gram(A)
     return cs2 * (ρ/ρ0)**β * AdevG(A,G)
 
-def dEdJ(J, PAR):
+def dEdJ(J, MP):
     """ Returns the partial derivative of E by J
     """
-    α2 = PAR.α2
+    α2 = MP.α2
     return α2 * J
 
-def E_to_T(ρ, E, A, J, PAR):
+def E_to_T(ρ, E, A, J, MP):
     """ Returns the temperature of an ideal gas, given the energy
         (minus the kinetic energy or any chemical energy)
     """
-    E1 = E - E_2A(ρ, A, PAR) - E_2J(J, PAR)
-    return E1 / PAR.cv
+    E1 = E - E_2A(ρ, A, MP) - E_2J(J, MP)
+    return E1 / MP.cv

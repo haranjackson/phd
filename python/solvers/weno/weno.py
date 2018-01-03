@@ -106,7 +106,7 @@ from solvers.basis import MIDVALS
 from system.gpr.misc.structures import Cvec_to_Pvec
 
 
-def weno_primitive(q, PAR):
+def weno_primitive(q, MP):
     """ Returns a WENO reconstruction in primitive variables, given the grid of
         conserved values. A reconstruction in conserved variables is performed.
         The midpoints of this reconstruction are then taken as the conserved
@@ -118,7 +118,7 @@ def weno_primitive(q, PAR):
     pav = zeros(qav.shape)
     nx, ny, nz = qav.shape[:3]
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k], PAR)
+        pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k], MP)
     return weno(pav)
 
 def expand_weno(wh):

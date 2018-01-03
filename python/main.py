@@ -23,9 +23,9 @@ IC = fluids.first_stokes_problem_IC
 BC = boundaries.standard_BC
 
 
-u, PARs = IC()
+u, MPs = IC()
 data = [Data(u, 0)]
-m = len(PARs)
+m = len(MPs)
 
 pool = Parallel(n_jobs=NCORE)
 
@@ -47,10 +47,10 @@ def main(t, tf, count, data):
         t0 = time()
 
         mats = array([u for i in range(m)])
-        dt = timestep(mats, count, t, tf, PARs)
+        dt = timestep(mats, count, t, tf, MPs)
 
         if RGFM:
-            add_ghost_cells(mats, PARs, dt)
+            add_ghost_cells(mats, MPs, dt)
 
         print_stats(count, t, dt)
 
@@ -60,7 +60,7 @@ def main(t, tf, count, data):
 
             if USE_CPP:
                 tmp = mat.ravel()
-                MP = PARs[i]
+                MP = MPs[i]
 
                 if SPLIT:
                     GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
@@ -75,12 +75,12 @@ def main(t, tf, count, data):
                 mat = tmp.reshape([nx,ny,nz,nV])
 
             else:
-                PAR = PARs[i]
+                MP = MPs[i]
 
                 if SPLIT:
-                    split_stepper(pool, mat, BC, dt, PAR)
+                    split_stepper(pool, mat, BC, dt, MP)
                 else:
-                    ader_stepper(pool, mat, BC, dt, PAR)
+                    ader_stepper(pool, mat, BC, dt, MP)
 
         u = make_u(mats)
         data.append(Data(u, t))

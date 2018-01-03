@@ -7,7 +7,7 @@ from scipy.special import erf
 from system.gpr.misc.objects import material_parameters
 from system.gpr.misc.structures import Cvec, Cvec_to_Pclass
 from system.gpr.variables.wavespeeds import c_0
-from tests_1d.common import riemann_IC, PAR_AIR
+from tests_1d.common import riemann_IC, MP_AIR
 from options import nx, ny, nz, nV, dx, Lx, RGFM
 
 
@@ -23,10 +23,10 @@ def heat_conduction_IC():
     pR = 1
     vR = zeros(3)
 
-    PAR = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
+    MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
                               cs=1, α=2, μ=1e-2, κ=1e-2)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
     dx = 1/n
@@ -48,20 +48,20 @@ def first_stokes_problem_IC():
     pR = 1 / γ
     vR = array([0, 0.1, 0])
 
-    PAR = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1/γ, γ=γ, pINF=0,
+    MP = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1/γ, γ=γ, pINF=0,
                               cs=1, α=1e-16, μ=μ, Pr=0.75)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP)
 
-def viscous_shock_exact(x, Ms, PAR, μ, center=0):
+def viscous_shock_exact(x, Ms, MP, μ, center=0):
     """ Returns the density, pressure, and velocity of the viscous shock
         (Mach number Ms) at x
     """
     x -= center
-    ρ0 = PAR.ρ0
-    p0 = PAR.p0
-    γ = PAR.γ
-    pINF = PAR.pINF
+    ρ0 = MP.ρ0
+    p0 = MP.p0
+    γ = MP.γ
+    pINF = MP.pINF
 
     if Ms==2:
         l = 0.3
@@ -73,7 +73,7 @@ def viscous_shock_exact(x, Ms, PAR, μ, center=0):
     elif x < -l:
         x=-l
 
-    c0 = c_0(ρ0, p0, PAR)
+    c0 = c_0(ρ0, p0, MP)
     a = 2 / (Ms**2 * (γ+1)) + (γ-1)/(γ+1)
     Re = ρ0 * c0 * Ms / μ
     c1 = ((1-a)/2)**(1-a)
@@ -103,7 +103,7 @@ def viscous_shock_IC(center=0):
     p0 = 1 / γ
     μ = 2e-2
 
-    PAR = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
+    MP = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
                               cs=5, α=5, μ=2e-2, Pr=0.75)
 
     x = arange(-Lx/2, Lx/2, 1/nx)
@@ -111,7 +111,7 @@ def viscous_shock_IC(center=0):
     p = zeros(nx)
     v = zeros(nx)
     for i in range(nx):
-        ρ[i], p[i], v[i] = viscous_shock_exact(x[i], Ms, PAR, μ, center=center)
+        ρ[i], p[i], v[i] = viscous_shock_exact(x[i], Ms, MP, μ, center=center)
 
     v -= v[0]           # Velocity in shock 0
 
@@ -120,6 +120,6 @@ def viscous_shock_IC(center=0):
         A = (ρ[i])**(1/3) * eye(3)
         J = zeros(3)
         λ = 0
-        u[i,0,0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, PAR)
+        u[i,0,0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
-    return u, [PAR]
+    return u, [MP]

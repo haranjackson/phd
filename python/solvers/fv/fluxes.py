@@ -7,7 +7,7 @@ from system.system import Bdot, system
 from options import N1, nV
 
 
-def Bint(qL, qR, d, PAR):
+def Bint(qL, qR, d, MP):
     """ Returns the jump matrix for B, in the dth direction.
     """
     ret = zeros(nV)
@@ -15,24 +15,24 @@ def Bint(qL, qR, d, PAR):
     for i in range(N1):
         q = qL + NODES[i] * qJump
         tmp  = zeros(nV)
-        Bdot(tmp, qJump, q, d, PAR)
+        Bdot(tmp, qJump, q, d, MP)
         ret += WGHTS[i] * tmp
     return ret
 
-def Aint(qL, qR, d, PAR):
+def Aint(qL, qR, d, MP):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
     """
     ret = zeros(nV, dtype=complex128)
     Δq = qR - qL
     for i in range(N1):
         q = qL + NODES[i] * Δq
-        J = system(q, d, PAR)
+        J = system(q, d, MP)
         λ, R = eig(J, overwrite_a=1, check_finite=0)
         b = solve(R, Δq, check_finite=0)
         ret += WGHTS[i] * dot(R, abs(λ)*b)
     return ret.real
 
-def Smax(qL, qR, d, PAR):
-    max1 = max_abs_eigs(qL, d, PAR)
-    max2 = max_abs_eigs(qR, d, PAR)
+def Smax(qL, qR, d, MP):
+    max1 = max_abs_eigs(qL, d, MP)
+    max2 = max_abs_eigs(qR, d, MP)
     return max(max1, max2) * (qR - qL)

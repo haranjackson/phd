@@ -21,8 +21,8 @@ def thermo_acoustic_tensor(P, d):
     G = P.G()
     Gd = G[d]
 
-    PAR = P.PAR
-    cs2 = PAR.cs2
+    MP = P.MP
+    cs2 = MP.cs2
 
     if VISCOUS:
         O = GdevG(G)
@@ -33,13 +33,13 @@ def thermo_acoustic_tensor(P, d):
         O *= cs2
         ret[:3, :3] = O
 
-    c0 = c_0(ρ, p, PAR)
+    c0 = c_0(ρ, p, MP)
     ret[d, d] += c0**2
 
     if THERMAL:
-        Tρ = dTdρ(ρ, p, PAR)
-        Tp = dTdp(ρ, PAR)
-        ch = c_h(ρ, T, PAR)
+        Tρ = dTdρ(ρ, p, MP)
+        Tp = dTdp(ρ, MP)
+        ch = c_h(ρ, T, MP)
 
         ret[3, 0] = Tρ + Tp * c0**2
         ret[0, 3] = ch**2 / Tp
@@ -47,10 +47,10 @@ def thermo_acoustic_tensor(P, d):
 
     return ret
 
-def max_abs_eigs(Q, d, PAR):
+def max_abs_eigs(Q, d, MP):
     """ Returns the maximum of the absolute values of the eigenvalues of the GPR system
     """
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
     vd = P.v[d]
     O = thermo_acoustic_tensor(P, d)
 

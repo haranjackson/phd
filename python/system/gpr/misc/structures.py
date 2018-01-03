@@ -11,7 +11,7 @@ from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
 class Cvec_to_Pclass():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
-    def __init__(self, Q, PAR):
+    def __init__(self, Q, MP):
 
         if MULTI:
             self.ρ = Q[0] + Q[17]
@@ -30,7 +30,7 @@ class Cvec_to_Pclass():
 
         if VISCOUS:
             self.A  = Q[5:14].reshape([3,3])
-            self.σ = sigma(self.ρ, self.A, PAR)
+            self.σ = sigma(self.ρ, self.A, MP)
 
         if THERMAL:
             self.J  = Q[14:17] / self.ρ
@@ -38,44 +38,44 @@ class Cvec_to_Pclass():
             self.J = zeros(3)
 
         if REACTIVE:
-            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, PAR,
+            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, MP,
                               self.λ)
         else:
-            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, PAR)
+            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, MP)
 
-        self.T = temperature(self.ρ, self.p, PAR)
+        self.T = temperature(self.ρ, self.p, MP)
 
         if THERMAL:
-            self.q = heat_flux(self.T, self.J, PAR)
+            self.q = heat_flux(self.T, self.J, MP)
 
-        self.PAR = PAR
+        self.MP = MP
 
     def dσdA(self):
-        return dsigmadA(self.ρ, self.A, self.PAR)
+        return dsigmadA(self.ρ, self.A, self.MP)
 
     def Σ(self):
-        return Sigma(self.p, self.ρ, self.A, self.PAR)
+        return Sigma(self.p, self.ρ, self.A, self.MP)
 
     def ψ(self):
-        return dEdA(self.ρ, self.A, self.PAR)
+        return dEdA(self.ρ, self.A, self.MP)
 
     def H(self):
-        return dEdJ(self.J, self.PAR)
+        return dEdJ(self.J, self.MP)
 
     def G(self):
         return gram(self.A)
 
     def θ1_1(self):
-        return theta1inv(self.A, self.PAR)
+        return theta1inv(self.A, self.MP)
 
     def θ2_1(self):
-        return theta2inv(self.ρ, self.T, self.PAR)
+        return theta2inv(self.ρ, self.T, self.MP)
 
     def E1(self):
-        return E_1(self.ρ, self.p, self.PAR)
+        return E_1(self.ρ, self.p, self.MP)
 
 
-def Cvec(ρ1, p, v, A, J, PAR, ρ2=None, z=1, λ=None):
+def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     """ Returns the vector of conserved variables, given the primitive variables
     """
     Q = zeros(nV)
@@ -91,7 +91,7 @@ def Cvec(ρ1, p, v, A, J, PAR, ρ2=None, z=1, λ=None):
         ρ = ρ1
         Q[0] = ρ
 
-    Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, PAR)
+    Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, MP)
     Q[2:5] = ρ * v
 
     if VISCOUS:
@@ -111,7 +111,7 @@ def Pvec(P):
     ret[14:17] = P.J
     return ret
 
-def Pvec_to_Cvec(P, PAR):
+def Pvec_to_Cvec(P, MP):
     """ Returns the vector of conserved variables, given the vector of
         primitive variables
     """
@@ -124,12 +124,12 @@ def Pvec_to_Cvec(P, PAR):
     else:
         λ = 0
 
-    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, PAR)
+    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP)
     Q[2:5] *= ρ
     Q[14:] *= ρ
     return Q
 
-def Cvec_to_Pvec(Q, PAR):
+def Cvec_to_Pvec(Q, MP):
     """ Returns the vector of primitive variables in standard ordering,
         given the vector of conserved variables.
     """
@@ -144,7 +144,7 @@ def Cvec_to_Pvec(Q, PAR):
     else:
         λ = None
 
-    p = pressure(ρ, E, v, A, J, PAR, λ)
+    p = pressure(ρ, E, v, A, J, MP, λ)
 
     ret = Q.copy()
     ret[1] = p

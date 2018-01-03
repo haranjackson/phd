@@ -5,32 +5,32 @@ from system.gpr.systems.conserved import block_cons_ref, source_cons_ref
 from options import nV
 
 
-def flux_ref(ret, Q, d, PAR):
-    flux_cons_ref(ret, Q, d, PAR)
+def flux_ref(ret, Q, d, MP):
+    flux_cons_ref(ret, Q, d, MP)
 
-def block_ref(ret, Q, d, PAR):
-    block_cons_ref(ret, Q, d, PAR)
+def block_ref(ret, Q, d, MP):
+    block_cons_ref(ret, Q, d, MP)
 
-def source_ref(ret, Q, PAR):
-    source_cons_ref(ret, Q, PAR)
+def source_ref(ret, Q, MP):
+    source_cons_ref(ret, Q, MP)
 
-def flux(Q, d, PAR):
+def flux(Q, d, MP):
     ret = zeros(nV)
-    flux_ref(ret, Q, d, PAR)
+    flux_ref(ret, Q, d, MP)
     return ret
 
-def block(Q, d, PAR):
+def block(Q, d, MP):
     ret = zeros([nV, nV])
-    block_ref(ret, Q, d, PAR)
+    block_ref(ret, Q, d, MP)
     return ret
 
-def source(Q, PAR):
+def source(Q, MP):
     ret = zeros(nV)
-    source_ref(ret, Q, PAR)
+    source_ref(ret, Q, MP)
     return ret
 
-def Bdot(ret, x, Q, d, PAR):
-    Bdot_cons(ret, x, Q, d, PAR)
+def Bdot(ret, x, Q, d, MP):
+    Bdot_cons(ret, x, Q, d, MP)
 
-def system(Q, d, PAR):
-    return system_cons(Q, d, PAR)
+def system(Q, d, MP):
+    return system_cons(Q, d, MP)

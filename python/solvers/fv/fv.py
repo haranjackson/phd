@@ -46,7 +46,7 @@ def endpoints(qh):
 
     return qEnd
 
-def interfaces(qEnd, PAR):
+def interfaces(qEnd, MP):
     nx, ny, nz = qEnd.shape[2:5]
     fEnd = zeros([ndim, nx-1, ny-1, nz-1, nV])
     BEnd = zeros([ndim, nx-1, ny-1, nz-1, nV])
@@ -70,11 +70,11 @@ def interfaces(qEnd, PAR):
                 qR_ = qR[t, x1, x2]
 
                 ftemp = zeros(nV)
-                flux_ref(ftemp, qL_, d, PAR)
-                flux_ref(ftemp, qR_, d, PAR)
-                ftemp -= S_FUNC(qL_, qR_, d, PAR)
+                flux_ref(ftemp, qL_, d, MP)
+                flux_ref(ftemp, qR_, d, MP)
+                ftemp -= S_FUNC(qL_, qR_, d, MP)
                 fEndTemp += wghtEnd[t, x1, x2] * ftemp
-                BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, PAR)
+                BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, MP)
 
             fEnd[d, i, j, k] = fEndTemp
             BEnd[d, i, j, k] = BEndTemp
@@ -96,7 +96,7 @@ def interfaces(qEnd, PAR):
         ret += BEnd[2, 1:, 1:,  1:]
     return ret
 
-def center(qhi, t, inds, PAR, HOMOGENEOUS):
+def center(qhi, t, inds, MP, HOMOGENEOUS):
     """ Returns the space-time averaged source term and non-conservative term in cell ijk
     """
     q = qhi[t, inds[0], inds[1], inds[2]]
@@ -108,18 +108,18 @@ def center(qhi, t, inds, PAR, HOMOGENEOUS):
     ret = zeros(nV)
 
     if not HOMOGENEOUS:
-        source_ref(ret, q, PAR)
+        source_ref(ret, q, MP)
         ret *= dx
 
     for d in range(ndim):
         dxdxi = dot(DERVALS[inds[d]], qi[d])
         temp = zeros(nV)
-        Bdot(temp, dxdxi, q, d, PAR)
+        Bdot(temp, dxdxi, q, d, MP)
         ret -= temp
 
     return ret
 
-def fv_terms(qh, dt, PAR, HOMOGENEOUS=0):
+def fv_terms(qh, dt, MP, HOMOGENEOUS=0):
     """ Returns the space-time averaged interface terms, jump terms, source terms, and
         non-conservative terms
     """
@@ -140,13 +140,13 @@ def fv_terms(qh, dt, PAR, HOMOGENEOUS=0):
 
         for t, x, y, z in product(range(IDX[0]),range(IDX[1]),range(IDX[2]),range(IDX[3])):
 
-            s[i, j, k] += wght[t,x,y,z] * center(qhi, t, [x, y, z], PAR, HOMOGENEOUS)
+            s[i, j, k] += wght[t,x,y,z] * center(qhi, t, [x, y, z], MP, HOMOGENEOUS)
 
-    s -= 0.5 * interfaces(qEnd, PAR)
+    s -= 0.5 * interfaces(qEnd, MP)
 
     return dt/dx * s
 
-def fv_launcher(pool, qh, dt, PAR, HOMOGENEOUS=0):
+def fv_launcher(pool, qh, dt, MP, HOMOGENEOUS=0):
     """ Controls the parallel computation of the Finite Volume interface terms
     """
     if PARA_FV:
@@ -156,8 +156,8 @@ def fv_launcher(pool, qh, dt, PAR, HOMOGENEOUS=0):
         chunk[0] += 1
         chunk[-1] -= 1
         n = len(chunk) - 1
-        qhList = pool(delayed(fv_terms)(qh[chunk[i]-1:chunk[i+1]+1], dt, PAR, HOMOGENEOUS)
+        qhList = pool(delayed(fv_terms)(qh[chunk[i]-1:chunk[i+1]+1], dt, MP, HOMOGENEOUS)
                                        for i in range(n))
         return concatenate(qhList)
     else:
-        return fv_terms(qh, dt, PAR, HOMOGENEOUS)
+        return fv_terms(qh, dt, MP, HOMOGENEOUS)

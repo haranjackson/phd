@@ -6,9 +6,9 @@ from system.gpr.misc.structures import Cvec_to_Pclass
 from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV, LSETS
 
 
-def flux_cons_ref(ret, Q, d, PAR):
+def flux_cons_ref(ret, Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
 
     ρ1 = P.ρ1
     ρ = P.ρ
@@ -41,7 +41,7 @@ def flux_cons_ref(ret, Q, d, PAR):
 
     if THERMAL:
 
-        α2 = PAR.α2
+        α2 = MP.α2
 
         J = P.J
         T = P.T
@@ -61,9 +61,9 @@ def flux_cons_ref(ret, Q, d, PAR):
         if REACTIVE:
             ret[19] += (1-z) * ρ2 * vd * λ
 
-def block_cons_ref(ret, Q, d, PAR):
+def block_cons_ref(ret, Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
 
     v = P.v
     vd = v[d]
@@ -77,9 +77,9 @@ def block_cons_ref(ret, Q, d, PAR):
     for i in range(1, LSETS+1):
         ret[-i,-i] = vd
 
-def source_cons_ref(ret, Q, PAR):
+def source_cons_ref(ret, Q, MP):
 
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
 
     ρ = P.ρ
 
@@ -98,12 +98,12 @@ def source_cons_ref(ret, Q, PAR):
         z = P.z
         ρ2 = P.ρ2
 
-        if PAR.REACTION == 'a':
-            K = - K_arr(P, PAR)
-        elif PAR.REACTION == 'd':
-            K = - K_dis(P, PAR)
-        elif PAR.REACTION == 'i':
-            K = - K_ing(P, PAR)
+        if MP.REACTION == 'a':
+            K = - K_arr(P, MP)
+        elif MP.REACTION == 'd':
+            K = - K_dis(P, MP)
+        elif MP.REACTION == 'i':
+            K = - K_ing(P, MP)
 
         ret[19] = (1-z) * ρ2 * K
 
@@ -158,9 +158,9 @@ def B2dot(ret, x, v):
     for i in range(1, LSETS+1):
         ret[-i] = v2 * x[-i]
 
-def Bdot_cons(ret, x, Q, d, PAR):
+def Bdot_cons(ret, x, Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
     v = P.v
     if d==0:
         B0dot(ret, x, v)
@@ -169,12 +169,12 @@ def Bdot_cons(ret, x, Q, d, PAR):
     else:
         B2dot(ret, x, v)
 
-def system_cons(Q, d, PAR):
+def system_cons(Q, d, MP):
     """ Returns the Jacobian in the dth direction
     """
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
     B = zeros([nV, nV])
-    block_cons_ref(B, Q, d, PAR)
+    block_cons_ref(B, Q, d, MP)
     return dot(DFDP, DPDQ) + B

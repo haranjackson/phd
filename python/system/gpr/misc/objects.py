@@ -39,7 +39,7 @@ class EOS_params():
             self.R1 = R1
             self.R2 = R2
 
-def params(PAR, Rc, EOS, ρ0, p0, T0, cv,
+def params(MP, Rc, EOS, ρ0, p0, T0, cv,
            γ, pINF,
            c0, Γ0, s, e0,
            A, B, R1, R2,
@@ -50,72 +50,72 @@ def params(PAR, Rc, EOS, ρ0, p0, T0, cv,
            Bc, Ea,
            I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2):
 
-    PAR.Rc = Rc
-    PAR.EOS = eos_text_to_code(EOS)
+    MP.Rc = Rc
+    MP.EOS = eos_text_to_code(EOS)
 
-    PAR.ρ0 = ρ0
-    PAR.p0 = p0
-    PAR.T0 = T0
-    PAR.cv = cv
+    MP.ρ0 = ρ0
+    MP.p0 = p0
+    MP.T0 = T0
+    MP.cv = cv
 
     if EOS == 'sg':
-        PAR.γ = γ
-        PAR.pINF = pINF
+        MP.γ = γ
+        MP.pINF = pINF
 
     elif EOS == 'smg':
-        PAR.Γ0 = Γ0
-        PAR.c02 = c0**2
-        PAR.s = s
-        PAR.e0 = e0
+        MP.Γ0 = Γ0
+        MP.c02 = c0**2
+        MP.s = s
+        MP.e0 = e0
 
     elif EOS == 'jwl' or EOS == 'cc':
-        PAR.Γ0 = Γ0
-        PAR.A = A
-        PAR.B = B
-        PAR.R1 = R1
-        PAR.R2 = R2
+        MP.Γ0 = Γ0
+        MP.A = A
+        MP.B = B
+        MP.R1 = R1
+        MP.R2 = R2
 
     if cs is not None:
-        PAR.cs2 = cs**2
-        PAR.β = β
-        PAR.τ1 = τ1
-        PAR.PLASTIC = PLASTIC
+        MP.cs2 = cs**2
+        MP.β = β
+        MP.τ1 = τ1
+        MP.PLASTIC = PLASTIC
         if PLASTIC:
-            PAR.σY = σY
-            PAR.n = n
+            MP.σY = σY
+            MP.n = n
 
     if α is not None:
-        PAR.α2 = α**2
-        PAR.τ2 = τ2
+        MP.α2 = α**2
+        MP.τ2 = τ2
 
     if REACTION is not None:
-        PAR.REACTION = REACTION
-        PAR.Qc = Qc
+        MP.REACTION = REACTION
+        MP.Qc = Qc
 
         if REACTION == 'd':
-            PAR.Kc = Kc
-            PAR.Ti = Ti
+            MP.Kc = Kc
+            MP.Ti = Ti
 
         elif REACTION == 'a':
-            PAR.Ea = Ea
-            PAR.Bc = Bc
+            MP.Ea = Ea
+            MP.Bc = Bc
 
         elif REACTION == 'i':
-            PAR.I = I
-            PAR.G1 = G1
-            PAR.G2 = G2
-            PAR.a = a
-            PAR.b = b
-            PAR.c = c
-            PAR.d = d
-            PAR.e = e
-            PAR.g = g
-            PAR.x = x
-            PAR.y = y
-            PAR.z = z
-            PAR.φIG = φIG
-            PAR.φG1 = φG1
-            PAR.φG2 = φG2
+            MP.I = I
+            MP.G1 = G1
+            MP.G2 = G2
+            MP.a = a
+            MP.b = b
+            MP.c = c
+            MP.d = d
+            MP.e = e
+            MP.g = g
+            MP.x = x
+            MP.y = y
+            MP.z = z
+            MP.φIG = φIG
+            MP.φG1 = φG1
+            MP.φG2 = φG2
 
 def material_parameters(EOS, ρ0, cv, p0=None,
                         γ=None, pINF=None,
@@ -157,11 +157,11 @@ def material_parameters(EOS, ρ0, cv, p0=None,
 
     if USE_CPP:
         import GPRpy
-        PAR = GPRpy.classes.Par()
+        MP = GPRpy.classes.Par()
     else:
-        class PAR: pass
+        class MP: pass
 
-    params(PAR, Rc, EOS, ρ0, p0, T0, cv,
+    params(MP, Rc, EOS, ρ0, p0, T0, cv,
            γ, pINF,
            c0, Γ0, s, e0,
            A, B, R1, R2,
@@ -172,4 +172,4 @@ def material_parameters(EOS, ρ0, cv, p0=None,
            Bc, Ea,
            I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2)
 
-    return PAR
+    return MP

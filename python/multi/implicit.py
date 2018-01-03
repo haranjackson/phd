@@ -15,7 +15,7 @@ DERVALS = derivative_values()
 NODES, _, _ = quad()
 
 
-def obj_eul(x, WwL, WwR, dt, PARL, PARR):
+def obj_eul(x, WwL, WwR, dt, MPL, MPR):
 
     nX = NT*nV
 
@@ -26,8 +26,8 @@ def obj_eul(x, WwL, WwR, dt, PARL, PARR):
 
     ret = zeros(2*nX+6*N1)
 
-    ret[0 : nX]    = (dot(U, qL) - rhs(qL, WwL, dt, PARL, 0)).ravel()
-    ret[nX : 2*nX] = (dot(U, qR) - rhs(qR, WwR, dt, PARR, 0)).ravel()
+    ret[0 : nX]    = (dot(U, qL) - rhs(qL, WwL, dt, MPL, 0)).ravel()
+    ret[nX : 2*nX] = (dot(U, qR) - rhs(qR, WwR, dt, MPR, 0)).ravel()
 
     qL_ = dot(ENDVALS[:,1], qL.reshape([N1,N1,nV]))
     qR_ = dot(ENDVALS[:,0], qR.reshape([N1,N1,nV]))
@@ -40,8 +40,8 @@ def obj_eul(x, WwL, WwR, dt, PARL, PARR):
     ΣL_ = zeros([N1,3])
     ΣR_ = zeros([N1,3])
     for i in range(N1):
-        PL_ = Cvec_to_Pclass(qL_[i], PARL)
-        PR_ = Cvec_to_Pclass(qR_[i], PARR)
+        PL_ = Cvec_to_Pclass(qL_[i], MPL)
+        PR_ = Cvec_to_Pclass(qR_[i], MPR)
         vL_[i] = PL_.v
         vR_[i] = PR_.v
         ΣL_[i] = PL_.Σ()[0]
@@ -63,7 +63,7 @@ def dΧ(xh, dt):
 
 if __name__ == "__main__":
 
-    PAR = material_parameters(EOS='sg', ρ0=1, cv=1, γ=1.4, pINF=0, p0=1,
+    MP = material_parameters(EOS='sg', ρ0=1, cv=1, γ=1.4, pINF=0, p0=1,
                               cs=1, α=1, μ=1e-2, Pr=0.75)
     """
     ρL = 1
@@ -71,20 +71,20 @@ if __name__ == "__main__":
     vL = zeros(3)
     AL = ρL**(1/3) * eye(3)
     JL = zeros(3)
-    PARL = PAR
+    MPL = MP
 
     ρR = 0.1
     pR = 0.1
     vR = zeros(3)
     AR = ρR**(1/3) * eye(3)
     JR = zeros(3)
-    PARR = PAR
+    MPR = MP
 
-    QL = Cvec(ρL, pL, vL, AL, JL, PARR)
-    QR = Cvec(ρR, pR, vR, AR, JR, PARL)
+    QL = Cvec(ρL, pL, vL, AL, JL, MPR)
+    QR = Cvec(ρR, pR, vR, AR, JR, MPL)
 
-    PL = Cvec_to_Pclass(QL, PARL)
-    PR = Cvec_to_Pclass(QR, PARL)
+    PL = Cvec_to_Pclass(QL, MPL)
+    PR = Cvec_to_Pclass(QR, MPL)
 
     wL = array([QL for i in range(N1)])
     wR = array([QR for i in range(N1)])
@@ -101,8 +101,8 @@ if __name__ == "__main__":
         ρR = 2-NODES[i]
         pR = ρR
         AR = ρR**(1/3) * eye(3)
-        wL[i] = Cvec(ρL, pL, v0, AL, J0, PAR)
-        wR[i] = Cvec(ρR, pR, v0, AR, J0, PAR)
+        wL[i] = Cvec(ρL, pL, v0, AL, J0, MP)
+        wR[i] = Cvec(ρR, pR, v0, AR, J0, MP)
 
     WwL = dot(W, wL)
     WwR = dot(W, wR)
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
     dt = 0.01
 
-    f = lambda x : obj(x, WwL, WwR, dt, PAR, PAR)
+    f = lambda x : obj(x, WwL, WwR, dt, MP, MP)
     #ret = newton_krylov(f, x0)
     #ret = root(f, x0)
     #ret = anderson(f, x0)

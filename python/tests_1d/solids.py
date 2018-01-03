@@ -7,30 +7,30 @@ from etc.boundaries import standard_BC
 from system.gpr.misc.structures import Cvec
 from system.gpr.variables.eos_hyp import Sigma_hyp
 from system.gpr.variables.state import sigma
-from tests_1d.common import HYP_COP, PAR_COP_SMG, PAR_COP_SMG_P
+from tests_1d.common import HYP_COP, MP_COP_SMG, MP_COP_SMG_P
 from options import nx, ny, nz, nV, dx
 
 
-def hyperelastic_vars(F, S, HYP, PAR):
+def hyperelastic_vars(F, S, HYP, MP):
     """ Returns the GPR variables corresponding to the hyperelastic variables
     """
     A = inv(F)
     ρ = HYP.ρ0 * det(A)
     Σ = Sigma_hyp(ρ, A, S, HYP)
 
-    σ = sigma(ρ, A, PAR)
+    σ = sigma(ρ, A, MP)
     p = trace(σ-Σ)/3
     return ρ, p, A
 
-def solid_IC(vL, vR, FL, FR, SL, SR, HYP, PAR):
+def solid_IC(vL, vR, FL, FR, SL, SR, HYP, MP):
 
-    ρL, pL, AL = hyperelastic_vars(FL, SL, HYP, PAR)
-    ρR, pR, AR = hyperelastic_vars(FR, SR, HYP, PAR)
+    ρL, pL, AL = hyperelastic_vars(FL, SL, HYP, MP)
+    ρR, pR, AR = hyperelastic_vars(FR, SR, HYP, MP)
 
     J = zeros(3)
 
-    QL = Cvec(ρL, pL, vL, AL, J, PAR)
-    QR = Cvec(ρR, pR, vR, AR, J, PAR)
+    QL = Cvec(ρL, pL, vL, AL, J, MP)
+    QR = Cvec(ρR, pR, vR, AR, J, MP)
 
     u = zeros([nx, ny, nz, nV])
 
@@ -40,7 +40,7 @@ def solid_IC(vL, vR, FL, FR, SL, SR, HYP, PAR):
         else:
             u[i,j,k] = QR
 
-    return u, [PAR]
+    return u, [MP]
 
 def barton1_IC():
     """ tf = 0.06
@@ -58,7 +58,7 @@ def barton1_IC():
                 [0, 0, 1  ]])
     SR = 0
 
-    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
 def barton2_IC():
     """ tf = 0.06
@@ -76,7 +76,7 @@ def barton2_IC():
                 [-0.01, 0,    0.9]])
     SR = 0
 
-    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
 def elastic1_IC():
     """ tf = 0.06
@@ -94,7 +94,7 @@ def elastic1_IC():
     vR = zeros(3)
     SR = 0
 
-    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
 def elastic2_IC():
     """ tf = 0.06
@@ -112,26 +112,26 @@ def elastic2_IC():
     vR = zeros(3)
     SR = 0
 
-    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, PAR_COP_SMG)
+    return solid_IC(vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
 def piston_IC():
     """ tf = 1.5
         L = 1
     """
-    PAR = PAR_COP_SMG_P
-    ρ = PAR.ρ0
-    p = PAR.p0
+    MP = MP_COP_SMG_P
+    ρ = MP.ρ0
+    p = MP.p0
     v = zeros(3)
     A = eye(3)
     J = zeros(3)
-    Q = Cvec(ρ, p, v, A, J, PAR)
+    Q = Cvec(ρ, p, v, A, J, MP)
 
     u = zeros([nx, ny, nz, nV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
         u[i,j,k] = Q
 
-    return u, [PAR]
+    return u, [MP]
 
 def piston_BC(u):
     ret = standard_BC(u)

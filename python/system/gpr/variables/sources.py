@@ -4,20 +4,20 @@ from system.gpr.misc.functions import det3, sigma_norm
 from system.gpr.variables.state import sigma
 
 
-def theta1inv(A, PAR):
+def theta1inv(A, MP):
     """ Returns 1/θ1
     """
-    cs2 = PAR.cs2
-    τ1 = PAR.τ1
+    cs2 = MP.cs2
+    τ1 = MP.τ1
 
     if τ1==inf:
         return 0
 
-    if PAR.PLASTIC:
-        σY = PAR.σY
-        n = PAR.n
-        ρ = det3(A) * PAR.ρ0
-        σ = sigma(ρ, A, PAR)
+    if MP.PLASTIC:
+        σY = MP.σY
+        n = MP.n
+        ρ = det3(A) * MP.ρ0
+        σ = sigma(ρ, A, MP)
         sn = sigma_norm(σ)
         if sn == 0:
             return 0
@@ -27,30 +27,30 @@ def theta1inv(A, PAR):
 
     return 3 * det3(A)**(5/3) / (cs2 * τ)
 
-def theta2inv(ρ, T, PAR):
+def theta2inv(ρ, T, MP):
     """ Returns 1/θ2
     """
-    ρ0 = PAR.ρ0
-    T0 = PAR.T0
-    α2 = PAR.α2
-    τ2 = PAR.τ2
+    ρ0 = MP.ρ0
+    T0 = MP.T0
+    α2 = MP.α2
+    τ2 = MP.τ2
 
     return 1 / (α2 * τ2 * (ρ / ρ0) * (T0 / T))
 
-def K_arr(P, PAR):
+def K_arr(P, MP):
     """ Returns the rate of reaction according to Arrhenius kinetics
     """
     ρ = P.ρ
     λ = P.λ
     T = P.T
 
-    Bc = PAR.Bc
-    Ea = PAR.Ea
-    Rc = PAR.Rc
+    Bc = MP.Bc
+    Ea = MP.Ea
+    Rc = MP.Rc
 
     return Bc * ρ * λ * exp(-Ea / (Rc*T))
 
-def K_dis(P, PAR):
+def K_dis(P, MP):
     """ Returns the rate of reaction according to discrete ignition temperature
         reaction kinetics
     """
@@ -58,33 +58,33 @@ def K_dis(P, PAR):
     λ = P.λ
     T = P.T
 
-    Ti = PAR.Ti
-    Kc = PAR.Kc
+    Ti = MP.Ti
+    Kc = MP.Kc
 
     if T > Ti:
         return ρ * λ * Kc
     else:
         return 0
 
-def K_ing(P, PAR):
+def K_ing(P, MP):
     """ Returns the rate of reaction according to ignition and growth
         reaction kinetics
     """
-    I = PAR.I
-    G1 = PAR.G1
-    G2 = PAR.G2
-    a = PAR.a
-    b = PAR.b
-    c = PAR.c
-    d = PAR.d
-    e = PAR.e
-    g = PAR.g
-    x = PAR.x
-    y = PAR.y
-    z = PAR.z
-    φIG = PAR.φIG
-    φG1 = PAR.φG1
-    φG2 = PAR.φG2
+    I = MP.I
+    G1 = MP.G1
+    G2 = MP.G2
+    a = MP.a
+    b = MP.b
+    c = MP.c
+    d = MP.d
+    e = MP.e
+    g = MP.g
+    x = MP.x
+    y = MP.y
+    z = MP.z
+    φIG = MP.φIG
+    φG1 = MP.φG1
+    φG2 = MP.φG2
 
     ρ = P.ρ
     p = P.p

@@ -14,8 +14,8 @@ def source_prim_ref(ret, P):
     θ1_1 = P.θ1_1()
     θ2_1 = P.θ2_1()
 
-    PAR = P.PAR
-    γ = PAR.γ
+    MP = P.MP
+    γ = MP.γ
 
     if VISCOUS:
         ret[1] = (γ-1) * ρ * L2_2D(ψ) * θ1_1
@@ -25,15 +25,15 @@ def source_prim_ref(ret, P):
         ret[1] += (γ-1) * ρ * L2_1D(H) * θ2_1
         ret[14:17] = -H * θ2_1
 
-def source_prim(Q, PAR):
+def source_prim(Q, MP):
     ret = zeros(nV)
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
     source_prim_ref(ret, P)
     return ret
 
-def system_prim(Q, d, PAR, pForm=1):
+def system_prim(Q, d, MP, pForm=1):
 
-    P = Cvec_to_Pclass(Q, PAR)
+    P = Cvec_to_Pclass(Q, MP)
 
     ρ = P.ρ
     p = P.p
@@ -44,10 +44,10 @@ def system_prim(Q, d, PAR, pForm=1):
 
     dσdA = P.dσdA()
 
-    γ = PAR.γ
-    pINF = PAR.pINF
-    cv = PAR.cv
-    α2 = PAR.α2
+    γ = MP.γ
+    pINF = MP.pINF
+    cv = MP.cv
+    α2 = MP.α2
     Γ = γ-1
 
     ret = v[d] * eye(nV)

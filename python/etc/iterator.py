@@ -21,7 +21,7 @@ def make_u(mats):
 
     return u
 
-def timestep(mats, count, t, tf, PARs):
+def timestep(mats, count, t, tf, MPs):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
     m = len(mats)
@@ -29,16 +29,16 @@ def timestep(mats, count, t, tf, PARs):
     for ind in range(m):
 
         u = mats[ind]
-        PAR = PARs[ind]
+        MP = MPs[ind]
 
         for i,j,k in product(range(nx), range(ny), range(nz)):
 
             Q = u[i,j,k]
-            MAX = max(MAX, max_abs_eigs(Q, 0, PAR) / dx)
+            MAX = max(MAX, max_abs_eigs(Q, 0, MP) / dx)
             if ndim > 1:
-                MAX = max(MAX, max_abs_eigs(Q, 1, PAR) / dy)
+                MAX = max(MAX, max_abs_eigs(Q, 1, MP) / dy)
                 if ndim > 2:
-                    MAX = max(MAX, max_abs_eigs(Q, 2, PAR) / dz)
+                    MAX = max(MAX, max_abs_eigs(Q, 2, MP) / dz)
 
     dt = CFL / MAX
     if count <= 5:

@@ -18,46 +18,46 @@ def eos_text_to_code(text):
         return COCHRAN_CHAN
 
 
-def Γ_MG(ρ, PAR):
+def Γ_MG(ρ, MP):
     """ Returns the Mie-Gruneisen parameter
     """
-    EOS = PAR.EOS
+    EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
-        γ = PAR.γ
+        γ = MP.γ
         return γ - 1
 
     elif EOS == SHOCK_MG:
-        Γ0 = PAR.Γ0
-        ρ0 = PAR.ρ0
+        Γ0 = MP.Γ0
+        ρ0 = MP.ρ0
         return Γ0 * ρ0 / ρ
 
     elif EOS == JWL or EOS == COCHRAN_CHAN:
-        return PAR.Γ0
+        return MP.Γ0
 
-def p_ref(ρ, PAR):
+def p_ref(ρ, MP):
     """ Returns the reference pressure in the Mie-Gruneisen EOS
     """
-    EOS = PAR.EOS
+    EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
-        return - PAR.γ * PAR.pINF
+        return - MP.γ * MP.pINF
 
     elif EOS == SHOCK_MG:
-        c02 = PAR.c02
-        ρ0 = PAR.ρ0
-        s = PAR.s
+        c02 = MP.c02
+        ρ0 = MP.ρ0
+        s = MP.s
         if ρ > ρ0:
             return c02 * (1/ρ0 - 1/ρ) / (1/ρ0 - s * (1/ρ0 - 1/ρ))**2
         else:
             return c02 * (ρ-ρ0)
 
     else:
-        A = PAR.A
-        B = PAR.B
-        R1 = PAR.R1
-        R2 = PAR.R2
-        ρ0 = PAR.ρ0
+        A = MP.A
+        B = MP.B
+        R1 = MP.R1
+        R2 = MP.R2
+        ρ0 = MP.ρ0
         v_ = ρ0 / ρ
 
         if EOS == JWL:
@@ -66,28 +66,28 @@ def p_ref(ρ, PAR):
         elif EOS == COCHRAN_CHAN:
             return A * v_**(-R1) - B * v_**(-R2)
 
-def e_ref(ρ, PAR):
+def e_ref(ρ, MP):
     """ Returns the reference energy for the Mie-Gruneisen EOS
     """
-    EOS = PAR.EOS
+    EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
         return 0
 
     elif EOS == SHOCK_MG:
-        ρ0 = PAR.ρ0
-        pr = p_ref(ρ, PAR)
+        ρ0 = MP.ρ0
+        pr = p_ref(ρ, MP)
         if ρ > ρ0:
             return 0.5 * pr * (1/ρ0 - 1/ρ)
         else:
             return 0
 
     else:
-        A = PAR.A
-        B = PAR.B
-        R1 = PAR.R1
-        R2 = PAR.R2
-        ρ0 = PAR.ρ0
+        A = MP.A
+        B = MP.B
+        R1 = MP.R1
+        R2 = MP.R2
+        ρ0 = MP.ρ0
         v_ = ρ0 / ρ
 
         if EOS == JWL:
@@ -97,45 +97,45 @@ def e_ref(ρ, PAR):
             return -A/(ρ0*(1-R1)) * (v_**(1-R1)-1) + B/(ρ0*(1-R2)) * (v_**(1-R2)-1)
 
 
-def dΓ_MG(ρ, PAR):
+def dΓ_MG(ρ, MP):
     """ Returns the derivative of the Mie-Gruneisen parameter
     """
-    EOS = PAR.EOS
+    EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
         return 0
 
     elif EOS == SHOCK_MG:
-        Γ0 = PAR.Γ0
-        ρ0 = PAR.ρ0
+        Γ0 = MP.Γ0
+        ρ0 = MP.ρ0
         return - Γ0 * ρ0 / ρ**2
 
     elif EOS == JWL or EOS == COCHRAN_CHAN:
         return 0
 
-def dp_ref(ρ, PAR):
+def dp_ref(ρ, MP):
     """ Returns the derivative of the reference pressure in the Mie-Gruneisen EOS
     """
-    EOS = PAR.EOS
+    EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
         return 0
 
     elif EOS == SHOCK_MG:
-        c02 = PAR.c02
-        ρ0 = PAR.ρ0
-        s = PAR.s
+        c02 = MP.c02
+        ρ0 = MP.ρ0
+        s = MP.s
         if ρ > ρ0:
             return c02 * ρ0**2 * (s*(ρ0-ρ) - ρ) / (s*(ρ-ρ0) - ρ)**3
         else:
             return c02
 
     else:
-        A = PAR.A
-        B = PAR.B
-        R1 = PAR.R1
-        R2 = PAR.R2
-        ρ0 = PAR.ρ0
+        A = MP.A
+        B = MP.B
+        R1 = MP.R1
+        R2 = MP.R2
+        ρ0 = MP.ρ0
         v_ = ρ0 / ρ
 
         if EOS == JWL:
@@ -144,59 +144,59 @@ def dp_ref(ρ, PAR):
         elif EOS == COCHRAN_CHAN:
             return v_/ρ * (A*R1 * v_**(-R1-1) - B*R2 * v_**(-R2-1))
 
-def de_ref(ρ, PAR):
+def de_ref(ρ, MP):
     """ Returns the derivative of the reference energy for the Mie-Gruneisen EOS
     """
-    EOS = PAR.EOS
+    EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
         return 0
 
     elif EOS == SHOCK_MG:
-        c02 = PAR.c02
-        ρ0 = PAR.ρ0
-        s = PAR.s
+        c02 = MP.c02
+        ρ0 = MP.ρ0
+        s = MP.s
         if ρ > ρ0:
             return - (ρ-ρ0) * ρ0 * c02 / (s * (ρ-ρ0) - ρ)**3
         else:
             return 0
 
     elif EOS == JWL or EOS == COCHRAN_CHAN:
-        return e_ref(ρ, PAR) / ρ**2
+        return e_ref(ρ, MP) / ρ**2
 
-def dedρ(ρ, p, PAR):
+def dedρ(ρ, p, MP):
     """ Returns the derivative of the Mie-Gruneisen internal energy
         with respect to ρ
     """
-    Γ = Γ_MG(ρ, PAR)
-    dΓ  = dΓ_MG(ρ, PAR)
-    pr  =  p_ref(ρ, PAR)
-    dpr = dp_ref(ρ, PAR)
-    der = de_ref(ρ, PAR)
+    Γ = Γ_MG(ρ, MP)
+    dΓ  = dΓ_MG(ρ, MP)
+    pr  =  p_ref(ρ, MP)
+    dpr = dp_ref(ρ, MP)
+    der = de_ref(ρ, MP)
     return der - (dpr*ρ*Γ + (Γ+ρ*dΓ)*(p-pr)) / (ρ*Γ)**2
 
-def dedp(ρ, PAR):
+def dedp(ρ, MP):
     """ Returns the derivative of the Mie-Gruneisen internal energy
         with respect to p
     """
-    Γ = Γ_MG(ρ, PAR)
+    Γ = Γ_MG(ρ, MP)
     return 1 / (ρ*Γ)
 
 
-def dTdρ(ρ, p, PAR):
+def dTdρ(ρ, p, MP):
     """ Returns the derivative of the Mie-Gruneisen temperature
         with respect to ρ
     """
-    cv = PAR.cv
-    Γ = Γ_MG(ρ, PAR)
-    dΓ  = dΓ_MG(ρ, PAR)
-    pr  =  p_ref(ρ, PAR)
-    dpr = dp_ref(ρ, PAR)
+    cv = MP.cv
+    Γ = Γ_MG(ρ, MP)
+    dΓ  = dΓ_MG(ρ, MP)
+    pr  =  p_ref(ρ, MP)
+    dpr = dp_ref(ρ, MP)
     return - (dpr*ρ*Γ + (Γ+ρ*dΓ)*(p-pr)) / (ρ*Γ)**2 / cv
 
-def dTdp(ρ, PAR):
+def dTdp(ρ, MP):
     """ Returns the derivative of the Mie-Gruneisen temperature
         with respect to p
     """
-    cv = PAR.cv
-    return dedp(ρ, PAR) / cv
+    cv = MP.cv
+    return dedp(ρ, MP) / cv

@@ -40,10 +40,10 @@ def eig_prim(P, left=1, right=1):
     σ0 = P.σ[0]
     dσdA0 = P.dσdA()[0]
 
-    PAR = P.PAR
-    γ = PAR.γ
-    pINF = PAR.pINF
-    α2 = PAR.α2
+    MP = P.MP
+    γ = MP.γ
+    pINF = MP.pINF
+    α2 = MP.α2
 
     Π1 = dσdA0[:,:,0]
     Π2 = dσdA0[:,:,1]

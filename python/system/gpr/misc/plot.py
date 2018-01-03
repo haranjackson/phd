@@ -92,52 +92,52 @@ def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0):
 
     plot1d(y, style, x, lab, col, 'Concentration', sci=sci)
 
-def plot_pressure(u, PARs, style='-', x=None, lab=None, col=None, sci=0):
+def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
     figure(19)
     n = len(u)
     y = zeros(n)
 
     for i in range(n):
         Q = u[i, 0, 0]
-        j = get_material_index(Q, PARs)
-        y[i] = Cvec_to_Pclass(Q, PARs[j]).p
+        j = get_material_index(Q, MPs)
+        y[i] = Cvec_to_Pclass(Q, MPs[j]).p
 
     plot1d(y, style, x, lab, col, 'Pressure', sci=sci)
 
-def plot_temperature(u, PARs, style='-', x=None, lab=None, col=None, sci=0):
+def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
     figure(20)
     n = len(u)
     y = zeros(n)
 
     for i in range(n):
         Q = u[i, 0, 0]
-        j = get_material_index(Q, PARs)
-        y[i] = Cvec_to_Pclass(Q, PARs[j]).T
+        j = get_material_index(Q, MPs)
+        y[i] = Cvec_to_Pclass(Q, MPs[j]).T
 
     plot1d(y, style, x, lab, col, 'Temperature', sci=sci)
 
-def plot_sigma(u, i, j, PARs, style='-', x=None, lab=None, col=None, sci=0):
+def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0):
     figure(21+i*3+j)
     n = len(u)
     y = zeros(n)
 
     for k in range(n):
         Q = u[k, 0, 0]
-        j = get_material_index(Q, PARs)
-        y[k] = Cvec_to_Pclass(Q, PARs[j]).σ[i, j]
+        j = get_material_index(Q, MPs)
+        y[k] = Cvec_to_Pclass(Q, MPs[j]).σ[i, j]
 
     plot1d(y, style, x, lab, col,
            'Viscous Stress Component %d,%d' % (i+1, j+1), sci=sci)
 
-def plot_heat_flux(u, i, PARs, style='-', x=None, lab=None, col=None, sci=0):
+def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0):
     figure(30+i)
     n = len(u)
     y = zeros(n)
 
     for k in range(n):
         Q = u[k, 0, 0]
-        j = get_material_index(Q, PARs)
-        y[k] = Cvec_to_Pclass(Q, PARs[j]).q[i]
+        j = get_material_index(Q, MPs)
+        y[k] = Cvec_to_Pclass(Q, MPs[j]).q[i]
 
     plot1d(y, style, x, lab, col, 'Heat Flux Component %d' % (i+1), sci=sci)
 
@@ -146,10 +146,10 @@ def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0):
     y = u[:, 0, 0, var]
     plot1d(y, style, x, lab, col, 'Variable %d' % var, sci=sci)
 
-def plot_primitives(u, PARs, style='-', x=None):
+def plot_primitives(u, MPs, style='-', x=None):
     plot_density(u, style=style, x=x)
     plot_velocity(u, 0, style=style, x=x)
-    plot_pressure(u, PARs, style=style, x=x)
+    plot_pressure(u, MPs, style=style, x=x)
 
 def plot_interfaces(u, figNum=None, loc=None, col=None):
     # use axvline
@@ -159,7 +159,7 @@ def colors(n):
     cmap = get_cmap('viridis')
     return [cmap.colors[i] for i in linspace(0, 255, n, dtype=int)]
 
-def plot_weno(wh, var, PARs=None):
+def plot_weno(wh, var, MPs=None):
     n, _, _, N1, nV = wh.shape
     x = zeros(N1*n)
     u = zeros([N1*n,1,1,nV])
@@ -176,9 +176,9 @@ def plot_weno(wh, var, PARs=None):
     if var=='velocity':
         plot_velocity(u, x=x)
     if var=='pressure':
-        plot_pressure(u, PARs, x=x)
+        plot_pressure(u, MPs, x=x)
 
-def plot_dg(qh, var, t, PARs=None):
+def plot_dg(qh, var, t, MPs=None):
     n, _, _, N1, _, nV = qh.shape
     wh = zeros([n,1,1,N1,nV])
     for i in range(n):
@@ -186,7 +186,7 @@ def plot_dg(qh, var, t, PARs=None):
             for k in range(N1):
                 wh[i,0,0,j] += PSI[k](t) * qh[i,0,0,k,j]
 
-    plot_weno(wh, var, PARs)
+    plot_weno(wh, var, MPs)
 
 def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
     cm = colors(3)

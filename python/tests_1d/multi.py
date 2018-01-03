@@ -1,7 +1,7 @@
 from numpy import array, eye, sqrt, zeros
 
 from system.gpr.misc.structures import Cvec
-from tests_1d.common import riemann_IC, PAR_AIR, PAR_AIR2, PAR_HEL2, PAR_WAT2
+from tests_1d.common import riemann_IC, MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
 from options import nx, ny, nz, nV, dx
 
 
@@ -17,7 +17,7 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 def water_gas_IC():
     """ tf = 237.44e-6
@@ -31,7 +31,7 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_AIR2, PAR_WAT2, 0.7)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
 
 def water_water_IC():
     """ tf = 1.5e-4
@@ -45,7 +45,7 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR_WAT2)
+    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_WAT2)
 
 def helium_bubble_IC():
     """ tf = 0.0014
@@ -69,9 +69,9 @@ def helium_bubble_IC():
     J = zeros(3)
 
     u = zeros([nx, ny, nz, nV])
-    Q1 = Cvec(ρL, pL, vL, AL, J, PAR_AIR2)
-    Q2 = Cvec(ρM, pM, vM, AM, J, PAR_AIR2)
-    Q3 = Cvec(ρR, pR, vR, AR, J, PAR_HEL2)
+    Q1 = Cvec(ρL, pL, vL, AL, J, MP_AIR2)
+    Q2 = Cvec(ρM, pM, vM, AM, J, MP_AIR2)
+    Q3 = Cvec(ρR, pR, vR, AR, J, MP_HEL2)
 
     for i in range(nx):
 
@@ -88,4 +88,4 @@ def helium_bubble_IC():
         else:
             u[i, 0, 0, :-3] = Q2
 
-    return u, [PAR_AIR2, PAR_AIR2, PAR_HEL2, PAR_AIR2]
+    return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2]

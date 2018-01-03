@@ -7,8 +7,8 @@ from system.gpr.variables.eos import dEdA
 from system.gpr.variables.sources import theta1inv
 
 
-def f_A(A, PAR):
-    return - dEdA(A, PAR).ravel() * theta1inv(A, PAR)
+def f_A(A, MP):
+    return - dEdA(A, MP).ravel() * theta1inv(A, MP)
 
 def jac_A(A, τ1):
     G = gram(A)
@@ -39,12 +39,12 @@ def f_reduced(y, t0, k, c):
     ret[1] = k * y1 * (2*y1 - y0 - c/(y0*y1))
     return ret
 
-def solver_distortion_reduced(A, dt, PAR):
+def solver_distortion_reduced(A, dt, MP):
     U, s, V = svd(A)
     s0 = s**2
     c = prod(s0)
     t = array([0, dt])
-    k = -2 * prod(s)**(5/3) / PAR.τ1
+    k = -2 * prod(s)**(5/3) / MP.τ1
     s2 = odeint(f_reduced, s0[:2], t, args=(k,c))[1]
     s = array([s2[0], s2[1], c/(s2[0]*s2[1])])
     return dot(U*sqrt(s),V)
@@ -55,7 +55,7 @@ def bound_f(x, l):
 def pos(x):
     return max(0,x)
 
-def solver_approximate_analytic(A, dt, PAR):
+def solver_approximate_analytic(A, dt, MP):
     U, s, V = svd(A)
     detA3 = prod(s)**(1/3)
     s0 = (s/detA3)**2
@@ -65,7 +65,7 @@ def solver_approximate_analytic(A, dt, PAR):
     if u0 == 0:
         return A
 
-    k = 2 * detA3**7 / PAR.τ1
+    k = 2 * detA3**7 / MP.τ1
     τ = k * dt
     e_6τ = exp(-6*τ)
     e_9τ = exp(-9*τ)
