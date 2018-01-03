@@ -17,8 +17,8 @@ double theta_2(VecVr Q, Par & MP)
 {   // Returns the function used in the source terms for the thermal impulse vector
     // NB May be more suitable to use a different form for other fluids/solids
 
-    double r = Q(0);
+    double ρ = Q(0);
     double p = pressure(Q, MP);
-    double T = temperature(r, p, MP);
-    return MP.α2 * MP.τ2 * (r / MP.ρ0) * (MP.T0 / T);
+    double T = temperature(ρ, p, MP);
+    return MP.α2 * MP.τ2 * (ρ / MP.ρ0) * (MP.T0 / T);
 }

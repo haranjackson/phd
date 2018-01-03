@@ -12,7 +12,7 @@ void flux(VecVr ret, VecVr Q, int d,
 {   // Adds the flux vector in the dth direction, given conserved variables Q
     // NOTE It may be necessary to initialize ret to 0 first
 
-    double r = Q(0);
+    double ρ = Q(0);
     double rE = Q(1);
 
     Vec3Map rv = get_rv(Q);
@@ -20,9 +20,9 @@ void flux(VecVr ret, VecVr Q, int d,
     Vec3Map rJ = get_rJ(Q);
 
     double p = pressure(Q, MP);
-    double T = temperature(r, p, MP);
+    double T = temperature(ρ, p, MP);
 
-    double vd = rv(d) / r;
+    double vd = rv(d) / ρ;
 
     ret(0) += rv(d);
     ret(1) += vd * (rE + p);
@@ -30,15 +30,15 @@ void flux(VecVr ret, VecVr Q, int d,
     ret(2+d) += p;
 
     Vec3 sigmad = sigma(Q, MP, d);
-    ret(1) -= dot(sigmad, rv) / r;
+    ret(1) -= dot(sigmad, rv) / ρ;
     ret.segment<3>(2) -= sigmad;
 
-    Vec3 Av = A * rv / r;
+    Vec3 Av = A * rv / ρ;
     ret(5+d) += Av(0);
     ret(8+d) += Av(1);
     ret(11+d) += Av(2);
 
-    ret(1) += MP.α2 * T * rJ(d) / r;
+    ret(1) += MP.α2 * T * rJ(d) / ρ;
     ret.tail<3>() += vd * rJ;
     ret(14+d) += T;
 }
@@ -47,27 +47,27 @@ void flux(VecVr ret, VecVr Q, int d,
 void source(VecVr ret, VecVr Q,
             Par & MP)
 {
-    double r = Q(0);
+    double ρ = Q(0);
 
     ret.head<5>().setZero();
 
     Mat3_3 Asource = - dEdA(Q, MP) / theta_1(Q, MP);
     ret.segment<9>(5) = VecMap(Asource.data(), 9);
 
-    ret.tail<3>() = - r * dEdJ(Q, MP) / theta_2(Q, MP);
+    ret.tail<3>() = - ρ * dEdJ(Q, MP) / theta_2(Q, MP);
 }
 
 
 void block(MatV_Vr ret, VecVr Q, int d)
 {
-    double r = Q(0);
+    double ρ = Q(0);
     Vec3Map rv = get_rv(Q);
-    double vd = rv(d) / r;
+    double vd = rv(d) / ρ;
     for (int i=5; i<14; i++)
         ret(i,i) = vd;
     for (int i=0; i<3; i++)
     {
-        double vi = rv(i) / r;
+        double vi = rv(i) / ρ;
         ret(5+d, 5+d+i) -= vi;
         ret(8+d, 8+d+i) -= vi;
         ret(11+d, 11+d+i) -= vi;
@@ -131,8 +131,8 @@ void B2dot(VecVr ret, VecVr x, Vec3 v)
 
 void Bdot(VecVr ret, VecVr Q, VecVr x, int d)
 {
-    double r = Q(0);
-    Vec3 v = get_rv(Q) / r;
+    double ρ = Q(0);
+    Vec3 v = get_rv(Q) / ρ;
     if (d==0)
         B0dot(ret, x, v);
     else if (d==1)

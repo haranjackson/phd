@@ -58,17 +58,17 @@ void analyticSolver_distortion(VecVr Q, double dt, Par & MP)
 void analyticSolver_thermal(VecVr Q, double dt, Par & MP)
 {   // Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS
 
-    double r = Q(0);
-    double E = Q(1) / r;
+    double ρ = Q(0);
+    double E = Q(1) / ρ;
     Vec3Map rJ = get_rJ(Q);
     double c1 = E - E_2A(Q, MP) - E_3(Q);
     double c2 = MP.α2 / 2.;
-    double k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * r * MP.cv);
+    double k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv);
     c1 *= k;
     c2 *= k;
 
     double ea = exp(-c1 * dt / 2);
-    double den = 1 - c2 / c1 * (1 - ea*ea) * L2_1D(rJ) / (r*r);
+    double den = 1 - c2 / c1 * (1 - ea*ea) * L2_1D(rJ) / (ρ*ρ);
     Q.tail<3>() *= ea / sqrt(den);
 }
 

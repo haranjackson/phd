@@ -11,7 +11,7 @@ Mat3_3 sigma(VecVr Q, Par & MP);
 
 Vec3 sigma(VecVr Q, Par & MP, int d);
 
-double temperature(double r, double p, Par & MP);
+double temperature(double ρ, double p, Par & MP);
 
 Vec3 heat_flux(double T, Vec3r J, Par & MP);
 

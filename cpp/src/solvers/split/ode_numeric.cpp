@@ -47,8 +47,8 @@ void ode_stepper_numeric(VecVr Q, double dt, Par & MP)
 {   // Solves the ODE analytically by linearising the distortion equations and
     // providing an analytic approximation to the thermal impulse evolution
 
-    double r = Q(0);
-    double E = Q(1) / r;
+    double ρ = Q(0);
+    double E = Q(1) / ρ;
     Vec3 v = get_v(Q, true);
     Mat3_3 A = get_A(Q);
     Vec3 J = get_J(Q, true);
@@ -57,7 +57,7 @@ void ode_stepper_numeric(VecVr Q, double dt, Par & MP)
     set_A(Q, A1);
 
     Mat3_3 A2 = (A+A1)/2;
-    J = analyticSolver_thermal(r, E, A2, J, v, dt, MP);
+    J = analyticSolver_thermal(ρ, E, A2, J, v, dt, MP);
     set_J(Q, J);
 }
 

@@ -4,7 +4,7 @@
 #include "variables/state.h"
 
 
-Mat4_4 thermo_acoustic_tensor(double r, Mat3_3r A, double p, double T, int d,
+Mat4_4 thermo_acoustic_tensor(double ρ, Mat3_3r A, double p, double T, int d,
                               Par & MP)
 {   // Returns the tensor T_dij corresponding to the (i,j) component of the
     // thermo-acoustic tensor in the dth direction
@@ -24,12 +24,12 @@ Mat4_4 thermo_acoustic_tensor(double r, Mat3_3r A, double p, double T, int d,
     O *= MP.cs2;
     ret.topLeftCorner<3,3>() = O;
 
-    ret(d,d) += γ * p / r;
+    ret(d,d) += γ * p / ρ;
 
-    ret(3,0) = ((γ-1) * p - pINF) * T / (r * (p+pINF));
+    ret(3,0) = ((γ-1) * p - pINF) * T / (ρ * (p+pINF));
     ret(3,1) = 0.;
     ret(3,2) = 0.;
-    double tmp = (γ-1) * MP.α2 * T / r;
+    double tmp = (γ-1) * MP.α2 * T / ρ;
     ret(0,3) = tmp;
     ret(1,3) = 0.;
     ret(2,3) = 0.;
@@ -43,14 +43,14 @@ double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS,
 {   // Returns the maximum of the absolute values of the eigenvalues of the GPR
     // system
 
-    double r = Q(0);
-    double vd = Q(2+d) / r;
+    double ρ = Q(0);
+    double vd = Q(2+d) / ρ;
     Mat3_3Map A = get_A(Q);
 
     double p = pressure(Q, MP);
-    double T = temperature(r, p, MP);
+    double T = temperature(ρ, p, MP);
 
-    Mat4_4 O = thermo_acoustic_tensor(r, A, p, T, d, MP);
+    Mat4_4 O = thermo_acoustic_tensor(ρ, A, p, T, d, MP);
 
     double lam;
     if (PERRON_FROBENIUS)

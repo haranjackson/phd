@@ -39,6 +39,7 @@ SET(SRC_LIST src/main.cpp
 
              src/system/variables/eos.cpp
              src/system/variables/materials.cpp
+             src/system/variables/mg.cpp
              src/system/variables/state.cpp
    )
 

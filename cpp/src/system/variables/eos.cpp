@@ -4,15 +4,17 @@
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
 #include "../objects/gpr_objects.h"
+#include "mg.h"
 
 
-double E_1(double r, double p, Par & MP)
+double E_1(double ρ, double p, Par & MP)
 {   // Returns the microscale energy corresponding to a stiffened gas
     // NB The ideal gas equation is obtained if pINF=0
 
-    double γ = MP.γ;
-    double pINF = MP.pINF;
-    return (p + γ*pINF) / ((γ-1) * r);
+    double Γ = Γ_MG(ρ, MP);
+    double pr = p_ref(ρ, MP);
+    double er = e_ref(ρ, MP);
+    return er + (p - pr) / (ρ * Γ);
 }
 
 double E_2A(VecVr Q, Par & MP)
@@ -33,17 +35,17 @@ double E_2A(VecVr Q, Par & MP)
 double E_2J(VecVr Q, Par & MP)
 {   // Returns the mesoscale energy dependent on the thermal impulse
 
-    double r = Q(0);
+    double ρ = Q(0);
     Vec3Map rJ = get_rJ(Q);
-    return MP.α2 * L2_1D(rJ) / (2*r*r);
+    return MP.α2 * L2_1D(rJ) / (2*ρ*ρ);
 }
 
 double E_3(VecVr Q)
 {   // Returns the macroscale kinetic energy
 
-    double r = Q(0);
+    double ρ = Q(0);
     Vec3Map rv = get_rv(Q);
-    return L2_1D(rv) / (2*r*r);
+    return L2_1D(rv) / (2*ρ*ρ);
 }
 
 Mat3_3 dEdA(VecVr Q, Par & MP)
@@ -56,7 +58,7 @@ Mat3_3 dEdA(VecVr Q, Par & MP)
 Vec3 dEdJ(VecVr Q, Par & MP)
 {   // Returns the partial derivative of E by J
 
-    double r = Q(0);
+    double ρ = Q(0);
     Vec3Map rJ = get_rJ(Q);
-    return MP.α2 * rJ / r;
+    return MP.α2 * rJ / ρ;
 }
