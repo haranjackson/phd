@@ -1,10 +1,10 @@
-g++ bindings.cpp -std=c++11 -Wall -O3 -shared -fPIC -march=native  \
--o GPRpy.so             \
--I ../include/pybind11  \
--I ../include/eigen3    \
--I ../include           \
+clang++ bindings.cpp -std=c++11 -Wall -O3 -shared -fPIC -march=native  \
+-o ../../python/GPRpy.so \
+-I ../include/pybind11   \
+-I ../include/eigen3     \
+-I ../include            \
 -I /home/hari/miniconda3/include/python3.6m   \
--Wsign-compare -DNDEBUG -fopenmp              \
+-Wsign-compare -DNDEBUG                       \
 -L /home/hari/miniconda3/lib                  \
 -lpython3.6m -lpthread -ldl  -lutil -lrt -lm  \
 -Xlinker -export-dynamic                      \

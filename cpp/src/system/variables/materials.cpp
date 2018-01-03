@@ -10,7 +10,7 @@ double theta_1(VecVr Q, Par & MP)
 
     Mat3_3Map A = get_A(Q);
     double den = pow(det(A), 5./3.);
-    return (MP.cs2 * MP.tau1) / (3 * den);
+    return (MP.cs2 * MP.τ1) / (3 * den);
 }
 
 double theta_2(VecVr Q, Par & MP)
@@ -20,5 +20,5 @@ double theta_2(VecVr Q, Par & MP)
     double r = Q(0);
     double p = pressure(Q, MP);
     double T = temperature(r, p, MP);
-    return MP.alpha2 * MP.tau2 * (r / MP.r0) * (MP.T0 / T);
+    return MP.α2 * MP.τ2 * (r / MP.ρ0) * (MP.T0 / T);
 }

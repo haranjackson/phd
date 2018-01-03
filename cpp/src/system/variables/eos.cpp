@@ -8,11 +8,11 @@
 
 double E_1(double r, double p, Par & MP)
 {   // Returns the microscale energy corresponding to a stiffened gas
-    // NB The ideal gas equation is obtained if pinf=0
+    // NB The ideal gas equation is obtained if pINF=0
 
-    double gamma = MP.gamma;
-    double pinf = MP.pinf;
-    return (p + gamma*pinf) / ((gamma-1) * r);
+    double γ = MP.γ;
+    double pINF = MP.pINF;
+    return (p + γ*pINF) / ((γ-1) * r);
 }
 
 double E_2A(VecVr Q, Par & MP)
@@ -35,7 +35,7 @@ double E_2J(VecVr Q, Par & MP)
 
     double r = Q(0);
     Vec3Map rJ = get_rJ(Q);
-    return MP.alpha2 * L2_1D(rJ) / (2*r*r);
+    return MP.α2 * L2_1D(rJ) / (2*r*r);
 }
 
 double E_3(VecVr Q)
@@ -58,5 +58,5 @@ Vec3 dEdJ(VecVr Q, Par & MP)
 
     double r = Q(0);
     Vec3Map rJ = get_rJ(Q);
-    return MP.alpha2 * rJ / r;
+    return MP.α2 * rJ / r;
 }

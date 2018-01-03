@@ -38,7 +38,7 @@ void flux(VecVr ret, VecVr Q, int d,
     ret(8+d) += Av(1);
     ret(11+d) += Av(2);
 
-    ret(1) += MP.alpha2 * T * rJ(d) / r;
+    ret(1) += MP.α2 * T * rJ(d) / r;
     ret.tail<3>() += vd * rJ;
     ret(14+d) += T;
 }

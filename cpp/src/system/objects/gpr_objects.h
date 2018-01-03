@@ -24,22 +24,37 @@ typedef Eigen::Map<Vec3, 0, Eigen::InnerStride<1> > Vec3Map;
 
 struct Par
 {
-    double gamma;
-    double cv;
-    double pinf;
+    double Rc;
+    int EOS;
 
-    double r0;
+    double ρ0;
     double p0;
     double T0;
+    double cv;
+
+    double γ;
+    double pINF;
+
+    double Γ0;
+
+    double c02;
+    double s;
+    double e0;
+
+    double A;
+    double B;
+    double R1;
+    double R2;
 
     double cs2;
-    double mu;
-    double tau1;
-    double Pr;
+    double β;
+    double τ1;
+    bool PLASTIC;
+    double σY;
+    double n;
 
-    double alpha2;
-    double kappa;
-    double tau2;
+    double α2;
+    double τ2;
 };
 
 

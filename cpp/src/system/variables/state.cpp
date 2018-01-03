@@ -13,7 +13,7 @@ double pressure(VecVr Q, Par & MP)
     double r = Q(0);
     double E = Q(1) / r;
     double E1 = E - E_2A(Q, MP) - E_2J(Q, MP) - E_3(Q);
-    return (MP.gamma-1) * r * E1 - MP.gamma * MP.pinf;
+    return (MP.γ-1) * r * E1 - MP.γ * MP.pINF;
 }
 
 Mat3_3 sigma(VecVr Q, Par & MP)
@@ -39,11 +39,11 @@ Vec3 sigma(VecVr Q, Par & MP, int d)
 double temperature(double r, double p, Par & MP)
 {   // Returns the temperature for an stiffened gas
 
-    return (p + MP.pinf) / ((MP.gamma-1) * r * MP.cv);
+    return (p + MP.pINF) / ((MP.γ-1) * r * MP.cv);
 }
 
 Vec3 heat_flux(double T, Vec3r J, Par & MP)
 {   // Returns the heat flux vector
 
-    return MP.alpha2 * T * J;
+    return MP.α2 * T * J;
 }

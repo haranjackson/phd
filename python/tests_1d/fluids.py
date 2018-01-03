@@ -53,7 +53,7 @@ def first_stokes_problem_IC():
 
     return riemann_IC(ρL, pL, vL, ρR, pR, vR, PAR)
 
-def viscous_shock_exact(x, Ms, PAR, center=0):
+def viscous_shock_exact(x, Ms, PAR, μ, center=0):
     """ Returns the density, pressure, and velocity of the viscous shock
         (Mach number Ms) at x
     """
@@ -62,7 +62,6 @@ def viscous_shock_exact(x, Ms, PAR, center=0):
     p0 = PAR.p0
     γ = PAR.γ
     pINF = PAR.pINF
-    μ = PAR.μ
 
     if Ms==2:
         l = 0.3
@@ -112,7 +111,7 @@ def viscous_shock_IC(center=0):
     p = zeros(nx)
     v = zeros(nx)
     for i in range(nx):
-        ρ[i], p[i], v[i] = viscous_shock_exact(x[i], Ms, PAR, center=center)
+        ρ[i], p[i], v[i] = viscous_shock_exact(x[i], Ms, PAR, μ, center=center)
 
     v -= v[0]           # Velocity in shock 0
 

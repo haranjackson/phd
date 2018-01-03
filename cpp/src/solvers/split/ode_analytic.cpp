@@ -28,10 +28,10 @@ void analyticSolver_distortion(VecVr Q, double dt, Par & MP)
 
     double m0 = (s0+s1+s2) / 3;
     double u0 = ((s0-s1)*(s0-s1) + (s1-s2)*(s1-s2) + (s2-s0)*(s2-s0)) / 3.;
-    double tau = 2 * detA * detA * detA1_3 / MP.tau1 * dt;
+    double τ = 2 * detA * detA * detA1_3 / MP.τ1 * dt;
 
-    double c0 = exp(-9*tau);
-    double c1 = (9*m0-u0-9) * exp(3*tau);
+    double c0 = exp(-9*τ);
+    double c1 = (9*m0-u0-9) * exp(3*τ);
     double c2 = 6*m0-u0-6;
     double m = 1 + c0/3 * (c1 - c2);
     double u = pos(c0 * (2*c1 - 3*c2));
@@ -62,8 +62,8 @@ void analyticSolver_thermal(VecVr Q, double dt, Par & MP)
     double E = Q(1) / r;
     Vec3Map rJ = get_rJ(Q);
     double c1 = E - E_2A(Q, MP) - E_3(Q);
-    double c2 = MP.alpha2 / 2.;
-    double k = 2 * MP.r0 / (MP.tau2 * MP.T0 * r * MP.cv);
+    double c2 = MP.α2 / 2.;
+    double k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * r * MP.cv);
     c1 *= k;
     c2 *= k;
 

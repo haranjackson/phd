@@ -36,20 +36,22 @@ Vec heat_conduction_1d(Par MP)
 
 int main()
 {
+    double γ = 1.4;
+    double cv = 2.5;
+    double κ = 1e-2;
+    double μ = 1e-2;
+
     Par MP;
-    MP.gamma = 1.4;
-    MP.cv = 2.5;
-    MP.pinf = 0.;
-    MP.r0 = 1.;
+    MP.γ = γ;
+    MP.cv = cv;
+    MP.pINF = 0.;
+    MP.ρ0 = 1.;
     MP.p0 = 1.;
     MP.T0 = 1.;
     MP.cs2 = 1.;
-    MP.mu = 1e-2;
-    MP.tau1 = 6 * MP.mu / (MP.r0 * MP.cs2);
-    MP.alpha2 = 4.;
-    MP.kappa = 1e-2;
-    MP.tau2 = MP.kappa * MP.r0 / (MP.T0 * MP.alpha2);
-    MP.Pr = 0.;
+    MP.τ1 = 6 * μ / (MP.ρ0 * MP.cs2);
+    MP.α2 = 4.;
+    MP.τ2 = κ * MP.ρ0 / (MP.T0 * MP.α2);
 
     Vec u = heat_conduction_1d(MP);
 

@@ -1,3 +1,5 @@
+import GPRpy
+
 from time import time
 
 from joblib import Parallel
@@ -17,7 +19,7 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.elastic2_IC
+IC = fluids.first_stokes_problem_IC
 BC = boundaries.standard_BC
 
 
@@ -29,13 +31,10 @@ pool = Parallel(n_jobs=NCORE)
 
 
 if USE_CPP:
-    import GPRpy
-    from system.gpr.misc.objects import CParameters
     extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
-    ub = zeros(extDims * nV);
-    wh = zeros(extDims * int(pow(N1,ndim)) * nV);
-    qh = zeros(extDims * int(pow(N1,ndim+1)) * nV);
-    cPARs = [CParameters(GPRpy, PAR) for PAR in PARs]
+    ub = zeros(extDims * nV)
+    wh = zeros(extDims * int(pow(N1,ndim)) * nV)
+    qh = zeros(extDims * int(pow(N1,ndim+1)) * nV)
 
 
 def main(t, tf, count, data):
@@ -61,7 +60,7 @@ def main(t, tf, count, data):
 
             if USE_CPP:
                 tmp = mat.ravel()
-                MP = cPARs[i]
+                MP = PARs[i]
 
                 if SPLIT:
                     GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,

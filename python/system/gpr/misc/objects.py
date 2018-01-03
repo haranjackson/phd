@@ -1,21 +1,7 @@
 from system.gpr.variables.state import temperature
+from system.gpr.variables.mg import eos_text_to_code
+from options import USE_CPP
 
-
-def CParameters(GPRpy, PAR):
-    MP = GPRpy.classes.Par()
-    MP.gamma = PAR.γ
-    MP.cv = PAR.cv
-    MP.pinf = PAR.pINF
-    MP.r0 = PAR.ρ0
-    MP.p0 = PAR.p0
-    MP.T0 = PAR.T0
-    MP.cs2 = PAR.cs2
-    MP.mu = PAR.μ
-    MP.tau1 = PAR.τ1
-    MP.alpha2 = PAR.α2
-    MP.kappa = PAR.κ
-    MP.tau2 = PAR.τ2
-    return MP
 
 class hyperelastic_params():
     def __init__(self, ρ0, α, β, γ, cv, T0, b0, c0):
@@ -29,8 +15,10 @@ class hyperelastic_params():
         self.B0 = b0**2
 
 class EOS_params():
-    def __init__(self, EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2, ε1, ε2):
-        self.EOS = EOS
+    def __init__(self, EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2):
+
+        self.EOS = eos_text_to_code(EOS)
+
         self.ρ0 = ρ0
         self.cv = cv
         self.p0 = p0
@@ -44,112 +32,95 @@ class EOS_params():
             self.c02 = c0**2
             self.s = s
 
-        elif EOS == 'jwl':
+        elif EOS == 'jwl' or EOS == 'cc':
             self.Γ0 = Γ0
             self.A = A
             self.B = B
             self.R1 = R1
             self.R2 = R2
 
-        elif EOS == 'cc':
-            self.Γ0 = Γ0
-            self.A = A
-            self.B = B
-            self.ε1 = ε1
-            self.ε2 = ε2
+def params(PAR, Rc, EOS, ρ0, p0, T0, cv,
+           γ, pINF,
+           c0, Γ0, s, e0,
+           A, B, R1, R2,
+           cs, β, τ1, μ, σY, n, PLASTIC,
+           α, τ2,
+           REACTION, Qc,
+           Kc, Ti,
+           Bc, Ea,
+           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2):
 
-class params():
-    def __init__(self, Rc, EOS, ρ0, p0, T0, cv,
-                 γ, pINF,
-                 c0, Γ0, s, e0,
-                 A, B, R1, R2, ε1, ε2,
-                 cs, β, τ1, μ, σY, n, PLASTIC,
-                 α, τ2,
-                 REACTION, Qc,
-                 Kc, Ti,
-                 Bc, Ea,
-                 I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2):
+    PAR.Rc = Rc
+    PAR.EOS = eos_text_to_code(EOS)
 
-        self.Rc = Rc
-        self.EOS = EOS
+    PAR.ρ0 = ρ0
+    PAR.p0 = p0
+    PAR.T0 = T0
+    PAR.cv = cv
 
-        self.ρ0 = ρ0
-        self.p0 = p0
-        self.T0 = T0
-        self.cv = cv
+    if EOS == 'sg':
+        PAR.γ = γ
+        PAR.pINF = pINF
 
-        if EOS == 'sg':
-            self.γ = γ
-            self.pINF = pINF
+    elif EOS == 'smg':
+        PAR.Γ0 = Γ0
+        PAR.c02 = c0**2
+        PAR.s = s
+        PAR.e0 = e0
 
-        elif EOS == 'smg':
-            self.Γ0 = Γ0
-            self.c02 = c0**2
-            self.s = s
-            self.e0 = e0
+    elif EOS == 'jwl' or EOS == 'cc':
+        PAR.Γ0 = Γ0
+        PAR.A = A
+        PAR.B = B
+        PAR.R1 = R1
+        PAR.R2 = R2
 
-        elif EOS == 'jwl':
-            self.Γ0 = Γ0
-            self.A = A
-            self.B = B
-            self.R1 = R1
-            self.R2 = R2
+    if cs is not None:
+        PAR.cs2 = cs**2
+        PAR.β = β
+        PAR.τ1 = τ1
+        PAR.PLASTIC = PLASTIC
+        if PLASTIC:
+            PAR.σY = σY
+            PAR.n = n
 
-        elif EOS == 'cc':
-            self.Γ0 = Γ0
-            self.A = A
-            self.B = B
-            self.ε1 = ε1
-            self.ε2 = ε2
+    if α is not None:
+        PAR.α2 = α**2
+        PAR.τ2 = τ2
 
-        if cs is not None:
-            self.cs2 = cs**2
-            self.β = β
-            self.τ1 = τ1
-            self.PLASTIC = PLASTIC
-            if PLASTIC:
-                self.σY = σY
-                self.n = n
-            else:
-                self.μ = μ
+    if REACTION is not None:
+        PAR.REACTION = REACTION
+        PAR.Qc = Qc
 
-        if α is not None:
-            self.α2 = α**2
-            self.τ2 = τ2
+        if REACTION == 'd':
+            PAR.Kc = Kc
+            PAR.Ti = Ti
 
-        if REACTION is not None:
-            self.REACTION = REACTION
-            self.Qc = Qc
+        elif REACTION == 'a':
+            PAR.Ea = Ea
+            PAR.Bc = Bc
 
-            if REACTION == 'd':
-                self.Kc = Kc
-                self.Ti = Ti
-
-            elif REACTION == 'a':
-                self.Ea = Ea
-                self.Bc = Bc
-
-            elif REACTION == 'i':
-                self.I = I
-                self.G1 = G1
-                self.G2 = G2
-                self.a = a
-                self.b = b
-                self.c = c
-                self.d = d
-                self.e = e
-                self.g = g
-                self.x = x
-                self.y = y
-                self.z = z
-                self.φIG = φIG
-                self.φG1 = φG1
-                self.φG2 = φG2
+        elif REACTION == 'i':
+            PAR.I = I
+            PAR.G1 = G1
+            PAR.G2 = G2
+            PAR.a = a
+            PAR.b = b
+            PAR.c = c
+            PAR.d = d
+            PAR.e = e
+            PAR.g = g
+            PAR.x = x
+            PAR.y = y
+            PAR.z = z
+            PAR.φIG = φIG
+            PAR.φG1 = φG1
+            PAR.φG2 = φG2
 
 def material_parameters(EOS, ρ0, cv, p0=None,
                         γ=None, pINF=None,
                         c0=None, Γ0=None, s=None, e0=None,
-                        A=None, B=None, R1=None, R2=None, ε1=None, ε2=None,
+                        A=None, B=None, R1=None, R2=None,
                         cs=None, β=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
                         α=None, κ=None, Pr=None,
                         REACTION=None, Qc=None,
@@ -168,7 +139,7 @@ def material_parameters(EOS, ρ0, cv, p0=None,
     if (γ is not None) and (pINF is None):
         pINF = 0
 
-    P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2, ε1, ε2)
+    P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2)
     T0 = temperature(ρ0, p0, P)
 
     if cs is not None:
@@ -184,13 +155,21 @@ def material_parameters(EOS, ρ0, cv, p0=None,
     else:
         τ2 = None
 
-    return params(Rc, EOS, ρ0, p0, T0, cv,
-                  γ, pINF,
-                  c0, Γ0, s, e0,
-                  A, B, R1, R2, ε1, ε2,
-                  cs, β, τ1, μ, σY, n, PLASTIC,
-                  α, τ2,
-                  REACTION, Qc,
-                  Kc, Ti,
-                  Bc, Ea,
-                  I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2)
+    if USE_CPP:
+        import GPRpy
+        PAR = GPRpy.classes.Par()
+    else:
+        class PAR: pass
+
+    params(PAR, Rc, EOS, ρ0, p0, T0, cv,
+           γ, pINF,
+           c0, Γ0, s, e0,
+           A, B, R1, R2,
+           cs, β, τ1, μ, σY, n, PLASTIC,
+           α, τ2,
+           REACTION, Qc,
+           Kc, Ti,
+           Bc, Ea,
+           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2)
+
+    return PAR
