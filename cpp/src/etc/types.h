@@ -1,8 +1,10 @@
-﻿#ifndef TYPES_H
+#ifndef TYPES_H
 #define TYPES_H
 
 //#define EIGEN_USE_MKL_ALL
 //#define EIGEN_MKL_DIRECT_CALL
+//#define EIGEN_DONT_VECTORIZE
+//#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 #include "../../include/eigen3/Eigen"
 

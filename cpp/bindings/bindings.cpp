@@ -83,11 +83,11 @@ PYBIND11_MODULE(GPRpy, m)
             .def_readwrite("τ2", &Par::τ2);
 
     pybind11::class_<poly>(m_classes, "poly")
-              .def(pybind11::init<Vec>())
-              .def_readwrite("coef", &poly::coef)
-              .def("intt", &poly::intt)
-              .def("diff", &poly::diff)
-              .def("eval", &poly::eval);
+            .def(pybind11::init<Vec>())
+            .def_readwrite("coef", &poly::coef)
+            .def("intt", &poly::intt)
+            .def("diff", &poly::diff)
+            .def("eval", &poly::eval);
 
     m_scipy.def("lgmres_wrapper", &lgmres_wrapper,
                 py::arg("matvec"),
