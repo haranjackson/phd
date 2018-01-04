@@ -1,0 +1,201 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout researchoutput
+The following materials were produced over the course of my PhD.
+\end_layout
+
+\begin_layout Subsubsection*
+Publications
+\end_layout
+
+\begin_layout Itemize
+H Jackson, G Harcombe, 
+\shape italic
+A solver based on eigendecomposition of the Cauchy tensor for Godunov-Romenski-t
+ype continuum models
+\shape default
+ (in preparation)
+\end_layout
+
+\begin_layout Itemize
+H Jackson, N Nikiforakis, 
+\shape italic
+A Riemann ghost fluid method for modeling multimaterial interfaces with
+ the GPR model
+\shape default
+ (in preparation)
+\end_layout
+
+\begin_layout Itemize
+H Jackson, 
+\shape italic
+The Montecinos-Balsara ADER-FV polynomial basis: convergence properties
+ & extension to non-conservative multidimensional systems
+\shape default
+ (Computers & Fluids, 2018)
+\end_layout
+
+\begin_layout Itemize
+H Jackson, 
+\shape italic
+A fast numerical scheme for the Godunov-Peshkov-Romenski model of continuum
+ mechanics
+\shape default
+ (Journal of Computational Physics, 2017) 
+\end_layout
+
+\begin_layout Itemize
+H Jackson, 
+\shape italic
+On the eigenvalues of the ADER-WENO Galerkin predictor
+\shape default
+ (Journal of Computational Physics, 2017)
+\end_layout
+
+\begin_layout Subsubsection*
+Conference Presentations
+\end_layout
+
+\begin_layout Itemize
+International Conference on Computational Science 2017 (Zürich, CH), 
+\shape italic
+Paper: A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of
+ Continuum Mechanics
+\end_layout
+
+\begin_layout Itemize
+SIAM International Conference on Numerical Combustion 2017 (Orlando, FL),
+ 
+\shape italic
+Minisymposium: A New Approach for Cook-off Modeling
+\end_layout
+
+\begin_layout Itemize
+Scientific Computation in the University of Cambridge Seminar Day 2017 (Cambridg
+e, UK), 
+\shape italic
+Poster: A Numerical Method based on Operator Splitting for the GPR Model
+ of Continuum Mechanics
+\end_layout
+
+\begin_layout Itemize
+Cavendish Graduate Student Conference 2016 (Cambridge, UK), 
+\shape italic
+Poster: A New Framework for Simulating Multimaterial Systems and Gaseous
+ Cookoff
+\end_layout
+
+\begin_layout Subsubsection*
+Open-Source Software
+\end_layout
+
+\begin_layout Itemize
+ADER-WENO (github.com/haranjackson/ADER-WENO): A Python implementation of
+ the ADER-WENO method for solving hyperbolic systems of PDEs
+\end_layout
+
+\begin_layout Itemize
+Julia-WENO (github.com/haranjackson/Julia-WENO): An optimized Julia implementatio
+n of the WENO reconstruction algorithm, of any order of accuracy
+\end_layout
+
+\begin_layout Itemize
+Euler1D (github.com/haranjackson/Euler1D): A few first- and second-order
+ methods for solving the 1D Euler equations, implemented in C++
+\end_layout
+
+\begin_layout Itemize
+ProjectionMethod (github.com/haranjackson/ProjectionMethod): A C++ implementation
+ of Chorin’s Project Method
+\end_layout
+
+\begin_layout Itemize
+NewtonKrylov (github.com/haranjackson/NewtonKrylov): A C++ implementation
+ of the Newton-Krylov algorithm, with Python bindings
+\end_layout
+
+\begin_layout Itemize
+LGMRES (github.com/haranjackson/LGMRES): A C++ implementation of the LGMRES
+ algorithm, with Python bindings
+\end_layout
+
+\begin_layout Itemize
+LegendreGauss (github.com/haranjackson/LegendreGauss): C++ code to compute
+ the Legendre-Gauss nodes and weights on [-1,1], based on NumPy’s leggauss
+ function
+\end_layout
+
+\end_body
+\end_document
