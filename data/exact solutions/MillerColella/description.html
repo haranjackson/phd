@@ -1,0 +1,34 @@
+<p>
+This is the smooth purely elastic test case 8.1 of Miller & Colella 2001. The material obeys the modified Moonley-Rivlin hyperelastic equation of state described in that paper, with parameters &rho;<sub>0</sub>=1, &mu;<sub>0</sub> = 0.6, &lambda;<sub>0</sub> = 0.6, &mu;<sub>s</sub>=0.01, &lambda;<sub>s</sub>=0.01
+</p>
+<p>
+The ambient initial conditions are: F =
+<table style="display:inline;vertical-align:middle;">
+  <tr>
+    <td>0.90909</td><td>0</td><td>0</td>
+  </tr>
+  <tr>
+    <td>0</td><td>0.90909</td><td>0</td>
+  </tr>
+  <tr>
+    <td>0</td><td>0</td><td>0.90909</td>
+  </tr>
+</table>
+, v = (0, 0, 0), s = 0, 
+with a Gaussian 'hotspot' of increased energy located at x=0, with a distribution of standard deviation 5 and internal energy increased by a factor 10. The time to which the simulation is run is t=4.
+</p>
+<p>
+There are three sets of tests run: one set with varying resolution of
+100, 200, 400, and 800 cells, and no refinement, and the second
+set with a fixed effective resolution of 800 cells, with
+coarsest grid level resolutions 100, 200, and 400,
+with refinements of factor 2 to achieve the effective resolution.</p>
+<p>
+The third set of tests varies the slope-limiter used for comparison of their various properties.
+We also choose whether to
+limit on primitive or conserved variables (for SLIC and MUSCL-Hancock only).
+<p>
+The first two tests are run with five different flux methods, the first-order
+FORCE and Godunov and the second-order SLIC, MUSCL-Hancock and WAF. The third test
+is only run for SLIC, MUSCL-Hancock and WAF, being the only methods that use limiters.
+</p>

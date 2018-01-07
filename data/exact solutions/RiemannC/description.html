@@ -1,0 +1,60 @@
+<p>
+This is a Riemann problem test that corresponds to testcase 1 of Miller 2003. The material obeys the Vinet-Rose equation of state, with material constants chosen to correspond to copper.</p>
+<p>
+The initial conditions are:
+<table>
+<tr>
+<td>
+F = <table class="matrix">
+  <tr>
+    <td>1</td><td>0</td><td>0</td>
+  </tr>
+  <tr>
+    <td>-0.0090909</td><td>0.90909</td><td>0</td>
+  </tr>
+  <tr>
+    <td>-0.016667</td><td>0</td><td>0.833333</td>
+  </tr>
+</table>
+, u = (2000, 0, 100), s = -88.5
+</td>
+<td>
+if x < 0
+</td>
+</tr>
+<tr>
+<td>
+F = <table class="matrix">
+  <tr>
+    <td>1</td><td>0</td><td>0</td>
+  </tr>
+  <tr>
+    <td>0.0181818</td><td>0.90909</td><td>0</td>
+  </tr>
+  <tr>
+    <td>-0.0166667</td><td>0</td><td>0.833333</td>
+  </tr>
+</table>, u = (0, -30, -10), s = -88.5
+</td>
+<td>
+if 0 < x
+</td>
+</tr>
+</table>
+and the time to which the simulation is run is t=1ms.
+</p>
+<p>
+There are three sets of tests run: one set with varying resolution of
+100, 200, 400, and 800 cells, and no refinement, and the second
+set with a fixed effective resolution of 800 cells, with
+coarsest grid level resolutions 100, 200, and 400,
+with refinements of factor 2 to achieve the effective resolution.</p>
+<p>
+The third set of tests varies the slope-limiter used for comparison of their various properties.
+We also choose whether to
+limit on primitive or conserved variables (for SLIC and MUSCL-Hancock only).
+<p>
+The first two tests are run with five different flux methods, the first-order
+FORCE and Godunov and the second-order SLIC, MUSCL-Hancock and WAF. The third test
+is only run for SLIC, MUSCL-Hancock and WAF, being the only methods that use limiters.
+</p>

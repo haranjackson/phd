@@ -1,0 +1,30 @@
+<p>
+This is a Riemann problem test that corresponds to testcase 5.3 of Titarev et al. 2006: Sonic point test problem. The material obeys the isotropic hyperelastic equation of state due to Romenski (Titarev, Romenski, Toro 2008). Material constants are chosen to correspond to copper, given by &rho;<sub>0</sub>=8.93, &alpha;=1, &beta;=3, &gamma;=2, b<sub>0</sub>=2.1, c<sub>0</sub>=4.6.</p>
+<p>
+The initial conditions are:
+<ul>
+<li> 
+F = <table class="matrix">
+<tr><td>0.8</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>0</td><td>0</td><td>1</td></tr>
+</table>, u = (0,0,0), S = 0 if x < 0.55 </li>
+<li> F = I, u = (3,0,0), S = 0 if x > 0.55 </li>
+</ul>
+and the time to which the simulation is run is t=0.04.
+</p>
+<p>
+There are three sets of tests run: one set with varying resolution of
+100, 200, 400, and 800 cells, and no refinement, and the second
+set with a fixed effective resolution of 800 cells, with
+coarsest grid level resolutions 100, 200, and 400,
+with refinements of factor 2 to achieve the effective resolution.</p>
+<p>
+The third set of tests varies the slope-limiter used for comparison of their various properties.
+We also choose whether to
+limit on primitive or conserved variables (for SLIC and MUSCL-Hancock only).
+<p>
+The first two tests are run with five different flux methods, the first-order
+FORCE and Godunov and the second-order SLIC, MUSCL-Hancock and WAF. The third test
+is only run for SLIC, MUSCL-Hancock and WAF being the only methods that use limiters.
+</p>
