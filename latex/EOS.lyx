@@ -990,7 +990,37 @@ Thus:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-p=\rho^{2}E_{\rho}=\rho\left(2\alpha\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)+\beta\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\right)
+p=\rho^{2}E_{\rho}=\rho\left(\frac{c_{0}^{2}}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)+\beta\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E-\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}-\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}=\frac{p}{\gamma\rho}-\frac{c_{0}^{2}}{\gamma\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-\beta\frac{c_{s}^{2}}{4\gamma}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=\frac{p}{\gamma\rho}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1-\frac{2\alpha}{\gamma}\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}\right)+\left(1-\frac{\beta}{\gamma}\right)\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}
 \end{equation}
 
 \end_inset

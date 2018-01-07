@@ -140,6 +140,17 @@ description "Reference density"
 
 \begin_layout Section
 Equations of State
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Equations-of-State"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Mie-Gruneisen Models
 \end_layout
 
 \begin_layout Standard
@@ -155,11 +166,12 @@ reference "eq:EnergyDefinition"
 \end_inset
 
 .
- In this study, 
+ In this study, several different possible choices for 
 \begin_inset Formula $E_{1}$
 \end_inset
 
- will always be chosen to take the following Mie-Gruneisen form:
+ are put into the same framework by expressing them in the following Mie-Gruneis
+en form:
 \end_layout
 
 \begin_layout Standard
@@ -181,8 +193,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-e\left(\rho,p\right) & =e_{ref}\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\\
-T & =T_{0}+\frac{e-e_{ref}}{c_{v}}=T_{0}+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}
+E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e_{ref}\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
+T & =T_{ref}+\frac{e-e_{ref}}{c_{v}}=T_{ref}+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}
 \end{align}
 
 \end_inset
@@ -219,18 +231,106 @@ reference "tab:MG EOSs"
 \end_inset
 
 .
+ The first five entries in the table are standard results.
+ The sixth is derived thus.
+ The Godunov-Romenski hyperelastic EOS is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,S,A\right)=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)+\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the relation 
+\begin_inset Formula $\det\left(A\right)=\frac{\rho}{\rho_{0}}$
+\end_inset
+
+, this can be thought of as taking the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}\left(\rho,s\right)+\frac{c_{s}\left(\rho\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}$
+\end_inset
+
+.
+ Considering only the microscale energy component, note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}\frac{\partial E_{1}}{\partial\rho}=\rho\left(\frac{c_{0}^{2}}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}-\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}=\frac{p}{\gamma\rho}-\frac{c_{0}^{2}}{\gamma\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ can be put in Mie-Gruneisen form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p-\frac{c_{0}^{2}\rho}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}}{\gamma\rho}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float table
 wide false
-sideways false
+sideways true
 status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="7" columns="4">
+<lyxtabular version="3" rows="7" columns="5">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -269,11 +369,23 @@ Equation of State
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\Gamma\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $T_{ref}$
 \end_inset
 
 
@@ -316,11 +428,23 @@ Ideal Gas
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}\left(=\gamma-1\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\gamma-1$
+\begin_inset Formula $0$
 \end_inset
 
 
@@ -343,7 +467,7 @@ Stiffened Gas
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $-\gamma p_{\infty}$
+\begin_inset Formula $-p_{\infty}$
 \end_inset
 
 
@@ -355,7 +479,19 @@ Stiffened Gas
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $0$
+\begin_inset Formula $\frac{p_{\infty}}{\rho}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}\left(=\gamma-1\right)$
 \end_inset
 
 
@@ -367,7 +503,7 @@ Stiffened Gas
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\gamma-1$
+\begin_inset Formula $0$
 \end_inset
 
 
@@ -390,7 +526,7 @@ Shock Mie-Gruneisen
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $p_{0}+\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}$
+\begin_inset Formula $\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}$
 \end_inset
 
 
@@ -402,7 +538,19 @@ Shock Mie-Gruneisen
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $e_{0}+\frac{p_{ref}+p_{0}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)$
+\begin_inset Formula $\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}\frac{\rho_{0}}{\rho}$
 \end_inset
 
 
@@ -414,7 +562,7 @@ Shock Mie-Gruneisen
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma_{0}\frac{\rho_{0}}{\rho}$
+\begin_inset Formula $0$
 \end_inset
 
 
@@ -457,11 +605,23 @@ JWL
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
 \end_inset
 
 
@@ -504,11 +664,23 @@ Cochran-Chan
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
 \end_inset
 
 
@@ -531,6 +703,9 @@ Godunov-Romenski
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\frac{c_{0}^{2}\rho}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}$
+\end_inset
+
 
 \end_layout
 
@@ -540,6 +715,21 @@ Godunov-Romenski
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}\left(=\gamma\right)$
+\end_inset
+
 
 \end_layout
 
@@ -549,6 +739,9 @@ Godunov-Romenski
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $T_{0}$
+\end_inset
+
 
 \end_layout
 
@@ -594,19 +787,34 @@ name "tab:MG EOSs"
 \end_layout
 
 \begin_layout Standard
-Although this is a versatile class of equations of state - and fit for the
- purposes that the model is put to here - it should be noted that many other
- choices are available.
+Although this is a versatile class of equations of state - and it is fit
+ for the purposes that the model is put to here - it should be noted that
+ many other choices are available.
+\end_layout
+
+\begin_layout Subsection*
+Variable Transverse Perturbation Speed
 \end_layout
 
 \begin_layout Standard
-The Godunov-Romenski hyperelastic EOS is given by:
+Taking 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MG form"
+
+\end_inset
+
+ and using the fact that 
+\begin_inset Formula $p=\rho^{2}e_{\rho}$
+\end_inset
+
+, we have:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E\left(\rho,S,A\right)=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}+c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)+\frac{b_{0}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(G\right)\right\Vert ^{2}
+e_{\rho}-\frac{\Gamma}{\rho}e=\frac{p_{ref}}{\rho^{2}}-\frac{\Gamma}{\rho}e_{ref}
 \end{equation}
 
 \end_inset
@@ -615,13 +823,45 @@ E\left(\rho,S,A\right)=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho
 \end_layout
 
 \begin_layout Standard
-This can be thought of as taking the form:
+The solutions to this equation for different forms of 
+\begin_inset Formula $\Gamma,p_{ref},e_{ref}$
+\end_inset
+
+ take the form below, where 
+\begin_inset Formula $f$
+\end_inset
+
+ is an arbitrary function of 
+\begin_inset Formula $s$
+\end_inset
+
+, 
+\begin_inset Formula $g$
+\end_inset
+
+ depends on the form of 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+, and 
+\begin_inset Formula $\hat{e}$
+\end_inset
+
+ is a particular solution of the equation (which will be equal to 
+\begin_inset Formula $e_{ref}$
+\end_inset
+
+ if 
+\begin_inset Formula $p_{ref}=\rho^{2}\frac{\partial e_{ref}}{\partial\rho}$
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{1}\left(\rho,s\right)+\frac{c_{s}\left(\rho\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}
+e=f\left(s\right)g\left(\rho\right)+\hat{e}\left(\rho\right)
 \end{equation}
 
 \end_inset
@@ -630,33 +870,13 @@ E_{1}\left(\rho,s\right)+\frac{c_{s}\left(\rho\right)^{2}}{4}\left\Vert \dev\lef
 \end_layout
 
 \begin_layout Standard
-where 
-\begin_inset Formula $c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}$
-\end_inset
-
-.
- Considering only the microscale energy component, note that we have:
+We have:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-p=\rho^{2}\frac{\partial E_{1}}{\partial\rho}=\rho\left(2\alpha\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Therefore:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-E_{1}-\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}=\frac{p}{\gamma\rho}-\frac{2\alpha}{\gamma}\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}
+p=\rho^{2}e_{\rho}=\rho^{2}\left(f\left(s\right)g^{'}\left(\rho\right)+\hat{e}^{'}\left(\rho\right)\right)
 \end{equation}
 
 \end_inset
@@ -671,7 +891,7 @@ Thus:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{1}=\frac{p}{\gamma\rho}+\frac{2\alpha}{\gamma}\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}
+\frac{\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)}{g^{'}\left(\rho\right)}=f\left(s\right)=\frac{e-\hat{e}\left(\rho\right)}{g\left(\rho\right)}
 \end{equation}
 
 \end_inset
@@ -680,14 +900,123 @@ E_{1}=\frac{p}{\gamma\rho}+\frac{2\alpha}{\gamma}\frac{c_{0}^{2}}{2\alpha^{2}}\l
 \end_layout
 
 \begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\sigma=-\rho A^{T}E_{A}=-\rho c_{s}^{2}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}G\dev\left(G\right)
+E_{1}\left(\rho,p\right)=e\left(\rho,p\right)=\hat{e}\left(\rho\right)+\frac{g\left(\rho\right)}{g^{'}\left(\rho\right)}\left(\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)\right)
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+We now add another term to the energy, giving it the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,p\right)=e\left(\rho,p\right)=f\left(s\right)g\left(\rho\right)+\hat{e}\left(\rho\right)+B\left(\rho\right)h\left(A\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}\left(f\left(s\right)g^{'}\left(\rho\right)+\hat{e}^{'}\left(\rho\right)+B^{'}\left(\rho\right)h\left(A\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)-B^{'}\left(\rho\right)h\left(A\right)}{g^{'}\left(\rho\right)}=f\left(s\right)=\frac{e-\hat{e}\left(\rho\right)-B\left(\rho\right)h\left(A\right)}{g\left(\rho\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=\frac{g\left(\rho\right)}{g^{'}\left(\rho\right)}\left(\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)-B^{'}\left(\rho\right)h\left(A\right)\right)+\hat{e}\left(\rho\right)+B\left(\rho\right)h\left(A\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $\frac{g\left(\rho\right)}{g^{'}\left(\rho\right)}=\frac{\rho}{\Gamma\left(\rho\right)}$
+\end_inset
+
+, this can be expressed as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,p\right)=e\left(\rho,p\right)=E_{1}\left(\rho,p\right)+\left(B\left(\rho\right)-\frac{\rho}{\Gamma\left(\rho\right)}B^{'}\left(\rho\right)\right)h\left(A\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the EOS comprises a microscale energy component of Mie-Gruneisen type,
+ and a mesoscale energy component with speed of transverse vibrations dependent
+ upon 
+\begin_inset Formula $\rho$
+\end_inset
+
+, then this provides a method to recover the EOS in terms of 
+\begin_inset Formula $\rho$
+\end_inset
+
+ and 
+\begin_inset Formula $p$
+\end_inset
+
+ (by substituting 
+\begin_inset Formula $B\left(\rho\right)=\frac{c_{s}^{2}\left(\rho\right)}{4}$
+\end_inset
+
+ and 
+\begin_inset Formula $h\left(A\right)=\left\Vert \dev\left(A^{T}A\right)\right\Vert _{F}^{2}$
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Section

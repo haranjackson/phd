@@ -158,9 +158,9 @@ begin{subequations}
 \begin{align}
 \frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
 \frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
-\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquation}\\
-\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquation}\\
-\frac{\partial\left(\rho s\right)}{\partial t}+\frac{\partial\left(\rho sv_{k}+H_{k}\right)}{\partial x_{k}} & =\frac{\rho}{\theta_{1}\left(\tau_{1}\right)T}\psi_{kl}\psi_{kl}+\frac{\rho}{\theta_{2}\left(\tau_{2}\right)T}H_{k}H_{k}\label{eq:EntropyEquation}
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho s\right)}{\partial t}+\frac{\partial\left(\rho sv_{k}+H_{k}\right)}{\partial x_{k}} & =\frac{\rho}{T}\left(\frac{\psi_{kl}\psi_{kl}}{\theta_{1}}+\frac{H_{k}H_{k}}{\theta_{2}}\right)\label{eq:EntropyEquation}
 \end{align}
 
 \end_inset
@@ -449,10 +449,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-p & =\rho^{2}\frac{\partial E}{\partial\rho}\\
-\sigma & =-\rho A^{T}\frac{\partial E}{\partial A}\\
-T & =\frac{\partial E}{\partial s}\\
-\boldsymbol{q} & =\frac{\partial E}{\partial s}\frac{\partial E}{\partial\boldsymbol{J}}
+p & =\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A}\\
+\sigma & =-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\\
+T & =\left.\frac{\partial E}{\partial s}\right|_{\rho,A}\\
+\boldsymbol{q} & =T\frac{\partial E}{\partial\boldsymbol{J}}
 \end{align}
 
 \end_inset
@@ -536,7 +536,14 @@ In previous studies,
 \begin_inset Formula $E_{1}$
 \end_inset
 
- is given in the following chapter.
+ is given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Equations-of-State"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -597,6 +604,28 @@ description "Constant related to characteristic velocity of heat waves"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is the characteristic velocity of transverse perturbations.
+ In previous studies, 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ has always been constant.
+ In this study, it will be extended to have a 
+\begin_inset Formula $\rho$
+\end_inset
+
+ dependence, as outlined in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Equations-of-State"
+
+\end_inset
+
+.
+ 
 \begin_inset Formula $\alpha$
 \end_inset
 
@@ -625,6 +654,14 @@ description "Characteristic velocity of heat waves"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+In previous studies, 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ has been taken to be constant, as it will in this study.
 \end_layout
 
 \begin_layout Standard
@@ -694,8 +731,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\theta_{1}\left(\tau_{1}\right) & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
-\theta_{2}\left(\tau_{2}\right) & =\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
+\theta_{2} & =\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T}
 \end{align}
 
 \end_inset

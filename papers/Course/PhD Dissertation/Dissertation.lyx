@@ -21,7 +21,7 @@
 \usepackage{setspace}		% Spacing in TOC
 \setcounter{chapter}{-1}		% Make chapters start at 0 
 
-%%% Edit Heading Spacing %%%
+%%% Heading Spacing %%%
 \usepackage{titlesec}
 \titlespacing*{\section}{0pt}{4ex}{0ex}
 \titlespacing*{\subsection}{0pt}{4ex}{0ex}
