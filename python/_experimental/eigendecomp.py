@@ -3,13 +3,14 @@ from scipy.integrate import odeint
 from scipy.linalg import svd
 import matplotlib.pyplot as plt
 
-from system.gpr.misc.functions import dev, lim
+from system.gpr.misc.functions import det3, dev, lim
+from system.gpr.misc.objects import material_parameters
 from system.gpr.variables.eos import dEdA
 
 
 ### Options ###
 
-RAND = True
+RAND = 1
 
 if RAND:
     ε = rand(3,3)
@@ -28,6 +29,9 @@ else:
 tScale = 10
 includeSources = 1
 n = 50
+
+
+PAR = material_parameters('sg', 1, 1, p0=1, γ=1.4, b0=1, τ1=τ)
 
 
 ### Auxiliary Functions ###
@@ -57,7 +61,7 @@ def f_standard(y, t):
     A = y.reshape([3,3])
     ret = -dot(A,ε)
     if includeSources:
-        ret -= dEdA(A,1)/τ
+        ret -= dEdA(det3(A), A,PAR)/τ
     return ret.ravel()
 
 def solver_standard(A, dt):
@@ -79,6 +83,10 @@ def f_vectors(y, t):
     b1 = -dot(v3, dot(λ3*ε + λ2*ε.T, v2)) / lim(λ2-λ3)
     b2 = -dot(v1, dot(λ1*ε + λ3*ε.T, v3)) / lim(λ3-λ1)
     b3 = -dot(v2, dot(λ2*ε + λ1*ε.T, v1)) / lim(λ1-λ2)
+
+    #b1 = -dot(v3, dot(ε + ε.T, v2)) / lim(λ2-λ3)
+    #b2 = -dot(v1, dot(ε + ε.T, v3)) / lim(λ3-λ1)
+    #b3 = -dot(v2, dot(ε + ε.T, v1)) / lim(λ1-λ2)
 
     ret = zeros(12)
     ret[0] = -2 * dot(v1,dot(ε,v1))

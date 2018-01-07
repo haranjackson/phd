@@ -1,9 +1,16 @@
 from numpy import exp, eye, sqrt
 
 from system.gpr.misc.functions import L2_1D
-from system.gpr.variables.eos import E_2A, E_3, dEdJ, E_to_T
+from system.gpr.variables.eos import E_2A, E_2J, E_3, dEdJ
 from system.gpr.variables.sources import theta2inv
 
+
+def E_to_T(ρ, E, A, J, MP):
+    """ Returns the temperature of an ideal gas, given the energy
+        (minus the kinetic energy or any chemical energy)
+    """
+    E1 = E - E_2A(ρ, A, MP) - E_2J(J, MP)
+    return E1 / MP.cv
 
 def f_J(ρ, E, A, J, MP):
     T = E_to_T(ρ, E, A, J, MP)

@@ -7,6 +7,7 @@
 
 double tr(Matr X);
 double det(Matr X);
+double det3(Matr X);
 Mat2_2 inv2(Mat2_2r X);
 Mat3_3 inv3(Mat3_3r X);
 double L2_1D(Vec3r x);

@@ -121,17 +121,13 @@ def dFdP(P, d):
     p = P.p
     v = P.v
     A = P.A
-    J = P.J
     E = P.E
-    T = P.T
-    q = P.q
 
     dσdA = P.dσdA()
 
     MP = P.MP
     γ = MP.γ
     pINF = MP.pINF
-    α2 = MP.α2
 
     ρvd = ρ * v[d]
 
@@ -166,6 +162,9 @@ def dFdP(P, d):
 
 
     if THERMAL:
+        J = P.J
+        T = P.T
+        α2 = MP.α2
         ret[1, 14:17] = α2 * ρvd * J
         ret[1, 14+d] += α2 * T
         ret[14:17, 0] = v[d] * J

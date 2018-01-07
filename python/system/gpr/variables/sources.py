@@ -2,16 +2,18 @@ from numpy import exp, inf
 
 from system.gpr.misc.functions import det3, sigma_norm
 from system.gpr.variables.state import sigma
+from system.gpr.variables.wavespeeds import c_s2
 
 
-def theta1inv(A, MP):
+def theta1inv(ρ, A, MP):
     """ Returns 1/θ1
     """
-    cs2 = MP.cs2
     τ1 = MP.τ1
 
     if τ1==inf:
         return 0
+
+    cs2 = c_s2(ρ, MP)
 
     if MP.PLASTIC:
         σY = MP.σY
@@ -36,6 +38,7 @@ def theta2inv(ρ, T, MP):
     τ2 = MP.τ2
 
     return 1 / (α2 * τ2 * (ρ / ρ0) * (T0 / T))
+
 
 def K_arr(P, MP):
     """ Returns the rate of reaction according to Arrhenius kinetics

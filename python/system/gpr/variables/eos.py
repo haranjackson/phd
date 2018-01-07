@@ -1,24 +1,20 @@
-from system.gpr.variables.mg import Γ_MG, e_ref, p_ref
+from system.gpr.variables import mg
+from system.gpr.variables.wavespeeds import c_s2, dc_s2dρ
 from system.gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
 from options import VISCOUS, THERMAL, REACTIVE
 
 
 def E_1(ρ, p, MP):
-    """ Returns the microscale energy for the Mie-Gruneisen EOS
+    """ Returns the microscale energy
     """
-    Γ = Γ_MG(ρ, MP)
-    pr = p_ref(ρ, MP)
-    er = e_ref(ρ, MP)
-    return er + (p - pr) / (ρ * Γ)
+    return mg.internal_energy(ρ, p, MP)
 
 def E_2A(ρ, A, MP):
     """ Returns the mesoscale energy dependent on the distortion
     """
-    cs2 = MP.cs2
-    ρ0 = MP.ρ0
-    β = MP.β
+    cs2 = c_s2(ρ, MP)
     G = gram(A)
-    return cs2/4 * (ρ/ρ0)**β * L2_2D(dev(G))
+    return cs2 / 4 * L2_2D(dev(G))
 
 def E_2J(J, MP):
     """ Returns the mesoscale energy dependent on the thermal impulse
@@ -56,24 +52,32 @@ def total_energy(ρ, p, v, A, J, λ, MP):
 
     return ret
 
+def dEdρ(ρ, p, A, MP):
+    """ Returns the partial derivative of E by ρ (holding p constant)
+    """
+    dcs2dρ = dc_s2dρ(ρ, MP)
+    G = gram(A)
+    return mg.dedρ(ρ, p, MP) + dcs2dρ / 4 * L2_2D(dev(G))
+
+def dEdp(ρ, MP):
+    """ Returns the partial derivative of E by p
+    """
+    return mg.dedp(ρ, MP)
+
+def dEdv(v):
+    """ Returns the partial derivative of E by v
+    """
+    return v
+
 def dEdA(ρ, A, MP):
     """ Returns the partial derivative of E by A
     """
-    ρ0 = MP.ρ0
-    cs2 = MP.cs2
-    β = MP.β
+    cs2 = c_s2(ρ, MP)
     G = gram(A)
-    return cs2 * (ρ/ρ0)**β * AdevG(A,G)
+    return cs2 * AdevG(A,G)
 
 def dEdJ(J, MP):
     """ Returns the partial derivative of E by J
     """
     α2 = MP.α2
     return α2 * J
-
-def E_to_T(ρ, E, A, J, MP):
-    """ Returns the temperature of an ideal gas, given the energy
-        (minus the kinetic energy or any chemical energy)
-    """
-    E1 = E - E_2A(ρ, A, MP) - E_2J(J, MP)
-    return E1 / MP.cv

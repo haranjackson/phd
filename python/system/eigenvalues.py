@@ -4,7 +4,7 @@ from numpy.linalg import eigvals
 from system.gpr.misc.functions import GdevG
 from system.gpr.misc.structures import Cvec_to_Pclass
 from system.gpr.variables.mg import dTdρ, dTdp
-from system.gpr.variables.wavespeeds import c_0, c_h
+from system.gpr.variables.wavespeeds import c_0, c_h, c_s2
 from options import VISCOUS, THERMAL, PERRON_FROB
 
 
@@ -22,7 +22,7 @@ def thermo_acoustic_tensor(P, d):
     Gd = G[d]
 
     MP = P.MP
-    cs2 = MP.cs2
+    cs2 = c_s2(ρ, MP)
 
     if VISCOUS:
         O = GdevG(G)

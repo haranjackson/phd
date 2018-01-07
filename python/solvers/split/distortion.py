@@ -8,7 +8,8 @@ from system.gpr.variables.sources import theta1inv
 
 
 def f_A(A, MP):
-    return - dEdA(A, MP).ravel() * theta1inv(A, MP)
+    ρ = det3(A)
+    return - dEdA(A, MP).ravel() * theta1inv(ρ, A, MP)
 
 def jac_A(A, τ1):
     G = gram(A)

@@ -1,18 +1,24 @@
 from numpy import dot, eye
 
-from system.gpr.misc.functions import AdevG, gram
-from system.gpr.variables.mg import e_ref, p_ref, Γ_MG
-from system.gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA
+from system.gpr.misc.functions import AdevG, dev, gram, L2_2D
+from system.gpr.variables import mg
+from system.gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA, dEdJ
+from system.gpr.variables.wavespeeds import c_s2, dc_s2dρ
 from options import VISCOUS, THERMAL, REACTIVE
 
 
 def pressure(ρ, E, v, A, J, MP, λ=None):
-    """ Returns the pressure under the Mie-Gruneisen EOS
-    """
+
     E1 = E - E_3(v)
 
     if VISCOUS:
         E1 -= E_2A(ρ, A, MP)
+
+        if MP.β != 0:
+            Γ = mg.Γ_MG(ρ, MP)
+            dcs2dρ = dc_s2dρ(ρ, MP)
+            G = gram(A)
+            E1 += ρ/(4*Γ) * dcs2dρ / 4 * L2_2D(dev(G))
 
     if THERMAL:
         E1 -= E_2J(J, MP)
@@ -20,25 +26,18 @@ def pressure(ρ, E, v, A, J, MP, λ=None):
     if REACTIVE:
         E1 -= E_R(λ, MP)
 
-    Γ = Γ_MG(ρ, MP)
-    pr = p_ref(ρ, MP)
-    er = e_ref(ρ, MP)
+    p = mg.pressure(ρ, E1, MP)
 
-    return (E1 - er) * ρ * Γ + pr
+    return p
 
 def temperature(ρ, p, MP):
-    """ Returns the temperature under the Mie-Gruneisen EOS
-    """
-    cv = MP.cv
-    Γ = Γ_MG(ρ, MP)
-    pr = p_ref(ρ, MP)
-    return (p - pr) / (ρ * Γ * cv)
+
+    return mg.temperature(ρ, p, MP)
 
 def heat_flux(T, J, MP):
-    """ Returns the heat flux vector
-    """
-    α2 = MP.α2
-    return α2 * T * J
+
+    H = dEdJ(J, MP)
+    return H * T
 
 def sigma(ρ, A, MP):
     """ Returns the symmetric viscous shear stress tensor
@@ -47,9 +46,9 @@ def sigma(ρ, A, MP):
 
 def dsigmadA(ρ, A, MP):
     """ Returns T_ijmn = dσ_ij / dA_mn, holding ρ constant.
-        NOTE: Only valid for EOS with E_2A = cs2/4 * (ρ/ρ0)**(β/2) * (devG)**2
+        NOTE: Only valid for EOS with E_2A = cs^2/4 * |devG|^2
     """
-    cs2 = MP.cs2
+    cs2 = c_s2(ρ, MP)
     β = MP.β
 
     G = gram(A)
@@ -61,7 +60,7 @@ def dsigmadA(ρ, A, MP):
         ret[i, :, :, i] += AdevGT
         ret[:, i, :, i] += AdevGT
 
-    return -ρ * cs2 * (ρ/ρ0)**β * ret
+    return -ρ * cs2 * ret
 
 def Sigma(p, ρ, A, MP):
     """ Returns the total symmetric stress tensor

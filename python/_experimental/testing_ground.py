@@ -1,8 +1,10 @@
+from system.gpr.misc.functions import det3
 from system.gpr.misc.objects import material_parameters
+from system.gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
+
 from system.gpr.systems.conserved import system_cons
 from system.gpr.systems.primitive import system_prim
 from system.gpr.systems.jacobians import dQdP
-from system.gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
 
 
 def systems(Q, d, MP):
@@ -26,7 +28,7 @@ def generate_pars():
     α = 1.5
     κ = 1e-4
 
-    return material_parameters(γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0, cs=cs, α=α,
+    return material_parameters(γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0, b0=cs, α=α,
                                μ=μ, κ=κ)
 
 def generate_vecs(MP=None):
@@ -35,8 +37,8 @@ def generate_vecs(MP=None):
         MP = generate_pars()
 
     A = rand(3,3)
-    A /= sign(det(A))
-    ρ = det(A)
+    A /= sign(det3(A))
+    ρ = det3(A)
     p = rand()
     v = rand(3)
     J = rand(3)

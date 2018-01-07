@@ -66,7 +66,7 @@ class Cvec_to_Pclass():
         return gram(self.A)
 
     def θ1_1(self):
-        return theta1inv(self.A, self.MP)
+        return theta1inv(self.ρ, self.A, self.MP)
 
     def θ2_1(self):
         return theta2inv(self.ρ, self.T, self.MP)

@@ -164,6 +164,33 @@ def de_ref(ρ, MP):
     elif EOS == JWL or EOS == COCHRAN_CHAN:
         return e_ref(ρ, MP) / ρ**2
 
+
+def internal_energy(ρ, p, MP):
+    """ Returns the Mie-Gruneisen internal energy
+    """
+    Γ = Γ_MG(ρ, MP)
+    pr = p_ref(ρ, MP)
+    er = e_ref(ρ, MP)
+    return er + (p - pr) / (ρ * Γ)
+
+def pressure(ρ, e, MP):
+    """ Returns the Mie-Gruneisen pressure, given the density and internal
+        energy
+    """
+    Γ = Γ_MG(ρ, MP)
+    pr = p_ref(ρ, MP)
+    er = e_ref(ρ, MP)
+    return (e - er) * ρ * Γ + pr
+
+def temperature(ρ, p, MP):
+    """ Returns the Mie-Gruneisen temperature, given the density and pressure
+    """
+    cv = MP.cv
+    Γ = Γ_MG(ρ, MP)
+    pr = p_ref(ρ, MP)
+    return (p - pr) / (ρ * Γ * cv)
+
+
 def dedρ(ρ, p, MP):
     """ Returns the derivative of the Mie-Gruneisen internal energy
         with respect to ρ

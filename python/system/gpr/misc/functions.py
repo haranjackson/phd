@@ -45,6 +45,7 @@ def L2_2D(X):
            + X[1,0]**2 + X[1,1]**2 + X[1,2]**2
            + X[2,0]**2 + X[2,1]**2 + X[2,2]**2)
 
+@jit
 def sigma_norm(σ):
     """ Returns the norm defined in Boscheri et al
     """
@@ -64,7 +65,7 @@ def I_1(G):
 def I_2(G):
     """ Returns the second invariant of G
     """
-    return 1/2 * (tr(G)**2 - tr(dot(G,G)))
+    return 1/2 * (tr(G)**2 - L2_2D(G))
 
 def I_3(G):
     """ Returns the third invariant of G
@@ -83,11 +84,11 @@ def dev(G):
 
 @jit
 def GdevG(G):
-    return dot(G,G) - tr(G)/3 * G
+    return dot(G,dev(G))
 
 @jit
 def AdevG(A,G):
-    return dot(A,G) - tr(G)/3 * A
+    return dot(A,dev(G))
 
 
 @jit
