@@ -6,9 +6,9 @@ from options import nx, ny, nz, nV, dx
 
 
 def sod_shock_IC():
-    """ tf = 0.2
-        L = 1
-    """
+
+    tf = 0.2
+
     ρL = 1
     pL = 1
     vL = zeros(3)
@@ -17,12 +17,12 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 def water_gas_IC():
-    """ tf = 237.44e-6
-        L = 1
-    """
+
+    tf = 237.44e-6
+
     ρL = 1000
     pL = 1e9
     vL = zeros(3)
@@ -31,12 +31,12 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
+    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
 
 def water_water_IC():
-    """ tf = 1.5e-4
-        L = 1
-    """
+
+    tf = 1.5e-4
+
     ρL = 1000
     pL = 7e8
     vL = zeros(3)
@@ -45,12 +45,12 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_WAT2)
+    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
 
 def helium_bubble_IC():
-    """ tf = 0.0014
-        L = 1
-    """
+
+    tf = 0.0014
+
     ρL = 1.3333
     pL = 1.5e5
     vL = array([35.35*sqrt(10), 0, 0])
@@ -88,4 +88,4 @@ def helium_bubble_IC():
         else:
             u[i, 0, 0, :-3] = Q2
 
-    return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2]
+    return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2], tf

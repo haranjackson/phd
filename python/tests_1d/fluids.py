@@ -12,9 +12,9 @@ from options import nx, ny, nz, nV, dx, Lx, RGFM
 
 
 def heat_conduction_IC():
-    """ tf = 1
-        L = 1
-    """
+
+    tf = 1
+
     ρL = 2
     pL = 1
     vL = zeros(3)
@@ -24,9 +24,9 @@ def heat_conduction_IC():
     vR = zeros(3)
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
-                              cs=1, α=2, μ=1e-2, κ=1e-2)
+                              b0=1, α=2, μ=1e-2, κ=1e-2)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
     dx = 1/n
@@ -34,9 +34,9 @@ def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
     return v0 * erf(x / (2 * sqrt(μ * t)))
 
 def first_stokes_problem_IC():
-    """ tf = 1
-        L = 1
-    """
+
+    tf = 1
+
     γ=1.4
     μ = 1e-2 # 1e-3 # 1e-4
 
@@ -49,9 +49,9 @@ def first_stokes_problem_IC():
     vR = array([0, 0.1, 0])
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1/γ, γ=γ, pINF=0,
-                              cs=1, α=1e-16, μ=μ, Pr=0.75)
+                              b0=1, α=1e-16, μ=μ, Pr=0.75)
 
-    return riemann_IC(ρL, pL, vL, ρR, pR, vR, MP)
+    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP)
 
 def viscous_shock_exact(x, Ms, MP, μ, center=0):
     """ Returns the density, pressure, and velocity of the viscous shock
@@ -93,9 +93,9 @@ def viscous_shock_exact_x(n, M=2, t=0.2):
     return arange(M*t-0.25, M*t+0.75, 1/n)
 
 def viscous_shock_IC(center=0):
-    """ tf = 0.2
-        L = 1
-    """
+
+    tf = 0.2
+
     Ms = 2
     γ = 1.4
     pINF = 0
@@ -104,7 +104,7 @@ def viscous_shock_IC(center=0):
     μ = 2e-2
 
     MP = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
-                              cs=5, α=5, μ=2e-2, Pr=0.75)
+                              b0=5, α=5, μ=2e-2, Pr=0.75)
 
     x = arange(-Lx/2, Lx/2, 1/nx)
     ρ = zeros(nx)
@@ -122,4 +122,4 @@ def viscous_shock_IC(center=0):
         λ = 0
         u[i,0,0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
-    return u, [MP]
+    return u, [MP], tf

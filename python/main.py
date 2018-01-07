@@ -14,16 +14,16 @@ from etc.iterator import timestep, make_u
 from etc.save import Data, print_stats, save_all
 from solvers.solvers import ader_stepper, split_stepper
 from multi.gfm import add_ghost_cells
-from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1, tf
+from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = fluids.first_stokes_problem_IC
+IC = solids.barton1_IC
 BC = boundaries.standard_BC
 
 
-u, MPs = IC()
+u, MPs, tf = IC()
 data = [Data(u, 0)]
 m = len(MPs)
 
