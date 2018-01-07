@@ -1,0 +1,649 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Primitive System
+\end_layout
+
+\begin_layout Standard
+Taking the ordering 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+ of primitive variables in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Pvec"
+
+\end_inset
+
+, note that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MomentumEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalEquation"
+
+\end_inset
+
+ can be stated as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{D\rho}{Dt}+\rho\frac{\partial v_{k}}{\partial x_{k}} & =0\\
+\frac{Dv_{i}}{Dt}+\frac{1}{\rho}\frac{\partial\Sigma_{ik}}{\partial x_{k}} & =0\\
+\frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
+\frac{DJ_{i}}{Dt}+\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}} & =-\frac{H_{i}}{\theta_{2}}\\
+\frac{DE}{Dt}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the stress tensor 
+\begin_inset Formula $\Sigma=pI+\rho A^{T}\psi$
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{DE}{Dt} & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\frac{\partial E}{\partial\rho}\frac{D\rho}{Dt}+v_{i}\frac{Dv_{i}}{Dt}+\psi_{ij}\frac{DA_{ij}}{Dt}+H_{i}\frac{DJ_{i}}{Dt}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the energy equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\frac{\partial E}{\partial\rho}\rho\frac{\partial v_{k}}{\partial x_{k}}-\frac{v_{i}}{\rho}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\psi_{ij}A_{ik}\frac{\partial v_{k}}{\partial x_{j}}-\frac{\psi_{ij}\psi_{ij}}{\theta_{1}}\\
+-\frac{H_{i}}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}}-\frac{H_{i}H_{i}}{\theta_{2}}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}} & =0\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Simplifying:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\left(\frac{p}{\rho}-\frac{\partial E}{\partial\rho}\rho\right)\frac{\partial v_{k}}{\partial x_{k}}+\frac{T}{\rho}\frac{\partial H_{k}}{\partial x_{k}}=\frac{\psi_{ij}\psi_{ij}}{\theta_{1}}+\frac{H_{i}H_{i}}{\theta_{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The full system then becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{D\rho}{Dt}+\rho\frac{\partial v_{k}}{\partial x_{k}} & =0\\
+\frac{Dv_{i}}{Dt}+\frac{1}{\rho}\frac{\partial\Sigma_{ik}}{\partial x_{k}} & =0\\
+\frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
+\frac{DJ_{i}}{Dt}+\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}} & =-\frac{H_{i}}{\theta_{2}}\\
+\frac{Dp}{Dt}+\frac{p-\rho^{2}E_{\rho}}{\rho E_{p}}\frac{\partial v_{k}}{\partial x_{k}}+\frac{T}{\rho E_{p}}\frac{\partial H_{k}}{\partial x_{k}} & =\frac{\psi_{ij}\psi_{ij}}{\theta_{1}E_{p}}+\frac{H_{i}H_{i}}{\theta_{2}E_{p}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{align}
+\frac{p-\rho^{2}E_{\rho}}{\rho E_{p}} & =\frac{\rho^{2}\left.E_{\rho}\right|_{s}-\rho^{2}\left.E_{\rho}\right|_{p}}{\rho\left.E_{p}\right|_{\rho}}=\rho\frac{\left.E_{\rho}\right|_{s}-\left(\left.E_{\rho}\right|_{s}+\left.E_{s}\right|_{\rho}\left.s_{\rho}\right|_{p}\right)}{\left.E_{s}\right|_{\rho}\left.s_{p}\right|_{\rho}}\\
+ & =\rho\frac{-\left.s_{\rho}\right|_{p}}{\left.s_{p}\right|_{\rho}}=\rho\left.\frac{\partial p}{\partial\rho}\right|_{s}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+The result follows by the definition of 
+\begin_inset Formula $c_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{p-\rho^{2}E_{\rho}}{\rho E_{p}} & =\rho c_{0}^{2}\\
+\frac{\alpha^{2}T}{\rho E_{p}}=\frac{\alpha^{2}T}{\rho c_{v}T_{p}} & =\frac{\rho c_{h}^{2}}{T_{p}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, expressing the system in terms of spatial derivatives of the primitive
+ variables, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{D\rho}{Dt}+\rho\frac{\partial v_{k}}{\partial x_{k}} & =0\\
+\frac{Dv_{i}}{Dt}+\frac{\delta_{ik}}{\rho}\frac{\partial p}{\partial x_{k}}-\frac{\left(\beta+1\right)\sigma_{ik}}{\rho^{2}}\frac{\partial\rho}{\partial x_{k}}-\frac{1}{\rho}\frac{\partial\sigma_{ik}}{\partial A_{mn}}\frac{\partial A_{mn}}{\partial x_{k}} & =0\\
+\frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
+\frac{DJ_{i}}{Dt}+\frac{T_{\rho}\delta_{ik}}{\rho}\frac{\partial\rho}{\partial x_{k}}+\frac{T_{p}\delta_{ik}}{\rho}\frac{\partial p}{\partial x_{k}} & =-\frac{H_{i}}{\theta_{2}}\\
+\frac{Dp}{Dt}+\rho c_{0}^{2}\frac{\partial v_{k}}{\partial x_{k}}+\frac{\rho c_{h}^{2}}{T_{p}}\frac{\partial J_{k}}{\partial x_{k}} & =\frac{\left\Vert \psi\right\Vert _{F}^{2}}{\theta_{1}E_{p}}+\frac{\left\Vert H\right\Vert ^{2}}{\theta_{2}E_{p}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the GPR system can be written in the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{P}}{\partial t}+\boldsymbol{M}\cdot\nabla\boldsymbol{P}=\boldsymbol{S_{p}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+M_{1}=\left(\begin{array}{ccccccccccccccccc}
+v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0\\
+0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho c_{0}^{2} & 0 & 0 & \frac{\rho c_{h}^{2}}{T_{p}} & 0 & 0\\
+0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & 0\\
+0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{11}}{\rho^{2}} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{33}} & v_{1} & 0 & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{21}}{\rho^{2}} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{33}} & 0 & v_{1} & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{31}}{\rho^{2}} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{33}} & 0 & 0 & v_{1} & 0 & 0 & 0\\
+\frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+M_{2}=\left(\begin{array}{ccccccccccccccccc}
+v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0\\
+0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho c_{0}^{2} & 0 & 0 & \frac{\rho c_{h}^{2}}{T_{p}} & 0\\
+0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0 & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{12}}{\rho^{2}} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{12}}{\partial A_{33}} & v_{2} & 0 & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{22}}{\rho^{2}} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{22}}{\partial A_{33}} & 0 & v_{2} & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{32}}{\rho^{2}} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{32}}{\partial A_{33}} & 0 & 0 & v_{2} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0 & 0\\
+\frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{2}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+M_{3}=\left(\begin{array}{ccccccccccccccccc}
+v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0\\
+0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho c_{0}^{2} & 0 & 0 & \frac{\rho c_{h}^{2}}{T_{p}}\\
+0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & A_{31} & A_{32} & A_{33} & 0 & 0 & 0\\
+-\frac{\sigma_{13}}{\rho^{2}} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{13}}{\partial A_{33}} & v_{3} & 0 & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{23}}{\rho^{2}} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{23}}{\partial A_{33}} & 0 & v_{3} & 0 & 0 & 0 & 0\\
+-\frac{\sigma_{33}}{\rho^{2}} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{33}}{\partial A_{33}} & 0 & 0 & v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3} & 0\\
+\frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{3}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{P}=\left(\begin{array}{c}
+\rho\\
+p\\
+A_{11}\\
+A_{21}\\
+A_{31}\\
+A_{12}\\
+A_{22}\\
+A_{32}\\
+A_{13}\\
+A_{23}\\
+A_{33}\\
+v_{1}\\
+v_{2}\\
+v_{3}\\
+J_{1}\\
+J_{2}\\
+J_{3}
+\end{array}\right)\label{eq:Pvec}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+placement ph
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{S_{p}}=\frac{1}{\theta_{1}\left(\tau_{1}\right)E_{p}}\left(\begin{array}{c}
+0\\
+\left\Vert \psi\right\Vert _{F}^{2}\\
+0\\
+0\\
+0\\
+-\psi_{11}\\
+-\psi_{21}\\
+-\psi_{31}\\
+-\psi_{12}\\
+-\psi_{22}\\
+-\psi_{32}\\
+-\psi_{13}\\
+-\psi_{23}\\
+-\psi_{33}\\
+0\\
+0\\
+0
+\end{array}\right)+\frac{1}{\theta_{2}\left(\tau_{2}\right)E_{p}}\left(\begin{array}{c}
+0\\
+\left\Vert \boldsymbol{H}\right\Vert ^{2}\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+-H_{1}\\
+-H_{2}\\
+-H_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

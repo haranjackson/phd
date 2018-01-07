@@ -549,7 +549,7 @@ In previous studies,
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{2}=\frac{c_{s}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha\left(\rho,s\right)^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
 \end{equation}
 
 \end_inset

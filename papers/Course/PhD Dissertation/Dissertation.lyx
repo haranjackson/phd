@@ -66,7 +66,7 @@
 \font_sans "default" "default"
 \font_typewriter "default" "default"
 \font_math "auto" "auto"
-\font_default_family default
+\font_default_family sfdefault
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
@@ -332,7 +332,7 @@ setcounter{page}{1}
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapter1/Chapter1.lyx"
+filename "Chapters/Chapter1.lyx"
 
 \end_inset
 
@@ -342,7 +342,7 @@ filename "Chapter1/Chapter1.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapter2/Chapter2.lyx"
+filename "Chapters/Chapter2.lyx"
 
 \end_inset
 
@@ -352,7 +352,7 @@ filename "Chapter2/Chapter2.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapter3/Chapter3.lyx"
+filename "Chapters/Chapter3.lyx"
 
 \end_inset
 
@@ -362,7 +362,7 @@ filename "Chapter3/Chapter3.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapter4/Chapter4.lyx"
+filename "Chapters/Chapter4.lyx"
 
 \end_inset
 
@@ -372,7 +372,7 @@ filename "Chapter4/Chapter4.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapter5/Chapter5.lyx"
+filename "Chapters/Chapter5.lyx"
 
 \end_inset
 
@@ -382,7 +382,7 @@ filename "Chapter5/Chapter5.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapter6/Chapter6.lyx"
+filename "Chapters/Chapter6.lyx"
 
 \end_inset
 
@@ -412,7 +412,17 @@ options "siam"
 \start_of_appendix
 \begin_inset CommandInset include
 LatexCommand include
-filename "Appendix1/Appendix1.lyx"
+filename "Appendices/Appendix1.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "Appendices/Appendix2.lyx"
 
 \end_inset
 

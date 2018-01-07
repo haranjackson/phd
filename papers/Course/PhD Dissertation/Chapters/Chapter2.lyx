@@ -1,0 +1,722 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass PhDThesisLyX
+\options a4paper,titlepage,12pt,numbered
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\branch ChildOnly
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Objective 1: Extending the GPR Model
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$c_0$"
+description "Adiabatic speed of sound"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$c_p$"
+description "Specific heat capacity at constant pressure"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$c_v$"
+description "Specific heat capacity at constant volume"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\gamma$"
+description "Ratio of specific heat capacities, equal to $\\frac{c_p}{c_v}$"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$p_\\infty$"
+description "Pressure constant in stiffened gas equation of state"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\rho_0$"
+description "Reference density"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Equations of State
+\end_layout
+
+\begin_layout Standard
+It is required to specify the microscale energy 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ appearing in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyDefinition"
+
+\end_inset
+
+.
+ In this study, 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ will always be chosen to take the following Mie-Gruneisen form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+e\left(\rho,p\right) & =e_{ref}\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\\
+T & =T_{0}+\frac{e-e_{ref}}{c_{v}}=T_{0}+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The forms taken by 
+\begin_inset Formula $e_{ref},p_{ref},\Gamma$
+\end_inset
+
+ for various different instances of this class are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:MG EOSs"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Equation of State
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p_{ref}\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e_{ref}\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ideal Gas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma-1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Stiffened Gas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-\gamma p_{\infty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma-1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Shock Mie-Gruneisen
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p_{0}+\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e_{0}+\frac{p_{ref}+p_{0}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}\frac{\rho_{0}}{\rho}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JWL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Ae^{-\frac{R_{1}\rho_{0}}{\rho}}+Be^{-\frac{R_{2}\rho_{0}}{\rho}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{A}{\rho_{0}R_{1}}e^{-\frac{R_{1}\rho_{0}}{\rho}}+\frac{B}{\rho_{0}R_{2}}e^{-\frac{R_{2}\rho_{0}}{\rho}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cochran-Chan
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}}-B\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{A}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}-1}-1\right)-\frac{B}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}-1}-1\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Godunov-Romenski
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $e_{ref},p_{ref},\Gamma$
+\end_inset
+
+ for different kinds of Mie-Gruneisen equations of state
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:MG EOSs"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although this is a versatile class of equations of state - and fit for the
+ purposes that the model is put to here - it should be noted that many other
+ choices are available.
+\end_layout
+
+\begin_layout Standard
+The Godunov-Romenski hyperelastic EOS is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,S,A\right)=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}+c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)+\frac{b_{0}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}\left\Vert \dev\left(G\right)\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be thought of as taking the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}\left(\rho,s\right)+\frac{c_{s}\left(\rho\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}$
+\end_inset
+
+.
+ Considering only the microscale energy component, note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}\frac{\partial E_{1}}{\partial\rho}=\rho\left(2\alpha\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}-\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}=\frac{p}{\gamma\rho}-\frac{2\alpha}{\gamma}\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p}{\gamma\rho}+\frac{2\alpha}{\gamma}\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma=-\rho A^{T}E_{A}=-\rho c_{s}^{2}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}G\dev\left(G\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Multiple Materials
+\end_layout
+
+\begin_layout Section
+Reactive Materials
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch ChildOnly
+status collapsed
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "../../../refs"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
