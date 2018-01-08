@@ -25,11 +25,11 @@ def generate_pars():
     p0 = 1
     cs = 2
     μ = 1e-3
-    α = 1.5
+    cα = 1.5
     κ = 1e-4
 
-    return material_parameters(γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0, b0=cs, α=α,
-                               μ=μ, κ=κ)
+    return material_parameters(γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0,
+                               b0=cs, cα=cα, μ=μ, κ=κ)
 
 def generate_vecs(MP=None):
 

@@ -157,7 +157,7 @@ def riemann_constraints2(P, side, MP):
     dσdA0 = P.dσdA()[0]
 
     pINF = MP.pINF
-    α2 = MP.α2
+    cα2 = MP.cα2
 
     if side=='L':
         Lhat[4:8] = Lhat[:4]
@@ -168,7 +168,7 @@ def riemann_constraints2(P, side, MP):
     Lhat[:3, 5:14] = -dσdA0.reshape([3,9])
     Lhat[3, 0] = -q0 / ρ
     Lhat[3, 1] = q0 / (p+pINF)
-    Lhat[3, 14] = α2 * T
+    Lhat[3, 14] = cα2 * T
 
     return Lhat
 

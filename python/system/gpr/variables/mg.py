@@ -5,6 +5,7 @@ STIFFENED_GAS = 0
 SHOCK_MG = 1
 JWL = 2
 COCHRAN_CHAN = 3
+GODUNOV_ROMENSKI = 4
 
 
 def eos_text_to_code(text):
@@ -16,6 +17,8 @@ def eos_text_to_code(text):
         return JWL
     if text == 'cc':
         return COCHRAN_CHAN
+    if text == 'gr':
+        return GODUNOV_ROMENSKI
 
 
 def Γ_MG(ρ, MP):
@@ -32,7 +35,10 @@ def Γ_MG(ρ, MP):
         ρ0 = MP.ρ0
         return Γ0 * ρ0 / ρ
 
-    elif EOS == JWL or EOS == COCHRAN_CHAN:
+    elif EOS == GODUNOV_ROMENSKI:
+        return MP.γ
+
+    elif EOS in [JWL, COCHRAN_CHAN]:
         return MP.Γ0
 
 def p_ref(ρ, MP):
@@ -41,7 +47,7 @@ def p_ref(ρ, MP):
     EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
-        return - MP.γ * MP.pINF
+        return -MP.pINF
 
     elif EOS == SHOCK_MG:
         c02 = MP.c02
@@ -52,7 +58,14 @@ def p_ref(ρ, MP):
         else:
             return c02 * (ρ-ρ0)
 
-    else:
+    elif EOS == GODUNOV_ROMENSKI:
+        c02 = MP.c02
+        α = MP.α
+        ρ0 = MP.ρ0
+        tmp = (ρ/ρ0)**α
+        return c02 * ρ / α * (tmp - 1) * tmp
+
+    elif EOS in [JWL, COCHRAN_CHAN]:
         A = MP.A
         B = MP.B
         R1 = MP.R1
@@ -72,7 +85,7 @@ def e_ref(ρ, MP):
     EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
-        return 0
+        return MP.pINF / ρ
 
     elif EOS == SHOCK_MG:
         ρ0 = MP.ρ0
@@ -82,7 +95,14 @@ def e_ref(ρ, MP):
         else:
             return 0
 
-    else:
+    elif EOS == GODUNOV_ROMENSKI:
+        c02 = MP.c02
+        α = MP.α
+        ρ0 = MP.ρ0
+        tmp = (ρ/ρ0)**α
+        return c02 / (2 * α**2) * (tmp - 1)**2
+
+    elif EOS in [JWL, COCHRAN_CHAN]:
         A = MP.A
         B = MP.B
         R1 = MP.R1
@@ -102,16 +122,13 @@ def dΓ_MG(ρ, MP):
     """
     EOS = MP.EOS
 
-    if EOS == STIFFENED_GAS:
+    if EOS in [STIFFENED_GAS, JWL, COCHRAN_CHAN, GODUNOV_ROMENSKI]:
         return 0
 
     elif EOS == SHOCK_MG:
         Γ0 = MP.Γ0
         ρ0 = MP.ρ0
         return - Γ0 * ρ0 / ρ**2
-
-    elif EOS == JWL or EOS == COCHRAN_CHAN:
-        return 0
 
 def dp_ref(ρ, MP):
     """ Returns the derivative of the reference pressure in the Mie-Gruneisen EOS
@@ -130,7 +147,13 @@ def dp_ref(ρ, MP):
         else:
             return c02
 
-    else:
+    elif EOS == GODUNOV_ROMENSKI:
+        c02 = MP.c02
+        α = MP.α
+        tmp = (ρ/ρ0)**α
+        return c02 / α * tmp * ((1+α) * (tmp-1) + α * tmp)
+
+    elif EOS in [JWL, COCHRAN_CHAN]:
         A = MP.A
         B = MP.B
         R1 = MP.R1
@@ -150,7 +173,7 @@ def de_ref(ρ, MP):
     EOS = MP.EOS
 
     if EOS == STIFFENED_GAS:
-        return 0
+        return - MP.pINF / ρ**2
 
     elif EOS == SHOCK_MG:
         c02 = MP.c02
@@ -161,7 +184,14 @@ def de_ref(ρ, MP):
         else:
             return 0
 
-    elif EOS == JWL or EOS == COCHRAN_CHAN:
+    elif EOS == GODUNOV_ROMENSKI:
+        c02 = MP.c02
+        α = MP.α
+        ρ0 = MP.ρ0
+        tmp = (ρ/ρ0)**α
+        return c02 / (ρ * α) * (tmp - 1) * tmp
+
+    elif EOS in [JWL, COCHRAN_CHAN]:
         return e_ref(ρ, MP) / ρ**2
 
 
@@ -188,7 +218,7 @@ def temperature(ρ, p, MP):
     cv = MP.cv
     Γ = Γ_MG(ρ, MP)
     pr = p_ref(ρ, MP)
-    return (p - pr) / (ρ * Γ * cv)
+    return MP.Tref + (p - pr) / (ρ * Γ * cv)
 
 
 def dedρ(ρ, p, MP):

@@ -24,7 +24,7 @@ def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, MP):
     """ Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS
     """
     c1 = E - E_2A(ρ, A, MP) - E_3(v)
-    c2 = MP.α2 / 2
+    c2 = MP.cα2 / 2
     k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv)
     c1 *= k
     c2 *= k

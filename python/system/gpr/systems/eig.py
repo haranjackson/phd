@@ -16,12 +16,12 @@ def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
     ret[3, 1] = T / (ρ * (p + pINF))
     return ret
 
-def Xi2mat(ρ, p, A, T, γ, α2):
+def Xi2mat(ρ, p, A, T, γ, cα2):
     ret = zeros([5,4])
     ret[2:, :3] = A
     ret[0, 0] = ρ
     ret[1, 0] = γ * p
-    ret[1, 3] = (γ-1) * α2 * T
+    ret[1, 3] = (γ-1) * cα2 * T
     return ret
 
 def eig_prim(P, left=1, right=1):
@@ -43,7 +43,7 @@ def eig_prim(P, left=1, right=1):
     MP = P.MP
     γ = MP.γ
     pINF = MP.pINF
-    α2 = MP.α2
+    cα2 = MP.cα2
 
     Π1 = dσdA0[:,:,0]
     Π2 = dσdA0[:,:,1]
@@ -51,7 +51,7 @@ def eig_prim(P, left=1, right=1):
 
     O = thermo_acoustic_tensor(P, 0)
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
-    Ξ2 = Xi2mat(ρ, p, A, T, γ, α2)
+    Ξ2 = Xi2mat(ρ, p, A, T, γ, cα2)
     w, vl, vr = eig(O, left=1)
     sw = sqrt(w.real)
     D = diag(sw)

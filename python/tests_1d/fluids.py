@@ -24,7 +24,7 @@ def heat_conduction_IC():
     vR = zeros(3)
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
-                              b0=1, α=2, μ=1e-2, κ=1e-2)
+                              b0=1, cα=2, μ=1e-2, κ=1e-2)
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
@@ -49,7 +49,7 @@ def first_stokes_problem_IC():
     vR = array([0, 0.1, 0])
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1/γ, γ=γ, pINF=0,
-                              b0=1, α=1e-16, μ=μ, Pr=0.75)
+                              b0=1, cα=1e-16, μ=μ, Pr=0.75)
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP)
 
@@ -104,7 +104,7 @@ def viscous_shock_IC(center=0):
     μ = 2e-2
 
     MP = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
-                              b0=5, α=5, μ=2e-2, Pr=0.75)
+                              b0=5, cα=5, μ=2e-2, Pr=0.75)
 
     x = arange(-Lx/2, Lx/2, 1/nx)
     ρ = zeros(nx)

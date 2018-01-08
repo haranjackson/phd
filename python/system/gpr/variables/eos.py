@@ -19,8 +19,8 @@ def E_2A(ρ, A, MP):
 def E_2J(J, MP):
     """ Returns the mesoscale energy dependent on the thermal impulse
     """
-    α2 = MP.α2
-    return α2 / 2 * L2_1D(J)
+    cα2 = MP.cα2
+    return cα2 / 2 * L2_1D(J)
 
 def E_3(v):
     """ Returns the macroscale kinetic energy
@@ -79,5 +79,5 @@ def dEdA(ρ, A, MP):
 def dEdJ(J, MP):
     """ Returns the partial derivative of E by J
     """
-    α2 = MP.α2
-    return α2 * J
+    cα2 = MP.cα2
+    return cα2 * J

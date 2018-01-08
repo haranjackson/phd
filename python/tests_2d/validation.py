@@ -31,7 +31,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
     J = zeros(3)
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ,
-                             b0=0.5, α=1, μ=μ, κ=κ)
+                             b0=0.5, cα=1, μ=μ, κ=κ)
 
     u = zeros([nx, ny, nz, nV])
     for i,j,k in product(range(nx), range(ny), range(nz)):
@@ -54,7 +54,7 @@ def circular_explosion_IC():
 
     R = 0.25 * Lx
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
-                             b0=0.5, α=0.5, μ=1e-4, κ=1e-4)
+                             b0=0.5, cα=0.5, μ=1e-4, κ=1e-4)
     v = zeros([3])
     J = zeros([3])
 

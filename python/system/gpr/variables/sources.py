@@ -34,10 +34,10 @@ def theta2inv(ρ, T, MP):
     """
     ρ0 = MP.ρ0
     T0 = MP.T0
-    α2 = MP.α2
+    cα2 = MP.cα2
     τ2 = MP.τ2
 
-    return 1 / (α2 * τ2 * (ρ / ρ0) * (T0 / T))
+    return 1 / (cα2 * τ2 * (ρ / ρ0) * (T0 / T))
 
 
 def K_arr(P, MP):

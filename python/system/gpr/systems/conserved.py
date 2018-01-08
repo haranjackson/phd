@@ -41,7 +41,7 @@ def flux_cons_ref(ret, Q, d, MP):
 
     if THERMAL:
 
-        α2 = MP.α2
+        cα2 = MP.cα2
 
         J = P.J
         T = P.T

@@ -15,7 +15,7 @@ class hyperelastic_params():
         self.B0 = b0**2
 
 class EOS_params():
-    def __init__(self, EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2):
+    def __init__(self, EOS, ρ0, cv, p0, α, β, γ, pINF, c0, Γ0, s, A, B, R1, R2):
 
         self.EOS = eos_text_to_code(EOS)
 
@@ -32,6 +32,11 @@ class EOS_params():
             self.c02 = c0**2
             self.s = s
 
+        elif EOS == 'gr':
+            self.α = α
+            self.β = β
+            self.γ = γ
+
         elif EOS == 'jwl' or EOS == 'cc':
             self.Γ0 = Γ0
             self.A = A
@@ -39,12 +44,12 @@ class EOS_params():
             self.R1 = R1
             self.R2 = R2
 
-def params(MP, Rc, EOS, ρ0, p0, T0, cv,
-           γ, pINF,
+def params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
+           α, β, γ, pINF,
            c0, Γ0, s, e0,
            A, B, R1, R2,
            b0, β, τ1, μ, σY, n, PLASTIC,
-           α, τ2,
+           cα, τ2,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,
@@ -55,6 +60,7 @@ def params(MP, Rc, EOS, ρ0, p0, T0, cv,
 
     MP.ρ0 = ρ0
     MP.p0 = p0
+    MP.Tref = Tref
     MP.T0 = T0
     MP.cv = cv
 
@@ -67,6 +73,11 @@ def params(MP, Rc, EOS, ρ0, p0, T0, cv,
         MP.c02 = c0**2
         MP.s = s
         MP.e0 = e0
+
+    if EOS == 'gr':
+        MP.α = α
+        MP.β = β
+        MP.γ = γ
 
     elif EOS == 'jwl' or EOS == 'cc':
         MP.Γ0 = Γ0
@@ -84,8 +95,8 @@ def params(MP, Rc, EOS, ρ0, p0, T0, cv,
             MP.σY = σY
             MP.n = n
 
-    if α is not None:
-        MP.α2 = α**2
+    if cα is not None:
+        MP.cα2 = cα**2
         MP.τ2 = τ2
 
     if REACTION is not None:
@@ -117,12 +128,13 @@ def params(MP, Rc, EOS, ρ0, p0, T0, cv,
             MP.φG1 = φG1
             MP.φG2 = φG2
 
-def material_parameters(EOS, ρ0, cv, p0=None,
-                        γ=None, pINF=None,
+def material_parameters(EOS, ρ0, cv, p0,
+                        Tref=None, α=None, β=None, γ=None, pINF=None,
                         c0=None, Γ0=None, s=None, e0=None,
                         A=None, B=None, R1=None, R2=None,
-                        b0=None, β=None, μ=None, τ1=None, σY=None, n=None, PLASTIC=False,
-                        α=None, κ=None, Pr=None,
+                        b0=None, β=None, μ=None, τ1=None,
+                        σY=None, n=None, PLASTIC=False,
+                        cα=None, κ=None, Pr=None,
                         REACTION=None, Qc=None,
                         Kc=None, Ti=None,
                         Bc=None, Ea=None,
@@ -133,13 +145,16 @@ def material_parameters(EOS, ρ0, cv, p0=None,
 
     """ An object to hold the material constants
     """
-    assert(EOS in ['sg', 'smg', 'jwl', 'cc'])
+    assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr'])
     assert(REACTION in ['a', 'd', 'ig', None])
+
+    if Tref is None:
+        Tref = 0
 
     if (γ is not None) and (pINF is None):
         pINF = 0
 
-    P = EOS_params(EOS, ρ0, cv, p0, γ, pINF, c0, Γ0, s, A, B, R1, R2)
+    P = EOS_params(EOS, ρ0, cv, p0, α, β, γ, pINF, c0, Γ0, s, A, B, R1, R2)
     T0 = temperature(ρ0, p0, P)
 
     if b0 is not None:
@@ -148,10 +163,10 @@ def material_parameters(EOS, ρ0, cv, p0=None,
         if β is None:
             β = 0
 
-    if α is not None:
+    if cα is not None:
         if Pr is not None:
             κ = μ * γ * cv / Pr
-        τ2 = κ * ρ0 / (T0 * α**2)
+        τ2 = κ * ρ0 / (T0 * cα**2)
     else:
         τ2 = None
 
@@ -161,12 +176,12 @@ def material_parameters(EOS, ρ0, cv, p0=None,
     else:
         class MP: pass
 
-    params(MP, Rc, EOS, ρ0, p0, T0, cv,
-           γ, pINF,
+    params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
+           α, β, γ, pINF,
            c0, Γ0, s, e0,
            A, B, R1, R2,
            b0, β, τ1, μ, σY, n, PLASTIC,
-           α, τ2,
+           cα, τ2,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,

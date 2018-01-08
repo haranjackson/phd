@@ -20,12 +20,12 @@ class jacobian_variables():
 
         MP = P.MP
         γ = MP.γ
-        α2 = MP.α2
+        cα2 = MP.cα2
 
         self.Γ = γ - 1
         self.Ψ = ρ * outer(v, v) - σ
         self.Ω = (E - E1) * v - (dot(σ, v) + q) / ρ
-        self.Υ = self.Γ * (L2_1D(v) + α2 * L2_1D(J) + E1 - E)
+        self.Υ = self.Γ * (L2_1D(v) + cα2 * L2_1D(J) + E1 - E)
         self.Φ = ρ * outer(v, ψ).reshape([3,3,3])
         self.Φ -= tensordot(v, dσdA, axes=(0,0))
 
@@ -44,7 +44,7 @@ def dQdP(P):
 
     MP = P.MP
     γ = MP.γ
-    α2 = MP.α2
+    cα2 = MP.cα2
     Qc = MP.Qc
 
     ret[1, 0] = E - E1
@@ -57,7 +57,7 @@ def dQdP(P):
         ret[1, 5:14] = ρ * ψ.ravel()
 
     if THERMAL:
-        ret[1, 14:17] = α2 * ρ * J
+        ret[1, 14:17] = cα2 * ρ * J
         ret[14:17, 0] = J
         ret[14:17, 14:17] *= ρ
 
@@ -80,7 +80,7 @@ def dPdQ(P):
     ψ = P.ψ()
 
     MP = P.MP
-    α2 = MP.α2
+    cα2 = MP.cα2
 
     jacVars = jacobian_variables(P)
     Γ = jacVars.Γ
@@ -98,7 +98,7 @@ def dPdQ(P):
         ret[1, 5:14] = -Γ * ρ * ψ.ravel()
 
     if THERMAL:
-        ret[1, 14:17] = -Γ * α2 * J
+        ret[1, 14:17] = -Γ * cα2 * J
         ret[14:17, 0] = -J / ρ
         for i in range(14,17):
             ret[i, i] = 1 / ρ
@@ -164,9 +164,9 @@ def dFdP(P, d):
     if THERMAL:
         J = P.J
         T = P.T
-        α2 = MP.α2
-        ret[1, 14:17] = α2 * ρvd * J
-        ret[1, 14+d] += α2 * T
+        cα2 = MP.cα2
+        ret[1, 14:17] = cα2 * ρvd * J
+        ret[1, 14+d] += cα2 * T
         ret[14:17, 0] = v[d] * J
         ret[14+d, 0] -= T / ρ
         ret[14+d, 1] = T / (p+pINF)

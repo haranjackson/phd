@@ -47,7 +47,7 @@ def system_prim(Q, d, MP, pForm=1):
     γ = MP.γ
     pINF = MP.pINF
     cv = MP.cv
-    α2 = MP.α2
+    cα2 = MP.cα2
     Γ = γ-1
 
     ret = v[d] * eye(nV)
@@ -62,13 +62,13 @@ def system_prim(Q, d, MP, pForm=1):
 
     if pForm:
         ret[1, 2+d] = γ * p
-        ret[1, 14+d] = Γ * α2 * T
+        ret[1, 14+d] = Γ * cα2 * T
         ret[2+d, 1] = 1 / ρ
         ret[14+d, 0] = -T / ρ**2
         ret[14+d, 1] = T / (ρ * (p + pINF))
     else:
         ret[1, 2+d] = Γ * T
-        ret[1, 14+d] = α2 * T / (cv * ρ)
+        ret[1, 14+d] = cα2 * T / (cv * ρ)
         ret[2+d, 0] += Γ * cv * T / ρ
         ret[2+d, 1] = Γ * cv
         ret[14+d, 1] = 1 / ρ

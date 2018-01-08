@@ -37,6 +37,6 @@ def c_inf(ρ, p, MP):
 def c_h(ρ, T, MP):
     """ Returns the velocity of the heat characteristic at equilibrium
     """
-    α2 = MP.α2
+    cα2 = MP.cα2
     cv = MP.cv
-    return sqrt(α2 * T / cv) / ρ
+    return sqrt(cα2 * T / cv) / ρ
