@@ -1003,9 +1003,6 @@ The GPR model, being non-conservative, with stiff source terms, represents
  Galerkin method.
  A finite volume solver is then used to couple neighboring cells and produce
  the cell-wise constant data at the next time step.
- In this study, all simulations were performed in 1D.
- The methods presented here are easily extensible to higher dimensions,
- however.
 \end_layout
 
 \begin_layout Standard
@@ -1038,7 +1035,7 @@ description "Finite Volume"
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 The WENO Reconstruction
 \end_layout
 
@@ -1060,8 +1057,8 @@ key "Jiang1996"
 
 , WENO methods are used to produce high order polynomial approximations
  to piece-wise constant data.
- In this study, the modified method of Dumbser et al.
- 
+ Many variations exist.
+ In this study, the method of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2013"
@@ -1079,6 +1076,11 @@ Consider the domain
 .
  Take 
 \begin_inset Formula $K,N\in\mathbb{N}$
+\end_inset
+
+.
+ The order of accuracy of the resulting method will be 
+\begin_inset Formula $N+1$
 \end_inset
 
 .
@@ -1113,10 +1115,10 @@ Consider the domain
 \end_inset
 
 , an order 
-\begin_inset Formula $N+1$
+\begin_inset Formula $N$
 \end_inset
 
- accurate polynomial reconstruction of 
+ polynomial reconstruction of 
 \begin_inset Formula $u$
 \end_inset
 
@@ -1247,7 +1249,7 @@ where the
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{1}{\Delta x}\int_{x_{k}}^{x_{k+1}}\psi_{p}\left(\chi^{k}\left(x\right)\right)\hat{w}_{p}^{ij}dx=u_{k}\qquad\forall C_{k}\in S_{j}
+\frac{1}{\Delta x}\int_{x_{k}}^{x_{k+1}}\sum_{p}\psi_{p}\left(\chi^{k}\left(x\right)\right)\hat{w}_{p}^{ij}dx=u_{k}\qquad\forall C_{k}\in S_{j}
 \end{equation}
 
 \end_inset
@@ -1269,7 +1271,37 @@ where
 \end_inset
 
 .
- Define the oscillation indicator matrix:
+ This can be written as 
+\begin_inset Formula $M_{j}\boldsymbol{\hat{w}^{ij}}=\boldsymbol{u_{\left[j_{0}:j_{N}\right]}}$
+\end_inset
+
+ where 
+\begin_inset Formula $\left\{ j_{0},\ldots,j_{N}\right\} $
+\end_inset
+
+ indexes the cells in 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+.
+ In this study reconstructions with 
+\begin_inset Formula $N=2$
+\end_inset
+
+ are used.
+ The matrices of these linear systems are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:WENO-Matrices-for-N=2"
+
+\end_inset
+
+, along with their inverses, which are precomputed to accelerate the solution
+ of these systems.
+\end_layout
+
+\begin_layout Standard
+Define the oscillation indicator matrix:
 \end_layout
 
 \begin_layout Standard
@@ -1309,7 +1341,7 @@ The full reconstruction in
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-w_{i}\left(x\right)=\sum_{p}\psi_{p}\left(\chi^{i}\left(x\right)\right)\hat{w}_{p}^{i}
+w_{i}\left(x\right)=\sum_{p}\psi_{p}\left(\chi^{i}\left(x\right)\right)\bar{w}_{p}^{i}
 \end{equation}
 
 \end_inset
@@ -1319,7 +1351,7 @@ w_{i}\left(x\right)=\sum_{p}\psi_{p}\left(\chi^{i}\left(x\right)\right)\hat{w}_{
 
 \begin_layout Standard
 where 
-\begin_inset Formula $\hat{w}_{p}^{i}=\omega_{j}\hat{w}_{p}^{ij}$
+\begin_inset Formula $\bar{w}_{p}^{i}=\omega_{j}\hat{w}_{p}^{ij}$
 \end_inset
 
  is the weighted coefficient of the 
@@ -1332,7 +1364,7 @@ th basis function, with weights:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\omega_{j}=\frac{\tilde{\omega}_{j}}{\sum_{k}\tilde{\omega}_{k}}\qquad\tilde{\omega}_{j}=\frac{\zeta_{j}}{\left(o_{s}+\varepsilon\right)^{r}}
+\omega_{j}=\frac{\tilde{\omega}_{j}}{\sum_{k}\tilde{\omega}_{k}}\qquad\tilde{\omega}_{j}=\frac{\zeta_{j}}{\left(o_{j}+\varepsilon\right)^{r}}
 \end{equation}
 
 \end_inset
@@ -1375,11 +1407,80 @@ key "Dumbser2014"
 .
 \end_layout
 
-\begin_layout Subsection*
-The Discontinuous Galerkin Predictor 
+\begin_layout Standard
+The reconstruction can be extended to two dimensions by taking:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\upsilon^{i}=\frac{1}{\Delta y}\left(y-y_{i}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and defining stencils in the y-axis in an analogous manner.
+ The data in 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ is then reconstructed using stencil 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sum_{p,q}\psi_{p}\left(\chi^{i}\left(x\right)\right)\psi_{q}\left(\upsilon^{i}\left(x\right)\right)\tilde{w}_{pq}^{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the coefficients of the weighted 1D reconstruction are used as cell
+ averages:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+M_{j}\boldsymbol{\tilde{w}_{p}^{ij}}=\boldsymbol{\bar{w}_{p}^{\left[j_{0}:j_{N}\right]}}\qquad\forall p\in\left\{ 0,\ldots,N\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The oscillation indicator is calculated for each 
+\begin_inset Formula $p$
+\end_inset
+
+ in the same manner as the 1D case.
+ The reconstruction method is easily further extensible to three dimensions,
+ now using the coefficients 
+\begin_inset Formula $\bar{w}_{pq}$
+\end_inset
+
+ of the weighted 2D reconstruction as cell averages.
+\end_layout
+
+\begin_layout Subsection
+The Galerkin Predictor 
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:The Discontinuous Galerkin Predictor"
+name "sec:The Galerkin Predictor"
 
 \end_inset
 
@@ -1420,22 +1521,6 @@ where
 \end_inset
 
  is the algebraic source vector.
- Defining 
-\begin_inset Formula $M=\frac{\partial\boldsymbol{F}}{\partial\boldsymbol{Q}}+B$
-\end_inset
-
- this becomes:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{\partial\boldsymbol{Q}}{\partial t}+M\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:NonConservativeSystem2}
-\end{equation}
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1471,7 +1556,7 @@ key "Dumbser2009,Dumbser2014"
 \end_layout
 
 \begin_layout Standard
-Define the scaled time variable:
+Now define the scaled time variable:
 \end_layout
 
 \begin_layout Standard
@@ -1486,7 +1571,14 @@ Define the scaled time variable:
 \end_layout
 
 \begin_layout Standard
-Using these variables gives:
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:NonConservativeSystem"
+
+\end_inset
+
+ becomes:
 \end_layout
 
 \begin_layout Standard
@@ -1516,16 +1608,15 @@ where
 \end_layout
 
 \begin_layout Standard
-The non-dimensionalisation notation and spacetime cell indexing notation
+The non-dimensionalization notation and spacetime cell indexing notation
  will be dropped for simplicity in what follows.
- Using the same nodal basis as in the previous section, define the set of
- spatio-temporal basis functions:
+ Now define the set of spatio-temporal basis functions:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\left\{ \theta_{k}\left(\chi,\tau\right)=\psi_{p}\left(\chi\right)\psi_{s}\left(\tau\right):0\leq p,s\leq N\right\} 
+\left\{ \theta_{k}\left(\chi,\tau\right)\right\} =\left\{ \psi_{p}\left(\chi\right)\psi_{s}\left(\tau\right):0\leq p,s\leq N\right\} 
 \end{equation}
 
 \end_inset
@@ -1534,11 +1625,11 @@ The non-dimensionalisation notation and spacetime cell indexing notation
 \end_layout
 
 \begin_layout Standard
-The 
-\shape italic
-nodal basis representation
-\shape default
- is the following set of approximations:
+Denoting the Galerkin predictor by 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, take the following set of approximations:
 \end_layout
 
 \begin_layout Standard
@@ -1560,10 +1651,75 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\boldsymbol{Q} & \approx\boldsymbol{q_{h}}=\theta_{\beta}\boldsymbol{q_{\beta}}\\
-\boldsymbol{F}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
-B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi} & \approx\theta_{\beta}B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\\
-\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)
+\boldsymbol{Q} & \approx\boldsymbol{q}=\theta_{\beta}\boldsymbol{q_{\beta}}\\
+\boldsymbol{F}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{F_{\beta}}\\
+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial\chi} & \approx\theta_{\beta}\boldsymbol{B_{\beta}}\\
+\boldsymbol{S}\left(\boldsymbol{Q}\right) & \approx\theta_{\beta}\boldsymbol{S_{\beta}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+for some coefficients 
+\begin_inset Formula $\boldsymbol{q_{\beta}},\boldsymbol{F_{\beta}},\boldsymbol{B_{\beta}},\boldsymbol{S_{\beta}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
+\end_inset
+
+ is a nodal basis, the 
+\shape italic
+nodal basis representation
+\shape default
+ may be used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{F_{\beta}} & =\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
+\boldsymbol{B_{\beta}} & =B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\\
+\boldsymbol{S_{\beta}} & =\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)
 \end{align}
 
 \end_inset
@@ -1592,13 +1748,35 @@ where
 \begin_inset Formula $\left(\chi_{\beta},\tau_{\beta}\right)$
 \end_inset
 
- are the coordinates of the Legendre node corresponding to basis function
- 
+ are the coordinates of the node corresponding to basis function 
 \begin_inset Formula $\theta_{\beta}$
 \end_inset
 
 .
- Define the integral operators:
+\end_layout
+
+\begin_layout Standard
+If a modal basis is used, 
+\begin_inset Formula $\boldsymbol{F_{\beta}},\boldsymbol{B_{\beta}},\boldsymbol{S_{\beta}}$
+\end_inset
+
+ may be found from the previous values of 
+\begin_inset Formula $\boldsymbol{q_{\beta}}$
+\end_inset
+
+ in the iterative processes described below.
+\end_layout
+
+\begin_layout Standard
+For functions 
+\begin_inset Formula $f\left(\chi,\tau\right)=f_{χ}\left(χ\right)f_{τ}\left(τ\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $g\left(\chi,\tau\right)=g_{χ}\left(χ\right)g_{τ}\left(τ\right)$
+\end_inset
+
+, define the following integral operators:
 \end_layout
 
 \begin_layout Standard
@@ -1620,8 +1798,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\left[f,g\right]^{\tau} & =\int_{0}^{1}f\left(\chi,\tau\right)g\left(\chi,\tau\right)d\chi\\
-\left\langle f,g\right\rangle  & =\int_{0}^{1}\int_{0}^{1}f\left(\chi,\tau\right)g\left(\chi,\tau\right)d\chi d\tau
+\left[f,g\right]^{t} & =f_{τ}\left(t\right)g_{τ}\left(t\right)\left\langle f_{χ},g_{χ}\right\rangle \\
+\left\{ f,g\right\}  & =\left\langle f_{\tau},g_{\tau}\right\rangle \left\langle f_{χ},g_{χ}\right\rangle 
 \end{align}
 
 \end_inset
@@ -1646,7 +1824,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Using the nodal basis representation, multiplying 
+Multiplying 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:NonDimensionalNonConservativeSystem"
@@ -1657,14 +1835,17 @@ reference "eq:NonDimensionalNonConservativeSystem"
 \begin_inset Formula $\theta_{\alpha}$
 \end_inset
 
- and integrating over space and time gives:
+, using the polynomial approximations for 
+\begin_inset Formula $\boldsymbol{Q},\boldsymbol{F},\boldsymbol{B},\boldsymbol{S}$
+\end_inset
+
+, and integrating over space and time gives:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\rangle \boldsymbol{q_{\beta}} & =-\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\rangle \boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
- & \quad+\left\langle \theta_{\alpha},\theta_{\beta}\right\rangle \left(\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)-B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\right)
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} \boldsymbol{q_{\beta}} & =-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}+\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\label{eq:InitialSystem}
 \end{align}
 
 \end_inset
@@ -1672,15 +1853,32 @@ reference "eq:NonDimensionalNonConservativeSystem"
 
 \end_layout
 
+\begin_layout Subsubsection
+The Discontinuous Galerkin Method
+\end_layout
+
 \begin_layout Standard
-Integrating by parts in time gives:
+This method of computing the Galerkin predictor allows solutions to be discontin
+uous at temporal cell boundaries, and is also suitable for stiff source
+ terms.
+\end_layout
+
+\begin_layout Standard
+Integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:InitialSystem"
+
+\end_inset
+
+ by parts in time gives:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\left(\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\langle \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\rangle \right)\boldsymbol{q_{\beta}} & =\left[\theta_{\alpha},\boldsymbol{w}\right]^{0}-\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\rangle \boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)\\
- & \quad+\left\langle \theta_{\alpha},\theta_{\beta}\right\rangle \left(\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)-B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\right)\nonumber 
+\left(\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \right)\boldsymbol{q_{\beta}} & =\left[\theta_{\alpha},\boldsymbol{w}\right]^{0}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \boldsymbol{F_{\beta}}\\
+ & +\left\{ \theta_{\alpha},\theta_{\beta}\right\} \left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)\nonumber 
 \end{align}
 
 \end_inset
@@ -1690,12 +1888,12 @@ Integrating by parts in time gives:
 
 \begin_layout Standard
 where 
-\begin_inset Formula $\boldsymbol{w}=\boldsymbol{w_{\gamma}}\psi_{\gamma}$
+\begin_inset Formula $\boldsymbol{w}$
 \end_inset
 
  is the reconstruction obtained at the start of the time step with the WENO
  method.
- Define the following notation:
+ Define the following:
 \end_layout
 
 \begin_layout Standard
@@ -1717,10 +1915,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\langle \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\rangle \\
-V_{\alpha\beta} & =\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\rangle \\
-W_{\alpha\gamma} & =\left[\theta_{\alpha},\psi_{\gamma}\right]^{0}\\
-Z_{\alpha\beta} & =\left\langle \theta_{\alpha},\theta_{\beta}\right\rangle 
+U_{\alpha\beta} & =\left[\theta_{\alpha},\theta_{\beta}\right]^{1}-\left\{ \frac{\partial\theta_{\alpha}}{\partial\tau},\theta_{\beta}\right\} \\
+V_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} \\
+\boldsymbol{W_{\alpha}} & =\left[\theta_{\alpha},\psi_{\gamma}\right]^{0}\boldsymbol{w_{\gamma}}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} 
 \end{align}
 
 \end_inset
@@ -1751,7 +1949,7 @@ Thus:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-U_{\alpha\beta}\boldsymbol{q_{\beta}}=W_{\alpha\gamma}\boldsymbol{w_{\gamma}}-V_{\alpha\beta}\boldsymbol{F}\left(\boldsymbol{q_{\beta}}\right)+Z_{\alpha\beta}\left(\boldsymbol{S}\left(\boldsymbol{q_{\beta}}\right)-B\left(\boldsymbol{q_{\beta}}\right)\cdot\left(\frac{\partial\theta_{\gamma}\left(\chi_{\beta},\tau_{\beta}\right)}{\partial\chi}\boldsymbol{q_{\gamma}}\right)\right)
+U_{\alpha\beta}\boldsymbol{q_{\beta}}=\boldsymbol{W_{\alpha}}-V_{\alpha\beta}\boldsymbol{F_{\beta}}+Z_{\alpha\beta}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)
 \end{equation}
 
 \end_inset
@@ -1766,165 +1964,60 @@ This nonlinear system in
 
  is solved by a Newton method.
  The source terms must be solved implicitly if they are stiff.
- 
+ Note that 
+\begin_inset Formula $\boldsymbol{W}$
+\end_inset
+
+ has no dependence on 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection*
-The Predictor Initial Guess
+\begin_layout Subsubsection
+The Continuous Galerkin Method
 \end_layout
 
 \begin_layout Standard
-Let the initial guess for the nonlinear system of the DG predictor be 
-\begin_inset Formula $\boldsymbol{q_{h}^{0}}=\theta_{k}\boldsymbol{\hat{q}_{k}}$
+This method of computing the Galerkin predictor is not suitable for stiff
+ source terms, but it provides substantial savings on computational cost
+ and ensures continuity across temporal cell boundaries.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
 \end_inset
 
-.
- In 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2010"
-
+ must be chosen in such a way that the first 
+\begin_inset Formula $N+1$
 \end_inset
 
- this is taken to be the WENO reconstruction, i.e.
- 
-\begin_inset Formula $\boldsymbol{q_{h}^{0}}\left(\chi,\tau\right)=\boldsymbol{w}\left(\chi\right)$
+ elements of 
+\begin_inset Formula $\left\{ \theta_{\beta}\right\} $
 \end_inset
 
- for 
-\begin_inset Formula $\tau\in\left[0,1\right]$
+ have only a spatial dependence.
+ The first 
+\begin_inset Formula $N+1$
 \end_inset
 
-.
- In 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Hidalgo2011"
-
+ elements of 
+\begin_inset Formula $\boldsymbol{q}$
 \end_inset
 
-, a more sophisticated initial guess is used for systems of the form 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:NonConservativeSystem"
-
-\end_inset
-
- with 
-\begin_inset Formula $B=0$
-\end_inset
-
-.
- Denote the Gauss-Legendre abscissae on 
-\begin_inset Formula $\left[0,1\right]$
-\end_inset
-
- by 
-\begin_inset Formula $\left\{ \tau_{0},\ldots,\tau_{N}\right\} $
-\end_inset
-
-.
- Let 
-\begin_inset Formula $\Delta\tau_{j}=\tau_{j+1}-\tau_{j}$
-\end_inset
-
-.
- Letting 
-\begin_inset Formula $\boldsymbol{q_{h}^{0}}=\psi_{i}\left(\chi\right)\psi_{j}\left(\tau\right)\boldsymbol{\hat{q}_{ij}}$
+ are then fixed by demanding continuity at 
+\begin_inset Formula $\tau=0$
 \end_inset
 
 :
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
-\begin{align}
-\boldsymbol{\hat{q}_{i,j+1}} & =\boldsymbol{\hat{q}_{ij}}-\Delta\tau_{j}\frac{\partial\boldsymbol{F}\left(\boldsymbol{\hat{q}_{ij}}\right)}{\partial x}+\frac{\Delta\tau_{j}}{2}\left(\boldsymbol{S}\left(\boldsymbol{\hat{q}_{i,j+1}}\right)+\boldsymbol{S}\left(\boldsymbol{\hat{q}_{ij}}\right)\right)\\
-\boldsymbol{\hat{q}_{i0}} & =\boldsymbol{w_{i}}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-An explicit second order Taylor method is used to solve the flux term, combined
- with a second order Crank–Nicholson scheme for the stiff source term.
- In this study, this method was adapted to deal with the non-conservative
- terms:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\boldsymbol{\hat{q}_{i,j+1}} & =\boldsymbol{\hat{q}_{ij}}-\Delta\tau_{j}M\left(\boldsymbol{\hat{q}_{ij}}\right)\cdot\left(\frac{\partial\psi_{k}}{\partial\chi}\boldsymbol{\hat{q}_{kj}}\right)+\frac{\Delta\tau_{j}}{2}\left(\boldsymbol{S}\left(\boldsymbol{\hat{q}_{i,j+1}}\right)+\boldsymbol{S}\left(\boldsymbol{\hat{q}_{ij}}\right)\right)\\
-\boldsymbol{\hat{q}_{i0}} & =\boldsymbol{w_{i}}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
+\begin{equation}
+\boldsymbol{q}\left(\chi,0\right)=\boldsymbol{w}\left(\chi\right)
+\end{equation}
 
 \end_inset
 
@@ -1933,39 +2026,146 @@ end{subequations}
 
 \begin_layout Standard
 where 
-\begin_inset Formula $M$
+\begin_inset Formula $\boldsymbol{w}$
 \end_inset
 
- is given in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:NonConservativeSystem2"
-
-\end_inset
-
-.
- The Taylor method for the flux term is no longer necessary.
- The system was solved by a Newton method to deal with the stiff source
- term.
+ is spatial the reconstruction obtained at the start of the time step with
+ the WENO method.
 \end_layout
 
 \begin_layout Standard
-It was found that the more sophisticated initial guess would reduce overall
- computation times on some problems, owing to a faster convergence of the
- DG calculation.
- On other problems, the total computation time would increase, owing to
- the added cost of calculating the initial guess.
- See 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2008,Dumbser2008a,Dumbser2009a"
+For a given vector 
+\begin_inset Formula $\boldsymbol{v}\in\mathbb{R}^{\left(N+1\right)^{2}}$
+\end_inset
+
+ and matrix 
+\begin_inset Formula $X\in M_{\left(N+1\right)^{2},\left(N+1\right)^{2}}\left(\mathbb{R}\right)$
+\end_inset
+
+, let 
+\begin_inset Formula $\boldsymbol{v}=\left(\boldsymbol{v^{0}},\boldsymbol{v^{1}}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $X=\left(\begin{array}{cc}
+X^{00} & X^{01}\\
+X^{10} & X^{11}
+\end{array}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{v^{0}},X^{00}$
+\end_inset
+
+ are the components relating solely to the first 
+\begin_inset Formula $N+1$
+\end_inset
+
+ components of 
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+.
+ We only need to find the latter components of 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+, and thus, from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:InitialSystem"
 
 \end_inset
 
- for other choices for the initial guess.
+, we have:
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} ^{11}\boldsymbol{q_{\beta}^{1}} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{11}\left(\boldsymbol{S_{β}^{1}}-\boldsymbol{B_{β}^{1}}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{11}\boldsymbol{F_{\beta}^{1}}\\
+ & +\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S_{β}^{0}}-\boldsymbol{B_{β}^{0}}\right)-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{10}\boldsymbol{F_{\beta}^{0}}\nonumber 
+\end{align}
+
+\end_inset
+
+Define the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+U_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\tau}\right\} ^{11}\\
+V_{\alpha\beta} & =\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{11}\\
+\boldsymbol{W_{\alpha}} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)^{0}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi}\right\} ^{10}\boldsymbol{F_{\beta}^{0}}\\
+Z_{\alpha\beta} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{11}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+U_{\alpha\beta}\boldsymbol{q_{\beta}^{1}}=\boldsymbol{W_{\alpha}}-V_{\alpha\beta}\boldsymbol{F_{\beta}^{1}}+Z_{\alpha\beta}\left(\boldsymbol{S_{β}^{1}}-\boldsymbol{B_{β}^{1}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, as with the discontinuous Galerkin method, 
+\begin_inset Formula $\boldsymbol{W}$
+\end_inset
+
+ has no dependence on the degrees of freedom in 
+\begin_inset Formula $\boldsymbol{q}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
 The Finite Volume Scheme
 \end_layout
 
@@ -2087,11 +2287,11 @@ end{subequations}
 , as defined in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:The Discontinuous Galerkin Predictor"
+reference "sec:The Galerkin Predictor"
 
 \end_inset
 
-, is a diagonalisable matrix with decomposition 
+, is a diagonalizable matrix with decomposition 
 \begin_inset Formula $M=R\Lambda R^{-1}$
 \end_inset
 
@@ -2205,7 +2405,7 @@ It was found that the Osher-Solomon flux would often produce slightly less
  also had a greater tendency to introduce numerical artifacts.
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Time Step and Boundary Conditions
 \end_layout
 
@@ -2268,55 +2468,10 @@ reference "sec:Eigenstructure of the HPR Model"
 \begin_layout Standard
 Transmissive boundary conditions (allowing material and heat to pass through)
  are implemented by setting the state variables in the boundary cells to
- the same value as their non-boundary neighbours.
+ the same value as their non-boundary neighbors.
  Reflective boundary conditions are implemented in the same way, except
  that the directions of the velocity and thermal impulse vectors in the
  boundary cells are reversed.
- Where fixed temperature boundary conditions are used, reflective boundary
- conditions are first imposed, after which the pressure is altered so that
- the boundary cell has the desired temperature 
-\begin_inset Formula $T_{fixed}$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-p=\rho\left(\gamma-1\right)c_{v}T_{fixed}-p_{\infty}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where a fixed boundary heat flux 
-\begin_inset Formula $q$
-\end_inset
-
- is specified, the quantity 
-\begin_inset Formula $\frac{q\cdot\Delta t}{\Delta x}$
-\end_inset
-
- is added to the value of 
-\begin_inset Formula $\rho E$
-\end_inset
-
- in the boundary cell.
- It may be appropriate to also fix 
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
- in the boundary cell in accordance with the specified heat flux (as 
-\begin_inset Formula $\boldsymbol{q}=\alpha^{2}T\boldsymbol{J}$
-\end_inset
-
-), but this was not done here, as no analogous procedure was undertaken
- in the studies with which this study compares its results.
- The effect of this measure is a potential area of further research.
 \end_layout
 
 \begin_layout Standard

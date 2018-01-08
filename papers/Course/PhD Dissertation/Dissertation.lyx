@@ -111,7 +111,7 @@
 \color #008000
 \end_index
 \secnumdepth 3
-\tocdepth 3
+\tocdepth 1
 \paragraph_separation skip
 \defskip bigskip
 \quotes_language english
@@ -423,6 +423,26 @@ filename "Appendices/Appendix1.lyx"
 \begin_inset CommandInset include
 LatexCommand include
 filename "Appendices/Appendix2.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "Appendices/Appendix3.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "Appendices/Appendix4.lyx"
 
 \end_inset
 

@@ -149,7 +149,7 @@ name "sec:Equations-of-State"
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Mie-Gruneisen Models
 \end_layout
 
@@ -792,7 +792,7 @@ Although this is a versatile class of equations of state - and it is fit
  many other choices are available.
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Variable Transverse Perturbation Speed
 \end_layout
 
