@@ -169,7 +169,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-where the stress tensor 
+where the total stress tensor 
 \begin_inset Formula $\Sigma=pI+\rho A^{T}\psi$
 \end_inset
 
@@ -180,7 +180,7 @@ where the stress tensor
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{DE}{Dt} & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\frac{\partial E}{\partial\rho}\frac{D\rho}{Dt}+v_{i}\frac{Dv_{i}}{Dt}+\psi_{ij}\frac{DA_{ij}}{Dt}+H_{i}\frac{DJ_{i}}{Dt}
+\frac{DE}{Dt} & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\frac{\partial E}{\partial\rho}\frac{D\rho}{Dt}+v_{i}\frac{Dv_{i}}{Dt}+\left(1-\frac{\rho}{\Gamma c_{s}^{2}}\frac{\partial c_{s}^{2}}{\partial\rho}\right)\psi_{ij}\frac{DA_{ij}}{Dt}+H_{i}\frac{DJ_{i}}{Dt}
 \end{align}
 
 \end_inset

@@ -10,7 +10,7 @@ nz = 1                      # Number of cells in z direction
 """ System Options """
 
 VISCOUS  = 1                # Include viscosity
-THERMAL  = 0                # Include thermal conduction
+THERMAL  = 1                # Include thermal conduction
 MULTI    = 0                # Include a second (potentially-reactive) fluid
 REACTIVE = 0                # Second fluid is reactive
 

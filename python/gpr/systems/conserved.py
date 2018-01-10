@@ -1,7 +1,6 @@
 from numpy import dot, zeros
 
 from gpr.systems.jacobians import dFdP, dPdQ
-from gpr.variables.sources import K_arr, K_dis, K_ing
 from gpr.misc.structures import Cvec_to_Pclass
 
 from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV, LSETS
@@ -95,17 +94,9 @@ def source_cons_ref(ret, Q, MP):
         ret[14:17] = - ρ * H * θ2_1
 
     if REACTIVE:
-
         z = P.z
         ρ2 = P.ρ2
-
-        if MP.REACTION == 'a':
-            K = - K_arr(P, MP)
-        elif MP.REACTION == 'd':
-            K = - K_dis(P, MP)
-        elif MP.REACTION == 'i':
-            K = - K_ing(P, MP)
-
+        K = - P.K()
         ret[19] = (1-z) * ρ2 * K
 
 def B0dot(ret, x, v):

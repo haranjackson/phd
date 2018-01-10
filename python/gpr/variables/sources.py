@@ -40,27 +40,19 @@ def theta2inv(ρ, T, MP):
     return 1 / (cα2 * τ2 * (ρ / ρ0) * (T0 / T))
 
 
-def K_arr(P, MP):
+def K_arr(ρ, λ, T, MP):
     """ Returns the rate of reaction according to Arrhenius kinetics
     """
-    ρ = P.ρ
-    λ = P.λ
-    T = P.T()
-
     Bc = MP.Bc
     Ea = MP.Ea
     Rc = MP.Rc
 
     return Bc * ρ * λ * exp(-Ea / (Rc*T))
 
-def K_dis(P, MP):
+def K_dis(ρ, λ, T, MP):
     """ Returns the rate of reaction according to discrete ignition temperature
         reaction kinetics
     """
-    ρ = P.ρ
-    λ = P.λ
-    T = P.T()
-
     Ti = MP.Ti
     Kc = MP.Kc
 
@@ -69,7 +61,7 @@ def K_dis(P, MP):
     else:
         return 0
 
-def K_ing(P, MP):
+def K_ing(ρ, λ, p, MP):
     """ Returns the rate of reaction according to ignition and growth
         reaction kinetics
     """
@@ -89,9 +81,6 @@ def K_ing(P, MP):
     φG1 = MP.φG1
     φG2 = MP.φG2
 
-    ρ = P.ρ
-    p = P.p()
-    λ = P.λ
     φ = 1 - λ
 
     ret = 0
