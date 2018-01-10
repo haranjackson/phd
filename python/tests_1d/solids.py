@@ -4,11 +4,11 @@ from numpy import array, eye, trace, zeros
 from numpy.linalg import inv
 
 from etc.boundaries import standard_BC
-from system.gpr.misc.functions import det3
-from system.gpr.misc.structures import Cvec
-from system.gpr.variables.hyp import Sigma_hyp
-from system.gpr.variables.state import sigma
-from tests_1d.common import HYP_COP, MP_COP_SMG, MP_COP_SMG_P
+from gpr.misc.functions import det3
+from gpr.misc.structures import Cvec
+from gpr.variables.hyp import Sigma_hyp
+from gpr.variables.state import sigma
+from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG, MP_COP_SMG_P
 from options import nx, ny, nz, nV, dx
 
 
@@ -59,7 +59,7 @@ def barton1_IC():
                 [0, 0, 1  ]])
     SR = 0
 
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
+    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 def barton2_IC():
 

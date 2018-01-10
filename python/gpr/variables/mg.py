@@ -148,6 +148,7 @@ def dp_ref(ρ, MP):
             return c02
 
     elif EOS == GODUNOV_ROMENSKI:
+        ρ0 = MP.ρ0
         c02 = MP.c02
         α = MP.α
         tmp = (ρ/ρ0)**α

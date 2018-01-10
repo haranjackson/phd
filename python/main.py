@@ -8,12 +8,13 @@ from numpy import array, zeros
 from etc import boundaries
 from tests_1d import fluids, solids, multi, toro
 from tests_2d import validation
-from system.gpr.misc.plot import *
+from gpr.misc.plot import *
 
 from etc.iterator import timestep, make_u
 from etc.save import Data, print_stats, save_all
-from solvers.solvers import ader_stepper, split_stepper
 from multi.gfm import add_ghost_cells
+from solvers.solvers import ader_stepper, split_stepper
+
 from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 

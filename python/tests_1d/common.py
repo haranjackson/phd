@@ -2,8 +2,8 @@ from itertools import product
 
 from numpy import eye, inf, zeros
 
-from system.gpr.misc.objects import material_parameters, hyperelastic_params
-from system.gpr.misc.structures import Cvec
+from gpr.misc.objects import material_parameters, hyperelastic_params
+from gpr.misc.structures import Cvec
 from options import nx, ny, nz, nV, dx, RGFM
 
 
@@ -67,6 +67,9 @@ HYP_ALU = hyperelastic_params(ρ0=2.71, α=1, β=3.577, γ=2.088, cv=9e-4, T0=30
 HYP_COP = hyperelastic_params(ρ0=8.9, α=1, β=3, γ=2, cv=4e-4, T0=300,
                               b0=2.1, c0=4.6)
 
+MP_COP_GR = material_parameters(EOS='gr', ρ0=8.9, cv=4e-4, p0=0,
+                                c0=3.909, α=1, β=3, γ=2,
+                                b0=2.1, τ1=inf)
 
 MP_COP_SMG = material_parameters(EOS='smg', ρ0=8.9, cv=4e-4, p0=0,
                                   c0=3.909, Γ0=1.99, s=1.5, e0=0,

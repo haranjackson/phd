@@ -1,6 +1,6 @@
 from numpy import sqrt
 
-from system.gpr.variables.mg import dedρ, dedp
+from gpr.variables.mg import dedρ, dedp
 
 
 def c_s2(ρ, MP):

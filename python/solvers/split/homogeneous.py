@@ -3,7 +3,7 @@ from itertools import product
 from numpy import dot, tensordot, zeros
 
 from solvers.basis import DERVALS
-from system.system import Bdot, flux, system
+from system import Bdot, flux, system
 from options import nV, dx, dy, N1, ndim
 
 

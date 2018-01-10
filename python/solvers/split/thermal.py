@@ -1,8 +1,8 @@
 from numpy import exp, eye, sqrt
 
-from system.gpr.misc.functions import L2_1D
-from system.gpr.variables.eos import E_2A, E_2J, E_3, dEdJ
-from system.gpr.variables.sources import theta2inv
+from gpr.misc.functions import L2_1D
+from gpr.variables.eos import E_2A, E_2J, E_3, dEdJ
+from gpr.variables.sources import theta2inv
 
 
 def E_to_T(ρ, E, A, J, MP):

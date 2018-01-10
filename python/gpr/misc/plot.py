@@ -1,13 +1,14 @@
-from matplotlib.pyplot import figure, plot, scatter, get_cmap, imshow, colorbar, streamplot
-from matplotlib.pyplot import ticklabel_format, xlabel, ylabel, xlim
-from numpy import arange, zeros, linspace, mgrid, flipud
-
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+from numpy import arange, flipud, linspace, mgrid, zeros
+from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot, scatter
+from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
+
+from gpr.misc.structures import Cvec_to_Pclass
 from multi.gfm import get_material_index
 from solvers.basis import NODES, PSI
-from system.gpr.misc.structures import Cvec_to_Pclass
+
 from options import nx, ny, ndim
 
 
@@ -100,7 +101,7 @@ def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
     for i in range(n):
         Q = u[i, 0, 0]
         j = get_material_index(Q, MPs)
-        y[i] = Cvec_to_Pclass(Q, MPs[j]).p
+        y[i] = Cvec_to_Pclass(Q, MPs[j]).p()
 
     plot1d(y, style, x, lab, col, 'Pressure', sci=sci)
 
@@ -112,7 +113,7 @@ def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
     for i in range(n):
         Q = u[i, 0, 0]
         j = get_material_index(Q, MPs)
-        y[i] = Cvec_to_Pclass(Q, MPs[j]).T
+        y[i] = Cvec_to_Pclass(Q, MPs[j]).T()
 
     plot1d(y, style, x, lab, col, 'Temperature', sci=sci)
 
@@ -124,7 +125,7 @@ def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0):
     for k in range(n):
         Q = u[k, 0, 0]
         j = get_material_index(Q, MPs)
-        y[k] = Cvec_to_Pclass(Q, MPs[j]).σ[i, j]
+        y[k] = Cvec_to_Pclass(Q, MPs[j]).σ()[i, j]
 
     plot1d(y, style, x, lab, col,
            'Viscous Stress Component %d,%d' % (i+1, j+1), sci=sci)
@@ -137,7 +138,7 @@ def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0):
     for k in range(n):
         Q = u[k, 0, 0]
         j = get_material_index(Q, MPs)
-        y[k] = Cvec_to_Pclass(Q, MPs[j]).q[i]
+        y[k] = Cvec_to_Pclass(Q, MPs[j]).q()[i]
 
     plot1d(y, style, x, lab, col, 'Heat Flux Component %d' % (i+1), sci=sci)
 
@@ -200,9 +201,9 @@ def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
         plot(ref, col=cm[0], label=reflab, linewidth=1)
 
 def anim(data, var):
-    fig = plt.figure()
+    fig = figure()
 
-    im = plt.imshow(data[0][:,:,0,var])
+    im = imshow(data[0][:,:,0,var])
 
     def animate(i):
         im.set_array(data[i][:,:,0,var])

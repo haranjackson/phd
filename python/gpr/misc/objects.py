@@ -1,5 +1,6 @@
-from system.gpr.variables.state import temperature
-from system.gpr.variables.mg import eos_text_to_code
+from gpr.variables.mg import eos_text_to_code
+from gpr.variables.state import temperature
+
 from options import USE_CPP
 
 
@@ -34,6 +35,7 @@ class EOS_params():
             self.s = s
 
         elif EOS == 'gr':
+            self.c02 = c0**2
             self.α = α
             self.β = β
             self.γ = γ
@@ -76,6 +78,7 @@ def params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
         MP.e0 = e0
 
     if EOS == 'gr':
+        MP.c02 = c0**2
         MP.α = α
         MP.β = β
         MP.γ = γ

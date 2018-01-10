@@ -1,7 +1,8 @@
 from numpy import zeros
 
-from system.gpr.systems.conserved import flux_cons_ref, Bdot_cons, system_cons
-from system.gpr.systems.conserved import block_cons_ref, source_cons_ref
+from gpr.systems.conserved import flux_cons_ref, Bdot_cons, system_cons
+from gpr.systems.conserved import block_cons_ref, source_cons_ref
+from gpr.systems.eigenvalues import max_abs_eigs
 from options import nV
 
 
@@ -34,3 +35,6 @@ def Bdot(ret, x, Q, d, MP):
 
 def system(Q, d, MP):
     return system_cons(Q, d, MP)
+
+def max_eig(Q, d, MP):
+    return max_abs_eigs(Q, d, MP)

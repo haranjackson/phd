@@ -2,9 +2,9 @@ from numpy import arctan, argsort, array, dot, cos, einsum, exp, log, prod, sort
 from scipy.integrate import odeint
 from scipy.linalg import svd, inv
 
-from system.gpr.misc.functions import AdevG, det3, gram, gram_rev, L2_2D
-from system.gpr.variables.eos import dEdA
-from system.gpr.variables.sources import theta1inv
+from gpr.misc.functions import AdevG, det3, gram, gram_rev, L2_2D
+from gpr.variables.eos import dEdA
+from gpr.variables.sources import theta1inv
 
 
 def f_A(A, MP):

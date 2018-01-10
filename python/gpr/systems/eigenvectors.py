@@ -1,9 +1,10 @@
 from numpy import array, diag, dot, eye, sqrt, zeros
-from scipy.linalg import solve, eig
+from scipy.linalg import eig, solve
 
-from system.eigenvalues import thermo_acoustic_tensor
-from system.gpr.misc.functions import reorder
-from system.gpr.systems.jacobians import dQdP, dPdQ
+from gpr.misc.functions import reorder
+from gpr.systems.eigenvalues import thermo_acoustic_tensor
+from gpr.systems.jacobians import dQdP, dPdQ
+
 from options import nV
 
 
@@ -32,12 +33,12 @@ def eig_prim(P, left=1, right=1):
     R = zeros([nV,nV])
 
     ρ = P.ρ
-    p = P.p
+    p = P.p()
     A = P.A
-    T = P.T
+    T = P.T()
 
     vd = P.v[0]
-    σ0 = P.σ[0]
+    σ0 = P.σ()[0]
     dσdA0 = P.dσdA()[0]
 
     MP = P.MP

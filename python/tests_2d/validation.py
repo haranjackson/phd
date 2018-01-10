@@ -3,8 +3,8 @@ from itertools import product
 import numpy as np
 from numpy import array, cos, exp, eye, sin, sqrt, tanh, zeros
 
-from system.gpr.misc.objects import material_parameters
-from system.gpr.misc.structures import Cvec
+from gpr.misc.objects import material_parameters
+from gpr.misc.structures import Cvec
 from solvers.weno.weno import extend
 from options import nx, ny, nz, nV, dx, dy, Lx, Ly
 

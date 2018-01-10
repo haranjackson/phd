@@ -1,9 +1,9 @@
 from numpy import dot, eye
 
-from system.gpr.misc.functions import AdevG, dev, gram, L2_2D
-from system.gpr.variables import mg
-from system.gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA, dEdJ
-from system.gpr.variables.wavespeeds import c_s2, dc_s2dρ
+from gpr.misc.functions import AdevG, dev, gram, L2_2D
+from gpr.variables import mg
+from gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA, dEdJ
+from gpr.variables.wavespeeds import c_s2, dc_s2dρ
 from options import VISCOUS, THERMAL, REACTIVE
 
 

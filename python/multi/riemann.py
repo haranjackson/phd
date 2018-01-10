@@ -1,12 +1,12 @@
-from scipy.optimize import newton_krylov
 from numpy import amax, concatenate, diag, dot, eye, outer, sqrt, zeros
 from scipy.linalg import eig, solve
+from scipy.optimize import newton_krylov
 
-from system.eigenvalues import thermo_acoustic_tensor
-from system.gpr.systems.eig import eig_prim, Xi1mat
-from system.gpr.misc.functions import reorder
-from system.gpr.misc.structures import Cvec_to_Pclass, Cvec_to_Pvec, Pvec, Pvec_to_Cvec
-from system.gpr.systems.primitive import source_prim
+from gpr.systems.eigenvalues import thermo_acoustic_tensor
+from gpr.systems.eigenvectors import eig_prim, Xi1mat
+from gpr.systems.primitive import source_prim
+from gpr.misc.functions import reorder
+from gpr.misc.structures import Cvec_to_Pclass, Cvec_to_Pvec, Pvec, Pvec_to_Cvec
 
 from options import nV, STAR_TOL, STIFF_RGFM
 
@@ -40,11 +40,11 @@ def riemann_constraints1(P, sgn, MP):
     Rhat = reorder(Rhat, order='atypical')
 
     ρ = P.ρ
-    p = P.p
+    p = P.p()
     A = P.A
-    T = P.T
+    T = P.T()
 
-    σ0 = P.σ[0]
+    σ0 = P.σ()[0]
     dσdA0 = P.dσdA()[0]
 
     pINF = MP.pINF
@@ -149,11 +149,11 @@ def riemann_constraints2(P, side, MP):
     _, Lhat, _ = eig_prim(P)
 
     ρ = P.ρ
-    p = P.p
-    T = P.T
+    p = P.p()
+    T = P.T()
 
-    q0 = P.q[0]
-    σ0 = P.σ[0]
+    q0 = P.q()[0]
+    σ0 = P.σ()[0]
     dσdA0 = P.dσdA()[0]
 
     pINF = MP.pINF

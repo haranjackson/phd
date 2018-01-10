@@ -7,7 +7,7 @@ from scipy.optimize import newton_krylov
 
 from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_Z, DG_T
 from solvers.basis import GAPS, DERVALS
-from system.system import source, flux_ref, source_ref, Bdot, system
+from system import source, flux_ref, source_ref, Bdot, system
 from options import ndim, dx, N1, NT, nV
 from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, MAX_ITER, PARA_DG, NCORE
 

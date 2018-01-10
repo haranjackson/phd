@@ -1,10 +1,10 @@
-from system.gpr.misc.functions import det3
-from system.gpr.misc.objects import material_parameters
-from system.gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
+from gpr.misc.functions import det3
+from gpr.misc.objects import material_parameters
+from gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
 
-from system.gpr.systems.conserved import system_cons
-from system.gpr.systems.primitive import system_prim
-from system.gpr.systems.jacobians import dQdP
+from gpr.systems.conserved import system_cons
+from gpr.systems.primitive import system_prim
+from gpr.systems.jacobians import dQdP
 
 
 def systems(Q, d, MP):

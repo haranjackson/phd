@@ -1,6 +1,7 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
-from system.gpr.misc.functions import L2_1D
+from gpr.misc.functions import L2_1D
+
 from options import VISCOUS, THERMAL, REACTIVE, nV
 
 
@@ -11,8 +12,8 @@ class jacobian_variables():
         J = P.J
         v = P.v
         E = P.E
-        q = P.q
-        σ = P.σ
+        q = P.q()
+        σ = P.σ()
 
         E1 = P.E1()
         dσdA = P.dσdA()
@@ -118,7 +119,7 @@ def dFdP(P, d):
         NOTE: Primitive variables are assumed to be in standard ordering
     """
     ρ = P.ρ
-    p = P.p
+    p = P.p()
     v = P.v
     A = P.A
     E = P.E
@@ -163,7 +164,7 @@ def dFdP(P, d):
 
     if THERMAL:
         J = P.J
-        T = P.T
+        T = P.T()
         cα2 = MP.cα2
         ret[1, 14:17] = cα2 * ρvd * J
         ret[1, 14+d] += cα2 * T

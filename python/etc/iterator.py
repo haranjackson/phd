@@ -3,8 +3,9 @@ from itertools import product
 from numpy import sum
 
 from multi.gfm import get_levelset_root
-from system.eigenvalues import max_abs_eigs
+
 from options import nx, ny, nz, CFL, dx, dy, dz, ndim, nV
+from system import max_eig
 
 
 def make_u(mats):
@@ -34,11 +35,11 @@ def timestep(mats, count, t, tf, MPs):
         for i,j,k in product(range(nx), range(ny), range(nz)):
 
             Q = u[i,j,k]
-            MAX = max(MAX, max_abs_eigs(Q, 0, MP) / dx)
+            MAX = max(MAX, max_eig(Q, 0, MP) / dx)
             if ndim > 1:
-                MAX = max(MAX, max_abs_eigs(Q, 1, MP) / dy)
+                MAX = max(MAX, max_eig(Q, 1, MP) / dy)
                 if ndim > 2:
-                    MAX = max(MAX, max_abs_eigs(Q, 2, MP) / dz)
+                    MAX = max(MAX, max_eig(Q, 2, MP) / dz)
 
     dt = CFL / MAX
     if count <= 5:

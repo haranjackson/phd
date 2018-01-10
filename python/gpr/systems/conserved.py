@@ -1,8 +1,9 @@
 from numpy import dot, zeros
 
-from system.gpr.systems.jacobians import dFdP, dPdQ
-from system.gpr.variables.sources import K_arr, K_dis, K_ing
-from system.gpr.misc.structures import Cvec_to_Pclass
+from gpr.systems.jacobians import dFdP, dPdQ
+from gpr.variables.sources import K_arr, K_dis, K_ing
+from gpr.misc.structures import Cvec_to_Pclass
+
 from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV, LSETS
 
 
@@ -12,7 +13,7 @@ def flux_cons_ref(ret, Q, d, MP):
 
     ρ1 = P.ρ1
     ρ = P.ρ
-    p = P.p
+    p = P.p()
     E = P.E
     v = P.v
     z = P.z
@@ -28,7 +29,7 @@ def flux_cons_ref(ret, Q, d, MP):
     if VISCOUS:
 
         A = P.A
-        σ = P.σ
+        σ = P.σ()
 
         σd = σ[d]
         ret[1] -= dot(σd, v)
@@ -44,8 +45,8 @@ def flux_cons_ref(ret, Q, d, MP):
         cα2 = MP.cα2
 
         J = P.J
-        T = P.T
-        q = P.q
+        T = P.T()
+        q = P.q()
 
         ret[1] += q[d]
         ret[14:17] += ρvd * J

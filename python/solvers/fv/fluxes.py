@@ -2,8 +2,7 @@ from numpy import complex128, dot, zeros
 from scipy.linalg import eig, solve
 
 from solvers.basis import NODES, WGHTS
-from system.eigenvalues import max_abs_eigs
-from system.system import Bdot, system
+from system import Bdot, system, max_eig
 from options import N1, nV
 
 
@@ -33,6 +32,6 @@ def Aint(qL, qR, d, MP):
     return ret.real
 
 def Smax(qL, qR, d, MP):
-    max1 = max_abs_eigs(qL, d, MP)
-    max2 = max_abs_eigs(qR, d, MP)
+    max1 = max_eig(qL, d, MP)
+    max2 = max_eig(qR, d, MP)
     return max(max1, max2) * (qR - qL)

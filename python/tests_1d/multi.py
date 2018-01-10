@@ -1,6 +1,6 @@
 from numpy import array, eye, sqrt, zeros
 
-from system.gpr.misc.structures import Cvec
+from gpr.misc.structures import Cvec
 from tests_1d.common import riemann_IC, MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
 from options import nx, ny, nz, nV, dx
 

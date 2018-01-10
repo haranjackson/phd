@@ -5,7 +5,7 @@ from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
 from solvers.fv.fluxes import Bint, Aint, Smax
 from solvers.basis import WGHTS, ENDVALS, DERVALS
-from system.system import Bdot, source_ref, flux_ref
+from system import Bdot, source_ref, flux_ref
 from options import ndim, nV, dx, N1, OSHER, SPLIT, PARA_FV, NCORE
 
 

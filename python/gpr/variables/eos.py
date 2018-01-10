@@ -1,6 +1,6 @@
-from system.gpr.variables import mg
-from system.gpr.variables.wavespeeds import c_s2, dc_s2dρ
-from system.gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
+from gpr.variables import mg
+from gpr.variables.wavespeeds import c_s2, dc_s2dρ
+from gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
 from options import VISCOUS, THERMAL, REACTIVE
 
 

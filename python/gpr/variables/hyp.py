@@ -1,6 +1,6 @@
 from numpy import dot, exp, eye
 
-from system.gpr.misc.functions import I_1, I_2, I_3
+from gpr.misc.functions import I_1, I_2, I_3
 
 
 I = eye(3)

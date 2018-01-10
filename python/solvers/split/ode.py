@@ -4,8 +4,8 @@ from numpy import array, zeros
 from scipy.integrate import odeint
 
 from options import NUM_ODE, VISCOUS, THERMAL
-from system.gpr.variables.eos import E_3
-from system.gpr.misc.structures import Cvec_to_Pclass
+from gpr.variables.eos import E_3
+from gpr.misc.structures import Cvec_to_Pclass
 from solvers.split.distortion import f_A, jac_A, solver_approximate_analytic
 from solvers.split.thermal import f_J, jac_J, solver_thermal_analytic_ideal
 

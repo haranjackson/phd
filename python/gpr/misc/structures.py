@@ -1,10 +1,11 @@
 from numpy import zeros
 
-from system.gpr.misc.functions import gram
-from system.gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
-from system.gpr.variables.sources import theta1inv, theta2inv
-from system.gpr.variables.state import heat_flux, pressure, temperature
-from system.gpr.variables.state import sigma, dsigmadA, Sigma
+from gpr.misc.functions import gram
+from gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
+from gpr.variables.sources import theta1inv, theta2inv
+from gpr.variables.state import heat_flux, pressure, temperature
+from gpr.variables.state import sigma, dsigmadA, Sigma
+
 from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
 
 
@@ -30,31 +31,44 @@ class Cvec_to_Pclass():
 
         if VISCOUS:
             self.A  = Q[5:14].reshape([3,3])
-            self.σ = sigma(self.ρ, self.A, MP)
 
         if THERMAL:
             self.J  = Q[14:17] / self.ρ
         else:
             self.J = zeros(3)
 
-        if REACTIVE:
-            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, MP,
-                              self.λ)
-        else:
-            self.p = pressure(self.ρ, self.E, self.v, self.A, self.J, MP)
-
-        self.T = temperature(self.ρ, self.p, MP)
-
-        if THERMAL:
-            self.q = heat_flux(self.T, self.J, MP)
-
         self.MP = MP
+
+    def p(self):
+        if hasattr(self, 'p_'):
+            return self.p_
+        else:
+            if REACTIVE:
+                self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J,
+                                   self.MP, self.λ)
+            else:
+                self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J,
+                                   self.MP)
+            return self.p_
+
+    def T(self):
+        if hasattr(self, 'T_'):
+            return self.T_
+        else:
+            self.T_ = temperature(self.ρ, self.p(), self.MP)
+            return self.T_
+
+    def σ(self):
+        return sigma(self.ρ, self.A, self.MP)
 
     def dσdA(self):
         return dsigmadA(self.ρ, self.A, self.MP)
 
     def Σ(self):
-        return Sigma(self.p, self.ρ, self.A, self.MP)
+        return Sigma(self.p(), self.ρ, self.A, self.MP)
+
+    def q(self):
+        return heat_flux(self.T(), self.J, self.MP)
 
     def ψ(self):
         return dEdA(self.ρ, self.A, self.MP)
@@ -69,10 +83,10 @@ class Cvec_to_Pclass():
         return theta1inv(self.ρ, self.A, self.MP)
 
     def θ2_1(self):
-        return theta2inv(self.ρ, self.T, self.MP)
+        return theta2inv(self.ρ, self.T(), self.MP)
 
     def E1(self):
-        return E_1(self.ρ, self.p, self.MP)
+        return E_1(self.ρ, self.p(), self.MP)
 
 
 def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
@@ -105,7 +119,7 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
 def Pvec(P):
     ret = zeros(nV)
     ret[0] = P.ρ
-    ret[1] = P.p
+    ret[1] = P.p()
     ret[2:5] = P.v
     ret[5:14] = P.A.ravel()
     ret[14:17] = P.J

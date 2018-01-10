@@ -3,7 +3,7 @@ from itertools import product
 from numpy import concatenate, diag, eye, ones, zeros
 
 from solvers.basis import NODES, WGHTS, PSI, PSID, DERVALS
-from system.gpr.misc.functions import kron_prod
+from gpr.misc.functions import kron_prod
 from options import ndim, N1, NT, nV
 
 

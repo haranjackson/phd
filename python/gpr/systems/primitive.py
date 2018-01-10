@@ -1,7 +1,8 @@
 from numpy import eye, zeros
 
-from system.gpr.misc.functions import L2_1D, L2_2D
-from system.gpr.misc.structures import Cvec_to_Pclass
+from gpr.misc.functions import L2_1D, L2_2D
+from gpr.misc.structures import Cvec_to_Pclass
+
 from options import nV, VISCOUS, THERMAL
 
 
@@ -36,11 +37,11 @@ def system_prim(Q, d, MP, pForm=1):
     P = Cvec_to_Pclass(Q, MP)
 
     ρ = P.ρ
-    p = P.p
+    p = P.p()
     A = P.A
     v = P.v
-    T = P.T
-    σ = P.σ
+    T = P.T()
+    σ = P.σ()
 
     dσdA = P.dσdA()
 

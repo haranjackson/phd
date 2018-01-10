@@ -4,9 +4,9 @@ from numpy import array, eye, zeros, arange, around, concatenate, exp, int64, on
 from scipy.optimize import brentq
 from scipy.special import erf
 
-from system.gpr.misc.objects import material_parameters
-from system.gpr.misc.structures import Cvec, Cvec_to_Pclass
-from system.gpr.variables.wavespeeds import c_0
+from gpr.misc.objects import material_parameters
+from gpr.misc.structures import Cvec, Cvec_to_Pclass
+from gpr.variables.wavespeeds import c_0
 from tests_1d.common import riemann_IC, MP_AIR
 from options import nx, ny, nz, nV, dx, Lx, RGFM
 

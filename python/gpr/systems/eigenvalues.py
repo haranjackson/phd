@@ -1,10 +1,11 @@
 from numpy import outer, sqrt, zeros
 from numpy.linalg import eigvals
 
-from system.gpr.misc.functions import GdevG
-from system.gpr.misc.structures import Cvec_to_Pclass
-from system.gpr.variables.mg import dTdρ, dTdp
-from system.gpr.variables.wavespeeds import c_0, c_h, c_s2
+from gpr.misc.functions import GdevG
+from gpr.misc.structures import Cvec_to_Pclass
+from gpr.variables.mg import dTdρ, dTdp
+from gpr.variables.wavespeeds import c_0, c_h, c_s2
+
 from options import VISCOUS, THERMAL, PERRON_FROB
 
 
@@ -15,8 +16,8 @@ def thermo_acoustic_tensor(P, d):
     ret = zeros([4,4])
 
     ρ = P.ρ
-    p = P.p
-    T = P.T
+    p = P.p()
+    T = P.T()
 
     G = P.G()
     Gd = G[d]

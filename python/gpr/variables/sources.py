@@ -1,8 +1,8 @@
 from numpy import exp, inf
 
-from system.gpr.misc.functions import det3, sigma_norm
-from system.gpr.variables.state import sigma
-from system.gpr.variables.wavespeeds import c_s2
+from gpr.misc.functions import det3, sigma_norm
+from gpr.variables.state import sigma
+from gpr.variables.wavespeeds import c_s2
 
 
 def theta1inv(ρ, A, MP):
@@ -45,7 +45,7 @@ def K_arr(P, MP):
     """
     ρ = P.ρ
     λ = P.λ
-    T = P.T
+    T = P.T()
 
     Bc = MP.Bc
     Ea = MP.Ea
@@ -59,7 +59,7 @@ def K_dis(P, MP):
     """
     ρ = P.ρ
     λ = P.λ
-    T = P.T
+    T = P.T()
 
     Ti = MP.Ti
     Kc = MP.Kc
@@ -90,7 +90,7 @@ def K_ing(P, MP):
     φG2 = MP.φG2
 
     ρ = P.ρ
-    p = P.p
+    p = P.p()
     λ = P.λ
     φ = 1 - λ
 
