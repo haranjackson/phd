@@ -4,17 +4,14 @@
 #include "../../etc/types.h"
 #include "../objects/gpr_objects.h"
 
+double pressure(VecVr Q, Par &MP);
 
-double pressure(VecVr Q, Par & MP);
+Mat3_3 sigma(VecVr Q, Par &MP);
 
-Mat3_3 sigma(VecVr Q, Par & MP);
+Vec3 sigma(VecVr Q, Par &MP, int d);
 
-Vec3 sigma(VecVr Q, Par & MP, int d);
+double temperature(double ρ, double p, Par &MP);
 
-double temperature(double ρ, double p, Par & MP);
-
-Vec3 heat_flux(double T, Vec3r J, Par & MP);
-
+Vec3 heat_flux(double T, Vec3r J, Par &MP);
 
 #endif // STATE_H
-

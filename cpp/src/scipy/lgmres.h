@@ -4,26 +4,23 @@
 #include "../etc/types.h"
 #include "newton_krylov.h"
 
+class System {
+  Mat A;
+  Mat M;
 
-class System
-{
-    Mat A;
-    Mat M;
 public:
-    Vec call(Vec x) { return A*x; }
-    Vec prec(Vec x) { return M*x; }
-    void set_A(Mat A_) { A = A_; }
-    void set_M(Mat M_) { M = M_; }
+  Vec call(Vec x) { return A * x; }
+  Vec prec(Vec x) { return M * x; }
+  void set_A(Mat A_) { A = A_; }
+  void set_M(Mat M_) { M = M_; }
 };
 
-Vec lgmres(VecFunc matvec, VecFunc psolve,
-           Vecr b, Vec x, std::vector<Vec> & outer_v,
-           const double tol, const int maxiter,
+Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
+           std::vector<Vec> &outer_v, const double tol, const int maxiter,
            const int inner_m, const unsigned int outer_k);
 
 Vec lgmres_wrapper(Matr A, Vecr b, Vecr x0, Matr M, const double tol,
                    const int maxiter, const int inner_m,
-                   const unsigned int outer_k, std::vector<Vec> & outer_v);
-
+                   const unsigned int outer_k, std::vector<Vec> &outer_v);
 
 #endif // LGMRES_H

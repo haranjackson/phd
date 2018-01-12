@@ -8,5 +8,4 @@ void boundaries(Vecr u, Vecr ub, int ndim, int nx, int ny, int nz,
 
 int extended_dimensions(int nx, int ny, int nz);
 
-
 #endif // GRID_H

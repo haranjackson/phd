@@ -3,13 +3,12 @@
 
 #include <limits>
 
-#include "types.h"
 #include "../options.h"
 #include "../solvers/basis.h"
 #include "../solvers/weno/weno_matrices.h"
+#include "types.h"
 
-
-const int N1 = N+1;
+const int N1 = N + 1;
 const int FN2 = (int)floor(N / 2.);
 const int CN2 = (int)ceil(N / 2.);
 
@@ -44,6 +43,5 @@ extern const Dec DG_U3;
 
 const double mEPS = 2.2204460492503131e-16;
 const double INF = std::numeric_limits<double>::max();
-
 
 #endif // GLOBALS_H

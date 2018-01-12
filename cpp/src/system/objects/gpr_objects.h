@@ -3,7 +3,6 @@
 
 #include "../../../include/eigen3/Eigen"
 
-
 typedef Eigen::Matrix<double, 2, 2, Eigen::RowMajor> Mat2_2;
 typedef Eigen::Matrix<double, 3, 3, Eigen::RowMajor> Mat3_3;
 typedef Eigen::Matrix<double, 4, 4, Eigen::RowMajor> Mat4_4;
@@ -18,44 +17,41 @@ typedef Eigen::Matrix<double, 9, 1> Vec9;
 typedef Eigen::Ref<Vec3> Vec3r;
 typedef Eigen::Ref<Vec9> Vec9r;
 
-typedef Eigen::Map<Mat3_3, 0, Eigen::OuterStride<3> > Mat3_3Map;
-typedef Eigen::Map<Vec3, 0, Eigen::InnerStride<1> > Vec3Map;
+typedef Eigen::Map<Mat3_3, 0, Eigen::OuterStride<3>> Mat3_3Map;
+typedef Eigen::Map<Vec3, 0, Eigen::InnerStride<1>> Vec3Map;
 
+struct Par {
+  double Rc;
+  int EOS;
 
-struct Par
-{
-    double Rc;
-    int EOS;
+  double ρ0;
+  double p0;
+  double T0;
+  double cv;
 
-    double ρ0;
-    double p0;
-    double T0;
-    double cv;
+  double γ;
+  double pINF;
 
-    double γ;
-    double pINF;
+  double Γ0;
 
-    double Γ0;
+  double c02;
+  double s;
+  double e0;
 
-    double c02;
-    double s;
-    double e0;
+  double A;
+  double B;
+  double R1;
+  double R2;
 
-    double A;
-    double B;
-    double R1;
-    double R2;
+  double cs2;
+  double β;
+  double τ1;
+  bool PLASTIC;
+  double σY;
+  double n;
 
-    double cs2;
-    double β;
-    double τ1;
-    bool PLASTIC;
-    double σY;
-    double n;
-
-    double α2;
-    double τ2;
+  double α2;
+  double τ2;
 };
-
 
 #endif // GPR_OBJECTS_H

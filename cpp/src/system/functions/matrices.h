@@ -4,7 +4,6 @@
 #include "../../etc/types.h"
 #include "../objects/gpr_objects.h"
 
-
 double tr(Matr X);
 double det(Matr X);
 double det3(Matr X);
@@ -18,6 +17,5 @@ Mat3_3 devG(Mat3_3r A);
 Mat3_3 AdevG(Mat3_3r A);
 Mat3_3 GdevG(Mat3_3r G);
 Mat3_3 outer(Vec3r x, Vec3r y);
-
 
 #endif

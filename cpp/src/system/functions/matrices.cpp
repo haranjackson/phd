@@ -1,108 +1,79 @@
 #include "../../etc/types.h"
 #include "../objects/gpr_objects.h"
 
+double tr(Matr X) { return X.trace(); }
 
-double tr(Matr X)
-{
-    return X.trace();
+double det(Matr X) { return X.determinant(); }
+
+double det3(Matr X) {
+  return X(0, 0) * (X(1, 1) * X(2, 2) - X(2, 1) * X(1, 2)) -
+         X(1, 0) * (X(0, 1) * X(2, 2) - X(2, 1) * X(0, 2)) +
+         X(2, 0) * (X(0, 1) * X(1, 2) - X(1, 1) * X(0, 2));
 }
 
-double det(Matr X)
-{
-    return X.determinant();
+Mat2_2 inv2(Mat2_2r X) {
+  double detX = det(X);
+  Mat2_2 ret;
+  ret(0, 0) = X(1, 1);
+  ret(0, 1) = -X(0, 1);
+  ret(1, 0) = -X(1, 0);
+  ret(1, 1) = X(0, 0);
+  return ret / detX;
 }
 
-double det3(Matr X)
-{
-    return X(0,0) * (X(1,1) * X(2,2) - X(2,1) * X(1,2))
-          -X(1,0) * (X(0,1) * X(2,2) - X(2,1) * X(0,2))
-          +X(2,0) * (X(0,1) * X(1,2) - X(1,1) * X(0,2));
+Mat3_3 inv3(Mat3_3r X) {
+  double detX = det(X);
+  Mat3_3 ret;
+  ret(0, 0) = (X(1, 1) * X(2, 2) - X(2, 1) * X(1, 2));
+  ret(0, 1) = (X(0, 2) * X(2, 1) - X(0, 1) * X(2, 2));
+  ret(0, 2) = (X(0, 1) * X(1, 2) - X(0, 2) * X(1, 1));
+  ret(1, 0) = (X(1, 2) * X(2, 0) - X(1, 0) * X(2, 2));
+  ret(1, 1) = (X(0, 0) * X(2, 2) - X(0, 2) * X(2, 0));
+  ret(1, 2) = (X(1, 0) * X(0, 2) - X(0, 0) * X(1, 2));
+  ret(2, 0) = (X(1, 0) * X(2, 1) - X(2, 0) * X(1, 1));
+  ret(2, 1) = (X(2, 0) * X(0, 1) - X(0, 0) * X(2, 1));
+  ret(2, 2) = (X(0, 0) * X(1, 1) - X(1, 0) * X(0, 1));
+  return ret / detX;
 }
 
-Mat2_2 inv2(Mat2_2r X)
-{
-    double detX = det(X);
-    Mat2_2 ret;
-    ret(0, 0) = X(1, 1);
-    ret(0, 1) = - X(0, 1);
-    ret(1, 0) = - X(1, 0);
-    ret(1, 1) = X(0, 0);
-    return ret / detX;
+double L2_1D(Vec3r x) { return x.squaredNorm(); }
+
+double L2_2D(Mat3_3r X) { return X.squaredNorm(); }
+
+double dot(Vec3r u, Vec3r v) { return u.dot(v); }
+
+Mat3_3 gram(Mat3_3r A) { // Returns the Gram matrix for A
+  return A.transpose() * A;
 }
 
-Mat3_3 inv3(Mat3_3r X)
-{
-    double detX = det(X);
-    Mat3_3 ret;
-    ret(0, 0) = (X(1, 1) * X(2, 2) - X(2, 1) * X(1, 2));
-    ret(0, 1) = (X(0, 2) * X(2, 1) - X(0, 1) * X(2, 2));
-    ret(0, 2) = (X(0, 1) * X(1, 2) - X(0, 2) * X(1, 1));
-    ret(1, 0) = (X(1, 2) * X(2, 0) - X(1, 0) * X(2, 2));
-    ret(1, 1) = (X(0, 0) * X(2, 2) - X(0, 2) * X(2, 0));
-    ret(1, 2) = (X(1, 0) * X(0, 2) - X(0, 0) * X(1, 2));
-    ret(2, 0) = (X(1, 0) * X(2, 1) - X(2, 0) * X(1, 1));
-    ret(2, 1) = (X(2, 0) * X(0, 1) - X(0, 0) * X(2, 1));
-    ret(2, 2) = (X(0, 0) * X(1, 1) - X(1, 0) * X(0, 1));
-    return ret / detX;
+Mat3_3 devG(Mat3_3r A) { // Returns the deviator of G (the Gramian of A)
+
+  Mat3_3 ret = gram(A);
+  double x = tr(ret) / 3;
+  ret(0, 0) -= x;
+  ret(1, 1) -= x;
+  ret(2, 2) -= x;
+  return ret;
 }
 
-double L2_1D(Vec3r x)
-{
-    return x.squaredNorm();
+Mat3_3 AdevG(Mat3_3r A) {
+  Mat3_3 G = gram(A);
+  double x = tr(G) / 3;
+  G(0, 0) -= x;
+  G(1, 1) -= x;
+  G(2, 2) -= x;
+  return A * G;
 }
 
-double L2_2D(Mat3_3r X)
-{
-    return X.squaredNorm();
+Mat3_3 GdevG(Mat3_3r G) { return G * G - tr(G) / 3 * G; }
+
+Mat3_3 outer(Vec3r x, Vec3r y) {
+  Mat3_3 ret;
+  ret.noalias() = x * y.transpose();
+  return ret;
 }
-
-double dot(Vec3r u, Vec3r v)
-{
-    return u.dot(v);
-}
-
-Mat3_3 gram(Mat3_3r A)
-{   // Returns the Gram matrix for A
-    return A.transpose() * A;
-}
-
-Mat3_3 devG(Mat3_3r A)
-{   // Returns the deviator of G (the Gramian of A)
-
-    Mat3_3 ret = gram(A);
-    double x = tr(ret)/3;
-    ret(0,0) -= x;
-    ret(1,1) -= x;
-    ret(2,2) -= x;
-    return ret;
-}
-
-Mat3_3 AdevG(Mat3_3r A)
-{
-    Mat3_3 G = gram(A);
-    double x = tr(G)/3;
-    G(0,0) -= x;
-    G(1,1) -= x;
-    G(2,2) -= x;
-    return A*G;
-}
-
-Mat3_3 GdevG(Mat3_3r G)
-{
-    return G*G - tr(G)/3 * G;
-}
-
-Mat3_3 outer(Vec3r x, Vec3r y)
-{
-    Mat3_3 ret;
-    ret.noalias() = x * y.transpose();
-    return ret;
-}
-
 
 /*
-
-
 def gram_rev(A):
     """ Returns the Gram matrix for A^T
     """
@@ -180,7 +151,8 @@ def eigh3(M, V=None, overwriteM=0):
     V[2,2] = a*b - M01_M10
 
 def eigh3_1(M, x, y, z, overwriteM=0):
-    """ Returns an upper bound on the maximum eigenvalue of the following matrix:
+    """ Returns an upper bound on the maximum eigenvalue of the following
+matrix:
         [M11+x  M12  M13  y]
         [M21    M22  M23  0]
         [M31    M32  M33  0]

@@ -3,8 +3,6 @@
 
 #include "../../etc/globals.h"
 
-
-void ode_launcher(Vecr u, double dt, Par & MP);
-
+void ode_launcher(Vecr u, double dt, Par &MP);
 
 #endif // ODE_H

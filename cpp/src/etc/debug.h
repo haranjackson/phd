@@ -8,4 +8,3 @@ void print(double x);
 void print(std::string x);
 
 #endif // DEBUG
-
