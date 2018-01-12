@@ -1,10 +1,10 @@
 from numpy import zeros
 
 from gpr.misc.functions import gram
-from gpr.variables.eos import total_energy, dEdA, dEdJ, E_1
-from gpr.variables.sources import theta1inv, theta2inv
+from gpr.variables.eos import total_energy, dEdρ, dEdp, dEdA, dEdA_s, dEdJ, E_1
+from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing
 from gpr.variables.state import heat_flux, pressure, temperature
-from gpr.variables.state import sigma, dsigmadA, Sigma
+from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
 
 from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
 
@@ -39,6 +39,9 @@ class Cvec_to_Pclass():
 
         self.MP = MP
 
+    def G(self):
+        return gram(self.A)
+
     def p(self):
         if hasattr(self, 'p_'):
             return self.p_
@@ -61,6 +64,9 @@ class Cvec_to_Pclass():
     def σ(self):
         return sigma(self.ρ, self.A, self.MP)
 
+    def dσdρ(self):
+        return dsigmadρ(self.ρ, self.A, self.MP)
+
     def dσdA(self):
         return dsigmadA(self.ρ, self.A, self.MP)
 
@@ -70,14 +76,20 @@ class Cvec_to_Pclass():
     def q(self):
         return heat_flux(self.T(), self.J, self.MP)
 
-    def ψ(self):
+    def dEdρ(self):
+        return dEdρ(self.ρ, self.p(), self.A, self.MP)
+
+    def dEdp(self):
+        return dEdp(self.ρ, self.MP)
+
+    def dEdA(self):
         return dEdA(self.ρ, self.A, self.MP)
+
+    def ψ(self):
+        return dEdA_s(self.ρ, self.A, self.MP)
 
     def H(self):
         return dEdJ(self.J, self.MP)
-
-    def G(self):
-        return gram(self.A)
 
     def θ1_1(self):
         return theta1inv(self.ρ, self.A, self.MP)
@@ -85,8 +97,13 @@ class Cvec_to_Pclass():
     def θ2_1(self):
         return theta2inv(self.ρ, self.T(), self.MP)
 
-    def E1(self):
-        return E_1(self.ρ, self.p(), self.MP)
+    def K(self):
+        if self.MP.REACTION == 'a':
+            return K_arr(self.ρ, self.λ, self.T(), self.MP)
+        elif self.MP.REACTION == 'd':
+            return K_dis(self.ρ, self.λ, self.T(), self.MP)
+        elif self.MP.REACTION == 'i':
+            return K_ing(self.ρ, self.λ, self.p(), self.MP)
 
 
 def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):

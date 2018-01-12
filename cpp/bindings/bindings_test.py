@@ -8,10 +8,10 @@ from numpy.random import rand
 
 import GPRpy
 
-from system.gpr.misc.objects import material_parameters
-from system.gpr.misc.structures import Cvec, Cvec_to_Pvec
-from system.gpr.variables.eos import total_energy
-from system.system import flux_ref, source_ref, block_ref, Bdot
+from gpr.misc.objects import material_parameters
+from gpr.misc.structures import Cvec, Cvec_to_Pvec
+from gpr.variables.eos import total_energy
+from system import flux_ref, source_ref, block_ref, Bdot
 
 from solvers.weno.weno import coeffs, weno_launcher, extend
 from solvers.dg.dg import predictor, rhs
@@ -36,9 +36,11 @@ pINF = 0
 p0 = 1
 cs = 2
 μ = 1e-3
-α = 1.5
+cα = 1.5
 κ = 1e-4
 
+PAR = material_parameters(EOS='sg', ρ0=ρ0, cv=cv, p0=p0,
+                          γ=γ, pINF=pINF, b0=cs, cα=cα, μ=μ, κ=κ)
 
 def generate_vector():
     A = rand(3,3)
@@ -84,9 +86,6 @@ def generate_reconstruction(recDims, FACTOR=1000):
 
 d = 0
 dt = 0.0001
-
-PAR = material_parameters(EOS='sg', ρ0=ρ0, cv=cv, p0=p0,
-                          γ=γ, pINF=pINF, cs=cs, α=α, μ=μ, κ=κ)
 
 Q = generate_vector()
 

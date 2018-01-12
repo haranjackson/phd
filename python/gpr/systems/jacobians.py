@@ -1,68 +1,46 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
+from gpr.variables.mg import Γ_MG, dTdρ, dTdp
 from gpr.misc.functions import L2_1D
 
 from options import VISCOUS, THERMAL, REACTIVE, nV
 
-
-class jacobian_variables():
-
-    def __init__(self, P):
-        ρ = P.ρ
-        J = P.J
-        v = P.v
-        E = P.E
-        q = P.q()
-        σ = P.σ()
-
-        E1 = P.E1()
-        dσdA = P.dσdA()
-        ψ = P.ψ()
-
-        MP = P.MP
-        γ = MP.γ
-        cα2 = MP.cα2
-
-        self.Γ = γ - 1
-        self.Ψ = ρ * outer(v, v) - σ
-        self.Ω = (E - E1) * v - (dot(σ, v) + q) / ρ
-        self.Υ = self.Γ * (L2_1D(v) + cα2 * L2_1D(J) + E1 - E)
-        self.Φ = ρ * outer(v, ψ).reshape([3,3,3])
-        self.Φ -= tensordot(v, dσdA, axes=(0,0))
 
 def dQdP(P):
     """ Returns the Jacobian of the conserved variables with respect to the primitive variables
     """
     ret = eye(nV)
 
+    MP = P.MP
+
     ρ = P.ρ
-    J = P.J
     v = P.v
     E = P.E
 
-    E1 = P.E1()
-    ψ = P.ψ()
+    dEdρ = P.dEdρ()
+    Γ = Γ_MG(ρ, MP)
 
-    MP = P.MP
-    γ = MP.γ
-    cα2 = MP.cα2
-    Qc = MP.Qc
-
-    ret[1, 0] = E - E1
-    ret[1, 1] /= γ - 1
+    ret[1, 0] = E + ρ * dEdρ
+    ret[1, 1] = 1 / Γ
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
-    ret[2:5, 2:5] *= ρ
+    for i in range(2,5):
+        ret[i,i] = ρ
 
     if VISCOUS:
-        ret[1, 5:14] = ρ * ψ.ravel()
+        ψ_ = P.dEdA()
+        ret[1, 5:14] = ρ * ψ_.ravel()
 
     if THERMAL:
-        ret[1, 14:17] = cα2 * ρ * J
+        J = P.J
+        H = P.H()
+        ret[1, 14:17] = ρ * H
         ret[14:17, 0] = J
-        ret[14:17, 14:17] *= ρ
+        for i in range(14,17):
+            ret[i,i] = ρ
 
     if REACTIVE:
+        Qc = MP.Qc
         ret[1, 17] = Qc * ρ
         ret[17, 0] = P.λ
         ret[17, 17] *= ρ
@@ -74,18 +52,22 @@ def dPdQ(P):
     """
     ret = eye(nV)
 
+    MP = P.MP
+
     ρ = P.ρ
     v = P.v
+    E = P.E
     J = P.J
 
-    ψ = P.ψ()
+    dE_dρ = P.dEdρ()
+    Γ = Γ_MG(ρ, MP)
+    ψ_ = P.dEdA()
 
-    MP = P.MP
-    cα2 = MP.cα2
-
-    jacVars = jacobian_variables(P)
-    Γ = jacVars.Γ
-    Υ = jacVars.Υ
+    tmp = L2_1D(v) - (E + ρ * dE_dρ)
+    if THERMAL:
+        cα2 = MP.cα2
+        tmp += cα2 * L2_1D(J)
+    Υ = Γ * tmp
 
     ret[1, 0] = Υ
     ret[1, 1] = Γ
@@ -96,10 +78,11 @@ def dPdQ(P):
         ret[i, i] = 1 / ρ
 
     if VISCOUS:
-        ret[1, 5:14] = -Γ * ρ * ψ.ravel()
+        ret[1, 5:14] = -Γ * ρ * ψ_.ravel()
 
     if THERMAL:
-        ret[1, 14:17] = -Γ * cα2 * J
+        H = P.H()
+        ret[1, 14:17] = -Γ * H
         ret[14:17, 0] = -J / ρ
         for i in range(14,17):
             ret[i, i] = 1 / ρ
@@ -118,41 +101,48 @@ def dFdP(P, d):
     """ Returns the Jacobian of the flux vector with respect to the primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
+    MP = P.MP()
+
     ρ = P.ρ
     p = P.p()
-    v = P.v
     A = P.A
+    v = P.v
     E = P.E
+    σ = P.σ()
+    H = P.H()
 
+    ψ_ = P.dEdA()
+    dσdρ = P.dσdρ()
     dσdA = P.dσdA()
+    dEdρ = P.dEdρ()
+    dEdp = P.dEdp()
 
-    MP = P.MP
-    γ = MP.γ
-    pINF = MP.pINF
-
+    dT_dρ = dTdρ(ρ, p, MP)
+    dT_dp = dTdp(ρ, MP)
     ρvd = ρ * v[d]
 
-    jacVars = jacobian_variables(P)
-    Ψ = jacVars.Ψ
-    Φ = jacVars.Φ
-    Ω = jacVars.Ω
-    Γ = jacVars.Γ
+    vv = outer(v, v)
+    Ψ = ρ * vv - σ
+    Φ = vv - dσdρ
+    Ω = ρ * outer(v, ψ_).reshape([3,3,3]) - tensordot(v, dσdA, axes=(0,0))
+    Δ = (E + ρ * dEdρ) * v - dot(dσdρ, v) + dT_dρ * H
+    Π = (ρ * dEdp + 1) * v + dT_dp * H
 
     ret = zeros([nV, nV])
     ret[0, 0] = v[d]
     ret[0, 2+d] = ρ
-    ret[1, 0] = Ω[d]
-    ret[1, 1] = γ * v[d] / Γ + q[d] / (p + pINF)
+    ret[1, 0] = Δ[d]
+    ret[1, 1] = Π[d]
     ret[1, 2:5] = Ψ[d]
     ret[1, 2+d] += ρ * E + p
-    ret[2:5, 0] = Ψ[d] / ρ
+    ret[2:5, 0] = Φ[d]
     for i in range(2,5):
         ret[i, i] = ρvd
     ret[2:5, 2+d] += ρ * v
     ret[2+d, 1] = 1
 
     if VISCOUS:
-        ret[1, 5:14] = Φ[d].ravel()
+        ret[1, 5:14] = Ω[d].ravel()
         ret[2:5, 5:14] = -dσdA[d].reshape([3,9])
         ret[5+d, 2:5] = A[0]
         ret[8+d, 2:5] = A[1]
@@ -161,16 +151,15 @@ def dFdP(P, d):
         ret[8+d, 8:11] = v
         ret[11+d, 11:14] = v
 
-
     if THERMAL:
-        J = P.J
         T = P.T()
+        J = P.J
         cα2 = MP.cα2
-        ret[1, 14:17] = cα2 * ρvd * J
+        ret[1, 14:17] = ρvd * H
         ret[1, 14+d] += cα2 * T
         ret[14:17, 0] = v[d] * J
-        ret[14+d, 0] -= T / ρ
-        ret[14+d, 1] = T / (p+pINF)
+        ret[14+d, 0] -= dT_dρ
+        ret[14+d, 1] = dT_dp
         ret[14:17, 2+d] = ρ * J
         for i in range(14,17):
             ret[i, i] = ρvd

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from gpr.misc.functions import det3, dev, lim
 from gpr.misc.objects import material_parameters
-from gpr.variables.eos import dEdA
+from gpr.variables.eos import dEdA_s
 
 
 ### Options ###
@@ -61,7 +61,7 @@ def f_standard(y, t):
     A = y.reshape([3,3])
     ret = -dot(A,ε)
     if includeSources:
-        ret -= dEdA(det3(A), A,PAR)/τ
+        ret -= dEdA_s(det3(A), A,PAR)/τ
     return ret.ravel()
 
 def solver_standard(A, dt):

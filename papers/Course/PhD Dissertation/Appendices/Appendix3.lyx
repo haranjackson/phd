@@ -76,7 +76,7 @@
 Matrices used in the Numerical Methods
 \end_layout
 
-\begin_layout Section
+\begin_layout Section*
 WENO Matrices for 
 \begin_inset Formula $N=2$
 \end_inset

@@ -2,7 +2,7 @@ from numpy import dot, eye
 
 from gpr.misc.functions import AdevG, dev, gram, L2_2D
 from gpr.variables import mg
-from gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA, dEdJ
+from gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA_s, dEdJ
 from gpr.variables.wavespeeds import c_s2, dc_s2dρ
 from options import VISCOUS, THERMAL, REACTIVE
 
@@ -13,12 +13,6 @@ def pressure(ρ, E, v, A, J, MP, λ=None):
 
     if VISCOUS:
         E1 -= E_2A(ρ, A, MP)
-
-        if MP.β != 0:
-            Γ = mg.Γ_MG(ρ, MP)
-            dcs2dρ = dc_s2dρ(ρ, MP)
-            G = gram(A)
-            E1 += ρ/(4*Γ) * dcs2dρ / 4 * L2_2D(dev(G))
 
     if THERMAL:
         E1 -= E_2J(J, MP)
@@ -42,7 +36,8 @@ def heat_flux(T, J, MP):
 def sigma(ρ, A, MP):
     """ Returns the symmetric viscous shear stress tensor
     """
-    return -ρ * dot(A.T, dEdA(ρ, A, MP))
+    ψ = dEdA_s(ρ, A, MP)
+    return -ρ * dot(A.T, ψ)
 
 def dsigmadA(ρ, A, MP):
     """ Returns T_ijmn = dσ_ij / dA_mn, holding ρ constant.
@@ -61,6 +56,14 @@ def dsigmadA(ρ, A, MP):
         ret[:, i, :, i] += AdevGT
 
     return -ρ * cs2 * ret
+
+def dsigmadρ(ρ, A, MP):
+    """ Returns the symmetric viscous shear stress tensor
+    """
+    cs2 = c_s2(ρ, MP)
+    dcs2dρ = dc_s2dρ(ρ, MP)
+    ψ = dEdA_s(ρ, A, MP)
+    return -(1 + ρ * dcs2dρ / cs2) * dot(A.T, ψ)
 
 def Sigma(p, ρ, A, MP):
     """ Returns the total symmetric stress tensor

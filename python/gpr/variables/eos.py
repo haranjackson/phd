@@ -1,5 +1,5 @@
-from gpr.variables import mg
-from gpr.variables.wavespeeds import c_s2, dc_s2dρ
+from gpr.variables.mg import internal_energy, dedρ, dedp
+from gpr.variables.wavespeeds import c_s2, C_0, dC_0dρ
 from gpr.misc.functions import AdevG, dev, gram, L2_1D, L2_2D
 from options import VISCOUS, THERMAL, REACTIVE
 
@@ -7,14 +7,14 @@ from options import VISCOUS, THERMAL, REACTIVE
 def E_1(ρ, p, MP):
     """ Returns the microscale energy
     """
-    return mg.internal_energy(ρ, p, MP)
+    return internal_energy(ρ, p, MP)
 
 def E_2A(ρ, A, MP):
     """ Returns the mesoscale energy dependent on the distortion
     """
-    cs2 = c_s2(ρ, MP)
+    C0 = C_0(ρ, MP)
     G = gram(A)
-    return cs2 / 4 * L2_2D(dev(G))
+    return C0/4 * L2_2D(dev(G))
 
 def E_2J(J, MP):
     """ Returns the mesoscale energy dependent on the thermal impulse
@@ -53,24 +53,27 @@ def total_energy(ρ, p, v, A, J, λ, MP):
     return ret
 
 def dEdρ(ρ, p, A, MP):
-    """ Returns the partial derivative of E by ρ (holding p constant)
+    """ Returns the partial derivative of E by ρ (holding p,A constant)
     """
-    dcs2dρ = dc_s2dρ(ρ, MP)
     G = gram(A)
-    return mg.dedρ(ρ, p, MP) + dcs2dρ / 4 * L2_2D(dev(G))
+    dC0dρ = dC_0dρ(ρ, MP)
+    ret = dedρ(ρ, p, MP) + dC0dρ / 4 * L2_2D(dev(G))
+    return ret
 
 def dEdp(ρ, MP):
-    """ Returns the partial derivative of E by p
+    """ Returns the partial derivative of E by p (holding ρ constant)
     """
-    return mg.dedp(ρ, MP)
-
-def dEdv(v):
-    """ Returns the partial derivative of E by v
-    """
-    return v
+    return dedp(ρ, MP)
 
 def dEdA(ρ, A, MP):
-    """ Returns the partial derivative of E by A
+    """ Returns the partial derivative of E by A (holding ρ,s constant)
+    """
+    C0 = C_0(ρ, MP)
+    G = gram(A)
+    return C0 * AdevG(A,G)
+
+def dEdA_s(ρ, A, MP):
+    """ Returns the partial derivative of E by A (holding ρ,s constant)
     """
     cs2 = c_s2(ρ, MP)
     G = gram(A)
@@ -81,3 +84,8 @@ def dEdJ(J, MP):
     """
     cα2 = MP.cα2
     return cα2 * J
+
+def dEdv(v):
+    """ Returns the partial derivative of E by v
+    """
+    return v

@@ -3,13 +3,13 @@ from scipy.integrate import odeint
 from scipy.linalg import svd, inv
 
 from gpr.misc.functions import AdevG, det3, gram, gram_rev, L2_2D
-from gpr.variables.eos import dEdA
+from gpr.variables.eos import dEdA_s
 from gpr.variables.sources import theta1inv
 
 
 def f_A(A, MP):
     ρ = det3(A)
-    return - dEdA(A, MP).ravel() * theta1inv(ρ, A, MP)
+    return - dEdA_s(A, MP).ravel() * theta1inv(ρ, A, MP)
 
 def jac_A(A, τ1):
     G = gram(A)
