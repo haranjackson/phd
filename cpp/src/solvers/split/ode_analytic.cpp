@@ -58,7 +58,7 @@ void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
   double E = Q(1) / ρ;
   Vec3Map rJ = get_rJ(Q);
   double c1 = E - E_2A(Q, MP) - E_3(Q);
-  double c2 = MP.α2 / 2.;
+  double c2 = MP.cα2 / 2.;
   double k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv);
   c1 *= k;
   c2 *= k;

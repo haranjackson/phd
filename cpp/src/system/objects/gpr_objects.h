@@ -27,30 +27,33 @@ struct Par {
   double ρ0;
   double p0;
   double T0;
+  double Tref;
   double cv;
 
-  double γ;
   double pINF;
 
   double Γ0;
-
   double c02;
+
   double s;
   double e0;
+
+  double α;
+  double β;
+  double γ;
 
   double A;
   double B;
   double R1;
   double R2;
 
-  double cs2;
-  double β;
+  double B0;
   double τ1;
   bool PLASTIC;
   double σY;
   double n;
 
-  double α2;
+  double cα2;
   double τ2;
 };
 

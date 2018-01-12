@@ -42,5 +42,5 @@ double temperature(double ρ, double p, Par &MP) {
 
 Vec3 heat_flux(double T, Vec3r J, Par &MP) {
   // Returns the heat flux vector
-  return MP.α2 * T * J;
+  return MP.cα2 * T * J;
 }

@@ -8,7 +8,7 @@ double theta_1(VecVr Q, Par &MP) {
   // NB May be more suitable to use a different form for other fluids/solids
   Mat3_3Map A = get_A(Q);
   double den = pow(det(A), 5. / 3.);
-  return (MP.cs2 * MP.τ1) / (3 * den);
+  return (MP.B0 * MP.τ1) / (3 * den);
 }
 
 double theta_2(VecVr Q, Par &MP) {
@@ -18,5 +18,5 @@ double theta_2(VecVr Q, Par &MP) {
   double ρ = Q(0);
   double p = pressure(Q, MP);
   double T = temperature(ρ, p, MP);
-  return MP.α2 * MP.τ2 * (ρ / MP.ρ0) * (MP.T0 / T);
+  return MP.cα2 * MP.τ2 * (ρ / MP.ρ0) * (MP.T0 / T);
 }

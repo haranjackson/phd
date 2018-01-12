@@ -19,7 +19,7 @@ Mat4_4 thermo_acoustic_tensor(double ρ, Mat3_3r A, double p, double T, int d,
   O.row(d) *= 2.;
   O(d, d) *= 3. / 4.;
   O += Gd(d) * G + 1. / 3. * outer(Gd, Gd);
-  O *= MP.cs2;
+  O *= MP.B0;
   ret.topLeftCorner<3, 3>() = O;
 
   ret(d, d) += γ * p / ρ;
@@ -27,7 +27,7 @@ Mat4_4 thermo_acoustic_tensor(double ρ, Mat3_3r A, double p, double T, int d,
   ret(3, 0) = ((γ - 1) * p - pINF) * T / (ρ * (p + pINF));
   ret(3, 1) = 0.;
   ret(3, 2) = 0.;
-  double tmp = (γ - 1) * MP.α2 * T / ρ;
+  double tmp = (γ - 1) * MP.cα2 * T / ρ;
   ret(0, 3) = tmp;
   ret(1, 3) = 0.;
   ret(2, 3) = 0.;

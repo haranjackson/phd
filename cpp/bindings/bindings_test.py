@@ -149,7 +149,7 @@ print("WENO diff =", diff(wh_cp, wh_py))
 ### DISCONTINUOUS GALERKIN ###
 
 
-upy, _ = viscous_shock_IC()
+upy, _, _ = viscous_shock_IC()
 rec_py = weno_launcher(upy)
 rec_cp = rec_py.ravel()
 

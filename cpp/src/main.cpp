@@ -43,10 +43,10 @@ int main() {
   MP.ρ0 = 1.;
   MP.p0 = 1.;
   MP.T0 = 1.;
-  MP.cs2 = 1.;
-  MP.τ1 = 6 * μ / (MP.ρ0 * MP.cs2);
-  MP.α2 = 4.;
-  MP.τ2 = κ * MP.ρ0 / (MP.T0 * MP.α2);
+  MP.B0 = 1.;
+  MP.τ1 = 6 * μ / (MP.ρ0 * MP.B0);
+  MP.cα2 = 4.;
+  MP.τ2 = κ * MP.ρ0 / (MP.T0 * MP.cα2);
 
   Vec u = heat_conduction_1d(MP);
 
