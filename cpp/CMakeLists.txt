@@ -4,17 +4,17 @@ cmake_minimum_required(VERSION 2.8)
 
 SET(PYTHON_DIR "/home/hari/miniconda3/include/python3.6m")
 
+include_directories(include/pybind11
+                    include/eigen3
+                    include
+                    ${PYTHON_DIR})
+
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3 -fPIC")
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -DNDEBUG")
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I/opt/intel/mkl/include")
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--start-group /opt/intel/mkl/lib intel64/libmkl_intel_lp64.a /opt/intel/mkl/lib/intel64/libmkl_gnu_thread.a /opt/intel/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl")
-
-include_directories(include/pybind11
-                    include/eigen3
-                    include
-                    ${PYTHON_DIR})
 
 SET(SRCS src/etc/globals.cpp
          src/etc/grid.cpp

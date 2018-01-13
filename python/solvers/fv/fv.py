@@ -33,18 +33,11 @@ IDX = [tN] + [N1]*ndim + [1]*(3-ndim)
 IDX_END = [tN] + [N1]*(ndim-1) + [1]*(3-ndim)
 
 
-def endpoints(qh):
-    """ Returns an array containing the values of the basis polynomials at 0 and 1
-        xEnd[d,e,i,j,k,:,:,:,:,:] is the set of coefficients at end e in the dth direction
+def endpoints(qh0):
+    """ Returns tensor T where T[d,e,i,j,k,:,:,:,:,:] is the set of DG
+        coefficients at end e (either 0 or 1) in the dth direction
     """
-    nx, ny, nz = qh.shape[:3]
-    qh0 = qh.reshape([nx, ny, nz] + IDX + [nV])
-    qEnd = zeros([ndim, 2, nx, ny, nz] + IDX_END + [nV])
-
-    for d in range(ndim):
-        qEnd[d] = tensordot(ENDVALS, qh0, (0,4+d))
-
-    return qEnd
+    return array([tensordot(ENDVALS, qh0, (0,4+d)) for d in range(ndim)])
 
 def interfaces(qEnd, MP):
     nx, ny, nz = qEnd.shape[2:5]
@@ -96,42 +89,9 @@ def interfaces(qEnd, MP):
         ret += BEnd[2, 1:, 1:,  1:]
     return ret
 
-def center(qhi, t, inds, MP, HOMOGENEOUS):
-    """ Returns the space-time averaged source term and non-conservative term in cell ijk
+def centers(qh0, nx, ny, nz, MP, HOMOGENEOUS):
+    """ Returns the space-time averaged source term and non-conservative terms
     """
-    q = qhi[t, inds[0], inds[1], inds[2]]
-    qx = qhi[t, :, inds[1], inds[2]]
-    qy = qhi[t, inds[0], :, inds[2]]
-    qz = qhi[t, inds[0], inds[1], :]
-    qi = [qx, qy, qz]
-
-    ret = zeros(nV)
-
-    if not HOMOGENEOUS:
-        source_ref(ret, q, MP)
-        ret *= dx
-
-    for d in range(ndim):
-        dxdxi = dot(DERVALS[inds[d]], qi[d])
-        temp = zeros(nV)
-        Bdot(temp, dxdxi, q, d, MP)
-        ret -= temp
-
-    return ret
-
-def fv_terms(qh, dt, MP, HOMOGENEOUS=0):
-    """ Returns the space-time averaged interface terms, jump terms, source terms, and
-        non-conservative terms
-    """
-    nx, ny, nz = qh.shape[:3]
-    if nz==1:
-        qh0 = qh.repeat([3], axis=2)
-    if ny==1:
-        qh0 = qh0.repeat([3], axis=1)
-    nx, ny, nz = array(qh0.shape[:3]) - 2
-    qEnd = endpoints(qh0)
-    qh0 = qh0.reshape([nx+2, ny+2, nz+2] + IDX + [nV])
-
     s = zeros([nx, ny, nz, nV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
@@ -140,8 +100,52 @@ def fv_terms(qh, dt, MP, HOMOGENEOUS=0):
 
         for t, x, y, z in product(range(IDX[0]),range(IDX[1]),range(IDX[2]),range(IDX[3])):
 
-            s[i, j, k] += wght[t,x,y,z] * center(qhi, t, [x, y, z], MP, HOMOGENEOUS)
+            q  = qhi[t, x, y, z]
+            qx = qhi[t, :, y, z]
+            qy = qhi[t, x, :, z]
+            qz = qhi[t, x, y, :]
+            qi = [qx, qy, qz]
 
+            tmp = zeros(nV)
+
+            if not HOMOGENEOUS:
+                source_ref(tmp, q, MP)
+                tmp *= dx
+
+            inds = [x,y,z]
+            for d in range(ndim):
+                dxdxi = dot(DERVALS[inds[d]], qi[d])
+                temp = zeros(nV)
+                Bdot(temp, dxdxi, q, d, MP)
+                tmp -= temp
+
+            s[i, j, k] += wght[t,x,y,z] * tmp
+
+    return s
+
+def extend_dimensions(qh):
+    """ If the simulation is 1D or 2D, extends the array in the unused
+        dimensions so that the 3D solver can be used
+    """
+    nx, ny, nz = qh.shape[:3]
+    if nz==1:
+        qh0 = qh.repeat([3], axis=2)
+    if ny==1:
+        qh0 = qh0.repeat([3], axis=1)
+    nx, ny, nz = array(qh0.shape[:3]) - 2
+
+    qh0 = qh0.reshape([nx+2, ny+2, nz+2] + IDX + [nV])
+
+    return qh0, nx, ny, nz
+
+def fv_terms(qh, dt, MP, HOMOGENEOUS=0):
+    """ Returns the space-time averaged interface terms, jump terms,
+        source terms, and non-conservative terms
+    """
+    qh0, nx, ny, nz = extend_dimensions(qh)
+    qEnd = endpoints(qh0)
+
+    s = centers(qh0, nx, ny, nz, MP, HOMOGENEOUS)
     s -= 0.5 * interfaces(qEnd, MP)
 
     return dt/dx * s

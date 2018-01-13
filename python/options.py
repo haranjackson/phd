@@ -3,7 +3,7 @@
 Lx = 1                      # Length of domain in x direction
 Ly = 1                      # Length of domain in x direction
 Lz = 1                      # Length of domain in x direction
-nx = 500                    # Number of cells in x direction
+nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
 
@@ -31,7 +31,7 @@ NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
 STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
-N   = 2                     # Method is order N+1
+N   = 1                     # Method is order N+1
 CFL = 0.6                   # CFL number
 OSHER = 0                   # Whether to use Osher flux (else Rusanov flux)
 PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ

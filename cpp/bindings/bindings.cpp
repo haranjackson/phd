@@ -35,9 +35,12 @@ PYBIND11_MODULE(GPRpy, m) {
 
   pybind11::module m_classes =
       m.def_submodule("classes", "Classes used by GPRpy");
+
   pybind11::module m_scipy = m.def_submodule("scipy", "SciPy functions");
+
   pybind11::module m_system =
       m.def_submodule("system", "System vectors and matrices");
+
   pybind11::module m_solvers = m.def_submodule("solvers", "Solver functions");
   pybind11::module m_solvers_common =
       m_solvers.def_submodule("common", "Functions common to all solvers");
@@ -115,7 +118,6 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);
   m_solvers_weno.def("weno_launcher", &weno_launcher);
 
-  m_solvers_dg.def("kron", &kron);
   m_solvers_dg.def("rhs1", &rhs1);
   m_solvers_dg.def("obj1", &obj1);
   m_solvers_dg.def("predictor", &predictor);
@@ -127,5 +129,10 @@ PYBIND11_MODULE(GPRpy, m) {
 
   m_solvers_fv.def("Bint", &Bint);
   m_solvers_fv.def("Smax", &Smax);
+
+  m_solvers_fv.def("centers1", &centers1);
+  m_solvers_fv.def("centers2", &centers2);
+  m_solvers_fv.def("interfs1", &interfs1);
+  m_solvers_fv.def("interfs2", &interfs2);
   m_solvers_fv.def("fv_launcher", &fv_launcher);
 }

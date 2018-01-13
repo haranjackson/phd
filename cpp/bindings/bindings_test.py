@@ -19,12 +19,11 @@ from solvers.dg.matrices import DG_U
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_stepper_analytical
 from solvers.fv.fluxes import Smax, Bint
-from solvers.fv.fv import fv_terms
+from solvers.fv.fv import fv_terms, centers, interfaces, extend_dimensions, endpoints
 
 from tests_1d.fluids import viscous_shock_IC
 
 from options import dx, N1, SPLIT, nx, ny, nz, ndim, nV
-
 
 ### ENSURE N,V are equal ###
 
@@ -39,7 +38,10 @@ cs = 2
 cα = 1.5
 κ = 1e-4
 
-PAR = material_parameters(EOS='sg', ρ0=ρ0, cv=cv, p0=p0,
+d = 0
+dt = 0.0001
+
+MP = material_parameters(EOS='sg', ρ0=ρ0, cv=cv, p0=p0,
                           γ=γ, pINF=pINF, b0=cs, cα=cα, μ=μ, κ=κ)
 
 def generate_vector():
@@ -49,71 +51,36 @@ def generate_vector():
     p = rand()
     v = rand(3)
     J = rand(3)
-    E = total_energy(ρ, p, v, A, J, 0, PAR)
-    return Cvec(ρ, p, v, A, J, PAR)
-
-def generate_reconstruction(recDims, FACTOR=1000):
-
-    NX = nx+2
-    NY = ny+2 if ny>1 else 1
-    NZ = nz+2 if nz>1 else 1
-
-    if recDims==1:
-        rec = zeros([NX, NY, NZ, N1, nV])
-        for i, j, k in product(range(NX), range(NY), range(NZ)):
-            Q = generate_vector()
-            for r1 in range(N1):
-                Q += rand(nV) / FACTOR
-                rec[i,j,k,r1] = Q
-
-    elif recDims==2:
-        rec = zeros([NX, NY, NZ, N1, N1, nV])
-        for i, j, k in product(range(NX), range(NY), range(NZ)):
-            Q = generate_vector()
-            for r1, r2 in product(range(N1), range(N1)):
-                Q += rand(nV) / FACTOR
-                rec[i,j,k,r1,r2] = Q
-
-    elif recDims==3:
-        rec = zeros([NX, NY, NZ, N1, N1, N1, nV])
-        for i, j, k in product(range(NX), range(NY), range(NZ)):
-            Q = generate_vector()
-            for r1 in product(range(N1), range(N1), range(N1)):
-                Q[:nV] += rand(nV) / FACTOR
-                rec[i,j,k,r1,r2,r3] = Q
-
-    return rec, rec.ravel()
-
-d = 0
-dt = 0.0001
-
-Q = generate_vector()
-
+    E = total_energy(ρ, p, v, A, J, 0, MP)
+    return Cvec(ρ, p, v, A, J, MP)
 
 def diff(x1, x2):
     return amax(abs(x1-x2))
+
+Q = generate_vector()
+
 
 ### EQUATIONS ###
 
 
 F_cp = zeros(nV)
 F_py = zeros(nV)
-GPRpy.system.flux(F_cp, Q, d, PAR)
-flux_ref(F_py, Q, d, PAR)
+GPRpy.system.flux(F_cp, Q, d, MP)
+flux_ref(F_py, Q, d, MP)
 
 print("F    diff =", diff(F_cp, F_py))
 
 S_cp = zeros(nV)
 S_py = zeros(nV)
-GPRpy.system.source(S_cp, Q, PAR)
-source_ref(S_py, Q, PAR)
+GPRpy.system.source(S_cp, Q, MP)
+source_ref(S_py, Q, MP)
 
 print("S    diff =", diff(S_cp, S_py))
 
 B_cp = zeros([nV,nV])
 B_py = zeros([nV,nV])
 GPRpy.system.block(B_cp, Q, d)
-block_ref(B_py, Q, d, PAR)
+block_ref(B_py, Q, d, MP)
 
 print("B    diff =", diff(B_cp, B_py))
 
@@ -121,7 +88,7 @@ Bx_cp = zeros(nV)
 Bx_py = zeros(nV)
 x = rand(nV)
 GPRpy.system.Bdot(Bx_cp, Q, x, d)
-Bdot(Bx_py, x, Q, d, PAR)
+Bdot(Bx_py, x, Q, d, MP)
 
 print("Bdot diff =", diff(Bx_cp, Bx_py))
 
@@ -159,12 +126,12 @@ Q_cp = Q_py[:,:nV]
 Ww_py = rand(N1*N1, nV)
 Ww_py[:,-1] = 0
 Ww_cp = Ww_py[:,:nV]
-rhs_py = rhs(Q_py, Ww_py, dt, PAR, 0)
-rhs_cp = GPRpy.solvers.dg.rhs1(Q_cp, Ww_cp, dt, dx, PAR)
+rhs_py = rhs(Q_py, Ww_py, dt, MP, 0)
+rhs_cp = GPRpy.solvers.dg.rhs1(Q_cp, Ww_cp, dt, dx, MP)
 
 print("RHS  diff =", diff(rhs_cp, rhs_py))
 
-obj_cp = GPRpy.solvers.dg.obj1(Q_cp.ravel(), Ww_cp, dt, dx, PAR).reshape([N1*N1, nV])
+obj_cp = GPRpy.solvers.dg.obj1(Q_cp.ravel(), Ww_cp, dt, dx, MP).reshape([N1*N1, nV])
 obj_py = rhs_py - dot(DG_U, Q_py)
 
 print("obj  diff =", diff(obj_cp, obj_py))
@@ -172,9 +139,10 @@ print("obj  diff =", diff(obj_cp, obj_py))
 qh_cp = zeros(len(rec_cp)*N1)
 STIFF = False
 HIDALGO = False
-GPRpy.solvers.dg.predictor(qh_cp, rec_cp, ndim, dt, dx, dx, dx, STIFF, HIDALGO, PAR)
+GPRpy.solvers.dg.predictor(qh_cp, rec_cp, ndim, dt, dx, dx, dx, STIFF, HIDALGO, MP)
 
-qh_py = predictor(rec_py, dt, PAR).ravel()
+qh_py0 = predictor(rec_py, dt, MP)
+qh_py = qh_py0.ravel()
 
 print("DG   diff =", diff(qh_cp, qh_py))
 
@@ -185,32 +153,51 @@ print("DG   diff =", diff(qh_cp, qh_py))
 Q1 = generate_vector()
 Q2 = generate_vector()
 
-Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, False, PAR)
-Smax_py = -Smax(Q1, Q2, d, PAR)
+Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, False, MP)
+Smax_py = -Smax(Q1, Q2, d, MP)
 
 print("Smax diff =", diff(Smax_cp, Smax_py))
 
 Bint_cp = GPRpy.solvers.fv.Bint(Q1, Q2, d)
-Bint_py = Bint(Q1, Q2, d, PAR)
+Bint_py = Bint(Q1, Q2, d, MP)
 
 print("Bint diff =", diff(Bint_cp, Bint_py))
 
 
 ### FINITE VOLUME (ndim=1) ###
 
+
 HOMOGENEOUS = SPLIT
 TIME = not SPLIT
 SOURCES = not SPLIT
 
-rec_py, rec_cp = generate_reconstruction(ndim+TIME)
+qh0 = extend_dimensions(qh_py0)[0]
+FVc_py = dt/dx * centers(qh0, nx-2, ny, nz, MP, HOMOGENEOUS)
+FVc_cp = zeros([(nx-2)*nV])
+GPRpy.solvers.fv.centers1(FVc_cp, qh_py, nx-2, dt, dx, SOURCES, TIME, MP)
 
-FV_py = fv_terms(rec_py, dt, PAR, HOMOGENEOUS)
-FV_cp = zeros([nx*nV])
-GPRpy.solvers.fv.fv_launcher(FV_cp, rec_cp, 1, nx, 1, 1, dt, dx, 1, 1,
-                             SOURCES, TIME, False, PAR)
+FVc_cp = FVc_cp.reshape([(nx-2),nV])
+FVc_py = FVc_py.reshape([(nx-2),nV])
 
-FV_cp = FV_cp.reshape([nx,nV])
-FV_py = FV_py.reshape([nx,nV])
+print("FVc  diff =", diff(FVc_cp, FVc_py))
+
+qEnd = endpoints(qh0)
+FVi_py = -0.5 * dt/dx * interfaces(qEnd, MP)
+FVi_cp = zeros([(nx-2)*nV])
+GPRpy.solvers.fv.interfs1(FVi_cp, qh_py, nx-2, dt, dx, TIME, 0, MP)
+
+FVi_cp = FVi_cp.reshape([(nx-2),nV])
+FVi_py = FVi_py.reshape([(nx-2),nV])
+
+print("FVi  diff =", diff(FVi_cp, FVi_py))
+
+FV_py = fv_terms(qh_py0, dt, MP, HOMOGENEOUS)
+FV_cp = zeros([(nx-2)*nV])
+GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py, 1, nx-2, 1, 1, dt, dx, 1, 1,
+                             SOURCES, TIME, False, MP)
+
+FV_cp = FV_cp.reshape([(nx-2),nV])
+FV_py = FV_py.reshape([(nx-2),nV])
 
 # NOTE: Differences occur in cells where the reconstuction given is non-physical
 # This arises because the max_abs_eigs functions are slightly different
@@ -220,17 +207,13 @@ print("FV   diff =", diff(FV_cp, FV_py))
 ### SPLIT (ndim=1) ###
 
 
-if SPLIT:
-    mid_py = rec_py.reshape([nx+2,1,1,N1,nV])
-    mid_cp = mid_py.ravel()
-else:
-    mid_py = rec_py.reshape([nx+2,1,1,N1,N1,nV])[:,:,:,:,0]
-    mid_cp = mid_py.ravel()
+mid_py = rec_py.reshape([nx,1,1,N1,nV])
+mid_cp = mid_py.ravel()
 
-weno_midstepper(mid_py, dt, PAR)
-GPRpy.solvers.split.midstepper(mid_cp, 1, dt, dx, dx, dx, PAR)
-mid_cp = mid_cp.reshape([nx+2,N1,nV])
-mid_py = mid_py.reshape([nx+2,N1,nV])
+weno_midstepper(mid_py, dt, MP)
+GPRpy.solvers.split.midstepper(mid_cp, 1, dt, dx, dx, dx, MP)
+mid_cp = mid_cp.reshape([nx,N1,nV])
+mid_py = mid_py.reshape([nx,N1,nV])
 
 print("Step diff =", diff(mid_cp, mid_py))
 
@@ -238,8 +221,8 @@ ode_py = Q1.copy()
 ode_cp = Q1.copy()
 u = zeros([1,1,1,nV])
 u[0] = ode_py
-GPRpy.solvers.split.ode_launcher(ode_cp, dt, PAR)
-ode_stepper_analytical(u, dt, PAR)
+GPRpy.solvers.split.ode_launcher(ode_cp, dt, MP)
+ode_stepper_analytical(u, dt, MP)
 ode_py = u[0,0,0]
 
 print("ODEs diff =", diff(ode_cp, ode_py))

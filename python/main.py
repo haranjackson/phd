@@ -20,7 +20,7 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.barton1_IC
+IC = fluids.first_stokes_problem_IC
 BC = boundaries.standard_BC
 
 
