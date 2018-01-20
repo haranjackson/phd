@@ -17,20 +17,22 @@ def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
     ret[3, 1] = T / (ρ * (p + pINF))
     return ret
 
+
 def Xi2mat(ρ, p, A, T, γ, cα2):
-    ret = zeros([5,4])
+    ret = zeros([5, 4])
     ret[2:, :3] = A
     ret[0, 0] = ρ
     ret[1, 0] = γ * p
-    ret[1, 3] = (γ-1) * cα2 * T
+    ret[1, 3] = (γ - 1) * cα2 * T
     return ret
+
 
 def eig_prim(P, left=1, right=1):
     """ Returns eigenvalues and set of left and right eigenvectors of the
         matrix returned by system_prim
     """
-    L = zeros([nV,nV])
-    R = zeros([nV,nV])
+    L = zeros([nV, nV])
+    R = zeros([nV, nV])
 
     ρ = P.ρ
     p = P.p()
@@ -46,9 +48,9 @@ def eig_prim(P, left=1, right=1):
     pINF = MP.pINF
     cα2 = MP.cα2
 
-    Π1 = dσdA0[:,:,0]
-    Π2 = dσdA0[:,:,1]
-    Π3 = dσdA0[:,:,2]
+    Π1 = dσdA0[:, :, 0]
+    Π2 = dσdA0[:, :, 1]
+    Π3 = dσdA0[:, :, 2]
 
     O = thermo_acoustic_tensor(P, 0)
     Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
@@ -58,9 +60,9 @@ def eig_prim(P, left=1, right=1):
     D = diag(sw)
     Q = vl.T
     Q_1 = vr
-    I = dot(Q,Q_1)
+    I = dot(Q, Q_1)
     Q = solve(I, Q, overwrite_a=1, check_finite=0)
-    DQ = dot(D,Q)
+    DQ = dot(D, Q)
 
     if right:
         temp = solve(DQ.T, Ξ2.T, overwrite_a=1, overwrite_b=1, check_finite=0).T
@@ -70,7 +72,7 @@ def eig_prim(P, left=1, right=1):
         R[11:15, :4] = temp2
         R[11:15, 4:8] = -temp2
 
-        b = array([p+pINF, 0, 0]) - σ0
+        b = array([p + pINF, 0, 0]) - σ0
         Π1A = dot(Π1, A)
         c = 2 / (solve(Π1A, b, overwrite_a=1, check_finite=0)[0] - 1)
         R[0, 8] = c * ρ
@@ -84,8 +86,8 @@ def eig_prim(P, left=1, right=1):
 
     if left:
         temp = solve(D, dot(Q, Ξ1), overwrite_b=1, check_finite=0)
-        temp2 = -solve(D, dot(Q[:,:3], Π2), overwrite_b=1, check_finite=0) / ρ
-        temp3 = -solve(D, dot(Q[:,:3], Π3), overwrite_b=1, check_finite=0) / ρ
+        temp2 = -solve(D, dot(Q[:, :3], Π2), overwrite_b=1, check_finite=0) / ρ
+        temp3 = -solve(D, dot(Q[:, :3], Π3), overwrite_b=1, check_finite=0) / ρ
         temp4 = Q
         L[:4, :5] = temp
         L[4:8, :5] = temp
@@ -105,8 +107,9 @@ def eig_prim(P, left=1, right=1):
         L[9:15, 5:11] = eye(6)
         L[15:17, 15:17] = eye(2)
 
-    l = array([vd+s for s in sw] + [vd-s for s in sw] + [vd]*9).real
+    l = array([vd + s for s in sw] + [vd - s for s in sw] + [vd] * 9).real
     return l, reorder(L.T).T, reorder(0.5 * R)
+
 
 def eig_cons(P):
     """ Returns the eigenvalues and left and right eigenvectors of the

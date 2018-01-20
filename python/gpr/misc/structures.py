@@ -12,6 +12,7 @@ from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
 class Cvec_to_Pclass():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
+
     def __init__(self, Q, MP):
 
         if MULTI:
@@ -26,14 +27,14 @@ class Cvec_to_Pclass():
             self.ρ1 = self.ρ
             self.z = 1
 
-        self.E  = Q[1] / self.ρ
-        self.v  = Q[2:5] / self.ρ
+        self.E = Q[1] / self.ρ
+        self.v = Q[2:5] / self.ρ
 
         if VISCOUS:
-            self.A  = Q[5:14].reshape([3,3])
+            self.A = Q[5:14].reshape([3, 3])
 
         if THERMAL:
-            self.J  = Q[14:17] / self.ρ
+            self.J = Q[14:17] / self.ρ
         else:
             self.J = zeros(3)
 
@@ -112,12 +113,12 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     Q = zeros(nV)
 
     if MULTI:
-        ρ = z * ρ1 + (1-z) * ρ2
+        ρ = z * ρ1 + (1 - z) * ρ2
         Q[0] = z * ρ1
-        Q[17] = (1-z) * ρ2
+        Q[17] = (1 - z) * ρ2
         Q[18] = z * ρ
         if REACTIVE:
-            Q[19] = (1-z) * ρ2 * λ
+            Q[19] = (1 - z) * ρ2 * λ
     else:
         ρ = ρ1
         Q[0] = ρ
@@ -133,6 +134,7 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
 
     return Q
 
+
 def Pvec(P):
     ret = zeros(nV)
     ret[0] = P.ρ
@@ -142,13 +144,14 @@ def Pvec(P):
     ret[14:17] = P.J
     return ret
 
+
 def Pvec_to_Cvec(P, MP):
     """ Returns the vector of conserved variables, given the vector of
         primitive variables
     """
     Q = P.copy()
     ρ = P[0]
-    A = P[5:14].reshape([3,3])
+    A = P[5:14].reshape([3, 3])
 
     if REACTIVE:
         λ = P[17]
@@ -160,6 +163,7 @@ def Pvec_to_Cvec(P, MP):
     Q[14:] *= ρ
     return Q
 
+
 def Cvec_to_Pvec(Q, MP):
     """ Returns the vector of primitive variables in standard ordering,
         given the vector of conserved variables.
@@ -167,7 +171,7 @@ def Cvec_to_Pvec(Q, MP):
     ρ = Q[0]
     E = Q[1] / ρ
     v = Q[2:5] / ρ
-    A = Q[5:14].reshape([3,3])
+    A = Q[5:14].reshape([3, 3])
     J = Q[14:17] / ρ
 
     if REACTIVE:

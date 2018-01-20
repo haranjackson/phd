@@ -13,10 +13,11 @@ def Bint(qL, qR, d, MP):
     qJump = qR - qL
     for i in range(N1):
         q = qL + NODES[i] * qJump
-        tmp  = zeros(nV)
+        tmp = zeros(nV)
         Bdot(tmp, qJump, q, d, MP)
         ret += WGHTS[i] * tmp
     return ret
+
 
 def Aint(qL, qR, d, MP):
     """ Returns the Osher-Solomon jump matrix for A, in the dth direction
@@ -28,8 +29,9 @@ def Aint(qL, qR, d, MP):
         J = system(q, d, MP)
         λ, R = eig(J, overwrite_a=1, check_finite=0)
         b = solve(R, Δq, check_finite=0)
-        ret += WGHTS[i] * dot(R, abs(λ)*b)
+        ret += WGHTS[i] * dot(R, abs(λ) * b)
     return ret.real
+
 
 def Smax(qL, qR, d, MP):
     max1 = max_eig(qL, d, MP)

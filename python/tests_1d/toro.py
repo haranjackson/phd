@@ -17,6 +17,7 @@ def toro1_IC():
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
+
 def toro2_IC():
 
     tf = 0.15
@@ -30,6 +31,7 @@ def toro2_IC():
     vR = array([2, 0, 0])
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+
 
 def toro3_IC():
 
@@ -45,6 +47,7 @@ def toro3_IC():
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
+
 def toro4_IC():
 
     tf = 0.035
@@ -58,6 +61,7 @@ def toro4_IC():
     vR = zeros(3)
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+
 
 def toro_test5_IC():
 

@@ -34,8 +34,8 @@ pool = Parallel(n_jobs=NCORE)
 if USE_CPP:
     extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
     ub = zeros(extDims * nV)
-    wh = zeros(extDims * int(pow(N1,ndim)) * nV)
-    qh = zeros(extDims * int(pow(N1,ndim+1)) * nV)
+    wh = zeros(extDims * int(pow(N1, ndim)) * nV)
+    qh = zeros(extDims * int(pow(N1, ndim + 1)) * nV)
 
 
 def main(t, tf, count, data):
@@ -73,7 +73,7 @@ def main(t, tf, count, data):
                                                dt, dx, dy, dz, False,
                                                bool(PERRON_FROB), MP)
 
-                mat = tmp.reshape([nx,ny,nz,nV])
+                mat = tmp.reshape([nx, ny, nz, nV])
 
             else:
                 MP = MPs[i]
@@ -92,9 +92,10 @@ def main(t, tf, count, data):
 
         t += dt
         count += 1
-        print('Total Time:', time()-t0, '\n')
+        print('Total Time:', time() - t0, '\n')
 
-    print('TOTAL RUNTIME:', time()-tStart)
+    print('TOTAL RUNTIME:', time() - tStart)
+
 
 if __name__ == "__main__":
     main(0, tf, 0, data)

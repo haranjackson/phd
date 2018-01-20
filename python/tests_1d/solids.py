@@ -20,8 +20,9 @@ def hyperelastic_vars(F, S, HYP, MP):
     Σ = Sigma_hyp(ρ, A, S, HYP)
 
     σ = sigma(ρ, A, MP)
-    p = trace(σ-Σ)/3
+    p = trace(σ - Σ) / 3
     return ρ, p, A
+
 
 def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP):
 
@@ -36,48 +37,51 @@ def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP):
     u = zeros([nx, ny, nz, nV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        if i*dx < 0.5:
-            u[i,j,k] = QL
+        if i * dx < 0.5:
+            u[i, j, k] = QL
         else:
-            u[i,j,k] = QR
+            u[i, j, k] = QR
 
     return u, [MP], tf
+
 
 def barton1_IC():
 
     tf = 0.06
 
     vL = array([0, 0.5, 1])
-    FL = array([[0.98, 0, 0  ],
+    FL = array([[0.98, 0, 0],
                 [0.02, 1, 0.1],
-                [0,    0, 1  ]])
+                [0,    0, 1]])
     SL = 0.001
 
     vR = array([0, 0, 0])
-    FR = array([[1, 0, 0  ],
+    FR = array([[1, 0, 0],
                 [0, 1, 0.1],
-                [0, 0, 1  ]])
+                [0, 0, 1]])
     SR = 0
 
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+
 
 def barton2_IC():
 
     tf = 0.06
 
     vL = array([2, 0, 0.1])
-    FL = array([[1,      0,    0   ],
+    FL = array([[1,      0,    0],
                 [-0.01,  0.95, 0.02],
-                [-0.015, 0,    0.9 ]])
+                [-0.015, 0,    0.9]])
     SL = 0
 
     vR = array([0, -0.03, -0.01])
-    FR = array([[1,     0,    0  ],
-                [0.015, 0.95, 0  ],
+    FR = array([[1,     0,    0],
+                [0.015, 0.95, 0],
                 [-0.01, 0,    0.9]])
     SR = 0
 
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
+
 
 def elastic1_IC():
 
@@ -97,6 +101,7 @@ def elastic1_IC():
 
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
+
 def elastic2_IC():
 
     tf = 0.06
@@ -104,7 +109,7 @@ def elastic2_IC():
     FL = array([[0.95, 0, 0],
                 [0.05, 1, 0],
                 [0,    0, 1]])
-    vL = array([0,1,0])
+    vL = array([0, 1, 0])
     SL = 0.001
 
     FR = array([[1, 0, 0],
@@ -114,6 +119,7 @@ def elastic2_IC():
     SR = 0
 
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
+
 
 def piston_IC():
 
@@ -130,12 +136,13 @@ def piston_IC():
     u = zeros([nx, ny, nz, nV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        u[i,j,k] = Q
+        u[i, j, k] = Q
 
     return u, [MP], tf
+
 
 def piston_BC(u):
     ret = standard_BC(u)
     for j, k in product(range(ny), range(nz)):
-        ret[0,j,k,2:5] = ret[0,j,k,0] * array([0.002,0,0])
+        ret[0, j, k, 2:5] = ret[0, j, k, 0] * array([0.002, 0, 0])
     return ret

@@ -10,7 +10,7 @@ def theta1inv(ρ, A, MP):
     """
     τ1 = MP.τ1
 
-    if τ1==inf:
+    if τ1 == inf:
         return 0
 
     cs2 = c_s2(ρ, MP)
@@ -27,7 +27,8 @@ def theta1inv(ρ, A, MP):
     else:
         τ = τ1
 
-    return 3 * det3(A)**(5/3) / (cs2 * τ)
+    return 3 * det3(A)**(5 / 3) / (cs2 * τ)
+
 
 def theta2inv(ρ, T, MP):
     """ Returns 1/θ2
@@ -47,7 +48,8 @@ def K_arr(ρ, λ, T, MP):
     Ea = MP.Ea
     Rc = MP.Rc
 
-    return Bc * ρ * λ * exp(-Ea / (Rc*T))
+    return Bc * ρ * λ * exp(-Ea / (Rc * T))
+
 
 def K_dis(ρ, λ, T, MP):
     """ Returns the rate of reaction according to discrete ignition temperature
@@ -60,6 +62,7 @@ def K_dis(ρ, λ, T, MP):
         return ρ * λ * Kc
     else:
         return 0
+
 
 def K_ing(ρ, λ, p, MP):
     """ Returns the rate of reaction according to ignition and growth
@@ -85,7 +88,7 @@ def K_ing(ρ, λ, p, MP):
 
     ret = 0
     if φIG > φ:
-        ret += I * λ**b * (ρ-1-a)**x
+        ret += I * λ**b * (ρ - 1 - a)**x
     if φG1 > φ:
         ret += G1 * λ**c * φ**d * p**y
     if φ > φG2:

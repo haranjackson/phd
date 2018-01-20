@@ -19,6 +19,7 @@ REACTIVE = 0                # Second fluid is reactive
 LSETS    = 0                # Number of level sets
 RGFM     = 0                # Use Riemann GFM
 ISO_FIX  = 0                # Use isobaric fix
+
 STAR_TOL = 1e-6             # Tolerance to which star states converge
 STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 
@@ -41,30 +42,32 @@ PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ
 HIDALGO     = 0             # Use Hidalgo initial guess
 STIFF       = 0             # Use Newton-Krylov
 SUPER_STIFF = 0             # Use Newton-Krylov for Hidalgo initial guess
-DG_TOL      = 1e-6          # Tolerance to which the predictor must converge
-MAX_ITER    = 50            # Max number of non-stiff iterations attempted
+
+DG_TOL = 1e-6               # Tolerance to which the predictor must converge
+MAX_ITER = 50               # Max number of non-stiff iterations attempted
 
 """ WENO Parameters """
 
 rc = 8                      # Exponent used in oscillation indicator
 λc = 1e5                    # WENO coefficient of central stencils
 λs = 1                      # WENO coefficient of side stencils
-eps  = 1e-14                # Ensures oscillation indicators don't blow up
+eps = 1e-14                 # Ensures oscillation indicators don't blow up
 
 """ Speed-Up Parameters """
 
 PARA_DG = 0                 # Parallelise DG step
 PARA_FV = 0                 # Parallelise FV step
-NCORE   = 4                 # Number of cores used if running in parallel
+NCORE = 4                   # Number of cores used if running in parallel
 
 
 """ Derived Values """
 
-ndim = (nx>1) + (ny>1) + (nz>1)
-N1 = N+1
-NT = N1**(ndim+1)
+ndim = (nx > 1) + (ny > 1) + (nz > 1)
+N1 = N + 1
+NT = N1**(ndim + 1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
 
-nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(MULTI) * 2 + int(REACTIVE) + LSETS
+nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + \
+    int(MULTI) * 2 + int(REACTIVE) + LSETS

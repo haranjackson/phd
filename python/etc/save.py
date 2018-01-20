@@ -16,9 +16,10 @@ from options import PARA_DG, PARA_FV, NCORE
 
 
 def print_stats(count, t, dt):
-    print(count+1)
+    print(count + 1)
     print('t  =', t)
     print('dt =', dt)
+
 
 def save_config(path):
     with open(path, 'w+', encoding='utf-8') as f:
@@ -52,9 +53,10 @@ def save_config(path):
 
         f.write('HIDALGO     = %i\n' % HIDALGO)
         f.write('STIFF       = %i\n' % STIFF)
-        f.write('SUPER_STIFF = %i\n' % SUPER_STIFF)
-        f.write('DG_TOL      = %e\n' % DG_TOL)
-        f.write('MAX_ITER    = %i\n\n' % MAX_ITER)
+        f.write('SUPER_STIFF = %i\n\n' % SUPER_STIFF)
+
+        f.write('DG_TOL = %e\n' % DG_TOL)
+        f.write('MAX_ITER = %i\n\n' % MAX_ITER)
 
         f.write('rc  = %f\n' % rc)
         f.write('λc  = %e\n' % λc)
@@ -63,7 +65,8 @@ def save_config(path):
 
         f.write('PARA_DG = %i\n' % PARA_DG)
         f.write('PARA_FV = %i\n' % PARA_FV)
-        f.write('NCORE   = %i\n\n' % NCORE)
+        f.write('NCORE = %i\n\n' % NCORE)
+
 
 def save_all(data):
 
@@ -77,14 +80,17 @@ def save_all(data):
     save('_dump/time%d.npy' % time(), timeArray)
     save_config('_dump/opts%d.txt' % time())
 
+
 def compress_data(data, N):
     n = len(data.time)
-    inds = linspace(0, n-1, N, dtype=int64)
+    inds = linspace(0, n - 1, N, dtype=int64)
     return [data.grid[inds], data.time[inds]]
+
 
 class Data():
     """ An object to hold the arrays in which simulation data are saved
     """
+
     def __init__(self, u, t):
         self.grid = u.copy()
         self.time = t

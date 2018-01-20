@@ -12,11 +12,13 @@ class hyperelastic_params():
         self.γ = γ
         self.cv = cv
         self.T0 = T0
-        self.K0 = c0**2 - 4/3 * b0**2
+        self.K0 = c0**2 - 4 / 3 * b0**2
         self.B0 = b0**2
 
+
 class EOS_params():
-    def __init__(self, EOS, ρ0, cv, p0, Tref, α, β, γ, pINF, c0, Γ0, s, A, B, R1, R2):
+    def __init__(self, EOS, ρ0, cv, p0, Tref,
+                 α, β, γ, pINF, c0, Γ0, s, A, B, R1, R2):
 
         self.EOS = eos_text_to_code(EOS)
 
@@ -46,6 +48,7 @@ class EOS_params():
             self.B = B
             self.R1 = R1
             self.R2 = R2
+
 
 def params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
            α, β, γ, pINF,
@@ -132,6 +135,7 @@ def params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
             MP.φG1 = φG1
             MP.φG2 = φG2
 
+
 def material_parameters(EOS, ρ0, cv, p0,
                         Tref=None, α=None, β=None, γ=None, pINF=None,
                         c0=None, Γ0=None, s=None, e0=None,
@@ -146,7 +150,6 @@ def material_parameters(EOS, ρ0, cv, p0,
                         d=None, e=None, g=None, x=None, y=None, z=None,
                         φIG=None, φG1=None, φG2=None,
                         Rc=8.31445985):
-
     """ An object to hold the material constants
     """
     assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr'])
@@ -158,7 +161,8 @@ def material_parameters(EOS, ρ0, cv, p0,
     if (γ is not None) and (pINF is None):
         pINF = 0
 
-    P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ, pINF, c0, Γ0, s, A, B, R1, R2)
+    P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ,
+                   pINF, c0, Γ0, s, A, B, R1, R2)
     T0 = temperature(ρ0, p0, P)
 
     if b0 is not None:
@@ -178,7 +182,8 @@ def material_parameters(EOS, ρ0, cv, p0,
         import GPRpy
         MP = GPRpy.classes.Par()
     else:
-        class MP: pass
+        class MP:
+            pass
 
     params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
            α, β, γ, pINF,

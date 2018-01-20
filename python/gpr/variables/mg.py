@@ -41,6 +41,7 @@ def Γ_MG(ρ, MP):
     elif EOS in [JWL, COCHRAN_CHAN]:
         return MP.Γ0
 
+
 def p_ref(ρ, MP):
     """ Returns the reference pressure in the Mie-Gruneisen EOS
     """
@@ -54,15 +55,15 @@ def p_ref(ρ, MP):
         ρ0 = MP.ρ0
         s = MP.s
         if ρ > ρ0:
-            return c02 * (1/ρ0 - 1/ρ) / (1/ρ0 - s * (1/ρ0 - 1/ρ))**2
+            return c02 * (1 / ρ0 - 1 / ρ) / (1 / ρ0 - s * (1 / ρ0 - 1 / ρ))**2
         else:
-            return c02 * (ρ-ρ0)
+            return c02 * (ρ - ρ0)
 
     elif EOS == GODUNOV_ROMENSKI:
         c02 = MP.c02
         α = MP.α
         ρ0 = MP.ρ0
-        tmp = (ρ/ρ0)**α
+        tmp = (ρ / ρ0)**α
         return c02 * ρ / α * (tmp - 1) * tmp
 
     elif EOS in [JWL, COCHRAN_CHAN]:
@@ -79,6 +80,7 @@ def p_ref(ρ, MP):
         elif EOS == COCHRAN_CHAN:
             return A * v_**(-R1) - B * v_**(-R2)
 
+
 def e_ref(ρ, MP):
     """ Returns the reference energy for the Mie-Gruneisen EOS
     """
@@ -91,7 +93,7 @@ def e_ref(ρ, MP):
         ρ0 = MP.ρ0
         pr = p_ref(ρ, MP)
         if ρ > ρ0:
-            return 0.5 * pr * (1/ρ0 - 1/ρ)
+            return 0.5 * pr * (1 / ρ0 - 1 / ρ)
         else:
             return 0
 
@@ -99,7 +101,7 @@ def e_ref(ρ, MP):
         c02 = MP.c02
         α = MP.α
         ρ0 = MP.ρ0
-        tmp = (ρ/ρ0)**α
+        tmp = (ρ / ρ0)**α
         return c02 / (2 * α**2) * (tmp - 1)**2
 
     elif EOS in [JWL, COCHRAN_CHAN]:
@@ -111,10 +113,10 @@ def e_ref(ρ, MP):
         v_ = ρ0 / ρ
 
         if EOS == JWL:
-            return A/(ρ0*R1) * exp(-R1*v_)  +  B/(ρ0*R2) * exp(-R2*v_)
+            return A / (ρ0 * R1) * exp(-R1 * v_) + B / (ρ0 * R2) * exp(-R2 * v_)
 
         elif EOS == COCHRAN_CHAN:
-            return -A/(ρ0*(1-R1)) * (v_**(1-R1)-1) + B/(ρ0*(1-R2)) * (v_**(1-R2)-1)
+            return -A / (ρ0 * (1 - R1)) * (v_**(1 - R1) - 1) + B / (ρ0 * (1 - R2)) * (v_**(1 - R2) - 1)
 
 
 def dΓ_MG(ρ, MP):
@@ -130,6 +132,7 @@ def dΓ_MG(ρ, MP):
         ρ0 = MP.ρ0
         return - Γ0 * ρ0 / ρ**2
 
+
 def dp_ref(ρ, MP):
     """ Returns the derivative of the reference pressure in the Mie-Gruneisen EOS
     """
@@ -143,7 +146,7 @@ def dp_ref(ρ, MP):
         ρ0 = MP.ρ0
         s = MP.s
         if ρ > ρ0:
-            return c02 * ρ0**2 * (s*(ρ0-ρ) - ρ) / (s*(ρ-ρ0) - ρ)**3
+            return c02 * ρ0**2 * (s * (ρ0 - ρ) - ρ) / (s * (ρ - ρ0) - ρ)**3
         else:
             return c02
 
@@ -151,8 +154,8 @@ def dp_ref(ρ, MP):
         ρ0 = MP.ρ0
         c02 = MP.c02
         α = MP.α
-        tmp = (ρ/ρ0)**α
-        return c02 / α * tmp * ((1+α) * (tmp-1) + α * tmp)
+        tmp = (ρ / ρ0)**α
+        return c02 / α * tmp * ((1 + α) * (tmp - 1) + α * tmp)
 
     elif EOS in [JWL, COCHRAN_CHAN]:
         A = MP.A
@@ -166,7 +169,8 @@ def dp_ref(ρ, MP):
             return v_ / ρ * (A * R1 * exp(-R1 * v_) + B * R2 * exp(-R2 * v_))
 
         elif EOS == COCHRAN_CHAN:
-            return v_/ρ * (A*R1 * v_**(-R1-1) - B*R2 * v_**(-R2-1))
+            return v_ / ρ * (A * R1 * v_**(-R1 - 1) - B * R2 * v_**(-R2 - 1))
+
 
 def de_ref(ρ, MP):
     """ Returns the derivative of the reference energy for the Mie-Gruneisen EOS
@@ -181,7 +185,7 @@ def de_ref(ρ, MP):
         ρ0 = MP.ρ0
         s = MP.s
         if ρ > ρ0:
-            return - (ρ-ρ0) * ρ0 * c02 / (s * (ρ-ρ0) - ρ)**3
+            return - (ρ - ρ0) * ρ0 * c02 / (s * (ρ - ρ0) - ρ)**3
         else:
             return 0
 
@@ -189,7 +193,7 @@ def de_ref(ρ, MP):
         c02 = MP.c02
         α = MP.α
         ρ0 = MP.ρ0
-        tmp = (ρ/ρ0)**α
+        tmp = (ρ / ρ0)**α
         return c02 / (ρ * α) * (tmp - 1) * tmp
 
     elif EOS in [JWL, COCHRAN_CHAN]:
@@ -204,6 +208,7 @@ def internal_energy(ρ, p, MP):
     er = e_ref(ρ, MP)
     return er + (p - pr) / (ρ * Γ)
 
+
 def pressure(ρ, e, MP):
     """ Returns the Mie-Gruneisen pressure, given the density and internal
         energy
@@ -212,6 +217,7 @@ def pressure(ρ, e, MP):
     pr = p_ref(ρ, MP)
     er = e_ref(ρ, MP)
     return (e - er) * ρ * Γ + pr
+
 
 def temperature(ρ, p, MP):
     """ Returns the Mie-Gruneisen temperature, given the density and pressure
@@ -227,18 +233,19 @@ def dedρ(ρ, p, MP):
         with respect to ρ
     """
     Γ = Γ_MG(ρ, MP)
-    dΓ  = dΓ_MG(ρ, MP)
-    pr  =  p_ref(ρ, MP)
+    dΓ = dΓ_MG(ρ, MP)
+    pr = p_ref(ρ, MP)
     dpr = dp_ref(ρ, MP)
     der = de_ref(ρ, MP)
-    return der - (dpr*ρ*Γ + (Γ+ρ*dΓ)*(p-pr)) / (ρ*Γ)**2
+    return der - (dpr * ρ * Γ + (Γ + ρ * dΓ) * (p - pr)) / (ρ * Γ)**2
+
 
 def dedp(ρ, MP):
     """ Returns the derivative of the Mie-Gruneisen internal energy
         with respect to p
     """
     Γ = Γ_MG(ρ, MP)
-    return 1 / (ρ*Γ)
+    return 1 / (ρ * Γ)
 
 
 def dTdρ(ρ, p, MP):
@@ -247,10 +254,11 @@ def dTdρ(ρ, p, MP):
     """
     cv = MP.cv
     Γ = Γ_MG(ρ, MP)
-    dΓ  = dΓ_MG(ρ, MP)
-    pr  =  p_ref(ρ, MP)
+    dΓ = dΓ_MG(ρ, MP)
+    pr = p_ref(ρ, MP)
     dpr = dp_ref(ρ, MP)
-    return - (dpr*ρ*Γ + (Γ+ρ*dΓ)*(p-pr)) / (ρ*Γ)**2 / cv
+    return - (dpr * ρ * Γ + (Γ + ρ * dΓ) * (p - pr)) / (ρ * Γ)**2 / cv
+
 
 def dTdp(ρ, MP):
     """ Returns the derivative of the Mie-Gruneisen temperature

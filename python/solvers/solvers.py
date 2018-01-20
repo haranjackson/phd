@@ -20,13 +20,14 @@ def ader_stepper(pool, mat, BC, dt, MP):
     mat += fv_launcher(pool, qh, dt, MP)
     t3 = time()
 
-    print('WENO:', t1-t0)
-    print('DG:  ', t2-t1)
-    print('FV:  ', t3-t2)
+    print('WENO:', t1 - t0)
+    print('DG:  ', t2 - t1)
+    print('FV:  ', t3 - t2)
+
 
 def split_stepper(pool, mat, BC, dt, MP):
 
-    Δt = dt/2 if STRANG else dt
+    Δt = dt / 2 if STRANG else dt
     t0 = time()
 
     ode_launcher(mat, Δt, MP)
@@ -40,11 +41,11 @@ def split_stepper(pool, mat, BC, dt, MP):
     mat += fv_launcher(pool, wh, dt, MP, 1)
     t3 = time()
 
-    print('ODE: ', t1-t0)
-    print('WENO:', t2-t1)
-    print('FV:  ', t3-t2)
+    print('ODE: ', t1 - t0)
+    print('WENO:', t2 - t1)
+    print('FV:  ', t3 - t2)
 
     if STRANG:
         ode_launcher(mat, Δt, MP)
         t4 = time()
-        print('ODE: ', t4-t3)
+        print('ODE: ', t4 - t3)

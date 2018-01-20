@@ -12,13 +12,16 @@ def E_to_T(ρ, E, A, J, MP):
     E1 = E - E_2A(ρ, A, MP) - E_2J(J, MP)
     return E1 / MP.cv
 
+
 def f_J(ρ, E, A, J, MP):
     T = E_to_T(ρ, E, A, J, MP)
     return - dEdJ(J, MP) * theta2inv(ρ, T, MP)
 
+
 def jac_J(ρ, E, A, J, MP):
     T = E_to_T(ρ, E, A, J, MP)
     return -(T * MP.ρ0) / (MP.T0 * ρ * MP.τ1) * eye(3)
+
 
 def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, MP):
     """ Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS
@@ -30,7 +33,7 @@ def solver_thermal_analytic_ideal(ρ, E, A, J, v, dt, MP):
     c2 *= k
 
     # To avoid NaNs if dt>>1
-    ea = exp(-c1*dt/2)
-    den = 1 - c2/c1 * (1-ea**2) * L2_1D(J)
+    ea = exp(-c1 * dt / 2)
+    den = 1 - c2 / c1 * (1 - ea**2) * L2_1D(J)
     ret = J / sqrt(den)
     return ea * ret

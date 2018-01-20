@@ -23,7 +23,7 @@ def flux_cons_ref(ret, Q, d, MP):
     ret[0] += z * ρ1 * vd
     ret[1] += ρvd * E + p * vd
     ret[2:5] += ρvd * v
-    ret[2+d] += p
+    ret[2 + d] += p
 
     if VISCOUS:
 
@@ -35,9 +35,9 @@ def flux_cons_ref(ret, Q, d, MP):
         ret[2:5] -= σd
 
         Av = dot(A, v)
-        ret[5+d] += Av[0]
-        ret[8+d] += Av[1]
-        ret[11+d] += Av[2]
+        ret[5 + d] += Av[0]
+        ret[8 + d] += Av[1]
+        ret[11 + d] += Av[2]
 
     if THERMAL:
 
@@ -49,17 +49,18 @@ def flux_cons_ref(ret, Q, d, MP):
 
         ret[1] += q[d]
         ret[14:17] += ρvd * J
-        ret[14+d] += T
+        ret[14 + d] += T
 
     if MULTI:
 
         λ = P.λ
         ρ2 = P.ρ2
 
-        ret[17] += (1-z) * ρ2 * vd
+        ret[17] += (1 - z) * ρ2 * vd
         ret[18] += ρvd * z
         if REACTIVE:
-            ret[19] += (1-z) * ρ2 * vd * λ
+            ret[19] += (1 - z) * ρ2 * vd * λ
+
 
 def block_cons_ref(ret, Q, d, MP):
 
@@ -68,14 +69,15 @@ def block_cons_ref(ret, Q, d, MP):
     v = P.v
     vd = v[d]
 
-    for i in range(5,14):
-        ret[i,i] = vd
-    ret[5+d, 5+d:8+d] -= v
-    ret[8+d, 8+d:11+d] -= v
-    ret[11+d, 11+d:14+d] -= v
+    for i in range(5, 14):
+        ret[i, i] = vd
+    ret[5 + d, 5 + d:8 + d] -= v
+    ret[8 + d, 8 + d:11 + d] -= v
+    ret[11 + d, 11 + d:14 + d] -= v
 
-    for i in range(1, LSETS+1):
-        ret[-i,-i] = vd
+    for i in range(1, LSETS + 1):
+        ret[-i, -i] = vd
+
 
 def source_cons_ref(ret, Q, MP):
 
@@ -97,7 +99,8 @@ def source_cons_ref(ret, Q, MP):
         z = P.z
         ρ2 = P.ρ2
         K = - P.K()
-        ret[19] = (1-z) * ρ2 * K
+        ret[19] = (1 - z) * ρ2 * K
+
 
 def B0dot(ret, x, v):
     v0 = v[0]
@@ -113,8 +116,9 @@ def B0dot(ret, x, v):
     ret[12] = v0 * x[12]
     ret[13] = v0 * x[13]
 
-    for i in range(1, LSETS+1):
+    for i in range(1, LSETS + 1):
         ret[-i] = v0 * x[-i]
+
 
 def B1dot(ret, x, v):
     v0 = v[0]
@@ -130,8 +134,9 @@ def B1dot(ret, x, v):
     ret[12] = - v0 * x[11] - v2 * x[13]
     ret[13] = v1 * x[13]
 
-    for i in range(1, LSETS+1):
+    for i in range(1, LSETS + 1):
         ret[-i] = v1 * x[-i]
+
 
 def B2dot(ret, x, v):
     v0 = v[0]
@@ -147,19 +152,21 @@ def B2dot(ret, x, v):
     ret[12] = v2 * x[12]
     ret[13] = - v0 * x[11] - v1 * x[12]
 
-    for i in range(1, LSETS+1):
+    for i in range(1, LSETS + 1):
         ret[-i] = v2 * x[-i]
+
 
 def Bdot_cons(ret, x, Q, d, MP):
 
     P = Cvec_to_Pclass(Q, MP)
     v = P.v
-    if d==0:
+    if d == 0:
         B0dot(ret, x, v)
-    elif d==1:
+    elif d == 1:
         B1dot(ret, x, v)
     else:
         B2dot(ret, x, v)
+
 
 def system_cons(Q, d, MP):
     """ Returns the Jacobian in the dth direction

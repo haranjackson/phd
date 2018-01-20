@@ -7,7 +7,8 @@ from options import VISCOUS, THERMAL, REACTIVE, nV
 
 
 def dQdP(P):
-    """ Returns the Jacobian of the conserved variables with respect to the primitive variables
+    """ Returns the Jacobian of the conserved variables with respect to the
+        primitive variables
     """
     ret = eye(nV)
 
@@ -24,8 +25,8 @@ def dQdP(P):
     ret[1, 1] = 1 / Γ
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
-    for i in range(2,5):
-        ret[i,i] = ρ
+    for i in range(2, 5):
+        ret[i, i] = ρ
 
     if VISCOUS:
         ψ_ = P.dEdA()
@@ -36,8 +37,8 @@ def dQdP(P):
         H = P.H()
         ret[1, 14:17] = ρ * H
         ret[14:17, 0] = J
-        for i in range(14,17):
-            ret[i,i] = ρ
+        for i in range(14, 17):
+            ret[i, i] = ρ
 
     if REACTIVE:
         Qc = MP.Qc
@@ -47,8 +48,10 @@ def dQdP(P):
 
     return ret
 
+
 def dPdQ(P):
-    """ Returns the Jacobian of the primitive variables with respect to the conserved variables
+    """ Returns the Jacobian of the primitive variables with respect to the
+        conserved variables
     """
     ret = eye(nV)
 
@@ -74,7 +77,7 @@ def dPdQ(P):
     ret[1, 2:5] = -Γ * v
     ret[2:5, 0] = -v / ρ
 
-    for i in range(2,5):
+    for i in range(2, 5):
         ret[i, i] = 1 / ρ
 
     if VISCOUS:
@@ -84,7 +87,7 @@ def dPdQ(P):
         H = P.H()
         ret[1, 14:17] = -Γ * H
         ret[14:17, 0] = -J / ρ
-        for i in range(14,17):
+        for i in range(14, 17):
             ret[i, i] = 1 / ρ
 
     if REACTIVE:
@@ -97,8 +100,10 @@ def dPdQ(P):
 
     return ret
 
+
 def dFdP(P, d):
-    """ Returns the Jacobian of the flux vector with respect to the primitive variables
+    """ Returns the Jacobian of the flux vector with respect to the
+        primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
     MP = P.MP()
@@ -124,51 +129,51 @@ def dFdP(P, d):
     vv = outer(v, v)
     Ψ = ρ * vv - σ
     Φ = vv - dσdρ
-    Ω = ρ * outer(v, ψ_).reshape([3,3,3]) - tensordot(v, dσdA, axes=(0,0))
+    Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, dσdA, axes=(0, 0))
     Δ = (E + ρ * dEdρ) * v - dot(dσdρ, v) + dT_dρ * H
     Π = (ρ * dEdp + 1) * v + dT_dp * H
 
     ret = zeros([nV, nV])
     ret[0, 0] = v[d]
-    ret[0, 2+d] = ρ
+    ret[0, 2 + d] = ρ
     ret[1, 0] = Δ[d]
     ret[1, 1] = Π[d]
     ret[1, 2:5] = Ψ[d]
-    ret[1, 2+d] += ρ * E + p
+    ret[1, 2 + d] += ρ * E + p
     ret[2:5, 0] = Φ[d]
-    for i in range(2,5):
+    for i in range(2, 5):
         ret[i, i] = ρvd
-    ret[2:5, 2+d] += ρ * v
-    ret[2+d, 1] = 1
+    ret[2:5, 2 + d] += ρ * v
+    ret[2 + d, 1] = 1
 
     if VISCOUS:
         ret[1, 5:14] = Ω[d].ravel()
-        ret[2:5, 5:14] = -dσdA[d].reshape([3,9])
-        ret[5+d, 2:5] = A[0]
-        ret[8+d, 2:5] = A[1]
-        ret[11+d, 2:5] = A[2]
-        ret[5+d, 5:8] = v
-        ret[8+d, 8:11] = v
-        ret[11+d, 11:14] = v
+        ret[2:5, 5:14] = -dσdA[d].reshape([3, 9])
+        ret[5 + d, 2:5] = A[0]
+        ret[8 + d, 2:5] = A[1]
+        ret[11 + d, 2:5] = A[2]
+        ret[5 + d, 5:8] = v
+        ret[8 + d, 8:11] = v
+        ret[11 + d, 11:14] = v
 
     if THERMAL:
         T = P.T()
         J = P.J
         cα2 = MP.cα2
         ret[1, 14:17] = ρvd * H
-        ret[1, 14+d] += cα2 * T
+        ret[1, 14 + d] += cα2 * T
         ret[14:17, 0] = v[d] * J
-        ret[14+d, 0] -= dT_dρ
-        ret[14+d, 1] = dT_dp
-        ret[14:17, 2+d] = ρ * J
-        for i in range(14,17):
+        ret[14 + d, 0] -= dT_dρ
+        ret[14 + d, 1] = dT_dp
+        ret[14:17, 2 + d] = ρ * J
+        for i in range(14, 17):
             ret[i, i] = ρvd
 
     if REACTIVE:
         λ = P.λ
         Qc = MP.Qc
         ret[17, 0] = v[d] * λ
-        ret[17, 2+d] = ρ * λ
+        ret[17, 2 + d] = ρ * λ
         ret[17, 17] = ρvd
         ret[1, 17] += Qc * ρvd
 

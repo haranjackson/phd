@@ -13,14 +13,15 @@ def make_u(mats):
     """
     m = len(mats)
     u = mats[0]
-    N = nV - (m-1)
-    u[:,:,:,N:] = sum([mat[:,:,:,N:] for mat in mats], axis=0) / m
+    N = nV - (m - 1)
+    u[:, :, :, N:] = sum([mat[:, :, :, N:] for mat in mats], axis=0) / m
 
     for i in range(1, m):
-        ind = get_levelset_root(u, i-1, m)
-        u[ind:,:,:,:N] = mats[i][ind:,:,:,:N]
+        ind = get_levelset_root(u, i - 1, m)
+        u[ind:, :, :, :N] = mats[i][ind:, :, :, :N]
 
     return u
+
 
 def timestep(mats, count, t, tf, MPs):
     """ Calculates dt, based on the maximum wavespeed across the domain
@@ -32,9 +33,9 @@ def timestep(mats, count, t, tf, MPs):
         u = mats[ind]
         MP = MPs[ind]
 
-        for i,j,k in product(range(nx), range(ny), range(nz)):
+        for i, j, k in product(range(nx), range(ny), range(nz)):
 
-            Q = u[i,j,k]
+            Q = u[i, j, k]
             MAX = max(MAX, max_eig(Q, 0, MP) / dx)
             if ndim > 1:
                 MAX = max(MAX, max_eig(Q, 1, MP) / dy)

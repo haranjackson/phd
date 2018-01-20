@@ -19,6 +19,7 @@ def sod_shock_IC():
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
+
 def water_gas_IC():
 
     tf = 237.44e-6
@@ -32,6 +33,7 @@ def water_gas_IC():
     vR = zeros(3)
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
+
 
 def water_water_IC():
 
@@ -47,24 +49,25 @@ def water_water_IC():
 
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
 
+
 def helium_bubble_IC():
 
     tf = 0.0014
 
     ρL = 1.3333
     pL = 1.5e5
-    vL = array([35.35*sqrt(10), 0, 0])
-    AL = ρL**(1/3) * eye(3)
+    vL = array([35.35 * sqrt(10), 0, 0])
+    AL = ρL**(1 / 3) * eye(3)
 
     ρM = 1
     pM = 1e5
     vM = zeros(3)
-    AM = ρM**(1/3) * eye(3)
+    AM = ρM**(1 / 3) * eye(3)
 
     ρR = 0.1379
     pR = 1e5
     vR = zeros(3)
-    AR = ρR**(1/3) * eye(3)
+    AR = ρR**(1 / 3) * eye(3)
 
     J = zeros(3)
 
@@ -75,15 +78,15 @@ def helium_bubble_IC():
 
     for i in range(nx):
 
-        u[i, 0, 0, -3] = i*dx - 0.05
-        u[i, 0, 0, -2] = i*dx - 0.4
-        u[i, 0, 0, -1] = i*dx - 0.6
+        u[i, 0, 0, -3] = i * dx - 0.05
+        u[i, 0, 0, -2] = i * dx - 0.4
+        u[i, 0, 0, -1] = i * dx - 0.6
 
-        if i*dx < 0.05:
+        if i * dx < 0.05:
             u[i, 0, 0, :-3] = Q1
-        elif i*dx < 0.4:
+        elif i * dx < 0.4:
             u[i, 0, 0, :-3] = Q2
-        elif i*dx < 0.6:
+        elif i * dx < 0.6:
             u[i, 0, 0, :-3] = Q3
         else:
             u[i, 0, 0, :-3] = Q2
