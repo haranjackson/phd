@@ -15,6 +15,11 @@ DERVALS = derivative_values()
 NODES, _, _ = quad()
 
 
+# The left and right end polynomials used in the implicit interfaces method
+PSIL = lagrange(concatenate((NODES, [1])), [0] * N1 + [1])
+PSIR = lagrange(concatenate(([0], NODES)), [1] + [0] * N1)
+
+
 def obj_eul(x, WwL, WwR, dt, MPL, MPR):
 
     nX = NT*nV

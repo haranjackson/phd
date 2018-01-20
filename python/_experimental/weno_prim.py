@@ -1,10 +1,14 @@
 from functools import product
 
-from numpy import dot, zeros
+from numpy import array, dot, zeros
 
-from solvers.basis import MIDVALS
+from solvers.basis import PSI
 from solvers.weno.weno import weno
 from gpr.misc.structures import Cvec_to_Pvec
+
+
+# The values of the basis polynomials at x=0.5
+MIDVALS = array([ψ(0.5) for ψ in PSI])
 
 
 def weno_primitive(q, MP):
