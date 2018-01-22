@@ -1,7 +1,8 @@
 from numpy import exp, eye, sqrt
 
 from gpr.misc.functions import L2_1D
-from gpr.variables.eos import E_2A, E_2J, E_3, dEdJ
+from gpr.variables.derivatives import dEdJ
+from gpr.variables.eos import E_2A, E_2J, E_3
 from gpr.variables.sources import theta2inv
 
 

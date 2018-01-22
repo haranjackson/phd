@@ -4,26 +4,47 @@ from scipy.linalg import eig, solve
 from gpr.misc.functions import reorder
 from gpr.systems.eigenvalues import thermo_acoustic_tensor
 from gpr.systems.jacobians import dQdP, dPdQ
+from gpr.variables.wavespeeds import c_0, c_h
 
 from options import nV
 
 
-def Xi1mat(ρ, p, T, pINF, σd, dσdAd):
+def Xi1(P, d):
+
+    ρ = P.ρ
+    dσdρ = P.dσdρ()
+    dσdA = P.dσdA()
+    dTdρ = P.dTdρ()
+    dTdp = P.dTdp()
+
     ret = zeros([4, 5])
-    ret[:3, 0] = -σd / ρ**2
+    ret[:3, 0] = -1 / ρ * dσdρ[d]
     ret[0, 1] = 1 / ρ
-    ret[:3, 2:] = -dσdAd / ρ
-    ret[3, 0] = -T / ρ**2
-    ret[3, 1] = T / (ρ * (p + pINF))
+    ret[:3, 2:] = -1 / ρ * dσdA[d, :, :, d]
+    ret[3, 0] = dTdρ / ρ
+    ret[3, 1] = dTdp / ρ
     return ret
 
 
-def Xi2mat(ρ, p, A, T, γ, cα2):
+def Xi2(P, d):
+
+    ρ = P.ρ
+    p = P.p()
+    A = P.A
+    T = P.T()
+    σ = P.σ()
+    dσdρ = P.dσdρ()
+    dTdp = P.dTdp()
+
+    c0 = c_0(ρ, p, A, MP)
+    ch = c_h(ρ, T, MP)
+
     ret = zeros([5, 4])
-    ret[2:, :3] = A
     ret[0, 0] = ρ
-    ret[1, 0] = γ * p
-    ret[1, 3] = (γ - 1) * cα2 * T
+    ret[1, :3] = σ[d] - ρ * dσdρ[d]
+    ret[1, d] += ρ * c0**2
+    ret[1, 3] = ρ * ch**2 / dTdp
+    ret[2:, :3] = A
     return ret
 
 
@@ -40,21 +61,19 @@ def eig_prim(P, left=1, right=1):
     T = P.T()
 
     vd = P.v[0]
-    σ0 = P.σ()[0]
-    dσdA0 = P.dσdA()[0]
+    σ = P.σ()
+    dσdρ = P.dσdρ()
+    dσdA = P.dσdA()
+    dTdρ = P.dTdρ()
+    dTdp = P.dTdp()
 
-    MP = P.MP
-    γ = MP.γ
-    pINF = MP.pINF
-    cα2 = MP.cα2
-
-    Π1 = dσdA0[:, :, 0]
-    Π2 = dσdA0[:, :, 1]
-    Π3 = dσdA0[:, :, 2]
+    Π1 = dσdA[d,:, :, 0]
+    Π2 = dσdA[d,:, :, 1]
+    Π3 = dσdA[d,:, :, 2]
 
     O = thermo_acoustic_tensor(P, 0)
-    Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
-    Ξ2 = Xi2mat(ρ, p, A, T, γ, cα2)
+    Ξ1 = Xi1(P, d)
+    Ξ2 = Xi2(P, d)
     w, vl, vr = eig(O, left=1)
     sw = sqrt(w.real)
     D = diag(sw)
@@ -72,11 +91,11 @@ def eig_prim(P, left=1, right=1):
         R[11:15, :4] = temp2
         R[11:15, 4:8] = -temp2
 
-        b = array([p + pINF, 0, 0]) - σ0
+        b = array([p, 0, 0]) - σ[d]
         Π1A = dot(Π1, A)
         c = 2 / (solve(Π1A, b, overwrite_a=1, check_finite=0)[0] - 1)
         R[0, 8] = c * ρ
-        R[1, 8] = c * (p + pINF)
+        R[1, 8] = c * p
         R[2:5, 8] = c * solve(Π1, b, overwrite_b=1, check_finite=0)
 
         R[2:5, 9:12] = -2 * solve(Π1, Π2)

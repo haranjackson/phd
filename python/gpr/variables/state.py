@@ -1,9 +1,10 @@
 from numpy import dot, eye
 
-from gpr.misc.functions import AdevG, dev, gram, L2_2D
+from gpr.misc.functions import AdevG, gram
 from gpr.variables import mg
-from gpr.variables.eos import E_2A, E_2J, E_3, E_R, dEdA_s, dEdJ
-from gpr.variables.wavespeeds import c_s2, dc_s2dρ
+from gpr.variables.derivatives import dEdA_s, dEdJ
+from gpr.variables.eos import E_2A, E_2J, E_3, E_R
+from gpr.variables.shear import c_s2, dc_s2dρ
 from options import VISCOUS, THERMAL, REACTIVE
 
 
@@ -48,8 +49,6 @@ def dsigmadA(ρ, A, MP):
         NOTE: Only valid for EOS with E_2A = cs^2/4 * |devG|^2
     """
     cs2 = c_s2(ρ, MP)
-    β = MP.β
-
     G = gram(A)
     AdevGT = AdevG(A, G).T
     GA = dot(G[:, :, None], A[:, None])

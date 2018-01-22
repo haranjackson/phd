@@ -5,7 +5,7 @@ from scipy.optimize import newton_krylov
 from gpr.misc.functions import reorder
 from gpr.misc.structures import Cvec_to_Pclass, Cvec_to_Pvec, Pvec, Pvec_to_Cvec
 from gpr.systems.eigenvalues import thermo_acoustic_tensor
-from gpr.systems.eigenvectors import eig_prim, Xi1mat
+from gpr.systems.eigenvectors import eig_prim, Xi1
 from gpr.systems.primitive import source_prim
 
 from options import nV, STAR_TOL, STIFF_RGFM
@@ -47,13 +47,13 @@ def riemann_constraints1(P, sgn, MP):
     T = P.T()
 
     σ0 = P.σ()[0]
-    dσdA0 = P.dσdA()[0]
+    dσdA0 = P.dσdA()
 
     pINF = MP.pINF
 
-    Π1 = dσdA0[:, :, 0]
-    Π2 = dσdA0[:, :, 1]
-    Π3 = dσdA0[:, :, 2]
+    Π1 = dσdA[d, :, :, 0]
+    Π2 = dσdA[d, :, :, 1]
+    Π3 = dσdA[d, :, :, 2]
 
     Lhat[:4] = 0
     Lhat[:3, 0] = -σ0 / ρ
@@ -72,7 +72,7 @@ def riemann_constraints1(P, sgn, MP):
     X = dot(A, Z2)
     a = Z2[0]
 
-    Ξ1 = Xi1mat(ρ, p, T, pINF, σ0, Π1)
+    Ξ1 = Xi1(P)
     O = thermo_acoustic_tensor(P, 0)
     w, vl, vr = eig(O, left=1)
     D = diag(sqrt(w.real))

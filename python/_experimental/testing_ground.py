@@ -1,3 +1,7 @@
+from numpy import dot, sign
+from numpy.linalg import solve
+from numpy.random import rand
+
 from gpr.misc.functions import det3
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
@@ -28,7 +32,7 @@ def generate_pars():
     cα = 1.5
     κ = 1e-4
 
-    return material_parameters(γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0,
+    return material_parameters(EOS='sg', γ=γ, pINF=pinf, cv=cv, ρ0=ρ0, p0=p0,
                                b0=cs, cα=cα, μ=μ, κ=κ)
 
 def generate_vecs(MP=None):
@@ -43,7 +47,7 @@ def generate_vecs(MP=None):
     v = rand(3)
     J = rand(3)
 
-    Q = Cvec(ρ, p, v, A, J, 0, MP)
+    Q = Cvec(ρ, p, v, A, J, MP)
     P = Cvec_to_Pvec(Q, MP)
     Pc = Cvec_to_Pclass(Q, MP)
     return Q, P, Pc

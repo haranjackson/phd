@@ -2,7 +2,7 @@ from numpy import exp, inf
 
 from gpr.misc.functions import det3, sigma_norm
 from gpr.variables.state import sigma
-from gpr.variables.wavespeeds import c_s2
+from gpr.variables.shear import c_s2
 
 
 def theta1inv(ρ, A, MP):

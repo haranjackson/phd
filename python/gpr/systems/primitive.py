@@ -2,6 +2,8 @@ from numpy import eye, zeros
 
 from gpr.misc.functions import L2_1D, L2_2D
 from gpr.misc.structures import Cvec_to_Pclass
+from gpr.variables.shear import c_s2, dc_s2dρ
+from gpr.variables.wavespeeds import c_0, c_h
 
 from options import nV, VISCOUS, THERMAL
 
@@ -15,15 +17,16 @@ def source_prim_ref(ret, P):
     θ1_1 = P.θ1_1()
     θ2_1 = P.θ2_1()
 
-    MP = P.MP
-    γ = MP.γ
+    dEdp = P.dEdp()
+    cs2 = c_s2(ρ, MP)
+    dcs2dρ = dc_s2dρ(ρ, MP)
 
     if VISCOUS:
-        ret[1] = (γ - 1) * ρ * L2_2D(ψ) * θ1_1
+        ret[1] = (1 / dEdp - ρ**2 / cs2 * dcs2dρ) * L2_2D(ψ) * θ1_1
         ret[5:14] = -ψ.ravel() * θ1_1
 
     if THERMAL:
-        ret[1] += (γ - 1) * ρ * L2_1D(H) * θ2_1
+        ret[1] += 1 / dEdp * L2_1D(H) * θ2_1
         ret[14:17] = -H * θ2_1
 
 
@@ -34,7 +37,7 @@ def source_prim(Q, MP):
     return ret
 
 
-def system_prim(Q, d, MP, pForm=1):
+def system_prim(Q, d, MP):
 
     P = Cvec_to_Pclass(Q, MP)
 
@@ -45,35 +48,29 @@ def system_prim(Q, d, MP, pForm=1):
     T = P.T()
     σ = P.σ()
 
+    dσdρ = P.dσdρ()
     dσdA = P.dσdA()
+    dTdρ = P.dTdρ()
+    dTdp = P.dTdp()
 
-    γ = MP.γ
-    pINF = MP.pINF
-    cv = MP.cv
-    cα2 = MP.cα2
-    Γ = γ - 1
+    c0 = c_0(ρ, p, A, MP)
+    ch = c_h(ρ, T, MP)
 
     ret = v[d] * eye(nV)
     ret[0, 2 + d] = ρ
 
-    ret[2:5, 0] = -σ[d] / ρ**2
+    ret[2:5, 0] = -1 / ρ * dσdρ[d]
     ret[2:5, 5:14] = -1 / ρ * dσdA[d].reshape([3, 9])
 
     ret[5 + d, 2:5] = A[0]
     ret[8 + d, 2:5] = A[1]
     ret[11 + d, 2:5] = A[2]
 
-    if pForm:
-        ret[1, 2 + d] = γ * p
-        ret[1, 14 + d] = Γ * cα2 * T
-        ret[2 + d, 1] = 1 / ρ
-        ret[14 + d, 0] = -T / ρ**2
-        ret[14 + d, 1] = T / (ρ * (p + pINF))
-    else:
-        ret[1, 2 + d] = Γ * T
-        ret[1, 14 + d] = cα2 * T / (cv * ρ)
-        ret[2 + d, 0] += Γ * cv * T / ρ
-        ret[2 + d, 1] = Γ * cv
-        ret[14 + d, 1] = 1 / ρ
+    ret[1, 2:5] = σ[d] - ρ * dσdρ[d]
+    ret[1, 2 + d] += ρ * c0**2
+    ret[1, 14 + d] = ρ * ch**2 / dTdp
+    ret[2 + d, 1] = 1 / ρ
+    ret[14 + d, 0] = dTdρ / ρ
+    ret[14 + d, 1] = dTdp / ρ
 
     return ret

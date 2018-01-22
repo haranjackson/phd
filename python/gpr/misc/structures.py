@@ -1,7 +1,8 @@
 from numpy import zeros
 
 from gpr.misc.functions import gram
-from gpr.variables.eos import total_energy, dEdρ, dEdp, dEdA, dEdA_s, dEdJ, E_1
+from gpr.variables.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
+from gpr.variables.eos import total_energy, E_1
 from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing
 from gpr.variables.state import heat_flux, pressure, temperature
 from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
@@ -39,6 +40,7 @@ class Cvec_to_Pclass():
             self.J = zeros(3)
 
         self.MP = MP
+
 
     def G(self):
         return gram(self.A)
@@ -91,6 +93,12 @@ class Cvec_to_Pclass():
 
     def H(self):
         return dEdJ(self.J, self.MP)
+
+    def dTdρ(self):
+        return dTdρ(self.ρ, self.p(), self.MP)
+
+    def dTdp(self):
+        return dTdp(self.ρ, self.MP)
 
     def θ1_1(self):
         return theta1inv(self.ρ, self.A, self.MP)

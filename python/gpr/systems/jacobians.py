@@ -1,6 +1,5 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
-from gpr.variables.mg import Γ_MG, dTdρ, dTdp
 from gpr.misc.functions import L2_1D
 
 from options import VISCOUS, THERMAL, REACTIVE, nV
@@ -19,10 +18,10 @@ def dQdP(P):
     E = P.E
 
     dEdρ = P.dEdρ()
-    Γ = Γ_MG(ρ, MP)
+    dEdp = P.dEdp()
 
     ret[1, 0] = E + ρ * dEdρ
-    ret[1, 1] = 1 / Γ
+    ret[1, 1] = ρ * dEdp
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
     for i in range(2, 5):
@@ -62,30 +61,31 @@ def dPdQ(P):
     E = P.E
     J = P.J
 
-    dE_dρ = P.dEdρ()
-    Γ = Γ_MG(ρ, MP)
+    dEdρ = P.dEdρ()
+    dEdp = P.dEdp()
     ψ_ = P.dEdA()
+    Γ_ = 1 / (ρ * dEdp)
 
-    tmp = L2_1D(v) - (E + ρ * dE_dρ)
+    tmp = L2_1D(v) - (E + ρ * dEdρ)
     if THERMAL:
         cα2 = MP.cα2
         tmp += cα2 * L2_1D(J)
-    Υ = Γ * tmp
+    Υ = Γ_ * tmp
 
     ret[1, 0] = Υ
-    ret[1, 1] = Γ
-    ret[1, 2:5] = -Γ * v
+    ret[1, 1] = Γ_
+    ret[1, 2:5] = -Γ_ * v
     ret[2:5, 0] = -v / ρ
 
     for i in range(2, 5):
         ret[i, i] = 1 / ρ
 
     if VISCOUS:
-        ret[1, 5:14] = -Γ * ρ * ψ_.ravel()
+        ret[1, 5:14] = -Γ_ * ρ * ψ_.ravel()
 
     if THERMAL:
         H = P.H()
-        ret[1, 14:17] = -Γ * H
+        ret[1, 14:17] = -Γ_ * H
         ret[14:17, 0] = -J / ρ
         for i in range(14, 17):
             ret[i, i] = 1 / ρ
@@ -95,8 +95,8 @@ def dPdQ(P):
         Qc = MP.Qc
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
-        ret[1, 0] += Γ * Qc * λ
-        ret[1, 17] -= Γ * Qc
+        ret[1, 0] += Γ_ * Qc * λ
+        ret[1, 17] -= Γ_ * Qc
 
     return ret
 
@@ -106,7 +106,7 @@ def dFdP(P, d):
         primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
-    MP = P.MP()
+    MP = P.MP
 
     ρ = P.ρ
     p = P.p()
@@ -121,17 +121,17 @@ def dFdP(P, d):
     dσdA = P.dσdA()
     dEdρ = P.dEdρ()
     dEdp = P.dEdp()
+    dTdρ = P.dTdρ()
+    dTdp = P.dTdp()
 
-    dT_dρ = dTdρ(ρ, p, MP)
-    dT_dp = dTdp(ρ, MP)
     ρvd = ρ * v[d]
 
     vv = outer(v, v)
     Ψ = ρ * vv - σ
     Φ = vv - dσdρ
     Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, dσdA, axes=(0, 0))
-    Δ = (E + ρ * dEdρ) * v - dot(dσdρ, v) + dT_dρ * H
-    Π = (ρ * dEdp + 1) * v + dT_dp * H
+    Δ = (E + ρ * dEdρ) * v - dot(dσdρ, v) + dTdρ * H
+    Π = (ρ * dEdp + 1) * v + dTdp * H
 
     ret = zeros([nV, nV])
     ret[0, 0] = v[d]
@@ -163,8 +163,8 @@ def dFdP(P, d):
         ret[1, 14:17] = ρvd * H
         ret[1, 14 + d] += cα2 * T
         ret[14:17, 0] = v[d] * J
-        ret[14 + d, 0] -= dT_dρ
-        ret[14 + d, 1] = dT_dp
+        ret[14 + d, 0] += dTdρ
+        ret[14 + d, 1] = dTdp
         ret[14:17, 2 + d] = ρ * J
         for i in range(14, 17):
             ret[i, i] = ρvd
