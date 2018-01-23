@@ -1,32 +1,80 @@
-from numpy import outer, sqrt, zeros
+from numpy import dot, sqrt, zeros
 from numpy.linalg import eigvals
 
-from gpr.misc.functions import GdevG
 from gpr.misc.structures import Cvec_to_Pclass
 from gpr.variables.wavespeeds import c_0, c_h
-from gpr.variables.shear import c_s2
 
 from options import VISCOUS, THERMAL, PERRON_FROB
+
+
+def Xi1(P, d):
+
+    ρ = P.ρ
+    ret = zeros([4, 5])
+    ret[0, 1] = 1 / ρ
+
+    if VISCOUS:
+        dσdρ = P.dσdρ()
+        dσdA = P.dσdA()
+        ret[:3, 0] = -1 / ρ * dσdρ[d]
+        ret[:3, 2:] = -1 / ρ * dσdA[d, :, :, d]
+
+    if THERMAL:
+        dTdρ = P.dTdρ()
+        dTdp = P.dTdp()
+        ret[3, 0] = dTdρ / ρ
+        ret[3, 1] = dTdp / ρ
+
+    return ret
+
+
+def Xi2(P, d):
+
+    ρ = P.ρ
+    p = P.p()
+    A = P.A
+    MP = P.MP
+    c0 = c_0(ρ, p, A, MP)
+
+    ret = zeros([5, 4])
+    ret[0, 0] = ρ
+    ret[1, d] = ρ * c0**2
+
+    if VISCOUS:
+        σ = P.σ()
+        dσdρ = P.dσdρ()
+        ret[1, :3] += σ[d] - ρ * dσdρ[d]
+        ret[2:, :3] = A
+
+    if THERMAL:
+        T = P.T()
+        dTdp = P.dTdp()
+        ch = c_h(ρ, T, MP)
+        ret[1, 3] = ρ * ch**2 / dTdp
+
+    return ret
 
 
 def thermo_acoustic_tensor(P, d):
     """ Returns the tensor T_dij corresponding to the (i,j) component of the
         thermo-acoustic tensor in the dth direction
     """
+    return dot(Xi1(P, d), Xi2(P, d))
+
+    """ REQUIRES MODIFICATION
     ret = zeros([4, 4])
 
     ρ = P.ρ
     p = P.p()
     A = P.A
-    T = P.T()
 
     G = P.G()
     Gd = G[d]
 
     MP = P.MP
-    cs2 = c_s2(ρ, MP)
 
     if VISCOUS:
+        cs2 = c_s2(ρ, MP)
         O = GdevG(G)
         O[:, d] *= 2
         O[d] *= 2
@@ -39,6 +87,7 @@ def thermo_acoustic_tensor(P, d):
     ret[d, d] += c0**2
 
     if THERMAL:
+        T = P.T()
         Tρ = P.dTdρ()
         Tp = P.dTdp()
         ch = c_h(ρ, T, MP)
@@ -48,6 +97,7 @@ def thermo_acoustic_tensor(P, d):
         ret[3, 3] = ch**2
 
     return ret
+    """
 
 
 def max_abs_eigs(Q, d, MP):

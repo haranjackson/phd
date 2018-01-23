@@ -80,7 +80,7 @@ def barton2_IC():
                 [-0.01, 0,    0.9]])
     SR = 0
 
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
+    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def elastic1_IC():

@@ -2,7 +2,7 @@ from numpy import zeros
 
 from gpr.misc.functions import gram
 from gpr.variables.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
-from gpr.variables.eos import total_energy, E_1
+from gpr.variables.eos import total_energy
 from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing
 from gpr.variables.state import heat_flux, pressure, temperature
 from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma

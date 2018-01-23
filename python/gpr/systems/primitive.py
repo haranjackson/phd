@@ -45,32 +45,37 @@ def system_prim(Q, d, MP):
     p = P.p()
     A = P.A
     v = P.v
-    T = P.T()
-    σ = P.σ()
-
-    dσdρ = P.dσdρ()
-    dσdA = P.dσdA()
-    dTdρ = P.dTdρ()
-    dTdp = P.dTdp()
 
     c0 = c_0(ρ, p, A, MP)
-    ch = c_h(ρ, T, MP)
 
     ret = v[d] * eye(nV)
     ret[0, 2 + d] = ρ
-
-    ret[2:5, 0] = -1 / ρ * dσdρ[d]
-    ret[2:5, 5:14] = -1 / ρ * dσdA[d].reshape([3, 9])
-
-    ret[5 + d, 2:5] = A[0]
-    ret[8 + d, 2:5] = A[1]
-    ret[11 + d, 2:5] = A[2]
-
-    ret[1, 2:5] = σ[d] - ρ * dσdρ[d]
-    ret[1, 2 + d] += ρ * c0**2
-    ret[1, 14 + d] = ρ * ch**2 / dTdp
+    ret[1, 2 + d] = ρ * c0**2
     ret[2 + d, 1] = 1 / ρ
-    ret[14 + d, 0] = dTdρ / ρ
-    ret[14 + d, 1] = dTdp / ρ
+
+    if VISCOUS:
+
+        σ = P.σ()
+        dσdρ = P.dσdρ()
+        dσdA = P.dσdA()
+
+        ret[1, 2:5] += σ[d] - ρ * dσdρ[d]
+        ret[2:5, 0] = -1 / ρ * dσdρ[d]
+        ret[2:5, 5:14] = -1 / ρ * dσdA[d].reshape([3, 9])
+
+        ret[5 + d, 2:5] = A[0]
+        ret[8 + d, 2:5] = A[1]
+        ret[11 + d, 2:5] = A[2]
+
+    if THERMAL:
+
+        dTdρ = P.dTdρ()
+        dTdp = P.dTdp()
+        T = P.T()
+        ch = c_h(ρ, T, MP)
+
+        ret[1, 14 + d] = ρ * ch**2 / dTdp
+        ret[14 + d, 0] = dTdρ / ρ
+        ret[14 + d, 1] = dTdp / ρ
 
     return ret

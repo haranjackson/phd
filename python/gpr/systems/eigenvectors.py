@@ -2,50 +2,11 @@ from numpy import array, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve
 
 from gpr.misc.functions import reorder
-from gpr.systems.eigenvalues import thermo_acoustic_tensor
+from gpr.systems.eigenvalues import thermo_acoustic_tensor, Xi1, Xi2
 from gpr.systems.jacobians import dQdP, dPdQ
 from gpr.variables.wavespeeds import c_0, c_h
 
-from options import nV
-
-
-def Xi1(P, d):
-
-    ρ = P.ρ
-    dσdρ = P.dσdρ()
-    dσdA = P.dσdA()
-    dTdρ = P.dTdρ()
-    dTdp = P.dTdp()
-
-    ret = zeros([4, 5])
-    ret[:3, 0] = -1 / ρ * dσdρ[d]
-    ret[0, 1] = 1 / ρ
-    ret[:3, 2:] = -1 / ρ * dσdA[d, :, :, d]
-    ret[3, 0] = dTdρ / ρ
-    ret[3, 1] = dTdp / ρ
-    return ret
-
-
-def Xi2(P, d):
-
-    ρ = P.ρ
-    p = P.p()
-    A = P.A
-    T = P.T()
-    σ = P.σ()
-    dσdρ = P.dσdρ()
-    dTdp = P.dTdp()
-
-    c0 = c_0(ρ, p, A, MP)
-    ch = c_h(ρ, T, MP)
-
-    ret = zeros([5, 4])
-    ret[0, 0] = ρ
-    ret[1, :3] = σ[d] - ρ * dσdρ[d]
-    ret[1, d] += ρ * c0**2
-    ret[1, 3] = ρ * ch**2 / dTdp
-    ret[2:, :3] = A
-    return ret
+from options import nV, VISCOUS, THERMAL
 
 
 def eig_prim(P, left=1, right=1):
@@ -67,9 +28,9 @@ def eig_prim(P, left=1, right=1):
     dTdρ = P.dTdρ()
     dTdp = P.dTdp()
 
-    Π1 = dσdA[d,:, :, 0]
-    Π2 = dσdA[d,:, :, 1]
-    Π3 = dσdA[d,:, :, 2]
+    Π1 = dσdA[d, :, :, 0]
+    Π2 = dσdA[d, :, :, 1]
+    Π3 = dσdA[d, :, :, 2]
 
     O = thermo_acoustic_tensor(P, 0)
     Ξ1 = Xi1(P, d)

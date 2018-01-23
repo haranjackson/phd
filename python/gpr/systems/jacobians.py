@@ -63,7 +63,6 @@ def dPdQ(P):
 
     dEdρ = P.dEdρ()
     dEdp = P.dEdp()
-    ψ_ = P.dEdA()
     Γ_ = 1 / (ρ * dEdp)
 
     tmp = L2_1D(v) - (E + ρ * dEdρ)
@@ -81,6 +80,7 @@ def dPdQ(P):
         ret[i, i] = 1 / ρ
 
     if VISCOUS:
+        ψ_ = P.dEdA()
         ret[1, 5:14] = -Γ_ * ρ * ψ_.ravel()
 
     if THERMAL:
@@ -113,25 +113,38 @@ def dFdP(P, d):
     A = P.A
     v = P.v
     E = P.E
-    σ = P.σ()
-    H = P.H()
 
-    ψ_ = P.dEdA()
-    dσdρ = P.dσdρ()
-    dσdA = P.dσdA()
     dEdρ = P.dEdρ()
     dEdp = P.dEdp()
-    dTdρ = P.dTdρ()
-    dTdp = P.dTdp()
 
     ρvd = ρ * v[d]
 
     vv = outer(v, v)
-    Ψ = ρ * vv - σ
-    Φ = vv - dσdρ
-    Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, dσdA, axes=(0, 0))
-    Δ = (E + ρ * dEdρ) * v - dot(dσdρ, v) + dTdρ * H
-    Π = (ρ * dEdp + 1) * v + dTdp * H
+    Ψ = ρ * vv
+    Φ = vv
+    Δ = (E + ρ * dEdρ) * v
+    Π = (ρ * dEdp + 1) * v
+
+    if VISCOUS:
+
+        σ = P.σ()
+        ψ_ = P.dEdA()
+        dσdρ = P.dσdρ()
+        dσdA = P.dσdA()
+
+        Ψ -= σ
+        Φ -= dσdρ
+        Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, dσdA, axes=(0, 0))
+        Δ -= dot(dσdρ, v)
+
+    if THERMAL:
+
+        dTdρ = P.dTdρ()
+        dTdp = P.dTdp()
+
+        H = P.H()
+        Δ += dTdρ * H
+        Π += dTdp * H
 
     ret = zeros([nV, nV])
     ret[0, 0] = v[d]

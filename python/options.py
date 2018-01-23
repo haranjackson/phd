@@ -10,7 +10,7 @@ nz = 1                      # Number of cells in z direction
 """ System Options """
 
 VISCOUS  = 1                # Include viscosity
-THERMAL  = 1                # Include thermal conduction
+THERMAL  = 0                # Include thermal conduction
 MULTI    = 0                # Include a second (potentially-reactive) fluid
 REACTIVE = 0                # Second fluid is reactive
 
@@ -25,7 +25,7 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 
 """ Solver Options """
 
-USE_CPP = 1                 # Whether to use compiled C++
+USE_CPP = 0                 # Whether to use compiled C++
 SPLIT   = 0                 # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
