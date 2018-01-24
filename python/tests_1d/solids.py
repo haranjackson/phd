@@ -1,38 +1,18 @@
 from itertools import product
 
-from numpy import array, eye, trace, zeros
-from numpy.linalg import inv
+from numpy import array, eye, zeros
 
 from etc.boundaries import standard_BC
-from gpr.misc.functions import det3
 from gpr.misc.structures import Cvec
-from gpr.variables.hyp import Sigma_hyp
-from gpr.variables.state import sigma
+from gpr.variables.hyp import Cvec_hyp
 from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG, MP_COP_SMG_P
 from options import nx, ny, nz, nV, dx
 
 
-def hyperelastic_vars(F, S, HYP, MP):
-    """ Returns the GPR variables corresponding to the hyperelastic variables
-    """
-    A = inv(F)
-    ρ = HYP.ρ0 * det3(A)
-    Σ = Sigma_hyp(ρ, A, S, HYP)
-
-    σ = sigma(ρ, A, MP)
-    p = trace(σ - Σ) / 3
-    return ρ, p, A
-
-
 def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP):
 
-    ρL, pL, AL = hyperelastic_vars(FL, SL, HYP, MP)
-    ρR, pR, AR = hyperelastic_vars(FR, SR, HYP, MP)
-
-    J = zeros(3)
-
-    QL = Cvec(ρL, pL, vL, AL, J, MP)
-    QR = Cvec(ρR, pR, vR, AR, J, MP)
+    QL = Cvec_hyp(FL, SL, vL, HYP)
+    QR = Cvec_hyp(FR, SR, vR, HYP)
 
     u = zeros([nx, ny, nz, nV])
 
