@@ -57,8 +57,8 @@
 \end_index
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation indent
-\paragraph_indentation default
+\paragraph_separation skip
+\defskip bigskip
 \quotes_language english
 \papercolumns 1
 \papersides 1
@@ -554,14 +554,63 @@ Eigenvalues
 \end_layout
 
 \begin_layout Standard
+Considering the primitive system matrix 
+\begin_inset Formula $M_{1}$
+\end_inset
+
+ given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Appendix"
+
+\end_inset
+
+, it is clear that the eigenvalues of the GPR system in the first spatial
+ axis consist of 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+ repeated 8 times, along with the roots of:
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\Xi_{1}\Xi_{2}=\left(\begin{array}{ccccc}
+\left|\begin{array}{cc}
+\left(v_{1}-\lambda\right)I & \Xi_{2}\\
+\Xi_{1} & \left(v_{1}-\lambda\right)I
+\end{array}\right|=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{1}=\left(\begin{array}{ccccc}
 -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial\rho} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}}\\
 -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}}\\
 -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}}\\
 \frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0
-\end{array}\right)\left(\begin{array}{cccc}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{2}=\left(\begin{array}{cccc}
 \rho & 0 & 0 & 0\\
 \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & \frac{\rho c_{h}^{2}}{T_{p}}\\
 A_{11} & A_{12} & A_{13} & 0\\
@@ -576,10 +625,49 @@ A_{31} & A_{32} & A_{33} & 0
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\Omega_{ij}^{d}=-\frac{1}{\rho}\frac{\partial\sigma_{id}}{\partial A_{kd}}A_{kj}-\frac{\partial\sigma_{id}}{\partial\rho}\delta_{dj}$
+By the properties of block matrices
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+If 
+\begin_inset Formula $A$
+\end_inset
+
+ is 
+\lang british
+invertible
+\lang english
+, 
+\begin_inset Formula $\det\left(\begin{array}{cc}
+A & B\\
+C & D
+\end{array}\right)=\det\left(A\right)\det\left(D-CA^{-1}B\right)$
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+, the remaining eigenvalues are 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+ and the roots of 
+\begin_inset Formula $\left|\left(v_{1}-\lambda\right)^{2}I-\Xi_{1}\Xi_{2}\right|=0$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $\lambda_{i}=v_{1}\pm\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ where the 
+\begin_inset Formula $\tilde{\lambda_{i}}$
+\end_inset
+
+ are the eigenvalues of the following matrix:
 \end_layout
 
 \begin_layout Standard
@@ -596,6 +684,251 @@ T_{\rho}+T_{p}\left(c_{0}^{2}+\frac{\sigma_{11}}{\rho}-\frac{\partial\sigma_{11}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ is given shortly.
+ Similar results hold for the other two spatial directions.
+ In general it is not possible to express the eigenvalues of 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ in terms of the eigenvalues of its submatrices.
+ Note, however, that if 
+\begin_inset Formula $\alpha=0$
+\end_inset
+
+ then one of the eigenvalues is 
+\begin_inset Formula $0$
+\end_inset
+
+ and the remaining eigenvalues can be found analytically, using the form
+ given in the appendix of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2016a"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It is straightforward to verify the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\sigma_{ij}}{\partial A_{mn}}=-c_{s}^{2}\rho\left(\begin{array}{c}
+\delta_{in}\left(A\dev\left(G\right)\right)_{mj}+\delta_{jn}\left(A\dev\left(G\right)\right)_{mi}\\
++A_{mi}G_{jn}+A_{mj}G_{in}-\frac{2}{3}G_{ij}A_{mn}
+\end{array}\right)\label{eq:dsigma/dA}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The quantity 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ is named here the 
+\shape italic
+acoustic tensor
+\shape default
+, due to its similarity to the acoustic tensor described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2009"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\Omega_{ij}^{d} & =-\frac{1}{\rho}\frac{\partial\sigma_{id}}{\partial A_{kd}}A_{kj}-\frac{\sigma_{id}}{\rho}\delta_{dj}\\
+ & =c_{s}^{2}\left(\begin{array}{c}
+\delta_{id}\left(G\dev\left(G\right)\right)_{dj}+\left(G\dev\left(G\right)\right)_{id}\delta_{dj}\\
++\left(G\dev\left(G\right)\right)_{ij}+G_{ij}G_{dd}+\frac{1}{3}G_{dj}G_{id}
+\end{array}\right)\nonumber \\
+ & =c_{s}^{2}\left(E^{d}G\dev\left(G\right)+G\dev\left(G\right)E^{d}+G\dev\left(G\right)+G_{dd}G+\frac{1}{3}G_{d}G_{d}^{T}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $E_{ij}^{d}=\delta_{id}\delta_{jd}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Eigenvectors
+\end_layout
+
+\begin_layout Standard
+By hyperbolicity of the system, 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ can be expressed as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi=Q^{-1}D^{2}Q
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $D$
+\end_inset
+
+ is a diagonal matrix with positive diagonal entries.
+ The eigenvectors corresponding to 
+\begin_inset Formula $\lambda_{i}=v_{1}\pm\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ take the form 
+\begin_inset Formula $\left(\begin{array}{ccccccccccccccccc}
+\hat{u}_{1} & \hat{u}_{2} & \hat{u}_{3} & 0 & 0 & \hat{u}_{4} & 0 & 0 & \hat{u}_{5} & 0 & 0 & \tilde{u}_{1} & \tilde{u}_{2} & \tilde{u}_{3} & \tilde{u}_{4} & 0 & 0\end{array}\right)^{T}$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\hat{u}},\boldsymbol{\tilde{u}}$
+\end_inset
+
+ satisfy:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cc}
+v_{1}I & \Xi_{2}\\
+\Xi_{1} & v_{1}I
+\end{array}\right)\left(\begin{array}{c}
+\boldsymbol{\hat{u}}\\
+\boldsymbol{\tilde{u}}
+\end{array}\right)=\left(v_{1}\pm\sqrt{\tilde{\lambda_{i}}}\right)\left(\begin{array}{c}
+\boldsymbol{\hat{u}}\\
+\boldsymbol{\tilde{u}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset Formula $\Xi_{2}\boldsymbol{\tilde{u}}=\pm\sqrt{\tilde{\lambda_{i}}}\boldsymbol{\hat{u}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Xi_{1}\boldsymbol{\hat{u}}=\pm\sqrt{\tilde{\lambda_{i}}}\boldsymbol{\tilde{u}}$
+\end_inset
+
+.
+ Combining these results, 
+\begin_inset Formula $\Xi\boldsymbol{\tilde{u}}=\tilde{\lambda_{i}}\boldsymbol{\tilde{u}}$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $\boldsymbol{\tilde{u}}$
+\end_inset
+
+ is a right eigenvector of 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ and, taking the form 
+\begin_inset Formula $Q^{-1}\boldsymbol{e_{i}}$
+\end_inset
+
+ for some 
+\begin_inset Formula $i=1\ldots4$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\Pi_{k}^{ij}=\frac{\partial\sigma_{i1}}{\partial A_{jk}}$
+\end_inset
+
+.
+ Using the result just obtained, the four eigenvectors corresponding to
+ eigenvalues of the form 
+\begin_inset Formula $v_{1}+\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ are columns 1-4 of matrix 
+\begin_inset Formula $R$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Right-Eigenvectors"
+
+\end_inset
+
+.
+ Those corresponding to eigenvalues of the form 
+\begin_inset Formula $v_{1}-\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ are columns 5-8.
+ By inspection, it can be verified that the remaining 9 eigenvectors (correspond
+ing to eigenvalue 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+) are the remaining columns.
+\end_layout
+
+\begin_layout Standard
+A similar analysis yields the left eigenvectors as the rows of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors"
+
+\end_inset
+
+.
+ In the form given here, 
+\begin_inset Formula $L=R^{-1}$
+\end_inset
+
+.
 \end_layout
 
 \end_body
