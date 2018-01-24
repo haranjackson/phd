@@ -5,27 +5,27 @@ from gpr.misc.structures import Cvec_to_Pclass
 from gpr.variables.shear import c_s2, dc_s2dρ
 from gpr.variables.wavespeeds import c_0, c_h
 
-from options import nV, VISCOUS, THERMAL
+from options import nV
 
 
 def source_prim_ref(ret, P):
 
     ρ = P.ρ
-
-    ψ = P.ψ()
-    H = P.H()
-    θ1_1 = P.θ1_1()
-    θ2_1 = P.θ2_1()
+    MP = P.MP
 
     dEdp = P.dEdp()
     cs2 = c_s2(ρ, MP)
     dcs2dρ = dc_s2dρ(ρ, MP)
 
-    if VISCOUS:
+    if MP.VISCOUS:
+        ψ = P.ψ()
+        θ1_1 = P.θ1_1()
         ret[1] = (1 / dEdp - ρ**2 / cs2 * dcs2dρ) * L2_2D(ψ) * θ1_1
         ret[5:14] = -ψ.ravel() * θ1_1
 
-    if THERMAL:
+    if MP.THERMAL:
+        H = P.H()
+        θ2_1 = P.θ2_1()
         ret[1] += 1 / dEdp * L2_1D(H) * θ2_1
         ret[14:17] = -H * θ2_1
 
@@ -53,7 +53,7 @@ def system_prim(Q, d, MP):
     ret[1, 2 + d] = ρ * c0**2
     ret[2 + d, 1] = 1 / ρ
 
-    if VISCOUS:
+    if MP.VISCOUS:
 
         σ = P.σ()
         dσdρ = P.dσdρ()
@@ -67,7 +67,7 @@ def system_prim(Q, d, MP):
         ret[8 + d, 2:5] = A[1]
         ret[11 + d, 2:5] = A[2]
 
-    if THERMAL:
+    if MP.THERMAL:
 
         dTdρ = P.dTdρ()
         dTdp = P.dTdp()

@@ -4,22 +4,24 @@ from numpy.linalg import eigvals
 from gpr.misc.structures import Cvec_to_Pclass
 from gpr.variables.wavespeeds import c_0, c_h
 
-from options import VISCOUS, THERMAL, PERRON_FROB
+from options import PERRON_FROB
 
 
 def Xi1(P, d):
 
     ρ = P.ρ
+    MP = P.MP
+
     ret = zeros([4, 5])
     ret[0, 1] = 1 / ρ
 
-    if VISCOUS:
+    if MP.VISCOUS:
         dσdρ = P.dσdρ()
         dσdA = P.dσdA()
         ret[:3, 0] = -1 / ρ * dσdρ[d]
         ret[:3, 2:] = -1 / ρ * dσdA[d, :, :, d]
 
-    if THERMAL:
+    if MP.THERMAL:
         dTdρ = P.dTdρ()
         dTdp = P.dTdp()
         ret[3, 0] = dTdρ / ρ
@@ -40,13 +42,13 @@ def Xi2(P, d):
     ret[0, 0] = ρ
     ret[1, d] = ρ * c0**2
 
-    if VISCOUS:
+    if MP.VISCOUS:
         σ = P.σ()
         dσdρ = P.dσdρ()
         ret[1, :3] += σ[d] - ρ * dσdρ[d]
         ret[2:, :3] = A
 
-    if THERMAL:
+    if MP.THERMAL:
         T = P.T()
         dTdp = P.dTdp()
         ch = c_h(ρ, T, MP)

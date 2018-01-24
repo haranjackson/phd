@@ -6,7 +6,7 @@ from gpr.systems.eigenvalues import thermo_acoustic_tensor, Xi1, Xi2
 from gpr.systems.jacobians import dQdP, dPdQ
 from gpr.variables.wavespeeds import c_0, c_h
 
-from options import nV, VISCOUS, THERMAL
+from options import nV
 
 
 def eig_prim(P, left=1, right=1):

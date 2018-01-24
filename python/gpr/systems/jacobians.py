@@ -2,7 +2,7 @@ from numpy import dot, eye, outer, tensordot, zeros
 
 from gpr.misc.functions import L2_1D
 
-from options import VISCOUS, THERMAL, REACTIVE, nV
+from options import nV
 
 
 def dQdP(P):
@@ -27,11 +27,11 @@ def dQdP(P):
     for i in range(2, 5):
         ret[i, i] = ρ
 
-    if VISCOUS:
+    if MP.VISCOUS:
         ψ_ = P.dEdA()
         ret[1, 5:14] = ρ * ψ_.ravel()
 
-    if THERMAL:
+    if MP.THERMAL:
         J = P.J
         H = P.H()
         ret[1, 14:17] = ρ * H
@@ -39,7 +39,7 @@ def dQdP(P):
         for i in range(14, 17):
             ret[i, i] = ρ
 
-    if REACTIVE:
+    if MP.REACTIVE:
         Qc = MP.Qc
         ret[1, 17] = Qc * ρ
         ret[17, 0] = P.λ
@@ -66,7 +66,7 @@ def dPdQ(P):
     Γ_ = 1 / (ρ * dEdp)
 
     tmp = L2_1D(v) - (E + ρ * dEdρ)
-    if THERMAL:
+    if MP.THERMAL:
         cα2 = MP.cα2
         tmp += cα2 * L2_1D(J)
     Υ = Γ_ * tmp
@@ -79,18 +79,18 @@ def dPdQ(P):
     for i in range(2, 5):
         ret[i, i] = 1 / ρ
 
-    if VISCOUS:
+    if MP.VISCOUS:
         ψ_ = P.dEdA()
         ret[1, 5:14] = -Γ_ * ρ * ψ_.ravel()
 
-    if THERMAL:
+    if MP.THERMAL:
         H = P.H()
         ret[1, 14:17] = -Γ_ * H
         ret[14:17, 0] = -J / ρ
         for i in range(14, 17):
             ret[i, i] = 1 / ρ
 
-    if REACTIVE:
+    if MP.REACTIVE:
         λ = P.λ
         Qc = MP.Qc
         ret[17, 0] = -λ / ρ
@@ -125,7 +125,7 @@ def dFdP(P, d):
     Δ = (E + ρ * dEdρ) * v
     Π = (ρ * dEdp + 1) * v
 
-    if VISCOUS:
+    if MP.VISCOUS:
 
         σ = P.σ()
         ψ_ = P.dEdA()
@@ -137,7 +137,7 @@ def dFdP(P, d):
         Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, dσdA, axes=(0, 0))
         Δ -= dot(dσdρ, v)
 
-    if THERMAL:
+    if MP.THERMAL:
 
         dTdρ = P.dTdρ()
         dTdp = P.dTdp()
@@ -159,7 +159,7 @@ def dFdP(P, d):
     ret[2:5, 2 + d] += ρ * v
     ret[2 + d, 1] = 1
 
-    if VISCOUS:
+    if MP.VISCOUS:
         ret[1, 5:14] = Ω[d].ravel()
         ret[2:5, 5:14] = -dσdA[d].reshape([3, 9])
         ret[5 + d, 2:5] = A[0]
@@ -169,7 +169,7 @@ def dFdP(P, d):
         ret[8 + d, 8:11] = v
         ret[11 + d, 11:14] = v
 
-    if THERMAL:
+    if MP.THERMAL:
         T = P.T()
         J = P.J
         cα2 = MP.cα2
@@ -182,7 +182,7 @@ def dFdP(P, d):
         for i in range(14, 17):
             ret[i, i] = ρvd
 
-    if REACTIVE:
+    if MP.REACTIVE:
         λ = P.λ
         Qc = MP.Qc
         ret[17, 0] = v[d] * λ

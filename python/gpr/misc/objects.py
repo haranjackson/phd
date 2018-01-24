@@ -50,7 +50,8 @@ class EOS_params():
             self.R2 = R2
 
 
-def params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
+def params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
+           ρ0, p0, Tref, T0, cv,
            α, β, γ, pINF,
            c0, Γ0, s, e0,
            A, B, R1, R2,
@@ -63,6 +64,11 @@ def params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
 
     MP.Rc = Rc
     MP.EOS = eos_text_to_code(EOS)
+
+    MP.VISCOUS = VISCOUS
+    MP.THERMAL = THERMAL
+    MP.REACTIVE = REACTIVE
+    MP.MULTI = MULTI
 
     MP.ρ0 = ρ0
     MP.p0 = p0
@@ -166,17 +172,25 @@ def material_parameters(EOS, ρ0, cv, p0,
     T0 = temperature(ρ0, p0, P)
 
     if b0 is not None:
+        VISCOUS = True
         if (not PLASTIC) and (τ1 is None):
             τ1 = 6 * μ / (ρ0 * b0**2)
         if β is None:
             β = 0
+    else:
+        VISCOUS = False
 
     if cα is not None:
+        THERMAL = True
         if Pr is not None:
             κ = μ * γ * cv / Pr
         τ2 = κ * ρ0 / (T0 * cα**2)
     else:
+        THERMAL = False
         τ2 = None
+
+    REACTIVE = REACTION is not None
+    MULTI = REACTIVE # should be amended in future
 
     if USE_CPP:
         import GPRpy
@@ -185,7 +199,8 @@ def material_parameters(EOS, ρ0, cv, p0,
         class MP:
             pass
 
-    params(MP, Rc, EOS, ρ0, p0, Tref, T0, cv,
+    params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
+           ρ0, p0, Tref, T0, cv,
            α, β, γ, pINF,
            c0, Γ0, s, e0,
            A, B, R1, R2,

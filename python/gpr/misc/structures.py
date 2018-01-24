@@ -7,7 +7,7 @@ from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing
 from gpr.variables.state import heat_flux, pressure, temperature
 from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
 
-from options import nV, VISCOUS, THERMAL, MULTI, REACTIVE
+from options import nV
 
 
 class Cvec_to_Pclass():
@@ -16,12 +16,12 @@ class Cvec_to_Pclass():
 
     def __init__(self, Q, MP):
 
-        if MULTI:
+        if MP.MULTI:
             self.ρ = Q[0] + Q[17]
             self.z = Q[18] / self.ρ
             self.ρ1 = Q[0] / self.z
             self.ρ2 = Q[17] / self.z
-            if REACTIVE:
+            if MP.REACTIVE:
                 self.λ = Q[19] / Q[17]
         else:
             self.ρ = Q[0]
@@ -31,10 +31,10 @@ class Cvec_to_Pclass():
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
 
-        if VISCOUS:
+        if MP.VISCOUS:
             self.A = Q[5:14].reshape([3, 3])
 
-        if THERMAL:
+        if MP.THERMAL:
             self.J = Q[14:17] / self.ρ
         else:
             self.J = zeros(3)
@@ -49,7 +49,7 @@ class Cvec_to_Pclass():
         if hasattr(self, 'p_'):
             return self.p_
         else:
-            if REACTIVE:
+            if self.MP.REACTIVE:
                 self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J,
                                    self.MP, self.λ)
             else:
@@ -120,12 +120,12 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     """
     Q = zeros(nV)
 
-    if MULTI:
+    if MP.MULTI:
         ρ = z * ρ1 + (1 - z) * ρ2
         Q[0] = z * ρ1
         Q[17] = (1 - z) * ρ2
         Q[18] = z * ρ
-        if REACTIVE:
+        if MP.REACTIVE:
             Q[19] = (1 - z) * ρ2 * λ
     else:
         ρ = ρ1
@@ -134,10 +134,10 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, MP)
     Q[2:5] = ρ * v
 
-    if VISCOUS:
+    if MP.VISCOUS:
         Q[5:14] = A.ravel()
 
-    if THERMAL:
+    if MP.THERMAL:
         Q[14:17] = ρ * J
 
     return Q
@@ -161,7 +161,7 @@ def Pvec_to_Cvec(P, MP):
     ρ = P[0]
     A = P[5:14].reshape([3, 3])
 
-    if REACTIVE:
+    if MP.REACTIVE:
         λ = P[17]
     else:
         λ = 0
@@ -182,7 +182,7 @@ def Cvec_to_Pvec(Q, MP):
     A = Q[5:14].reshape([3, 3])
     J = Q[14:17] / ρ
 
-    if REACTIVE:
+    if MP.REACTIVE:
         λ = Q[17] / ρ
     else:
         λ = None

@@ -5,7 +5,6 @@ from time import time
 from numpy import array, linspace, int64, save
 
 from options import Lx, Ly, Lz, nx, ny, nz
-from options import VISCOUS, THERMAL, REACTIVE
 from options import RGFM, ISO_FIX, STAR_TOL, STIFF_RGFM
 from options import USE_CPP, SPLIT
 from options import NUM_ODE, HALF_STEP, STRANG
@@ -29,10 +28,6 @@ def save_config(path):
         f.write('nx = %i\n' % nx)
         f.write('ny = %i\n' % ny)
         f.write('nz = %i\n\n' % nz)
-
-        f.write('VISCOUS  = %i\n' % VISCOUS)
-        f.write('THERMAL  = %i\n' % THERMAL)
-        f.write('REACTIVE = %i\n\n' % REACTIVE)
 
         f.write('RGFM     = %i\n' % RGFM)
         f.write('ISO_FIX  = %i\n' % ISO_FIX)

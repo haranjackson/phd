@@ -6,13 +6,8 @@ Lz = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
-
-""" System Options """
-
-VISCOUS  = 1                # Include viscosity
-THERMAL  = 0                # Include thermal conduction
-MULTI    = 0                # Include a second (potentially-reactive) fluid
-REACTIVE = 0                # Second fluid is reactive
+nV = 17                     # Number of variables - should be:
+                            #     5+VISCOUS*9+THERMAL*3+MULTI*2+REACTIVE+LSETS
 
 """ GFM Options """
 
@@ -68,6 +63,3 @@ NT = N1**(ndim + 1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
-
-nV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + \
-    int(MULTI) * 2 + int(REACTIVE) + LSETS

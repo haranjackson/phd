@@ -5,20 +5,19 @@ from gpr.variables import mg
 from gpr.variables.derivatives import dEdA_s, dEdJ
 from gpr.variables.eos import E_2A, E_2J, E_3, E_R
 from gpr.variables.shear import c_s2, dc_s2dρ
-from options import VISCOUS, THERMAL, REACTIVE
 
 
 def pressure(ρ, E, v, A, J, MP, λ=None):
 
     E1 = E - E_3(v)
 
-    if VISCOUS:
+    if MP.VISCOUS:
         E1 -= E_2A(ρ, A, MP)
 
-    if THERMAL:
+    if MP.THERMAL:
         E1 -= E_2J(J, MP)
 
-    if REACTIVE:
+    if MP.REACTIVE:
         E1 -= E_R(λ, MP)
 
     p = mg.pressure(ρ, E1, MP)

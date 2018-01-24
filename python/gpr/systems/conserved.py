@@ -3,7 +3,7 @@ from numpy import dot, zeros
 from gpr.systems.jacobians import dFdP, dPdQ
 from gpr.misc.structures import Cvec_to_Pclass
 
-from options import VISCOUS, THERMAL, MULTI, REACTIVE, nV, LSETS
+from options import nV, LSETS
 
 
 def flux_cons_ref(ret, Q, d, MP):
@@ -25,7 +25,7 @@ def flux_cons_ref(ret, Q, d, MP):
     ret[2:5] += ρvd * v
     ret[2 + d] += p
 
-    if VISCOUS:
+    if MP.VISCOUS:
 
         A = P.A
         σ = P.σ()
@@ -39,7 +39,7 @@ def flux_cons_ref(ret, Q, d, MP):
         ret[8 + d] += Av[1]
         ret[11 + d] += Av[2]
 
-    if THERMAL:
+    if MP.THERMAL:
 
         cα2 = MP.cα2
 
@@ -51,32 +51,34 @@ def flux_cons_ref(ret, Q, d, MP):
         ret[14:17] += ρvd * J
         ret[14 + d] += T
 
-    if MULTI:
+    if MP.MULTI:
 
         λ = P.λ
         ρ2 = P.ρ2
 
         ret[17] += (1 - z) * ρ2 * vd
         ret[18] += ρvd * z
-        if REACTIVE:
+        if MP.REACTIVE:
             ret[19] += (1 - z) * ρ2 * vd * λ
 
 
 def block_cons_ref(ret, Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, MP)
+    if MP.VISCOUS:
 
-    v = P.v
-    vd = v[d]
+        P = Cvec_to_Pclass(Q, MP)
 
-    for i in range(5, 14):
-        ret[i, i] = vd
-    ret[5 + d, 5 + d:8 + d] -= v
-    ret[8 + d, 8 + d:11 + d] -= v
-    ret[11 + d, 11 + d:14 + d] -= v
+        v = P.v
+        vd = v[d]
 
-    for i in range(1, LSETS + 1):
-        ret[-i, -i] = vd
+        for i in range(5, 14):
+            ret[i, i] = vd
+        ret[5 + d, 5 + d:8 + d] -= v
+        ret[8 + d, 8 + d:11 + d] -= v
+        ret[11 + d, 11 + d:14 + d] -= v
+
+        for i in range(1, LSETS + 1):
+            ret[-i, -i] = vd
 
 
 def source_cons_ref(ret, Q, MP):
@@ -85,17 +87,17 @@ def source_cons_ref(ret, Q, MP):
 
     ρ = P.ρ
 
-    if VISCOUS:
+    if MP.VISCOUS:
         ψ = P.ψ()
         θ1_1 = P.θ1_1()
         ret[5:14] = - ψ.ravel() * θ1_1
 
-    if THERMAL:
+    if MP.THERMAL:
         H = P.H()
         θ2_1 = P.θ2_1()
         ret[14:17] = - ρ * H * θ2_1
 
-    if REACTIVE:
+    if MP.REACTIVE:
         z = P.z
         ρ2 = P.ρ2
         K = - P.K()
@@ -158,14 +160,15 @@ def B2dot(ret, x, v):
 
 def Bdot_cons(ret, x, Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, MP)
-    v = P.v
-    if d == 0:
-        B0dot(ret, x, v)
-    elif d == 1:
-        B1dot(ret, x, v)
-    else:
-        B2dot(ret, x, v)
+    if MP.VISCOUS:
+        P = Cvec_to_Pclass(Q, MP)
+        v = P.v
+        if d == 0:
+            B0dot(ret, x, v)
+        elif d == 1:
+            B1dot(ret, x, v)
+        else:
+            B2dot(ret, x, v)
 
 
 def system_cons(Q, d, MP):

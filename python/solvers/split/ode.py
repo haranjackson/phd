@@ -3,7 +3,7 @@ from itertools import product
 from numpy import array, zeros
 from scipy.integrate import odeint
 
-from options import NUM_ODE, VISCOUS, THERMAL
+from options import NUM_ODE
 from gpr.variables.eos import E_3
 from gpr.misc.structures import Cvec_to_Pclass
 from solvers.split.distortion import f_A, jac_A, solver_approximate_analytic
@@ -15,10 +15,10 @@ def f(y, t0, ρ, E, MP):
     ret = zeros(12)
     A = y[:9].reshape([3, 3])
 
-    if VISCOUS:
+    if MP.VISCOUS:
         ret[:9] = f_A(A, MP)
 
-    if THERMAL:
+    if MP.THERMAL:
         J = y[9:]
         ret[9:] = f_J(ρ, E, A, J, MP)
 
@@ -30,10 +30,10 @@ def jac(y, t0, ρ, E, MP):
     ret = zeros([12, 12])
     A = y[:9].reshape([3, 3])
 
-    if VISCOUS:
+    if MP.VISCOUS:
         ret[:9, :9] = jac_A(A, MP.τ1)
 
-    if THERMAL:
+    if MP.THERMAL:
         J = y[9:]
         ret[9:, 9:] = jac_J(ρ, E, A, J, MP)
 
