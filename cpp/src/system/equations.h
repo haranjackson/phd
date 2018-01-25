@@ -10,6 +10,6 @@ void source(VecVr ret, VecVr Q, Par &MP);
 
 void block(MatV_Vr ret, VecVr Q, int d);
 
-void Bdot(VecVr ret, VecVr Q, VecVr x, int d);
+void Bdot(VecVr ret, VecVr Q, VecVr x, int d, Par &MP);
 
 #endif

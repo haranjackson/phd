@@ -1,7 +1,6 @@
-#include "../etc/globals.h"
-
-#include "lgmres.h"
 #include "newton_krylov.h"
+#include "../etc/globals.h"
+#include "lgmres.h"
 
 double maxnorm(Vecr x) { return x.lpNorm<Eigen::Infinity>(); }
 

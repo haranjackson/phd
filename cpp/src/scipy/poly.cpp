@@ -1,6 +1,5 @@
 #include "poly.h"
 #include "../etc/types.h"
-
 #include <cmath>
 
 Vec integrate(Vec p) {

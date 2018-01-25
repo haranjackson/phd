@@ -1,44 +1,14 @@
 #include "functions/matrices.h"
 #include "functions/vectors.h"
 #include "objects/gpr_objects.h"
+#include "variables/mg.h"
 #include "variables/state.h"
-
-Mat4_4 thermo_acoustic_tensor(double ρ, Mat3_3r A, double p, double T, int d,
-                              Par &MP) {
-  // Returns the tensor T_dij corresponding to the (i,j) component of the
-  // thermo-acoustic tensor in the dth direction
-  Mat3_3 G = gram(A);
-  Mat4_4 ret;
-  Vec3 Gd = G.col(d);
-
-  double γ = MP.γ;
-  double pINF = MP.pINF;
-
-  Mat3_3 O = GdevG(G);
-  O.col(d) *= 2.;
-  O.row(d) *= 2.;
-  O(d, d) *= 3. / 4.;
-  O += Gd(d) * G + 1. / 3. * outer(Gd, Gd);
-  O *= MP.B0;
-  ret.topLeftCorner<3, 3>() = O;
-
-  ret(d, d) += γ * p / ρ;
-
-  ret(3, 0) = ((γ - 1) * p - pINF) * T / (ρ * (p + pINF));
-  ret(3, 1) = 0.;
-  ret(3, 2) = 0.;
-  double tmp = (γ - 1) * MP.cα2 * T / ρ;
-  ret(0, 3) = tmp;
-  ret(1, 3) = 0.;
-  ret(2, 3) = 0.;
-  ret(3, 3) = tmp * T / (p + pINF);
-
-  return ret;
-}
+#include "variables/wavespeeds.h"
 
 double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP) {
   // Returns the maximum of the absolute values of  the eigenvalues of the GPR
   // system
+
   double ρ = Q(0);
   double vd = Q(2 + d) / ρ;
   Mat3_3Map A = get_A(Q);
@@ -46,7 +16,34 @@ double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP) {
   double p = pressure(Q, MP);
   double T = temperature(ρ, p, MP);
 
-  Mat4_4 O = thermo_acoustic_tensor(ρ, A, p, T, d, MP);
+  Mat Xi1(4, 5);
+  Mat Xi2(5, 4);
+
+  double c0 = c_0(ρ, p, A, MP);
+  Xi1(0, 1) = 1 / ρ;
+  Xi2(0, 0) = ρ;
+  Xi2(1, d) = ρ * c0 * c0;
+
+  if (MP.VISCOUS) {
+    Vec3 σ = sigma(Q, MP, d);
+    Vec3 dσdρ = dsigmadρ(Q, MP, d);
+    Mat3_3 dσdA = dsigmadA(Q, MP, d);
+    Xi1.topLeftCorner(3, 1) = -1 / ρ * dσdρ;
+    Xi1.topRightCorner(3, 3) = -1 / ρ * dσdA;
+    Xi2.block<1, 3>(1, 0) += σ - ρ * dσdρ;
+    Xi2.bottomLeftCorner(3, 3) = A;
+  }
+
+  if (MP.THERMAL) {
+    double ch = c_h(ρ, T, MP);
+    double dT_dρ = dTdρ(ρ, p, MP);
+    double dT_dp = dTdp(ρ, MP);
+    Xi1(3, 0) = dT_dρ / ρ;
+    Xi1(3, 1) = dT_dp / ρ;
+    Xi2(1, 3) = ρ * ch * ch / dT_dp;
+  }
+
+  Mat4_4 O = Xi1 * Xi2;
 
   double lam;
   if (PERRON_FROBENIUS) {

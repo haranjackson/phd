@@ -1,7 +1,6 @@
-#include <cmath>
-
-#include "../etc/globals.h"
 #include "lgmres.h"
+#include "../etc/globals.h"
+#include <cmath>
 
 DecQR qr_append(Matr Q, Matr R, Matr u) {
   // Returns QR factorization of Q*R with u appended as the last column

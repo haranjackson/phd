@@ -1,9 +1,8 @@
-#include <iostream>
-
 #include "../etc/globals.h"
 #include "../etc/grid.h"
 #include "../system/eig.h"
 #include "steppers.h"
+#include <iostream>
 
 double timestep(Vecr u, double dX[4], int ndim, double CFL, double t, double tf,
                 unsigned int count, bool PERRON_FROBENIUS, Par &MP) {

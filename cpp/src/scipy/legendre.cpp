@@ -1,6 +1,5 @@
-#include <vector>
-
 #include "../etc/types.h"
+#include <vector>
 
 Vec legval(Vec x, Vec c) {
   /*  Evaluate a Legendre series at points x.

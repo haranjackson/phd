@@ -22,7 +22,7 @@ void midstepper(Vecr wh, int ndim, double dt, double dx, double dy, double dz,
       dFdx.noalias() = DERVALS * F / dx;
 
       for (int a = 0; a < N1; a++) {
-        Bdot(Bdwdx, w.row(a), dwdx.row(a), 0);
+        Bdot(Bdwdx, w.row(a), dwdx.row(a), 0, MP);
         w.row(a) -= dt / 2 * (dFdx.row(a) + Bdwdx.transpose());
       }
     }
@@ -52,8 +52,8 @@ void midstepper(Vecr wh, int ndim, double dt, double dx, double dy, double dz,
       dGdy /= dy;
 
       for (int s = 0; s < N1N1; s++) {
-        Bdot(Bdwdx, w.row(s), dwdx.row(s), 0);
-        Bdot(Bdwdy, w.row(s), dwdy.row(s), 1);
+        Bdot(Bdwdx, w.row(s), dwdx.row(s), 0, MP);
+        Bdot(Bdwdy, w.row(s), dwdy.row(s), 1, MP);
         w.row(s) -= dt / 2 * (dFdx.row(s) + dGdy.row(s) + Bdwdx.transpose() +
                               Bdwdy.transpose());
       }

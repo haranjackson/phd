@@ -7,6 +7,7 @@ const int STIFFENED_GAS = 0;
 const int SHOCK_MG = 1;
 const int JWL = 2;
 const int COCHRAN_CHAN = 3;
+const int GODUNOV_ROMENSKI = 4;
 
 double Γ_MG(double ρ, Par &MP);
 double p_ref(double ρ, Par &MP);

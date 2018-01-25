@@ -17,7 +17,7 @@ Matn2_V rhs1(Matn2_Vr q, Matn2_Vr Ww, double dt, double dx, Par &MP) {
   for (int t = 0; t < N1; t++)
     for (int i = 0; i < N1; i++) {
       source(ret.row(ind), q.row(ind), MP);
-      Bdot(tmp, q.row(ind), dq_dx.row(ind), 0);
+      Bdot(tmp, q.row(ind), dq_dx.row(ind), 0, MP);
       ret.row(ind) -= tmp;
       ret.row(ind) *= WGHTS(t) * WGHTS(i);
       flux(F.row(ind), q.row(ind), 0, MP);
@@ -55,8 +55,8 @@ Matn3_V rhs2(Matn3_Vr q, Matn3_Vr Ww, double dt, double dx, double dy,
     for (int i = 0; i < N1; i++)
       for (int j = 0; j < N1; j++) {
         source(ret.row(ind), q.row(ind), MP);
-        Bdot(tmpx, q.row(ind), dq_dx.row(ind), 0);
-        Bdot(tmpy, q.row(ind), dq_dy.row(ind), 1);
+        Bdot(tmpx, q.row(ind), dq_dx.row(ind), 0, MP);
+        Bdot(tmpy, q.row(ind), dq_dy.row(ind), 1, MP);
         ret.row(ind) -= tmpx + tmpy;
         ret.row(ind) *= WGHTS(t) * WGHTS(i) * WGHTS(j);
         flux(F.row(ind), q.row(ind), 0, MP);
@@ -143,11 +143,11 @@ void hidalgo_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
       else
           DT = dt * (NODES(t) - NODES(t-1));
 
-      Mat dqdxt = dot(derivs, qt);
+      Mat dqdxt = derivs.dot(qt);
 
       for (int i=0; i<N1; i++)
       {
-          M = dot(system_conserved(qi, 0, PAR, SYS), dqdxt[i]);
+          M = system_conserved(qi, 0, PAR, SYS).dot(dqdxt[i]);
           S = source(qt[i], PAR, SYS);
 
           if (superStiff)

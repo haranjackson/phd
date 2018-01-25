@@ -1,4 +1,4 @@
-from numpy import dot, eye
+from numpy import dot, eye, outer
 
 from gpr.misc.functions import AdevG, gram
 from gpr.variables import mg
@@ -58,6 +58,19 @@ def dsigmadA(ρ, A, MP):
         ret[:, i, :, i] += AdevGT
 
     return -ρ * cs2 * ret
+
+
+def dsigmadAdd(ρ, A, d, MP):
+    """ Returns dσ_dj / dA_md, holding ρ constant.
+        NOTE: Only valid for EOS with E_2A = cs^2/4 * |devG|^2
+    """
+    cs2 = c_s2(ρ, MP)
+    G = gram(A)
+    ret = AdevG(A, G)
+    ret[:,d] *= 2
+    ret += 1/3 * outer(A[:,d],G[d])
+    ret += G[d,d] * A
+    return -ρ * cs2 * ret.T
 
 
 def dsigmadρ(ρ, A, MP):

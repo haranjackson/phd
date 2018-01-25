@@ -4,17 +4,14 @@
 #include "../variables/state.h"
 
 double theta_1(VecVr Q, Par &MP) {
-  // Returns the function used in the source terms for the distortion tensor
-  // NB May be more suitable to use a different form for other fluids/solids
+  // Returns the relaxation parameter for the distortion tensor
   Mat3_3Map A = get_A(Q);
-  double den = pow(det(A), 5. / 3.);
+  double den = pow(A.determinant(), 5. / 3.);
   return (MP.B0 * MP.τ1) / (3 * den);
 }
 
 double theta_2(VecVr Q, Par &MP) {
-  // Returns the function used in the source terms for the thermal impulse
-  // vector
-  // NB May be more suitable to use a different form for other fluids/solids
+  // Returns the relaxation parameter for the thermal impulse vector
   double ρ = Q(0);
   double p = pressure(Q, MP);
   double T = temperature(ρ, p, MP);

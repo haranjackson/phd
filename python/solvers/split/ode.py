@@ -73,11 +73,11 @@ def ode_stepper_analytical(u, dt, MP):
         ρ = Q[0]
         A = Q[5:14].reshape([3, 3])
 
-        if VISCOUS:
+        if MP.VISCOUS:
             A1 = solver_approximate_analytic(A, dt, MP)
             Q[5:14] = A1.ravel()
 
-        if THERMAL:
+        if MP.THERMAL:
             J = Q[14:17] / ρ
             E = Q[1] / ρ
             v = Q[2:5] / ρ

@@ -23,26 +23,15 @@ from solvers.fv.fv import fv_terms, centers, interfaces, extend_dimensions, endp
 
 from tests_1d.fluids import viscous_shock_IC
 
-from options import dx, N1, SPLIT, nx, ny, nz, ndim, nV
+from options import dx, N, SPLIT, nx, ny, nz, ndim, nV
+
 
 ### ENSURE N,V are equal ###
 
 
-γ = 1.4
-cv = 2.5
-pINF = 0
-ρ0 = 1
-p0 = 1
-cs = 2
-μ = 1e-3
-cα = 1.5
-κ = 1e-4
+u0, MPs, _ = viscous_shock_IC()
+MP = MPs[0]
 
-d = 0
-dt = 0.0001
-
-MP = material_parameters(EOS='sg', ρ0=ρ0, cv=cv, p0=p0,
-                          γ=γ, pINF=pINF, b0=cs, cα=cα, μ=μ, κ=κ)
 
 def generate_vector():
     A = rand(3,3)
@@ -87,7 +76,7 @@ print("B    diff =", diff(B_cp, B_py))
 Bx_cp = zeros(nV)
 Bx_py = zeros(nV)
 x = rand(nV)
-GPRpy.system.Bdot(Bx_cp, Q, x, d)
+GPRpy.system.Bdot(Bx_cp, Q, x, d, MP)
 Bdot(Bx_py, x, Q, d, MP)
 
 print("Bdot diff =", diff(Bx_cp, Bx_py))
@@ -101,13 +90,13 @@ ucp = upy.ravel()
 
 if ndim==1:
     wh_py = weno_launcher(upy).ravel()
-    wh_cp = zeros((nx+2)*(ny)*(nz)*N1*1*1*nV)
+    wh_cp = zeros((nx+2)*(ny)*(nz)*N*nV)
 elif ndim==2:
     wh_py = weno_launcher(upy).ravel()
-    wh_cp = zeros((nx+2)*(ny+2)*(nz)*N1*N1*1*nV)
+    wh_cp = zeros((nx+2)*(ny+2)*(nz)*N*N*nV)
 else:
     wh_py = weno_launcher(upy).ravel()
-    wh_cp = zeros((nx+2)*(ny+2)*(nz+2)*N1*N1*N1*nV)
+    wh_cp = zeros((nx+2)*(ny+2)*(nz+2)*N*N*N*nV)
 
 GPRpy.solvers.weno.weno_launcher(wh_cp, ucp, ndim, nx, ny, nz)
 print("WENO diff =", diff(wh_cp, wh_py))
@@ -116,14 +105,13 @@ print("WENO diff =", diff(wh_cp, wh_py))
 ### DISCONTINUOUS GALERKIN ###
 
 
-upy, _, _ = viscous_shock_IC()
-rec_py = weno_launcher(upy)
+rec_py = weno_launcher(u0)
 rec_cp = rec_py.ravel()
 
 Q = rec_py[100,0,0]
-Q_py = array([Q]*N1).reshape([N1*N1,nV])
+Q_py = array([Q]*N).reshape([N*N,nV])
 Q_cp = Q_py[:,:nV]
-Ww_py = rand(N1*N1, nV)
+Ww_py = rand(N*N, nV)
 Ww_py[:,-1] = 0
 Ww_cp = Ww_py[:,:nV]
 rhs_py = rhs(Q_py, Ww_py, dt, MP, 0)
@@ -131,12 +119,12 @@ rhs_cp = GPRpy.solvers.dg.rhs1(Q_cp, Ww_cp, dt, dx, MP)
 
 print("RHS  diff =", diff(rhs_cp, rhs_py))
 
-obj_cp = GPRpy.solvers.dg.obj1(Q_cp.ravel(), Ww_cp, dt, dx, MP).reshape([N1*N1, nV])
+obj_cp = GPRpy.solvers.dg.obj1(Q_cp.ravel(), Ww_cp, dt, dx, MP).reshape([N*N, nV])
 obj_py = rhs_py - dot(DG_U, Q_py)
 
 print("obj  diff =", diff(obj_cp, obj_py))
 
-qh_cp = zeros(len(rec_cp)*N1)
+qh_cp = zeros(len(rec_cp)*N)
 STIFF = False
 HIDALGO = False
 GPRpy.solvers.dg.predictor(qh_cp, rec_cp, ndim, dt, dx, dx, dx, STIFF, HIDALGO, MP)
@@ -158,7 +146,7 @@ Smax_py = -Smax(Q1, Q2, d, MP)
 
 print("Smax diff =", diff(Smax_cp, Smax_py))
 
-Bint_cp = GPRpy.solvers.fv.Bint(Q1, Q2, d)
+Bint_cp = GPRpy.solvers.fv.Bint(Q1, Q2, d, MP)
 Bint_py = Bint(Q1, Q2, d, MP)
 
 print("Bint diff =", diff(Bint_cp, Bint_py))
@@ -207,13 +195,13 @@ print("FV   diff =", diff(FV_cp, FV_py))
 ### SPLIT (ndim=1) ###
 
 
-mid_py = rec_py.reshape([nx,1,1,N1,nV])
+mid_py = rec_py.reshape([nx,1,1,N,nV])
 mid_cp = mid_py.ravel()
 
 weno_midstepper(mid_py, dt, MP)
 GPRpy.solvers.split.midstepper(mid_cp, 1, dt, dx, dx, dx, MP)
-mid_cp = mid_cp.reshape([nx,N1,nV])
-mid_py = mid_py.reshape([nx,N1,nV])
+mid_cp = mid_cp.reshape([nx,N,nV])
+mid_py = mid_py.reshape([nx,N,nV])
 
 print("Step diff =", diff(mid_cp, mid_py))
 

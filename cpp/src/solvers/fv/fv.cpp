@@ -27,7 +27,7 @@ void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
       else
         S.setZero(V);
 
-      Bdot(tmpx, qs, dqdxs, 0);
+      Bdot(tmpx, qs, dqdxs, 0, MP);
 
       S -= tmpx / dx;
 
@@ -70,8 +70,8 @@ void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           else
             S.setZero(V);
 
-          Bdot(tmpx, qs, dqdxs, 0);
-          Bdot(tmpy, qs, dqdys, 1);
+          Bdot(tmpx, qs, dqdxs, 0, MP);
+          Bdot(tmpy, qs, dqdys, 1, MP);
 
           S -= tmpx / dx;
           S -= tmpy / dy;
@@ -108,7 +108,7 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
     f = Smax(ql, qr, 0, PERRON_FROBENIUS, MP);
     flux(f, ql, 0, MP);
     flux(f, qr, 0, MP);
-    b = Bint(ql, qr, 0);
+    b = Bint(ql, qr, 0, MP);
 
     if (i > 0)
       u.segment<V>((i - 1) * V) -= k * (b + f);
@@ -169,12 +169,12 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
         fx = Smax(qlx, qrx, 0, PERRON_FROBENIUS, MP);
         flux(fx, qlx, 0, MP);
         flux(fx, qrx, 0, MP);
-        bx = Bint(qlx, qrx, 0);
+        bx = Bint(qlx, qrx, 0, MP);
 
         fy = Smax(qly, qry, 1, PERRON_FROBENIUS, MP);
         flux(fy, qly, 1, MP);
         flux(fy, qry, 1, MP);
-        by = Bint(qly, qry, 1);
+        by = Bint(qly, qry, 1, MP);
 
         if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {
           u.segment<V>(uind0) -= WGHTS(s) * kx * (bx + fx);

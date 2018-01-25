@@ -20,7 +20,7 @@ from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.favrie2_IC
+IC = fluids.heat_conduction_IC
 BC = boundaries.standard_BC
 
 

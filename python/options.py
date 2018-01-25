@@ -20,7 +20,7 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 
 """ Solver Options """
 
-USE_CPP = 0                 # Whether to use compiled C++
+USE_CPP = 1                 # Whether to use compiled C++
 SPLIT   = 0                 # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)

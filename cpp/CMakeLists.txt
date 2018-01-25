@@ -48,14 +48,17 @@ SET(SRCS src/etc/globals.cpp
          src/system/functions/matrices.cpp
          src/system/functions/vectors.cpp
 
+         src/system/variables/derivatives.cpp
          src/system/variables/eos.cpp
          src/system/variables/materials.cpp
          src/system/variables/mg.cpp
+         src/system/variables/shear.cpp
          src/system/variables/state.cpp
+         src/system/variables/wavespeeds.cpp
    )
 
-set(SRCS_EXEC ${SRCS} src/main.cpp)
-add_executable(${PROJECT_NAME} ${SRCS_EXEC})
+#set(SRCS_EXEC ${SRCS} src/main.cpp)
+#add_executable(${PROJECT_NAME} ${SRCS_EXEC})
 
 set(SRCS_SO ${SRCS} bindings/bindings.cpp)
 add_library(${BINDINGS_NAME} SHARED ${SRCS_SO})

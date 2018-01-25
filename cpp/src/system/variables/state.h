@@ -6,9 +6,11 @@
 
 double pressure(VecVr Q, Par &MP);
 
-Mat3_3 sigma(VecVr Q, Par &MP);
-
 Vec3 sigma(VecVr Q, Par &MP, int d);
+
+Vec3 dsigmadρ(VecVr Q, Par &MP, int d);
+
+Mat3_3 dsigmadA(VecVr Q, Par &MP, int d);
 
 double temperature(double ρ, double p, Par &MP);
 

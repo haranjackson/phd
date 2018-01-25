@@ -2,14 +2,14 @@
 #include "../../system/eig.h"
 #include "../../system/equations.h"
 
-VecV Bint(VecVr qL, VecVr qR, int d) {
+VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
   // Returns the jump matrix for B, in the dth direction.
   VecV ret = VecV::Zero();
   VecV qJump = qR - qL;
   VecV q, tmp;
   for (int i = 0; i < N + 1; i++) {
     q = qL + NODES(i) * qJump;
-    Bdot(tmp, q, qJump, d);
+    Bdot(tmp, q, qJump, d, MP);
     ret += WGHTS(i) * tmp;
   }
   return ret;
@@ -32,6 +32,6 @@ def Aint(pL, pR, qL, qR, d, PAR, SYS):
         J = system_conserved(q, d, PAR, SYS)
         λ, R = eig(J, overwrite_a=1, check_finite=0)
         b = solve(R, Δq, check_finite=0)
-        ret += weights[i] * dot(R, abs(λ)*b)
+        ret += weights[i] * R.dot(abs(λ)*b)
     return ret.real
 */
