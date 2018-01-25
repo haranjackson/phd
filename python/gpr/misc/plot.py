@@ -177,12 +177,12 @@ def colors(n):
 
 
 def plot_weno(wh, var, MPs=None):
-    n, _, _, N1, nV = wh.shape
-    x = zeros(N1 * n)
-    u = zeros([N1 * n, 1, 1, nV])
+    n, _, _, N, nV = wh.shape
+    x = zeros(N * n)
+    u = zeros([N * n, 1, 1, nV])
     for i in range(n):
-        ind = N1 * i
-        for j in range(N1):
+        ind = N * i
+        for j in range(N):
             x[ind + j] = i + NODES[j]
             u[ind + j] = wh[i, 0, 0, j]
 
@@ -197,11 +197,11 @@ def plot_weno(wh, var, MPs=None):
 
 
 def plot_dg(qh, var, t, MPs=None):
-    n, _, _, N1, _, nV = qh.shape
-    wh = zeros([n, 1, 1, N1, nV])
+    n, _, _, N, _, nV = qh.shape
+    wh = zeros([n, 1, 1, N, nV])
     for i in range(n):
-        for j in range(N1):
-            for k in range(N1):
+        for j in range(N):
+            for k in range(N):
                 wh[i, 0, 0, j] += PSI[k](t) * qh[i, 0, 0, k, j]
 
     plot_weno(wh, var, MPs)

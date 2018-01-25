@@ -4,15 +4,15 @@ from numpy import concatenate, diag, eye, ones, zeros
 
 from solvers.basis import NODES, WGHTS, PSI, PSID, DERVALS
 from gpr.misc.functions import kron_prod
-from options import ndim, N1, NT, nV
+from options import ndim, N, NT, nV
 
 
 # Inner products required for Galerkin matrices
-I11 = zeros([N1, N1])                           # I11[a,b] = ψ_a(1) * ψ_b(1)
-I1 = zeros([N1, N1])                            # I1[a,b] = ψ_a • ψ_b
-I2 = zeros([N1, N1])                            # I2[a,b] = ψ_a • ψ_b'
-I = eye(N1)
-for a, b in product(range(N1), range(N1)):
+I11 = zeros([N, N])                           # I11[a,b] = ψ_a(1) * ψ_b(1)
+I1 = zeros([N, N])                            # I1[a,b] = ψ_a • ψ_b
+I2 = zeros([N, N])                            # I2[a,b] = ψ_a • ψ_b'
+I = eye(N)
+for a, b in product(range(N), range(N)):
     I11[a, b] = PSI[a](1) * PSI[b](1)
     if a == b:
         I1[a, b] = WGHTS[a]
@@ -22,7 +22,7 @@ for a, b in product(range(N1), range(N1)):
 
 
 # Galerkin matrices
-DG_W = concatenate([PSI[a](0) * kron_prod([I1] * ndim) for a in range(N1)])
+DG_W = concatenate([PSI[a](0) * kron_prod([I1] * ndim) for a in range(N)])
 
 DG_U = kron_prod([I11 - I2.T] + [I1] * ndim)
 

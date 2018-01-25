@@ -15,12 +15,12 @@ from etc.save import Data, print_stats, save_all
 from multi.gfm import add_ghost_cells
 from solvers.solvers import ader_stepper, split_stepper
 
-from options import nx, ny, nz, nV, dx, dy, dz, ndim, N1
+from options import nx, ny, nz, nV, dx, dy, dz, ndim, N
 from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.barton2_IC
+IC = solids.favrie2_IC
 BC = boundaries.standard_BC
 
 
@@ -34,8 +34,8 @@ pool = Parallel(n_jobs=NCORE)
 if USE_CPP:
     extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
     ub = zeros(extDims * nV)
-    wh = zeros(extDims * int(pow(N1, ndim)) * nV)
-    qh = zeros(extDims * int(pow(N1, ndim + 1)) * nV)
+    wh = zeros(extDims * int(pow(N, ndim)) * nV)
+    qh = zeros(extDims * int(pow(N, ndim + 1)) * nV)
 
 
 def main(t, tf, count, data):

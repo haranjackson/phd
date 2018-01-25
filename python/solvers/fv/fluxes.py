@@ -3,7 +3,7 @@ from scipy.linalg import eig, solve
 
 from solvers.basis import NODES, WGHTS
 from system import Bdot, system, max_eig
-from options import N1, nV
+from options import N, nV
 
 
 def Bint(qL, qR, d, MP):
@@ -11,7 +11,7 @@ def Bint(qL, qR, d, MP):
     """
     ret = zeros(nV)
     qJump = qR - qL
-    for i in range(N1):
+    for i in range(N):
         q = qL + NODES[i] * qJump
         tmp = zeros(nV)
         Bdot(tmp, qJump, q, d, MP)
@@ -24,7 +24,7 @@ def Aint(qL, qR, d, MP):
     """
     ret = zeros(nV, dtype=complex128)
     Δq = qR - qL
-    for i in range(N1):
+    for i in range(N):
         q = qL + NODES[i] * Δq
         J = system(q, d, MP)
         λ, R = eig(J, overwrite_a=1, check_finite=0)

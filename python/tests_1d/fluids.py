@@ -1,14 +1,12 @@
-from itertools import product
-
-from numpy import array, eye, zeros, arange, around, concatenate, exp, int64, ones, sqrt
+from numpy import array, eye, arange, exp, sqrt, zeros
 from scipy.optimize import brentq
 from scipy.special import erf
 
 from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec, Cvec_to_Pclass
+from gpr.misc.structures import Cvec
 from gpr.variables.wavespeeds import c_0
 from tests_1d.common import riemann_IC, MP_AIR
-from options import nx, ny, nz, nV, dx, Lx, RGFM
+from options import nx, nV, Lx, N
 
 
 def heat_conduction_IC():
@@ -26,6 +24,7 @@ def heat_conduction_IC():
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
                              b0=1, cα=2, μ=1e-2, κ=1e-2)
 
+    print("HEAT CONDUCTION IN A GAS: N =", N)
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
@@ -53,6 +52,7 @@ def first_stokes_problem_IC():
     MP = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0,
                              b0=1, cα=1e-16, μ=μ, Pr=0.75)
 
+    print("FIST STOKES PROBLEM: N =", N, "μ =", μ)
     return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP)
 
 
@@ -76,7 +76,7 @@ def viscous_shock_exact(x, Ms, MP, μ, center=0):
     elif x < -l:
         x = -l
 
-    c0 = c_0(ρ0, p0, MP)
+    c0 = c_0(ρ0, p0, eye(3), MP)
     a = 2 / (Ms**2 * (γ + 1)) + (γ - 1) / (γ + 1)
     Re = ρ0 * c0 * Ms / μ
     c1 = ((1 - a) / 2)**(1 - a)
@@ -125,6 +125,7 @@ def viscous_shock_IC(center=0):
         A = (ρ[i])**(1 / 3) * eye(3)
         J = zeros(3)
         λ = 0
-        u[i, 0, 0] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
+        u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
+    print("VISCOUS SHOCK: N =", N)
     return u, [MP], tf

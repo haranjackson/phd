@@ -8,7 +8,7 @@ from scipy.optimize import newton_krylov
 from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_Z, DG_T
 from solvers.basis import GAPS, DERVALS
 from system import source, flux_ref, source_ref, Bdot, system
-from options import ndim, dx, N1, NT, nV
+from options import ndim, dx, N, NT, nV
 from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, MAX_ITER, PARA_DG, NCORE
 
 
@@ -47,21 +47,21 @@ def rhs(q, Ww, dt, MP, HOMOGENEOUS):
 def standard_initial_guess(w):
     """ Returns a Galerkin intial guess consisting of the value of q at t=0
     """
-    ret = array([w for i in range(N1)])
+    ret = array([w for i in range(N)])
     return ret.reshape([NT, nV])
 
 
 def hidalgo_initial_guess(w, dtGAPS, MP, HOMOGENEOUS):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
     """
-    q = zeros([N1] * (ndim + 1) + [nV])
+    q = zeros([N] * (ndim + 1) + [nV])
     qt = w
 
-    for t in range(N1):
+    for t in range(N):
         dt = dtGAPS[t]
         dqdxj = dot(DERVALS, qt)
 
-        for i in range(N1):
+        for i in range(N):
             qi = qt[i]
             dqdxi = dqdxj[i]
 
@@ -95,7 +95,7 @@ def predictor(wh, dt, MP, HOMOGENEOUS=0):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     nx, ny, nz, = wh.shape[:3]
-    wh = wh.reshape([nx, ny, nz, N1**ndim, nV])
+    wh = wh.reshape([nx, ny, nz, N**ndim, nV])
     qh = zeros([nx, ny, nz, NT, nV])
     dtGAPS = dt * GAPS
 

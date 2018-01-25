@@ -1,12 +1,10 @@
-from itertools import product
-
 from numpy import array, eye, zeros
 
 from etc.boundaries import standard_BC
 from gpr.misc.structures import Cvec
 from gpr.variables.hyp import Cvec_hyp
 from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG, MP_COP_SMG_P, MP_ALU_SG
-from options import nx, ny, nz, nV, dx
+from options import nx, nV, dx, N
 
 
 def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP):
@@ -14,13 +12,13 @@ def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP):
     QL = Cvec_hyp(FL, SL, vL, HYP)
     QR = Cvec_hyp(FR, SR, vR, HYP)
 
-    u = zeros([nx, ny, nz, nV])
+    u = zeros([nx, 1, 1, nV])
 
-    for i, j, k in product(range(nx), range(ny), range(nz)):
+    for i in range(nx):
         if i * dx < 0.5:
-            u[i, j, k] = QL
+            u[i] = QL
         else:
-            u[i, j, k] = QR
+            u[i] = QR
 
     return u, [MP], tf
 
@@ -41,6 +39,7 @@ def barton1_IC():
                 [0, 0, 1]])
     SR = 0
 
+    print("BARTON1: N =", N)
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
@@ -60,6 +59,7 @@ def barton2_IC():
                 [-0.01, 0, 0.9]])
     SR = 0
 
+    print("BARTON2: N =", N)
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
@@ -79,6 +79,7 @@ def elastic1_IC():
     vR = zeros(3)
     SR = 0
 
+    print("ELASTIC1: N =", N)
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
 
@@ -98,6 +99,7 @@ def elastic2_IC():
     vR = zeros(3)
     SR = 0
 
+    print("ELASTIC2: N =", N)
     return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
 
 
@@ -113,18 +115,18 @@ def piston_IC():
     J = zeros(3)
     Q = Cvec(ρ, p, v, A, J, MP)
 
-    u = zeros([nx, ny, nz, nV])
+    u = zeros([nx, 1, 1, nV])
 
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        u[i, j, k] = Q
+    for i in range(nx):
+        u[i] = Q
 
+    print("ELASTO-PLASTIC PISTON: N =", N)
     return u, [MP], tf
 
 
 def piston_BC(u):
     ret = standard_BC(u)
-    for j, k in product(range(ny), range(nz)):
-        ret[0, j, k, 2:5] = ret[0, j, k, 0] * array([0.002, 0, 0])
+    ret[0, 0, 0, 2:5] = ret[0, 0, 0, 0] * array([0.002, 0, 0])
     return ret
 
 
@@ -145,14 +147,15 @@ def favrie1_IC():
     QL = Cvec(ρ, p, vL, A, J, MP)
     QR = Cvec(ρ, p, vR, A, J, MP)
 
-    u = zeros([nx, ny, nz, nV])
+    u = zeros([nx, 1, 1, nV])
 
-    for i, j, k in product(range(nx), range(ny), range(nz)):
+    for i in range(nx):
         if i * dx < 0.5:
-            u[i, j, k] = QL
+            u[i] = QL
         else:
-            u[i, j, k] = QR
+            u[i] = QR
 
+    print("FAVRIE1: N =", N)
     return u, [MP], tf
 
 
@@ -173,12 +176,13 @@ def favrie2_IC():
     QL = Cvec(ρ, p, vL, A, J, MP)
     QR = Cvec(ρ, p, vR, A, J, MP)
 
-    u = zeros([nx, ny, nz, nV])
+    u = zeros([nx, 1, 1, nV])
 
-    for i, j, k in product(range(nx), range(ny), range(nz)):
+    for i in range(nx):
         if i * dx < 0.5:
-            u[i, j, k] = QL
+            u[i] = QL
         else:
-            u[i, j, k] = QR
+            u[i] = QR
 
+    print("FAVRIE2: N =", N)
     return u, [MP], tf

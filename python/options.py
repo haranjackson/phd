@@ -27,7 +27,7 @@ NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
 STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
-N   = 1                     # Method is order N+1
+N   = 2                     # Order of the method
 CFL = 0.6                   # CFL number
 OSHER = 0                   # Whether to use Osher flux (else Rusanov flux)
 PERRON_FROB = 0             # Use Perron-Frobenius approximation to max λ
@@ -58,8 +58,7 @@ NCORE = 4                   # Number of cores used if running in parallel
 """ Derived Values """
 
 ndim = (nx > 1) + (ny > 1) + (nz > 1)
-N1 = N + 1
-NT = N1**(ndim + 1)
+NT = N**(ndim + 1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz

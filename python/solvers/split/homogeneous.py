@@ -4,12 +4,12 @@ from numpy import dot, tensordot, zeros
 
 from solvers.basis import DERVALS
 from system import Bdot, flux, system
-from options import nV, dx, dy, N1, ndim
+from options import nV, dx, dy, N, ndim
 
 
 def derivative(X, dim):
     """ Returns the derivative of polynomial coefficients X with respect to
-        dimension dim. X can be of shape (N1,...) or (N1,N1,...)
+        dimension dim. X can be of shape (N,...) or (N,N,...)
     """
     if dim == 0:
         return tensordot(DERVALS, X, (1, 0)) / dx
@@ -24,8 +24,8 @@ def weno_midstepper(wh, dt, MP):
 
     nx, ny, nz = wh.shape[:3]
 
-    F = zeros([N1] * ndim + [nV])
-    G = zeros([N1] * ndim + [nV])
+    F = zeros([N] * ndim + [nV])
+    G = zeros([N] * ndim + [nV])
     Bdwdx = zeros(nV)
     Bdwdy = zeros(nV)
 
@@ -37,14 +37,14 @@ def weno_midstepper(wh, dt, MP):
         if ndim == 1:
 
             if USE_JACOBIAN:
-                for a in range(N1):
+                for a in range(N):
                     Mx = system(w[a], 0, MP)
                     w[a] -= dt / 2 * dot(Mx, dwdx[a])
             else:
-                for a in range(N1):
+                for a in range(N):
                     F[a] = flux(w[a], 0, MP)
                 dFdx = derivative(F, 0)
-                for a in range(N1):
+                for a in range(N):
                     Bdot(Bdwdx, dwdx[a], w[a], 0, MP)
                     w[a] -= dt / 2 * (dFdx[a] + Bdwdx)
 
@@ -53,18 +53,18 @@ def weno_midstepper(wh, dt, MP):
             dwdy = derivative(w, 1)
 
             if USE_JACOBIAN:
-                for a, b in product(range(N1), range(N1)):
+                for a, b in product(range(N), range(N)):
                     Mx = system(w[a, b], 0, MP)
                     My = system(w[a, b], 1, MP)
                     w[a, b] -= dt / 2 * \
                         (dot(Mx, dwdx[a, b]) + dot(My, dwdy[a, b]))
             else:
-                for a, b in product(range(N1), range(N1)):
+                for a, b in product(range(N), range(N)):
                     F[a, b] = flux(w[a, b], 0, MP)
                     G[a, b] = flux(w[a, b], 1, MP)
                 dFdx = derivative(F, 0)
                 dGdy = derivative(G, 1)
-                for a, b in product(range(N1), range(N1)):
+                for a, b in product(range(N), range(N)):
                     Bdot(Bdwdx, dwdx[a, b], w[a, b], 0, MP)
                     Bdot(Bdwdy, dwdy[a, b], w[a, b], 1, MP)
                     w[a, b] -= dt / 2 * \

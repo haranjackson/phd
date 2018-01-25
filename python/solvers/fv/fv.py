@@ -6,7 +6,7 @@ from numpy import array, concatenate, dot, einsum, tensordot, zeros
 from solvers.fv.fluxes import Bint, Aint, Smax
 from solvers.basis import WGHTS, ENDVALS, DERVALS
 from system import Bdot, source_ref, flux_ref
-from options import ndim, nV, dx, N1, OSHER, SPLIT, PARA_FV, NCORE
+from options import ndim, nV, dx, N, OSHER, SPLIT, PARA_FV, NCORE
 
 
 if OSHER:
@@ -20,7 +20,7 @@ if SPLIT:
     tN = 1
 else:
     tWGHTS = [WGHTS]
-    tN = N1
+    tN = N
 
 
 wghtList = tWGHTS + [WGHTS] * ndim + [array([1])] * (3 - ndim)
@@ -29,8 +29,8 @@ wghtListEnd = tWGHTS + [WGHTS] * (ndim - 1) + [array([1])] * (3 - ndim)
 wght = einsum('t,x,y,z', wghtList[0], wghtList[1], wghtList[2], wghtList[3])
 wghtEnd = einsum('t,x,y', wghtListEnd[0], wghtListEnd[1], wghtListEnd[2])
 
-IDX = [tN] + [N1] * ndim + [1] * (3 - ndim)
-IDX_END = [tN] + [N1] * (ndim - 1) + [1] * (3 - ndim)
+IDX = [tN] + [N] * ndim + [1] * (3 - ndim)
+IDX_END = [tN] + [N] * (ndim - 1) + [1] * (3 - ndim)
 
 
 def endpoints(qh0):

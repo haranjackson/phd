@@ -23,17 +23,18 @@ def weno_primitive(q, MP):
     pav = zeros(qav.shape)
     nx, ny, nz = qav.shape[:3]
     for i, j, k in product(range(nx), range(ny), range(nz)):
-        pav[i,j,k] = Cvec_to_Pvec(qav[i,j,k], MP)
+        pav[i, j, k] = Cvec_to_Pvec(qav[i, j, k], MP)
     return weno(pav)
 
+
 def expand_weno(wh):
-    nx, ny, _, N1, _, nvar = wh.shape
-    ret = zeros([nx*N1, ny*N1, nvar])
+    nx, ny, _, N, _, nvar = wh.shape
+    ret = zeros([nx * N, ny * N, nvar])
     for i in range(nx):
         for j in range(ny):
-            for ii in range(N1):
-                for jj in range(N1):
-                    indi = i*N1+ii
-                    indj = j*N1+jj
-                    ret[indi,indj] = wh[i,j,0,ii,jj]
+            for ii in range(N):
+                for jj in range(N):
+                    indi = i * N + ii
+                    indj = j * N + jj
+                    ret[indi, indj] = wh[i, j, 0, ii, jj]
     return ret
