@@ -1,3 +1,4 @@
+#include "../../etc/debug.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
 #include "../objects/gpr_objects.h"
@@ -42,10 +43,10 @@ Mat3_3 dsigmadA(VecVr Q, Par &MP, int d) {
   double cs2 = c_s2(ρ, MP);
   Mat3_3Map A = get_A(Q);
   Mat3_3 G = A.transpose() * A;
-  Mat3_3 ret = AdevG(A);
 
+  Mat3_3 ret = AdevG(A);
   ret.col(d) *= 2.;
-  ret += 1 / 3 * A.col(d) * G.row(d);
+  ret += 1. / 3. * A.col(d) * G.row(d);
   ret += G(d, d) * A;
   return -ρ * cs2 * ret.transpose();
 }

@@ -1,3 +1,4 @@
+#include "../etc/debug.h"
 #include "functions/matrices.h"
 #include "functions/vectors.h"
 #include "objects/gpr_objects.h"
@@ -5,19 +6,15 @@
 #include "variables/state.h"
 #include "variables/wavespeeds.h"
 
-double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP) {
-  // Returns the maximum of the absolute values of  the eigenvalues of the GPR
-  // system
-
+Mat4_4 thermo_acoustic_tensor(VecVr Q, int d, Par &MP) {
   double ρ = Q(0);
-  double vd = Q(2 + d) / ρ;
   Mat3_3Map A = get_A(Q);
 
   double p = pressure(Q, MP);
   double T = temperature(ρ, p, MP);
 
-  Mat Xi1(4, 5);
-  Mat Xi2(5, 4);
+  Mat Xi1 = Mat::Zero(4, 5);
+  Mat Xi2 = Mat::Zero(5, 4);
 
   double c0 = c_0(ρ, p, A, MP);
   Xi1(0, 1) = 1 / ρ;
@@ -33,7 +30,6 @@ double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP) {
     Xi2.block<1, 3>(1, 0) += σ - ρ * dσdρ;
     Xi2.bottomLeftCorner(3, 3) = A;
   }
-
   if (MP.THERMAL) {
     double ch = c_h(ρ, T, MP);
     double dT_dρ = dTdρ(ρ, p, MP);
@@ -42,8 +38,14 @@ double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP) {
     Xi1(3, 1) = dT_dp / ρ;
     Xi2(1, 3) = ρ * ch * ch / dT_dp;
   }
+  return Xi1 * Xi2;
+}
 
-  Mat4_4 O = Xi1 * Xi2;
+double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP) {
+  // Returns the maximum of the absolute values of  the eigenvalues of the GPR
+  // system
+  Mat4_4 O = thermo_acoustic_tensor(Q, d, MP);
+  double vd = Q(2 + d) / Q(0);
 
   double lam;
   if (PERRON_FROBENIUS) {

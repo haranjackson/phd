@@ -9,7 +9,8 @@ from numpy.random import rand
 import GPRpy
 
 from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec, Cvec_to_Pvec
+from gpr.misc.structures import Cvec, Cvec_to_Pvec, Cvec_to_Pclass
+from gpr.systems.eigenvalues import thermo_acoustic_tensor
 from gpr.variables.eos import total_energy
 from system import flux_ref, source_ref, block_ref, Bdot
 
@@ -31,6 +32,8 @@ from options import dx, N, SPLIT, nx, ny, nz, ndim, nV
 
 u0, MPs, _ = viscous_shock_IC()
 MP = MPs[0]
+d = 0
+dt = 0.0001
 
 
 def generate_vector():
@@ -140,6 +143,13 @@ print("DG   diff =", diff(qh_cp, qh_py))
 
 Q1 = generate_vector()
 Q2 = generate_vector()
+
+P1 = Cvec_to_Pclass(Q1,MP)
+
+TAT_py = thermo_acoustic_tensor(P1, 0)
+TAT_cp = GPRpy.system.thermo_acoustic_tensor(Q1, 0, MP)
+
+print("TAT diff  =", diff(TAT_cp, TAT_py))
 
 Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, False, MP)
 Smax_py = -Smax(Q1, Q2, d, MP)
