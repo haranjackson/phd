@@ -46,7 +46,7 @@ def plot2d(x, style, y=None):
 
 
 def plot_density(u, style='-', x=None, lab=None, col=None, sci=0):
-    figure(0)
+    figure(0, figsize=(10, 10))
     if ndim == 1:
         y = u[:, 0, 0, 0]
         plot1d(y, style, x, lab, col, 'Density', sci=sci)
@@ -56,7 +56,7 @@ def plot_density(u, style='-', x=None, lab=None, col=None, sci=0):
 
 
 def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0):
-    figure(1)
+    figure(1, figsize=(10, 10))
     if ndim == 1:
         y = u[:, 0, 0, 1] / u[:, 0, 0, 0]
         plot1d(y, style, x, lab, col, 'Total Energy', sci=sci)
@@ -67,7 +67,7 @@ def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0):
 
 def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
                   offset=0, dims=None):
-    figure(2 + i)
+    figure(2 + i, figsize=(10, 10))
     if dims == None:
         dims = ndim
     if dims == 1:
@@ -81,28 +81,28 @@ def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
 
 
 def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0):
-    figure(5 + i * 3 + j)
+    figure(5 + i * 3 + j, figsize=(10, 10))
     y = u[:, 0, 0, 5 + 3 * j + i]
     plot1d(y, style, x, lab, col, 'Distortion Component %d,%d' % (i + 1, j + 1),
            sci=sci)
 
 
 def plot_thermal_impulse(u, i, style='-', x=None, lab=None, col=None, sci=0):
-    figure(14 + i)
+    figure(14 + i, figsize=(10, 10))
     y = u[:, 0, 0, 14 + i] / u[:, 0, 0, 0]
     plot1d(y, style, x, lab, col, 'Thermal Impulse Component %d' % (i + 1),
            sci=sci)
 
 
 def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0):
-    figure(18)
+    figure(18, figsize=(10, 10))
     y = u[:, 0, 0, 17] / u[:, 0, 0, 0]
 
     plot1d(y, style, x, lab, col, 'Concentration', sci=sci)
 
 
 def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(19)
+    figure(19, figsize=(10, 10))
     n = len(u)
     y = zeros(n)
 
@@ -115,7 +115,7 @@ def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
 
 
 def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(20)
+    figure(20, figsize=(10, 10))
     n = len(u)
     y = zeros(n)
 
@@ -128,7 +128,7 @@ def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
 
 
 def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(21 + i * 3 + j)
+    figure(21 + i * 3 + j, figsize=(10, 10))
     n = len(u)
     y = zeros(n)
 
@@ -142,7 +142,7 @@ def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0):
 
 
 def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(30 + i)
+    figure(30 + i, figsize=(10, 10))
     n = len(u)
     y = zeros(n)
 
@@ -155,7 +155,7 @@ def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0):
 
 
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0):
-    figure(34)
+    figure(34, figsize=(10, 10))
     y = u[:, 0, 0, var]
     plot1d(y, style, x, lab, col, 'Variable %d' % var, sci=sci)
 
