@@ -15,12 +15,12 @@ from etc.save import Data, print_stats, save_all
 from multi.gfm import add_ghost_cells
 from solvers.solvers import ader_stepper, split_stepper
 
-from options import nx, ny, nz, nV, dx, dy, dz, ndim, N
-from options import NCORE, RGFM, SPLIT, USE_CPP, STRANG, HALF_STEP, PERRON_FROB
+from options import nx, ny, nz, nV, dx, dy, dz, ndim, N, NCORE, CFL
+from options import RGFM, SPLIT, USE_CPP, FULL_CPP, STRANG, HALF_STEP, PERRON_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = fluids.heat_conduction_IC
+IC = solids.barton1_IC
 BC = boundaries.standard_BC
 
 
@@ -43,56 +43,64 @@ def main(t, tf, count, data):
     tStart = time()
     u = data[count].grid
 
-    while t < tf:
+    if FULL_CPP:
+        u1 = u.ravel()
+        GPRpy.solvers.iterator(u1, tf, nx, ny, nz, dx, dy, dz, CFL,
+                               False, SPLIT, STRANG, HALF_STEP,
+                               PERRON_FROB, MPs[0])
+        data.append(Data(u1.reshape(u.shape), t))
 
-        t0 = time()
+    else:
+        while t < tf:
 
-        mats = array([u for i in range(m)])
-        dt = timestep(mats, count, t, tf, MPs)
+            t0 = time()
 
-        if RGFM:
-            add_ghost_cells(mats, MPs, dt)
+            mats = array([u for i in range(m)])
+            dt = timestep(mats, count, t, tf, MPs)
 
-        print_stats(count, t, dt)
+            if RGFM:
+                add_ghost_cells(mats, MPs, dt)
 
-        for i in range(m):
+            print_stats(count, t, dt)
 
-            mat = mats[i]
+            for i in range(m):
 
-            if USE_CPP:
-                tmp = mat.ravel()
-                MP = MPs[i]
+                mat = mats[i]
 
-                if SPLIT:
-                    GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
-                                                dt, dx, dy, dz, False,
-                                                bool(STRANG), bool(HALF_STEP),
-                                                bool(PERRON_FROB), MP)
+                if USE_CPP:
+                    tmp = mat.ravel()
+                    MP = MPs[i]
+
+                    if SPLIT:
+                        GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
+                                                    dt, dx, dy, dz, False,
+                                                    bool(STRANG), bool(HALF_STEP),
+                                                    bool(PERRON_FROB), MP)
+                    else:
+                        GPRpy.solvers.ader_stepper(tmp, ub, wh, qh, ndim, nx, ny, nz,
+                                                   dt, dx, dy, dz, False,
+                                                   bool(PERRON_FROB), MP)
+
+                    mat = tmp.reshape([nx, ny, nz, nV])
+
                 else:
-                    GPRpy.solvers.ader_stepper(tmp, ub, wh, qh, ndim, nx, ny, nz,
-                                               dt, dx, dy, dz, False,
-                                               bool(PERRON_FROB), MP)
+                    MP = MPs[i]
 
-                mat = tmp.reshape([nx, ny, nz, nV])
+                    if SPLIT:
+                        split_stepper(pool, mat, BC, dt, MP)
+                    else:
+                        ader_stepper(pool, mat, BC, dt, MP)
 
-            else:
-                MP = MPs[i]
+            u = make_u(mats)
+            data.append(Data(u, t))
 
-                if SPLIT:
-                    split_stepper(pool, mat, BC, dt, MP)
-                else:
-                    ader_stepper(pool, mat, BC, dt, MP)
+            if RGFM:
+                # reinitialize level sets
+                pass
 
-        u = make_u(mats)
-        data.append(Data(u, t))
-
-        if RGFM:
-            # reinitialize level sets
-            pass
-
-        t += dt
-        count += 1
-        print('Total Time:', time() - t0, '\n')
+            t += dt
+            count += 1
+            print('Total Time:', time() - t0, '\n')
 
     print('TOTAL RUNTIME:', time() - tStart)
 

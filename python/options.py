@@ -20,8 +20,9 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 
 """ Solver Options """
 
-USE_CPP = 1                 # Whether to use compiled C++
-SPLIT   = 0                 # Whether or not to use a split solver
+USE_CPP  = 1                # Whether to use compiled C++
+FULL_CPP = 1                # Whether to use C++ time loop (=0 if USE_CPP=0)
+SPLIT    = 0                # Whether or not to use a split solver
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
@@ -62,3 +63,5 @@ NT = N**(ndim + 1)
 dx = Lx / nx
 dy = Ly / ny
 dz = Lz / nz
+if not USE_CPP:
+    FULL_CPP = 0
