@@ -27,23 +27,23 @@ Mat kron(std::vector<Mat> &mats) {
   }
 }
 
-Matn_n end_value_products(const std::vector<poly> &basis) {
+MatN_N end_value_products(const std::vector<poly> &basis) {
   // ret[i,j] = ψ_i(1) * ψ_j(1)
-  Matn_n ret;
-  int N1 = basis.size();
-  for (int i = 0; i < N1; i++)
-    for (int j = 0; j < N1; j++)
+  MatN_N ret;
+  int N = basis.size();
+  for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++)
       ret(i, j) = basis[i].eval(1) * basis[j].eval(1);
   return ret;
 }
 
-Matn_n derivative_products(const std::vector<poly> &basis, const Vecn nodes,
-                           const Vecn wghts) {
+MatN_N derivative_products(const std::vector<poly> &basis, const VecN nodes,
+                           const VecN wghts) {
   // ret[i,j] = < ψ_i , ψ_j' >
-  Matn_n ret;
-  int N1 = basis.size();
-  for (int i = 0; i < N1; i++)
-    for (int j = 0; j < N1; j++) {
+  MatN_N ret;
+  int N = basis.size();
+  for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++) {
       if (i == j)
         ret(i, j) = (pow(basis[i].eval(1), 2.) - pow(basis[i].eval(0), 2.)) / 2;
       else

@@ -7,7 +7,6 @@
 //#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 #include "../../include/eigen3/Eigen"
-
 #include "../options.h"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
@@ -18,39 +17,34 @@ typedef Eigen::Ref<Vec> Vecr;
 typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     Arr;
 
-typedef Eigen::Matrix<double, 2, N + 1, Eigen::RowMajor> Mat2_n;
+typedef Eigen::Matrix<double, 2, N, Eigen::RowMajor> Mat2_N;
 typedef Eigen::Matrix<double, V, V, Eigen::RowMajor> MatV_V;
 typedef Eigen::Matrix<double, N, V, Eigen::RowMajor> MatN_V;
-typedef Eigen::Matrix<double, N + 1, V, Eigen::RowMajor> Matn_V;
-typedef Eigen::Matrix<double, (N + 1) * (N + 1), V, Eigen::RowMajor> Matn2_V;
-typedef Eigen::Matrix<double, (N + 1) * (N + 1) * (N + 1), V, Eigen::RowMajor>
-    Matn3_V;
-typedef Eigen::Matrix<double, N + 1, N + 1, Eigen::RowMajor> Matn_n;
-typedef Eigen::Matrix<double, 2 * N + 1, V, Eigen::RowMajor> Mat2N1_V;
+typedef Eigen::Matrix<double, N * N, V, Eigen::RowMajor> MatN2_V;
+typedef Eigen::Matrix<double, N * N * N, V, Eigen::RowMajor> MatN3_V;
+typedef Eigen::Matrix<double, N, N, Eigen::RowMajor> MatN_N;
+typedef Eigen::Matrix<double, 2 * N, V, Eigen::RowMajor> Mat2N_V;
 
-typedef Eigen::Ref<Mat2_n> Mat2_nr;
+typedef Eigen::Ref<Mat2_N> Mat2_Nr;
 typedef Eigen::Ref<MatV_V> MatV_Vr;
 typedef Eigen::Ref<MatN_V> MatN_Vr;
-typedef Eigen::Ref<Matn_V> Matn_Vr;
-typedef Eigen::Ref<Matn2_V> Matn2_Vr;
-typedef Eigen::Ref<Matn3_V> Matn3_Vr;
-typedef Eigen::Ref<Matn_n> Matn_nr;
-typedef Eigen::Ref<Mat2N1_V> Mat2N1_Vr;
+typedef Eigen::Ref<MatN2_V> MatN2_Vr;
+typedef Eigen::Ref<MatN3_V> MatN3_Vr;
+typedef Eigen::Ref<MatN_N> MatN_Nr;
+typedef Eigen::Ref<Mat2N_V> Mat2N_Vr;
 
 typedef Eigen::Matrix<double, V, 1> VecV;
 typedef Eigen::Matrix<double, N, 1> VecN;
-typedef Eigen::Matrix<double, N + 1, 1> Vecn;
 
 typedef Eigen::Ref<VecV> VecVr;
 typedef Eigen::Ref<VecN> VecNr;
-typedef Eigen::Ref<Vecn> Vecnr;
 
 typedef Eigen::OuterStride<Eigen::Dynamic> OuterStride;
 typedef Eigen::Map<Mat, 0, Eigen::OuterStride<Eigen::Dynamic>> MatMap;
-typedef Eigen::Map<Matn_V, 0, Eigen::OuterStride<Eigen::Dynamic>> Matn_VMap;
-typedef Eigen::Map<Matn2_V, 0, Eigen::OuterStride<Eigen::Dynamic>> Matn2_VMap;
-typedef Eigen::Map<Matn3_V, 0, Eigen::OuterStride<Eigen::Dynamic>> Matn3_VMap;
-typedef Eigen::Map<Mat2N1_V, 0, Eigen::OuterStride<Eigen::Dynamic>> Mat2N1_VMap;
+typedef Eigen::Map<MatN_V, 0, Eigen::OuterStride<Eigen::Dynamic>> MatN_VMap;
+typedef Eigen::Map<MatN2_V, 0, Eigen::OuterStride<Eigen::Dynamic>> MatN2_VMap;
+typedef Eigen::Map<MatN3_V, 0, Eigen::OuterStride<Eigen::Dynamic>> MatN3_VMap;
+typedef Eigen::Map<Mat2N_V, 0, Eigen::OuterStride<Eigen::Dynamic>> Mat2N_VMap;
 typedef Eigen::Map<Vec, 0, Eigen::InnerStride<1>> VecMap;
 
 typedef Eigen::HouseholderQR<Mat> DecQR;

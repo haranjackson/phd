@@ -5,9 +5,9 @@
 
 Mat kron(std::vector<Mat> &mats);
 
-Matn_n end_value_products(const std::vector<poly> &basis);
+MatN_N end_value_products(const std::vector<poly> &basis);
 
-Matn_n derivative_products(const std::vector<poly> &basis, const Vecn nodes,
-                           const Vecn wghts);
+MatN_N derivative_products(const std::vector<poly> &basis, const VecN nodes,
+                           const VecN wghts);
 
 #endif // DG_MATRICES_H

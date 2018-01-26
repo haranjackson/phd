@@ -1,3 +1,4 @@
+#include "../etc/debug.h"
 #include "../etc/globals.h"
 #include "../etc/grid.h"
 #include "../system/eig.h"
@@ -36,8 +37,8 @@ void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
   double dX[4] = {dx, dy, dz, 0.};
 
   Vec ub(extDims * V);
-  Vec wh(extDims * int(pow(N1, ndim)) * V);
-  Vec qh(extDims * int(pow(N1, ndim + 1)) * V);
+  Vec wh(extDims * int(pow(N, ndim)) * V);
+  Vec qh(extDims * int(pow(N, ndim + 1)) * V);
 
   double t = 0.;
   unsigned long count = 0;
@@ -53,5 +54,7 @@ void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
     }
     t += dt;
     count += 1;
+
+    print(int(t / tf * 100.));
   }
 }

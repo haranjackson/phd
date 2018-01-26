@@ -7,7 +7,7 @@ VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
   VecV ret = VecV::Zero();
   VecV qJump = qR - qL;
   VecV q, tmp;
-  for (int i = 0; i < N + 1; i++) {
+  for (int i = 0; i < N; i++) {
     q = qL + NODES(i) * qJump;
     Bdot(tmp, q, qJump, d, MP);
     ret += WGHTS(i) * tmp;
@@ -27,7 +27,7 @@ def Aint(pL, pR, qL, qR, d, PAR, SYS):
     """
     ret = zeros(18, dtype=complex128)
     Δq = qR - qL
-    for i in range(N1):
+    for i in range(N):
         q = qL + nodes[i] * Δq
         J = system_conserved(q, d, PAR, SYS)
         λ, R = eig(J, overwrite_a=1, check_finite=0)

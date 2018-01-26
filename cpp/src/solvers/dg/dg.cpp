@@ -4,18 +4,18 @@
 #include "../../system/objects/gpr_objects.h"
 #include "../evaluations.h"
 
-Matn2_V rhs1(Matn2_Vr q, Matn2_Vr Ww, double dt, double dx, Par &MP) {
+MatN2_V rhs1(MatN2_Vr q, MatN2_Vr Ww, double dt, double dx, Par &MP) {
 
-  Matn2_V ret, F, dq_dx;
-  F.setZero(N1N1, V);
+  MatN2_V ret, F, dq_dx;
+  F.setZero(N * N, V);
   VecV tmp;
 
-  for (int t = 0; t < N1; t++)
-    dq_dx.block<N1, V>(t * N1, 0) = DERVALS * q.block<N1, V>(t * N1, 0) / dx;
+  for (int t = 0; t < N; t++)
+    dq_dx.block<N, V>(t * N, 0) = DERVALS * q.block<N, V>(t * N, 0) / dx;
 
   int ind = 0;
-  for (int t = 0; t < N1; t++)
-    for (int i = 0; i < N1; i++) {
+  for (int t = 0; t < N; t++)
+    for (int i = 0; i < N; i++) {
       source(ret.row(ind), q.row(ind), MP);
       Bdot(tmp, q.row(ind), dq_dx.row(ind), 0, MP);
       ret.row(ind) -= tmp;
@@ -24,36 +24,36 @@ Matn2_V rhs1(Matn2_Vr q, Matn2_Vr Ww, double dt, double dx, Par &MP) {
       ind += 1;
     }
 
-  for (int t = 0; t < N1; t++)
-    ret.block<N1, V>(t * N1, 0) -=
-        WGHTS(t) * DG_DER * F.block<N1, V>(t * N1, 0) / dx;
+  for (int t = 0; t < N; t++)
+    ret.block<N, V>(t * N, 0) -=
+        WGHTS(t) * DG_DER * F.block<N, V>(t * N, 0) / dx;
 
   ret *= dt;
   ret += Ww;
   return ret;
 }
 
-Matn3_V rhs2(Matn3_Vr q, Matn3_Vr Ww, double dt, double dx, double dy,
+MatN3_V rhs2(MatN3_Vr q, MatN3_Vr Ww, double dt, double dx, double dy,
              Par &MP) {
 
-  Matn3_V ret, F, G, dq_dx, dq_dy;
-  F.setZero(N1N1N1, V);
-  G.setZero(N1N1N1, V);
+  MatN3_V ret, F, G, dq_dx, dq_dy;
+  F.setZero(N * N * N, V);
+  G.setZero(N * N * N, V);
   VecV tmpx, tmpy;
 
-  for (int t = 0; t < N1; t++) {
-    derivs2d(dq_dx.block<N1N1, V>(t * N1N1, 0), q.block<N1N1, V>(t * N1N1, 0),
-             0);
-    derivs2d(dq_dy.block<N1N1, V>(t * N1N1, 0), q.block<N1N1, V>(t * N1N1, 0),
-             1);
+  for (int t = 0; t < N; t++) {
+    derivs2d(dq_dx.block<N * N, V>(t * N * N, 0),
+             q.block<N * N, V>(t * N * N, 0), 0);
+    derivs2d(dq_dy.block<N * N, V>(t * N * N, 0),
+             q.block<N * N, V>(t * N * N, 0), 1);
   }
   dq_dx /= dx;
   dq_dy /= dy;
 
   int ind = 0;
-  for (int t = 0; t < N1; t++)
-    for (int i = 0; i < N1; i++)
-      for (int j = 0; j < N1; j++) {
+  for (int t = 0; t < N; t++)
+    for (int i = 0; i < N; i++)
+      for (int j = 0; j < N; j++) {
         source(ret.row(ind), q.row(ind), MP);
         Bdot(tmpx, q.row(ind), dq_dx.row(ind), 0, MP);
         Bdot(tmpy, q.row(ind), dq_dy.row(ind), 1, MP);
@@ -64,25 +64,25 @@ Matn3_V rhs2(Matn3_Vr q, Matn3_Vr Ww, double dt, double dx, double dy,
         ind += 1;
       }
 
-  Matn3_V F2, G2;
-  for (int i = 0; i < N1N1N1; i++) {
-    F2.row(i) = WGHTS(i % N1) * F.row(i);
+  MatN3_V F2, G2;
+  for (int i = 0; i < N * N * N; i++) {
+    F2.row(i) = WGHTS(i % N) * F.row(i);
   }
-  for (int i = 0; i < N1N1; i++) {
-    G2.block<N1, V>(i * N1, 0) = DG_DER * G.block<N1, V>(i * N1, 0);
+  for (int i = 0; i < N * N; i++) {
+    G2.block<N, V>(i * N, 0) = DG_DER * G.block<N, V>(i * N, 0);
   }
 
   ind = 0;
-  for (int t = 0; t < N1; t++)
-    for (int i = 0; i < N1; i++) {
-      for (int j = 0; j < N1; j++) {
-        int indi = t * N1 + i;
-        int indj = t * N1 + j;
-        ret.block<N1, V>(indi * N1, 0) -=
-            WGHTS(t) * DG_DER(i, j) * F2.block<N1, V>(indj * N1, 0) / dx;
+  for (int t = 0; t < N; t++)
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        int indi = t * N + i;
+        int indj = t * N + j;
+        ret.block<N, V>(indi * N, 0) -=
+            WGHTS(t) * DG_DER(i, j) * F2.block<N, V>(indj * N, 0) / dx;
       }
-      ret.block<N1, V>(ind * N1, 0) -=
-          WGHTS(t) * WGHTS(i) * G2.block<N1, V>(ind * N1, 0) / dy;
+      ret.block<N, V>(ind * N, 0) -=
+          WGHTS(t) * WGHTS(i) * G2.block<N, V>(ind * N, 0) / dy;
       ind += 1;
     }
 
@@ -91,40 +91,40 @@ Matn3_V rhs2(Matn3_Vr q, Matn3_Vr Ww, double dt, double dx, double dy,
   return ret;
 }
 
-Vec obj1(Vec q, Matn2_Vr Ww, double dt, double dx, Par &MP) {
+Vec obj1(Vec q, MatN2_Vr Ww, double dt, double dx, Par &MP) {
 
-  Matn2_VMap qmat(q.data(), OuterStride(V));
-  Matn2_V tmp = rhs1(qmat, Ww, dt, dx, MP);
+  MatN2_VMap qmat(q.data(), OuterStride(V));
+  MatN2_V tmp = rhs1(qmat, Ww, dt, dx, MP);
 
-  for (int t = 0; t < N1; t++)
-    for (int i = 0; i < N1; i++)
-      for (int k = 0; k < N1; k++)
-        tmp.row(t * N1 + i) -= DG_MAT(t, k) * WGHTS(i) * qmat.row(k * N1 + i);
+  for (int t = 0; t < N; t++)
+    for (int i = 0; i < N; i++)
+      for (int k = 0; k < N; k++)
+        tmp.row(t * N + i) -= DG_MAT(t, k) * WGHTS(i) * qmat.row(k * N + i);
 
-  VecMap ret(tmp.data(), N1N1V);
+  VecMap ret(tmp.data(), N * N * V);
   return ret;
 }
 
-Vec obj2(Vec q, Matn3_Vr Ww, double dt, double dx, double dy, Par &MP) {
-  Matn3_VMap qmat(q.data(), OuterStride(V));
-  Matn3_V tmp = rhs2(qmat, Ww, dt, dx, dy, MP);
+Vec obj2(Vec q, MatN3_Vr Ww, double dt, double dx, double dy, Par &MP) {
+  MatN3_VMap qmat(q.data(), OuterStride(V));
+  MatN3_V tmp = rhs2(qmat, Ww, dt, dx, dy, MP);
 
-  for (int t = 0; t < N1; t++)
-    for (int k = 0; k < N1; k++)
-      for (int i = 0; i < N1; i++)
-        for (int j = 0; j < N1; j++) {
-          int indt = (t * N1 + i) * N1 + j;
-          int indk = (k * N1 + i) * N1 + j;
+  for (int t = 0; t < N; t++)
+    for (int k = 0; k < N; k++)
+      for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++) {
+          int indt = (t * N + i) * N + j;
+          int indk = (k * N + i) * N + j;
           tmp.row(indt) -=
               (DG_MAT(t, k) * WGHTS(i) * WGHTS(j)) * qmat.row(indk);
         }
-  VecMap ret(tmp.data(), N1N1N1V);
+  VecMap ret(tmp.data(), N * N * N * V);
   return ret;
 }
 
 void standard_initial_guess(Matr q, Matr w, int NT) {
   // Returns a Galerkin intial guess consisting of the value of q at t=0
-  for (int i = 0; i < N1; i++)
+  for (int i = 0; i < N; i++)
     q.block(i * NT, 0, NT, V) = w;
 }
 
@@ -135,7 +135,7 @@ void hidalgo_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
   /*
   Mat qt = w;
 
-  for (int t=0; t<N1; t++)
+  for (int t=0; t<N; t++)
   {
       double DT;
       if (t==0)
@@ -145,7 +145,7 @@ void hidalgo_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
 
       Mat dqdxt = derivs.dot(qt);
 
-      for (int i=0; i<N1; i++)
+      for (int i=0; i<N; i++)
       {
           M = system_conserved(qi, 0, PAR, SYS).dot(dqdxt[i]);
           S = source(qt[i], PAR, SYS);
@@ -167,23 +167,23 @@ void hidalgo_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
 }
 
 void initial_condition(Matr Ww, Matr w) {
-  for (int t = 0; t < N1; t++)
-    for (int i = 0; i < N1; i++)
-      Ww.row(t * N1 + i) = ENDVALS(0, t) * WGHTS(i) * w.row(i);
+  for (int t = 0; t < N; t++)
+    for (int i = 0; i < N; i++)
+      Ww.row(t * N + i) = ENDVALS(0, t) * WGHTS(i) * w.row(i);
 }
 
 void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
                double dz, bool STIFF, bool HIDALGO, Par &MP) {
 
-  int ncell = qh.size() / (int(pow(N1, ndim + 1)) * V);
-  int NT = int(pow(N1, ndim));
+  int ncell = qh.size() / (int(pow(N, ndim + 1)) * V);
+  int NT = int(pow(N, ndim));
 
-  Mat Ww(NT * N1, V);
-  Mat q0(NT * N1, V);
+  Mat Ww(NT * N, V);
+  Mat q0(NT * N, V);
 
   for (int ind = 0; ind < ncell; ind++) {
     MatMap wi(wh.data() + (ind * NT * V), NT, V, OuterStride(V));
-    MatMap qi(qh.data() + (ind * NT * N1V), NT * N1, V, OuterStride(V));
+    MatMap qi(qh.data() + (ind * NT * N * V), NT * N, V, OuterStride(V));
 
     initial_condition(Ww, wi);
 
@@ -204,8 +204,8 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
       standard_initial_guess(q0, wi, NT);
 
     if (STIFF) {
-      VecMap q0v(q0.data(), NT * N1V);
-      qh.segment(ind * NT * N1V, NT * N1V) = nonlin_solve(obj_bound, q0v);
+      VecMap q0v(q0.data(), NT * N * V);
+      qh.segment(ind * NT * N * V, NT * N * V) = nonlin_solve(obj_bound, q0v);
     } else {
       bool FAIL = true;
       for (int count = 0; count < DG_ITER; count++) {
@@ -231,8 +231,8 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
       }
       if (FAIL) {
         hidalgo_initial_guess(q0, wi, NT, dt, MP);
-        VecMap q0v(q0.data(), NT * N1V);
-        qh.segment(ind * NT * N1V, NT * N1V) = nonlin_solve(obj_bound, q0v);
+        VecMap q0v(q0.data(), NT * N * V);
+        qh.segment(ind * NT * N * V, NT * N * V) = nonlin_solve(obj_bound, q0v);
       }
     }
   }

@@ -6,37 +6,37 @@ void midstepper(Vecr wh, int ndim, double dt, double dx, double dy, double dz,
                 Par &MP) {
   // Steps the WENO reconstruction forwards by dt/2
   // NOTE: Only for the homogeneous system
-  const int ncell = wh.size() / (int(pow(N1, ndim)) * V);
+  const int ncell = wh.size() / (int(pow(N, ndim)) * V);
 
   if (ndim == 1) {
-    Matn_V F, dwdx, dFdx;
+    MatN_V F, dwdx, dFdx;
     VecV Bdwdx;
 
-    for (int ind = 0; ind < ncell * N1V; ind += N1V) {
-      Matn_VMap w(wh.data() + ind, OuterStride(V));
-      F.setZero(N1, V);
-      for (int a = 0; a < N1; a++)
+    for (int ind = 0; ind < ncell * N * V; ind += N * V) {
+      MatN_VMap w(wh.data() + ind, OuterStride(V));
+      F.setZero(N, V);
+      for (int a = 0; a < N; a++)
         flux(F.row(a), w.row(a), 0, MP);
 
       dwdx.noalias() = DERVALS * w / dx;
       dFdx.noalias() = DERVALS * F / dx;
 
-      for (int a = 0; a < N1; a++) {
+      for (int a = 0; a < N; a++) {
         Bdot(Bdwdx, w.row(a), dwdx.row(a), 0, MP);
         w.row(a) -= dt / 2 * (dFdx.row(a) + Bdwdx.transpose());
       }
     }
   }
   if (ndim == 2) {
-    Matn2_V F, G, dwdx, dwdy, dFdx, dGdy;
+    MatN2_V F, G, dwdx, dwdy, dFdx, dGdy;
     VecV Bdwdx, Bdwdy;
 
-    for (int ind = 0; ind < ncell * N1N1V; ind += N1N1V) {
-      Matn2_VMap w(wh.data() + ind, OuterStride(V));
-      F.setZero(N1N1, V);
-      G.setZero(N1N1, V);
+    for (int ind = 0; ind < ncell * N * N * V; ind += N * N * V) {
+      MatN2_VMap w(wh.data() + ind, OuterStride(V));
+      F.setZero(N * N, V);
+      G.setZero(N * N, V);
 
-      for (int s = 0; s < N1N1; s++) {
+      for (int s = 0; s < N * N; s++) {
         flux(F.row(s), w.row(s), 0, MP);
         flux(G.row(s), w.row(s), 1, MP);
       }
@@ -51,7 +51,7 @@ void midstepper(Vecr wh, int ndim, double dt, double dx, double dy, double dz,
       dFdx /= dx;
       dGdy /= dy;
 
-      for (int s = 0; s < N1N1; s++) {
+      for (int s = 0; s < N * N; s++) {
         Bdot(Bdwdx, w.row(s), dwdx.row(s), 0, MP);
         Bdot(Bdwdy, w.row(s), dwdy.row(s), 1, MP);
         w.row(s) -= dt / 2 * (dFdx.row(s) + dGdy.row(s) + Bdwdx.transpose() +

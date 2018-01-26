@@ -15,7 +15,7 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
            std::vector<Vec> &outer_v, const double tol, const int maxiter,
            const int inner_m, const unsigned int outer_k) {
 
-  int N = b.size();
+  int n = b.size();
 
   double b_norm = b.norm();
   if (b_norm == 0.)
@@ -41,7 +41,7 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
     unsigned int ind = 1 + inner_m + outer_v.size();
     unsigned int j;
     for (j = 1; j < ind; j++) {
-      Vec z(N);
+      Vec z(n);
       if (j < outer_v.size() + 1)
         z = outer_v[j - 1];
       else if (j == outer_v.size() + 1)

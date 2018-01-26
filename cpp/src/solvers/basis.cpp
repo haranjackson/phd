@@ -3,17 +3,17 @@
 #include "../scipy/poly.h"
 #include <vector>
 
-Vecn scaled_nodes() {
-  std::vector<Vec> tmp = leggauss(N + 1);
-  Vecn nodes = tmp[0];
+VecN scaled_nodes() {
+  std::vector<Vec> tmp = leggauss(N);
+  VecN nodes = tmp[0];
   nodes.array() += 1;
   nodes /= 2;
   return nodes;
 }
 
-Vecn scaled_weights() {
-  std::vector<Vec> tmp = leggauss(N + 1);
-  Vecn wghts = tmp[1];
+VecN scaled_weights() {
+  std::vector<Vec> tmp = leggauss(N);
+  VecN wghts = tmp[1];
   wghts /= 2;
   return wghts;
 }
@@ -44,28 +44,28 @@ poly lagrange(Vecr x, int i) {
 
 std::vector<poly> basis_polys() {
   // Returns basis polynomials
-  Vecn nodes = scaled_nodes();
-  std::vector<poly> psi(N + 1);
-  for (int i = 0; i < N + 1; i++)
+  VecN nodes = scaled_nodes();
+  std::vector<poly> psi(N);
+  for (int i = 0; i < N; i++)
     psi[i] = lagrange(nodes, i);
   return psi;
 }
 
-Mat2_n end_values(const std::vector<poly> &basis) {
+Mat2_N end_values(const std::vector<poly> &basis) {
   // ret[i,0], ret[i,1] are the the values of ith basis polynomial at 0,1
-  Mat2_n ret;
-  for (int j = 0; j < N + 1; j++) {
+  Mat2_N ret;
+  for (int j = 0; j < N; j++) {
     ret(0, j) = basis[j].eval(0.);
     ret(1, j) = basis[j].eval(1.);
   }
   return ret;
 }
 
-Matn_n derivative_values(const std::vector<poly> &basis, const Vecn nodes) {
+MatN_N derivative_values(const std::vector<poly> &basis, const VecN nodes) {
   // ret[i,j] is the derivative of the jth basis function at the ith node
-  Matn_n ret;
-  for (int i = 0; i < N + 1; i++)
-    for (int j = 0; j < N + 1; j++)
+  MatN_N ret;
+  for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++)
       ret(i, j) = basis[j].diff(1).eval(nodes(i));
   return ret;
 }
@@ -75,8 +75,8 @@ def derivative_end_values():
     """ Returns the value of the derivative of the ith basis function at 0 and 1
     """
     _, psiDer, _ = basis_polys()
-    ret = zeros([N1, 2])
-    for i in range(N1):
+    ret = zeros([N, 2])
+    for i in range(N):
         ret[i,0] = psiDer[1][i](0)
         ret[i,1] = psiDer[1][i](1)
     return ret

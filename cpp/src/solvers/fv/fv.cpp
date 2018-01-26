@@ -10,15 +10,15 @@ int ind(int i, int j, int t, int ny, int nt) { return (i * ny + j) * nt + t; }
 
 void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
                     double wght_t, bool SOURCES, Par &MP) {
-  Matn_V dqh_dx;
+  MatN_V dqh_dx;
   VecV dqdxs, qs, S, tmpx;
 
   for (int i = 0; i < nx; i++) {
-    int idx = ind(i + 1, t, nt) * N1V;
-    Matn_VMap qh(rec.data() + idx, OuterStride(V));
+    int idx = ind(i + 1, t, nt) * N * V;
+    MatN_VMap qh(rec.data() + idx, OuterStride(V));
     dqh_dx.noalias() = DERVALS * qh;
 
-    for (int s = 0; s < N1; s++) {
+    for (int s = 0; s < N; s++) {
       qs = qh.row(s);
       dqdxs = dqh_dx.row(s);
 
@@ -39,28 +39,28 @@ void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
 void centers1(Vecr u, Vecr rec, int nx, double dt, double dx, bool SOURCES,
               bool TIME, Par &MP) {
   if (TIME)
-    for (int t = 0; t < N1; t++)
-      centers1_inner(u, rec, nx, dx, N1, t, dt * WGHTS(t), SOURCES, MP);
+    for (int t = 0; t < N; t++)
+      centers1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), SOURCES, MP);
   else
     centers1_inner(u, rec, nx, dx, 1, 0, dt, SOURCES, MP);
 }
 
 void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
                     int nt, int t, double wght_t, bool SOURCES, Par &MP) {
-  Matn2_V dqh_dx, dqh_dy;
+  MatN2_V dqh_dx, dqh_dy;
   VecV qs, dqdxs, dqdys, S, tmpx, tmpy;
 
   for (int i = 0; i < nx; i++)
     for (int j = 0; j < ny; j++) {
-      int idx = ind(i + 1, j + 1, t, ny + 2, nt) * N1N1V;
+      int idx = ind(i + 1, j + 1, t, ny + 2, nt) * N * N * V;
 
-      Matn2_VMap qh(rec.data() + idx, OuterStride(V));
+      MatN2_VMap qh(rec.data() + idx, OuterStride(V));
       derivs2d(dqh_dx, qh, 0);
       derivs2d(dqh_dy, qh, 1);
 
-      for (int a = 0; a < N1; a++)
-        for (int b = 0; b < N1; b++) {
-          int s = a * N1 + b;
+      for (int a = 0; a < N; a++)
+        for (int b = 0; b < N; b++) {
+          int s = a * N + b;
           qs = qh.row(s);
           dqdxs = dqh_dx.row(s);
           dqdys = dqh_dy.row(s);
@@ -85,8 +85,8 @@ void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
               bool SOURCES, bool TIME, Par &MP) {
 
   if (TIME)
-    for (int t = 0; t < N1; t++)
-      centers2_inner(u, rec, nx, ny, dx, dy, N1, t, dt * WGHTS(t), SOURCES, MP);
+    for (int t = 0; t < N; t++)
+      centers2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), SOURCES, MP);
   else
     centers2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, SOURCES, MP);
 }
@@ -98,10 +98,10 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
   VecV ql, qr, f, b;
 
   for (int i = 0; i < nx + 1; i++) {
-    int indl = ind(i, t, nt) * N1V;
-    int indr = ind(i + 1, t, nt) * N1V;
-    Matn_VMap qhl(rec.data() + indl, OuterStride(V));
-    Matn_VMap qhr(rec.data() + indr, OuterStride(V));
+    int indl = ind(i, t, nt) * N * V;
+    int indr = ind(i + 1, t, nt) * N * V;
+    MatN_VMap qhl(rec.data() + indl, OuterStride(V));
+    MatN_VMap qhr(rec.data() + indr, OuterStride(V));
     ql.noalias() = ENDVALS.row(1) * qhl;
     qr.noalias() = ENDVALS.row(0) * qhr;
 
@@ -121,8 +121,8 @@ void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
               bool PERRON_FROBENIUS, Par &MP) {
 
   if (TIME)
-    for (int t = 0; t < N1; t++)
-      interfs1_inner(u, rec, nx, dx, N1, t, dt * WGHTS(t), PERRON_FROBENIUS,
+    for (int t = 0; t < N; t++)
+      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), PERRON_FROBENIUS,
                      MP);
   else
     interfs1_inner(u, rec, nx, dx, 1, 0, dt, PERRON_FROBENIUS, MP);
@@ -132,7 +132,7 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
                     int nt, int t, double wghts_t, bool PERRON_FROBENIUS,
                     Par &MP) {
 
-  Matn_V q0x, q0y, q1x, q1y;
+  MatN_V q0x, q0y, q1x, q1y;
   VecV qlx, qrx, qly, qry, fx, bx, fy, by;
 
   double kx = wghts_t / (2 * dx);
@@ -147,20 +147,20 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
       int uindx = ind(i, j - 1, ny) * V;
       int uindy = ind(i - 1, j, ny) * V;
 
-      int ind0 = ind(i, j, t, ny + 2, nt) * N1N1V;
-      int indx = ind(i + 1, j, t, ny + 2, nt) * N1N1V;
-      int indy = ind(i, j + 1, t, ny + 2, nt) * N1N1V;
+      int ind0 = ind(i, j, t, ny + 2, nt) * N * N * V;
+      int indx = ind(i + 1, j, t, ny + 2, nt) * N * N * V;
+      int indy = ind(i, j + 1, t, ny + 2, nt) * N * N * V;
 
-      Matn2_VMap qh0(rec.data() + ind0, OuterStride(V));
-      Matn2_VMap qhx(rec.data() + indx, OuterStride(V));
-      Matn2_VMap qhy(rec.data() + indy, OuterStride(V));
+      MatN2_VMap qh0(rec.data() + ind0, OuterStride(V));
+      MatN2_VMap qhx(rec.data() + indx, OuterStride(V));
+      MatN2_VMap qhy(rec.data() + indy, OuterStride(V));
 
       endpts2d(q0x, qh0, 0, 1);
       endpts2d(q0y, qh0, 1, 1);
       endpts2d(q1x, qhx, 0, 0);
       endpts2d(q1y, qhy, 1, 0);
 
-      for (int s = 0; s < N1; s++) {
+      for (int s = 0; s < N; s++) {
         qlx = q0x.row(s);
         qrx = q1x.row(s);
         qly = q0y.row(s);
@@ -191,8 +191,8 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
               bool TIME, bool PERRON_FROBENIUS, Par &MP) {
   if (TIME)
-    for (int t = 0; t < N1; t++)
-      interfs2_inner(u, rec, nx, ny, dx, dy, N1, t, dt * WGHTS(t),
+    for (int t = 0; t < N; t++)
+      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t),
                      PERRON_FROBENIUS, MP);
   else
     interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, PERRON_FROBENIUS, MP);
