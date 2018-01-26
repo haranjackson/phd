@@ -3,6 +3,7 @@
 #include "../functions/vectors.h"
 #include "../objects/gpr_objects.h"
 #include "mg.h"
+#include "shear.h"
 #include <cmath>
 
 double E_1(double ρ, double p, Par &MP) {
@@ -17,8 +18,10 @@ double E_1(double ρ, double p, Par &MP) {
 double E_2A(VecVr Q, Par &MP) {
   // Returns the mesoscale energy dependent on the distortion
 
+  double ρ = Q(0);
   Mat3_3Map A = get_A(Q);
-  return MP.B0 / 4 * devGsq(A);
+  double C0 = C_0(ρ, MP);
+  return C0 / 4 * devGsq(A);
 }
 
 double E_2J(VecVr Q, Par &MP) {

@@ -49,7 +49,7 @@ void source(VecVr ret, VecVr Q, Par &MP) {
   ret.head<5>().setZero();
 
   if (MP.VISCOUS) {
-    Mat3_3 Asource = -dEdA(Q, MP) / theta_1(Q, MP);
+    Mat3_3 Asource = -dEdA_s(Q, MP) / theta_1(Q, MP);
     ret.segment<9>(5) = VecMap(Asource.data(), 9);
   } else
     ret.segment<9>(5).setZero();

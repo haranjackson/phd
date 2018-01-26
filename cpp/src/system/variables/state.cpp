@@ -23,7 +23,7 @@ Vec3 sigma(VecVr Q, Par &MP, int d) {
   // Returns the dth column of the symmetric  viscous shear stress tensor
   double ρ = Q(0);
   Mat3_3Map A = get_A(Q);
-  Mat3_3 E_A = dEdA(Q, MP);
+  Mat3_3 E_A = dEdA_s(Q, MP);
   return -ρ * E_A.transpose() * A.col(d);
 }
 

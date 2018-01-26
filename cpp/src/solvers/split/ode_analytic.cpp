@@ -69,6 +69,9 @@ void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
 void ode_stepper_analytic(VecVr Q, double dt, Par &MP) {
   // Solves the ODE analytically by linearising the distortion equations and
   // providing an analytic approximation to the thermal impulse evolution
-  analyticSolver_distortion(Q, dt, MP);
-  analyticSolver_thermal(Q, dt, MP);
+
+  if (MP.VISCOUS)
+    analyticSolver_distortion(Q, dt, MP);
+  if (MP.THERMAL)
+    analyticSolver_thermal(Q, dt, MP);
 }

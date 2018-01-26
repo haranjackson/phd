@@ -16,10 +16,12 @@ double dEdp(double ρ, Par &MP) {
   return dedp(ρ, MP);
 }
 
-Mat3_3 dEdA(VecVr Q, Par &MP) {
-  // Returns the partial derivative of E by A
+Mat3_3 dEdA_s(VecVr Q, Par &MP) {
+  // Returns the partial derivative of E by A, holding s constant
+  double ρ = Q(0);
   Mat3_3Map A = get_A(Q);
-  return MP.B0 * AdevG(A);
+  double cs2 = c_s2(ρ, MP);
+  return cs2 * AdevG(A);
 }
 
 Vec3 dEdJ(VecVr Q, Par &MP) {
