@@ -7,7 +7,7 @@ double c_0(double ρ, double p, Mat3_3r A, Par &MP) {
   // Returns the adiabatic sound speed for the MG EOS
   double dE_dρ = dEdρ(ρ, p, A, MP);
   double dE_dp = dEdp(ρ, MP);
-  return sqrt((p / ρ * ρ - dE_dρ) / dE_dp);
+  return sqrt((p / (ρ * ρ) - dE_dρ) / dE_dp);
 }
 
 double c_h(double ρ, double T, Par &MP) {
