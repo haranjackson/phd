@@ -50,6 +50,21 @@ Mat3_3 dsigmadA(VecVr Q, Par &MP, int d) {
   return -ρ * cs2 * ret.transpose();
 }
 
+double dsigmadA(double ρ, double cs2, Mat3_3r A, Mat3_3r G, Mat3_3r AdevG,
+                int i, int j, int m, int n) {
+  // Returns dσ_ij / dA_mn, holding ρ constant.
+  // NOTE: Only valid for EOS with E_2A = cs^2/4 * |devG|^2
+
+  double ret =
+      A(m, i) * G(j, n) + A(m, j) * G(i, n) - 2. / 3. * G(i, j) * A(m, n);
+  if (i == n)
+    ret += AdevG(m, j);
+  if (j == n)
+    ret += AdevG(m, i);
+
+  return -ρ * cs2 * ret;
+}
+
 double temperature(double ρ, double p, Par &MP) {
   // Returns the temperature for an stiffened gas
   double cv = MP.cv;

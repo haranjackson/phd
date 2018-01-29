@@ -19,6 +19,7 @@ typedef Eigen::Ref<Vec9> Vec9r;
 
 typedef Eigen::Map<Mat3_3, 0, Eigen::OuterStride<3>> Mat3_3Map;
 typedef Eigen::Map<Vec3, 0, Eigen::InnerStride<1>> Vec3Map;
+typedef Eigen::Map<Vec9, 0, Eigen::InnerStride<1>> Vec9Map;
 
 struct Par {
   double Rc;

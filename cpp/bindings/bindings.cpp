@@ -1,3 +1,5 @@
+#include "../src/etc/types.h"
+
 #include "../include/pybind11/eigen.h"
 #include "../include/pybind11/pybind11.h"
 #include "../include/pybind11/stl.h"
@@ -27,6 +29,7 @@
 
 #include "../src/system/eig.h"
 #include "../src/system/equations.h"
+#include "../src/system/jacobians.h"
 
 namespace py = pybind11;
 
@@ -104,8 +107,12 @@ PYBIND11_MODULE(GPRpy, m) {
   m_system.def("source", &source);
   m_system.def("block", &block);
   m_system.def("Bdot", &Bdot);
+
   m_system.def("max_abs_eigs", &max_abs_eigs);
   m_system.def("thermo_acoustic_tensor", &thermo_acoustic_tensor);
+
+  m_system.def("dFdP", &dFdP);
+  m_system.def("dPdQ", &dPdQ);
 
   m_solvers_common.def("basis_polys", &basis_polys);
   m_solvers_common.def("scaled_nodes", &scaled_nodes);

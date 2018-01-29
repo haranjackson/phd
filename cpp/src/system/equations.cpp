@@ -1,6 +1,7 @@
 #include "../etc/globals.h"
 #include "functions/matrices.h"
 #include "functions/vectors.h"
+#include "jacobians.h"
 #include "objects/gpr_objects.h"
 #include "variables/derivatives.h"
 #include "variables/eos.h"
@@ -142,4 +143,13 @@ void Bdot(VecVr ret, VecVr Q, VecVr x, int d, Par &MP) {
       break;
     }
   }
+}
+
+MatV_V system(VecVr Q, int d, Par &MP) {
+  // Returns the Jacobian in the dth direction
+  MatV_V DFDP = dFdP(Q, d, MP);
+  MatV_V DPDQ = dPdQ(Q, MP);
+  MatV_V B = MatV_V::Zero();
+  block(B, Q, d);
+  return DFDP * DPDQ + B;
 }

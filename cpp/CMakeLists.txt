@@ -13,8 +13,9 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3 -fPIC")
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -DNDEBUG")
 
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I/opt/intel/mkl/include")
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--start-group /opt/intel/mkl/lib intel64/libmkl_intel_lp64.a /opt/intel/mkl/lib/intel64/libmkl_gnu_thread.a /opt/intel/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl")
+#SET(MKLROOT /opt/intel/mkl)
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I${MKLROOT}/include")
+#SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl")
 
 SET(SRCS src/etc/globals.cpp
          src/etc/grid.cpp
@@ -44,6 +45,7 @@ SET(SRCS src/etc/globals.cpp
 
          src/system/eig.cpp
          src/system/equations.cpp
+         src/system/jacobians.cpp
 
          src/system/functions/matrices.cpp
          src/system/functions/vectors.cpp
@@ -57,9 +59,9 @@ SET(SRCS src/etc/globals.cpp
          src/system/variables/wavespeeds.cpp
    )
 
-#set(SRCS_EXEC ${SRCS} src/main.cpp)
+#set(SRCS_EXEC src/main.cpp ${SRCS})
 #add_executable(${PROJECT_NAME} ${SRCS_EXEC})
 
-set(SRCS_SO ${SRCS} bindings/bindings.cpp src/etc/debug.cpp)
+set(SRCS_SO bindings/bindings.cpp src/etc/debug.cpp ${SRCS})
 add_library(${BINDINGS_NAME} SHARED ${SRCS_SO})
 set_target_properties(${BINDINGS_NAME} PROPERTIES PREFIX "")
