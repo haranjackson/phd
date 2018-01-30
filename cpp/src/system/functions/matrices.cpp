@@ -46,3 +46,17 @@ double devGsq(Mat3_3r A) {
   return ((G00 - t) * (G00 - t) + (G11 - t) * (G11 - t) +
           (G22 - t) * (G22 - t) + 2 * (G01 * G01 + G02 * G02 + G12 * G12));
 }
+
+double sigma_norm(Mat3_3r σ) {
+  // Returns the norm defined in Boscheri et al
+  double σ0011 = σ(0, 0) - σ(1, 1);
+  double σ1122 = σ(1, 1) - σ(2, 2);
+  double σ2200 = σ(2, 2) - σ(0, 0);
+  double σ01 = σ(0, 1);
+  double σ12 = σ(1, 2);
+  double σ20 = σ(2, 0);
+
+  double tmp1 = σ0011 * σ0011 + σ1122 * σ1122 + σ2200 * σ2200;
+  double tmp2 = σ01 * σ01 + σ12 * σ12 + σ20 * σ20;
+  return sqrt(0.5 * tmp1 + 3 * tmp2);
+}

@@ -45,10 +45,12 @@ def calculate_coeffs(uList, L=0, R=0):
 
 def coeffs(ret, uL, uR, uCL, uCR, L=0, R=0):
 
+    """
     if L:
         ret[:] = calculate_coeffs([uL], L=1)
     elif R:
         ret[:] = calculate_coeffs([uR], R=1)
+    """
 
     if N == 2:
         ret[:] = calculate_coeffs([uL, uR])

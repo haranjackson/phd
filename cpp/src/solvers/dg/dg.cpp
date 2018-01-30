@@ -182,6 +182,7 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
   Mat q0(NT * N, V);
 
   for (int ind = 0; ind < ncell; ind++) {
+
     MatMap wi(wh.data() + (ind * NT * V), NT, V, OuterStride(V));
     MatMap qi(qh.data() + (ind * NT * N * V), NT * N, V, OuterStride(V));
 
@@ -189,14 +190,10 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
 
     using std::placeholders::_1;
     VecFunc obj_bound;
-    switch (ndim) {
-    case 1:
+    if (ndim == 1)
       obj_bound = std::bind(obj1, _1, Ww, dt, dx, MP);
-      break;
-    case 2:
+    else if (ndim == 2)
       obj_bound = std::bind(obj2, _1, Ww, dt, dx, dy, MP);
-      break;
-    }
 
     if (HIDALGO)
       hidalgo_initial_guess(q0, wi, NT, dt, MP);
@@ -207,22 +204,24 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
       VecMap q0v(q0.data(), NT * N * V);
       qh.segment(ind * NT * N * V, NT * N * V) = nonlin_solve(obj_bound, q0v);
     } else {
+
       bool FAIL = true;
       for (int count = 0; count < DG_ITER; count++) {
+
         Mat q1;
-        switch (ndim) {
-        case 1:
+        if (ndim == 1)
           q1 = DG_U1.solve(rhs1(q0, Ww, dt, dx, MP));
-          break;
-        case 2:
+        else if (ndim == 2)
           q1 = DG_U2.solve(rhs2(q0, Ww, dt, dx, dy, MP));
-          break;
-        }
+
         Arr absDiff = (q1 - q0).array().abs();
 
         if ((absDiff > DG_TOL * (1 + q0.array().abs())).any()) {
           q0 = q1;
           continue;
+        } else if (q1.array().isNaN().any()) {
+          FAIL = true;
+          break;
         } else {
           qi = q1;
           FAIL = false;

@@ -34,10 +34,10 @@ class TerminationCondition {
 
 public:
   TerminationCondition(double ftol, double frtol, double xtol, double xrtol);
-  int check(Vecr f, Vecr x, Vecr dx);
+  bool check(Vecr f, Vecr x, Vecr dx);
 };
 
-Vec nonlin_solve(VecFunc F, Vecr x, double f_tol = pow(mEPS, 1. / 3),
+Vec nonlin_solve(VecFunc F, Vecr x, double f_tol = pow(mEPS, 1. / 3.),
                  double f_rtol = INF, double x_tol = INF, double x_rtol = INF);
 
 #endif // NEWTON_KRYLOV_H

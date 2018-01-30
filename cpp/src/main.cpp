@@ -66,8 +66,24 @@ int main() {
 
   Vec u = heat_conduction_1d(MP);
 
-  iterator(u, 0.1, 20, 10, 1, 0.005, 0.005, 0.005, 0.6, false, true, true, true,
-           true, MP);
+  double tf = 0.1;
+  int nx = 200;
+  int ny = 1;
+  int nz = 1;
+  double dx = 1. / nx;
+  double dy = 1. / ny;
+  double dz = 1. / nz;
+  double CFL = 0.6;
+  bool PERIODIC = false;
+  bool SPLIT = false;
+  bool STRANG = true;
+  bool HALF_STEP = true;
+  bool STIFF = false;
+  bool OSHER = false;
+  bool PERR_FROB = false;
+
+  iterator(u, tf, nx, ny, nz, dx, dy, dz, CFL, PERIODIC, SPLIT, STRANG,
+           HALF_STEP, STIFF, OSHER, PERR_FROB, MP);
 
   std::cout << "Hello World" << std::endl;
   return 0;

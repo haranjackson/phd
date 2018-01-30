@@ -5,6 +5,6 @@
 
 void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
               double dz, double CFL, bool PERIODIC, bool SPLIT, bool STRANG,
-              bool HALF_STEP, bool OSHER, bool PERR_FROB, Par &MP);
+              bool HALF_STEP, bool STIFF, bool OSHER, bool PERR_FROB, Par &MP);
 
 #endif // ITERATOR_H

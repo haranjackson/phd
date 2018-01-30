@@ -28,7 +28,7 @@ KrylovJacobian::KrylovJacobian(Vecr x, Vecr f, VecFunc F) {
 
 Vec KrylovJacobian::matvec(Vec v) {
   double nv = v.norm();
-  if (nv == 0)
+  if (nv == 0.)
     return 0. * v;
   double sc = omega / nv;
   return (func(x0 + sc * v) - f0) / sc;
@@ -61,7 +61,7 @@ TerminationCondition::TerminationCondition(double ftol, double frtol,
   f0_norm = 0.;
 }
 
-int TerminationCondition::check(Vecr f, Vecr x, Vecr dx) {
+bool TerminationCondition::check(Vecr f, Vecr x, Vecr dx) {
   double f_norm = maxnorm(f);
   double x_norm = maxnorm(x);
   double dx_norm = maxnorm(dx);
@@ -70,10 +70,10 @@ int TerminationCondition::check(Vecr f, Vecr x, Vecr dx) {
     f0_norm = f_norm;
 
   if (f_norm == 0.)
-    return 1;
+    return true;
 
-  return int((f_norm <= f_tol && f_norm / f_rtol <= f0_norm) &&
-             (dx_norm <= x_tol && dx_norm / x_rtol <= x_norm));
+  return f_norm <= f_tol && f_norm / f_rtol <= f0_norm && dx_norm <= x_tol &&
+         dx_norm / x_rtol <= x_norm;
 }
 
 double phi(double s, double *tmp_s, double *tmp_phi, Vecr tmp_Fx, VecFunc func,
@@ -108,7 +108,8 @@ double scalar_search_armijo(double phi0, double *tmp_s, double *tmp_phi,
     double factor = alpha1 * alpha1 * (alpha1 - 1);
     double a = phi_a1 - phi0 + phi0 * alpha1 - alpha1 * alpha1 * phi_a0;
     a /= factor;
-    double b = -(phi_a1 - phi0 + phi0 * alpha1) + pow(alpha1, 3.) * phi_a0;
+    double b =
+        -(phi_a1 - phi0 + phi0 * alpha1) + alpha1 * alpha1 * alpha1 * phi_a0;
     b /= factor;
 
     double alpha2 = (-b + sqrt(std::abs(b * b + 3 * a * phi0))) / (3. * a);
@@ -145,9 +146,9 @@ Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
                  double x_rtol) {
   TerminationCondition condition(f_tol, f_rtol, x_tol, x_rtol);
 
-  double gamma = 0.9;
-  double eta_max = 0.9999;
-  double eta_treshold = 0.1;
+  const double gamma = 0.9;
+  const double eta_max = 0.9999;
+  const double eta_treshold = 0.1;
   double eta = 1e-3;
 
   Vec dx = INF * Vec::Ones(x.size());
@@ -159,6 +160,7 @@ Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
   int maxiter = 100 * (x.size() + 1);
 
   for (int n = 0; n < maxiter; n++) {
+
     if (condition.check(Fx, x, dx))
       break;
 
@@ -170,11 +172,11 @@ Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
 
     jacobian.update(x, Fx);
 
-    double eta_A = gamma * pow(Fx_norm_new, 2.) / pow(Fx_norm, 2.);
+    double eta_A = gamma * Fx_norm_new * Fx_norm_new / (Fx_norm * Fx_norm);
     if (gamma * eta * eta < eta_treshold)
       eta = std::min(eta_max, eta_A);
     else
-      eta = std::min(eta_max, std::max(eta_A, gamma * pow(eta, 2.)));
+      eta = std::min(eta_max, std::max(eta_A, gamma * eta * eta));
 
     Fx_norm = Fx_norm_new;
   }

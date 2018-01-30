@@ -30,7 +30,7 @@ double timestep(Vecr u, double dX[4], int ndim, double CFL, double t, double tf,
 
 void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
               double dz, double CFL, bool PERIODIC, bool SPLIT, bool STRANG,
-              bool HALF_STEP, bool OSHER, bool PERR_FROB, Par &MP) {
+              bool HALF_STEP, bool STIFF, bool OSHER, bool PERR_FROB, Par &MP) {
 
   int ndim = int(nx > 1) + int(ny > 1) + int(nz > 1);
   int extDims = extended_dimensions(nx, ny, nz);
@@ -43,15 +43,16 @@ void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
   double t = 0.;
   unsigned long count = 0;
   while (t < tf) {
-    double dt = timestep(u, dX, ndim, CFL, t, tf, count, PERR_FROB, MP);
 
-    if (SPLIT) {
-      split_stepper(u, ub, wh, ndim, nx, ny, nz, dt, dx, dy, dz, PERIODIC,
-                    STRANG, HALF_STEP, OSHER, PERR_FROB, MP);
-    } else {
-      ader_stepper(u, ub, wh, qh, ndim, nx, ny, nz, dt, dx, dy, dz, PERIODIC,
+    double dt = timestep(u, dX, ndim, CFL, t, tf, count, PERR_FROB, MP);
+    boundaries(u, ub, ndim, nx, ny, nz, PERIODIC);
+
+    if (SPLIT)
+      split_stepper(u, ub, wh, ndim, nx, ny, nz, dt, dx, dy, dz, STRANG,
+                    HALF_STEP, OSHER, PERR_FROB, MP);
+    else
+      ader_stepper(u, ub, wh, qh, ndim, nx, ny, nz, dt, dx, dy, dz, STIFF,
                    OSHER, PERR_FROB, MP);
-    }
     t += dt;
     count += 1;
 

@@ -52,9 +52,9 @@ SET(SRCS src/etc/globals.cpp
 
          src/system/variables/derivatives.cpp
          src/system/variables/eos.cpp
-         src/system/variables/materials.cpp
          src/system/variables/mg.cpp
          src/system/variables/shear.cpp
+         src/system/variables/sources.cpp
          src/system/variables/state.cpp
          src/system/variables/wavespeeds.cpp
    )

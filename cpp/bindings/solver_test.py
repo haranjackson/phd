@@ -89,7 +89,7 @@ def dg_test(u, dx, dt, MP):
 
     qh_cp = zeros(len(wh_cp) * N)
     GPRpy.solvers.dg.predictor(qh_cp, wh_cp, ndim, dt, dx, dx, dx,
-                               bool(STIFF), bool(HIDALGO), MP)
+                               STIFF, HIDALGO, MP)
     qh_cp = qh_cp.reshape(qh_py.shape)
 
     print("DG   diff =", diff(qh_cp, qh_py))
@@ -113,7 +113,7 @@ def TAT_test(d, MP):
 def Smax_test(d, MP):
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
-    Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, bool(PERR_FROB), MP)
+    Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, PERR_FROB, MP)
     Smax_py = -Smax(Q1, Q2, d, MP)
 
     print("Smax diff =", diff(Smax_cp, Smax_py))
@@ -168,7 +168,7 @@ def FVi_test(qh_py, dx, dt, MP):
     FVi_py = -0.5 * dt / dx * interfaces(qEnd, MP)
     FVi_cp = zeros([(nx - 2) * nV])
     GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dx,
-                              TIME, bool(OSHER), bool(PERR_FROB), MP)
+                              TIME, OSHER, PERR_FROB, MP)
 
     FVi_cp = FVi_cp.reshape([(nx - 2), nV])
     FVi_py = FVi_py.reshape([(nx - 2), nV])
@@ -181,7 +181,7 @@ def FV_test(qh_py, dx, dt, MP):
     FV_py = fv_terms(qh_py, dt, MP, HOMOGENEOUS)
     FV_cp = zeros([(nx - 2) * nV])
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), 1, nx - 2, 1, 1, dt, dx,
-                                 1, 1, SOURCES, TIME, bool(OSHER), bool(PERR_FROB), MP)
+                                 1, 1, SOURCES, TIME, OSHER, PERR_FROB, MP)
 
     FV_cp = FV_cp.reshape([(nx - 2), nV])
     FV_py = FV_py.reshape([(nx - 2), nV])

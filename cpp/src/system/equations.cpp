@@ -5,7 +5,7 @@
 #include "objects/gpr_objects.h"
 #include "variables/derivatives.h"
 #include "variables/eos.h"
-#include "variables/materials.h"
+#include "variables/sources.h"
 #include "variables/state.h"
 
 void flux(VecVr ret, VecVr Q, int d, Par &MP) {
@@ -50,12 +50,12 @@ void source(VecVr ret, VecVr Q, Par &MP) {
   ret.head<5>().setZero();
 
   if (MP.VISCOUS) {
-    Mat3_3 Asource = -dEdA_s(Q, MP) / theta_1(Q, MP);
+    Mat3_3 Asource = -dEdA_s(Q, MP) * theta1inv(Q, MP);
     ret.segment<9>(5) = VecMap(Asource.data(), 9);
   } else
     ret.segment<9>(5).setZero();
   if (MP.THERMAL)
-    ret.tail<3>() = -ρ * dEdJ(Q, MP) / theta_2(Q, MP);
+    ret.tail<3>() = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
   else
     ret.tail<3>().setZero();
 }
