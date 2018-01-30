@@ -145,7 +145,7 @@ void Bdot(VecVr ret, VecVr Q, VecVr x, int d, Par &MP) {
   }
 }
 
-MatV_V system(VecVr Q, int d, Par &MP) {
+MatV_V system_matrix(VecVr Q, int d, Par &MP) {
   // Returns the Jacobian in the dth direction
   MatV_V DFDP = dFdP(Q, d, MP);
   MatV_V DPDQ = dPdQ(Q, MP);

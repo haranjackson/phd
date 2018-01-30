@@ -7,7 +7,7 @@ from gpr.misc.structures import Cvec_to_Pclass
 from gpr.systems.eigenvalues import thermo_acoustic_tensor
 
 from solvers.dg.dg import DG_U, predictor, rhs
-from solvers.fv.fluxes import Bint, Smax
+from solvers.fv.fluxes import Aint, Bint, Smax
 from solvers.fv.fv import interfaces, endpoints, extend_dimensions, fv_terms, centers
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_stepper_analytical
@@ -16,7 +16,7 @@ from solvers.weno.weno import weno_launcher
 from test_functions import diff, generate_vector
 
 from options import ndim, nV, nx, ny, nz, N
-from options import SPLIT, STIFF, HIDALGO, PERRON_FROB
+from options import SPLIT, STIFF, HIDALGO, OSHER, PERR_FROB
 
 
 ### WENO ###
@@ -113,11 +113,21 @@ def TAT_test(d, MP):
 def Smax_test(d, MP):
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
-    Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, bool(PERRON_FROB), MP)
+    Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, bool(PERR_FROB), MP)
     Smax_py = -Smax(Q1, Q2, d, MP)
 
     print("Smax diff =", diff(Smax_cp, Smax_py))
     return Smax_cp, Smax_py
+
+
+def Aint_test(d, MP):
+    Q1 = generate_vector(MP)
+    Q2 = generate_vector(MP)
+    Aint_cp = GPRpy.solvers.fv.Aint(Q1, Q2, d, MP)
+    Aint_py = -Aint(Q1, Q2, d, MP)
+
+    print("Aint diff =", diff(Aint_cp, Aint_py))
+    return Aint_cp, Aint_py
 
 
 def Bint_test(d, MP):
@@ -158,7 +168,7 @@ def FVi_test(qh_py, dx, dt, MP):
     FVi_py = -0.5 * dt / dx * interfaces(qEnd, MP)
     FVi_cp = zeros([(nx - 2) * nV])
     GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dx,
-                              TIME, bool(PERRON_FROB), MP)
+                              TIME, bool(OSHER), bool(PERR_FROB), MP)
 
     FVi_cp = FVi_cp.reshape([(nx - 2), nV])
     FVi_py = FVi_py.reshape([(nx - 2), nV])
@@ -171,7 +181,7 @@ def FV_test(qh_py, dx, dt, MP):
     FV_py = fv_terms(qh_py, dt, MP, HOMOGENEOUS)
     FV_cp = zeros([(nx - 2) * nV])
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), 1, nx - 2, 1, 1, dt, dx,
-                                 1, 1, SOURCES, TIME, False, MP)
+                                 1, 1, SOURCES, TIME, bool(OSHER), bool(PERR_FROB), MP)
 
     FV_cp = FV_cp.reshape([(nx - 2), nV])
     FV_py = FV_py.reshape([(nx - 2), nV])

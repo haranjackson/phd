@@ -3,7 +3,7 @@ from numpy import dot, zeros
 from gpr.systems.jacobians import dFdP, dPdQ
 from gpr.misc.structures import Cvec_to_Pclass
 
-from options import nV, LSETS
+from options import nV, LSET
 
 
 def flux_cons_ref(ret, Q, d, MP):
@@ -77,7 +77,7 @@ def block_cons_ref(ret, Q, d, MP):
         ret[8 + d, 8 + d:11 + d] -= v
         ret[11 + d, 11 + d:14 + d] -= v
 
-        for i in range(1, LSETS + 1):
+        for i in range(1, LSET + 1):
             ret[-i, -i] = vd
 
 
@@ -118,7 +118,7 @@ def B0dot(ret, x, v):
     ret[12] = v0 * x[12]
     ret[13] = v0 * x[13]
 
-    for i in range(1, LSETS + 1):
+    for i in range(1, LSET + 1):
         ret[-i] = v0 * x[-i]
 
 
@@ -136,7 +136,7 @@ def B1dot(ret, x, v):
     ret[12] = - v0 * x[11] - v2 * x[13]
     ret[13] = v1 * x[13]
 
-    for i in range(1, LSETS + 1):
+    for i in range(1, LSET + 1):
         ret[-i] = v1 * x[-i]
 
 
@@ -154,7 +154,7 @@ def B2dot(ret, x, v):
     ret[12] = v2 * x[12]
     ret[13] = - v0 * x[11] - v1 * x[12]
 
-    for i in range(1, LSETS + 1):
+    for i in range(1, LSET + 1):
         ret[-i] = v2 * x[-i]
 
 

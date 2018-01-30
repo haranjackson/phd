@@ -5,66 +5,52 @@
 double Γ_MG(double ρ, Par &MP) {
   // Returns the MG parameter
 
-  double ret;
-
   switch (MP.EOS) {
 
   case STIFFENED_GAS: {
-    double γ = MP.γ;
-    ret = γ - 1;
-    break;
+    return MP.γ - 1;
   }
   case SHOCK_MG: {
     double Γ0 = MP.Γ0;
     double ρ0 = MP.ρ0;
-    ret = Γ0 * ρ0 / ρ;
-    break;
+    return Γ0 * ρ0 / ρ;
   }
   case GODUNOV_ROMENSKI:
-    ret = MP.γ;
-    break;
+    return MP.γ;
+
   case JWL:
-    ret = MP.Γ0;
-    break;
   case COCHRAN_CHAN:
-    ret = MP.Γ0;
-    break;
+    return MP.Γ0;
+
+  default:
+    throw "EOS not recognized";
   }
-  return ret;
 }
 
 double p_ref(double ρ, Par &MP) {
   // Returns the reference pressure in the MG EOS
 
-  double ret;
-
   switch (MP.EOS) {
 
-  case STIFFENED_GAS: {
-    double γ = MP.γ;
-    double pINF = MP.pINF;
-    ret = -γ * pINF;
-    break;
-  }
+  case STIFFENED_GAS:
+    return -MP.pINF;
+
   case SHOCK_MG: {
     double c02 = MP.c02;
     double ρ0 = MP.ρ0;
     double s = MP.s;
     if (ρ > ρ0) {
       double tmp = 1 / ρ0 - s * (1 / ρ0 - 1 / ρ);
-      ret = c02 * (1 / ρ0 - 1 / ρ) / (tmp * tmp);
-    } else {
-      ret = c02 * (ρ - ρ0);
-    }
-    break;
+      return c02 * (1 / ρ0 - 1 / ρ) / (tmp * tmp);
+    } else
+      return c02 * (ρ - ρ0);
   }
   case GODUNOV_ROMENSKI: {
     double c02 = MP.c02;
     double α = MP.α;
     double ρ0 = MP.ρ0;
     double tmp = pow(ρ / ρ0, α);
-    ret = c02 * ρ / α * (tmp - 1) * tmp;
-    break;
+    return c02 * ρ / α * (tmp - 1) * tmp;
   }
   case JWL: {
     double A = MP.A;
@@ -73,8 +59,7 @@ double p_ref(double ρ, Par &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    ret = A * exp(-R1 * v_) + B * exp(-R2 * v_);
-    break;
+    return A * exp(-R1 * v_) + B * exp(-R2 * v_);
   }
   case COCHRAN_CHAN: {
     double A = MP.A;
@@ -83,39 +68,35 @@ double p_ref(double ρ, Par &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    ret = A * pow(v_, -R1) - B * pow(v_, -R2);
-    break;
+    return A * pow(v_, -R1) - B * pow(v_, -R2);
   }
+  default:
+    throw "EOS not recognized";
   }
-  return ret;
 }
 
 double e_ref(double ρ, Par &MP) {
   // Returns the reference energy for the MG EOS
 
-  double ret;
-
   switch (MP.EOS) {
 
   case STIFFENED_GAS:
-    ret = 0.;
-    break;
+    return MP.pINF / ρ;
+
   case SHOCK_MG: {
     double ρ0 = MP.ρ0;
     double pr = p_ref(ρ, MP);
     if (ρ > ρ0)
-      ret = 0.5 * pr * (1 / ρ0 - 1 / ρ);
+      return 0.5 * pr * (1 / ρ0 - 1 / ρ);
     else
-      ret = 0.;
-    break;
+      return 0.;
   }
   case GODUNOV_ROMENSKI: {
     double c02 = MP.c02;
     double α = MP.α;
     double ρ0 = MP.ρ0;
     double tmp = pow(ρ / ρ0, α);
-    ret = c02 / (2 * α * α) * (tmp - 1) * (tmp - 1);
-    break;
+    return c02 / (2 * α * α) * (tmp - 1) * (tmp - 1);
   }
   case JWL: {
     double A = MP.A;
@@ -124,8 +105,7 @@ double e_ref(double ρ, Par &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    ret = A / (ρ0 * R1) * exp(-R1 * v_) + B / (ρ0 * R2) * exp(-R2 * v_);
-    break;
+    return A / (ρ0 * R1) * exp(-R1 * v_) + B / (ρ0 * R2) * exp(-R2 * v_);
   }
   case COCHRAN_CHAN: {
     double A = MP.A;
@@ -134,44 +114,43 @@ double e_ref(double ρ, Par &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    ret = -A / (ρ0 * (1 - R1)) * (pow(v_, 1 - R1) - 1) +
-          B / (ρ0 * (1 - R2)) * (pow(v_, 1 - R2) - 1);
-    break;
+    return -A / (ρ0 * (1 - R1)) * (pow(v_, 1 - R1) - 1) +
+           B / (ρ0 * (1 - R2)) * (pow(v_, 1 - R2) - 1);
   }
+  default:
+    throw "EOS not recognized";
   }
-  return ret;
 }
 
 double dΓ_MG(double ρ, Par &MP) {
   // Returns the derivative of the MG parameter
-
-  double ret;
 
   switch (MP.EOS) {
 
   case SHOCK_MG: {
     double Γ0 = MP.Γ0;
     double ρ0 = MP.ρ0;
-    ret = -Γ0 * ρ0 / (ρ * ρ);
-    break;
+    return -Γ0 * ρ0 / (ρ * ρ);
   }
+  case STIFFENED_GAS:
+  case JWL:
+  case COCHRAN_CHAN:
+  case GODUNOV_ROMENSKI:
+    return 0.;
+
   default:
-    ret = 0.;
-    break;
+    throw "EOS not recognized";
   }
-  return ret;
 }
 
 double dp_ref(double ρ, Par &MP) {
   // Returns the derivative of the reference  pressure in the MG EOS
 
-  double ret;
-
   switch (MP.EOS) {
 
   case STIFFENED_GAS:
-    ret = 0.;
-    break;
+    return 0.;
+
   case SHOCK_MG: {
     double c02 = MP.c02;
     double ρ0 = MP.ρ0;
@@ -179,18 +158,16 @@ double dp_ref(double ρ, Par &MP) {
 
     if (ρ > ρ0) {
       double tmp = s * (ρ - ρ0) - ρ;
-      ret = c02 * ρ0 * ρ0 * (s * (ρ0 - ρ) - ρ) / (tmp * tmp * tmp);
+      return c02 * ρ0 * ρ0 * (s * (ρ0 - ρ) - ρ) / (tmp * tmp * tmp);
     } else
-      ret = c02;
-    break;
+      return c02;
   }
   case GODUNOV_ROMENSKI: {
     double ρ0 = MP.ρ0;
     double c02 = MP.c02;
     double α = MP.α;
     double tmp = pow(ρ / ρ0, α);
-    ret = c02 / α * tmp * ((1 + α) * (tmp - 1) + α * tmp);
-    break;
+    return c02 / α * tmp * ((1 + α) * (tmp - 1) + α * tmp);
   }
   case JWL: {
     double A = MP.A;
@@ -199,8 +176,7 @@ double dp_ref(double ρ, Par &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    ret = v_ / ρ * (A * R1 * exp(-R1 * v_) + B * R2 * exp(-R2 * v_));
-    break;
+    return v_ / ρ * (A * R1 * exp(-R1 * v_) + B * R2 * exp(-R2 * v_));
   }
   case COCHRAN_CHAN: {
     double A = MP.A;
@@ -209,23 +185,21 @@ double dp_ref(double ρ, Par &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    ret = v_ / ρ * (A * R1 * pow(v_, -R1 - 1) - B * R2 * pow(v_, -R2 - 1));
-    break;
+    return v_ / ρ * (A * R1 * pow(v_, -R1 - 1) - B * R2 * pow(v_, -R2 - 1));
   }
+  default:
+    throw "EOS not recognized";
   }
-  return ret;
 }
 
 double de_ref(double ρ, Par &MP) {
   // Returns the derivative of the reference  energy for the MG EOS
 
-  double ret;
-
   switch (MP.EOS) {
 
   case STIFFENED_GAS:
-    ret = 0.;
-    break;
+    return -MP.pINF / (ρ * ρ);
+
   case SHOCK_MG: {
     double c02 = MP.c02;
     double ρ0 = MP.ρ0;
@@ -233,28 +207,24 @@ double de_ref(double ρ, Par &MP) {
 
     if (ρ > ρ0) {
       double tmp = s * (ρ - ρ0) - ρ;
-      ret = -(ρ - ρ0) * ρ0 * c02 / (tmp * tmp * tmp);
-    } else {
-      ret = 0.;
-    }
-    break;
+      return -(ρ - ρ0) * ρ0 * c02 / (tmp * tmp * tmp);
+    } else
+      return 0.;
   }
   case GODUNOV_ROMENSKI: {
     double c02 = MP.c02;
     double α = MP.α;
     double ρ0 = MP.ρ0;
     double tmp = pow(ρ / ρ0, α);
-    ret = c02 / (ρ * α) * (tmp - 1) * tmp;
-    break;
+    return c02 / (ρ * α) * (tmp - 1) * tmp;
   }
   case JWL:
-    ret = e_ref(ρ, MP) / (ρ * ρ);
-    break;
   case COCHRAN_CHAN:
-    ret = e_ref(ρ, MP) / (ρ * ρ);
-    break;
+    return e_ref(ρ, MP) / (ρ * ρ);
+
+  default:
+    throw "EOS not recognized";
   }
-  return ret;
 }
 
 double dedρ(double ρ, double p, Par &MP) {

@@ -6,6 +6,6 @@
 
 Mat4_4 thermo_acoustic_tensor(VecVr Q, int d, Par &MP);
 
-double max_abs_eigs(VecVr Q, int d, bool PERRON_FROBENIUS, Par &MP);
+double max_abs_eigs(VecVr Q, int d, bool PERR_FROB, Par &MP);
 
 #endif // EIG_H

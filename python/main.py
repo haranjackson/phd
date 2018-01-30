@@ -16,11 +16,11 @@ from multi.gfm import add_ghost_cells
 from solvers.solvers import ader_stepper, split_stepper
 
 from options import nx, ny, nz, nV, dx, dy, dz, ndim, N, NCORE, CFL
-from options import RGFM, SPLIT, USE_CPP, FULL_CPP, STRANG, HALF_STEP, PERRON_FROB
+from options import RGFM, SPLIT, CPP_LVL, STRANG, HALF_STEP, OSHER, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.barton1_IC
+IC = solids.elastic2_IC
 BC = boundaries.standard_BC
 
 
@@ -31,11 +31,16 @@ m = len(MPs)
 pool = Parallel(n_jobs=NCORE)
 
 
-if USE_CPP:
+if CPP_LVL > 0:
+
     extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
     ub = zeros(extDims * nV)
     wh = zeros(extDims * int(pow(N, ndim)) * nV)
     qh = zeros(extDims * int(pow(N, ndim + 1)) * nV)
+
+    cppIterator = GPRpy.solvers.iterator
+    cppSplitStepper = GPRpy.solvers.split_stepper
+    cppAderStepper = GPRpy.solvers.ader_stepper
 
 
 def main(t, tf, count, data):
@@ -43,11 +48,10 @@ def main(t, tf, count, data):
     tStart = time()
     u = data[count].grid
 
-    if FULL_CPP:
+    if CPP_LVL == 2:
         u1 = u.ravel()
-        GPRpy.solvers.iterator(u1, tf, nx, ny, nz, dx, dy, dz, CFL,
-                               False, SPLIT, STRANG, HALF_STEP,
-                               PERRON_FROB, MPs[0])
+        cppIterator(u1, tf, nx, ny, nz, dx, dy, dz, CFL, False,
+                    SPLIT, STRANG, HALF_STEP, OSHER, PERR_FROB, MPs[0])
         data.append(Data(u1.reshape(u.shape), t))
 
     else:
@@ -67,19 +71,19 @@ def main(t, tf, count, data):
 
                 mat = mats[i]
 
-                if USE_CPP:
+                if CPP_LVL == 1:
                     tmp = mat.ravel()
                     MP = MPs[i]
 
                     if SPLIT:
-                        GPRpy.solvers.split_stepper(tmp, ub, wh, ndim, nx, ny, nz,
-                                                    dt, dx, dy, dz, False,
-                                                    bool(STRANG), bool(HALF_STEP),
-                                                    bool(PERRON_FROB), MP)
+                        cppSplitStepper(tmp, ub, wh, ndim, nx, ny, nz,
+                                        dt, dx, dy, dz, False,
+                                        bool(STRANG), bool(HALF_STEP),
+                                        bool(OSHER), bool(PERR_FROB), MP)
                     else:
-                        GPRpy.solvers.ader_stepper(tmp, ub, wh, qh, ndim, nx, ny, nz,
-                                                   dt, dx, dy, dz, False,
-                                                   bool(PERRON_FROB), MP)
+                        cppAderStepper(tmp, ub, wh, qh, ndim, nx, ny, nz,
+                                       dt, dx, dy, dz, False,
+                                       bool(OSHER), bool(PERR_FROB), MP)
 
                     mat = tmp.reshape([nx, ny, nz, nV])
 

@@ -8,7 +8,7 @@
 
 void ader_stepper(Vecr u, Vecr ub, Vecr wh, Vecr qh, int ndim, int nx, int ny,
                   int nz, double dt, double dx, double dy, double dz,
-                  bool PERIODIC, bool PERRON_FROBENIUS, Par &MP) {
+                  bool PERIODIC, bool OSHER, bool PERR_FROB, Par &MP) {
 
   boundaries(u, ub, ndim, nx, ny, nz, PERIODIC);
 
@@ -16,13 +16,13 @@ void ader_stepper(Vecr u, Vecr ub, Vecr wh, Vecr qh, int ndim, int nx, int ny,
 
   predictor(qh, wh, ndim, dt, dx, dy, dz, false, false, MP);
 
-  fv_launcher(u, qh, ndim, nx, ny, nz, dt, dx, dy, dz, true, true,
-              PERRON_FROBENIUS, MP);
+  fv_launcher(u, qh, ndim, nx, ny, nz, dt, dx, dy, dz, true, true, OSHER,
+              PERR_FROB, MP);
 }
 
 void split_stepper(Vecr u, Vecr ub, Vecr wh, int ndim, int nx, int ny, int nz,
                    double dt, double dx, double dy, double dz, bool PERIODIC,
-                   bool STRANG, bool HALF_STEP, bool PERRON_FROBENIUS,
+                   bool STRANG, bool HALF_STEP, bool OSHER, bool PERR_FROB,
                    Par &MP) {
 
   double Dt = STRANG ? dt / 2 : dt;
@@ -36,8 +36,8 @@ void split_stepper(Vecr u, Vecr ub, Vecr wh, int ndim, int nx, int ny, int nz,
   if (HALF_STEP)
     midstepper(wh, ndim, dt, dx, dy, dz, MP);
 
-  fv_launcher(u, wh, ndim, nx, ny, nz, dt, dx, dy, dz, false, false,
-              PERRON_FROBENIUS, MP);
+  fv_launcher(u, wh, ndim, nx, ny, nz, dt, dx, dy, dz, false, false, OSHER,
+              PERR_FROB, MP);
 
   if (STRANG)
     ode_launcher(u, Dt, MP);

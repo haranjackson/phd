@@ -34,8 +34,10 @@ typedef Eigen::Ref<MatN3_V> MatN3_Vr;
 typedef Eigen::Ref<MatN_N> MatN_Nr;
 typedef Eigen::Ref<Mat2N_V> Mat2N_Vr;
 
-typedef Eigen::Matrix<double, V, 1> VecV;
 typedef Eigen::Matrix<double, N, 1> VecN;
+typedef Eigen::Matrix<double, V, 1> VecV;
+
+typedef Eigen::Matrix<std::complex<double>, V, 1> VeccV;
 
 typedef Eigen::Ref<VecV> VecVr;
 typedef Eigen::Ref<VecN> VecNr;

@@ -80,7 +80,7 @@ def elastic1_IC():
     SR = 0
 
     print("ELASTIC1: N =", N)
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
+    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def elastic2_IC():
@@ -100,7 +100,7 @@ def elastic2_IC():
     SR = 0
 
     print("ELASTIC2: N =", N)
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_SMG)
+    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def piston_IC():

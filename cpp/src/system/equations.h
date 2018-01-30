@@ -12,6 +12,6 @@ void block(MatV_Vr ret, VecVr Q, int d);
 
 void Bdot(VecVr ret, VecVr Q, VecVr x, int d, Par &MP);
 
-MatV_V system(VecVr Q, int d, Par &MP);
+MatV_V system_matrix(VecVr Q, int d, Par &MP);
 
 #endif

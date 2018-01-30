@@ -1,7 +1,7 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-const int N = 2;  // Order of accuracy
+const int N = 3;  // Order of accuracy
 const int V = 17; // Number of variables
 
 // WENO Constants //

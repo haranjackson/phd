@@ -31,6 +31,8 @@
 #include "../src/system/equations.h"
 #include "../src/system/jacobians.h"
 
+#include "../src/system/variables/derivatives.h"
+
 namespace py = pybind11;
 
 PYBIND11_MODULE(GPRpy, m) {
@@ -107,6 +109,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_system.def("source", &source);
   m_system.def("block", &block);
   m_system.def("Bdot", &Bdot);
+  m_system.def("system_matrix", &system_matrix);
 
   m_system.def("max_abs_eigs", &max_abs_eigs);
   m_system.def("thermo_acoustic_tensor", &thermo_acoustic_tensor);
@@ -139,6 +142,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_split.def("analyticSolver_thermal", &analyticSolver_thermal);
   m_solvers_split.def("ode_launcher", &ode_launcher);
 
+  m_solvers_fv.def("Aint", &Aint);
   m_solvers_fv.def("Bint", &Bint);
   m_solvers_fv.def("Smax", &Smax);
 

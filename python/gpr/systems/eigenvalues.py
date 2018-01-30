@@ -4,7 +4,7 @@ from numpy.linalg import eigvals
 from gpr.misc.structures import Cvec_to_Pclass
 from gpr.variables.wavespeeds import c_0, c_h
 
-from options import PERRON_FROB
+from options import PERR_FROB
 
 
 def Xi1(P, d):
@@ -109,7 +109,7 @@ def max_abs_eigs(Q, d, MP):
     vd = P.v[d]
     O = thermo_acoustic_tensor(P, d)
 
-    if PERRON_FROB:
+    if PERR_FROB:
         rowSum = [sum(o) for o in O]
         colSum = [sum(oT) for oT in O.T]
         lam = sqrt(min(max(rowSum), max(colSum)))

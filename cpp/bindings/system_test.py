@@ -5,7 +5,7 @@ from numpy.random import rand
 
 from test_functions import diff, generate_vector
 
-from system import flux_ref, source_ref, block_ref, Bdot
+from system import flux_ref, source_ref, block_ref, Bdot, system
 
 from options import nV
 
@@ -52,3 +52,11 @@ def Bdot_test(d, MP):
     Bdot(Bx_py, x, Q, d, MP)
     print("Bdot diff =", diff(Bx_cp, Bx_py))
     return Bx_cp, Bx_py
+
+
+def system_test(d, MP):
+    Q = generate_vector(MP)
+    M_cp = GPRpy.system.system_matrix(Q, d, MP)
+    M_py = system(Q, d, MP)
+    print("M    diff =", diff(M_cp, M_py))
+    return M_cp, M_py

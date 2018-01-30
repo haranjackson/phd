@@ -6,19 +6,23 @@
 
 VecV Aint(VecVr qL, VecVr qR, int d, Par &MP) {
   // Returns the Osher-Solomon jump matrix for A, in the dth direction
-  VecV ret = VecV::Zero();
-  VecV Δq = qR - qL;
+  VeccV ret = VeccV::Zero();
+  VecV Δq = qL - qR;
+  VeccV Δqc = VeccV(Δq);
+  Eigen::EigenSolver<MatV_V> es;
+
+  VecV q;
+  VeccV b;
+  MatV_V J;
   for (int i = 0; i < N; i++) {
-    VecV q = qL + NODES[i] * Δq;
-    MatV_V J = system(q, d, MP);
-    Eigen::EigenSolver<MatV_V> es(J);
-    MatV_V R = es.eigenvectors().real();
-    VecV b = R.colPivHouseholderQr().solve(Δq);
-    for (int j = 0; j < V; j++)
-      b(j) = std::abs(es.eigenvalues().array().abs()(j)) * b(j);
-    ret += WGHTS[i] * R * b;
+    q = qR + NODES(i) * Δq;
+    J = system_matrix(q, d, MP);
+    es.compute(J);
+    b = es.eigenvectors().colPivHouseholderQr().solve(Δqc).array() *
+        es.eigenvalues().array().abs();
+    ret += WGHTS(i) * (es.eigenvectors() * b);
   }
-  return ret;
+  return ret.real();
 }
 
 VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
@@ -34,8 +38,8 @@ VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
   return ret;
 }
 
-VecV Smax(VecVr qL, VecVr qR, int d, bool PERRON_FROBENIUS, Par &MP) {
-  double max1 = max_abs_eigs(qL, d, PERRON_FROBENIUS, MP);
-  double max2 = max_abs_eigs(qR, d, PERRON_FROBENIUS, MP);
+VecV Smax(VecVr qL, VecVr qR, int d, bool PERR_FROB, Par &MP) {
+  double max1 = max_abs_eigs(qL, d, PERR_FROB, MP);
+  double max2 = max_abs_eigs(qR, d, PERR_FROB, MP);
   return std::max(max1, max2) * (qL - qR);
 }

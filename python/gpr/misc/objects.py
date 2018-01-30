@@ -1,7 +1,7 @@
 from gpr.variables.mg import eos_text_to_code
 from gpr.variables.state import temperature
 
-from options import USE_CPP
+from options import CPP_LVL
 
 
 class hyperelastic_params():
@@ -192,7 +192,7 @@ def material_parameters(EOS, ρ0, cv, p0,
     REACTIVE = REACTION is not None
     MULTI = REACTIVE # should be amended in future
 
-    if USE_CPP:
+    if CPP_LVL > 0:
         import GPRpy
         MP = GPRpy.classes.Par()
     else:

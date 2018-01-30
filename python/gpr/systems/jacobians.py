@@ -17,11 +17,11 @@ def dQdP(P):
     v = P.v
     E = P.E
 
-    dEdρ = P.dEdρ()
-    dEdp = P.dEdp()
+    Eρ = P.dEdρ()
+    Ep = P.dEdp()
 
-    ret[1, 0] = E + ρ * dEdρ
-    ret[1, 1] = ρ * dEdp
+    ret[1, 0] = E + ρ * Eρ
+    ret[1, 1] = ρ * Ep
     ret[1, 2:5] = ρ * v
     ret[2:5, 0] = v
     for i in range(2, 5):
@@ -61,11 +61,11 @@ def dPdQ(P):
     E = P.E
     J = P.J
 
-    dEdρ = P.dEdρ()
-    dEdp = P.dEdp()
-    Γ_ = 1 / (ρ * dEdp)
+    Eρ = P.dEdρ()
+    Ep = P.dEdp()
+    Γ_ = 1 / (ρ * Ep)
 
-    tmp = L2_1D(v) - (E + ρ * dEdρ)
+    tmp = L2_1D(v) - (E + ρ * Eρ)
     if MP.THERMAL:
         cα2 = MP.cα2
         tmp += cα2 * L2_1D(J)
@@ -114,37 +114,37 @@ def dFdP(P, d):
     v = P.v
     E = P.E
 
-    dEdρ = P.dEdρ()
-    dEdp = P.dEdp()
+    Eρ = P.dEdρ()
+    Ep = P.dEdp()
 
     ρvd = ρ * v[d]
 
     vv = outer(v, v)
     Ψ = ρ * vv
     Φ = vv
-    Δ = (E + ρ * dEdρ) * v
-    Π = (ρ * dEdp + 1) * v
+    Δ = (E + ρ * Eρ) * v
+    Π = (ρ * Ep + 1) * v
 
     if MP.VISCOUS:
 
         σ = P.σ()
         ψ_ = P.dEdA()
-        dσdρ = P.dσdρ()
-        dσdA = P.dσdA()
+        σρ = P.dσdρ()
+        σA = P.dσdA()
 
         Ψ -= σ
-        Φ -= dσdρ
-        Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, dσdA, axes=(0, 0))
-        Δ -= dot(dσdρ, v)
+        Φ -= σρ
+        Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, σA, axes=(0, 0))
+        Δ -= dot(σρ, v)
 
     if MP.THERMAL:
 
-        dTdρ = P.dTdρ()
-        dTdp = P.dTdp()
+        Tρ = P.dTdρ()
+        Tp = P.dTdp()
 
         H = P.H()
-        Δ += dTdρ * H
-        Π += dTdp * H
+        Δ += Tρ * H
+        Π += Tp * H
 
     ret = zeros([nV, nV])
     ret[0, 0] = v[d]
@@ -161,7 +161,7 @@ def dFdP(P, d):
 
     if MP.VISCOUS:
         ret[1, 5:14] = Ω[d].ravel()
-        ret[2:5, 5:14] = -dσdA[d].reshape([3, 9])
+        ret[2:5, 5:14] = -σA[d].reshape([3, 9])
         ret[5 + d, 2:5] = A[0]
         ret[8 + d, 2:5] = A[1]
         ret[11 + d, 2:5] = A[2]
@@ -176,8 +176,8 @@ def dFdP(P, d):
         ret[1, 14:17] = ρvd * H
         ret[1, 14 + d] += cα2 * T
         ret[14:17, 0] = v[d] * J
-        ret[14 + d, 0] += dTdρ
-        ret[14 + d, 1] = dTdp
+        ret[14 + d, 0] += Tρ
+        ret[14 + d, 1] = Tp
         ret[14:17, 2 + d] = ρ * J
         for i in range(14, 17):
             ret[i, i] = ρvd

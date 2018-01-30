@@ -6,6 +6,6 @@
 
 VecV Aint(VecVr qL, VecVr qR, int d, Par &MP);
 VecV Bint(VecVr qL, VecVr qR, int d, Par &MP);
-VecV Smax(VecVr qL, VecVr qR, int d, bool PERRON_FROBENIUS, Par &MP);
+VecV Smax(VecVr qL, VecVr qR, int d, bool PERR_FROB, Par &MP);
 
 #endif // FLUXES_H

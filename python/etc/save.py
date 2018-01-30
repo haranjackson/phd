@@ -6,9 +6,9 @@ from numpy import array, linspace, int64, save
 
 from options import Lx, Ly, Lz, nx, ny, nz
 from options import RGFM, ISO_FIX, STAR_TOL, STIFF_RGFM
-from options import USE_CPP, SPLIT
+from options import CPP_LVL, SPLIT
 from options import NUM_ODE, HALF_STEP, STRANG
-from options import N, CFL, OSHER, PERRON_FROB
+from options import N, CFL, OSHER, PERR_FROB
 from options import HIDALGO, STIFF, SUPER_STIFF, DG_TOL, MAX_ITER
 from options import rc, λc, λs, eps
 from options import PARA_DG, PARA_FV, NCORE
@@ -34,7 +34,7 @@ def save_config(path):
         f.write('STAR_TOL = %f\n' % STAR_TOL)
         f.write('STIFF_RGFM = %i\n\n' % STIFF_RGFM)
 
-        f.write('USE_CPP = %i\n' % USE_CPP)
+        f.write('CPP_LVL = %i\n' % CPP_LVL)
         f.write('SPLIT   = %i\n\n' % SPLIT)
 
         f.write('NUM_ODE   = %i\n' % NUM_ODE)
@@ -44,7 +44,7 @@ def save_config(path):
         f.write('N     = %i\n' % N)
         f.write('CFL   = %f\n' % CFL)
         f.write('OSHER = %i\n' % OSHER)
-        f.write('PERRON_FROB = %i\n\n' % PERRON_FROB)
+        f.write('PERR_FROB = %i\n\n' % PERR_FROB)
 
         f.write('HIDALGO     = %i\n' % HIDALGO)
         f.write('STIFF       = %i\n' % STIFF)
