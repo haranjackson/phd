@@ -39,9 +39,11 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
     Mat R = Mat::Zero(1, 0);
 
     unsigned int ind = 1 + inner_m + outer_v.size();
-    unsigned int j;
-    for (j = 1; j < ind; j++) {
+    unsigned int j = 1;
+    for (; j < ind; j++) {
+
       Vec z(n);
+
       if (j < outer_v.size() + 1)
         z = outer_v[j - 1];
       else if (j == outer_v.size() + 1)
@@ -83,6 +85,9 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
       if ((inner_res <= tol * inner_res_0) || (hcur(j) <= mEPS * v_new_norm))
         break;
     }
+    if (j == ind)
+      j -= 1;
+
     Vec b = Q.topLeftCorner(1, j).transpose();
     Mat A = R.topLeftCorner(j, j);
 
@@ -99,7 +104,6 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
 
     while (outer_v.size() > outer_k)
       outer_v.erase(outer_v.begin());
-
     x += dx;
   }
   return x;
