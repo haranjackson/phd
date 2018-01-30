@@ -18,16 +18,12 @@ def theta1inv(ρ, A, MP):
     if MP.PLASTIC:
         σY = MP.σY
         n = MP.n
-        ρ = det3(A) * MP.ρ0
         σ = sigma(ρ, A, MP)
         sn = sigma_norm(σ)
-        if sn == 0:
-            return 0
-        τ = τ1 * (σY / sn) ** n
+        sn = min(sn, 1e8)   # Hacky fix
+        return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * (sn / σY) ** n
     else:
-        τ = τ1
-
-    return 3 * det3(A)**(5 / 3) / (cs2 * τ)
+        return 3 * det3(A)**(5 / 3) / (cs2 * τ1)
 
 
 def theta2inv(ρ, T, MP):
