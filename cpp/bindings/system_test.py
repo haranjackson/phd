@@ -19,7 +19,7 @@ def flux_test(d, MP):
     F_py = zeros(nV)
     GPRpy.system.flux(F_cp, Q, d, MP)
     flux_ref(F_py, Q, d, MP)
-    print("F    diff =", diff(F_cp, F_py))
+    print("F      diff =", diff(F_cp, F_py))
     return F_cp, F_py
 
 
@@ -29,7 +29,7 @@ def source_test(d, MP):
     S_py = zeros(nV)
     GPRpy.system.source(S_cp, Q, MP)
     source_ref(S_py, Q, MP)
-    print("S    diff =", diff(S_cp, S_py))
+    print("S      diff =", diff(S_cp, S_py))
     return S_cp, S_py
 
 
@@ -39,7 +39,7 @@ def block_test(d, MP):
     B_py = zeros([nV, nV])
     GPRpy.system.block(B_cp, Q, d)
     block_ref(B_py, Q, d, MP)
-    print("B    diff =", diff(B_cp, B_py))
+    print("B      diff =", diff(B_cp, B_py))
     return B_cp, B_py
 
 
@@ -50,7 +50,7 @@ def Bdot_test(d, MP):
     Bx_py = zeros(nV)
     GPRpy.system.Bdot(Bx_cp, Q, x, d, MP)
     Bdot(Bx_py, x, Q, d, MP)
-    print("Bdot diff =", diff(Bx_cp, Bx_py))
+    print("Bdot   diff =", diff(Bx_cp, Bx_py))
     return Bx_cp, Bx_py
 
 
@@ -58,5 +58,5 @@ def system_test(d, MP):
     Q = generate_vector(MP)
     M_cp = GPRpy.system.system_matrix(Q, d, MP)
     M_py = system(Q, d, MP)
-    print("M    diff =", diff(M_cp, M_py))
+    print("M      diff =", diff(M_cp, M_py))
     return M_cp, M_py

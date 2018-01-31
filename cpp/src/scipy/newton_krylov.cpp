@@ -22,9 +22,6 @@ KrylovJacobian::KrylovJacobian(Vecr x, Vecr f, VecFunc F) {
   rdiff = std::pow(mEPS, 0.5);
   update_diff_step();
   outer_v = std::vector<Vec>(0);
-
-  int n = x.size();
-  M = Mat::Identity(n, n);
 }
 
 Vec KrylovJacobian::matvec(Vecr v) {
@@ -36,16 +33,16 @@ Vec KrylovJacobian::matvec(Vecr v) {
   return (func(tmp) - f0) / sc;
 }
 
-Vec KrylovJacobian::psolve(Vecr v) { return M * v; }
+Vec KrylovJacobian::psolve(Vecr v) { return v; }
 
 void KrylovJacobian::solve(Vecr rhs, double tol, Vecr dx) {
 
-  Vec x0 = 0. * rhs;
   using std::placeholders::_1;
   VecFunc mvec = std::bind(&KrylovJacobian::matvec, *this, _1);
   VecFunc psol = std::bind(&KrylovJacobian::psolve, *this, _1);
 
-  dx = -lgmres(mvec, psol, rhs, x0, outer_v, tol, maxiter, inner_m, outer_k);
+  dx = -lgmres(mvec, psol, rhs, 0. * rhs, outer_v, tol, maxiter, inner_m,
+               outer_k);
 }
 
 void KrylovJacobian::update(Vecr x, Vecr f) {
@@ -78,12 +75,6 @@ bool TerminationCondition::check(Vecr f, Vecr x, Vecr dx) {
          dx_norm / x_rtol <= x_norm;
 }
 
-void _nonlin_line_search(VecFunc func, Vecr x, Vecr Fx, Vecr dx) {
-
-  x += dx;
-  Fx = func(x);
-}
-
 Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
                  double x_rtol) {
 
@@ -110,7 +101,8 @@ Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
     double tol = std::min(eta, eta * Fx_norm);
     jacobian.solve(Fx, tol, dx);
 
-    _nonlin_line_search(F, x, Fx, dx);
+    x += dx;
+    Fx = F(x);
     double Fx_norm_new = Fx.norm();
 
     jacobian.update(x, Fx);
