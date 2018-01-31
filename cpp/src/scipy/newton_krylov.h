@@ -7,7 +7,7 @@ class KrylovJacobian {
   VecFunc func;
   int maxiter;
   int inner_m;
-  unsigned int outer_k;
+  int outer_k;
 
   Vec x0;
   Vec f0;
@@ -19,9 +19,9 @@ class KrylovJacobian {
 public:
   void update_diff_step();
   KrylovJacobian(Vecr x, Vecr f, VecFunc F);
-  Vec matvec(Vec v);
-  Vec psolve(Vec v);
-  Vec solve(Vecr rhs, double tol);
+  Vec matvec(Vecr v);
+  Vec psolve(Vecr v);
+  void solve(Vecr rhs, double tol, Vecr dx);
   void update(Vecr x, Vecr f);
 };
 

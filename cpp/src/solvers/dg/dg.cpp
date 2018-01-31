@@ -91,7 +91,7 @@ MatN3_V rhs2(MatN3_Vr q, MatN3_Vr Ww, double dt, double dx, double dy,
   return ret;
 }
 
-Vec obj1(Vec q, MatN2_Vr Ww, double dt, double dx, Par &MP) {
+Vec obj1(Vecr q, MatN2_Vr Ww, double dt, double dx, Par &MP) {
 
   MatN2_VMap qmat(q.data(), OuterStride(V));
   MatN2_V tmp = rhs1(qmat, Ww, dt, dx, MP);
@@ -105,7 +105,7 @@ Vec obj1(Vec q, MatN2_Vr Ww, double dt, double dx, Par &MP) {
   return ret;
 }
 
-Vec obj2(Vec q, MatN3_Vr Ww, double dt, double dx, double dy, Par &MP) {
+Vec obj2(Vecr q, MatN3_Vr Ww, double dt, double dx, double dy, Par &MP) {
   MatN3_VMap qmat(q.data(), OuterStride(V));
   MatN3_V tmp = rhs2(qmat, Ww, dt, dx, dy, MP);
 

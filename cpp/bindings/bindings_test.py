@@ -5,6 +5,7 @@ from tests_1d import fluids, solids
 
 from system_test import flux_test, source_test, block_test, Bdot_test, system_test
 
+from solver_test import lgmres_test, newton_krylov_test
 from solver_test import weno_test, rhs_test, obj_test, dg_test
 from solver_test import TAT_test, Smax_test, Aint_test, Bint_test
 from solver_test import FVc_test, FVi_test, FV_test
@@ -16,7 +17,7 @@ from options import dx
 ### ENSURE N,V are equal ###
 
 
-u, MPs, _ = solids.barton1_IC()
+u, MPs, _ = fluids.viscous_shock_IC()
 MP = MPs[0]
 d = 0
 dt = 0.0001
@@ -27,6 +28,9 @@ S_cp, S_py = source_test(d, MP)
 B_cp, B_py = block_test(d, MP)
 Bx_cp, Bx_py = Bdot_test(d, MP)
 M_cp, M_py = system_test(d, MP)
+
+lgmres_cp, lgmres_py = lgmres_test()
+nk_cp, nk_py = newton_krylov_test(u, dt, MP)
 
 wh_cp, wh_py = weno_test()
 

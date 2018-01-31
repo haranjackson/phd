@@ -26,24 +26,25 @@ KrylovJacobian::KrylovJacobian(Vecr x, Vecr f, VecFunc F) {
   M = Mat::Identity(n, n);
 }
 
-Vec KrylovJacobian::matvec(Vec v) {
+Vec KrylovJacobian::matvec(Vecr v) {
   double nv = v.norm();
   if (nv == 0.)
     return 0. * v;
   double sc = omega / nv;
-  return (func(x0 + sc * v) - f0) / sc;
+  Vec tmp = x0 + sc * v;
+  return (func(tmp) - f0) / sc;
 }
 
-Vec KrylovJacobian::psolve(Vec v) { return M * v; }
+Vec KrylovJacobian::psolve(Vecr v) { return M * v; }
 
-Vec KrylovJacobian::solve(Vecr rhs, double tol) {
+void KrylovJacobian::solve(Vecr rhs, double tol, Vecr dx) {
 
   Vec x0 = 0. * rhs;
   using std::placeholders::_1;
   VecFunc mvec = std::bind(&KrylovJacobian::matvec, *this, _1);
   VecFunc psol = std::bind(&KrylovJacobian::psolve, *this, _1);
 
-  return lgmres(mvec, psol, rhs, x0, outer_v, tol, maxiter, inner_m, outer_k);
+  dx = -lgmres(mvec, psol, rhs, x0, outer_v, tol, maxiter, inner_m, outer_k);
 }
 
 void KrylovJacobian::update(Vecr x, Vecr f) {
@@ -118,8 +119,8 @@ double scalar_search_armijo(double phi0, double *tmp_s, double *tmp_phi,
     if (phi_a2 <= phi0 - c1 * alpha2 * phi0)
       return alpha2;
 
-    if ((alpha1 - alpha2) > alpha1 / 2.0 || (1 - alpha2 / alpha1) < 0.96)
-      alpha2 = alpha1 / 2.0;
+    if ((alpha1 - alpha2) > alpha1 / 2. || (1. - alpha2 / alpha1) < 0.96)
+      alpha2 = alpha1 / 2.;
 
     alpha1 = alpha2;
     phi_a0 = phi_a1;
@@ -165,7 +166,7 @@ Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
       break;
 
     double tol = std::min(eta, eta * Fx_norm);
-    Vec dx = -jacobian.solve(Fx, tol);
+    jacobian.solve(Fx, tol, dx);
 
     _nonlin_line_search(F, x, Fx, dx);
     double Fx_norm_new = Fx.norm();

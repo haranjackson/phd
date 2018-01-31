@@ -6,7 +6,7 @@
 #include <iostream>
 
 double timestep(Vecr u, double dX[4], int ndim, double CFL, double t, double tf,
-                unsigned int count, bool PERR_FROB, Par &MP) {
+                int count, bool PERR_FROB, Par &MP) {
   double MIN = 1e5;
   int ncell = u.size() / V;
   VecV q;
@@ -41,7 +41,7 @@ void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
   Vec qh(extDims * int(pow(N, ndim + 1)) * V);
 
   double t = 0.;
-  unsigned long count = 0;
+  long count = 0;
   while (t < tf) {
 
     double dt = timestep(u, dX, ndim, CFL, t, tf, count, PERR_FROB, MP);

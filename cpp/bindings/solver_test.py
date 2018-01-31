@@ -2,11 +2,15 @@ import GPRpy
 
 from numpy import array, dot, zeros
 from numpy.random import rand
+from scipy.optimize import newton_krylov
+from scipy.sparse.linalg import lgmres
 
 from gpr.misc.structures import Cvec_to_Pclass
 from gpr.systems.eigenvalues import thermo_acoustic_tensor
 
-from solvers.dg.dg import DG_U, predictor, rhs
+from solvers.basis import GAPS
+from solvers.dg.dg import DG_W, DG_U, predictor, rhs
+from solvers.dg.dg import standard_initial_guess, hidalgo_initial_guess
 from solvers.fv.fluxes import Aint, Bint, Smax
 from solvers.fv.fv import interfaces, endpoints, extend_dimensions, fv_terms, centers
 from solvers.split.homogeneous import weno_midstepper
@@ -15,8 +19,45 @@ from solvers.weno.weno import weno_launcher
 
 from test_functions import diff, generate_vector
 
-from options import ndim, nV, nx, ny, nz, N
-from options import SPLIT, STIFF, HIDALGO, OSHER, PERR_FROB
+from options import ndim, nV, nx, ny, nz, N, NT
+from options import SPLIT, STIFF, HIDALGO, OSHER, PERR_FROB, DG_TOL
+
+
+### NEWTON-KRYLOV ###
+
+
+def lgmres_test():
+    A = rand(30, 30)
+    b = rand(30)
+    lgmres_cp = GPRpy.scipy.lgmres_wrapper(A, b)
+    lgmres_py = lgmres(A, b)[0]
+    print("LGMRES diff =", diff(lgmres_cp, lgmres_py))
+    return lgmres_cp, lgmres_py
+
+
+def newton_krylov_test(u, dt, MP):
+
+    wh = weno_launcher(u)
+    w = wh[int(nx / 2), 0, 0]
+    HOMOGENEOUS = SPLIT
+    Ww = dot(DG_W, w)
+    dtGAPS = dt * GAPS
+    if HIDALGO:
+        q = hidalgo_initial_guess(w, dtGAPS, MP, HOMOGENEOUS)
+    else:
+        q = standard_initial_guess(w)
+
+    def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, MP, HOMOGENEOUS)
+    def obj_cp(X):
+        X2 = X.reshape([NT, nV])
+        ret = obj(X2)
+        return ret.ravel()
+
+    nk_cp = GPRpy.scipy.newton_krylov(obj_cp, q.ravel(), f_tol=DG_TOL)
+    nk_py = newton_krylov(obj, q, f_tol=DG_TOL)
+    nk_cp = nk_cp.reshape([NT, nV])
+    print("N-K  diff =", diff(nk_cp, nk_py))
+    return nk_cp, nk_py
 
 
 ### WENO ###
