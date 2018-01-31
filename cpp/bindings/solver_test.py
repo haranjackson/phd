@@ -53,9 +53,8 @@ def newton_krylov_test(u, dt, MP):
         ret = obj(X2)
         return ret.ravel()
 
-    nk_cp = GPRpy.scipy.newton_krylov(obj_cp, q.ravel(), f_tol=DG_TOL)
-    nk_py = newton_krylov(obj, q, f_tol=DG_TOL)
-    nk_cp = nk_cp.reshape([NT, nV])
+    nk_cp = GPRpy.scipy.newton_krylov(obj_cp, q.copy().ravel(), f_tol=DG_TOL)
+    nk_py = newton_krylov(obj, q, f_tol=DG_TOL).ravel()
     print("N-K  diff =", diff(nk_cp, nk_py))
     return nk_cp, nk_py
 
