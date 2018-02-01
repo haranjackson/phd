@@ -10,11 +10,11 @@ def Bint(qL, qR, d, MP):
     """ Returns the jump matrix for B, in the dth direction.
     """
     ret = zeros(nV)
-    qJump = qR - qL
+    Δq = qR - qL
     for i in range(N):
-        q = qL + NODES[i] * qJump
+        q = qL + NODES[i] * Δq
         tmp = zeros(nV)
-        Bdot(tmp, qJump, q, d, MP)
+        Bdot(tmp, Δq, q, d, MP)
         ret += WGHTS[i] * tmp
     return ret
 

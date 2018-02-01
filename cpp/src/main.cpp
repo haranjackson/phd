@@ -8,7 +8,7 @@
 
 VecV Qvec(double ρ, double p, Vec3r v, Mat3_3r A, Vec3r J, Par &MP) {
   // Returns the vector of conserved variables
-  VecV Q = VecV::Zero();
+  VecV Q;
   Q(0) = ρ;
   Q.segment<3>(2) = ρ * v;
   Q.segment<9>(5) = VecMap(A.data(), 9);
@@ -21,19 +21,16 @@ VecV Qvec(double ρ, double p, Vec3r v, Mat3_3r A, Vec3r J, Par &MP) {
   return Q;
 }
 
-Vec heat_conduction_1d(Par MP) {
-  int nx = 200;
-  double rL = 2;
-  double rR = 0.5;
-  double rL_3 = pow(rL, 1 / 3.);
-  double rR_3 = pow(rR, 1 / 3.);
-  Mat AL = rL_3 * Mat::Identity(3, 3);
-  Mat AR = rR_3 * Mat::Identity(3, 3);
+Vec heat_conduction_1d(Par MP, int nx) {
+  double ρL = 2;
+  double ρR = 0.5;
+  Mat AL = pow(ρL, 1 / 3.) * Mat::Identity(3, 3);
+  Mat AR = pow(ρR, 1 / 3.) * Mat::Identity(3, 3);
   Vec v = Vec::Zero(3);
   Vec J = Vec::Zero(3);
 
-  VecV QL = Qvec(rL, 1., v, AL, J, MP);
-  VecV QR = Qvec(rR, 1., v, AR, J, MP);
+  VecV QL = Qvec(ρL, 1., v, AL, J, MP);
+  VecV QR = Qvec(ρR, 1., v, AR, J, MP);
 
   Vec u(nx * V);
   double dx = 1. / nx;
@@ -53,6 +50,7 @@ int main() {
   double μ = 1e-2;
 
   Par MP;
+  MP.EOS = 0;
   MP.γ = γ;
   MP.cv = cv;
   MP.pINF = 0.;
@@ -63,8 +61,6 @@ int main() {
   MP.τ1 = 6 * μ / (MP.ρ0 * MP.B0);
   MP.cα2 = 4.;
   MP.τ2 = κ * MP.ρ0 / (MP.T0 * MP.cα2);
-
-  Vec u = heat_conduction_1d(MP);
 
   double tf = 0.1;
   int nx = 200;
@@ -81,6 +77,8 @@ int main() {
   bool STIFF = false;
   bool OSHER = false;
   bool PERR_FROB = false;
+
+  Vec u = heat_conduction_1d(MP, nx);
 
   iterator(u, tf, nx, ny, nz, dx, dy, dz, CFL, PERIODIC, SPLIT, STRANG,
            HALF_STEP, STIFF, OSHER, PERR_FROB, MP);

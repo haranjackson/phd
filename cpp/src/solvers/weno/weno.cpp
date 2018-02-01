@@ -18,7 +18,7 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
   VecV oL, oR, oCL, oCR, oSum;
   MatN_V wL, wR, wCL, wCR;
 
-  if (N < 4) {
+  if (N < 3) {
     wL.noalias() = mLinv * data.block<N, V>(0, 0);
     wR.noalias() = mRinv * data.block<N, V>((N - 1), 0);
   } else {
@@ -31,7 +31,7 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
   oSum = oL + oR;
 
   if (N > 2) {
-    if (N < 4)
+    if (N < 3)
       wCL.noalias() = mCLinv * data.block<N, V>(FN2, 0);
     else
       wCL = MCL.solve(data.block<N, V>(FN2, 0));

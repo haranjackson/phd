@@ -53,6 +53,6 @@ typedef Eigen::Map<Vec, 0, Eigen::InnerStride<1>> VecMap;
 typedef Eigen::HouseholderQR<Mat> DecQR;
 typedef Eigen::ColPivHouseholderQR<Mat> Dec;
 
-typedef std::function<Vec(Vecr)> VecFunc; // change to Vec(Vecr)
+typedef std::function<Vec(Vecr)> VecFunc;
 
 #endif
