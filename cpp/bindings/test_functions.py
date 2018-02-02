@@ -17,5 +17,8 @@ def generate_vector(MP):
     return Cvec(ρ, p, v, A, J, MP)
 
 
-def diff(x1, x2):
-    return amax(abs(x1 - x2))
+def check(x1, x2):
+    if amax(abs(x1 - x2)) < 1e-12:
+        return "✓"
+    else:
+        return amax(abs(x1 - x2))

@@ -7,8 +7,8 @@ from numpy import array, linspace, int64, save
 from options import Lx, Ly, Lz, nx, ny, nz
 from options import RGFM, ISO_FIX, STAR_TOL, STIFF_RGFM
 from options import CPP_LVL, SPLIT
-from options import NUM_ODE, HALF_STEP, STRANG
 from options import N, CFL, OSHER, PERR_FROB
+from options import NUM_ODE, HALF_STEP, STRANG
 from options import HIDALGO, STIFF, SUPER_STIFF, DG_TOL, MAX_ITER
 from options import rc, λc, λs, eps
 from options import PARA_DG, PARA_FV, NCORE
@@ -37,14 +37,14 @@ def save_config(path):
         f.write('CPP_LVL = %i\n' % CPP_LVL)
         f.write('SPLIT   = %i\n\n' % SPLIT)
 
-        f.write('NUM_ODE   = %i\n' % NUM_ODE)
-        f.write('HALF_STEP = %i\n' % HALF_STEP)
-        f.write('STRANG    = %i\n\n' % STRANG)
-
         f.write('N     = %i\n' % N)
         f.write('CFL   = %f\n' % CFL)
         f.write('OSHER = %i\n' % OSHER)
         f.write('PERR_FROB = %i\n\n' % PERR_FROB)
+
+        f.write('NUM_ODE   = %i\n' % NUM_ODE)
+        f.write('HALF_STEP = %i\n' % HALF_STEP)
+        f.write('STRANG    = %i\n\n' % STRANG)
 
         f.write('HIDALGO     = %i\n' % HIDALGO)
         f.write('STIFF       = %i\n' % STIFF)

@@ -5,7 +5,7 @@
 #include "steppers.h"
 #include <iostream>
 
-double timestep(Vecr u, double dX[4], int ndim, double CFL, double t, double tf,
+double timestep(Vecr u, double dX[3], int ndim, double CFL, double t, double tf,
                 int count, bool PERR_FROB, Par &MP) {
   double MIN = 1e5;
   int ncell = u.size() / V;
@@ -34,7 +34,7 @@ void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
 
   int ndim = int(nx > 1) + int(ny > 1) + int(nz > 1);
   int extDims = extended_dimensions(nx, ny, nz);
-  double dX[4] = {dx, dy, dz, 0.};
+  double dX[3] = {dx, dy, dz};
 
   Vec ub(extDims * V);
   Vec wh(extDims * int(pow(N, ndim)) * V);
@@ -42,6 +42,7 @@ void iterator(Vecr u, double tf, int nx, int ny, int nz, double dx, double dy,
 
   double t = 0.;
   long count = 0;
+
   while (t < tf) {
 
     double dt = timestep(u, dX, ndim, CFL, t, tf, count, PERR_FROB, MP);

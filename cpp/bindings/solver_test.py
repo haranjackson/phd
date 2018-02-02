@@ -17,7 +17,7 @@ from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_stepper_analytical
 from solvers.weno.weno import weno_launcher
 
-from test_functions import diff, generate_vector
+from test_functions import check, generate_vector
 
 from options import ndim, nV, nx, ny, nz, N, NT
 from options import SPLIT, STIFF, HIDALGO, OSHER, PERR_FROB, DG_TOL
@@ -31,7 +31,7 @@ def lgmres_test():
     b = rand(30)
     lgmres_cp = GPRpy.scipy.lgmres_wrapper(A, b)
     lgmres_py = lgmres(A, b)[0]
-    print("LGMRES diff =", diff(lgmres_cp, lgmres_py))
+    print("LGMRES", check(lgmres_cp, lgmres_py))
     return lgmres_cp, lgmres_py
 
 
@@ -55,7 +55,7 @@ def newton_krylov_test(u, dt, MP):
 
     nk_cp = GPRpy.scipy.newton_krylov(obj_cp, q.copy().ravel(), f_tol=DG_TOL)
     nk_py = newton_krylov(obj, q, f_tol=DG_TOL).ravel()
-    print("N-K    diff =", diff(nk_cp, nk_py))
+    print("N-K   ", check(nk_cp, nk_py))
     return nk_cp, nk_py
 
 
@@ -77,7 +77,7 @@ def weno_test():
         wh_cp = zeros((nx + 2) * (ny + 2) * (nz + 2) * N * N * N * nV)
 
     GPRpy.solvers.weno.weno_launcher(wh_cp, ucp, ndim, nx, ny, nz)
-    print("WENO   diff =", diff(wh_cp, wh_py))
+    print("WENO  ", check(wh_cp, wh_py))
     return wh_cp, wh_py
 
 
@@ -97,7 +97,7 @@ def rhs_test(u, dx, dt, MP):
     rhs_py = rhs(Q_py, Ww_py, dt, MP, 0)
     rhs_cp = GPRpy.solvers.dg.rhs1(Q_cp, Ww_cp, dt, dx, MP)
 
-    print("RHS    diff =", diff(rhs_cp, rhs_py))
+    print("RHS   ", check(rhs_cp, rhs_py))
     return rhs_cp, rhs_py
 
 
@@ -117,7 +117,7 @@ def obj_test(u, dx, dt, MP):
     obj_cp = obj_cp.reshape([N * N, nV])
     obj_py = rhs_py - dot(DG_U, Q_py)
 
-    print("obj    diff =", diff(obj_cp, obj_py))
+    print("obj   ", check(obj_cp, obj_py))
     return obj_cp, obj_py
 
 
@@ -132,7 +132,7 @@ def dg_test(u, dx, dt, MP):
                                STIFF, HIDALGO, MP)
     qh_cp = qh_cp.reshape(qh_py.shape)
 
-    print("DG     diff =", diff(qh_cp, qh_py))
+    print("DG    ", check(qh_cp, qh_py))
     return qh_cp, qh_py
 
 
@@ -146,7 +146,7 @@ def TAT_test(d, MP):
     TAT_py = thermo_acoustic_tensor(P, d)
     TAT_cp = GPRpy.system.thermo_acoustic_tensor(Q, d, MP)
 
-    print("TAT    diff =", diff(TAT_cp, TAT_py))
+    print("TAT   ", check(TAT_cp, TAT_py))
     return TAT_cp, TAT_py
 
 
@@ -156,7 +156,7 @@ def Smax_test(d, MP):
     Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, PERR_FROB, MP)
     Smax_py = -Smax(Q1, Q2, d, MP)
 
-    print("Smax   diff =", diff(Smax_cp, Smax_py))
+    print("Smax  ", check(Smax_cp, Smax_py))
     return Smax_cp, Smax_py
 
 
@@ -166,7 +166,7 @@ def Aint_test(d, MP):
     Aint_cp = GPRpy.solvers.fv.Aint(Q1, Q2, d, MP)
     Aint_py = -Aint(Q1, Q2, d, MP)
 
-    print("Aint   diff =", diff(Aint_cp, Aint_py))
+    print("Aint  ", check(Aint_cp, Aint_py))
     return Aint_cp, Aint_py
 
 
@@ -176,7 +176,7 @@ def Bint_test(d, MP):
     Bint_cp = GPRpy.solvers.fv.Bint(Q1, Q2, d, MP)
     Bint_py = Bint(Q1, Q2, d, MP)
 
-    print("Bint   diff =", diff(Bint_cp, Bint_py))
+    print("Bint  ", check(Bint_cp, Bint_py))
     return Bint_cp, Bint_py
 
 
@@ -198,7 +198,7 @@ def FVc_test(qh_py, dx, dt, MP):
     FVc_cp = FVc_cp.reshape([(nx - 2), nV])
     FVc_py = FVc_py.reshape([(nx - 2), nV])
 
-    print("FVc    diff =", diff(FVc_cp, FVc_py))
+    print("FVc   ", check(FVc_cp, FVc_py))
     return FVc_cp, FVc_py
 
 
@@ -213,7 +213,7 @@ def FVi_test(qh_py, dx, dt, MP):
     FVi_cp = FVi_cp.reshape([(nx - 2), nV])
     FVi_py = FVi_py.reshape([(nx - 2), nV])
 
-    print("FVi    diff =", diff(FVi_cp, FVi_py))
+    print("FVi   ", check(FVi_cp, FVi_py))
     return FVi_cp, FVi_py
 
 
@@ -226,7 +226,7 @@ def FV_test(qh_py, dx, dt, MP):
     FV_cp = FV_cp.reshape([(nx - 2), nV])
     FV_py = FV_py.reshape([(nx - 2), nV])
 
-    print("FV     diff =", diff(FV_cp, FV_py))
+    print("FV    ", check(FV_cp, FV_py))
     return FV_cp, FV_py
 
 
@@ -243,7 +243,7 @@ def midstepper_test(u, dx, dt, MP):
     mid_cp = mid_cp.reshape([nx, N, nV])
     mid_py = mid_py.reshape([nx, N, nV])
 
-    print("Step   diff =", diff(mid_cp, mid_py))
+    print("Step  ", check(mid_cp, mid_py))
     return mid_cp, mid_py
 
 
@@ -256,5 +256,5 @@ def ode_test(dt, MP):
     ode_stepper_analytical(u, dt, MP)
     ode_py = u[0, 0, 0]
 
-    print("ODEs   diff =", diff(ode_cp, ode_py))
+    print("ODEs  ", check(ode_cp, ode_py))
     return ode_cp, ode_py

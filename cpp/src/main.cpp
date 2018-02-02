@@ -44,6 +44,7 @@ Vec heat_conduction_1d(Par MP, int nx) {
 }
 
 int main() {
+
   double γ = 1.4;
   double cv = 2.5;
   double κ = 1e-2;

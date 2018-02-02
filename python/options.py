@@ -23,14 +23,14 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 CPP_LVL = 2                 # Level of C++ use (0=none, 1=some, 2=full)
 SPLIT = 0                   # Whether or not to use a split solver
 
-NUM_ODE = 0                 # Use numerical ODE solver (SPLIT=1)
-HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
-STRANG = 1                  # Use Strang splitting (SPLIT=1)
-
 N = 3                       # Order of the method
-CFL = 0.6                   # CFL number
+CFL = 0.9                   # CFL number
 OSHER = 1                   # Whether to use Osher flux (else Rusanov flux)
 PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
+
+NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
+HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
+STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
 """ DG Options """
 
