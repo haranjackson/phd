@@ -4,8 +4,21 @@
 #include "../../system/equations.h"
 #include <cmath>
 
-VecV Aint(VecVr qL, VecVr qR, int d, Par &MP) {
-  // Returns the Osher-Solomon jump matrix for A, in the dth direction
+VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
+  // Returns the jump matrix for B, in the dth direction.
+  VecV ret = VecV::Zero();
+  VecV Δq = qR - qL;
+  VecV q, tmp;
+  for (int i = 0; i < N; i++) {
+    q = qL + NODES(i) * Δq;
+    Bdot(tmp, q, Δq, d, MP);
+    ret += WGHTS(i) * tmp;
+  }
+  return ret;
+}
+
+VecV D_OSH(VecVr qL, VecVr qR, int d, Par &MP) {
+  // Returns the Osher flux component, in the dth direction
   VeccV ret = VeccV::Zero();
   VecV Δq = qL - qR;
   VeccV Δqc = VeccV(Δq);
@@ -25,20 +38,23 @@ VecV Aint(VecVr qL, VecVr qR, int d, Par &MP) {
   return ret.real();
 }
 
-VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
-  // Returns the jump matrix for B, in the dth direction.
-  VecV ret = VecV::Zero();
-  VecV Δq = qR - qL;
-  VecV q, tmp;
+VecV D_ROE(VecVr qL, VecVr qR, int d, Par &MP) {
+  // Returns the Osher flux component, in the dth direction
+  VecV Δq = qL - qR;
+  VeccV Δqc = VeccV(Δq);
+  VecV q;
+  MatV_V J = MatV_V::Zero();
   for (int i = 0; i < N; i++) {
-    q = qL + NODES(i) * Δq;
-    Bdot(tmp, q, Δq, d, MP);
-    ret += WGHTS(i) * tmp;
+    q = qR + NODES(i) * Δq;
+    J += WGHTS(i) * system_matrix(q, d, MP);
   }
-  return ret;
+  Eigen::EigenSolver<MatV_V> es(J);
+  VeccV b = es.eigenvectors().colPivHouseholderQr().solve(Δqc).array() *
+            es.eigenvalues().array().abs();
+  return (es.eigenvectors() * b).real();
 }
 
-VecV Smax(VecVr qL, VecVr qR, int d, bool PERR_FROB, Par &MP) {
+VecV D_RUS(VecVr qL, VecVr qR, int d, bool PERR_FROB, Par &MP) {
   double max1 = max_abs_eigs(qL, d, PERR_FROB, MP);
   double max2 = max_abs_eigs(qR, d, PERR_FROB, MP);
   return std::max(max1, max2) * (qL - qR);

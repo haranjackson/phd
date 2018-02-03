@@ -3,16 +3,18 @@ from itertools import product
 from joblib import delayed
 from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
-from solvers.fv.fluxes import Bint, Aint, Smax
+from solvers.fv.fluxes import Bint, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
 from solvers.basis import WGHTS, ENDVALS, DERVALS
 from system import Bdot, source_ref, flux_ref
-from options import ndim, nV, dx, N, OSHER, SPLIT, PARA_FV, NCORE
+from options import ndim, nV, dx, N, FLUX, SPLIT, PARA_FV, NCORE
 
 
-if OSHER:
-    S_FUNC = Aint
-else:
-    S_FUNC = Smax
+if FLUX == RUSANOV:
+    D_FUN = D_RUS
+elif FLUX == ROE:
+    D_FUN = D_ROE
+elif FLUX == OSHER:
+    D_FUN = D_OSH
 
 
 if SPLIT:
@@ -66,7 +68,7 @@ def interfaces(qEnd, MP):
                 ftemp = zeros(nV)
                 flux_ref(ftemp, qL_, d, MP)
                 flux_ref(ftemp, qR_, d, MP)
-                ftemp -= S_FUNC(qL_, qR_, d, MP)
+                ftemp -= D_FUN(qL_, qR_, d, MP)
                 fEndTemp += wghtEnd[t, x1, x2] * ftemp
                 BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, MP)
 

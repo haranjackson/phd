@@ -202,7 +202,8 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
 
     if (STIFF) {
       VecMap q0v(q0.data(), NT * N * V);
-      qh.segment(ind * NT * N * V, NT * N * V) = nonlin_solve(obj_bound, q0v);
+      qh.segment(ind * NT * N * V, NT * N * V) =
+          nonlin_solve(obj_bound, q0v, DG_TOL);
     } else {
 
       bool FAIL = true;
@@ -231,7 +232,8 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
       if (FAIL) {
         hidalgo_initial_guess(q0, wi, NT, dt, MP);
         VecMap q0v(q0.data(), NT * N * V);
-        qh.segment(ind * NT * N * V, NT * N * V) = nonlin_solve(obj_bound, q0v);
+        qh.segment(ind * NT * N * V, NT * N * V) =
+            nonlin_solve(obj_bound, q0v, DG_TOL);
       }
     }
   }

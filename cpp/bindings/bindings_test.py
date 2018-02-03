@@ -7,7 +7,7 @@ from system_test import flux_test, source_test, block_test, Bdot_test, system_te
 
 from solver_test import lgmres_test, newton_krylov_test
 from solver_test import weno_test, rhs_test, obj_test, dg_test
-from solver_test import TAT_test, Smax_test, Aint_test, Bint_test
+from solver_test import TAT_test, Bint_test, D_RUS_test, D_ROE_test, D_OSH_test
 from solver_test import FVc_test, FVi_test, FV_test
 from solver_test import midstepper_test, ode_test
 
@@ -39,9 +39,10 @@ obj_cp, obj_py = obj_test(u, dx, dt, MP)
 qh_cp, qh_py = dg_test(u, dx, dt, MP)
 
 TAT_cp, TAT_py = TAT_test(d, MP)
-Smax_cp, Smax_py = Smax_test(d, MP)
-Aint_cp, Aint_py = Aint_test(d, MP)
 Bint_cp, Bint_py = Bint_test(d, MP)
+D_RUS_cp, D_RUS_py = D_RUS_test(d, MP)
+D_ROE_cp, D_ROE_py = D_ROE_test(d, MP)
+D_OSH_cp, D_OSH_py = D_OSH_test(d, MP)
 
 FVc_cp, FVc_py = FVc_test(qh_py, dx, dt, MP)
 FVi_cp, FVi_py = FVi_test(qh_py, dx, dt, MP)

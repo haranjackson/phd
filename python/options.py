@@ -25,7 +25,7 @@ SPLIT = 0                   # Whether or not to use a split solver
 
 N = 3                       # Order of the method
 CFL = 0.9                   # CFL number
-OSHER = 1                   # Whether to use Osher flux (else Rusanov flux)
+FLUX = 1                    # Flux type (0=Rusanov, 1=Roe, 2=Osher)
 PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)

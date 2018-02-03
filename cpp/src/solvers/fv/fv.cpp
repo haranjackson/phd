@@ -92,7 +92,7 @@ void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
 }
 
 void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
-                    double wght_t, bool OSHER, bool PERR_FROB, Par &MP) {
+                    double wght_t, int FLUX, bool PERR_FROB, Par &MP) {
 
   double k = wght_t / (2. * dx);
   VecV ql, qr, f, b;
@@ -105,10 +105,17 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
     ql.noalias() = ENDVALS.row(1) * qhl;
     qr.noalias() = ENDVALS.row(0) * qhr;
 
-    if (OSHER)
-      f = Aint(ql, qr, 0, MP);
-    else
-      f = Smax(ql, qr, 0, PERR_FROB, MP);
+    switch (FLUX) {
+    case OSHER:
+      f = D_OSH(ql, qr, 0, MP);
+      break;
+    case ROE:
+      f = D_ROE(ql, qr, 0, MP);
+      break;
+    case RUSANOV:
+      f = D_RUS(ql, qr, 0, PERR_FROB, MP);
+      break;
+    }
     flux(f, ql, 0, MP);
     flux(f, qr, 0, MP);
     b = Bint(ql, qr, 0, MP);
@@ -121,17 +128,17 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
 }
 
 void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
-              bool OSHER, bool PERR_FROB, Par &MP) {
+              int FLUX, bool PERR_FROB, Par &MP) {
 
   if (TIME)
     for (int t = 0; t < N; t++)
-      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), OSHER, PERR_FROB, MP);
+      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), FLUX, PERR_FROB, MP);
   else
-    interfs1_inner(u, rec, nx, dx, 1, 0, dt, OSHER, PERR_FROB, MP);
+    interfs1_inner(u, rec, nx, dx, 1, 0, dt, FLUX, PERR_FROB, MP);
 }
 
 void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
-                    int nt, int t, double wghts_t, bool OSHER, bool PERR_FROB,
+                    int nt, int t, double wghts_t, int FLUX, bool PERR_FROB,
                     Par &MP) {
 
   MatN_V q0x, q0y, q1x, q1y;
@@ -168,18 +175,32 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
         qly = q0y.row(s);
         qry = q1y.row(s);
 
-        if (OSHER)
-          fx = Aint(qlx, qrx, 0, MP);
-        else
-          fx = Smax(qlx, qrx, 0, PERR_FROB, MP);
+        switch (FLUX) {
+        case OSHER:
+          fx = D_OSH(qlx, qrx, 0, MP);
+          break;
+        case ROE:
+          fx = D_ROE(qlx, qrx, 0, MP);
+          break;
+        case RUSANOV:
+          fx = D_RUS(qlx, qrx, 0, PERR_FROB, MP);
+          break;
+        }
         flux(fx, qlx, 0, MP);
         flux(fx, qrx, 0, MP);
         bx = Bint(qlx, qrx, 0, MP);
 
-        if (OSHER)
-          fy = Aint(qly, qry, 1, MP);
-        else
-          fy = Smax(qly, qry, 1, PERR_FROB, MP);
+        switch (FLUX) {
+        case OSHER:
+          fy = D_OSH(qly, qry, 1, MP);
+          break;
+        case ROE:
+          fy = D_ROE(qly, qry, 1, MP);
+          break;
+        case RUSANOV:
+          fy = D_RUS(qly, qry, 1, PERR_FROB, MP);
+          break;
+        }
         flux(fy, qly, 1, MP);
         flux(fy, qry, 1, MP);
         by = Bint(qly, qry, 1, MP);
@@ -197,27 +218,27 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 }
 
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool TIME, bool OSHER, bool PERR_FROB, Par &MP) {
+              bool TIME, int FLUX, bool PERR_FROB, Par &MP) {
   if (TIME)
     for (int t = 0; t < N; t++)
-      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), OSHER,
+      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), FLUX,
                      PERR_FROB, MP);
   else
-    interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, OSHER, PERR_FROB, MP);
+    interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, PERR_FROB, MP);
 }
 
 void fv_launcher(Vecr u, Vecr rec, int ndim, int nx, int ny, int nz, double dt,
                  double dx, double dy, double dz, bool SOURCES, bool TIME,
-                 bool OSHER, bool PERR_FROB, Par &MP) {
+                 int FLUX, bool PERR_FROB, Par &MP) {
 
   switch (ndim) {
   case 1:
     centers1(u, rec, nx, dt, dx, SOURCES, TIME, MP);
-    interfs1(u, rec, nx, dt, dx, TIME, OSHER, PERR_FROB, MP);
+    interfs1(u, rec, nx, dt, dx, TIME, FLUX, PERR_FROB, MP);
     break;
   case 2:
     centers2(u, rec, nx, ny, dt, dx, dy, SOURCES, TIME, MP);
-    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, OSHER, PERR_FROB, MP);
+    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, FLUX, PERR_FROB, MP);
     break;
     // case 3 : TODO
   }

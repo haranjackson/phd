@@ -16,12 +16,12 @@ from multi.gfm import add_ghost_cells
 from solvers.solvers import ader_stepper, split_stepper
 
 from options import nx, ny, nz, nV, dx, dy, dz, ndim, N, NCORE, CFL, RGFM
-from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, OSHER, PERR_FROB
+from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.piston_IC
-BC = solids.piston_BC
+IC = fluids.viscous_shock_IC
+BC = boundaries.standard_BC
 
 
 u, MPs, tf = IC()
@@ -50,7 +50,7 @@ def main(t, tf, count, data):
     if CPP_LVL == 2:
         u1 = u.ravel()
         cppIterator(u1, tf, nx, ny, nz, dx, dy, dz, CFL, False,
-                    SPLIT, STRANG, HALF_STEP, STIFF, OSHER, PERR_FROB, MPs[0])
+                    SPLIT, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB, MPs[0])
         data.append(Data(u1.reshape(u.shape), t))
 
     else:
@@ -79,10 +79,10 @@ def main(t, tf, count, data):
                     if SPLIT:
                         cppSplitStepper(matr, matBCr, wh, ndim, nx, ny, nz,
                                         dt, dx, dy, dz, STRANG, HALF_STEP,
-                                        OSHER, PERR_FROB, MP)
+                                        FLUX, PERR_FROB, MP)
                     else:
                         cppAderStepper(matr, matBCr, wh, qh, ndim, nx, ny, nz,
-                                       dt, dx, dy, dz, STIFF, OSHER, PERR_FROB,
+                                       dt, dx, dy, dz, STIFF, FLUX, PERR_FROB,
                                        MP)
 
                     mat = matr.reshape([nx, ny, nz, nV])

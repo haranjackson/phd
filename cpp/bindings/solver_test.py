@@ -11,7 +11,7 @@ from gpr.systems.eigenvalues import thermo_acoustic_tensor
 from solvers.basis import GAPS
 from solvers.dg.dg import DG_W, DG_U, predictor, rhs
 from solvers.dg.dg import standard_initial_guess, hidalgo_initial_guess
-from solvers.fv.fluxes import Aint, Bint, Smax
+from solvers.fv.fluxes import Bint, D_OSH, D_ROE, D_RUS
 from solvers.fv.fv import interfaces, endpoints, extend_dimensions, fv_terms, centers
 from solvers.split.homogeneous import weno_midstepper
 from solvers.split.ode import ode_stepper_analytical
@@ -20,7 +20,7 @@ from solvers.weno.weno import weno_launcher
 from test_functions import check, generate_vector
 
 from options import ndim, nV, nx, ny, nz, N, NT
-from options import SPLIT, STIFF, HIDALGO, OSHER, PERR_FROB, DG_TOL
+from options import SPLIT, STIFF, HIDALGO, FLUX, PERR_FROB, DG_TOL
 
 
 ### NEWTON-KRYLOV ###
@@ -48,6 +48,7 @@ def newton_krylov_test(u, dt, MP):
         q = standard_initial_guess(w)
 
     def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, MP, HOMOGENEOUS)
+
     def obj_cp(X):
         X2 = X.reshape([NT, nV])
         ret = obj(X2)
@@ -150,26 +151,6 @@ def TAT_test(d, MP):
     return TAT_cp, TAT_py
 
 
-def Smax_test(d, MP):
-    Q1 = generate_vector(MP)
-    Q2 = generate_vector(MP)
-    Smax_cp = GPRpy.solvers.fv.Smax(Q1, Q2, d, PERR_FROB, MP)
-    Smax_py = -Smax(Q1, Q2, d, MP)
-
-    print("Smax  ", check(Smax_cp, Smax_py))
-    return Smax_cp, Smax_py
-
-
-def Aint_test(d, MP):
-    Q1 = generate_vector(MP)
-    Q2 = generate_vector(MP)
-    Aint_cp = GPRpy.solvers.fv.Aint(Q1, Q2, d, MP)
-    Aint_py = -Aint(Q1, Q2, d, MP)
-
-    print("Aint  ", check(Aint_cp, Aint_py))
-    return Aint_cp, Aint_py
-
-
 def Bint_test(d, MP):
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
@@ -179,6 +160,35 @@ def Bint_test(d, MP):
     print("Bint  ", check(Bint_cp, Bint_py))
     return Bint_cp, Bint_py
 
+
+def D_RUS_test(d, MP):
+    Q1 = generate_vector(MP)
+    Q2 = generate_vector(MP)
+    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, PERR_FROB, MP)
+    D_RUS_py = -D_RUS(Q1, Q2, d, MP)
+
+    print("D_RUS ", check(D_RUS_cp, D_RUS_py))
+    return D_RUS_cp, D_RUS_py
+
+
+def D_ROE_test(d, MP):
+    Q1 = generate_vector(MP)
+    Q2 = generate_vector(MP)
+    D_ROE_cp = GPRpy.solvers.fv.D_ROE(Q1, Q2, d, MP)
+    D_ROE_py = -D_ROE(Q1, Q2, d, MP)
+
+    print("D_ROE ", check(D_ROE_cp, D_ROE_py))
+    return D_ROE_cp, D_ROE_py
+
+
+def D_OSH_test(d, MP):
+    Q1 = generate_vector(MP)
+    Q2 = generate_vector(MP)
+    D_OSH_cp = GPRpy.solvers.fv.D_OSH(Q1, Q2, d, MP)
+    D_OSH_py = -D_OSH(Q1, Q2, d, MP)
+
+    print("D_OSH ", check(D_OSH_cp, D_OSH_py))
+    return D_OSH_cp, D_OSH_py
 
 ### FINITE VOLUME (ndim=1) ###
 
@@ -208,7 +218,7 @@ def FVi_test(qh_py, dx, dt, MP):
     FVi_py = -0.5 * dt / dx * interfaces(qEnd, MP)
     FVi_cp = zeros([(nx - 2) * nV])
     GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dx,
-                              TIME, OSHER, PERR_FROB, MP)
+                              TIME, FLUX, PERR_FROB, MP)
 
     FVi_cp = FVi_cp.reshape([(nx - 2), nV])
     FVi_py = FVi_py.reshape([(nx - 2), nV])
@@ -221,7 +231,7 @@ def FV_test(qh_py, dx, dt, MP):
     FV_py = fv_terms(qh_py, dt, MP, HOMOGENEOUS)
     FV_cp = zeros([(nx - 2) * nV])
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), 1, nx - 2, 1, 1, dt, dx,
-                                 1, 1, SOURCES, TIME, OSHER, PERR_FROB, MP)
+                                 1, 1, SOURCES, TIME, FLUX, PERR_FROB, MP)
 
     FV_cp = FV_cp.reshape([(nx - 2), nV])
     FV_py = FV_py.reshape([(nx - 2), nV])

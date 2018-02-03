@@ -143,9 +143,10 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_split.def("analyticSolver_thermal", &analyticSolver_thermal);
   m_solvers_split.def("ode_launcher", &ode_launcher);
 
-  m_solvers_fv.def("Aint", &Aint);
   m_solvers_fv.def("Bint", &Bint);
-  m_solvers_fv.def("Smax", &Smax);
+  m_solvers_fv.def("D_RUS", &D_RUS);
+  m_solvers_fv.def("D_ROE", &D_ROE);
+  m_solvers_fv.def("D_OSH", &D_OSH);
 
   m_solvers_fv.def("centers1", &centers1);
   m_solvers_fv.def("centers2", &centers2);

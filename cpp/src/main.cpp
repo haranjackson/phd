@@ -76,13 +76,13 @@ int main() {
   bool STRANG = true;
   bool HALF_STEP = true;
   bool STIFF = false;
-  bool OSHER = false;
+  int FLUX = 1;
   bool PERR_FROB = false;
 
   Vec u = heat_conduction_1d(MP, nx);
 
   iterator(u, tf, nx, ny, nz, dx, dy, dz, CFL, PERIODIC, SPLIT, STRANG,
-           HALF_STEP, STIFF, OSHER, PERR_FROB, MP);
+           HALF_STEP, STIFF, FLUX, PERR_FROB, MP);
 
   std::cout << "Hello World" << std::endl;
   return 0;
