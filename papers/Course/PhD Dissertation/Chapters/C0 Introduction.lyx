@@ -130,7 +130,7 @@ key "Peshkov2016"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2015"
+key "Dumbser2016a"
 
 \end_inset
 
@@ -1037,6 +1037,13 @@ description "Finite Volume"
 
 \begin_layout Subsection
 The WENO Reconstruction
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:The-WENO-Reconstruction"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1289,15 +1296,8 @@ where
 \end_inset
 
  are used.
- The matrices of these linear systems are given in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:WENO-Matrices-for-N=2"
-
-\end_inset
-
-, along with their inverses, which are precomputed to accelerate the solution
- of these systems.
+ The matrices of these linear systems and their inverses are precomputed
+ to accelerate the solution of these systems.
 \end_layout
 
 \begin_layout Standard
@@ -2435,7 +2435,7 @@ Let
  is given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Eigenstructure of the HPR Model"
+reference "sec:Eigenvalues"
 
 \end_inset
 

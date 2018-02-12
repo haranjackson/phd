@@ -2609,7 +2609,7 @@ A WENO reconstruction of the cell-averaged data is performed at the start
  of the time step (as described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "subsec:The-ADER-WENO-Method"
+reference "subsec:The-WENO-Reconstruction"
 
 \end_inset
 
@@ -3085,7 +3085,7 @@ where
 \end_inset
 
  are the operators solving the distortion and thermal impulse ODEs respectively,
- over timestep 
+ over time step 
 \begin_inset Formula $\delta t$
 \end_inset
 
@@ -3120,7 +3120,7 @@ name "subsec:The-Thermal-Impulse-ODEs"
 Taking the EOS for the GPR model 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:EOS"
+reference "eq:EnergyDefinition"
 
 \end_inset
 
@@ -3147,7 +3147,7 @@ reference "eq:EOS"
 \begin_inset Formula 
 \begin{align}
 T & =\frac{E_{1}}{c_{v}}\\
- & =\frac{E-E_{2}^{\left(A\right)}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}-\frac{1}{c_{v}}E_{2}^{\left(J\right)}\left(\boldsymbol{J}\right)\nonumber \\
+ & =\frac{E-E_{2}^{\left(A\right)}\left(\rho,s,A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}-\frac{1}{c_{v}}E_{2}^{\left(J\right)}\left(\boldsymbol{J}\right)\nonumber \\
  & =c_{1}-c_{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}\nonumber 
 \end{align}
 
