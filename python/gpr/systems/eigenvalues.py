@@ -57,57 +57,14 @@ def Xi2(P, d):
     return ret
 
 
-def thermo_acoustic_tensor(P, d):
-    """ Returns the tensor T_dij corresponding to the (i,j) component of the
-        thermo-acoustic tensor in the dth direction
-    """
-    return dot(Xi1(P, d), Xi2(P, d))
-
-    """ REQUIRES MODIFICATION
-    ret = zeros([4, 4])
-
-    ρ = P.ρ
-    p = P.p()
-    A = P.A
-
-    G = P.G()
-    Gd = G[d]
-
-    MP = P.MP
-
-    if VISCOUS:
-        cs2 = c_s2(ρ, MP)
-        O = GdevG(G)
-        O[:, d] *= 2
-        O[d] *= 2
-        O[d, d] *= 3 / 4
-        O += Gd[d] * G + 1 / 3 * outer(Gd, Gd)
-        O *= cs2
-        ret[:3, :3] = O
-
-    c0 = c_0(ρ, p, A, MP)
-    ret[d, d] += c0**2
-
-    if THERMAL:
-        T = P.T()
-        Tρ = P.dTdρ()
-        Tp = P.dTdp()
-        ch = c_h(ρ, T, MP)
-
-        ret[3, 0] = Tρ + Tp * c0**2
-        ret[0, 3] = ch**2 / Tp
-        ret[3, 3] = ch**2
-
-    return ret
-    """
-
-
 def max_abs_eigs(Q, d, MP):
     """ Returns maximum absolute value of the eigenvalues of the GPR system
     """
     P = Cvec_to_Pclass(Q, MP)
     vd = P.v[d]
-    O = thermo_acoustic_tensor(P, d)
+    Ξ1 = Xi1(P, d)
+    Ξ2 = Xi2(P, d)
+    O = dot(Ξ1, Ξ2)
 
     if PERR_FROB:
         rowSum = [sum(o) for o in O]

@@ -4,8 +4,8 @@ from scipy.optimize import newton_krylov
 
 from gpr.misc.functions import reorder
 from gpr.misc.structures import Cvec_to_Pclass, Cvec_to_Pvec, Pvec, Pvec_to_Cvec
-from gpr.systems.eigenvalues import thermo_acoustic_tensor
-from gpr.systems.eigenvectors import eig_prim, Xi1
+from gpr.systems.eigenvalues import Xi1, Xi2
+from gpr.systems.eigenvectors import eigen
 from gpr.systems.primitive import source_prim
 
 from options import nV, STAR_TOL, STIFF_RGFM
@@ -37,7 +37,7 @@ def riemann_constraints1(P, sgn, MP):
         v*L = v*R
         J*L = J*R
     """
-    _, Lhat, Rhat = eig_prim(P)
+    _, Lhat, Rhat = eigen(P)
     Lhat = reorder(Lhat.T, order='atypical').T
     Rhat = reorder(Rhat, order='atypical')
 
@@ -72,8 +72,9 @@ def riemann_constraints1(P, sgn, MP):
     X = dot(A, Z2)
     a = Z2[0]
 
-    Ξ1 = Xi1(P)
-    O = thermo_acoustic_tensor(P, 0)
+    Ξ1 = Xi1(P, d)
+    Ξ2 = Xi2(P, d)
+    O = dot(Ξ1, Ξ2)
     w, vl, vr = eig(O, left=1)
     D = diag(sqrt(w.real))
     Q = vl.T
@@ -107,8 +108,13 @@ def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(nV), SR=zeros(nV)):
     xL = concatenate([PL.Σ()[0], [PL.T]])
     xR = concatenate([PR.Σ()[0], [PR.T]])
 
-    OL = thermo_acoustic_tensor(PL, 0)
-    OR = thermo_acoustic_tensor(PR, 0)
+    Ξ1L = Xi1(PL, d)
+    Ξ2L = Xi2(PL, d)
+    OL = dot(Ξ1L, Ξ2L)
+    Ξ1R = Xi1(PR, d)
+    Ξ2R = Xi2(PR, d)
+    OR = dot(Ξ1R, Ξ2R)
+
     _, QL_1 = eig(OL)
     _, QR_1 = eig(OR)
     cL = dot(LL, reorder(SL, order='atypical'))
@@ -150,7 +156,7 @@ def riemann_constraints2(P, side, MP):
         v*L = v*R
         T*L = T*R
     """
-    _, Lhat, _ = eig_prim(P)
+    _, Lhat, _ = eigen(P)
 
     ρ = P.ρ
     p = P.p()

@@ -63,17 +63,17 @@ def dPdQ(P):
 
     Eρ = P.dEdρ()
     Ep = P.dEdp()
-    Γ_ = 1 / (ρ * Ep)
+    Γ = 1 / (ρ * Ep)
 
     tmp = L2_1D(v) - (E + ρ * Eρ)
     if MP.THERMAL:
         cα2 = MP.cα2
         tmp += cα2 * L2_1D(J)
-    Υ = Γ_ * tmp
+    Υ = Γ * tmp
 
     ret[1, 0] = Υ
-    ret[1, 1] = Γ_
-    ret[1, 2:5] = -Γ_ * v
+    ret[1, 1] = Γ
+    ret[1, 2:5] = -Γ * v
     ret[2:5, 0] = -v / ρ
 
     for i in range(2, 5):
@@ -81,11 +81,11 @@ def dPdQ(P):
 
     if MP.VISCOUS:
         ψ_ = P.dEdA()
-        ret[1, 5:14] = -Γ_ * ρ * ψ_.ravel()
+        ret[1, 5:14] = -Γ * ρ * ψ_.ravel()
 
     if MP.THERMAL:
         H = P.H()
-        ret[1, 14:17] = -Γ_ * H
+        ret[1, 14:17] = -Γ * H
         ret[14:17, 0] = -J / ρ
         for i in range(14, 17):
             ret[i, i] = 1 / ρ
@@ -95,8 +95,8 @@ def dPdQ(P):
         Qc = MP.Qc
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
-        ret[1, 0] += Γ_ * Qc * λ
-        ret[1, 17] -= Γ_ * Qc
+        ret[1, 0] += Γ * Qc * λ
+        ret[1, 17] -= Γ * Qc
 
     return ret
 
