@@ -104,24 +104,20 @@ def eig_cons(P):
     return Λ, dot(L, DPDQ), dot(DQDP, R)
 
 
-def eig_cons2(P, d, CONS=1):
+def eig2(P, d, CONS=1, LEFT=0):
 
     R = zeros([nV, nV])
+    L = zeros([nV, nV])
 
     ρ = P.ρ
-    E = P.E
+    A = P.A
     v = P.v
-    J = P.J
     vd = v[d]
-    Γ = mg.Γ_MG(ρ, MP)
 
-    dE_dρ = P.dEdρ()
-    dE_dA = P.dEdA()
     dσ_dρ = P.dσdρ()
     dσ_dA = P.dσdA()
     dT_dρ = P.dTdρ()
     dT_dp = P.dTdp()
-    H = P.H()
 
     Π1 = dσ_dA[d, :, :, 0]
     Π2 = dσ_dA[d, :, :, 1]
@@ -154,7 +150,38 @@ def eig_cons2(P, d, CONS=1):
     R[15, 15] = 1
     R[16, 16] = 1
 
+    if LEFT:
+        tmp = solve(D, dot(Q, Ξ1), overwrite_b=1, check_finite=0)
+        tmp2 = -solve(D, dot(Q[:, :3], Π2), overwrite_b=1, check_finite=0) / ρ
+        tmp3 = -solve(D, dot(Q[:, :3], Π3), overwrite_b=1, check_finite=0) / ρ
+        tmp4 = Q
+        L[:4, :5] = tmp
+        L[4:8, :5] = tmp
+        L[:4, 5:8] = tmp2
+        L[4:8, 5:8] = tmp2
+        L[:4, 8:11] = tmp3
+        L[4:8, 8:11] = tmp3
+        L[:4, 11:15] = tmp4
+        L[4:8, 11:15] = -tmp4
+
+        tmp = solve(A.T, array([1, 0, 0]), overwrite_b=1, check_finite=0)
+        L[8, 0] = -1 / ρ
+        L[8, 2:5] = tmp
+        L[8, 5:8] = dot(tmp, solve(Π1, Π2, check_finite=0))
+        L[8, 8:11] = dot(tmp, solve(Π1, Π3, check_finite=0))
+
+        L[9:15, 5:11] = eye(6)
+        L[15:17, 15:17] = eye(2)
+
     if CONS:
+        E = P.E
+        J = P.J
+
+        dE_dρ = P.dEdρ()
+        dE_dA = P.dEdA()
+        H = P.H()
+
+        Γ = mg.Γ_MG(ρ, MP)
         tmp = zeros(nV)
         tmp[0] = E + ρ * dE_dρ
         tmp[1] = 1 / Γ
@@ -168,4 +195,4 @@ def eig_cons2(P, d, CONS=1):
             R[14+i] = J[i] * R[0] + ρ * R[14+i]
 
     l = array([vd + s for s in sw] + [vd - s for s in sw] + [vd] * 9).real
-    return l, reorder(R)
+    return l, reorder(L.T).T, reorder(R)
