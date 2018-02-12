@@ -332,7 +332,7 @@ setcounter{page}{1}
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapters/Chapter1.lyx"
+filename "Chapters/C0 Introduction.lyx"
 
 \end_inset
 
@@ -342,7 +342,7 @@ filename "Chapters/Chapter1.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapters/Chapter2.lyx"
+filename "Chapters/C1 Extending the GPR Model.lyx"
 
 \end_inset
 
@@ -352,7 +352,7 @@ filename "Chapters/Chapter2.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapters/Chapter3.lyx"
+filename "Chapters/C2 Improved Numerical Methods.lyx"
 
 \end_inset
 
@@ -362,7 +362,7 @@ filename "Chapters/Chapter3.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapters/Chapter4.lyx"
+filename "Chapters/C3 Simulating Material Interfaces.lyx"
 
 \end_inset
 
@@ -372,7 +372,7 @@ filename "Chapters/Chapter4.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapters/Chapter5.lyx"
+filename "Chapters/C4 Impact-Induced Detonation in an Elasto-Plastic Confiner.lyx"
 
 \end_inset
 
@@ -382,7 +382,7 @@ filename "Chapters/Chapter5.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Chapters/Chapter6.lyx"
+filename "Chapters/C5 Conclusions & Discussion.lyx"
 
 \end_inset
 
@@ -412,7 +412,7 @@ options "siam"
 \start_of_appendix
 \begin_inset CommandInset include
 LatexCommand include
-filename "Appendices/Appendix1.lyx"
+filename "Appendices/A1 System Matrices.lyx"
 
 \end_inset
 
@@ -422,7 +422,7 @@ filename "Appendices/Appendix1.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Appendices/Appendix2.lyx"
+filename "Appendices/A2 Eigenstructure.lyx"
 
 \end_inset
 
@@ -432,17 +432,7 @@ filename "Appendices/Appendix2.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Appendices/Appendix3.lyx"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset include
-LatexCommand include
-filename "Appendices/Appendix4.lyx"
+filename "Appendices/A3 Jacobians.lyx"
 
 \end_inset
 
