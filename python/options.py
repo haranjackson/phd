@@ -21,11 +21,11 @@ STIFF_RGFM = 1              # Whether to use a stiff solver to find star states
 """ Solver Options """
 
 CPP_LVL = 2                 # Level of C++ use (0=none, 1=some, 2=full)
-SPLIT = 0                   # Whether or not to use a split solver
+SPLIT = 1                   # Whether or not to use a split solver
 
 N = 3                       # Order of the method
 CFL = 0.9                   # CFL number
-FLUX = 1                    # Flux type (0=Rusanov, 1=Roe, 2=Osher)
+FLUX = 0                    # Flux type (0=Rusanov, 1=Roe, 2=Osher)
 PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
@@ -39,7 +39,7 @@ STIFF = 0                   # Use Newton-Krylov
 SUPER_STIFF = 0             # Use Newton-Krylov for Hidalgo initial guess
 
 DG_TOL = 1e-6               # Tolerance to which the predictor must converge
-MAX_ITER = 50               # Max number of non-stiff iterations attempted
+DG_IT  = 50                 # Max number of non-stiff iterations attempted
 
 """ WENO Parameters """
 

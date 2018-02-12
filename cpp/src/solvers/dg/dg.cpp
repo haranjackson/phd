@@ -207,7 +207,7 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
     } else {
 
       bool FAIL = true;
-      for (int count = 0; count < DG_ITER; count++) {
+      for (int count = 0; count < DG_IT; count++) {
 
         Mat q1;
         if (ndim == 1)

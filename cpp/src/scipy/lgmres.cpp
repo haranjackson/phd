@@ -3,17 +3,6 @@
 #include "../etc/globals.h"
 #include <cmath>
 
-DecQR qr_append(Matr Q, Matr R, Matr u) {
-  // Returns QR factorization of Q*R with u appended as the last column
-  Mat A = Q * R;
-  int nr = A.rows();
-  int nc = A.cols();
-  A.conservativeResize(nr, nc + 1);
-  A.col(nc) = u;
-  DecQR ret;
-  return ret.compute(A);
-}
-
 Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
            std::vector<Vec> &outer_v, const double tol, const int maxiter,
            const int inner_m, const int outer_k) {
@@ -27,6 +16,8 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
   Vec r_outer(n);
   Vec vs0(n);
   Vec mvz(n);
+  Vec z(n);
+  DecQR QR;
 
   for (int k_outer = 0; k_outer < maxiter; k_outer++) {
     r_outer = matvec(x) - b;
@@ -42,11 +33,13 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
     std::vector<Vec> vs = {vs0};
     std::vector<Vec> ws;
 
-    Mat Q = Mat::Ones(1, 1);
-    Mat R = Mat::Zero(1, 0);
-    Vec z(n);
-
     int ind = 1 + inner_m + outer_v.size();
+
+    Mat A = Mat(ind, ind);
+    Mat Q = Mat::Zero(ind, ind);
+    Mat R = Mat::Zero(ind, ind - 1);
+    Q(0, 0) = 1.;
+
     int j = 1;
     for (; j < ind; j++) {
 
@@ -73,18 +66,15 @@ Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
       vs.push_back(v_new);
       ws.push_back(z);
 
-      Mat Q2 = Mat::Zero(j + 1, j + 1);
-      Q2.topLeftCorner(j, j) = Q;
-      Q2(j, j) = 1.;
+      Q(j, j) = 1.;
 
-      Mat R2 = Mat::Zero(j + 1, j - 1);
-      R2.topRows(j) = R;
+      A.topLeftCorner(j + 1, j - 1) =
+          Q.topLeftCorner(j + 1, j + 1) * R.topLeftCorner(j + 1, j - 1);
+      A.block(0, j - 1, j + 1, 1) = hcur;
+      QR.compute(A.topLeftCorner(j + 1, j));
 
-      DecQR QR = qr_append(Q2, R2, hcur);
-      Q.conservativeResize(j + 1, j + 1);
-      R.conservativeResize(j + 1, j - 1);
-      Q = QR.householderQ();
-      R = QR.matrixQR().triangularView<Eigen::Upper>();
+      Q.topLeftCorner(j + 1, j + 1) = QR.householderQ();
+      R.topLeftCorner(j + 1, j) = QR.matrixQR().triangularView<Eigen::Upper>();
 
       double inner_res = std::abs(Q(0, j)) * inner_res_0;
 

@@ -9,7 +9,7 @@ from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_Z, DG_T
 from solvers.basis import GAPS, DERVALS
 from system import source, flux_ref, source_ref, Bdot, system
 from options import ndim, dx, N, NT, nV
-from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, MAX_ITER, PARA_DG, NCORE
+from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, DG_IT, PARA_DG, NCORE
 
 
 MAX_TOL = 1e16  # values above this level will cause an error
@@ -115,7 +115,7 @@ def predictor(wh, dt, MP, HOMOGENEOUS=0):
             qh[i, j, k] = newton_krylov(obj, q, f_tol=DG_TOL, method='bicgstab')
 
         else:
-            for count in range(MAX_ITER):
+            for count in range(DG_IT):
 
                 qNew = solve(DG_U, rhs(q, Ww, dt, MP, HOMOGENEOUS),
                              check_finite=False)

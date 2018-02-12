@@ -9,7 +9,7 @@ from gpr.variables.eos import total_energy
 def generate_vector(MP):
     A = rand(3, 3)
     A *= sign(det(A))
-    ρ = det(A)
+    ρ = det(A) * MP.ρ0
     p = rand()
     v = rand(3)
     J = rand(3)
