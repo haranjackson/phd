@@ -1,4 +1,4 @@
-from numpy import array, diag, dot, eye, trace
+from numpy import array, diag, dot, eye, log, trace
 from numpy.random import rand
 
 
@@ -33,3 +33,14 @@ print(c - (9 / 2 * m * u + 3 * ρ))
 norm3 = 1 / 6 * u**2 + 4 * m**2 * u - 6 * m**4 + 6 * m * ρ
 
 print(norm1 - norm3)
+
+
+def f(a=2, b=1):
+
+    d = log(a / (a - 1)) / log(1 + b)
+    c = (1 + b) / ((a - 1) * b * d)
+
+    x = linspace(0, 4, 400)
+    plot(x, a / (1 + b * exp(-c * x))**d - (a - 1))
+    plot(linspace(0,1,100),linspace(0,1,100))
+    plot(x,ones(400))
