@@ -9,6 +9,23 @@ from tests_1d.common import riemann_IC, MP_AIR
 from options import nx, nV, Lx, N
 
 
+def fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
+    """ constructs the riemann problem corresponding to the parameters given
+    """
+    AL = ρL**(1 / 3) * eye(3)
+    JL = zeros(3)
+    AR = ρR**(1 / 3) * eye(3)
+    JR = zeros(3)
+
+    if MPR is None:
+        MPR = MPL
+
+    QL = Cvec(ρL, pL, vL, AL, JL, MPL)
+    QR = Cvec(ρR, pR, vR, AR, JR, MPR)
+
+    return riemann_IC(tf, QL, QR, MPL, MPR, x0)
+
+
 def heat_conduction_IC():
 
     tf = 1
@@ -25,7 +42,7 @@ def heat_conduction_IC():
                              b0=1, cα=2, μ=1e-2, κ=1e-2)
 
     print("HEAT CONDUCTION IN A GAS: N =", N)
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
@@ -53,7 +70,7 @@ def first_stokes_problem_IC():
                              b0=1, cα=1e-16, μ=μ, Pr=0.75)
 
     print("FIST STOKES PROBLEM: N =", N, "μ =", μ)
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP)
 
 
 def viscous_shock_exact(x, Ms, MP, μ, center=0):

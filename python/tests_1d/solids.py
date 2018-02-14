@@ -3,24 +3,17 @@ from numpy import array, eye, zeros
 from etc.boundaries import standard_BC
 from gpr.misc.structures import Cvec
 from gpr.variables.hyp import Cvec_hyp
+from tests_1d.common import riemann_IC
 from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG_P, MP_ALU_SG
 from options import nx, nV, dx, N
 
 
-def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP):
+def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
 
     QL = Cvec_hyp(FL, SL, vL, HYP)
     QR = Cvec_hyp(FR, SR, vR, HYP)
 
-    u = zeros([nx, 1, 1, nV])
-
-    for i in range(nx):
-        if i * dx < 0.5:
-            u[i] = QL
-        else:
-            u[i] = QR
-
-    return u, [MP], tf
+    return riemann_IC(tf, QL, QR, MP, MP, x0)
 
 
 def barton1_IC():

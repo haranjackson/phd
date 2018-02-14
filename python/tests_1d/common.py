@@ -1,25 +1,12 @@
 from itertools import product
 
-from numpy import eye, inf, sqrt, zeros
+from numpy import inf, sqrt, zeros
 
 from gpr.misc.objects import material_parameters, hyperelastic_params
-from gpr.misc.structures import Cvec
 from options import nx, ny, nz, nV, dx, RGFM
 
 
-def riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
-    """ constructs the riemann problem corresponding to the parameters given
-    """
-    AL = ρL**(1 / 3) * eye(3)
-    JL = zeros(3)
-    AR = ρR**(1 / 3) * eye(3)
-    JR = zeros(3)
-
-    if MPR is None:
-        MPR = MPL
-
-    QL = Cvec(ρL, pL, vL, AL, JL, MPL)
-    QR = Cvec(ρR, pR, vR, AR, JR, MPR)
+def riemann_IC(tf, QL, QR, MPL, MPR, x0):
 
     u = zeros([nx, ny, nz, nV])
 
@@ -73,7 +60,9 @@ MP_ALU_SG = material_parameters(EOS='sg', ρ0=2700, cv=897, p0=1e5, γ=3.4, pINF
 MP_COP_GR = material_parameters(EOS='gr', ρ0=8.9, cv=4e-4, p0=0,
                                 c0=sqrt(4.6**2 - 4 / 3 * 2.1**2),
                                 α=1, β=3, γ=2,
-                                b0=2.1, τ1=inf)
+                                b0=2.1, τ1=inf,
+                                Tref=300, κ=4e-8,
+                                cα=8.9 * sqrt(4.6**2 - 4 / 3 * 2.1**2) * sqrt(4e-4 / 300))
 
 MP_COP_SMG = material_parameters(EOS='smg', ρ0=8.9, cv=4e-4, p0=0,
                                  c0=3.909, Γ0=1.99, s=1.5, e0=0,

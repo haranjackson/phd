@@ -1,6 +1,7 @@
 from numpy import array, zeros
 
-from tests_1d.common import riemann_IC, MP_AIR
+from tests_1d.common import MP_AIR
+from tests_1d.fluids import fluids_IC
 
 
 def toro1_IC():
@@ -15,7 +16,7 @@ def toro1_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro2_IC():
@@ -30,7 +31,7 @@ def toro2_IC():
     pR = 0.4
     vR = array([2, 0, 0])
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro3_IC():
@@ -45,7 +46,7 @@ def toro3_IC():
     pR = 0.01
     vR = zeros(3)
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro4_IC():
@@ -60,7 +61,7 @@ def toro4_IC():
     pR = 100
     vR = zeros(3)
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro_test5_IC():
@@ -75,4 +76,4 @@ def toro_test5_IC():
     pR = 46.095
     vR = array([-6.19633, 0, 0])
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)

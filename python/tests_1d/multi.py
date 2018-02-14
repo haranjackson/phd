@@ -1,7 +1,8 @@
 from numpy import array, eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
-from tests_1d.common import riemann_IC, MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
+from tests_1d.common import MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
+from tests_1d.fluids import fluids_IC
 from options import nx, ny, nz, nV, dx
 
 
@@ -17,7 +18,7 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def water_gas_IC():
@@ -32,7 +33,7 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
 
 
 def water_water_IC():
@@ -47,7 +48,7 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    return riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
+    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
 
 
 def helium_bubble_IC():
