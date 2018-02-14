@@ -20,7 +20,7 @@ from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = fluids.viscous_shock_IC
+IC = solids.elastic1_IC
 BC = boundaries.standard_BC
 
 

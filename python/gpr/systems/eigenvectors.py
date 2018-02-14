@@ -1,5 +1,5 @@
 from numpy import array, diag, dot, eye, sqrt, zeros
-from scipy.linalg import eig, solve
+from scipy.linalg import eig, solve, norm
 
 from gpr.misc.functions import reorder
 from gpr.systems.eigenvalues import Xi1, Xi2
@@ -7,13 +7,13 @@ from gpr.systems.jacobians import dQdP, dPdQ
 from gpr.variables.wavespeeds import c_0, c_h
 from gpr.variables import mg
 
-from options import nV
 
+def eigen(P, d, CONS, RIGHT=1, LEFT=1):
 
-def eigen(P, d, CONS=1, RIGHT=1, LEFT=1):
+    R = zeros([17, 17])
+    L = zeros([17, 17])
 
-    R = zeros([nV, nV])
-    L = zeros([nV, nV])
+    MP = P.MP
 
     ρ = P.ρ
     A = P.A
@@ -97,7 +97,7 @@ def eigen(P, d, CONS=1, RIGHT=1, LEFT=1):
 
         if RIGHT:
 
-            b = zeros(nV)
+            b = zeros(17)
             b[0] = E + ρ * Eρ
             b[1] = 1 / Γ
             b[2:11] = ρ * EA
@@ -140,10 +140,10 @@ def test(Q, d, CONS):
 
     if CONS:
         from gpr.systems.conserved import system_cons
-        M = system_cons(Q, d, MP)
+        M = system_cons(Q, d, MP)[:17, :17]
     else:
         from gpr.systems.primitive import system_prim
-        M = system_prim(Q, d, MP)
+        M = system_prim(Q, d, MP)[:17, :17]
 
     print("Λ:", amax(abs(sort(eigvals(M)) - sort(l))))
 

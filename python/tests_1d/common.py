@@ -34,7 +34,7 @@ def riemann_IC(tf, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
 
             u[i, j, k, -1] = i * dx - x0
 
-        return u, [MPL, MPR]
+        return u, [MPL, MPR], tf
 
     else:
 

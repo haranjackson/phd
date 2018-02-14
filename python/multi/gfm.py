@@ -9,7 +9,7 @@ def get_levelset_root(u, i, m):
     φ = u[:, :, :, i - (m - 1)]
     n = len(φ)
     for j in range(n):
-        if φ[j] > 0:
+        if φ[j] >= 0:
             return j
     return n
 
@@ -26,6 +26,8 @@ def add_ghost_cells(mats, MPs, dt):
 
         QL = uL[ind - 1 - ISO_FIX, 0, 0, :-(m - 1)]
         QR = uR[ind + ISO_FIX, 0, 0, :-(m - 1)]
+
+        print(QL, QR)
         QL_, QR_ = star_states(QL, QR, dt, MPL, MPR)
 
         for j in range(ind, len(uL)):

@@ -1,4 +1,4 @@
-from numpy import amax, concatenate, diag, dot, eye, outer, sqrt, zeros
+from numpy import amax, concatenate, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve
 from scipy.optimize import newton_krylov
 
@@ -11,22 +11,18 @@ from gpr.systems.primitive import source_prim
 from options import nV, STAR_TOL, STIFF_RGFM
 
 
-e0 = zeros(3)
-e0[0] = 1
-
-
 def check_star_convergence(QL_, QR_, MPL, MPR):
 
     PL_ = Cvec_to_Pclass(QL_, MPL)
     PR_ = Cvec_to_Pclass(QR_, MPR)
 
     cond1 = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) < STAR_TOL
-    cond2 = abs(PL_.T - PR_.T) < STAR_TOL
+    cond2 = abs(PL_.T() - PR_.T()) < STAR_TOL
 
     return cond1 and cond2
 
 
-def riemann_constraints1(P, sgn, MP):
+def riemann_constraints1(P, d, sgn, MP):
     """ K=R: sgn = -1
         K=L: sgn = 1
         NOTE: Uses atypical ordering
@@ -37,40 +33,28 @@ def riemann_constraints1(P, sgn, MP):
         v*L = v*R
         J*L = J*R
     """
-    _, Lhat, Rhat = eigen(P)
+    _, Lhat, Rhat = eigen(P, d, 0)
     Lhat = reorder(Lhat.T, order='atypical').T
     Rhat = reorder(Rhat, order='atypical')
 
-    ρ = P.ρ
-    p = P.p()
-    A = P.A
-    T = P.T()
+    σA = P.dσdA()
+    σρ = P.dσdρ()
+    Tρ = P.dTdρ()
+    Tp = P.dTdp()
 
-    σ0 = P.σ()[0]
-    dσdA0 = P.dσdA()
-
-    pINF = MP.pINF
-
-    Π1 = dσdA[d, :, :, 0]
-    Π2 = dσdA[d, :, :, 1]
-    Π3 = dσdA[d, :, :, 2]
+    Π1 = σA[d, :, :, 0]
+    Π2 = σA[d, :, :, 1]
+    Π3 = σA[d, :, :, 2]
 
     Lhat[:4] = 0
-    Lhat[:3, 0] = -σ0 / ρ
-    Lhat[0, 1] = 1
+    Lhat[:3, 0] = -σρ[d]
+    Lhat[d, 1] = 1
     Lhat[:3, 2:5] = -Π1
     Lhat[:3, 5:8] = -Π2
     Lhat[:3, 8:11] = -Π3
-    Lhat[3, 0] = -T / ρ
-    Lhat[3, 1] = T / (p + pINF)
+    Lhat[3, 0] = Tρ
+    Lhat[3, 1] = Tp
     Lhat[4:8, 11:15] *= -sgn
-
-    Z0 = eye(3, 4)
-    Z0[0, 3] = -(p + pINF) / T
-    Z1 = outer((p + pINF) * e0 - σ0, e0) - dot(Π1, A)
-    Z2 = solve(Z1, Z0)
-    X = dot(A, Z2)
-    a = Z2[0]
 
     Ξ1 = Xi1(P, d)
     Ξ2 = Xi2(P, d)
@@ -80,15 +64,18 @@ def riemann_constraints1(P, sgn, MP):
     Q = vl.T
     Q_1 = vr
     I = dot(Q, Q_1)
-    Q = solve(I, Q, overwrite_a=1, check_finite=0)
+    Q = solve(I, Q)
 
-    Rhat[0, :4] = ρ * a
-    Rhat[1, :4] = (p + pINF) * a
-    Rhat[1, 3] += (p + pINF) / T
-    Rhat[2:5, :4] = X
+    tmp = zeros([5, 5])
+    tmp[:4] = Lhat[:4, :5]
+    tmp[4] = Lhat[8, :5]
+    b = zeros([5, 4])
+    b[:4, :4] = eye(4)
+    X = solve(tmp, b)
+    Rhat[:5, :4] = X
 
-    Y0 = -sgn * dot(Q_1, solve(D, Q))
-    Y = dot(Y0, dot(Ξ1, Rhat[:5, :4]))
+    Y0 = dot(Q_1, solve(D, Q))
+    Y = -sgn * dot(Y0, dot(Ξ1, X))
     Rhat[11:15, :4] = Y
     Rhat[:, 4:8] = 0
     Rhat[11:15, 4:8] = sgn * Q_1
@@ -98,15 +85,17 @@ def riemann_constraints1(P, sgn, MP):
 
 def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(nV), SR=zeros(nV)):
 
+    d = 0
+
     PL = Cvec_to_Pclass(QL, MPL)
     PR = Cvec_to_Pclass(QR, MPR)
-    LL, RL = riemann_constraints1(PL, 1, MPL)
-    LR, RR = riemann_constraints1(PR, -1, MPR)
+    LL, RL = riemann_constraints1(PL, 0, 1, MPL)
+    LR, RR = riemann_constraints1(PR, 0, -1, MPR)
     YL = RL[11:15, :4]
     YR = RR[11:15, :4]
 
-    xL = concatenate([PL.Σ()[0], [PL.T]])
-    xR = concatenate([PR.Σ()[0], [PR.T]])
+    xL = concatenate([PL.Σ()[d], [PL.T()]])
+    xR = concatenate([PR.Σ()[d], [PR.T()]])
 
     Ξ1L = Xi1(PL, d)
     Ξ2L = Xi2(PL, d)
@@ -122,8 +111,8 @@ def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(nV), SR=zeros(nV)):
     XL = dot(QL_1, cL[4:8])
     XR = dot(QR_1, cR[4:8])
 
-    yL = concatenate([PL.v, [PL.J[0]]])
-    yR = concatenate([PR.v, [PR.J[0]]])
+    yL = concatenate([PL.v, [PL.J[d]]])
+    yR = concatenate([PR.v, [PR.J[d]]])
     x_ = solve(YL - YR, yR - yL - dt * (XL + XR) + dot(YL, xL) - dot(YR, xR))
 
     cL[:4] = x_ - xL
@@ -139,13 +128,16 @@ def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(nV), SR=zeros(nV)):
 
 
 def star_states_iterative(QL, QR, dt, MPL, MPR):
-    SL = source_prim(QL, MPL)
-    SR = source_prim(QR, MPR)
-    QL_, QR_ = star_stepper(QL, QR, dt, MPL, MPR, SL, SR)
+
+    #SL = source_prim(QL, MPL)
+    #SR = source_prim(QR, MPR)
+    QL_, QR_ = star_stepper(QL, QR, dt, MPL, MPR)#, SL, SR)
+
     while not check_star_convergence(QL_, QR_, MPL, MPR):
-        SL_ = source_prim(QL_, MPL)
-        SR_ = source_prim(QR_, MPR)
-        QL_, QR_ = star_stepper(QL_, QR_, dt, MPL, MPR, SL_, SR_)
+        #SL_ = source_prim(QL_, MPL)
+        #SR_ = source_prim(QR_, MPR)
+        QL_, QR_ = star_stepper(QL_, QR_, dt, MPL, MPR)#, SL_, SR_)
+
     return QL_, QR_
 
 
@@ -156,7 +148,7 @@ def riemann_constraints2(P, side, MP):
         v*L = v*R
         T*L = T*R
     """
-    _, Lhat, _ = eigen(P)
+    _, Lhat, _ = eigen(P, 0, 0)
 
     ρ = P.ρ
     p = P.p()
@@ -212,8 +204,8 @@ def star_stepper_obj(x, QL, QR, dt, MPL, MPR):
 
     xL[:3] = PL.Σ()[0]
     xR[:3] = PR.Σ()[0]
-    xL[3] = PL.q[0]
-    xR[3] = PR.q[0]
+    xL[3] = PL.q()[0]
+    xR[3] = PR.q()[0]
 
     ret[0, :4] = dot(ML[:4], pL_ - pL) - (xL_ - xL)
     ret[1, :4] = dot(MR[:4], pR_ - pR) - (xR_ - xR)
@@ -230,8 +222,8 @@ def star_stepper_obj(x, QL, QR, dt, MPL, MPR):
     bL = zeros(4)
     bL[:3] = PL_.v
     bR[:3] = PR_.v
-    bL[3] = PL_.T
-    bR[3] = PR_.T
+    bL[3] = PL_.T()
+    bR[3] = PR_.T()
 
     ret[0, 17:] = xL_ - xR_
     ret[1, 17:] = bL - bR
@@ -245,8 +237,8 @@ def star_states_stiff(QL, QR, dt, MPL, MPR):
     PR = Cvec_to_Pclass(QR, MPR)
 
     x0 = zeros(42)
-    x0[:21] = concatenate([QL, PL.Σ()[0], [PL.q[0]]])
-    x0[21:] = concatenate([QR, PR.Σ()[0], [PR.q[0]]])
+    x0[:21] = concatenate([QL, PL.Σ()[0], [PL.q()[0]]])
+    x0[21:] = concatenate([QR, PR.Σ()[0], [PR.q()[0]]])
 
     def obj(x): return star_stepper_obj(x, QL, QR, dt, MPL, MPR)
 

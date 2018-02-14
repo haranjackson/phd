@@ -3,7 +3,7 @@ from numpy import array, eye, zeros
 from etc.boundaries import standard_BC
 from gpr.misc.structures import Cvec
 from gpr.variables.hyp import Cvec_hyp
-from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG, MP_COP_SMG_P, MP_ALU_SG
+from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG_P, MP_ALU_SG
 from options import nx, nV, dx, N
 
 
