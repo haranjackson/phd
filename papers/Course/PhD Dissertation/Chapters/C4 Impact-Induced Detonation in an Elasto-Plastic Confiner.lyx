@@ -92,7 +92,7 @@ status open
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs"
+bibfiles "../../../refs/phd_refs"
 options "plain"
 
 \end_inset

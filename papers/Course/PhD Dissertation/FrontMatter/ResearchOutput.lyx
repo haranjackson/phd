@@ -81,6 +81,15 @@ Publications
 \end_layout
 
 \begin_layout Itemize
+H Jackson, N Nikiforakis, 
+\shape italic
+Fast numerical schemes for plastic simulation with the Godunov-Peshkov-Romenski
+ model
+\shape default
+ (in preparation)
+\end_layout
+
+\begin_layout Itemize
 H Jackson, G Harcombe, N Nikiforakis, 
 \shape italic
 A solver based on eigendecomposition of the Cauchy tensor for Godunov-Romenski-t

@@ -629,8 +629,7 @@ reference "sec:Equations-of-State"
 \begin_inset Formula $\alpha$
 \end_inset
 
- is a constant related to the characteristic velocity of propagation of
- heat waves:
+ is related to the characteristic velocity of propagation of heat waves:
 \end_layout
 
 \begin_layout Standard
@@ -775,7 +774,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\tau_{1} & =\frac{6\mu}{\rho_{0}c_{s}^{2}}\\
+\tau_{1} & =\begin{cases}
+\frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
+\tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
+\end{cases}\\
 \tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
 \end{align}
 
@@ -814,7 +816,18 @@ key "Dumbser2016a"
 \end_inset
 
 ).
- This results in the following relations:
+ The power law for elastoplastic solids is based on the work 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2011"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, we have the following relations:
 \end_layout
 
 \begin_layout Standard
@@ -2360,10 +2373,29 @@ key "Toro2009"
 \end_layout
 
 \begin_layout Standard
+or a Roe flux 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2011b"
+
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 or a simplified Osher–Solomon flux 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2011,Dumbser2011a"
+key "Dumbser2011a"
 
 \end_inset
 
@@ -2481,7 +2513,7 @@ status open
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs"
+bibfiles "../../../refs/phd_refs"
 options "plain"
 
 \end_inset

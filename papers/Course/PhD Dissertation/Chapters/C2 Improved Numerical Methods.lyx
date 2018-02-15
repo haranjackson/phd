@@ -95,6 +95,17 @@ Convergence Properties of the Standard ADER-WENO Method
 \end_layout
 
 \begin_layout Standard
+The material in this section is published in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jackson2017"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 Extending the Galerkin method described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -820,6 +831,17 @@ U^{-1}V^{1}=\left(\left(\beth'\right)^{-1}\aleph'\right)\otimes\left(\aleph^{-1}
 
 \begin_layout Section
 Extension of the Montecinos-Balsara ADER-WENO Method
+\end_layout
+
+\begin_layout Standard
+The material in this section is published in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jackson2017b"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2426,7 +2448,18 @@ reference "eq:CGit"
 \end_layout
 
 \begin_layout Section
-An Operator Splitting Scheme for the GPR Model
+Operator Splitting for Newtonian Fluids and Elastic Solids
+\end_layout
+
+\begin_layout Standard
+The material in this section is published in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jackson2017a"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -8462,17 +8495,33 @@ It should be noted that both the ADER-WENO and Split-WENO methods, as described
 \end_layout
 
 \begin_layout Section
-An Operator Splitting Scheme for GPR-type Continuum Models
+Operator Splitting for Plastic Materials
+\end_layout
+
+\begin_layout Standard
+The material in this section is published in [REF].
+\end_layout
+
+\begin_layout Subsection
+Elastoplastic Power Law Materials
+\end_layout
+
+\begin_layout Subsection
+Bingham Plastics
+\end_layout
+
+\begin_layout Section
+Eigendecomposition Formulation for GPR-type Continuum Models
 \end_layout
 
 \begin_layout Standard
 \begin_inset Branch ChildOnly
-status collapsed
+status open
 
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs"
+bibfiles "../../../refs/my_publications,../../../refs/phd_refs"
 options "plain"
 
 \end_inset

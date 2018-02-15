@@ -753,7 +753,7 @@ key "Liu2003"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Sambasivan2009"
+key "Sambasivan2009a,Sambasivan2009b"
 
 \end_inset
 
@@ -3318,7 +3318,7 @@ The temperature curve generated using the GPR-RGFM matches very well the
  
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "subsec:Potential-Improvements"
+reference "chap:Conclusions-&-Discussion"
 
 \end_inset
 
@@ -4252,12 +4252,12 @@ Heat flux for the intermaterial heating-induced acoustic wave test with:
 
 \begin_layout Standard
 \begin_inset Branch ChildOnly
-status collapsed
+status open
 
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs"
+bibfiles "../../../refs/phd_refs,../../../refs/mphil_refs"
 options "plain"
 
 \end_inset

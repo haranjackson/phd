@@ -79,6 +79,13 @@
 
 \begin_layout Chapter
 Conclusions & Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Conclusions-&-Discussion"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -88,7 +95,7 @@ status open
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs"
+bibfiles "../../../refs/phd_refs"
 options "plain"
 
 \end_inset

@@ -95,20 +95,102 @@ graphicboxes
 \end_layout
 
 \begin_layout Title
-A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum
- Mechanics
+Fast Numerical Schemes for Plastic Simulation with the Godunov-Peshkov-Romenski
+ Model
 \end_layout
 
 \begin_layout Author
 Haran Jackson
+\begin_inset Flex CorAuthormark
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex CorAuthormark
+status collapsed
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Email
 hj305@cam.ac.uk
 \end_layout
 
+\begin_layout Author
+Nikos Nikiforakis
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Principal corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Address
 Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Abstract
@@ -130,6 +212,19 @@ sep
 \end_inset
 
  GPR 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Plasticity 
 \begin_inset ERT
 status collapsed
 
