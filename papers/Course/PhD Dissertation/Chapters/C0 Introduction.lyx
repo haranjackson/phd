@@ -777,7 +777,7 @@ begin{subequations}
 \tau_{1} & =\begin{cases}
 \frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
 \tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
-\end{cases}\\
+\end{cases}\label{eq:tau1}\\
 \tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
 \end{align}
 

@@ -35,12 +35,24 @@ norm3 = 1 / 6 * u**2 + 4 * m**2 * u - 6 * m**4 + 6 * m * ρ
 print(norm1 - norm3)
 
 
-def f(a=2, b=1):
+def g(b, σ0, x):
+    a, c, d = x
+    return array([(1 + 1 / d)**(d + 1) - a * c,
+                  a / (1 + b)**d + σ0 - a,
+                  (a - σ0) * b * c * d - (1 + b)])
 
-    d = log(a / (a - 1)) / log(1 + b)
+def f(a=2, b=1, σ0=1):
+
+    from scipy.optimize import newton_krylov
+    from numpy import ones
+
+    d = log(a / (a - σ0)) / log(1 + b)
     c = (1 + b) / ((a - 1) * b * d)
+
+    #g2 = lambda x: g(b, σ0, x)
+    #a, c, d = newton_krylov(g2, array([a,c,d]))
 
     x = linspace(0, 4, 400)
     plot(x, a / (1 + b * exp(-c * x))**d - (a - 1))
-    plot(linspace(0,1,100),linspace(0,1,100))
-    plot(x,ones(400))
+    #plot(linspace(0, 1, 100), linspace(0, 1, 100))
+    #plot(x, ones(400))

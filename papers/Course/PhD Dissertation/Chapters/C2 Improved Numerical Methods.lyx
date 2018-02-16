@@ -3349,6 +3349,13 @@ Note that this is a generalized Lotka-Volterra system in
 
 \begin_layout Subsubsection
 The Distortion ODEs
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:The-Distortion-ODEs"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -8506,8 +8513,574 @@ The material in this section is published in [REF].
 Elastoplastic Power Law Materials
 \end_layout
 
+\begin_layout Standard
+Take the singular value decomposition 
+\begin_inset Formula $A=U\Sigma V^{T}$
+\end_inset
+
+ as in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Distortion-ODEs"
+
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma=-\rho c_{s}^{2}A^{T}A\dev\left(A^{T}A\right)=-\rho c_{s}^{2}V\Sigma^{2}\dev\left(\Sigma^{2}\right)V^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \dev\left(\sigma\right)\right\Vert _{F}^{n}=\rho c_{s}^{2}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this result, for elastoplastic materials governed by the power law
+ described in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:tau1"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\Sigma}{dt}=-\frac{3\rho c_{s}^{2}}{\tau_{0}\sigma_{0}^{n}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}\Sigma\dev\left(\Sigma^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
+\end_inset
+
+ we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{dt^{*}}=-3\left\Vert \dev\left(\left(\begin{array}{ccc}
+x_{1}\left(x_{1}-\bar{x}\right) & 0 & 0\\
+0 & x_{2}\left(x_{2}-\bar{x}\right) & 0\\
+0 & 0 & x_{3}\left(x_{3}-\bar{x}\right)0
+\end{array}\right)\right)\right\Vert _{F}^{n}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $t^{*}=\frac{2\rho c_{s}^{2}}{\tau_{0}\sigma_{0}^{n}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{11}{3}}t$
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{27}{2}\left\Vert \dev\left(\left(\begin{array}{ccc}
+x_{1}\left(x_{1}-\bar{x}\right) & 0 & 0\\
+0 & x_{2}\left(x_{2}-\bar{x}\right) & 0\\
+0 & 0 & x_{3}\left(x_{3}-\bar{x}\right)0
+\end{array}\right)\right)\right\Vert _{F}^{2} & =3\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\\
+ & -3\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
+ & -2\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber \\
+ & +4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the following quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \dev\left(\left(\begin{array}{ccc}
+x_{1}\left(x_{1}-\bar{x}\right) & 0 & 0\\
+0 & x_{2}\left(x_{2}-\bar{x}\right) & 0\\
+0 & 0 & x_{3}\left(x_{3}-\bar{x}\right)0
+\end{array}\right)\right)\right\Vert _{F}^{2}=\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This leads to the following coupled system of ODEs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{dt^{*}} & =-18\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{dt^{*}} & =-\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{dt^{*}}=\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tau} & =-18\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tau} & =-u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the approximate solution from before:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m\left(\tau\right) & =1+\frac{e^{-9\tau}}{3}\left(\left(9m_{0}-u_{0}-9\right)e^{3\tau}-\left(6m_{0}-u_{0}-6\right)\right)\\
+u\left(\tau\right) & =e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left(18m_{0}-3u_{0}-18\right)\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Bingham Plastics
+\end_layout
+
+\begin_layout Standard
+For a Bingham plastic:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}=\begin{cases}
+0 & \sigma\leq\sigma_{0}\\
+\frac{1}{\mu_{\infty}}\left(\sigma-\sigma_{0}\right) & \sigma\geq\sigma_{0}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be approximated using some analytical function 
+\begin_inset Formula $f$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}=\frac{\sigma-f\left(\sigma\right)}{\mu_{\infty}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $f\left(\sigma\right)\sim\sigma$
+\end_inset
+
+ for 
+\begin_inset Formula $\sigma\ll\sigma_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $f\left(\sigma\right)\sim\sigma_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $\sigma\gg\sigma_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f$
+\end_inset
+
+ will take the form of the generalized logistic function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}-g
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\infty\right)=a-g=\sigma_{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+\sigma_{0}-a
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We also require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(0\right)=\frac{a}{\left(1+b\right)^{d}}+\sigma_{0}-a=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f^{'}\left(0\right)=abcd\left(1+b\right)^{-\left(d+1\right)}=\frac{\left(a-\sigma_{0}\right)bcd}{1+b}=1
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f^{'}\left(\sigma\right)=abcd\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq1
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq\frac{1}{abcd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{d}{d\sigma}\left(\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\right) & =bc\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-\left(d+2\right)}e^{-2c\sigma}-c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\\
+ & =c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\left(b\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-1}e^{-c\sigma}-1\right)\\
+ & =0\\
+ & \Rightarrow b\left(d+1\right)e^{-c\sigma}=1+be^{-c\sigma}\\
+ & \Rightarrow e^{-c\sigma}=\frac{1}{bd}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the maximum of 
+\begin_inset Formula $\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+\frac{1}{d}\right)^{-\left(d+1\right)}\frac{1}{bd}=\frac{1}{abcd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+\frac{1}{d}\right)^{d+1}=ac
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\frac{a}{\left(1+b\right)^{d}}=a-\sigma_{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(a-\sigma_{0}\right)bcd=1+b
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
