@@ -1,0 +1,94 @@
+from itertools import product
+
+from numpy import arctan, argsort, array, cos, dot, exp, log, prod, sort, sqrt
+from numpy.linalg import svd
+
+from gpr.misc.functions import L2_1D
+from gpr.variables.eos import E_2A, E_3
+
+
+### DISTORTION ###
+
+
+def bound_f(x, l):
+    return log((x**2 + l * x + l**2) / (x - l)**2) - 2 * sqrt(3) * arctan((2 * x + l) / (sqrt(3) * l))
+
+
+def pos(x):
+    return max(0, x)
+
+
+def solver_distortion_analytic(A, dt, MP):
+    U, s, V = svd(A)
+    detA3 = prod(s)**(1 / 3)
+    s0 = (s / detA3)**2
+    m0 = sum(s0) / 3
+    u0 = ((s0[0] - s0[1])**2 + (s0[1] - s0[2])**2 + (s0[2] - s0[0])**2) / 3
+
+    if u0 == 0:
+        return A
+
+    k = 2 * detA3**7 / MP.τ1
+    τ = k * dt
+    e_6τ = exp(-6 * τ)
+    e_9τ = exp(-9 * τ)
+    m = 1 + (3 * m0 - u0 / 3 - 3) * e_6τ - (2 * m0 - u0 / 3 - 2) * e_9τ
+    u = pos((18 * m0 - 2 * u0 - 18) * e_6τ - (18 * m0 - 3 * u0 - 18) * e_9τ)
+
+    Δ = -2 * m**3 + m * u + 2
+    arg1 = pos(6 * u**3 - 81 * Δ**2)
+    θ = arctan(sqrt(arg1) / max(1e-8, 9 * Δ))
+
+    x1 = sqrt(6 * u) / 3 * cos(θ / 3) + m
+    temp2 = 3 * m - x1
+    arg2 = pos(x1 * temp2**2 - 4)
+    x2 = 0.5 * (sqrt(arg2 / x1) + temp2)
+    x3 = 1 / (x1 * x2)
+
+    s1 = sort(detA3 * sqrt(array([x1, x2, x3])))
+    s = s1[argsort(s)]
+    return dot(U * s, V)
+
+
+### THERMAL IMPULSE ###
+
+
+def solver_thermal_analytic(ρ, E, A, J, v, dt, MP):
+    """ Solves the thermal impulse ODE analytically in 3D
+    """
+    c1 = E - E_2A(ρ, A, MP) - E_3(v)
+    c2 = MP.cα2 / 2
+    k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv)
+    a = c1 * k
+    b = c2 * k
+
+    # To avoid NaNs if dt>>1
+    ea = exp(-a * dt / 2)
+    den = 1 - b / a * (1 - ea**2) * L2_1D(J)
+    ret = J / sqrt(den)
+    return ea * ret
+
+
+### GENERAL ###
+
+
+def ode_stepper_analytical(u, dt, MP):
+    """ Solves the ODE analytically by approximating the distortion equations
+        and solving the thermal impulse equations
+    """
+    nx, ny, nz = u.shape[:3]
+    for i, j, k in product(range(nx), range(ny), range(nz)):
+        Q = u[i, j, k]
+        ρ = Q[0]
+        A = Q[5:14].reshape([3, 3])
+
+        if MP.VISCOUS:
+            A1 = solver_distortion_analytic(A, dt, MP)
+            Q[5:14] = A1.ravel()
+
+        if MP.THERMAL:
+            J = Q[14:17] / ρ
+            E = Q[1] / ρ
+            v = Q[2:5] / ρ
+            A2 = (A + A1) / 2
+            Q[14:17] = ρ * solver_thermal_analytic(ρ, E, A2, J, v, dt, MP)

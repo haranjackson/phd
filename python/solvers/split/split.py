@@ -3,8 +3,17 @@ from itertools import product
 from numpy import dot, tensordot, zeros
 
 from solvers.basis import DERVALS
+from solvers.split.analytical import ode_stepper_analytical
+from solvers.split.numerical import ode_stepper_numerical
 from system import Bdot, flux, system
-from options import nV, dx, dy, N, ndim
+from options import nV, dx, dy, N, ndim, NUM_ODE
+
+
+def ode_launcher(u, dt, MP, useJac=0):
+    if NUM_ODE:
+        ode_stepper_numerical(u, dt, MP, useJac=useJac)
+    else:
+        ode_stepper_analytical(u, dt, MP)
 
 
 def derivative(X, dim):

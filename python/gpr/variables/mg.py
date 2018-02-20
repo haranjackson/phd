@@ -223,9 +223,21 @@ def temperature(ρ, p, MP):
     """ Returns the Mie-Gruneisen temperature, given the density and pressure
     """
     cv = MP.cv
+    Tref = MP.Tref
     Γ = Γ_MG(ρ, MP)
     pr = p_ref(ρ, MP)
-    return MP.Tref + (p - pr) / (ρ * Γ * cv)
+    return Tref + (p - pr) / (ρ * Γ * cv)
+
+
+def temperature2(ρ, e, MP):
+    """ Returns the Mie-Gruneisen temperature, given the density and
+        internal energy
+    """
+    cv = MP.cv
+    Tref = MP.Tref
+    Γ = Γ_MG(ρ, MP)
+    er = e_ref(ρ, MP)
+    return Tref + (e - er) / cv
 
 
 def dedρ(ρ, p, MP):
