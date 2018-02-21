@@ -2,11 +2,11 @@
 """
 from itertools import product
 
-from numpy import ceil, concatenate, floor, int64, multiply, ones, zeros
+from numpy import concatenate, int64, multiply, ones, zeros
 from scipy.linalg import solve
 
 from solvers.weno.matrices import fHalfN, cHalfN, WN_M, WN_Σ
-from options import rc, λc, λs, eps, ndim, N, nV
+from options import rc, λc, λs, eps, N, NV
 
 
 LAMS = [λs, λs, λc, λc]
@@ -35,8 +35,8 @@ def calculate_coeffs(uList, L=0, R=0):
 
     σList = [((w.T).dot(WN_Σ).dot(w)).diagonal() for w in wList]
     oList = [LAMS[i] / (abs(σList[i]) + eps)**rc for i in range(n)]
-    oSum = zeros(nV)
-    numerator = zeros([N, nV])
+    oSum = zeros(NV)
+    numerator = zeros([N, NV])
     for i in range(n):
         oSum += oList[i]
         numerator += multiply(wList[i], oList[i])
@@ -73,7 +73,7 @@ def weno_launcher(u):
     """
     nx, ny, nz = u.shape[:3]
 
-    Wx = zeros([nx, ny, nz, N, nV])
+    Wx = zeros([nx, ny, nz, N, NV])
     tempu = extend(u, N - 1, 0)
     for i, j, k in product(range(nx), range(ny), range(nz)):
         uL, uR, uCL, uCR = extract_stencils(tempu[:, j, k], i + N - 1)
@@ -86,7 +86,7 @@ def weno_launcher(u):
     if ny == 1:
         return Wx
 
-    Wxy = zeros([nx, ny, nz, N, N, nV])
+    Wxy = zeros([nx, ny, nz, N, N, NV])
     tempWx = extend(Wx, N - 1, 1)
     for i, j, k, a in product(range(nx), range(ny), range(nz), range(N)):
         uL, uR, uCL, uCR = extract_stencils(tempWx[i, :, k, a], j + N - 1)
@@ -95,7 +95,7 @@ def weno_launcher(u):
     if nz == 1:
         return Wxy
 
-    Wxyz = zeros([nx, ny, nz, N, N, N, nV])
+    Wxyz = zeros([nx, ny, nz, N, N, N, NV])
     tempWxy = extend(Wxy, N - 1, 2)
     for i, j, k, a, b in product(range(nx), range(ny), range(nz), range(N), range(N)):
         uL, uR, uCL, uCR = extract_stencils(tempWxy[i, j, :, a, b], k + N - 1)

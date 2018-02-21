@@ -7,7 +7,7 @@ from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing
 from gpr.variables.state import heat_flux, pressure, temperature
 from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
 
-from options import nV
+from options import NV
 
 
 class Cvec_to_Pclass():
@@ -118,7 +118,7 @@ class Cvec_to_Pclass():
 def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     """ Returns the vector of conserved variables, given the primitive variables
     """
-    Q = zeros(nV)
+    Q = zeros(NV)
 
     if MP.MULTI:
         ρ = z * ρ1 + (1 - z) * ρ2
@@ -144,7 +144,7 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
 
 
 def Pvec(P):
-    ret = zeros(nV)
+    ret = zeros(NV)
     ret[0] = P.ρ
     ret[1] = P.p()
     ret[2:5] = P.v

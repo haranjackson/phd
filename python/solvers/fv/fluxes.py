@@ -3,7 +3,7 @@ from scipy.linalg import eig, solve
 
 from solvers.basis import NODES, WGHTS
 from system import Bdot, system, max_eig
-from options import N, nV
+from options import N, NV
 
 
 RUSANOV = 0
@@ -14,11 +14,11 @@ OSHER = 2
 def Bint(qL, qR, d, MP):
     """ Returns the jump matrix for B, in the dth direction.
     """
-    ret = zeros(nV)
+    ret = zeros(NV)
     Δq = qR - qL
     for i in range(N):
         q = qL + NODES[i] * Δq
-        tmp = zeros(nV)
+        tmp = zeros(NV)
         Bdot(tmp, Δq, q, d, MP)
         ret += WGHTS[i] * tmp
     return ret
@@ -27,7 +27,7 @@ def Bint(qL, qR, d, MP):
 def D_OSH(qL, qR, d, MP):
     """ Returns the Osher flux component, in the dth direction
     """
-    ret = zeros(nV, dtype=complex128)
+    ret = zeros(NV, dtype=complex128)
     Δq = qR - qL
 
     for i in range(N):
@@ -43,7 +43,7 @@ def D_OSH(qL, qR, d, MP):
 def D_ROE(qL, qR, d, MP):
     """ Returns the Roe flux component, in the dth direction
     """
-    M = zeros([nV, nV])
+    M = zeros([NV, NV])
     Δq = qR - qL
 
     for i in range(N):

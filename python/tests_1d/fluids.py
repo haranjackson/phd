@@ -5,11 +5,11 @@ from scipy.special import erf
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec
 from gpr.variables.wavespeeds import c_0
-from tests_1d.common import riemann_IC, MP_AIR
-from options import nx, nV, Lx, N
+from tests_1d.common import riemann_IC, MP_AIR, cell_sizes
+from options import NV, N
 
 
-def fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
+def fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
     """ constructs the riemann problem corresponding to the parameters given
     """
     AL = ρL**(1 / 3) * eye(3)
@@ -23,12 +23,14 @@ def fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
     QL = Cvec(ρL, pL, vL, AL, JL, MPL)
     QR = Cvec(ρR, pR, vR, AR, JR, MPR)
 
-    return riemann_IC(tf, QL, QR, MPL, MPR, x0)
+    return riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0)
 
 
 def heat_conduction_IC():
 
     tf = 1
+    nx = 100
+    Lx = 1
 
     ρL = 2
     pL = 1
@@ -40,9 +42,10 @@ def heat_conduction_IC():
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
                              b0=1, cα=2, μ=1e-2, κ=1e-2)
+    dX = cell_sizes(Lx, nx)
 
     print("HEAT CONDUCTION IN A GAS: N =", N)
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
@@ -54,6 +57,8 @@ def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
 def first_stokes_problem_IC():
 
     tf = 1
+    nx = 100
+    Lx = 1
 
     γ = 1.4
     μ = 1e-2  # 1e-3 # 1e-4
@@ -68,9 +73,10 @@ def first_stokes_problem_IC():
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0,
                              b0=1, cα=1e-16, μ=μ, Pr=0.75)
+    dX = cell_sizes(Lx, nx)
 
     print("FIST STOKES PROBLEM: N =", N, "μ =", μ)
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP)
 
 
 def viscous_shock_exact(x, Ms, MP, μ, center=0):
@@ -117,6 +123,8 @@ def viscous_shock_exact_x(n, M=2, t=0.2):
 def viscous_shock_IC(center=0):
 
     tf = 0.2
+    nx = 100
+    Lx = 1
 
     Ms = 2
     γ = 1.4
@@ -127,6 +135,7 @@ def viscous_shock_IC(center=0):
 
     MP = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
                              b0=5, cα=5, μ=2e-2, Pr=0.75)
+    dX = cell_sizes(Lx, nx)
 
     x = arange(-Lx / 2, Lx / 2, 1 / nx)
     ρ = zeros(nx)
@@ -137,7 +146,7 @@ def viscous_shock_IC(center=0):
 
     v -= v[0]           # Velocity in shock 0
 
-    u = zeros([nx, 1, 1, nV])
+    u = zeros([nx, 1, 1, NV])
     for i in range(nx):
         A = (ρ[i])**(1 / 3) * eye(3)
         J = zeros(3)
@@ -145,4 +154,4 @@ def viscous_shock_IC(center=0):
         u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
     print("VISCOUS SHOCK: N =", N)
-    return u, [MP], tf
+    return u, [MP], tf, dX

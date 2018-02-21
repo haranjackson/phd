@@ -4,7 +4,6 @@ from time import time
 
 from numpy import array, linspace, int64, save
 
-from options import Lx, Ly, Lz, nx, ny, nz
 from options import RGFM, ISO_FIX, STAR_TOL, STIFF_RGFM
 from options import CPP_LVL, SPLIT
 from options import N, CFL, FLUX, PERR_FROB
@@ -22,12 +21,6 @@ def print_stats(count, t, dt):
 
 def save_config(path):
     with open(path, 'w+', encoding='utf-8') as f:
-        f.write('Lx = %e\n' % Lx)
-        f.write('Ly = %e\n' % Ly)
-        f.write('Lz = %e\n' % Lz)
-        f.write('nx = %i\n' % nx)
-        f.write('ny = %i\n' % ny)
-        f.write('nz = %i\n\n' % nz)
 
         f.write('RGFM     = %i\n' % RGFM)
         f.write('ISO_FIX  = %i\n' % ISO_FIX)

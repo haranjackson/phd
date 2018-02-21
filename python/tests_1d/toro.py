@@ -1,12 +1,16 @@
 from numpy import array, zeros
 
-from tests_1d.common import MP_AIR
+from tests_1d.common import MP_AIR, cell_sizes
 from tests_1d.fluids import fluids_IC
 
 
 def toro1_IC():
 
     tf = 0.25
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1
     pL = 1
@@ -16,12 +20,16 @@ def toro1_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro2_IC():
 
     tf = 0.15
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1
     pL = 0.4
@@ -31,12 +39,16 @@ def toro2_IC():
     pR = 0.4
     vR = array([2, 0, 0])
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro3_IC():
 
     tf = 0.012
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1
     pL = 1000
@@ -46,12 +58,16 @@ def toro3_IC():
     pR = 0.01
     vR = zeros(3)
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro4_IC():
 
     tf = 0.035
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1
     pL = 0.01
@@ -61,12 +77,16 @@ def toro4_IC():
     pR = 100
     vR = zeros(3)
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def toro_test5_IC():
 
     tf = 0.035
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 5.99924
     pL = 460.894
@@ -76,4 +96,4 @@ def toro_test5_IC():
     pR = 46.095
     vR = array([-6.19633, 0, 0])
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)

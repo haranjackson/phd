@@ -6,7 +6,7 @@ from solvers.basis import DERVALS
 from solvers.split.analytical import ode_stepper_analytical
 from solvers.split.numerical import ode_stepper_numerical
 from system import Bdot, flux, system
-from options import nV, dx, dy, N, ndim, NUM_ODE
+from options import NV, N, NDIM, NUM_ODE
 
 
 def ode_launcher(u, dt, MP, USE_JAC=False):
@@ -16,34 +16,34 @@ def ode_launcher(u, dt, MP, USE_JAC=False):
         ode_stepper_analytical(u, dt, MP)
 
 
-def derivative(X, dim):
+def derivative(X, dX, dim):
     """ Returns the derivative of polynomial coefficients X with respect to
         dimension dim. X can be of shape (N,...) or (N,N,...)
     """
     if dim == 0:
-        return tensordot(DERVALS, X, (1, 0)) / dx
+        return tensordot(DERVALS, X, (1, 0)) / dX[0]
     elif dim == 1:
-        return tensordot(DERVALS, X, (1, 1)).swapaxes(0, 1) / dy
+        return tensordot(DERVALS, X, (1, 1)).swapaxes(0, 1) / dX[1]
 
 
-def weno_midstepper(wh, dt, MP):
+def weno_midstepper(wh, dt, dX, MP):
     """ Steps the WENO reconstruction forwards by dt/2, under the homogeneous system
     """
     USE_JACOBIAN = 0
 
     nx, ny, nz = wh.shape[:3]
 
-    F = zeros([N] * ndim + [nV])
-    G = zeros([N] * ndim + [nV])
-    Bdwdx = zeros(nV)
-    Bdwdy = zeros(nV)
+    F = zeros([N] * NDIM + [NV])
+    G = zeros([N] * NDIM + [NV])
+    Bdwdx = zeros(NV)
+    Bdwdy = zeros(NV)
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
         w = wh[i, j, k]
-        dwdx = derivative(w, 0)
+        dwdx = derivative(w, dX, 0)
 
-        if ndim == 1:
+        if NDIM == 1:
 
             if USE_JACOBIAN:
                 for a in range(N):
@@ -52,14 +52,14 @@ def weno_midstepper(wh, dt, MP):
             else:
                 for a in range(N):
                     F[a] = flux(w[a], 0, MP)
-                dFdx = derivative(F, 0)
+                dFdx = derivative(F, dX, 0)
                 for a in range(N):
                     Bdot(Bdwdx, dwdx[a], w[a], 0, MP)
                     w[a] -= dt / 2 * (dFdx[a] + Bdwdx)
 
-        elif ndim == 2:
+        elif NDIM == 2:
 
-            dwdy = derivative(w, 1)
+            dwdy = derivative(w, dX, 1)
 
             if USE_JACOBIAN:
                 for a, b in product(range(N), range(N)):
@@ -71,8 +71,8 @@ def weno_midstepper(wh, dt, MP):
                 for a, b in product(range(N), range(N)):
                     F[a, b] = flux(w[a, b], 0, MP)
                     G[a, b] = flux(w[a, b], 1, MP)
-                dFdx = derivative(F, 0)
-                dGdy = derivative(G, 1)
+                dFdx = derivative(F, dX, 0)
+                dGdy = derivative(G, dX, 1)
                 for a, b in product(range(N), range(N)):
                     Bdot(Bdwdx, dwdx[a, b], w[a, b], 0, MP)
                     Bdot(Bdwdy, dwdy[a, b], w[a, b], 1, MP)

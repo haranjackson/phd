@@ -2,14 +2,14 @@ from numpy import dot, eye, outer, tensordot, zeros
 
 from gpr.misc.functions import L2_1D
 
-from options import nV
+from options import NV
 
 
 def dQdP(P):
     """ Returns the Jacobian of the conserved variables with respect to the
         primitive variables
     """
-    ret = eye(nV)
+    ret = eye(NV)
 
     MP = P.MP
 
@@ -52,7 +52,7 @@ def dPdQ(P):
     """ Returns the Jacobian of the primitive variables with respect to the
         conserved variables
     """
-    ret = eye(nV)
+    ret = eye(NV)
 
     MP = P.MP
 
@@ -146,7 +146,7 @@ def dFdP(P, d):
         Δ += Tρ * H
         Π += Tp * H
 
-    ret = zeros([nV, nV])
+    ret = zeros([NV, NV])
     ret[0, 0] = v[d]
     ret[0, 2 + d] = ρ
     ret[1, 0] = Δ[d]

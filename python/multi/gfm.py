@@ -37,9 +37,9 @@ def add_ghost_cells(mats, MPs, dt):
 
 
 def get_material_index(Q, MPs):
-    nV = len(Q)
+    NV = len(Q)
     LSET = len(MPs) - 1
-    N = nV - LSET
+    N = NV - LSET
     for i in range(LSET):
         if Q[N + i] > 0:
             return i + 1

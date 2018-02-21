@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arctan, argsort, array, cos, dot, exp, log, prod, sort, sqrt
+from numpy import arctan, array, cos, dot, exp, log, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
@@ -12,7 +12,9 @@ from gpr.variables.shear import c_s2
 
 
 def bound_f(x, l):
-    return log((x**2 + l * x + l**2) / (x - l)**2) - 2 * sqrt(3) * arctan((2 * x + l) / (sqrt(3) * l))
+    tmp1 = log((x**2 + l * x + l**2) / (x - l)**2)
+    tmp2 = 2 * sqrt(3) * arctan((2 * x + l) / (sqrt(3) * l))
+    return tmp1 - tmp2
 
 
 def pos(x):

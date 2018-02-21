@@ -190,9 +190,9 @@ def fig_size(square):
 
 
 def plot_weno(wh, var, MPs=None):
-    n, _, _, N, nV = wh.shape
+    n, _, _, N, NV = wh.shape
     x = zeros(N * n)
-    u = zeros([N * n, 1, 1, nV])
+    u = zeros([N * n, 1, 1, NV])
     for i in range(n):
         ind = N * i
         for j in range(N):
@@ -210,8 +210,8 @@ def plot_weno(wh, var, MPs=None):
 
 
 def plot_dg(qh, var, t, MPs=None):
-    n, _, _, N, _, nV = qh.shape
-    wh = zeros([n, 1, 1, N, nV])
+    n, _, _, N, _, NV = qh.shape
+    wh = zeros([n, 1, 1, N, NV])
     for i in range(n):
         for j in range(N):
             for k in range(N):

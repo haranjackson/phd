@@ -3,7 +3,7 @@ from numpy import zeros
 from gpr.systems.conserved import flux_cons_ref, Bdot_cons, system_cons
 from gpr.systems.conserved import block_cons_ref, source_cons_ref
 from gpr.systems.eigenvalues import max_abs_eigs
-from options import nV
+from options import NV
 
 
 def flux_ref(ret, Q, d, MP):
@@ -19,19 +19,19 @@ def source_ref(ret, Q, MP):
 
 
 def flux(Q, d, MP):
-    ret = zeros(nV)
+    ret = zeros(NV)
     flux_ref(ret, Q, d, MP)
     return ret
 
 
 def block(Q, d, MP):
-    ret = zeros([nV, nV])
+    ret = zeros([NV, NV])
     block_ref(ret, Q, d, MP)
     return ret
 
 
 def source(Q, MP):
-    ret = zeros(nV)
+    ret = zeros(NV)
     source_ref(ret, Q, MP)
     return ret
 

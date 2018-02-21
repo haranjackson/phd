@@ -1,14 +1,18 @@
 from numpy import array, eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
-from tests_1d.common import MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
+from tests_1d.common import MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2, cell_sizes
 from tests_1d.fluids import fluids_IC
-from options import nx, ny, nz, nV, dx
+from options import NV
 
 
 def sod_shock_IC():
 
     tf = 0.2
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1
     pL = 1
@@ -18,12 +22,16 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
 def water_gas_IC():
 
     tf = 237.44e-6
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1000
     pL = 1e9
@@ -33,12 +41,16 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
 
 
 def water_water_IC():
 
     tf = 1.5e-4
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     ρL = 1000
     pL = 7e8
@@ -48,12 +60,17 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    return fluids_IC(tf, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
 
 
 def helium_bubble_IC():
 
     tf = 0.0014
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
+    dx = dX[0]
 
     ρL = 1.3333
     pL = 1.5e5
@@ -72,7 +89,7 @@ def helium_bubble_IC():
 
     J = zeros(3)
 
-    u = zeros([nx, ny, nz, nV])
+    u = zeros([nx, 1, 1, NV])
     Q1 = Cvec(ρL, pL, vL, AL, J, MP_AIR2)
     Q2 = Cvec(ρM, pM, vM, AM, J, MP_AIR2)
     Q3 = Cvec(ρR, pR, vR, AR, J, MP_HEL2)
@@ -92,4 +109,4 @@ def helium_bubble_IC():
         else:
             u[i, 0, 0, :-3] = Q2
 
-    return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2], tf
+    return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2], tf, dX

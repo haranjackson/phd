@@ -3,22 +3,26 @@ from numpy import array, eye, zeros
 from etc.boundaries import standard_BC
 from gpr.misc.structures import Cvec
 from gpr.variables.hyp import Cvec_hyp
-from tests_1d.common import riemann_IC
+from tests_1d.common import riemann_IC, cell_sizes
 from tests_1d.common import HYP_COP, MP_COP_GR, MP_COP_SMG_P, MP_ALU_SG
-from options import nx, nV, dx, N
+from options import NV, N
 
 
-def solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
+def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
 
     QL = Cvec_hyp(FL, SL, vL, HYP)
     QR = Cvec_hyp(FR, SR, vR, HYP)
 
-    return riemann_IC(tf, QL, QR, MP, MP, x0)
+    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, x0)
 
 
 def barton1_IC():
 
     tf = 0.06
+    nx = 500
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     vL = array([0, 0.5, 1])
     FL = array([[0.98, 0, 0],
@@ -33,12 +37,16 @@ def barton1_IC():
     SR = 0
 
     print("BARTON1: N =", N)
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def barton2_IC():
 
     tf = 0.06
+    nx = 500
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     vL = array([2, 0, 0.1])
     FL = array([[1, 0, 0],
@@ -53,12 +61,16 @@ def barton2_IC():
     SR = 0
 
     print("BARTON2: N =", N)
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def elastic1_IC():
 
     tf = 0.06
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     FL = array([[0.95, 0, 0],
                 [0, 1, 0],
@@ -73,12 +85,16 @@ def elastic1_IC():
     SR = 0
 
     print("ELASTIC1: N =", N)
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def elastic2_IC():
 
     tf = 0.06
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     FL = array([[0.95, 0, 0],
                 [0.05, 1, 0],
@@ -93,12 +109,16 @@ def elastic2_IC():
     SR = 0
 
     print("ELASTIC2: N =", N)
-    return solid_IC(tf, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
 
 
 def piston_IC():
 
     tf = 1.5
+    nx = 300
+    Lx = 1.5
+
+    dX = cell_sizes(Lx, nx)
 
     MP = MP_COP_SMG_P
     ρ = MP.ρ0
@@ -108,13 +128,13 @@ def piston_IC():
     J = zeros(3)
     Q = Cvec(ρ, p, v, A, J, MP)
 
-    u = zeros([nx, 1, 1, nV])
+    u = zeros([nx, 1, 1, NV])
 
     for i in range(nx):
         u[i] = Q
 
     print("ELASTO-PLASTIC PISTON: N =", N)
-    return u, [MP], tf
+    return u, [MP], tf, dX
 
 
 def piston_BC(u):
@@ -126,6 +146,10 @@ def piston_BC(u):
 def favrie1_IC():
 
     tf = 50e-6
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     MP = MP_ALU_SG
 
@@ -140,21 +164,17 @@ def favrie1_IC():
     QL = Cvec(ρ, p, vL, A, J, MP)
     QR = Cvec(ρ, p, vR, A, J, MP)
 
-    u = zeros([nx, 1, 1, nV])
-
-    for i in range(nx):
-        if i * dx < 0.5:
-            u[i] = QL
-        else:
-            u[i] = QR
-
     print("FAVRIE1: N =", N)
-    return u, [MP], tf
+    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)
 
 
 def favrie2_IC():
 
     tf = 50e-6
+    nx = 200
+    Lx = 1
+
+    dX = cell_sizes(Lx, nx)
 
     MP = MP_ALU_SG
 
@@ -169,13 +189,5 @@ def favrie2_IC():
     QL = Cvec(ρ, p, vL, A, J, MP)
     QR = Cvec(ρ, p, vR, A, J, MP)
 
-    u = zeros([nx, 1, 1, nV])
-
-    for i in range(nx):
-        if i * dx < 0.5:
-            u[i] = QL
-        else:
-            u[i] = QR
-
     print("FAVRIE2: N =", N)
-    return u, [MP], tf
+    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)

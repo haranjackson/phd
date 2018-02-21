@@ -1,38 +1,40 @@
-from itertools import product
-
-from numpy import inf, sqrt, zeros
+from numpy import array, inf, sqrt, zeros
 
 from gpr.misc.objects import material_parameters, hyperelastic_params
-from options import nx, ny, nz, nV, dx, RGFM
+from options import NV, RGFM
 
 
-def riemann_IC(tf, QL, QR, MPL, MPR, x0):
+def cell_sizes(Lx, nx, Ly=1, ny=1, Lz=1, nz=1):
+    return array([Lx/nx, Ly/nz, Lz/nz])
 
-    u = zeros([nx, ny, nz, nV])
+
+def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
+
+    u = zeros([nx, 1, 1, NV])
 
     if RGFM:
 
-        for i, j, k in product(range(nx), range(ny), range(nz)):
+        for i in range(nx):
 
-            if i * dx < x0:
-                u[i, j, k] = QL
+            if i * dX[0] < x0:
+                u[i] = QL
             else:
-                u[i, j, k] = QR
+                u[i] = QR
 
-            u[i, j, k, -1] = i * dx - x0
+            u[i, 0, 0, -1] = i * dX[0] - x0
 
         return u, [MPL, MPR], tf
 
     else:
 
-        for i, j, k in product(range(nx), range(ny), range(nz)):
+        for i in range(nx):
 
-            if i * dx < x0:
-                u[i, j, k] = QL
+            if i * dX[0] < x0:
+                u[i] = QL
             else:
-                u[i, j, k] = QR
+                u[i] = QR
 
-        return u, [MPL], tf
+        return u, [MPL], tf, dX
 
 
 MP_AIR = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,

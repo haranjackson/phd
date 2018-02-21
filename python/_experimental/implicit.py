@@ -6,7 +6,7 @@ from solvers.dg.dg import rhs
 from solvers.dg.matrices import system_matrices
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec_to_Pclass, Cvec
-from options import nV, N, NT
+from options import NV, N, NT
 
 
 W, U, _, _, _ = system_matrices()
@@ -22,10 +22,10 @@ PSIR = lagrange(concatenate(([0], NODES)), [1] + [0] * N)
 
 def obj_eul(x, WwL, WwR, dt, MPL, MPR):
 
-    nX = NT * nV
+    nX = NT * NV
 
-    qL = x[0: nX].reshape([NT, nV])
-    qR = x[nX: 2 * nX].reshape([NT, nV])
+    qL = x[0: nX].reshape([NT, NV])
+    qR = x[nX: 2 * nX].reshape([NT, NV])
     ρvL = x[2 * nX: 2 * nX + 3 * N].reshape([N, 3])
     ρvR = x[2 * nX + 3 * N: 2 * nX + 6 * N].reshape([N, 3])
 
@@ -34,8 +34,8 @@ def obj_eul(x, WwL, WwR, dt, MPL, MPR):
     ret[0: nX] = (dot(U, qL) - rhs(qL, WwL, dt, MPL, 0)).ravel()
     ret[nX: 2 * nX] = (dot(U, qR) - rhs(qR, WwR, dt, MPR, 0)).ravel()
 
-    qL_ = dot(ENDVALS[:, 1], qL.reshape([N, N, nV]))
-    qR_ = dot(ENDVALS[:, 0], qR.reshape([N, N, nV]))
+    qL_ = dot(ENDVALS[:, 1], qL.reshape([N, N, NV]))
+    qR_ = dot(ENDVALS[:, 0], qR.reshape([N, N, NV]))
 
     qL_[:, 2:5] += ρvL
     qR_[:, 2:5] += ρvR
@@ -97,8 +97,8 @@ if __name__ == "__main__":
     wR = array([QR for i in range(N)])
     """
 
-    wL = zeros([N, nV])
-    wR = zeros([N, nV])
+    wL = zeros([N, NV])
+    wR = zeros([N, NV])
     v0 = zeros(3)
     J0 = zeros(3)
     for i in range(N):
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     qL0 = array([wL for i in range(N)])
     qR0 = array([wR for i in range(N)])
 
-    nX = NT * nV
+    nX = NT * NV
     x0 = zeros(2 * nX + 6 * N)
     x0[0: nX] = qL0.ravel()
     x0[nX: 2 * nX] = qR0.ravel()
@@ -129,8 +129,8 @@ if __name__ == "__main__":
     #ret = anderson(f, x0)
     ret = leastsq(f, x0)[0]
 
-    qL = ret[0: nX].reshape([N, N, nV])
-    qR = ret[nX: 2 * nX].reshape([N, N, nV])
+    qL = ret[0: nX].reshape([N, N, NV])
+    qR = ret[nX: 2 * nX].reshape([N, N, NV])
     ρvL = ret[2 * nX: 2 * nX + 3 * N].reshape([N, 3])
     ρvR = ret[2 * nX + 3 * N: 2 * nX + 6 * N].reshape([N, 3])
 

@@ -4,7 +4,7 @@ from numpy import concatenate, diag, eye, ones, zeros
 
 from solvers.basis import NODES, WGHTS, PSI, PSID, DERVALS
 from gpr.misc.functions import kron_prod
-from options import ndim, N, NT, nV
+from options import NDIM, N, NT, NV
 
 
 # Inner products required for Galerkin matrices
@@ -22,16 +22,16 @@ for a, b in product(range(N), range(N)):
 
 
 # Galerkin matrices
-DG_W = concatenate([PSI[a](0) * kron_prod([I1] * ndim) for a in range(N)])
+DG_W = concatenate([PSI[a](0) * kron_prod([I1] * NDIM) for a in range(N)])
 
-DG_U = kron_prod([I11 - I2.T] + [I1] * ndim)
+DG_U = kron_prod([I11 - I2.T] + [I1] * NDIM)
 
-DG_V = zeros([ndim, NT, NT])
-for i in range(1, ndim + 1):
-    DG_V[i - 1] = kron_prod([I1] * i + [I2] + [I1] * (ndim - i))
+DG_V = zeros([NDIM, NT, NT])
+for i in range(1, NDIM + 1):
+    DG_V[i - 1] = kron_prod([I1] * i + [I2] + [I1] * (NDIM - i))
 
-DG_Z = (diag(kron_prod([I1] * (ndim + 1))) * ones([nV, NT])).T
+DG_Z = (diag(kron_prod([I1] * (NDIM + 1))) * ones([NV, NT])).T
 
-DG_T = zeros([ndim, NT, NT])
-for i in range(1, ndim + 1):
-    DG_T[i - 1] = kron_prod([I] * i + [DERVALS] + [I] * (ndim - i))
+DG_T = zeros([NDIM, NT, NT])
+for i in range(1, NDIM + 1):
+    DG_T[i - 1] = kron_prod([I] * i + [DERVALS] + [I] * (NDIM - i))

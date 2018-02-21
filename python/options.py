@@ -1,13 +1,8 @@
-""" Domain Parameters """
+""" System Parameters """
 
-Lx = 1                      # Length of domain in x direction
-Ly = 1                      # Length of domain in x direction
-Lz = 1                      # Length of domain in x direction
-nx = 200                    # Number of cells in x direction
-ny = 1                      # Number of cells in y direction
-nz = 1                      # Number of cells in z direction
-nV = 17                     # Number of variables - should be:
-#     5+VISCOUS*9+THERMAL*3+MULTI*2+REACTIVE+LSET
+NDIM = 1                    # Number of dimensions
+NV   = 17                   # Number of variables - should be:
+                            # 5 + VISCOUS*9 + THERMAL*3 + MULTI*2 + REACTIVE + LSET
 
 """ GFM Options """
 
@@ -57,8 +52,4 @@ NCORE = 4                   # Number of cores used if running in parallel
 
 """ Derived Values """
 
-ndim = (nx > 1) + (ny > 1) + (nz > 1)
-NT = N**(ndim + 1)
-dx = Lx / nx
-dy = Ly / ny
-dz = Lz / nz
+NT = N**(NDIM + 1)

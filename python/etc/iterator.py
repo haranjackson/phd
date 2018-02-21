@@ -4,7 +4,7 @@ from numpy import sum
 
 from multi.gfm import get_levelset_root
 
-from options import nx, ny, nz, CFL, dx, dy, dz, ndim, nV
+from options import CFL, NDIM, NV
 from system import max_eig
 
 
@@ -13,7 +13,7 @@ def make_u(mats):
     """
     m = len(mats)
     u = mats[0]
-    N = nV - (m - 1)
+    N = NV - (m - 1)
     u[:, :, :, N:] = sum([mat[:, :, :, N:] for mat in mats], axis=0) / m
 
     for i in range(1, m):
@@ -23,7 +23,7 @@ def make_u(mats):
     return u
 
 
-def timestep(mats, count, t, tf, MPs):
+def timestep(mats, count, t, tf, dX, MPs):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
     m = len(mats)
@@ -32,15 +32,16 @@ def timestep(mats, count, t, tf, MPs):
 
         u = mats[ind]
         MP = MPs[ind]
+        nx, ny, nz = u.shape[:3]
 
         for i, j, k in product(range(nx), range(ny), range(nz)):
 
             Q = u[i, j, k]
-            MAX = max(MAX, max_eig(Q, 0, MP) / dx)
-            if ndim > 1:
-                MAX = max(MAX, max_eig(Q, 1, MP) / dy)
-                if ndim > 2:
-                    MAX = max(MAX, max_eig(Q, 2, MP) / dz)
+            MAX = max(MAX, max_eig(Q, 0, MP) / dX[0])
+            if NDIM > 1:
+                MAX = max(MAX, max_eig(Q, 1, MP) / dX[1])
+                if NDIM > 2:
+                    MAX = max(MAX, max_eig(Q, 2, MP) / dX[2])
 
     dt = CFL / MAX
     if count <= 5:

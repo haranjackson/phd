@@ -3,7 +3,7 @@ from numpy import dot, zeros
 from gpr.systems.jacobians import dFdP, dPdQ
 from gpr.misc.structures import Cvec_to_Pclass
 
-from options import nV, LSET
+from options import NV, LSET
 
 
 def flux_cons_ref(ret, Q, d, MP):
@@ -177,6 +177,6 @@ def system_cons(Q, d, MP):
     P = Cvec_to_Pclass(Q, MP)
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
-    B = zeros([nV, nV])
+    B = zeros([NV, NV])
     block_cons_ref(B, Q, d, MP)
     return dot(DFDP, DPDQ) + B

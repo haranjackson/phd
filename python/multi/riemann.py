@@ -8,7 +8,7 @@ from gpr.systems.eigenvalues import Xi1, Xi2
 from gpr.systems.eigenvectors import eigen
 from gpr.systems.primitive import source_prim
 
-from options import nV, STAR_TOL, STIFF_RGFM
+from options import NV, STAR_TOL, STIFF_RGFM
 
 
 def check_star_convergence(QL_, QR_, MPL, MPR):
@@ -83,7 +83,7 @@ def riemann_constraints1(P, d, sgn, MP):
     return Lhat, Rhat
 
 
-def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(nV), SR=zeros(nV)):
+def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(NV), SR=zeros(NV)):
 
     d = 0
 

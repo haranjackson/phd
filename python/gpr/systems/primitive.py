@@ -5,7 +5,7 @@ from gpr.misc.structures import Cvec_to_Pclass
 from gpr.variables.shear import c_s2, dc_s2dρ
 from gpr.variables.wavespeeds import c_0, c_h
 
-from options import nV
+from options import NV
 
 
 def source_prim_ref(ret, P):
@@ -31,7 +31,7 @@ def source_prim_ref(ret, P):
 
 
 def source_prim(Q, MP):
-    ret = zeros(nV)
+    ret = zeros(NV)
     P = Cvec_to_Pclass(Q, MP)
     source_prim_ref(ret, P)
     return ret
@@ -48,7 +48,7 @@ def system_prim(Q, d, MP):
 
     c0 = c_0(ρ, p, A, MP)
 
-    ret = v[d] * eye(nV)
+    ret = v[d] * eye(NV)
     ret[0, 2 + d] = ρ
     ret[1, 2 + d] = ρ * c0**2
     ret[2 + d, 1] = 1 / ρ
