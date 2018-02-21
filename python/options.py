@@ -6,13 +6,13 @@ Lz = 1                      # Length of domain in x direction
 nx = 200                    # Number of cells in x direction
 ny = 1                      # Number of cells in y direction
 nz = 1                      # Number of cells in z direction
-nV = 18                     # Number of variables - should be:
+nV = 17                     # Number of variables - should be:
 #     5+VISCOUS*9+THERMAL*3+MULTI*2+REACTIVE+LSET
 
 """ GFM Options """
 
-LSET = 1                    # Number of level sets
-RGFM = 1                    # Use Riemann GFM
+LSET = 0                    # Number of level sets
+RGFM = 0                    # Use Riemann GFM
 ISO_FIX = 0                 # Use isobaric fix
 
 STAR_TOL = 1e-6             # Tolerance to which star states converge
@@ -21,10 +21,10 @@ STIFF_RGFM = 0              # Whether to use a stiff solver to find star states
 """ Solver Options """
 
 CPP_LVL = 0                 # Level of C++ use (0=none, 1=some, 2=full)
-SPLIT = 0                   # Whether or not to use a split solver
+SPLIT = 1                   # Whether or not to use a split solver
 
 N = 2                       # Order of the method
-CFL = 0.9                   # CFL number
+CFL = 0.5                   # CFL number
 FLUX = 0                    # Flux type (0=Rusanov, 1=Roe, 2=Osher)
 PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 

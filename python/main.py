@@ -20,8 +20,8 @@ from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.elastic1_IC
-BC = boundaries.standard_BC
+IC = solids.piston_IC
+BC = solids.piston_BC
 
 
 u, MPs, tf = IC()

@@ -72,9 +72,9 @@ def solver_distortion_analytic(A, dt, MP):
     x2 = 0.5 * (sqrt(arg2 / x1) + temp2)
     x3 = 1 / (x1 * x2)
 
-    s1 = sort(detA3 * sqrt(array([x1, x2, x3])))
-    s = s1[argsort(s)]
-    return dot(U * s, V)
+    s1 = detA3 * sqrt(array([x1, x2, x3]))
+    s1[::-1].sort()
+    return dot(U * s1, V)
 
 
 ### THERMAL IMPULSE ###
