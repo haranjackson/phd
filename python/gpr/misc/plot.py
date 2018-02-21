@@ -2,14 +2,12 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from numpy import arange, flipud, linspace, mgrid, zeros
-from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot, scatter
+from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot
 from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
 
 from gpr.misc.structures import Cvec_to_Pclass
 from multi.gfm import get_material_index
 from solvers.basis import NODES, PSI
-
-from options import nx, ny, ndim
 
 
 def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
@@ -17,14 +15,7 @@ def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
     if x is None:
         x = arange(len(y)) + 0.5
 
-    if style == '-':
-        plot(x, y, label=lab, color=col, linewidth=1)
-
-    elif style == '.':
-        scatter(x, y, label=lab, color=col)
-
-    elif style == 'x':
-        scatter(x, y, marker='x', s=20, label=lab, color=col, linewidth=1)
+    plot(x, y, style, label=lab, color=col, linewidth=1)
 
     xlim(x[0], x[-1])
 
@@ -37,106 +28,119 @@ def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
 
 
 def plot2d(x, style, y=None):
+
     if style == 'colormap':
-        im = imshow(y, get_cmap('viridis'))
+        im = imshow(x, get_cmap('viridis'))
         colorbar(im)
+
     elif style == 'streams':
+        nx, ny = x.shape[:2]
         Y, X = mgrid[0:nx, 0:ny]
         streamplot(X, Y, flipud(y), flipud(x))
+
+
+def plot_simple(u, style, x, lab, col, title, sci, ind, divρ):
+
+    nx, ny = u.shape[:2]
+
+    if ny == 1:
+        y = u[:, 0, 0, ind]
+        if divρ:
+            y /= u[:, 0, 0, 0]
+        plot1d(y, style, x, lab, col, title, sci=sci)
+    else:
+        y = u[:, :, 0, ind]
+        if divρ:
+            y /= u[:, :, 0, 0]
+        plot2d(y, 'colormap')
+
+
+def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None, j=None):
+
+    nx, ny = u.shape[:2]
+    y = zeros([nx, ny])
+    for ii in range(nx):
+        for jj in range(ny):
+            Q = u[ii, jj, 0]
+            MP = MPs[get_material_index(Q, MPs)]
+            P = Cvec_to_Pclass(Q, MP)
+            var = getattr(P, attr)()
+            if j is None:
+                if i is None:
+                    y[ii, jj] = var
+                else:
+                    y[ii, jj] = var[i]
+            else:
+                y[ii, jj] = var[i, j]
+
+    if ny == 1:
+        plot1d(y[:, 0], style, x, lab, col, title, sci=sci)
+    else:
+        plot2d(y, 'colormap')
 
 
 def plot_density(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(0, figsize=fig_size(square))
-
-    if ndim == 1:
-        y = u[:, 0, 0, 0]
-        plot1d(y, style, x, lab, col, 'Density', sci=sci)
-    elif ndim == 2:
-        y = u[:, :, 0, 0]
-        plot2d(y, 'colormap')
+    plot_simple(u, style, x, lab, col, 'Density', sci, 0, False)
 
 
 def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(1, figsize=fig_size(square))
-
-    if ndim == 1:
-        y = u[:, 0, 0, 1] / u[:, 0, 0, 0]
-        plot1d(y, style, x, lab, col, 'Total Energy', sci=sci)
-    elif ndim == 2:
-        y = u[:, 0, :, 1] / u[:, 0, :, 0]
-        plot2d(y, 'colormap')
+    plot_simple(u, style, x, lab, col, 'Total Energy', sci, 1, True)
 
 
 def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
-                  offset=0, dims=None, square=0):
+                  square=0):
 
     figure(2 + i, figsize=fig_size(square))
+    nx, ny = u.shape[:2]
 
-    if dims == None:
-        dims = ndim
-    if dims == 1:
-        y = u[:, 0, 0, 2 + i] / u[:, 0, 0, 0] + offset
+    if ny == 1:
+        y = u[:, 0, 0, 2 + i] / u[:, 0, 0, 0]
         plot1d(y, style, x, lab, col, 'Velocity Component %d' % (i + 1),
                sci=sci)
-    elif dims == 2:
-        x = u[:, :, 0, 2] / u[:, :, 0, 0] + offset
-        y = u[:, :, 0, 3] / u[:, :, 0, 0] + offset
+    else:
+        x = u[:, :, 0, 2] / u[:, :, 0, 0]
+        y = u[:, :, 0, 3] / u[:, :, 0, 0]
         plot2d(x, 'streams', y)
 
 
 def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0, fig=None, square=0):
 
+    ind = 5 + i * 3 + j
     if fig is None:
-        fig = 5 + i * 3 + j
+        fig = ind
     figure(fig, figsize=fig_size(square))
-    y = u[:, 0, 0, 5 + 3 * j + i]
-    plot1d(y, style, x, lab, col, 'Distortion Component %d,%d' % (i + 1, j + 1),
-           sci=sci)
+
+    plot_simple(u, style, x, lab, col,
+                'Distortion Component %d,%d' % (i + 1, j + 1), sci, ind, False)
 
 
 def plot_thermal_impulse(u, i, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(14 + i, figsize=fig_size(square))
-    y = u[:, 0, 0, 14 + i] / u[:, 0, 0, 0]
-    plot1d(y, style, x, lab, col, 'Thermal Impulse Component %d' % (i + 1),
-           sci=sci)
+    plot_simple(u, style, x, lab, col, 'Thermal Impulse Component %d' % (i + 1),
+                sci, 14 + i, True)
 
 
 def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(18, figsize=fig_size(square))
-    y = u[:, 0, 0, 17] / u[:, 0, 0, 0]
-    plot1d(y, style, x, lab, col, 'Concentration', sci=sci)
+    plot_simple(u, style, x, lab, col, 'Concentration', sci, 17, True)
 
 
 def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(19, figsize=fig_size(square))
-    n = len(u)
-    y = zeros(n)
-
-    for i in range(n):
-        Q = u[i, 0, 0]
-        MP = MPs[get_material_index(Q, MPs)]
-        y[i] = Cvec_to_Pclass(Q, MP).p()
-
-    plot1d(y, style, x, lab, col, 'Pressure', sci=sci)
+    plot_compound(u, MPs, style, x, lab, col, 'Pressure', sci, 'p')
 
 
 def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(20, figsize=fig_size(square))
-    n = len(u)
-    y = zeros(n)
-
-    for i in range(n):
-        Q = u[i, 0, 0]
-        MP = MPs[get_material_index(Q, MPs)]
-        y[i] = Cvec_to_Pclass(Q, MP).T()
-
-    plot1d(y, style, x, lab, col, 'Temperature', sci=sci)
+    plot_compound(u, MPs, style, x, lab, col, 'Temperature', sci, 'T')
 
 
 def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0, fig=None, square=0):
@@ -144,37 +148,22 @@ def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0, fig=N
     if fig is None:
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
-    n = len(u)
-    y = zeros(n)
-
-    for k in range(n):
-        Q = u[k, 0, 0]
-        MP = MPs[get_material_index(Q, MPs)]
-        y[k] = Cvec_to_Pclass(Q, MP).σ()[i, j]
-
-    plot1d(y, style, x, lab, col,
-           'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci=sci)
+    plot_compound(u, MPs, style, x, lab, col,
+                  'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'σ',
+                  i=i, j=j)
 
 
 def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(30 + i, figsize=fig_size(square))
-    n = len(u)
-    y = zeros(n)
-
-    for k in range(n):
-        Q = u[k, 0, 0]
-        MP = MPs[get_material_index(Q, MPs)]
-        y[k] = Cvec_to_Pclass(Q, MP).q()[i]
-
-    plot1d(y, style, x, lab, col, 'Heat Flux Component %d' % (i + 1), sci=sci)
+    plot_compound(u, MPs, style, x, lab, col,
+                  'Heat Flux Component %d' % (i + 1), sci, 'q', i=i)
 
 
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
     figure(34, figsize=fig_size(square))
-    y = u[:, 0, 0, var]
-    plot1d(y, style, x, lab, col, 'Variable %d' % var, sci=sci)
+    plot_simple(u, style, x, lab, col, 'Variable %d' % (var), sci, var, False)
 
 
 def plot_primitives(u, MPs, style='-', x=None):
@@ -246,10 +235,10 @@ def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
 def anim(data, var):
     fig = figure()
 
-    im = imshow(data[0][:, :, 0, var])
+    im = imshow(data[0].grid[:, :, 0, var])
 
     def animate(i):
-        im.set_array(data[i][:, :, 0, var])
+        im.set_array(data[i].grid[:, :, 0, var])
         return im,
 
     return animation.FuncAnimation(fig, animate, interval=200, repeat=True)
