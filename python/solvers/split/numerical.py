@@ -1,21 +1,21 @@
 from itertools import product
 
-from numpy import array, zeros
+from numpy import array, einsum, eye, outer, zeros
 from scipy.integrate import odeint
+from scipy.linalg import inv, norm
 
 from gpr.variables import mg
 from gpr.variables.derivatives import dEdA_s, dEdJ
 from gpr.variables.eos import E_2A, E_2J, E_3
 from gpr.variables.sources import theta1inv, theta2inv
-from gpr.misc.functions import det3
+from gpr.misc.functions import det3, gram, AdevG, gram_rev, L2_2D
 from gpr.misc.structures import Cvec_to_Pclass
 
 
 ### DISTORTION ###
 
 
-def f_A(A, MP):
-    ρ = det3(A)
+def f_A(ρ, A, MP):
     return - dEdA_s(ρ, A, MP).ravel() * theta1inv(ρ, A, MP)
 
 
@@ -72,7 +72,7 @@ def f(y, t0, ρ, E, v, MP):
     A = y[:9].reshape([3, 3])
 
     if MP.VISCOUS:
-        ret[:9] = f_A(A, MP)
+        ret[:9] = f_A(ρ, A, MP)
 
     if MP.THERMAL:
         J = y[9:]
@@ -96,7 +96,7 @@ def jac(y, t0, ρ, E, v, MP):
     return ret
 
 
-def ode_stepper_numerical(u, dt, MP, useJac=0):
+def ode_stepper_numerical(u, dt, MP, USE_JAC=False):
     """ Full numerical solver for the ODE system
     """
     nx, ny, nz = u.shape[:3]
@@ -112,7 +112,7 @@ def ode_stepper_numerical(u, dt, MP, useJac=0):
         y0[9:] = Q[14:17] / ρ
         t = array([0, dt])
 
-        if useJac:
+        if USE_JAC:
             y1 = odeint(f, y0, t, args=(ρ, E, v, MP), Dfun=jac)[1]
         else:
             y1 = odeint(f, y0, t, args=(ρ, E, v, MP))[1]

@@ -9,9 +9,9 @@ from system import Bdot, flux, system
 from options import nV, dx, dy, N, ndim, NUM_ODE
 
 
-def ode_launcher(u, dt, MP, useJac=0):
+def ode_launcher(u, dt, MP, USE_JAC=False):
     if NUM_ODE:
-        ode_stepper_numerical(u, dt, MP, useJac=useJac)
+        ode_stepper_numerical(u, dt, MP, USE_JAC=USE_JAC)
     else:
         ode_stepper_analytical(u, dt, MP)
 
