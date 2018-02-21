@@ -24,7 +24,7 @@ def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
         scatter(x, y, label=lab, color=col)
 
     elif style == 'x':
-        scatter(x, y, marker='x', s=10, label=lab, color=col, linewidth=1)
+        scatter(x, y, marker='x', s=20, label=lab, color=col, linewidth=1)
 
     xlim(x[0], x[-1])
 
@@ -45,8 +45,10 @@ def plot2d(x, style, y=None):
         streamplot(X, Y, flipud(y), flipud(x))
 
 
-def plot_density(u, style='-', x=None, lab=None, col=None, sci=0):
-    figure(0, figsize=(10, 10))
+def plot_density(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(0, figsize=fig_size(square))
+
     if ndim == 1:
         y = u[:, 0, 0, 0]
         plot1d(y, style, x, lab, col, 'Density', sci=sci)
@@ -55,8 +57,10 @@ def plot_density(u, style='-', x=None, lab=None, col=None, sci=0):
         plot2d(y, 'colormap')
 
 
-def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0):
-    figure(1, figsize=(10, 10))
+def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(1, figsize=fig_size(square))
+
     if ndim == 1:
         y = u[:, 0, 0, 1] / u[:, 0, 0, 0]
         plot1d(y, style, x, lab, col, 'Total Energy', sci=sci)
@@ -66,8 +70,10 @@ def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0):
 
 
 def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
-                  offset=0, dims=None):
-    figure(2 + i, figsize=(10, 10))
+                  offset=0, dims=None, square=0):
+
+    figure(2 + i, figsize=fig_size(square))
+
     if dims == None:
         dims = ndim
     if dims == 1:
@@ -80,82 +86,93 @@ def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
         plot2d(x, 'streams', y)
 
 
-def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0):
-    figure(5 + i * 3 + j, figsize=(10, 10))
+def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0, fig=None, square=0):
+
+    if fig is None:
+        fig = 5 + i * 3 + j
+    figure(fig, figsize=fig_size(square))
     y = u[:, 0, 0, 5 + 3 * j + i]
     plot1d(y, style, x, lab, col, 'Distortion Component %d,%d' % (i + 1, j + 1),
            sci=sci)
 
 
-def plot_thermal_impulse(u, i, style='-', x=None, lab=None, col=None, sci=0):
-    figure(14 + i, figsize=(10, 10))
+def plot_thermal_impulse(u, i, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(14 + i, figsize=fig_size(square))
     y = u[:, 0, 0, 14 + i] / u[:, 0, 0, 0]
     plot1d(y, style, x, lab, col, 'Thermal Impulse Component %d' % (i + 1),
            sci=sci)
 
 
-def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0):
-    figure(18, figsize=(10, 10))
-    y = u[:, 0, 0, 17] / u[:, 0, 0, 0]
+def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
+    figure(18, figsize=fig_size(square))
+    y = u[:, 0, 0, 17] / u[:, 0, 0, 0]
     plot1d(y, style, x, lab, col, 'Concentration', sci=sci)
 
 
-def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(19, figsize=(10, 10))
+def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(19, figsize=fig_size(square))
     n = len(u)
     y = zeros(n)
 
     for i in range(n):
         Q = u[i, 0, 0]
-        j = get_material_index(Q, MPs)
-        y[i] = Cvec_to_Pclass(Q, MPs[j]).p()
+        MP = MPs[get_material_index(Q, MPs)]
+        y[i] = Cvec_to_Pclass(Q, MP).p()
 
     plot1d(y, style, x, lab, col, 'Pressure', sci=sci)
 
 
-def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(20, figsize=(10, 10))
+def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(20, figsize=fig_size(square))
     n = len(u)
     y = zeros(n)
 
     for i in range(n):
         Q = u[i, 0, 0]
-        j = get_material_index(Q, MPs)
-        y[i] = Cvec_to_Pclass(Q, MPs[j]).T()
+        MP = MPs[get_material_index(Q, MPs)]
+        y[i] = Cvec_to_Pclass(Q, MP).T()
 
     plot1d(y, style, x, lab, col, 'Temperature', sci=sci)
 
 
-def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(21 + i * 3 + j, figsize=(10, 10))
+def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0, fig=None, square=0):
+
+    if fig is None:
+        fig = 21 + i * 3 + j
+    figure(fig, figsize=fig_size(square))
     n = len(u)
     y = zeros(n)
 
     for k in range(n):
         Q = u[k, 0, 0]
-        j = get_material_index(Q, MPs)
-        y[k] = Cvec_to_Pclass(Q, MPs[j]).σ()[i, j]
+        MP = MPs[get_material_index(Q, MPs)]
+        y[k] = Cvec_to_Pclass(Q, MP).σ()[i, j]
 
     plot1d(y, style, x, lab, col,
            'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci=sci)
 
 
-def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0):
-    figure(30 + i, figsize=(10, 10))
+def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(30 + i, figsize=fig_size(square))
     n = len(u)
     y = zeros(n)
 
     for k in range(n):
         Q = u[k, 0, 0]
-        j = get_material_index(Q, MPs)
-        y[k] = Cvec_to_Pclass(Q, MPs[j]).q()[i]
+        MP = MPs[get_material_index(Q, MPs)]
+        y[k] = Cvec_to_Pclass(Q, MP).q()[i]
 
     plot1d(y, style, x, lab, col, 'Heat Flux Component %d' % (i + 1), sci=sci)
 
 
-def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0):
-    figure(34, figsize=(10, 10))
+def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0, square=0):
+
+    figure(34, figsize=fig_size(square))
     y = u[:, 0, 0, var]
     plot1d(y, style, x, lab, col, 'Variable %d' % var, sci=sci)
 
@@ -174,6 +191,13 @@ def plot_interfaces(u, figNum=None, loc=None, col=None):
 def colors(n):
     cmap = get_cmap('viridis')
     return [cmap.colors[i] for i in linspace(0, 255, n, dtype=int)]
+
+
+def fig_size(square):
+    if square:
+        return (10, 10)
+    else:
+        return (6.4 / 0.72, 4.8 / 0.72)
 
 
 def plot_weno(wh, var, MPs=None):
