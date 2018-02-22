@@ -18,7 +18,7 @@ def vortex(x, y, x0, y0, ε, γ, ρ, p):
     return dv, dT, dρ, dp, A
 
 
-def coNVected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
+def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
 
     tf = 1
     Lx = 1
