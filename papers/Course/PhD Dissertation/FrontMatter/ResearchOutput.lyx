@@ -172,7 +172,8 @@ Open-Source Software
 
 \begin_layout Itemize
 ADER-WENO (github.com/haranjackson/ADER-WENO): A Python implementation of
- the ADER-WENO method for solving hyperbolic systems of PDEs
+ the ADER-WENO method for solving hyperbolic systems of PDEs (5 watchers,
+ 5 stars, 4 forks)
 \end_layout
 
 \begin_layout Itemize
@@ -197,7 +198,7 @@ NewtonKrylov (github.com/haranjackson/NewtonKrylov): A C++ implementation
 
 \begin_layout Itemize
 LGMRES (github.com/haranjackson/LGMRES): A C++ implementation of the LGMRES
- algorithm, with Python bindings
+ algorithm, with Python bindings (1 fork)
 \end_layout
 
 \begin_layout Itemize

@@ -62,6 +62,7 @@ SET(SRCS src/etc/globals.cpp
 #set(SRCS_EXEC src/main.cpp ${SRCS})
 #add_executable(${PROJECT_NAME} ${SRCS_EXEC})
 
+add_definitions(-DBINDINGS)
 set(SRCS_SO bindings/bindings.cpp src/etc/debug.cpp ${SRCS})
 add_library(${BINDINGS_NAME} SHARED ${SRCS_SO})
 set_target_properties(${BINDINGS_NAME} PROPERTIES PREFIX "")

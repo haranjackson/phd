@@ -48,7 +48,7 @@ def heat_conduction_IC():
     return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
 
 
-def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
+def first_stokes_problem_exact(μ, n=100, v0=0.1, t=1):
     dx = 1 / n
     x = linspace(-0.5 + dx / 2, 0.5 - dx / 2, num=n)
     return v0 * erf(x / (2 * sqrt(μ * t)))
@@ -57,7 +57,7 @@ def first_stokes_problem_exact(μ, n=200, v0=0.1, t=1):
 def first_stokes_problem_IC():
 
     tf = 1
-    nx = 100
+    nx = 200
     Lx = 1
 
     γ = 1.4

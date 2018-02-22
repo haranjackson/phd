@@ -3,7 +3,6 @@
 
 #include "../../etc/globals.h"
 
-void midstepper(Vecr wh, int ndim, double dt, double dx, double dy, double dz,
-                Par &MP);
+void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP);
 
 #endif // HOMOGENEOUS_H

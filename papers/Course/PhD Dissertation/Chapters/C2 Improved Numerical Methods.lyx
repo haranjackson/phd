@@ -9022,6 +9022,83 @@ For a Bingham plastic:
 \end_layout
 
 \begin_layout Standard
+Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}\phi}\\
+\phi & =\begin{cases}
+0 & \sigma\leq\sigma_{0}\\
+1-\frac{\sigma_{0}}{\left|\sigma\right|} & \sigma\geq\sigma_{0}
+\end{cases}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{G}=-\left(G\nabla v+\nabla v^{T}G\right)+\frac{2}{\rho\theta_{1}}\sigma
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the asymptotic expansion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+G=G_{0}+\tau_{1}G_{1}+\tau_{1}^{2}G_{2}+\cdots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\therefore\sigma & =-\rho c_{s}^{2}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\left(\dev G_{0}+\tau_{1}\dev G_{1}+\right)\\
+ & =-\rho c_{s}^{2}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{D}{Dt}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)= & -\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\nabla v-\nabla v^{T}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\\
+ & -\frac{6\phi}{\tau_{1}}\left|G_{0}+\tau_{1}G_{1}+\cdots\right|^{\frac{5}{6}}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 This can be approximated using some analytical function 
 \begin_inset Formula $f$
 \end_inset

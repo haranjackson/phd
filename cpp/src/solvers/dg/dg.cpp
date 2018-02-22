@@ -1,3 +1,4 @@
+#include "../../etc/debug.h"
 #include "../../etc/globals.h"
 #include "../../scipy/newton_krylov.h"
 #include "../../system/equations.h"
@@ -166,17 +167,28 @@ void hidalgo_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
   */
 }
 
-void initial_condition(Matr Ww, Matr w) {
-  for (int t = 0; t < N; t++)
-    for (int i = 0; i < N; i++)
-      Ww.row(t * N + i) = ENDVALS(0, t) * WGHTS(i) * w.row(i);
+void initial_condition(Matr Ww, Matr w, int ndim) {
+
+  if (ndim == 1) {
+    for (int t = 0; t < N; t++)
+      for (int i = 0; i < N; i++)
+        Ww.row(t * N + i) = ENDVALS(0, t) * WGHTS(i) * w.row(i);
+  } else if (ndim == 2) {
+    for (int t = 0; t < N; t++)
+      for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+          Ww.row(t * N * N + i * N + j) =
+              ENDVALS(0, t) * WGHTS(i) * WGHTS(j) * w.row(i * N + j);
+  }
 }
 
-void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
-               double dz, bool STIFF, bool HIDALGO, Par &MP) {
+void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
+               bool HIDALGO, Par &MP) {
 
   int ncell = qh.size() / (int(pow(N, ndim + 1)) * V);
   int NT = int(pow(N, ndim));
+  double dx = dX(0);
+  double dy = dX(1);
 
   Mat Ww(NT * N, V);
   Mat q0(NT * N, V);
@@ -186,7 +198,7 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, double dx, double dy,
     MatMap wi(wh.data() + (ind * NT * V), NT, V, OuterStride(V));
     MatMap qi(qh.data() + (ind * NT * N * V), NT * N, V, OuterStride(V));
 
-    initial_condition(Ww, wi);
+    initial_condition(Ww, wi, ndim);
 
     using std::placeholders::_1;
     VecFunc obj_bound;

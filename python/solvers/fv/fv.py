@@ -68,7 +68,7 @@ def interfaces(qEnd, MP):
                 ftemp = zeros(NV)
                 flux_ref(ftemp, qL_, d, MP)
                 flux_ref(ftemp, qR_, d, MP)
-                ftemp -= D_FUN(qL_, qR_, d, MP)
+                ftemp -= D_FUN(qL_, qR_, d, MP).real
                 fEndTemp += wghtEnd[t, x1, x2] * ftemp
                 BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, MP)
 

@@ -227,9 +227,12 @@ void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
     interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, PERR_FROB, MP);
 }
 
-void fv_launcher(Vecr u, Vecr rec, int ndim, int nx, int ny, int nz, double dt,
-                 double dx, double dy, double dz, bool SOURCES, bool TIME,
-                 int FLUX, bool PERR_FROB, Par &MP) {
+void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
+                 bool SOURCES, bool TIME, int FLUX, bool PERR_FROB, Par &MP) {
+  int nx = nX(0);
+  int ny = nX(1);
+  double dx = dX(0);
+  double dy = dX(1);
 
   switch (ndim) {
   case 1:

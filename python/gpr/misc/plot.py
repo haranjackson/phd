@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from numpy import arange, flipud, linspace, mgrid, zeros
+from numpy import arange, linspace, mgrid, zeros
 from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot
 from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
 

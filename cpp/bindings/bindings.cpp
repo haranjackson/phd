@@ -135,7 +135,9 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_weno.def("weno_launcher", &weno_launcher);
 
   m_solvers_dg.def("rhs1", &rhs1);
+  m_solvers_dg.def("rhs2", &rhs2);
   m_solvers_dg.def("obj1", &obj1);
+  m_solvers_dg.def("obj2", &obj2);
   m_solvers_dg.def("predictor", &predictor);
 
   m_solvers_split.def("midstepper", &midstepper);

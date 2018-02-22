@@ -3,6 +3,6 @@
 
 #include "../../etc/globals.h"
 
-void weno_launcher(Vecr ret, Vecr u, int ndim, int nx, int ny, int nz);
+void weno_launcher(Vecr ret, Vecr u, int ndim, Veci3r nX);
 
 #endif // WENO_H

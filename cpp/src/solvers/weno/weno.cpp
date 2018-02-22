@@ -171,8 +171,12 @@ void weno3(Vecr ret, Vecr u, int nx, int ny, int nz) {
     }
 }
 
-void weno_launcher(Vecr ret, Vecr u, int ndim, int nx, int ny, int nz) {
+void weno_launcher(Vecr ret, Vecr u, int ndim, Veci3r nX) {
   // NOTE: boundary conditions extend u by two cells in each dimension
+  int nx = nX(0);
+  int ny = nX(1);
+  int nz = nX(2);
+
   switch (ndim) {
   case 1:
     weno1(ret, u, nx + 2, ny, nz);

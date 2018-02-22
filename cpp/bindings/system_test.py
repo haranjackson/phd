@@ -7,7 +7,7 @@ from test_functions import check, generate_vector
 
 from system import flux_ref, source_ref, block_ref, Bdot, system
 
-from options import nV
+from options import NV
 
 
 ### EQUATIONS ###
@@ -15,8 +15,8 @@ from options import nV
 
 def flux_test(d, MP):
     Q = generate_vector(MP)
-    F_cp = zeros(nV)
-    F_py = zeros(nV)
+    F_cp = zeros(NV)
+    F_py = zeros(NV)
     GPRpy.system.flux(F_cp, Q, d, MP)
     flux_ref(F_py, Q, d, MP)
     print("F     ", check(F_cp, F_py))
@@ -25,8 +25,8 @@ def flux_test(d, MP):
 
 def source_test(d, MP):
     Q = generate_vector(MP)
-    S_cp = zeros(nV)
-    S_py = zeros(nV)
+    S_cp = zeros(NV)
+    S_py = zeros(NV)
     GPRpy.system.source(S_cp, Q, MP)
     source_ref(S_py, Q, MP)
     print("S     ", check(S_cp, S_py))
@@ -35,8 +35,8 @@ def source_test(d, MP):
 
 def block_test(d, MP):
     Q = generate_vector(MP)
-    B_cp = zeros([nV, nV])
-    B_py = zeros([nV, nV])
+    B_cp = zeros([NV, NV])
+    B_py = zeros([NV, NV])
     GPRpy.system.block(B_cp, Q, d)
     block_ref(B_py, Q, d, MP)
     print("B     ", check(B_cp, B_py))
@@ -45,9 +45,9 @@ def block_test(d, MP):
 
 def Bdot_test(d, MP):
     Q = generate_vector(MP)
-    x = rand(nV)
-    Bx_cp = zeros(nV)
-    Bx_py = zeros(nV)
+    x = rand(NV)
+    Bx_cp = zeros(NV)
+    Bx_py = zeros(NV)
     GPRpy.system.Bdot(Bx_cp, Q, x, d, MP)
     Bdot(Bx_py, x, Q, d, MP)
     print("Bdot  ", check(Bx_cp, Bx_py))

@@ -2,11 +2,12 @@
 #include "../../system/equations.h"
 #include "../evaluations.h"
 
-void midstepper(Vecr wh, int ndim, double dt, double dx, double dy, double dz,
-                Par &MP) {
+void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP) {
   // Steps the WENO reconstruction forwards by dt/2
   // NOTE: Only for the homogeneous system
   const int ncell = wh.size() / (int(pow(N, ndim)) * V);
+  double dx = dX(0);
+  double dy = dX(1);
 
   if (ndim == 1) {
     MatN_V F, dwdx, dFdx;

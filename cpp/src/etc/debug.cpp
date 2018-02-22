@@ -17,10 +17,10 @@ void print(Matr M) {
     oss << "[";
     for (int j = 0; j < M.cols(); j++) {
       if (j > 0)
-        oss << ",";
+        oss << ",\t";
       oss << M(i, j);
     }
-    oss << "]";
+    oss << "]\n";
     if (i < M.rows() - 1)
       oss << ",";
   }

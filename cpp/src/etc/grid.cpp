@@ -10,11 +10,12 @@ int uind(int i, int j, int k, int ny, int nz) {
   return ((i * ny + j) * nz + k) * V;
 }
 
-void boundaries(Vecr u, Vecr ub, int ndim, int nx, int ny, int nz,
-                bool PERIODIC) {
+void boundaries(Vecr u, Vecr ub, int ndim, Veci3r nX, bool PERIODIC) {
   // If periodic is true, applies periodic boundary conditions,
   // else applies transmissive boundary conditions
 
+  int nx = nX(0);
+  int ny = nX(1);
   if (ndim == 1) {
     ub.segment(V, nx * V) = u;
 
@@ -82,7 +83,10 @@ void boundaries(Vecr u, Vecr ub, int ndim, int nx, int ny, int nz,
   }
 }
 
-int extended_dimensions(int nx, int ny, int nz) {
+int extended_dimensions(Veci3r nX) {
+  int nx = nX(0);
+  int ny = nX(1);
+  int nz = nX(2);
   if (nz > 1)
     return (nx + 2) * (ny + 2) * (nz + 2);
   else if (ny > 1)

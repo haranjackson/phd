@@ -3,7 +3,7 @@ import GPRpy
 from time import time
 
 from joblib import Parallel
-from numpy import array, zeros
+from numpy import array, int32, zeros
 
 from etc import boundaries
 from tests_1d import fluids, solids, multi, toro
@@ -20,8 +20,8 @@ from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.piston_IC
-BC = solids.piston_BC
+IC = validation.hagen_poiseuille_duct_IC
+BC = validation.hagen_poiseuille_duct_BC
 
 
 u, MPs, tf, dX = IC()
@@ -33,8 +33,8 @@ pool = Parallel(n_jobs=NCORE)
 
 if CPP_LVL > 0:
 
-    nx, ny, nz = u.shape[:3]
-    extDims = GPRpy.solvers.extended_dimensions(nx, ny, nz)
+    nX = array(u.shape[:3], dtype=int32)
+    extDims = GPRpy.solvers.extended_dimensions(nX)
     wh = zeros(extDims * int(pow(N, NDIM)) * NV)
     qh = zeros(extDims * int(pow(N, NDIM + 1)) * NV)
 
@@ -50,8 +50,8 @@ def main(t, tf, count, data):
 
     if CPP_LVL == 2:
         u1 = u.ravel()
-        cppIterator(u1, tf, nx, ny, nz, dX[0], dX[1], dX[2], CFL, False,
-                    SPLIT, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB, MPs[0])
+        cppIterator(u1, tf, nX, dX, CFL, False, SPLIT, STRANG, HALF_STEP, STIFF,
+                    FLUX, PERR_FROB, MPs[0])
         data.append(Data(u1.reshape(u.shape), t))
 
     else:
@@ -78,15 +78,13 @@ def main(t, tf, count, data):
                     matBCr = matBC.ravel()
 
                     if SPLIT:
-                        cppSplitStepper(matr, matBCr, wh, NDIM, nx, ny, nz,
-                                        dt, dX[0], dX[1], dX[2],
+                        cppSplitStepper(matr, matBCr, wh, NDIM, nX, dt, dX,
                                         STRANG, HALF_STEP, FLUX, PERR_FROB, MP)
                     else:
-                        cppAderStepper(matr, matBCr, wh, qh, NDIM, nx, ny, nz,
-                                       dt, dX[0], dX[1], dX[2],
+                        cppAderStepper(matr, matBCr, wh, qh, NDIM, nX, dt, dX,
                                        STIFF, FLUX, PERR_FROB, MP)
 
-                    mat = matr.reshape([nx, ny, nz, NV])
+                    mat = matr.reshape([nX[0], nX[1], nX[2], NV])
 
                 else:
                     if SPLIT:
@@ -110,4 +108,4 @@ def main(t, tf, count, data):
 
 if __name__ == "__main__":
     main(0, tf, 0, data)
-    save_all(data)
+    # save_all(data)

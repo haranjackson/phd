@@ -1,8 +1,8 @@
 from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
+from etc.boundaries import extend
 from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec
-from solvers.weno.weno import extend
+from gpr.misc.structures import Cvec, Cvec_to_Pclass
 from tests_1d.common import cell_sizes
 from options import NV
 
@@ -45,7 +45,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
         for j in range(ny):
             x = (i + 0.5) * dX[0]
             y = (j + 0.5) * dX[1]
-            dv, dT, dρ, dp, A = vortex(x, y, 5 + t, 5 + t, ε, γ, ρ)
+            dv, dT, dρ, dp, A = vortex(x, y, Lx / 2 + t, Ly / 2 + t, ε, γ, ρ)
             u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, A, J, MP)
 
     return u, [MP], tf, dX
@@ -124,7 +124,7 @@ def hagen_poiseuille_duct_IC():
     tf = 10
     Lx = 10
     Ly = 0.5
-    nx = 100
+    nx = 10
     ny = 50
 
     γ = 1.4
@@ -145,6 +145,31 @@ def hagen_poiseuille_duct_IC():
             u[i, j] = Cvec(ρ, pi, v, A, J, MP)
 
     return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
+
+
+def hagen_poiseuille_duct_BC(u):
+
+    γ = 1.4
+    ρ = 1
+    p = 100/γ
+    dp = 4.8
+    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
+
+    ret = extend(u, 1, 1)
+    ret[:, 0, 0, 2:5] *= 0
+    ret[:, -1, 0, 2:5] *= 0
+
+    ret = extend(ret, 1, 0)
+    ny = ret.shape[1]
+    for j in range(ny):
+        QL = ret[0, j, 0]
+        QR = ret[-1, j, 0]
+        PL = Cvec_to_Pclass(QL, MP)
+        PR = Cvec_to_Pclass(QR, MP)
+        ret[0, j, 0] = Cvec(PL.ρ,  p, PL.v, PL.A, PL.J, MP)
+        ret[-1, j, 0] = Cvec(PR.ρ,  p-dp, PR.v, PR.A, PR.J, MP)
+
+    return ret
 
 
 def lid_driven_cavity_IC():

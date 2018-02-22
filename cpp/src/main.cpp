@@ -64,12 +64,8 @@ int main() {
   MP.τ2 = κ * MP.ρ0 / (MP.T0 * MP.cα2);
 
   double tf = 0.1;
-  int nx = 200;
-  int ny = 1;
-  int nz = 1;
-  double dx = 1. / nx;
-  double dy = 1. / ny;
-  double dz = 1. / nz;
+  Veci3 nX = {200, 1, 1};
+  Vec3 dX = {1. / nX(0), 1. / nX(1), 1. / nX(2)};
   double CFL = 0.6;
   bool PERIODIC = false;
   bool SPLIT = false;
@@ -79,10 +75,10 @@ int main() {
   int FLUX = 1;
   bool PERR_FROB = false;
 
-  Vec u = heat_conduction_1d(MP, nx);
+  Vec u = heat_conduction_1d(MP, nX(0));
 
-  iterator(u, tf, nx, ny, nz, dx, dy, dz, CFL, PERIODIC, SPLIT, STRANG,
-           HALF_STEP, STIFF, FLUX, PERR_FROB, MP);
+  iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT, STRANG, HALF_STEP, STIFF, FLUX,
+           PERR_FROB, MP);
 
   std::cout << "Hello World" << std::endl;
   return 0;

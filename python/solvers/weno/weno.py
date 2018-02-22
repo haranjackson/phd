@@ -2,23 +2,15 @@
 """
 from itertools import product
 
-from numpy import concatenate, int64, multiply, ones, zeros
+from numpy import multiply, zeros
 from scipy.linalg import solve
 
+from etc.boundaries import extend
 from solvers.weno.matrices import fHalfN, cHalfN, WN_M, WN_Σ
 from options import rc, λc, λs, eps, N, NV
 
 
 LAMS = [λs, λs, λc, λc]
-
-
-def extend(inarray, extension, d):
-    """ Extends the input array by M cells on each surface
-    """
-    n = inarray.shape[d]
-    reps = concatenate(([extension + 1], ones(n - 2),
-                        [extension + 1])).astype(int64)
-    return inarray.repeat(reps, axis=d)
 
 
 def calculate_coeffs(uList, L=0, R=0):

@@ -15,7 +15,7 @@ from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, DG_IT, PARA_DG, NCORE
 MAX_TOL = 1e16  # values above this level will cause an error
 
 
-def rhs(q, Ww, dt, dX, MP, HOMOGENEOUS):
+def rhs(q, Ww, dt, dX, MP):
     """ Returns the right-handside of the system governing coefficients of qh
     """
     ret = zeros([NT, NV])
@@ -25,23 +25,19 @@ def rhs(q, Ww, dt, dX, MP, HOMOGENEOUS):
     Bq = zeros([NDIM, NT, NV])
     for b in range(NT):
         qb = q[b]
-        if not HOMOGENEOUS:
-            source_ref(ret[b], qb, MP)
+        source_ref(ret[b], qb, MP)
         for d in range(NDIM):
             flux_ref(Fq[d, b], qb, d, MP)
             Bdot(Bq[d, b], Tq[d, b], qb, d, MP)
 
-    if not HOMOGENEOUS:
-        ret *= dX[0]
-
     for d in range(NDIM):
-        ret -= Bq[d]
+        ret -= Bq[d] / dX[d]
 
     ret *= DG_Z
     for d in range(NDIM):
-        ret -= dot(DG_V[d], Fq[d])
+        ret -= dot(DG_V[d], Fq[d]) / dX[d]
 
-    return (dt / dX[0]) * ret + Ww
+    return dt * ret + Ww
 
 
 def standard_initial_guess(w):
@@ -51,8 +47,9 @@ def standard_initial_guess(w):
     return ret.reshape([NT, NV])
 
 
-def hidalgo_initial_guess(w, dtGAPS, dX, MP, HOMOGENEOUS):
+def hidalgo_initial_guess(w, dtGAPS, dX, MP):
     """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
+        NOTE: Only in 1D
     """
     q = zeros([N] * (NDIM + 1) + [NV])
     qt = w
@@ -68,9 +65,9 @@ def hidalgo_initial_guess(w, dtGAPS, dX, MP, HOMOGENEOUS):
             M = dot(system(qi, 0, MP), dqdxi)
             Sj = source(qi, MP)
 
-            if SUPER_STIFF and not HOMOGENEOUS:
-                def f(X): return X - qi + dt / dX[0] * \
-                    M - dt / 2 * (Sj + source(X, MP))
+            if SUPER_STIFF:
+                def f(X): return (X - qi + dt / dX[0] * M
+                                  - dt / 2 * (Sj + source(X, MP)))
                 q[t, i] = newton_krylov(f, qi, f_tol=DG_TOL)
             else:
                 q[t, i] = qi - dt / dX[0] * M + dt * Sj
@@ -79,8 +76,8 @@ def hidalgo_initial_guess(w, dtGAPS, dX, MP, HOMOGENEOUS):
     return q.reshape([NT, NV])
 
 
-def failed(w, f, dtGAPS, MP, HOMOGENEOUS):
-    #q = hidalgo_initial_guess(w, dtGAPS, dX, MP, HOMOGENEOUS)
+def failed(w, f, dtGAPS, MP):
+    #q = hidalgo_initial_guess(w, dtGAPS, dX, MP)
     q = standard_initial_guess(w)
     return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
 
@@ -91,7 +88,7 @@ def unconverged(q, qNew):
     return (absolute(q - qNew) > DG_TOL * (1 + absolute(q))).any()
 
 
-def predictor(wh, dt, dX, MP, HOMOGENEOUS=0):
+def predictor(wh, dt, dX, MP):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     nx, ny, nz, = wh.shape[:3]
@@ -104,10 +101,10 @@ def predictor(wh, dt, dX, MP, HOMOGENEOUS=0):
         w = wh[i, j, k]
         Ww = dot(DG_W, w)
 
-        def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, MP, HOMOGENEOUS)
+        def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, MP)
 
         if HIDALGO:
-            q = hidalgo_initial_guess(w, dtGAPS, dX, MP, HOMOGENEOUS)
+            q = hidalgo_initial_guess(w, dtGAPS, dX, MP)
         else:
             q = standard_initial_guess(w)
 
@@ -117,11 +114,10 @@ def predictor(wh, dt, dX, MP, HOMOGENEOUS=0):
         else:
             for count in range(DG_IT):
 
-                qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP, HOMOGENEOUS),
-                             check_finite=False)
+                qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP), check_finite=False)
 
                 if (absolute(qNew) > MAX_TOL).any():
-                    qh[i, j, k] = failed(w, obj, dtGAPS, MP, HOMOGENEOUS)
+                    qh[i, j, k] = failed(w, obj, dtGAPS, MP)
                     break
                 elif unconverged(q, qNew):
                     q = qNew
@@ -130,12 +126,12 @@ def predictor(wh, dt, dX, MP, HOMOGENEOUS=0):
                     qh[i, j, k] = qNew
                     break
             else:
-                qh[i, j, k] = failed(w, obj, dtGAPS, MP, HOMOGENEOUS)
+                qh[i, j, k] = failed(w, obj, dtGAPS, MP)
 
     return qh
 
 
-def dg_launcher(pool, wh, dt, dX, MP, HOMOGENEOUS=0):
+def dg_launcher(pool, wh, dt, dX, MP):
     """ Controls the parallel computation of the Galerkin predictor
     """
     if PARA_DG:
@@ -143,8 +139,8 @@ def dg_launcher(pool, wh, dt, dX, MP, HOMOGENEOUS=0):
         step = int(nx / NCORE)
         chunk = array([i * step for i in range(NCORE)] + [nx + 1])
         n = len(chunk) - 1
-        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i + 1]], dt, dX, MP,
-                      HOMOGENEOUS) for i in range(n))
+        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i + 1]], dt, dX, MP)
+                      for i in range(n))
         return concatenate(qhList)
     else:
-        return predictor(wh, dt, dX, MP, HOMOGENEOUS)
+        return predictor(wh, dt, dX, MP)
