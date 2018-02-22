@@ -35,8 +35,8 @@ def plot2d(x, style, y=None):
 
     elif style == 'streams':
         nx, ny = x.shape[:2]
-        Y, X = mgrid[0:nx, 0:ny]
-        streamplot(X, Y, flipud(y), flipud(x))
+        Y, X = mgrid[0:ny, 0:nx]
+        streamplot(X, Y, x.T, y.T)
 
 
 def plot_simple(u, style, x, lab, col, title, sci, ind, divρ):

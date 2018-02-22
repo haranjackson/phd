@@ -1,4 +1,3 @@
-import numpy as np
 from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
 from gpr.misc.objects import material_parameters
@@ -8,10 +7,12 @@ from tests_1d.common import cell_sizes
 from options import NV
 
 
-def vortex(x, y, x0, y0, ε, γ, ρ, p):
+def vortex(x, y, x0, y0, ε, γ, ρ):
+
     r2 = (x - x0)**2 + (y - y0)**2
-    dv = ε / (2 * np.pi) * exp((1 - r2) / 2) * array([-(y - y0), x - x0, 0])
-    dT = -(γ - 1) * ε**2 / (8 * γ * np.pi**2) * exp(1 - r2)
+    dv = ε / (2 * pi) * exp((1 - r2) / 2) * array([-(y - y0), x - x0, 0])
+    dT = -(γ - 1) * ε**2 / (8 * γ * pi**2) * exp(1 - r2)
+
     dρ = (1 + dT)**(1 / (γ - 1)) - 1
     dp = (1 + dT)**(γ / (γ - 1)) - 1
     A = (ρ + dρ)**(1 / 3) * eye(3)
@@ -21,8 +22,8 @@ def vortex(x, y, x0, y0, ε, γ, ρ, p):
 def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
 
     tf = 1
-    Lx = 1
-    Ly = 1
+    Lx = 10
+    Ly = 10
     nx = 10
     ny = 10
 
@@ -44,7 +45,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
         for j in range(ny):
             x = (i + 0.5) * dX[0]
             y = (j + 0.5) * dX[1]
-            dv, dT, dρ, dp, A = vortex(x, y, 5 + t, 5 + t, ε, γ, ρ, p)
+            dv, dT, dρ, dp, A = vortex(x, y, 5 + t, 5 + t, ε, γ, ρ)
             u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, A, J, MP)
 
     return u, [MP], tf, dX
@@ -227,7 +228,7 @@ def double_shear_layer_IC():
                 v1 = tanh(ρ_ * (0.75 - y))
             else:
                 v1 = tanh(ρ_ * (y - 0.25))
-            v2 = δ * sin(2 * np.pi * x)
+            v2 = δ * sin(2 * pi * x)
             v = array([v1, v2, 0])
             u[i, j] = Cvec(ρ, p, v, A, J, MP)
 

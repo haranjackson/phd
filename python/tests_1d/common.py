@@ -5,7 +5,7 @@ from options import NV, RGFM
 
 
 def cell_sizes(Lx, nx, Ly=1, ny=1, Lz=1, nz=1):
-    return array([Lx/nx, Ly/nz, Lz/nz])
+    return array([Lx/nx, Ly/ny, Lz/nz])
 
 
 def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
