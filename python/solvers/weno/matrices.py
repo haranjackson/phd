@@ -4,8 +4,8 @@ from solvers.basis import PSID, PSII
 from options import N
 
 
-fHalfN = int(floor((N-1) / 2))
-cHalfN = int(ceil((N-1) / 2))
+fHalfN = int(floor((N - 1) / 2))
+cHalfN = int(ceil((N - 1) / 2))
 
 
 # The linear systems governing the coefficients of the basis polynomials

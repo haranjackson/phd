@@ -8,7 +8,7 @@ from options import RGFM, ISO_FIX, STAR_TOL, STIFF_RGFM
 from options import CPP_LVL, SPLIT
 from options import N, CFL, FLUX, PERR_FROB
 from options import NUM_ODE, HALF_STEP, STRANG
-from options import HIDALGO, STIFF, SUPER_STIFF, DG_TOL, DG_IT
+from options import STIFF, HIDALGO, STIFF_IG, DG_TOL, DG_IT
 from options import rc, λc, λs, eps
 from options import PARA_DG, PARA_FV, NCORE
 
@@ -39,9 +39,9 @@ def save_config(path):
         f.write('HALF_STEP = %i\n' % HALF_STEP)
         f.write('STRANG    = %i\n\n' % STRANG)
 
-        f.write('HIDALGO     = %i\n' % HIDALGO)
-        f.write('STIFF       = %i\n' % STIFF)
-        f.write('SUPER_STIFF = %i\n\n' % SUPER_STIFF)
+        f.write('STIFF    = %i\n' % STIFF)
+        f.write('HIDALGO  = %i\n' % HIDALGO)
+        f.write('STIFF_IG = %i\n\n' % STIFF_IG)
 
         f.write('DG_TOL = %e\n' % DG_TOL)
         f.write('DG_IT  = %i\n\n' % DG_IT)

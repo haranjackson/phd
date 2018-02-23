@@ -9,7 +9,7 @@ from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_Z, DG_T
 from solvers.basis import GAPS, DERVALS
 from system import source, flux_ref, source_ref, Bdot, system
 from options import NDIM, N, NT, NV
-from options import STIFF, SUPER_STIFF, HIDALGO, DG_TOL, DG_IT, PARA_DG, NCORE
+from options import STIFF, STIFF_IG, HIDALGO, DG_TOL, DG_IT, PARA_DG, NCORE
 
 
 MAX_TOL = 1e16  # values above this level will cause an error
@@ -65,7 +65,7 @@ def hidalgo_initial_guess(w, dtGAPS, dX, MP):
             M = dot(system(qi, 0, MP), dqdxi)
             Sj = source(qi, MP)
 
-            if SUPER_STIFF:
+            if STIFF_IG:
                 def f(X): return (X - qi + dt / dX[0] * M
                                   - dt / 2 * (Sj + source(X, MP)))
                 q[t, i] = newton_krylov(f, qi, f_tol=DG_TOL)

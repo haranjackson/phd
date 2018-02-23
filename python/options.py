@@ -1,6 +1,6 @@
 """ System Parameters """
 
-NDIM = 1                    # Number of dimensions
+NDIM = 2                    # Number of dimensions
 NV   = 17                   # Number of variables - should be:
                             # 5 + VISCOUS*9 + THERMAL*3 + MULTI*2 + REACTIVE + LSET
 
@@ -29,9 +29,9 @@ STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
 """ DG Options """
 
-HIDALGO = 0                 # Use Hidalgo initial guess
-STIFF = 0                   # Use Newton-Krylov
-SUPER_STIFF = 0             # Use Newton-Krylov for Hidalgo initial guess
+STIFF    = 1                # Use Newton-Krylov
+HIDALGO  = 0                # Use Hidalgo initial guess
+STIFF_IG = 0                # Use Newton-Krylov for Hidalgo initial guess
 
 DG_TOL = 1e-6               # Tolerance to which the predictor must converge
 DG_IT  = 50                 # Max number of non-stiff iterations attempted
