@@ -202,8 +202,6 @@ def _nonlin_line_search(func, x, Fx, dx):
     tmp_Fx = [Fx]
     tmp_phi = [norm(Fx)**2]
 
-    print(tmp_Fx[0])
-
     s, phi1 = scalar_search_armijo(tmp_phi[0], -tmp_phi[0],
                                    tmp_s, tmp_phi, tmp_Fx, func, x, dx)
 
@@ -213,8 +211,6 @@ def _nonlin_line_search(func, x, Fx, dx):
     else:
         Fx = func(x)
     Fx_norm = norm(Fx)
-
-    print(tmp_Fx[0])
 
     return s, x, Fx, Fx_norm
 
