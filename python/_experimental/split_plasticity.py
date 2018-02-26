@@ -108,10 +108,10 @@ def bingham(a=1e2, b=1e9, σ0=1):
 def test():
 
     MP = material_parameters('sg', 1, 1, 1, γ=1.4,
-                             b0=0.219, n=2, σY=9e-4, τ1=0.1, PLASTIC=1)
+                             b0=0.219, n=4, σY=9e-4, τ1=0.1, PLASTIC=1)
 
     n = 100
-    tf = 0.005
+    tf = 0.00001
 
     A = inv(array([[1, 0, 0],
                    [-0.01, 0.95, 0.02],

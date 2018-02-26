@@ -1,0 +1,1833 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+A Split Solver for Elastoplasticity under the GPR Model
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{tr}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\diag}{\operatorname{diag}}
+{\mathrm{diag}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The GPR Model
+\end_layout
+
+\begin_layout Standard
+The GPR model takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
+\end_inset
+
+.
+ Define 
+\begin_inset Formula $\dev X=X-\frac{\tr X}{3}I$
+\end_inset
+
+.
+ The EOS takes the following form, where 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is the internal energy (in terms of 
+\begin_inset Formula $\rho,p$
+\end_inset
+
+) and 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+,
+\begin_inset Formula $\alpha$
+\end_inset
+
+ are variables related to the speed of characteristics of shear waves and
+ heat waves:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}\left(\rho,p\right)+\frac{c_{s}{}^{2}}{4}\left\Vert \dev\left(A^{T}A\right)\right\Vert _{F}^{2}+\frac{\alpha{}^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}+\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following forms are taken:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
+\theta_{2} & =\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau_{1} & =\begin{cases}
+\frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
+\tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
+\end{cases}\label{eq:tau1}\\
+\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, defining 
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+, we have the following relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
+\boldsymbol{q} & =\alpha^{2}T\boldsymbol{J}\\
+-\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
+-\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following constraint also holds:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:detA}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+A Split Solver
+\end_layout
+
+\begin_layout Standard
+The GPR system can be split into its homogeneous part, and the following
+ temporal ODEs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
+\frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A second-order Strang splitting is used to evolve the state variables from
+ their initial state 
+\begin_inset Formula $\boldsymbol{Q_{0}}$
+\end_inset
+
+ to a state time 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ later:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{\Delta t}}=D^{\frac{\Delta t}{2}}T^{\frac{\Delta t}{2}}H^{\Delta t}T^{\frac{\Delta t}{2}}D^{\frac{\Delta t}{2}}\boldsymbol{Q_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $D^{\delta t},T^{\delta t},H^{\delta t}$
+\end_inset
+
+ are the operators solving the distortion and thermal impulse ODEs, and
+ the homogeneous system respectively, over time step 
+\begin_inset Formula $\delta t$
+\end_inset
+
+.
+ 
+\begin_inset Formula $H^{\delta t}$
+\end_inset
+
+ is performed using a second-order WENO method.
+ 
+\begin_inset Formula $T^{\delta t},D^{\delta t}$
+\end_inset
+
+ are given below.
+\end_layout
+
+\begin_layout Subsection
+The Thermal Impulse ODEs
+\end_layout
+
+\begin_layout Standard
+Denoting by 
+\begin_inset Formula $E^{A},E^{J},E^{v}$
+\end_inset
+
+ the components of 
+\begin_inset Formula $E$
+\end_inset
+
+ depending on 
+\begin_inset Formula $A,\boldsymbol{J},\boldsymbol{v}$
+\end_inset
+
+ respectively, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+T & =\frac{E_{1}}{c_{v}}\\
+ & =\frac{E-E^{A}\left(\rho,A\right)-E^{v}\left(\boldsymbol{v}\right)}{c_{v}}-\frac{1}{c_{v}}E^{J}\left(\boldsymbol{J}\right)\nonumber \\
+ & =c_{1}-c_{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{1} & =\frac{E-E^{A}\left(\rho,A\right)-E^{v}\left(\boldsymbol{v}\right)}{c_{v}}\\
+c_{2} & =\frac{\alpha^{2}}{2c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Over the time period of the ODE 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalODE"
+
+\end_inset
+
+, 
+\begin_inset Formula $c_{1},c_{2}>0$
+\end_inset
+
+ are constant.
+ We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dJ_{i}}{dt}=-\left(\frac{1}{\tau_{2}}\frac{\rho_{0}}{T_{0}\rho}\right)J_{i}\left(c_{1}-c_{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d}{dt}\left(J_{i}^{2}\right)=J_{i}^{2}\left(-a+b\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+a & =\frac{2\rho_{0}}{\tau_{2}T_{0}\rho c_{v}}\left(E-E_{2}^{\left(A\right)}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)\right)\\
+b & =\frac{\rho_{0}\alpha^{2}}{\tau_{2}T_{0}\rho c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this is a generalized Lotka-Volterra system in 
+\begin_inset Formula $\left\{ J_{1}^{2},J_{2}^{2},J_{3}^{2}\right\} $
+\end_inset
+
+.
+ It has the following analytical solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{J}\left(t\right)=\boldsymbol{J}\left(0\right)\sqrt{\frac{1}{e^{at}-\frac{b}{a}\left(e^{at}-1\right)\left\Vert \boldsymbol{J}\left(0\right)\right\Vert ^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The Distortion ODEs
+\end_layout
+
+\begin_layout Standard
+Take the singular value decomposition 
+\begin_inset Formula $A=U\Sigma V^{T}$
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma=-\rho c_{s}^{2}A^{T}A\dev\left(A^{T}A\right)=-\rho c_{s}^{2}V\Sigma^{2}\dev\left(\Sigma^{2}\right)V^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \dev\left(\sigma\right)\right\Vert _{F}^{n}=\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the fact that 
+\begin_inset Formula $d\Sigma=U^{T}dAV$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\frac{\left(\frac{3}{2}\right)^{\frac{n}{2}}\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}}{\sigma_{0}^{n}}\Sigma\dev\left(\Sigma^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
+\end_inset
+
+ then 
+\begin_inset Formula $\Sigma^{2}=\det\left(A\right)^{\frac{2}{3}}X$
+\end_inset
+
+ where 
+\begin_inset Formula $X=\diag\left(x_{1},x_{2},x_{3}\right)$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{d\tilde{t}}=-3\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{n}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{t}=\frac{2}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\sqrt{\frac{3}{2}}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{27}{2}\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2} & =3\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\\
+ & -3\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
+ & -2\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber \\
+ & +4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the following quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, due to 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:detA"
+
+\end_inset
+
+, 
+\begin_inset Formula $x_{1}x_{2}x_{3}=1$
+\end_inset
+
+.
+ Thus we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2}=\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:StretchODESystem-2"
+
+\end_inset
+
+ leads to the following coupled system of ODEs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tilde{t}} & =-18\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tilde{t}} & =-\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tau} & =-18\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tau} & =-u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining these equations, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d^{2}m}{d\tau^{2}}=-\frac{du}{d\tau}=18\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{array}{c}
+\frac{d^{2}m}{d\tau^{2}}+15m\frac{dm}{d\tau}+18\left(m^{3}-1\right)=0\\
+m\left(0\right)=m_{0}\\
+m^{'}\left(0\right)=-u_{0}
+\end{array}\right.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We make the following assumption, noting that it is true in all physical
+ situations tested in this study:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+m\left(t\right)=1+\eta\left(t\right),\quad\eta\ll1\;\forall t\geq0\label{eq:Assumption}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have the linearized ODE:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{array}{c}
+\frac{d^{2}\eta}{d\tau^{2}}+15\frac{d\eta}{d\tau}+54\eta=0\\
+\eta\left(0\right)=m_{0}-1\\
+\eta^{'}\left(0\right)=-u_{0}
+\end{array}\right.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a Sturm-Liouville equation with solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\eta\left(\tau\right)=\frac{e^{-9\tau}}{3}\left(\left(9m_{0}-u_{0}-9\right)e^{3\tau}-\left(6m_{0}-u_{0}-6\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we also have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+u\left(\tau\right)=e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left(18m_{0}-3u_{0}-18\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting 
+\begin_inset Formula $a=9m_{0}-u_{0}-9$
+\end_inset
+
+, 
+\begin_inset Formula $b=6m_{0}-u_{0}-6$
+\end_inset
+
+, it is straightforward to verify that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{n}{2}}}\left(\begin{array}{c}
+108ae^{-6\tau}-324be^{-9\tau}+108a^{2}e^{-12\tau}\\
+-396abe^{-15\tau}+297b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
++\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
+-24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
+\end{array}\right)^{\frac{n}{2}}\equiv\frac{f\left(\tau\right)^{\frac{n}{2}}}{54^{\frac{n}{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f\left(\tau\right)$
+\end_inset
+
+ is approximated by 
+\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\lambda\tau}$
+\end_inset
+
+, where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Formula 
+\begin{align}
+c & =108a-324b+108a^{2}-396ab+297b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
+\lambda & =\frac{c}{18a-36b+9a^{2}-\frac{132ab}{5}+\frac{33b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $f\left(0\right)=g\left(0\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{\infty}\left(f\left(\tau\right)-g\left(\tau\right)\right)d\tau=0$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{n}{2}}e^{-\frac{n\lambda}{2}\tau}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau & \approx\frac{2}{n\lambda}\log\left(\frac{n\lambda}{2}\left(\frac{c}{54}\right)^{\frac{n}{2}}\tilde{t}+1\right)\\
+ & =\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t+1\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m_{\Delta t} & =1+\eta\left(\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)\right)\\
+u_{\Delta t} & =u\left(\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{x_{i}+x_{j}+x_{k}}{3} & =m_{\Delta t}\\
+\frac{\left(x_{i}-x_{j}\right)^{2}+\left(x_{j}-x_{k}\right)^{2}+\left(x_{k}-x_{i}\right)^{2}}{3} & =u_{\Delta t}\\
+x_{i}x_{j}x_{k} & =1
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{i} & =\frac{\sqrt[3]{6\left(\sqrt{81\Delta^{2}-6u_{\Delta t}^{3}}+9\Delta\right)}}{6}+\frac{u_{\Delta t}}{\sqrt[3]{6\left(\sqrt{81\Delta^{2}-6u_{\Delta t}^{3}}+9\Delta\right)}}+m_{\Delta t}\\
+x_{j} & =\frac{1}{2}\left(\sqrt{\frac{x_{i}\left(3m_{\Delta t}-x_{i}\right)^{2}-4}{x_{i}}}+3m_{\Delta t}-x_{i}\right)\\
+x_{k} & =\frac{1}{x_{i}x_{j}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta=-2m_{\Delta t}^{3}+m_{\Delta t}u_{\Delta t}+2
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that taking the real parts of the above expression for 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{i} & =\frac{\sqrt{6u_{\Delta t}}}{3}\cos\left(\frac{\theta}{3}\right)+m_{\Delta t}\\
+\theta & =\tan^{-1}\left(\frac{\sqrt{6u_{\Delta t}^{3}-81\Delta^{2}}}{9\Delta}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At this point it is not clear which values of 
+\begin_inset Formula $\left\{ x_{i},x_{j},x_{k}\right\} $
+\end_inset
+
+ are taken by 
+\begin_inset Formula $x_{1},x_{2},x_{3}$
+\end_inset
+
+.
+ However, this can be inferred from the fact that any relation 
+\begin_inset Formula $x_{i}\geq x_{j}\geq x_{k}$
+\end_inset
+
+ is maintained over the lifetime of the system.
+ Thus, the stiff ODE solver has been obviated by a few arithmetic operations.
+ The obtained values of 
+\begin_inset Formula $x_{1},x_{2},x_{3}$
+\end_inset
+
+ are used to reconstruct 
+\begin_inset Formula $A$
+\end_inset
+
+ at time 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Numerical Results
+\end_layout
+
+\begin_layout Subsection
+Strain Relaxation Test
+\end_layout
+
+\begin_layout Standard
+Take initial data used by Barton:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A=\left(\begin{array}{ccc}
+1 & 0 & 0\\
+-0.01 & 0.95 & 0.02\\
+-0.015 & 0 & 0.9
+\end{array}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following parameter values were used: 
+\begin_inset Formula $\rho_{0}=1,c_{s}=0.219,n=4,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
+\end_inset
+
+.
+ As can be seen in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Distortion-ODEs_A"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Distortion-ODEs_σ"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Distortion-ODEs_Ε"
+
+\end_inset
+
+, the approximate analytic solver compares well with the exact solution
+ for the distortion tensor 
+\begin_inset Formula $A$
+\end_inset
+
+, and thus also the stress tensor and the energy.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename A1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename A2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Distortion-ODEs_A"
+
+\end_inset
+
+The distortion tensor during the Strain Relaxation Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename σ1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename σ2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Distortion-ODEs_σ"
+
+\end_inset
+
+The stress tensor during the Strain Relaxation Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename E.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Distortion-ODEs_Ε"
+
+\end_inset
+
+The total energy during the Strain Relaxation Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Elastoplastic Piston Test
+\end_layout
+
+\begin_layout Standard
+In this test, a piston with speed 0.002 is driven into copper initially at
+ rest.
+ An elastic shock wave develops, followed by a plastic shock wave.
+ The following parameters were used: 
+\begin_inset Formula $\rho_{0}=8.93,c_{s}=0.219,n=10,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
+\end_inset
+
+.
+ The shock Mie-Gruneisen EOS is used for the internal energy, with 
+\begin_inset Formula $p_{0}=0,c_{0}=0.394,\Gamma_{0}=2,s=1.48$
+\end_inset
+
+.
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:piston"
+
+\end_inset
+
+ demonstrates the results using the split solver, compared with the ADER-WENO
+ solution.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ρ.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:piston"
+
+\end_inset
+
+Density and velocity in the elastoplastic piston test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+I have demonstrated in my previous paper that the solver works well for
+ Newtonian fluids.
+ I believe this solver will also work for dilatants and pseudoplastics,
+ as they follow the same power law used here:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau_{1}\propto\frac{1}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}^{n}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I am also working on an analytical solver for Bingham plastics, using:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau_{1} & \propto\frac{1}{1-\frac{f\left(\left|\sigma\right|\right)}{\left|\sigma\right|}}\\
+f\left(\left|\sigma\right|\right) & =\frac{a}{\left(1+be^{-c\left|\sigma\right|}\right)^{d}}+\sigma_{0}-a
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $a,b\gg1$
+\end_inset
+
+ and 
+\begin_inset Formula $c,d$
+\end_inset
+
+ are chosen such that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}\approx\begin{cases}
+0 & \left|\sigma\right|\leq\sigma_{0}\\
+\frac{1}{\mu_{\infty}}\left(\sigma-\sigma_{0}\right) & \left|\sigma\right|\geq\sigma_{0}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
