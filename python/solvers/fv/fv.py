@@ -16,33 +16,24 @@ elif FLUX == ROE:
 elif FLUX == OSHER:
     D_FUN = D_OSH
 
+TWGHTS = array([1]) if SPLIT else WGHTS
+TN = len(TWGHTS)
 
-if SPLIT:
-    tWGHTS = [array([1])]
-    tN = 1
-else:
-    tWGHTS = [WGHTS]
-    tN = N
+IDX = [N] * NDIM + [1] * (3 - NDIM)
+WGHT_LIST = [WGHTS] * NDIM + [array([1])] * (3 - NDIM)
 
-
-wghtList = tWGHTS + [WGHTS] * NDIM + [array([1])] * (3 - NDIM)
-wghtListEnd = tWGHTS + [WGHTS] * (NDIM - 1) + [array([1])] * (3 - NDIM)
-
-wght = einsum('t,x,y,z', wghtList[0], wghtList[1], wghtList[2], wghtList[3])
-wghtEnd = einsum('t,x,y', wghtListEnd[0], wghtListEnd[1], wghtListEnd[2])
-
-IDX = [tN] + [N] * NDIM + [1] * (3 - NDIM)
-IDX_END = [tN] + [N] * (NDIM - 1) + [1] * (3 - NDIM)
+WGHT = einsum('t,x,y,z', TWGHTS, WGHT_LIST[0], WGHT_LIST[1], WGHT_LIST[2])
+WGHT_END = einsum('t,x,y', TWGHTS, WGHT_LIST[1], WGHT_LIST[2])
 
 
 def endpoints(qh0):
-    """ Returns tensor T where T[d,e,i,j,k,:,:,:,:,:] is the set of DG
-        coefficients at end e (either 0 or 1) in the dth direction
+    """ Returns tensor T where T[d,e,i,j,k] is the set of DG coefficients at end
+        e (either 0 or 1) in the dth direction, in cell (i,j,k)
     """
     return array([tensordot(ENDVALS, qh0, (0, 4 + d)) for d in range(NDIM)])
 
 
-def interfaces(qEnd, MP):
+def interfaces(qEnd, dX, MP):
     nx, ny, nz = qEnd.shape[2:5]
     fEnd = zeros([NDIM, nx - 1, ny - 1, nz - 1, NV])
     BEnd = zeros([NDIM, nx - 1, ny - 1, nz - 1, NV])
@@ -60,8 +51,7 @@ def interfaces(qEnd, MP):
 
             fEndTemp = zeros(NV)
             BEndTemp = zeros(NV)
-            for t, x1, x2 in product(range(IDX_END[0]), range(IDX_END[1]), range(IDX_END[2])):
-
+            for t, x1, x2 in product(range(TN), range(IDX[1]), range(IDX[2])):
                 qL_ = qL[t, x1, x2]
                 qR_ = qR[t, x1, x2]
 
@@ -69,11 +59,11 @@ def interfaces(qEnd, MP):
                 flux_ref(ftemp, qL_, d, MP)
                 flux_ref(ftemp, qR_, d, MP)
                 ftemp -= D_FUN(qL_, qR_, d, MP).real
-                fEndTemp += wghtEnd[t, x1, x2] * ftemp
-                BEndTemp += wghtEnd[t, x1, x2] * Bint(qL_, qR_, d, MP)
+                fEndTemp += WGHT_END[t, x1, x2] * ftemp
+                BEndTemp += WGHT_END[t, x1, x2] * Bint(qL_, qR_, d, MP)
 
-            fEnd[d, i, j, k] = fEndTemp
-            BEnd[d, i, j, k] = BEndTemp
+            fEnd[d, i, j, k] = fEndTemp / dX[d]
+            BEnd[d, i, j, k] = BEndTemp / dX[d]
 
     ret = zeros([nx - 2, ny - 2, nz - 2, NV])
     ret -= fEnd[0, :-1, 1:, 1:]
@@ -102,7 +92,8 @@ def centers(qh0, nx, ny, nz, dX, MP, HOMOGENEOUS):
 
         qhi = qh0[i + 1, j + 1, k + 1]
 
-        for t, x, y, z in product(range(IDX[0]), range(IDX[1]), range(IDX[2]), range(IDX[3])):
+        for t, x, y, z in product(range(TN), range(IDX[0]),
+                                  range(IDX[1]), range(IDX[2])):
 
             q = qhi[t, x, y, z]
             qx = qhi[t, :, y, z]
@@ -114,16 +105,15 @@ def centers(qh0, nx, ny, nz, dX, MP, HOMOGENEOUS):
 
             if not HOMOGENEOUS:
                 source_ref(tmp, q, MP)
-                tmp *= dX[0]
 
             inds = [x, y, z]
             for d in range(NDIM):
                 dxdxi = dot(DERVALS[inds[d]], qi[d])
                 temp = zeros(NV)
                 Bdot(temp, dxdxi, q, d, MP)
-                tmp -= temp
+                tmp -= temp / dX[d]
 
-            s[i, j, k] += wght[t, x, y, z] * tmp
+            s[i, j, k] += WGHT[t, x, y, z] * tmp
 
     return s
 
@@ -139,7 +129,7 @@ def extend_dimensions(qh):
         qh0 = qh0.repeat([3], axis=1)
     nx, ny, nz = array(qh0.shape[:3]) - 2
 
-    qh0 = qh0.reshape([nx + 2, ny + 2, nz + 2] + IDX + [NV])
+    qh0 = qh0.reshape([nx + 2, ny + 2, nz + 2, TN] + IDX + [NV])
 
     return qh0, nx, ny, nz
 
@@ -152,9 +142,9 @@ def fv_terms(qh, dt, dX, MP, HOMOGENEOUS=0):
     qEnd = endpoints(qh0)
 
     s = centers(qh0, nx, ny, nz, dX, MP, HOMOGENEOUS)
-    s -= 0.5 * interfaces(qEnd, MP)
+    s -= 0.5 * interfaces(qEnd, dX, MP)
 
-    return dt / dX[0] * s
+    return dt * s
 
 
 def fv_launcher(pool, qh, dt, dX, MP, HOMOGENEOUS=0):
@@ -168,7 +158,7 @@ def fv_launcher(pool, qh, dt, dX, MP, HOMOGENEOUS=0):
         chunk[-1] -= 1
         n = len(chunk) - 1
         qhList = pool(delayed(fv_terms)(qh[chunk[i] - 1:chunk[i + 1] + 1], dt,
-                      dX, MP, HOMOGENEOUS) for i in range(n))
+                                        dX, MP, HOMOGENEOUS) for i in range(n))
         return concatenate(qhList)
     else:
         return fv_terms(qh, dt, dX, MP, HOMOGENEOUS)

@@ -24,11 +24,7 @@ def pos(x):
 def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
 
     τ1 = MP.τ1
-    n = MP.n
-    if n == 0:
-        return 2 * detA3**7 / τ1 * dt
-
-    else:
+    if hasattr(MP,'n') and MP.n != 0:
         n = MP.n
         σY = MP.σY
         cs2 = c_s2(ρ, MP)
@@ -45,6 +41,8 @@ def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
                  - b**4 / 9)
         tmp = (sqrt(c) * ρ * cs2 / (6 * σY))**n
         return 2 / (n * λ) * log(n * λ / τ1 * detA3**(4 * n + 7) * tmp * dt + 1)
+    else:
+        return 2 * detA3**7 / τ1 * dt
 
 
 def solver_distortion_analytic(A, dt, MP):

@@ -37,11 +37,8 @@ def timestep(mats, count, t, tf, dX, MPs):
         for i, j, k in product(range(nx), range(ny), range(nz)):
 
             Q = u[i, j, k]
-            MAX = max(MAX, max_eig(Q, 0, MP) / dX[0])
-            if NDIM > 1:
-                MAX = max(MAX, max_eig(Q, 1, MP) / dX[1])
-                if NDIM > 2:
-                    MAX = max(MAX, max_eig(Q, 2, MP) / dX[2])
+            for d in range(NDIM):
+                MAX = max(MAX, max_eig(Q, d, MP) / dX[d])
 
     dt = CFL / MAX
     if count <= 5:
