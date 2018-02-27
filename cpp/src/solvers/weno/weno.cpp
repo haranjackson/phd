@@ -60,79 +60,23 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
     }
 }
 
-Vec expandx(Vecr arr, int nx, int ny, int nz) {
-  // Expands arr by (N-1) cells either side of the x dimension
-  // Size of ret: (nx+2*(N-1))*ny*nz*V
-  // Size of arr: nx*ny*nz*V
-  Vec ret((nx + 2 * (N - 1)) * ny * nz * V);
-
-  for (int i = 0; i < nx + 2 * (N - 1); i++) {
-    int ii = std::min(nx - 1, std::max(0, i - (N - 1)));
-    int indi = i * ny * nz * V;
-    int indii = ii * ny * nz * V;
-
-    for (int s = 0; s < ny * nz * V; s++)
-      ret(indi + s) = arr(indii + s);
-  }
-  return ret;
-}
-
-Vec expandy(Vecr arr, int nx, int ny, int nz) {
-  // Expands arr by (N-1) cells either side of the y dimension
-  // Size of ret: nx*(ny+2*(N-1))*nz*N*V
-  // Size of arr: nx*ny*nz*N*V
-  Vec ret(nx * (ny + 2 * (N - 1)) * nz * N * V);
-
-  for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny + 2 * (N - 1); j++) {
-      int jj = std::min(ny - 1, std::max(0, j - (N - 1)));
-      int indj = (i * (ny + 2 * (N - 1)) + j) * nz * N * V;
-      int indjj = (i * ny + jj) * nz * N * V;
-
-      for (int s = 0; s < nz * N * V; s++)
-        ret(indj + s) = arr(indjj + s);
-    }
-  return ret;
-}
-
-Vec expandz(Vecr arr, int nx, int ny, int nz) {
-  // Expands arr by (N-1) cells either side of the z dimension
-  // Size of ret: nx*ny*(nz+2*(N-1))*N*N*V
-  // Size of arr: nx*ny*nz*N*N*V
-  Vec ret(nx * ny * (nz + 2 * (N - 1)) * N * N * V);
-
-  for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny; j++)
-      for (int k = 0; k < nz + 2 * (N - 1); k++) {
-        int kk = std::min(nz - 1, std::max(0, k - (N - 1)));
-        int indk = ((i * ny + j) * (nz + 2 * (N - 1)) + k) * N * N * V;
-        int indkk = ((i * ny + j) * nz + kk) * N * N * V;
-
-        for (int s = 0; s < N * N * V; s++)
-          ret(indk + s) = arr(indkk + s);
-      }
-  return ret;
-}
-
-void weno1(Vecr ret, Vecr u, int nx, int ny, int nz) {
+void weno1(Vecr wh, Vecr ub, int nx, int ny, int nz) {
   // Returns the WENO reconstruction of u using polynomials in x
-  // Size of ret: nx*ny*nz*N*V
-  // Size of u:   nx*ny*nz*V
-  Vec tmp = expandx(u, nx, ny, nz);
+  // Size of wh: nx*ny*nz*N*V
+  // Size of ub: (nx+2(N-1))*ny*nz*V
   for (int ind = 0; ind < nx * ny * nz; ind++) {
-    MatN_VMap ret_ref(ret.data() + (ind * N * V), OuterStride(V));
-    Mat2N_VMap tmp_ref(tmp.data() + (ind * V), OuterStride(ny * nz * V));
-    coeffs(ret_ref, tmp_ref);
+    MatN_VMap wh_ref(wh.data() + (ind * N * V), OuterStride(V));
+    Mat2N_VMap ub_ref(ub.data() + (ind * V), OuterStride(ny * nz * V));
+    coeffs(wh_ref, ub_ref);
   }
 }
 
-void weno2(Vecr ret, Vecr u, int nx, int ny, int nz) {
+void weno2(Vecr wh, Vecr ub, int nx, int ny, int nz) {
   // Returns the WENO reconstruction of u using polynomials in y
-  // Size of ret: nx*ny*nz*N*N*V
-  // Size of u:   nx*ny*nz*V
-  Vec ux(nx * ny * nz * N * V);
-  weno1(ux, u, nx, ny, nz);
-  Vec tmp = expandy(ux, nx, ny, nz);
+  // Size of wh: nx*ny*nz*N*N*V
+  // Size of ub: (nx+2(N-1))*(ny+2(N-1))*nz*V
+  Vec ux(nx * (ny + 2 * (N - 1)) * nz * N * V);
+  weno1(ux, ub, nx, ny + 2 * (N - 1), nz);
 
   for (int i = 0; i < nx; i++) {
     int indi = i * ny * nz * N;
@@ -141,20 +85,19 @@ void weno2(Vecr ret, Vecr u, int nx, int ny, int nz) {
     for (int s = 0; s < ny * nz * N; s++) {
       int indr = (indi + s) * N * V;
       int indt = (indii + s) * V;
-      MatN_VMap ret_ref(ret.data() + indr, OuterStride(V));
-      Mat2N_VMap tmp_ref(tmp.data() + indt, OuterStride(nz * N * V));
-      coeffs(ret_ref, tmp_ref);
+      MatN_VMap wh_ref(wh.data() + indr, OuterStride(V));
+      Mat2N_VMap ux_ref(ux.data() + indt, OuterStride(nz * N * V));
+      coeffs(wh_ref, ux_ref);
     }
   }
 }
 
-void weno3(Vecr ret, Vecr u, int nx, int ny, int nz) {
+void weno3(Vecr wh, Vecr ub, int nx, int ny, int nz) {
   // Returns the WENO reconstruction of u using polynomials in z
-  // Size of ret: nx*ny*nz*N*N*N*V
-  // Size of u:   nx*ny*nz*V
-  Vec uy(nx * ny * nz * N * N * V);
-  weno2(uy, u, nx, ny, nz);
-  Vec tmp = expandz(uy, nx, ny, nz);
+  // Size of wh: nx*ny*nz*N*N*N*V
+  // Size of ub: (nx+2(N-1))*(ny+2(N-1))*(nz+2(N-1))*V
+  Vec uy(nx * ny * (nz + 2 * (N - 1)) * N * N * V);
+  weno2(uy, ub, nx, ny, nz + 2 * (N - 1));
 
   for (int i = 0; i < nx; i++)
     for (int j = 0; j < ny; j++) {
@@ -164,14 +107,14 @@ void weno3(Vecr ret, Vecr u, int nx, int ny, int nz) {
       for (int s = 0; s < nz * N * N; s++) {
         int indr = (indi + s) * N * V;
         int indt = (indii + s) * V;
-        MatN_VMap ret_ref(ret.data() + indr, OuterStride(V));
-        Mat2N_VMap tmp_ref(tmp.data() + indt, OuterStride(N * N * V));
-        coeffs(ret_ref, tmp_ref);
+        MatN_VMap wh_ref(wh.data() + indr, OuterStride(V));
+        Mat2N_VMap uy_ref(uy.data() + indt, OuterStride(N * N * V));
+        coeffs(wh_ref, uy_ref);
       }
     }
 }
 
-void weno_launcher(Vecr ret, Vecr u, int ndim, Veci3r nX) {
+void weno_launcher(Vecr wh, Vecr ub, int ndim, Veci3r nX) {
   // NOTE: boundary conditions extend u by two cells in each dimension
   int nx = nX(0);
   int ny = nX(1);
@@ -179,13 +122,13 @@ void weno_launcher(Vecr ret, Vecr u, int ndim, Veci3r nX) {
 
   switch (ndim) {
   case 1:
-    weno1(ret, u, nx + 2, ny, nz);
+    weno1(wh, ub, nx + 2, ny, nz);
     break;
   case 2:
-    weno2(ret, u, nx + 2, ny + 2, nz);
+    weno2(wh, ub, nx + 2, ny + 2, nz);
     break;
   case 3:
-    weno3(ret, u, nx + 2, ny + 2, nz + 2);
+    weno3(wh, ub, nx + 2, ny + 2, nz + 2);
     break;
   }
 }

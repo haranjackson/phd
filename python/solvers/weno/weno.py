@@ -5,25 +5,19 @@ from itertools import product
 from numpy import multiply, zeros
 from scipy.linalg import solve
 
-from etc.boundaries import extend
 from solvers.weno.matrices import fHalfN, cHalfN, WN_M, WN_Σ
-from options import rc, λc, λs, eps, N, NV
+from options import rc, λc, λs, eps, N, NV, NDIM
 
 
 LAMS = [λs, λs, λc, λc]
 
 
-def calculate_coeffs(uList, L=0, R=0):
+def calculate_coeffs(uList):
     """ Calculate coefficients of basis polynomials and weights
     """
     n = len(uList)
-    if L:
-        wList = [solve(WN_M[0], uList[0], overwrite_b=1, check_finite=0)]
-    elif R:
-        wList = [solve(WN_M[1], uList[0], overwrite_b=1, check_finite=0)]
-    else:
-        wList = [solve(WN_M[i], uList[i], overwrite_b=1, check_finite=0)
-                 for i in range(n)]
+    wList = [solve(WN_M[i], uList[i], overwrite_b=1, check_finite=0)
+             for i in range(n)]
 
     σList = [((w.T).dot(WN_Σ).dot(w)).diagonal() for w in wList]
     oList = [LAMS[i] / (abs(σList[i]) + eps)**rc for i in range(n)]
@@ -35,14 +29,7 @@ def calculate_coeffs(uList, L=0, R=0):
     return numerator / oSum
 
 
-def coeffs(ret, uL, uR, uCL, uCR, L=0, R=0):
-
-    """
-    if L:
-        ret[:] = calculate_coeffs([uL], L=1)
-    elif R:
-        ret[:] = calculate_coeffs([uR], R=1)
-    """
+def coeffs(ret, uL, uR, uCL, uCR):
 
     if N == 2:
         ret[:] = calculate_coeffs([uL, uR])
@@ -60,37 +47,35 @@ def extract_stencils(arrayRow, ind):
     return uL, uR, uCL, uCR
 
 
-def weno_launcher(u):
+def weno_launcher(uBC):
     """ Find reconstruction coefficients of u to order N+1
     """
-    nx, ny, nz = u.shape[:3]
+    nx, ny, nz = uBC.shape[:3]
+    nx_ = nx - 2 * (N - 1)
 
-    Wx = zeros([nx, ny, nz, N, NV])
-    tempu = extend(u, N - 1, 0)
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        uL, uR, uCL, uCR = extract_stencils(tempu[:, j, k], i + N - 1)
-        if i < 2 * (N - 1) - 1:
-            coeffs(Wx[i, j, k], uL, uR, uCL, uCR, R=1)
-        elif i > nx:
-            coeffs(Wx[i, j, k], uL, uR, uCL, uCR, L=1)
-        else:
-            coeffs(Wx[i, j, k], uL, uR, uCL, uCR)
+    if N == 1:
+        return uBC.reshape([nx,ny,nz]+[N]*NDIM+[NV])
+
+    Wx = zeros([nx_, ny, nz, N, NV])
+    for i, j, k in product(range(nx_), range(ny), range(nz)):
+        uL, uR, uCL, uCR = extract_stencils(uBC[:, j, k], i + N - 1)
+        coeffs(Wx[i, j, k], uL, uR, uCL, uCR)
     if ny == 1:
         return Wx
 
-    Wxy = zeros([nx, ny, nz, N, N, NV])
-    tempWx = extend(Wx, N - 1, 1)
-    for i, j, k, a in product(range(nx), range(ny), range(nz), range(N)):
-        uL, uR, uCL, uCR = extract_stencils(tempWx[i, :, k, a], j + N - 1)
+    ny_ = ny - 2 * (N - 1)
+    Wxy = zeros([nx_, ny_, nz, N, N, NV])
+    for i, j, k, a in product(range(nx_), range(ny_), range(nz), range(N)):
+        uL, uR, uCL, uCR = extract_stencils(Wx[i, :, k, a], j + N - 1)
         coeffs(Wxy[i, j, k, a], uL, uR, uCL, uCR)
 
     if nz == 1:
         return Wxy
 
-    Wxyz = zeros([nx, ny, nz, N, N, N, NV])
-    tempWxy = extend(Wxy, N - 1, 2)
-    for i, j, k, a, b in product(range(nx), range(ny), range(nz), range(N), range(N)):
-        uL, uR, uCL, uCR = extract_stencils(tempWxy[i, j, :, a, b], k + N - 1)
+    nz_ = nz - 2 * (N - 1)
+    Wxyz = zeros([nx_, ny_, nz_, N, N, N, NV])
+    for i, j, k, a, b in product(range(nx_), range(ny_), range(nz_), range(N), range(N)):
+        uL, uR, uCL, uCR = extract_stencils(Wxy[i, j, :, a, b], k + N - 1)
         coeffs(Wxyz[i, j, k, a, b], uL, uR, uCL, uCR)
 
     return Wxyz

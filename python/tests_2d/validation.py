@@ -1,6 +1,6 @@
 from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
-from etc.boundaries import extend
+from etc.boundaries import extend, destress
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec, Cvec_to_Pclass
 from tests_1d.common import cell_sizes
@@ -125,13 +125,14 @@ def laminar_boundary_layer_IC():
 def hagen_poiseuille_duct_IC():
 
     tf = 10
-    Lx = 10
+    Lx = 1
     Ly = 0.5
     nx = 10
     ny = 50
+    dp = 0.48
+    FIX_DOMAIN_P = 0
 
     γ = 1.4
-
     ρ = 1
     p = 100 / γ
     v = zeros(3)
@@ -139,13 +140,14 @@ def hagen_poiseuille_duct_IC():
     J = zeros(3)
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
-    dp = 4.8
 
+    ddp = dp / (nx + 1)
     u = zeros([nx, ny, 1, NV])
     for i in range(nx):
+        pi = p - (i + 1) * ddp if FIX_DOMAIN_P else p
+        Q = Cvec(ρ, pi, v, A, J, MP)
         for j in range(ny):
-            pi = p - (i+1) / (nx+2) * dp
-            u[i, j] = Cvec(ρ, pi, v, A, J, MP)
+            u[i, j] = Q
 
     print("HAGEN-POISEUILLE DUCT: N =", N)
     return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
@@ -153,25 +155,50 @@ def hagen_poiseuille_duct_IC():
 
 def hagen_poiseuille_duct_BC(u):
 
+    dp = 0.48
+    FIX_DOMAIN_P = 0
+
     γ = 1.4
     ρ = 1
     p = 100 / γ
-    dp = 4.8
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
 
-    ret = extend(u, 1, 1)
-    ret[:, 0, 0, 2:5] *= -1
-    ret[:, -1, 0, 2:5] *= -1
+    nx, ny = u.shape[:2]
+    ddp = dp / (nx + 1)
+    ret = u.copy()
 
-    ret = extend(ret, 1, 0)
+    for i in range(nx):
+        destress(ret[i, 0, 0], MP)
+        destress(ret[i, -1, 0], MP)
+
+        if FIX_DOMAIN_P:
+            pi = p - (i + 1) * ddp
+            for j in range(ny):
+                Q = ret[i, j, 0]
+                P = Cvec_to_Pclass(Q, MP)
+                ret[i, j, 0] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
+
+    ret = extend(ret, N, 1, 1)
+    ret[:, :N, 0, 2:5] *= -1
+    ret[:, -N:, 0, 2:5] *= -1
+
+    ret = extend(ret, N, 0, 0)
     ny = ret.shape[1]
+
     for j in range(ny):
         QL = ret[0, j, 0]
         QR = ret[-1, j, 0]
-        PL = Cvec_to_Pclass(QL, MP)
-        PR = Cvec_to_Pclass(QR, MP)
-        ret[0, j, 0] = Cvec(PL.ρ,  p, PL.v, PL.A, PL.J, MP)
-        ret[-1, j, 0] = Cvec(PR.ρ,  p - dp, PR.v, PR.A, PR.J, MP)
+        ρL = QL[0]
+        ρR = QR[0]
+        vL = QL[2:5] / ρL
+        vR = QR[2:5] / ρR
+        AL = QL[5:14].reshape([3, 3])
+        AR = QR[5:14].reshape([3, 3])
+        J = zeros(3)
+
+        for i in range(N):
+            ret[N - 1 - i, j, 0] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
+            ret[nx + N + i, j, 0] = Cvec(ρR, p - dp - i * ddp, vR, AR, J, MP)
 
     return ret
 
@@ -205,7 +232,7 @@ def lid_driven_cavity_IC():
 
 
 def lid_driven_cavity_BC(u):
-
+    """ NEED TO UPDATE """
     ret = extend(u, 1, 1)
     nx, ny = ret.shape[:2]
 

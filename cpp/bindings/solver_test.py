@@ -39,7 +39,7 @@ def newton_krylov_test(u, dt, dX, MP):
 
     nx, ny = u.shape[:2]
     wh = weno_launcher(u)
-    w = wh[int(nx / 2), int(ny/2), 0].reshape([N**NDIM, NV])
+    w = wh[int(nx / 2), int(ny / 2), 0].reshape([N**NDIM, NV])
     Ww = dot(DG_W, w)
 
     if HIDALGO:
@@ -70,14 +70,19 @@ def weno_test():
     ny = 20 if NDIM > 1 else 1
     nz = 20 if NDIM > 2 else 1
 
-    upy = rand(nx + 2, ny + 2 * (NDIM > 1), nz + 2 * (NDIM > 2), NV)
-    ucp = upy.ravel()
+    uBCpy = rand(nx + 2 * N,
+                 ny + 2 * N * (NDIM > 1),
+                 nz + 2 * N * (NDIM > 2),
+                 NV)
+    uBCcp = uBCpy.ravel()
 
-    wh_py = weno_launcher(upy).ravel()
-    wh_cp = zeros((nx + 2) * (ny + 2 * (NDIM > 1))
-                  * (nz + 2 * (NDIM > 2)) * N**NDIM * NV)
-    GPRpy.solvers.weno.weno_launcher(wh_cp, ucp, NDIM,
+    wh_py = weno_launcher(uBCpy)
+    wh_cp = zeros((nx + 2) * (ny + 2 * (NDIM > 1)) *
+                  (nz + 2 * (NDIM > 2)) * N**NDIM * NV)
+    GPRpy.solvers.weno.weno_launcher(wh_cp, uBCcp, NDIM,
                                      array([nx, ny, nz], dtype=int32))
+    wh_cp = wh_cp.reshape(wh_py.shape)
+
     print("WENO  ", check(wh_cp, wh_py))
     return wh_cp, wh_py
 
@@ -277,8 +282,8 @@ def FV_test(qh_py, dX, dt, MP):
 
 def midstepper_test(u, dX, dt, MP):
 
-    nx, ny = u.shape[:2]
     wh = weno_launcher(u)
+    nx, ny = wh.shape[:2]
     mid_py = wh.reshape([nx, ny, 1] + [N] * NDIM + [NV])
     mid_cp = mid_py.ravel()
 
