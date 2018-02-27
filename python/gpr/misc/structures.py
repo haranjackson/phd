@@ -41,7 +41,6 @@ class Cvec_to_Pclass():
 
         self.MP = MP
 
-
     def G(self):
         return gram(self.A)
 
@@ -194,4 +193,14 @@ def Cvec_to_Pvec(Q, MP):
     ret[2:5] /= ρ
     ret[14:] /= ρ
 
+    return ret
+
+
+def Cgrid_to_Pgrid(u, MP):
+    nx, ny, nz = u.shape[:3]
+    ret = zeros(u.shape)
+    for i in range(nx):
+        for j in range(ny):
+            for k in range(nz):
+                ret[i, j, k] = Cvec_to_Pvec(u[i, j, k], MP)
     return ret
