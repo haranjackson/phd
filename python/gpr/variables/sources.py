@@ -91,3 +91,9 @@ def K_ing(ρ, λ, p, MP):
         ret += G2 * λ**e * φ**g * p**z
 
     return ret
+
+
+def f_δp(MP):
+    """ Returns the body force density produced by a constant pressure gradient
+    """
+    return MP.δp

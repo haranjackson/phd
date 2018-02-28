@@ -3,7 +3,7 @@ from numpy import zeros
 from gpr.misc.functions import gram
 from gpr.variables.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
 from gpr.variables.eos import total_energy
-from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing
+from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing, f_δp
 from gpr.variables.state import heat_flux, pressure, temperature
 from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
 
@@ -112,6 +112,9 @@ class Cvec_to_Pclass():
             return K_dis(self.ρ, self.λ, self.T(), self.MP)
         elif self.MP.REACTION == 'i':
             return K_ing(self.ρ, self.λ, self.p(), self.MP)
+
+    def f_body(self):
+        return f_δp(self.MP)
 
 
 def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):

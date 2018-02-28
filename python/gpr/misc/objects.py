@@ -1,3 +1,5 @@
+from numpy import zeros
+
 from gpr.variables.mg import eos_text_to_code
 from gpr.variables.state import temperature
 
@@ -60,7 +62,8 @@ def params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,
-           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2):
+           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2,
+           δp):
 
     MP.Rc = Rc
     MP.EOS = eos_text_to_code(EOS)
@@ -141,6 +144,11 @@ def params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
             MP.φG1 = φG1
             MP.φG2 = φG2
 
+    if δp is None:
+        MP.δp = zeros(3)
+    else:
+        MP.δp = δp
+
 
 def material_parameters(EOS, ρ0, cv, p0,
                         Tref=None, α=None, β=None, γ=None, pINF=None,
@@ -155,7 +163,7 @@ def material_parameters(EOS, ρ0, cv, p0,
                         I=None, G1=None, G2=None, a=None, b=None, c=None,
                         d=None, e=None, g=None, x=None, y=None, z=None,
                         φIG=None, φG1=None, φG2=None,
-                        Rc=8.31445985):
+                        δp=None, Rc=8.31445985):
     """ An object to hold the material constants
     """
     assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr'])
@@ -190,7 +198,7 @@ def material_parameters(EOS, ρ0, cv, p0,
         τ2 = None
 
     REACTIVE = REACTION is not None
-    MULTI = REACTIVE # should be amended in future
+    MULTI = REACTIVE  # should be amended in future
 
     if CPP_LVL > 0:
         import GPRpy
@@ -209,6 +217,7 @@ def material_parameters(EOS, ρ0, cv, p0,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,
-           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2)
+           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2,
+           δp)
 
     return MP

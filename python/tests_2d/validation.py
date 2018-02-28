@@ -138,8 +138,10 @@ def hagen_poiseuille_duct_IC():
     v = zeros(3)
     A = eye(3)
     J = zeros(3)
+    δp = array([dp, 0, 0])
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
+    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p,
+                             γ=γ, b0=8, μ=1e-2, δp=δp)
 
     ddp = dp / (nx + 1)
     u = zeros([nx, ny, 1, NV])
@@ -156,7 +158,9 @@ def hagen_poiseuille_duct_IC():
 def hagen_poiseuille_duct_BC(u):
 
     dp = 0.48
+    DESTRESS = 0
     FIX_DOMAIN_P = 0
+    FIX_OUTLET_P = 0
 
     γ = 1.4
     ρ = 1
@@ -168,8 +172,10 @@ def hagen_poiseuille_duct_BC(u):
     ret = u.copy()
 
     for i in range(nx):
-        destress(ret[i, 0, 0], MP)
-        destress(ret[i, -1, 0], MP)
+
+        if DESTRESS:
+            destress(ret[i, 0, 0], MP)
+            destress(ret[i, -1, 0], MP)
 
         if FIX_DOMAIN_P:
             pi = p - (i + 1) * ddp
@@ -183,22 +189,23 @@ def hagen_poiseuille_duct_BC(u):
     ret[:, -N:, 0, 2:5] *= -1
 
     ret = extend(ret, N, 0, 0)
-    ny = ret.shape[1]
 
-    for j in range(ny):
-        QL = ret[0, j, 0]
-        QR = ret[-1, j, 0]
-        ρL = QL[0]
-        ρR = QR[0]
-        vL = QL[2:5] / ρL
-        vR = QR[2:5] / ρR
-        AL = QL[5:14].reshape([3, 3])
-        AR = QR[5:14].reshape([3, 3])
-        J = zeros(3)
-
-        for i in range(N):
-            ret[N - 1 - i, j, 0] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
-            ret[nx + N + i, j, 0] = Cvec(ρR, p - dp - i * ddp, vR, AR, J, MP)
+    if FIX_OUTLET_P:
+        ny = ret.shape[1]
+        for j in range(N, ny - N):
+            QL = ret[0, j, 0]
+            QR = ret[-1, j, 0]
+            ρL = QL[0]
+            ρR = QR[0]
+            vL = QL[2:5] / ρL
+            vR = QR[2:5] / ρR
+            AL = QL[5:14].reshape([3, 3])
+            AR = QR[5:14].reshape([3, 3])
+            J = zeros(3)
+            for i in range(N):
+                #ret[N - 1 - i, j, 0] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
+                ret[nx + N + i, j, 0] = Cvec(ρR, p - dp - i * ddp, vR, AR, J,
+                                             MP)
 
     return ret
 

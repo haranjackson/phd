@@ -87,6 +87,8 @@ def source_cons_ref(ret, Q, MP):
 
     ρ = P.ρ
 
+    ret[2:5] = P.f_body()
+
     if MP.VISCOUS:
         ψ = P.ψ()
         θ1_1 = P.θ1_1()

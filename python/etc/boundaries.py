@@ -1,7 +1,6 @@
 from numpy import arange, concatenate, dot, flip, int64, ones, zeros
 from numpy.linalg import det, svd
 
-from gpr.variables.eos import E_2A
 from options import NDIM, N
 
 
