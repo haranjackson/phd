@@ -2,6 +2,7 @@ from numpy import array, eye, arange, exp, sqrt, zeros
 from scipy.optimize import brentq
 from scipy.special import erf
 
+from etc.boundaries import standard_BC
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec
 from gpr.variables.wavespeeds import c_0
@@ -155,3 +156,32 @@ def viscous_shock_IC(center=0):
 
     print("VISCOUS SHOCK: N =", N)
     return u, [MP], tf, dX
+
+
+def hagen_poiseuille_IC():
+
+    tf = 10
+    Lx = 1
+    nx = 100
+    dp = 0.48
+
+    γ = 1.4
+    ρ = 1
+    p = 100 / γ
+    v = zeros(3)
+    A = eye(3)
+    J = zeros(3)
+    δp = array([0, dp, 0])
+
+    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2,
+                             δp=δp)
+
+    Q = Cvec(ρ, p, v, A, J, MP)
+    u = array([Q] * nx).reshape([nx, 1, 1, NV])
+
+    print("HAGEN-POISEUILLE DUCT: N =", N)
+    return u, [MP], tf, cell_sizes(Lx, nx)
+
+
+def hagen_poiseuille_BC(u):
+    return standard_BC(u, 1)
