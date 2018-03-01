@@ -8,9 +8,10 @@ from system_test import flux_test, source_test, block_test, Bdot_test, system_te
 
 from solver_test import lgmres_test, newton_krylov_test
 from solver_test import weno_test, rhs_test, obj_test, dg_test
-from solver_test import TAT_test, Bint_test, D_RUS_test, D_ROE_test, D_OSH_test
-from solver_test import FVc_test, FVi_test, FV_test
 from solver_test import midstepper_test, ode_test
+
+from fv_test import TAT_test, Bint_test, D_RUS_test, D_ROE_test, D_OSH_test
+from fv_test import FVc_test, FVi_test, FV_test
 
 from solvers.weno.weno import weno_launcher
 
@@ -21,7 +22,7 @@ from options import NDIM, SPLIT
 
 
 if NDIM == 1:
-    u, MPs, _, dX = fluids.viscous_shock_IC()
+    u, MPs, _, dX = fluids.hagen_poiseuille_IC()
 else:
     u, MPs, _, dX = validation.hagen_poiseuille_duct_IC()
 
