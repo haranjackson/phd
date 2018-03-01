@@ -122,7 +122,7 @@ def laminar_boundary_layer_IC():
     return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
 
 
-def hagen_poiseuille_duct_IC():
+def hagen_poiseuille_IC():
 
     tf = 10
     Lx = 1
@@ -155,11 +155,12 @@ def hagen_poiseuille_duct_IC():
     return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
 
 
-def hagen_poiseuille_duct_BC(u):
+def hagen_poiseuille_BC(u):
 
     dp = 0.48
     DESTRESS = 0
     FIX_DOMAIN_P = 0
+    FIX_INLET_V = 1
     FIX_OUTLET_P = 0
 
     γ = 1.4
