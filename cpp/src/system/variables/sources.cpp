@@ -37,3 +37,5 @@ double theta2inv(VecVr Q, Par &MP) {
   double T = temperature(ρ, p, MP);
   return (ρ0 / ρ) * (T / T0) / (cα2 * τ2);
 }
+
+void f_body(Vec3r x, Par &MP) { x = MP.δp; }

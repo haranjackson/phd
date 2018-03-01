@@ -88,7 +88,8 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("σY", &Par::σY)
       .def_readwrite("n", &Par::n)
       .def_readwrite("cα2", &Par::cα2)
-      .def_readwrite("τ2", &Par::τ2);
+      .def_readwrite("τ2", &Par::τ2)
+      .def_readwrite("δp", &Par::δp);
 
   pybind11::class_<poly>(m_classes, "poly")
       .def(pybind11::init<Vec>())

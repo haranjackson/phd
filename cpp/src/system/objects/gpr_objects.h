@@ -60,6 +60,8 @@ struct Par {
 
   double cα2;
   double τ2;
+
+  Vec3 δp;
 };
 
 #endif // GPR_OBJECTS_H

@@ -47,7 +47,9 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
 void source(VecVr ret, VecVr Q, Par &MP) {
   double ρ = Q(0);
 
-  ret.head<5>().setZero();
+  ret.head<2>().setZero();
+
+  f_body(ret.segment<3>(2), MP);
 
   if (MP.VISCOUS) {
     Mat3_3 Asource = -dEdA_s(Q, MP) * theta1inv(Q, MP);
