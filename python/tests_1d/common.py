@@ -23,7 +23,7 @@ def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
 
             u[i, 0, 0, -1] = i * dX[0] - x0
 
-        return u, [MPL, MPR], tf
+        return u, [MPL, MPR], tf, dX
 
     else:
 
