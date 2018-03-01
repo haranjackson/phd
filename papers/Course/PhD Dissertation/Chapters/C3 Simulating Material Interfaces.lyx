@@ -894,7 +894,7 @@ the GPR-RGFM
 The Riemann Problem of the GPR model takes the form demonstrated in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "fig:HPR_RP"
+reference "fig:GPR_RP"
 
 \end_inset
 
@@ -939,7 +939,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:HPR_RP"
+name "fig:GPR_RP"
 
 \end_inset
 
@@ -1155,7 +1155,7 @@ reference "fig:HPR_RP2"
 
 .
  Expanding the Taylor series of 
-\begin_inset Formula $\boldsymbol{\Sigma_{1}^{*}},T^{*}$
+\begin_inset Formula $\boldsymbol{\Sigma}^{*},T^{*}$
 \end_inset
 
 :
@@ -1180,8 +1180,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\boldsymbol{\Sigma_{1}^{*}} & =\boldsymbol{\Sigma_{1}}+\frac{\partial\boldsymbol{\Sigma_{1}}}{\partial\rho}\left(\rho^{*}-\rho\right)+\frac{\partial\boldsymbol{\Sigma_{1}}}{\partial p}\left(p^{*}-p\right)+\frac{\partial\boldsymbol{\Sigma_{1}}}{\partial A_{mn}}\left(A_{mn}^{*}-A_{mn}\right)+O\left(d\boldsymbol{P}^{2}\right)\label{eq:q* Taylor Series}\\
-T^{*} & =T+\frac{\partial T}{\partial\rho}\left(\rho^{*}-\rho\right)+\frac{\partial T}{\partial p}\left(p^{*}-p\right)+O\left(d\boldsymbol{P}^{2}\right)\label{eq:sigma* Taylor Series}
+\Sigma^{*} & =\Sigma+\left(\rho^{*}-\rho\right)\frac{\partial\Sigma}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial\Sigma}{\partial p}+\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\Sigma}{\partial A_{mn}}+O\left(d\boldsymbol{P}^{2}\right)\label{eq:q* Taylor Series}\\
+T^{*} & =T+\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}+O\left(d\boldsymbol{P}^{2}\right)\label{eq:sigma* Taylor Series}
 \end{align}
 
 \end_inset
@@ -1228,8 +1228,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\boldsymbol{\Sigma_{1}^{*}}-\boldsymbol{\Sigma_{1}} & \approx-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho}\left(\rho^{*}-\rho\right)+\boldsymbol{e_{1}}\left(p^{*}-p\right)-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial A_{mn}}\left(A_{mn}^{*}-A_{mn}\right)\\
-T^{*}-T & \approx\frac{\partial T}{\partial\rho}\left(\rho^{*}-\rho\right)+\frac{\partial T}{\partial p}\left(p^{*}-p\right)
+\Sigma^{*}-\Sigma & \approx-\left(\rho^{*}-\rho\right)\frac{\partial\sigma}{\partial\rho}+\left(p^{*}-p\right)I-\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\sigma}{\partial A_{mn}}\\
+T^{*}-T & \approx\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}
 \end{align}
 
 \end_inset
@@ -1255,7 +1255,12 @@ end{subequations}
 
 \begin_layout Standard
 These are the extra required relations.
- Thus:
+ Let 
+\begin_inset Formula $\boldsymbol{n}$
+\end_inset
+
+ be the normal to the boundary.
+ Then we have:
 \end_layout
 
 \begin_layout Standard
@@ -1304,7 +1309,7 @@ reference "eq:Left-Conditions"
 \begin_inset Formula 
 \begin{equation}
 \boldsymbol{c_{K}}=\left(\begin{array}{c}
-\left(\boldsymbol{\Sigma_{1}^{*}}\right)_{K}-\left(\boldsymbol{\Sigma_{1}}\right)_{K}\\
+\left(\Sigma_{K}^{*}-\Sigma_{K}\right)\cdot\boldsymbol{n}\\
 T_{K}^{*}-T_{K}\\
 dt\cdot\left(L_{K}\cdot\boldsymbol{S_{K}}\right)_{5:17}
 \end{array}\right)
@@ -1340,7 +1345,7 @@ reference "eq:Right-Conditions"
 
 .
  It remains to find expressions for 
-\begin_inset Formula $\boldsymbol{\Sigma_{1}^{*}}$
+\begin_inset Formula $\Sigma^{*}\cdot\boldsymbol{n}$
 \end_inset
 
  and 
@@ -1374,10 +1379,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\left(\boldsymbol{\Sigma_{1}^{*}}\right)_{L} & =\left(\boldsymbol{\Sigma_{1}^{*}}\right)_{R}\\
+\Sigma_{L}^{*}\cdot\boldsymbol{n} & =\Sigma_{R}^{*}\cdot\boldsymbol{n}\\
 T_{L}^{*} & =T_{R}^{*}\\
 \boldsymbol{v_{L}^{*}} & =\boldsymbol{v_{R}^{*}}\\
-\left(\alpha^{2}J_{1}\right)_{L}^{*} & =\left(\alpha^{2}J_{1}\right)_{R}^{*}
+\alpha^{2}\boldsymbol{J}_{L}^{*}\cdot\boldsymbol{n} & =\alpha^{2}\boldsymbol{J}_{R}^{*}\cdot\boldsymbol{n}
 \end{align}
 
 \end_inset
@@ -1414,15 +1419,15 @@ Taking the relevant rows of
 \begin{align}
 \left(\begin{array}{c}
 \boldsymbol{v^{*}}\\
-J_{1}^{*}
+\boldsymbol{J}^{*}\cdot\boldsymbol{n}
 \end{array}\right) & =\left(\begin{array}{c}
 \boldsymbol{v_{K}}\\
-\left(J_{1}\right)_{K}
+\boldsymbol{J}_{K}\cdot\boldsymbol{n}
 \end{array}\right)+Y_{K}\left(\left(\begin{array}{c}
-\boldsymbol{\Sigma_{1}^{*}}\\
+\Sigma^{*}\cdot\boldsymbol{n}\\
 T^{*}
 \end{array}\right)-\left(\begin{array}{c}
-\left(\boldsymbol{\Sigma_{1}}\right)_{K}\\
+\Sigma_{K}\cdot\boldsymbol{n}\\
 T_{K}
 \end{array}\right)\right)\\
  & +dt\cdot\xi_{K}\cdot Q_{K}^{-1}\left(L_{K}\cdot\boldsymbol{S_{K}}\right)_{5:8}\nonumber 
@@ -1443,22 +1448,22 @@ Thus, using the boundary conditions:
 \begin_inset Formula 
 \begin{equation}
 \left(\begin{array}{c}
-\boldsymbol{\Sigma_{1}^{*}}\\
+\Sigma^{*}\cdot\boldsymbol{n}\\
 T^{*}
 \end{array}\right)=\left(Y_{L}-Y_{R}\right)^{-1}\left(\begin{array}{c}
 \left(\begin{array}{c}
 \boldsymbol{v_{R}}\\
-\left(J_{1}\right)_{R}
+\boldsymbol{J}_{R}\cdot\boldsymbol{n}
 \end{array}\right)-\left(\begin{array}{c}
 \boldsymbol{v_{L}}\\
-\left(J_{1}\right)_{L}
+\boldsymbol{J}_{L}\cdot\boldsymbol{n}
 \end{array}\right)\\
 +dt\left(Q_{R}^{-1}\left(L_{R}\cdot\boldsymbol{S_{R}}\right)_{5:8}+Q_{L}^{-1}\left(L_{L}\cdot\boldsymbol{S_{L}}\right)_{5:8}\right)\\
 +Y_{L}\left(\begin{array}{c}
-\left(\boldsymbol{\Sigma_{1}}\right)_{L}\\
+\Sigma_{L}\cdot\boldsymbol{n}\\
 T_{L}
 \end{array}\right)-Y_{R}\left(\begin{array}{c}
-\left(\boldsymbol{\Sigma_{1}}\right)_{R}\\
+\Sigma_{R}\cdot\boldsymbol{n}\\
 T_{R}
 \end{array}\right)
 \end{array}\right)
