@@ -1,7 +1,7 @@
 #include "types.h"
 
 int uind(int i, int j, int ny) {
-  // Returns the starting index of cell (i,j,k)
+  // Returns the starting index of cell (i,j)
   return (i * ny + j) * V;
 }
 
@@ -10,143 +10,120 @@ int uind(int i, int j, int k, int ny, int nz) {
   return ((i * ny + j) * nz + k) * V;
 }
 
+void boundaries1(Vecr u, Vecr ub, int nx, bool PERIODIC) {
+  ub.segment(N * V, nx * V) = u;
+
+  if (PERIODIC) {
+    ub.head<N * V>() = u.tail<N * V>();
+    ub.tail<N * V>() = u.head<N * V>();
+  } else {
+    for (int i = 0; i < N; i++) {
+      ub.segment<V>(i * V) = u.head<V>();
+      ub.segment<V>((i + nx + N) * V) = u.tail<V>();
+    }
+  }
+}
+
+void boundaries2(Vecr u, Vecr ub, int nx, int ny, bool PERIODIC) {
+
+  for (int i = 0; i < nx; i++)
+    for (int j = 0; j < ny; j++)
+      ub.segment<V>(uind(i + N, j + N, ny + 2 * N)) =
+          u.segment<V>(uind(i, j, ny));
+
+  if (PERIODIC) {
+    for (int i = 0; i < N; i++)
+      for (int j = 0; j < N; j++) {
+        ub.segment<V>(uind(i, j, ny + 2 * N)) =
+            u.segment<V>(uind(nx - N + i, ny - N + j, ny));
+        ub.segment<V>(uind(nx + N + i, j, ny + 2 * N)) =
+            u.segment<V>(uind(i, ny - N + j, ny));
+        ub.segment<V>(uind(i, ny + N + j, ny + 2 * N)) =
+            u.segment<V>(uind(nx - N + i, j, ny));
+        ub.segment<V>(uind(nx + N + i, ny + N + j, ny + 2 * N)) =
+            u.segment<V>(uind(i, j, ny));
+      }
+    for (int i = 0; i < nx; i++)
+      for (int j = 0; j < N; j++) {
+        ub.segment<V>(uind(i + N, j, ny + 2 * N)) =
+            u.segment<V>(uind(i, ny - N + j, ny));
+        ub.segment<V>(uind(i + N, ny + N + j, ny + 2 * N)) =
+            u.segment<V>(uind(i, j, ny));
+      }
+    for (int i = 0; i < N; i++)
+      for (int j = 0; j < ny; j++) {
+        ub.segment<V>(uind(i, N + j, ny + 2 * N)) =
+            u.segment<V>(uind(nx - N + i, j, ny));
+        ub.segment<V>(uind(nx + N + i, j + N, ny + 2 * N)) =
+            u.segment<V>(uind(i, j, ny));
+      }
+  } else {
+    for (int i = 0; i < nx; i++)
+      for (int j = 0; j < N; j++) {
+        ub.segment<V>(uind(i + N, j, ny + 2 * N)) =
+            u.segment<V>(uind(i, 0, ny));
+        ub.segment<V>(uind(i + N, ny + N + j, ny + 2 * N)) =
+            u.segment<V>(uind(i, ny - 1, ny));
+      }
+    for (int i = 0; i < N; i++)
+      for (int j = 0; j < ny; j++) {
+        ub.segment<V>(uind(i, j + N, ny + 2 * N)) =
+            u.segment<V>(uind(0, j, ny));
+        ub.segment<V>(uind(nx + N + i, j + N, ny + 2 * N)) =
+            u.segment<V>(uind(nx - 1, j, ny));
+      }
+
+    // Make corners averages of cells either side
+    VecV BL = (ub.segment<V>(uind(N - 1, N, ny + 2 * N)) +
+               ub.segment<V>(uind(N, N - 1, ny + 2 * N))) /
+              2;
+    VecV BR = (ub.segment<V>(uind(nx + N - 1, N - 1, ny + 2 * N)) +
+               ub.segment<V>(uind(nx + N, N, ny + 2 * N))) /
+              2;
+    VecV TL = (ub.segment<V>(uind(N - 1, ny + N - 1, ny + 2 * N)) +
+               ub.segment<V>(uind(N, ny + N, ny + 2 * N))) /
+              2;
+    VecV TR = (ub.segment<V>(uind(nx + N - 1, ny + N, ny + 2 * N)) +
+               ub.segment<V>(uind(nx + N, ny + N - 1, ny + 2 * N))) /
+              2;
+    for (int i = 0; i < N; i++)
+      for (int j = 0; j < N; j++) {
+        ub.segment<V>(uind(i, N - 1, ny + 2 * N)) = BL;
+        ub.segment<V>(uind(N - 1, j, ny + 2 * N)) = BL;
+        ub.segment<V>(uind(nx + N + i, N - 1, ny + 2 * N)) = BR;
+        ub.segment<V>(uind(nx + N, j, ny + 2 * N)) = BR;
+        ub.segment<V>(uind(i, ny + N, ny + 2 * N)) = TL;
+        ub.segment<V>(uind(N - 1, ny + N + j, ny + 2 * N)) = TL;
+        ub.segment<V>(uind(nx + N + i, ny + N, ny + 2 * N)) = TR;
+        ub.segment<V>(uind(nx + N, ny + N + j, ny + 2 * N)) = TR;
+      }
+  }
+}
+
 void boundaries(Vecr u, Vecr ub, int ndim, Veci3r nX, bool PERIODIC) {
   // If periodic is true, applies periodic boundary conditions,
   // else applies transmissive boundary conditions
 
   int nx = nX(0);
   int ny = nX(1);
-  if (ndim == 1) {
-    ub.segment(V, nx * V) = u;
-
-    if (PERIODIC) {
-      ub.head<V>() = u.tail<V>();
-      ub.tail<V>() = u.head<V>();
-    } else {
-      ub.head<V>() = u.head<V>();
-      ub.tail<V>() = u.tail<V>();
-    }
-    return;
-  }
-  if (ndim == 2) {
-    for (int i = 0; i < nx; i++)
-      for (int j = 0; j < ny; j++)
-        ub.segment<V>(uind(i + 1, j + 1, ny + 2)) =
-            u.segment<V>(uind(i, j, ny));
-
-    if (PERIODIC) {
-      for (int i = 0; i < nx; i++) {
-        ub.segment<V>(uind(i + 1, 0, ny + 2)) =
-            u.segment<V>(uind(i, ny - 1, ny));
-        ub.segment<V>(uind(i + 1, ny + 1, ny + 2)) =
-            u.segment<V>(uind(i, 0, ny));
-      }
-      for (int j = 0; j < ny; j++) {
-        ub.segment<V>(uind(0, j + 1, ny + 2)) =
-            u.segment<V>(uind(nx - 1, j, ny));
-        ub.segment<V>(uind(nx + 1, j + 1, ny + 2)) =
-            u.segment<V>(uind(0, j, ny));
-      }
-    } else {
-      for (int i = 0; i < nx; i++) {
-        ub.segment<V>(uind(i + 1, 0, ny + 2)) = u.segment<V>(uind(i, 0, ny));
-        ub.segment<V>(uind(i + 1, ny + 1, ny + 2)) =
-            u.segment<V>(uind(i, ny - 1, ny));
-      }
-      for (int j = 0; j < ny; j++) {
-        ub.segment<V>(uind(0, j + 1, ny + 2)) = u.segment<V>(uind(0, j, ny));
-        ub.segment<V>(uind(nx + 1, j + 1, ny + 2)) =
-            u.segment<V>(uind(nx - 1, j, ny));
-      }
-    }
-
-    ub.segment<V>(uind(0, 0, ny + 2)) = (ub.segment<V>(uind(0, 1, ny + 2)) +
-                                         ub.segment<V>(uind(1, 0, ny + 2))) /
-                                        2;
-    ub.segment<V>(uind(0, ny + 1, ny + 2)) =
-        (ub.segment<V>(uind(0, ny, ny + 2)) +
-         ub.segment<V>(uind(1, ny + 1, ny + 2))) /
-        2;
-    ub.segment<V>(uind(nx + 1, 0, ny + 2)) =
-        (ub.segment<V>(uind(nx, 0, ny + 2)) +
-         ub.segment<V>(uind(nx + 1, 1, ny + 2))) /
-        2;
-    ub.segment<V>(uind(nx + 1, ny + 1, ny + 2)) =
-        (ub.segment<V>(uind(nx, ny + 1, ny + 2)) +
-         ub.segment<V>(uind(nx + 1, ny, ny + 2))) /
-        2;
-
-    return;
-  }
-  if (ndim == 3) {
-    // TODO
+  switch (ndim) {
+  case 1:
+    boundaries1(u, ub, nx, PERIODIC);
+    break;
+  case 2:
+    boundaries2(u, ub, nx, ny, PERIODIC);
+    break;
   }
 }
 
-int extended_dimensions(Veci3r nX) {
+int extended_dimensions(Veci3r nX, int ext) {
   int nx = nX(0);
   int ny = nX(1);
   int nz = nX(2);
   if (nz > 1)
-    return (nx + 2) * (ny + 2) * (nz + 2);
+    return (nx + 2 * ext) * (ny + 2 * ext) * (nz + 2 * ext);
   else if (ny > 1)
-    return (nx + 2) * (ny + 2);
+    return (nx + 2 * ext) * (ny + 2 * ext);
   else
-    return nx + 2;
+    return nx + 2 * ext;
 }
-
-/*
-Vec expandx(Vecr arr, int nx, int ny, int nz) {
-  // Expands arr by (N-1) cells either side of the x dimension
-  // Size of ret: (nx+2*(N-1))*ny*nz*V
-  // Size of arr: nx*ny*nz*V
-  Vec ret((nx + 2 * (N - 1)) * ny * nz * V);
-
-  for (int i = 0; i < nx + 2 * (N - 1); i++) {
-    int ii = std::min(nx - 1, std::max(0, i - (N - 1)));
-    int indi = i * ny * nz * V;
-    int indii = ii * ny * nz * V;
-
-    for (int s = 0; s < ny * nz * V; s++)
-      ret(indi + s) = arr(indii + s);
-  }
-  return ret;
-}
-
-Vec expandy(Vecr arr, int nx, int ny, int nz) {
-  // Expands arr by (N-1) cells either side of the y dimension
-  // Size of ret: nx*(ny+2*(N-1))*nz*N*V
-  // Size of arr: nx*ny*nz*N*V
-  Vec ret(nx * (ny + 2 * (N - 1)) * nz * N * V);
-
-  for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny + 2 * (N - 1); j++) {
-      int jj = std::min(ny - 1, std::max(0, j - (N - 1)));
-      int indj = (i * (ny + 2 * (N - 1)) + j) * nz * N * V;
-      int indjj = (i * ny + jj) * nz * N * V;
-
-      for (int s = 0; s < nz * N * V; s++)
-        ret(indj + s) = arr(indjj + s);
-    }
-  return ret;
-}
-
-Vec expandz(Vecr arr, int nx, int ny, int nz) {
-  // Expands arr by (N-1) cells either side of the z dimension
-  // Size of ret: nx*ny*(nz+2*(N-1))*N*N*V
-  // Size of arr: nx*ny*nz*N*N*V
-  Vec ret(nx * ny * (nz + 2 * (N - 1)) * N * N * V);
-
-  for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny; j++)
-      for (int k = 0; k < nz + 2 * (N - 1); k++) {
-        int kk = std::min(nz - 1, std::max(0, k - (N - 1)));
-        int indk = ((i * ny + j) * (nz + 2 * (N - 1)) + k) * N * N * V;
-        int indkk = ((i * ny + j) * nz + kk) * N * N * V;
-
-        for (int s = 0; s < N * N * V; s++)
-          ret(indk + s) = arr(indkk + s);
-      }
-  return ret;
-}
-*/

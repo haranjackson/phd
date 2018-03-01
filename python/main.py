@@ -20,8 +20,8 @@ from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = validation.hagen_poiseuille_duct_IC
-BC = validation.hagen_poiseuille_duct_BC
+IC = solids.barton1_IC
+BC = boundaries.standard_BC
 
 
 u, MPs, tf, dX = IC()
@@ -34,7 +34,7 @@ pool = Parallel(n_jobs=NCORE)
 if CPP_LVL > 0:
 
     nX = array(u.shape[:3], dtype=int32)
-    extDims = GPRpy.solvers.extended_dimensions(nX)
+    extDims = GPRpy.solvers.extended_dimensions(nX, 1)
     wh = zeros(extDims * int(pow(N, NDIM)) * NV)
     qh = zeros(extDims * int(pow(N, NDIM + 1)) * NV)
 

@@ -39,11 +39,10 @@ void iterator(Vecr u, double tf, Veci3r nX, Vec3r dX, double CFL, bool PERIODIC,
   int ny = nX(1);
   int nz = nX(2);
   int ndim = int(nx > 1) + int(ny > 1) + int(nz > 1);
-  int extDims = extended_dimensions(nX);
 
-  Vec ub(extDims * V);
-  Vec wh(extDims * int(pow(N, ndim)) * V);
-  Vec qh(extDims * int(pow(N, ndim + 1)) * V);
+  Vec ub(extended_dimensions(nX, N) * V);
+  Vec wh(extended_dimensions(nX, 1) * int(pow(N, ndim)) * V);
+  Vec qh(extended_dimensions(nX, 1) * int(pow(N, ndim + 1)) * V);
 
   double t = 0.;
   long count = 0;
