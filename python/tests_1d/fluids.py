@@ -163,7 +163,7 @@ def hagen_poiseuille_IC():
     tf = 10
     Lx = 1
     nx = 100
-    dp = 0.48
+    dp = 0.08
 
     γ = 1.4
     ρ = 1
@@ -173,7 +173,7 @@ def hagen_poiseuille_IC():
     J = zeros(3)
     δp = array([0, dp, 0])
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2,
+    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=1, μ=1e-2,
                              δp=δp)
 
     Q = Cvec(ρ, p, v, A, J, MP)
