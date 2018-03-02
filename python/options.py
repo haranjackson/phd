@@ -23,15 +23,15 @@ CFL = 0.6                   # CFL number
 FLUX = 0                    # Flux type (0=Rusanov, 1=Roe, 2=Osher)
 PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 
-NUM_ODE   = 1               # Use numerical ODE solver (SPLIT=1)
+NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)
 STRANG    = 1               # Use Strang splitting (SPLIT=1)
 
 """ DG Options """
 
-STIFF    = 1                # Use Newton-Krylov
-HIDALGO  = 0                # Use Hidalgo initial guess
-STIFF_IG = 0                # Use Newton-Krylov for Hidalgo initial guess
+STIFF    = 1                # Use Newton-Krylov to find DG coefficients
+STIFF_IG = 1                # Use stiff initial guess to DG coefficients
+N_K_IG   = 1                # Use Newton-Krylov for stiff initial guess
 
 DG_TOL = 1e-6               # Tolerance to which the predictor must converge
 DG_IT  = 50                 # Max number of non-stiff iterations attempted

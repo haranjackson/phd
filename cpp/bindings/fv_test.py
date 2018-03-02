@@ -78,10 +78,10 @@ SOURCES = not SPLIT
 
 def FVc_test(qh_py, dX, dt, MP):
 
-    qh0 = extend_dimensions(qh_py)[0]
+    qh0 = extend_dimensions(qh_py)
     nx, ny, nz = qh0.shape[:3]
 
-    FVc_py = dt * centers(qh0, nx - 2, ny - 2, nz - 2, dX, MP, HOMOGENEOUS)
+    FVc_py = dt * centers(qh0, dX, MP, HOMOGENEOUS)
 
     FVc_cp = zeros([(nx - 2) * (ny - 2) * NV])
     if NDIM == 1:
@@ -100,7 +100,7 @@ def FVc_test(qh_py, dX, dt, MP):
 
 def FVi_test(qh_py, dX, dt, MP):
 
-    qh0 = extend_dimensions(qh_py)[0]
+    qh0 = extend_dimensions(qh_py)
     nx, ny, nz = qh0.shape[:3]
     qEnd = endpoints(qh0)
 

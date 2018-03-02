@@ -11,7 +11,7 @@ ROE = 1
 OSHER = 2
 
 
-def Bint(qL, qR, d, MP):
+def B_INT(qL, qR, d, MP):
     """ Returns the jump matrix for B, in the dth direction.
     """
     ret = zeros(NV)

@@ -21,17 +21,22 @@ for a, b in product(range(N), range(N)):
         I2[a, b] = WGHTS[a] * PSID[1][b](NODES[a])
 
 
-# Galerkin matrices
+### Galerkin matrices ###
+
+# Matrix multiplying WENO reconstruction
 DG_W = concatenate([PSI[a](0) * kron_prod([I1] * NDIM) for a in range(N)])
 
-DG_U = kron_prod([I11 - I2.T] + [I1] * NDIM)
-
+# Stiffness matrices
 DG_V = zeros([NDIM, NT, NT])
 for i in range(1, NDIM + 1):
     DG_V[i - 1] = kron_prod([I1] * i + [I2] + [I1] * (NDIM - i))
 
-DG_Z = (diag(kron_prod([I1] * (NDIM + 1))) * ones([NV, NT])).T
+DG_U = kron_prod([I11 - I2.T] + [I1] * NDIM)
 
-DG_T = zeros([NDIM, NT, NT])
+# Mass matrix
+DG_M = (diag(kron_prod([I1] * (NDIM + 1))) * ones([NV, NT])).T
+
+# Differentiation operator matrix
+DG_D = zeros([NDIM, NT, NT])
 for i in range(1, NDIM + 1):
-    DG_T[i - 1] = kron_prod([I] * i + [DERVALS] + [I] * (NDIM - i))
+    DG_D[i - 1] = kron_prod([I] * i + [DERVALS] + [I] * (NDIM - i))

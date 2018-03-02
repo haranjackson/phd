@@ -3,7 +3,7 @@ from itertools import product
 from joblib import delayed
 from numpy import array, concatenate, dot, einsum, tensordot, zeros
 
-from solvers.fv.fluxes import Bint, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
+from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
 from solvers.basis import WGHTS, ENDVALS, DERVALS
 from system import Bdot, source_ref, flux_ref
 from options import NDIM, NV, N, FLUX, SPLIT, PARA_FV, NCORE
@@ -27,20 +27,38 @@ WGHT_END = einsum('t,x,y', TWGHTS, WGHT_LIST[1], WGHT_LIST[2])
 
 
 def endpoints(qh0):
-    """ Returns tensor T where T[d,e,i,j,k] is the set of DG coefficients at end
-        e (either 0 or 1) in the dth direction, in cell (i,j,k)
+    """ Returns tensor T where T[d,e,i,j,k] is the set of DG coefficients in the
+        dth direction, at end e (either 0 or 1), in cell (i,j,k)
     """
     return array([tensordot(ENDVALS, qh0, (0, 4 + d)) for d in range(NDIM)])
 
 
 def interfaces(qEnd, dX, MP):
+    """ Returns the contribution to the finite volume update coming from the
+        fluxes at the interfaces
+    """
     nx, ny, nz = qEnd.shape[2:5]
+
+    # There are nx-1, ny-1, nz-1 interfaces in the x-,y-,z-directions.
+    # fEnd,BEnd store the fluxes due to the conservative/non-conservaitve terms
+    # fEnd[0,i,j,k] is the flux between cells (i,j,k), (i+1,j,k)
+    # fEnd[1,i,j,k] is the flux between cells (i,j,k), (i,j+1,k)
+    # fEnd[2,i,j,k] is the flux between cells (i,j,k), (i,j,k+1)
+    # Similarly for BEnd
     fEnd = zeros([NDIM, nx - 1, ny - 1, nz - 1, NV])
     BEnd = zeros([NDIM, nx - 1, ny - 1, nz - 1, NV])
 
     for d in range(NDIM):
         for i, j, k in product(range(nx - 1), range(ny - 1), range(nz - 1)):
 
+            # skip unnecessary calculations
+            if NDIM < 3 and k == 0:
+                continue
+            if NDIM < 2 and j == 0:
+                continue
+
+            # qL,qR are the sets of polynomial coefficients for the DG
+            # reconstruction at the left and right sides of the interface
             qL = qEnd[d, 1, i, j, k]
             if d == 0:
                 qR = qEnd[d, 0, i + 1, j, k]
@@ -49,8 +67,7 @@ def interfaces(qEnd, dX, MP):
             else:
                 qR = qEnd[d, 0, i, j, k + 1]
 
-            fEndTemp = zeros(NV)
-            BEndTemp = zeros(NV)
+            # Integrate the flux over the interface
             for t, x1, x2 in product(range(TN), range(IDX[1]), range(IDX[2])):
                 qL_ = qL[t, x1, x2]
                 qR_ = qR[t, x1, x2]
@@ -59,39 +76,44 @@ def interfaces(qEnd, dX, MP):
                 flux_ref(ftemp, qL_, d, MP)
                 flux_ref(ftemp, qR_, d, MP)
                 ftemp -= D_FUN(qL_, qR_, d, MP).real
-                fEndTemp += WGHT_END[t, x1, x2] * ftemp
-                BEndTemp += WGHT_END[t, x1, x2] * Bint(qL_, qR_, d, MP)
+                Btemp = B_INT(qL_, qR_, d, MP)
 
-            fEnd[d, i, j, k] = fEndTemp / dX[d]
-            BEnd[d, i, j, k] = BEndTemp / dX[d]
+                fEnd[d, i, j, k] += WGHT_END[t, x1, x2] * ftemp / dX[d]
+                BEnd[d, i, j, k] += WGHT_END[t, x1, x2] * Btemp / dX[d]
 
     ret = zeros([nx - 2, ny - 2, nz - 2, NV])
+
     ret -= fEnd[0, :-1, 1:, 1:]
     ret += fEnd[0, 1:,  1:, 1:]
     ret += BEnd[0, :-1, 1:, 1:]
     ret += BEnd[0, 1:,  1:, 1:]
+
     if NDIM > 1:
         ret -= fEnd[1, 1:, :-1, 1:]
         ret += fEnd[1, 1:,  1:, 1:]
         ret += BEnd[1, 1:, :-1, 1:]
         ret += BEnd[1, 1:,  1:, 1:]
+
     if NDIM > 2:
         ret -= fEnd[2, 1:, 1:, :-1]
         ret += fEnd[2, 1:, 1:,  1:]
         ret += BEnd[2, 1:, 1:, :-1]
         ret += BEnd[2, 1:, 1:,  1:]
+
     return ret
 
 
-def centers(qh0, nx, ny, nz, dX, MP, HOMOGENEOUS):
+def centers(qh0, dX, MP, HOMOGENEOUS):
     """ Returns the space-time averaged source term and non-conservative terms
     """
+    nx, ny, nz = array(qh0.shape[:3]) - 2
     s = zeros([nx, ny, nz, NV])
 
     for i, j, k in product(range(nx), range(ny), range(nz)):
 
         qhi = qh0[i + 1, j + 1, k + 1]
 
+        # Integrate across volume of spacetime cell (i,j,k)
         for t, x, y, z in product(range(TN), range(IDX[0]),
                                   range(IDX[1]), range(IDX[2])):
 
@@ -122,26 +144,25 @@ def extend_dimensions(qh):
     """ If the simulation is 1D or 2D, extends the array in the unused
         dimensions so that the 3D solver can be used
     """
-    nx, ny, nz = qh.shape[:3]
-    if nz == 1:
+    if qh.shape[2] == 1:
         qh0 = qh.repeat([3], axis=2)
-    if ny == 1:
+
+    if qh.shape[1] == 1:
         qh0 = qh0.repeat([3], axis=1)
-    nx, ny, nz = array(qh0.shape[:3]) - 2
 
-    qh0 = qh0.reshape([nx + 2, ny + 2, nz + 2, TN] + IDX + [NV])
+    qh0 = qh0.reshape(list(qh0.shape[:3]) + [TN] + IDX + [NV])
 
-    return qh0, nx, ny, nz
+    return qh0
 
 
 def fv_terms(qh, dt, dX, MP, HOMOGENEOUS=0):
     """ Returns the space-time averaged interface terms, jump terms,
         source terms, and non-conservative terms
     """
-    qh0, nx, ny, nz = extend_dimensions(qh)
+    qh0 = extend_dimensions(qh)
     qEnd = endpoints(qh0)
 
-    s = centers(qh0, nx, ny, nz, dX, MP, HOMOGENEOUS)
+    s = centers(qh0, dX, MP, HOMOGENEOUS)
     s -= 0.5 * interfaces(qEnd, dX, MP)
 
     return dt * s

@@ -5,11 +5,12 @@ from numpy import absolute, array, concatenate, dot, zeros
 from scipy.linalg import solve
 from scipy.optimize import newton_krylov
 
-from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_Z, DG_T
-from solvers.basis import GAPS, DERVALS
-from system import source, flux_ref, source_ref, Bdot, system
+from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
+from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_M, DG_D
+from solvers.basis import GAPS
+from system import flux_ref, source_ref, Bdot
 from options import NDIM, N, NT, NV
-from options import STIFF, STIFF_IG, HIDALGO, DG_TOL, DG_IT, PARA_DG, NCORE
+from options import STIFF, STIFF_IG, DG_TOL, DG_IT, PARA_DG, NCORE
 
 
 MAX_TOL = 1e16  # values above this level will cause an error
@@ -20,65 +21,38 @@ def rhs(q, Ww, dt, dX, MP):
     """
     ret = zeros([NT, NV])
 
-    Tq = dot(DG_T, q)
+    # Dq[d,i]: dq/dx at position i in direction d
+    # Fq[d,i]: F(q) at position i in direction d
+    # Bq[d,i]: B.dq/dx at position i in direction d
+    Dq = dot(DG_D, q)
     Fq = zeros([NDIM, NT, NV])
     Bq = zeros([NDIM, NT, NV])
-    for b in range(NT):
-        qb = q[b]
-        source_ref(ret[b], qb, MP)
+
+    for i in range(NT):
+        qi = q[i]
+        source_ref(ret[i], qi, MP)
         for d in range(NDIM):
-            flux_ref(Fq[d, b], qb, d, MP)
-            Bdot(Bq[d, b], Tq[d, b], qb, d, MP)
+            flux_ref(Fq[d, i], qi, d, MP)
+            Bdot(Bq[d, i], Dq[d, i], qi, d, MP)
 
     for d in range(NDIM):
         ret -= Bq[d] / dX[d]
 
-    ret *= DG_Z
+    ret *= DG_M
     for d in range(NDIM):
         ret -= dot(DG_V[d], Fq[d]) / dX[d]
 
     return dt * ret + Ww
 
 
-def standard_initial_guess(w):
-    """ Returns a Galerkin intial guess consisting of the value of q at t=0
+def failed(w, f, dtGAPS, dX, MP):
+    """ Attempts to find DG coefficients with Newton-Krylov, if standard
+        method has failed
     """
-    ret = array([w for i in range(N)])
-    return ret.reshape([NT, NV])
-
-
-def hidalgo_initial_guess(w, dtGAPS, dX, MP):
-    """ Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
-        NOTE: Only in 1D
-    """
-    q = zeros([N] * (NDIM + 1) + [NV])
-    qt = w
-
-    for t in range(N):
-        dt = dtGAPS[t]
-        dqdxj = dot(DERVALS, qt)
-
-        for i in range(N):
-            qi = qt[i]
-            dqdxi = dqdxj[i]
-
-            M = dot(system(qi, 0, MP), dqdxi)
-            Sj = source(qi, MP)
-
-            if STIFF_IG:
-                def f(X): return (X - qi + dt / dX[0] * M
-                                  - dt / 2 * (Sj + source(X, MP)))
-                q[t, i] = newton_krylov(f, qi, f_tol=DG_TOL)
-            else:
-                q[t, i] = qi - dt / dX[0] * M + dt * Sj
-
-        qt = q[t]
-    return q.reshape([NT, NV])
-
-
-def failed(w, f, dtGAPS, MP):
-    #q = hidalgo_initial_guess(w, dtGAPS, dX, MP)
-    q = standard_initial_guess(w)
+    if STIFF_IG:
+        q = stiff_initial_guess(w, dtGAPS, dX, MP)
+    else:
+        q = standard_initial_guess(w)
     return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
 
 
@@ -103,8 +77,8 @@ def predictor(wh, dt, dX, MP):
 
         def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, MP)
 
-        if HIDALGO:
-            q = hidalgo_initial_guess(w, dtGAPS, dX, MP)
+        if STIFF_IG:
+            q = stiff_initial_guess(w, dtGAPS, dX, MP)
         else:
             q = standard_initial_guess(w)
 
@@ -117,16 +91,18 @@ def predictor(wh, dt, dX, MP):
                 qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP), check_finite=False)
 
                 if (absolute(qNew) > MAX_TOL).any():
-                    qh[i, j, k] = failed(w, obj, dtGAPS, MP)
+                    qh[i, j, k] = failed(w, obj, dtGAPS, dX, MP)
                     break
+
                 elif unconverged(q, qNew):
                     q = qNew
                     continue
+
                 else:
                     qh[i, j, k] = qNew
                     break
             else:
-                qh[i, j, k] = failed(w, obj, dtGAPS, MP)
+                qh[i, j, k] = failed(w, obj, dtGAPS, dX, MP)
 
     return qh
 
