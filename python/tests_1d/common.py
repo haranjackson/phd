@@ -5,7 +5,7 @@ from options import NV, RGFM
 
 
 def cell_sizes(Lx, nx, Ly=1, ny=1, Lz=1, nz=1):
-    return array([Lx/nx, Ly/ny, Lz/nz])
+    return array([Lx / nx, Ly / ny, Lz / nz])
 
 
 def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
@@ -21,7 +21,7 @@ def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
             else:
                 u[i] = QR
 
-            u[i, 0, 0, -1] = i * dX[0] - x0
+            u[i, 0, 0, -1] = (i + 0.5) * dX[0] - x0
 
         return u, [MPL, MPR], tf, dX
 
@@ -63,8 +63,7 @@ MP_COP_GR = material_parameters(EOS='gr', ρ0=8.9, cv=4e-4, p0=0,
                                 c0=sqrt(4.6**2 - 4 / 3 * 2.1**2),
                                 α=1, β=3, γ=2,
                                 b0=2.1, τ1=inf,
-                                Tref=300, κ=4e-8,
-                                cα=8.9 * sqrt(4.6**2 - 4 / 3 * 2.1**2) * sqrt(4e-4 / 300))
+                                Tref=300)  # , κ=4e-8, cα=8.9 * sqrt(4.6**2 - 4 / 3 * 2.1**2) * sqrt(4e-4 / 300))
 
 MP_COP_SMG = material_parameters(EOS='smg', ρ0=8.9, cv=4e-4, p0=0,
                                  c0=3.909, Γ0=1.99, s=1.5, e0=0,

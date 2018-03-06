@@ -30,13 +30,17 @@ def eigen(P, d, CONS, RIGHT=1, LEFT=1):
     Ξ2 = Xi2(P, d)
     O = dot(Ξ1, Ξ2)
     w, vl, vr = eig(O, left=1)
+
     sw = sqrt(w.real)
+    if not MP.THERMAL:
+        sw[-1] = 1
     D = diag(sw)
+    D_1 = diag(1/sw)
+
     Q = vl.T
     Q_1 = vr
     I = dot(Q, Q_1)
     Q = solve(I, Q)
-    DQ = dot(D, Q)
 
     if RIGHT:
 
@@ -44,11 +48,12 @@ def eigen(P, d, CONS, RIGHT=1, LEFT=1):
         Tρ = P.dTdρ()
         Tp = P.dTdp()
 
-        tmp = solve(DQ.T, Ξ2.T).T
-        R[:5, :4] = tmp
-        R[:5, 4:8] = tmp
-        R[11:15, :4] = Q_1
-        R[11:15, 4:8] = -Q_1
+        tmp1 = 0.5 * dot(Ξ2, dot(Q_1, D_1**2))
+        tmp2 = 0.5 * dot(Q_1, D_1)
+        R[:5, :4] = tmp1
+        R[:5, 4:8] = tmp1
+        R[11:15, :4] = tmp2
+        R[11:15, 4:8] = -tmp2
 
         b = Tp * σρ[d] + array([Tρ, 0, 0])
         c = 1 / (solve(dot(Π1, A), b)[d] + Tp / ρ)
@@ -58,23 +63,25 @@ def eigen(P, d, CONS, RIGHT=1, LEFT=1):
 
         R[2:5, 9:12] = -solve(Π1, Π2)
         R[2:5, 12:15] = -solve(Π1, Π3)
-        R[5:11, 9:15] = eye(6)
+        for i in range(6):
+            R[5 + i, 9 + i] = 1
         R[15, 15] = 1
         R[16, 16] = 1
 
     if LEFT:
 
-        tmp = solve(D, dot(Q, Ξ1))
-        tmp2 = -solve(D, dot(Q[:, :3], Π2)) / ρ
-        tmp3 = -solve(D, dot(Q[:, :3], Π3)) / ρ
-        L[:4, :5] = tmp
-        L[4:8, :5] = tmp
+        tmp1 = dot(Q, Ξ1)
+        tmp2 = -dot(Q[:, :3], Π2) / ρ
+        tmp3 = -dot(Q[:, :3], Π3) / ρ
+        tmp4 = dot(D, Q)
+        L[:4, :5] = tmp1
+        L[4:8, :5] = tmp1
         L[:4, 5:8] = tmp2
         L[4:8, 5:8] = tmp2
         L[:4, 8:11] = tmp3
         L[4:8, 8:11] = tmp3
-        L[:4, 11:15] = Q
-        L[4:8, 11:15] = -Q
+        L[:4, 11:15] = tmp4
+        L[4:8, 11:15] = -tmp4
 
         tmp = solve(A.T, array([1, 0, 0]))
         L[8, 0] = -1 / ρ
@@ -82,10 +89,14 @@ def eigen(P, d, CONS, RIGHT=1, LEFT=1):
         L[8, 5:8] = dot(tmp, solve(Π1, Π2))
         L[8, 8:11] = dot(tmp, solve(Π1, Π3))
 
-        L[9:15, 5:11] = eye(6)
-        L[15:17, 15:17] = eye(2)
+        for i in range(6):
+            L[9 + i, 5 + i] = 1
+        L[15, 15] = 1
+        L[16, 16] = 1
 
     if CONS:
+        # DOESNT WORK IF NOT THERMAL
+
         E = P.E
         J = P.J
 
@@ -136,7 +147,7 @@ def test(Q, d, CONS):
 
     from gpr.misc.structures import Cvec_to_Pclass
     P = Cvec_to_Pclass(Q, MP)
-    l, L, R = eigen(P, d, CONS=CONS, LEFT=1)
+    l, L, R = eigen(P, d, CONS=CONS)
 
     if CONS:
         from gpr.systems.conserved import system_cons

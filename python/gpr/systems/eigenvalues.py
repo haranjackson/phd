@@ -66,6 +66,9 @@ def max_abs_eigs(Q, d, MP):
     Ξ2 = Xi2(P, d)
     O = dot(Ξ1, Ξ2)
 
+    if not MP.THERMAL:
+        O = O[:3, :3]
+
     if PERR_FROB:
         rowSum = [sum(o) for o in O]
         colSum = [sum(oT) for oT in O.T]

@@ -1,4 +1,4 @@
-from numpy import amax, concatenate, diag, dot, eye, sqrt, zeros
+from numpy import amax, array, concatenate, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve
 from scipy.optimize import newton_krylov
 
@@ -22,7 +22,7 @@ def check_star_convergence(QL_, QR_, MPL, MPR):
     return cond1 and cond2
 
 
-def riemann_constraints1(P, d, sgn, MP):
+def riemann_constraints1(P, sgn, MP):
     """ K=R: sgn = -1
         K=L: sgn = 1
         NOTE: Uses atypical ordering
@@ -33,7 +33,7 @@ def riemann_constraints1(P, d, sgn, MP):
         v*L = v*R
         J*L = J*R
     """
-    _, Lhat, Rhat = eigen(P, d, 0)
+    _, Lhat, Rhat = eigen(P, 0, 0)
     Lhat = reorder(Lhat.T, order='atypical').T
     Rhat = reorder(Rhat, order='atypical')
 
@@ -42,25 +42,25 @@ def riemann_constraints1(P, d, sgn, MP):
     Tρ = P.dTdρ()
     Tp = P.dTdp()
 
-    Π1 = σA[d, :, :, 0]
-    Π2 = σA[d, :, :, 1]
-    Π3 = σA[d, :, :, 2]
+    Lhat[:3, 0] = -σρ[0]
+    Lhat[:3, 1] = array([1, 0, 0])
+    for i in range(3):
+        Lhat[:3, 2+3*i:5+3*i] = -σA[0, :, :, i]
+    Lhat[:3, 11:] = 0
 
-    Lhat[:4] = 0
-    Lhat[:3, 0] = -σρ[d]
-    Lhat[d, 1] = 1
-    Lhat[:3, 2:5] = -Π1
-    Lhat[:3, 5:8] = -Π2
-    Lhat[:3, 8:11] = -Π3
-    Lhat[3, 0] = Tρ
-    Lhat[3, 1] = Tp
+    if MP.THERMAL:
+        Lhat[3, 0] = Tρ
+        Lhat[3, 1] = Tp
+        Lhat[3, 2:] = 0
+
     Lhat[4:8, 11:15] *= -sgn
 
-    Ξ1 = Xi1(P, d)
-    Ξ2 = Xi2(P, d)
+    Ξ1 = Xi1(P, 0)
+    Ξ2 = Xi2(P, 0)
     O = dot(Ξ1, Ξ2)
     w, vl, vr = eig(O, left=1)
-    D = diag(sqrt(w.real))
+
+    D_1 = diag(1/sqrt(w.real))
     Q = vl.T
     Q_1 = vr
     I = dot(Q, Q_1)
@@ -74,7 +74,7 @@ def riemann_constraints1(P, d, sgn, MP):
     X = solve(tmp, b)
     Rhat[:5, :4] = X
 
-    Y0 = dot(Q_1, solve(D, Q))
+    Y0 = dot(Q_1, dot(D_1, Q))
     Y = -sgn * dot(Y0, dot(Ξ1, X))
     Rhat[11:15, :4] = Y
     Rhat[:, 4:8] = 0
@@ -89,8 +89,8 @@ def star_stepper(QL, QR, dt, MPL, MPR, SL=zeros(NV), SR=zeros(NV)):
 
     PL = Cvec_to_Pclass(QL, MPL)
     PR = Cvec_to_Pclass(QR, MPR)
-    LL, RL = riemann_constraints1(PL, 0, 1, MPL)
-    LR, RR = riemann_constraints1(PR, 0, -1, MPR)
+    LL, RL = riemann_constraints1(PL, 1, MPL)
+    LR, RR = riemann_constraints1(PR, -1, MPR)
     YL = RL[11:15, :4]
     YR = RR[11:15, :4]
 

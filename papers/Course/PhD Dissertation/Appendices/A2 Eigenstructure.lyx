@@ -1006,8 +1006,8 @@ end{subequations}
 \begin{equation}
 L=\left\{ \begin{array}{c}
 \left(\begin{array}{ccccc}
-Q\Xi_{1} & -\frac{1}{\rho}Q_{1:3}\Pi_{2} & -\frac{1}{\rho}Q_{1:3}\Pi_{3} & DQ & 0_{4,2}\\
-Q\Xi_{1} & -\frac{1}{\rho}Q_{1:3}\Pi_{2} & -\frac{1}{\rho}Q_{1:3}\Pi_{3} & -DQ & 0_{4,2}
+Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & DQ & 0_{4,2}\\
+Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & -DQ & 0_{4,2}
 \end{array}\right)\\
 \left(\begin{array}{cccccc}
 -\frac{1}{\rho} & 0 & \boldsymbol{e_{d}^{T}}A^{-1} & \boldsymbol{e_{d}^{T}}A^{-1}\Pi_{1}^{-1}\Pi_{2} & \boldsymbol{e_{d}^{T}}A^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{1,6}\end{array}\right)\\
