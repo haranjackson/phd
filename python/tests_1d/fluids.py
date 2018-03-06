@@ -4,7 +4,7 @@ from scipy.special import erf
 
 from etc.boundaries import standard_BC
 from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec
+from gpr.misc.structures import Cvec, Cvec_to_Pclass
 from gpr.variables.wavespeeds import c_0
 from tests_1d.common import riemann_IC, MP_AIR, cell_sizes
 from options import NV, N
@@ -161,9 +161,9 @@ def viscous_shock_IC(center=0):
 def hagen_poiseuille_IC():
 
     tf = 10
-    Lx = 1
-    nx = 100
-    dp = 0.08
+    Lx = 0.5
+    nx = 50
+    dp = 0.48
 
     γ = 1.4
     ρ = 1
@@ -184,4 +184,20 @@ def hagen_poiseuille_IC():
 
 
 def hagen_poiseuille_BC(u):
-    return standard_BC(u, 1)
+    dp = 0.48
+
+    γ = 1.4
+    ρ = 1
+    p = 100 / γ
+    δp = array([0, dp, 0])
+    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=1, μ=1e-2,
+                             δp=δp)
+
+    nx = u.shape[0]
+    ret = zeros(u.shape)
+    for i in range(nx):
+        Q = u[i,0,0]
+        P = Cvec_to_Pclass(Q, MP)
+        ret[i,0,0] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
+
+    return standard_BC(ret, 1)
