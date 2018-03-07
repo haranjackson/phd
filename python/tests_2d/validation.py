@@ -1,6 +1,6 @@
 from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
-from etc.boundaries import extend, destress
+from etc.boundaries import standard_BC, destress
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec, Cvec_to_Pclass
 from tests_1d.common import cell_sizes
@@ -185,11 +185,7 @@ def hagen_poiseuille_BC(u):
                 P = Cvec_to_Pclass(Q, MP)
                 ret[i, j, 0] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
 
-    ret = extend(ret, N, 1, 1)
-    ret[:, :N, 0, 2:5] *= -1
-    ret[:, -N:, 0, 2:5] *= -1
-
-    ret = extend(ret, N, 0, 0)
+    ret = standard_BC(u, [0, 1])
 
     if FIX_OUTLET_P:
         ny = ret.shape[1]
@@ -240,8 +236,8 @@ def lid_driven_cavity_IC():
 
 
 def lid_driven_cavity_BC(u):
-    """ NEED TO UPDATE """
-    ret = extend(u, 1, 1)
+
+    ret = standard_BC(u, [1, 1])
     nx, ny = ret.shape[:2]
 
     for i in range(nx):
@@ -250,7 +246,6 @@ def lid_driven_cavity_BC(u):
         ret[i, 0, 0, 3] *= -1
         ret[i, -1, 0, 2:5] *= -1
 
-    ret = extend(ret, 1, 0)
     for j in range(ny):
         ret[0, j, 0, 2:5] *= -1
         ret[-1, j, 0, 2:5] *= -1

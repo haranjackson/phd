@@ -200,4 +200,4 @@ def hagen_poiseuille_BC(u):
         P = Cvec_to_Pclass(Q, MP)
         ret[i,0,0] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
 
-    return standard_BC(ret, 1)
+    return standard_BC(ret, [1])

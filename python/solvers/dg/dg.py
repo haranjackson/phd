@@ -1,7 +1,5 @@
-from itertools import product
-
 from joblib import delayed
-from numpy import absolute, array, concatenate, dot, zeros
+from numpy import absolute, array, concatenate, dot, prod, zeros
 from scipy.linalg import solve
 from scipy.optimize import newton_krylov
 
@@ -65,14 +63,15 @@ def unconverged(q, qNew):
 def predictor(wh, dt, dX, MP):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
-    nx, ny, nz, = wh.shape[:3]
-    wh = wh.reshape([nx, ny, nz, N**NDIM, NV])
-    qh = zeros([nx, ny, nz, NT, NV])
+    shape = wh.shape
+    n = prod(shape[:NDIM])
+    wh = wh.reshape(n, N**NDIM, NV)
+    qh = zeros([n, NT, NV])
     dtGAPS = dt * GAPS
 
-    for i, j, k in product(range(nx), range(ny), range(nz)):
+    for i in range(n):
 
-        w = wh[i, j, k]
+        w = wh[i]
         Ww = dot(DG_W, w)
 
         def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, MP)
@@ -83,7 +82,7 @@ def predictor(wh, dt, dX, MP):
             q = standard_initial_guess(w)
 
         if STIFF:
-            qh[i, j, k] = newton_krylov(obj, q, f_tol=DG_TOL, method='bicgstab')
+            qh[i] = newton_krylov(obj, q, f_tol=DG_TOL, method='bicgstab')
 
         else:
             for count in range(DG_IT):
@@ -91,7 +90,7 @@ def predictor(wh, dt, dX, MP):
                 qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP), check_finite=False)
 
                 if (absolute(qNew) > MAX_TOL).any():
-                    qh[i, j, k] = failed(w, obj, dtGAPS, dX, MP)
+                    qh[i] = failed(w, obj, dtGAPS, dX, MP)
                     break
 
                 elif unconverged(q, qNew):
@@ -99,12 +98,12 @@ def predictor(wh, dt, dX, MP):
                     continue
 
                 else:
-                    qh[i, j, k] = qNew
+                    qh[i] = qNew
                     break
             else:
-                qh[i, j, k] = failed(w, obj, dtGAPS, dX, MP)
+                qh[i] = failed(w, obj, dtGAPS, dX, MP)
 
-    return qh
+    return qh.reshape(shape[:NDIM] + (NT, NV))
 
 
 def dg_launcher(pool, wh, dt, dX, MP):

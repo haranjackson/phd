@@ -2,7 +2,7 @@
 """
 from itertools import product
 
-from numpy import multiply, zeros
+from numpy import multiply, prod, zeros
 from scipy.linalg import solve
 
 from solvers.weno.matrices import fHalfN, cHalfN, WN_M, WN_Σ
@@ -18,14 +18,15 @@ def calculate_coeffs(uList):
     n = len(uList)
     wList = [solve(WN_M[i], uList[i], overwrite_b=1, check_finite=0)
              for i in range(n)]
-
     σList = [((w.T).dot(WN_Σ).dot(w)).diagonal() for w in wList]
     oList = [LAMS[i] / (abs(σList[i]) + eps)**rc for i in range(n)]
+
     oSum = zeros(NV)
     numerator = zeros([N, NV])
     for i in range(n):
         oSum += oList[i]
         numerator += multiply(wList[i], oList[i])
+
     return numerator / oSum
 
 
@@ -39,43 +40,47 @@ def coeffs(ret, uL, uR, uCL, uCR):
         ret[:] = calculate_coeffs([uL, uR, uCL, uCR])
 
 
-def extract_stencils(arrayRow, ind):
-    uL = arrayRow[ind - N + 1: ind + 1]
-    uR = arrayRow[ind: ind + N]
-    uCL = arrayRow[ind - cHalfN: ind + fHalfN + 1]
-    uCR = arrayRow[ind - fHalfN: ind + cHalfN + 1]
+def stencils(strip, ind):
+    """ Returns the set of stencils along strip at position ind
+    """
+    uL = strip[ind - N + 1: ind + 1]
+    uR = strip[ind: ind + N]
+    uCL = strip[ind - cHalfN: ind + fHalfN + 1]
+    uCR = strip[ind - fHalfN: ind + cHalfN + 1]
     return uL, uR, uCL, uCR
 
 
 def weno_launcher(uBC):
-    """ Find reconstruction coefficients of u to order N+1
+    """ Find reconstruction coefficients of uBC to order N
     """
-    nx, ny, nz = uBC.shape[:3]
-    nx_ = nx - 2 * (N - 1)
+    if N == 1:  # No reconstruction necessary
+        return uBC.reshape(list(uBC.shape)[:NDIM] + [1] * NDIM + [NV])
 
-    if N == 1:
-        return uBC.reshape([nx,ny,nz]+[N]*NDIM+[NV])
+    rec = uBC
+    # The reconstruction is built up along each dimension. At each step, rec
+    # holds the reconstruction so far, and tmp holds the new reconstruction
+    # along dimension d.
+    for d in range(NDIM):
 
-    Wx = zeros([nx_, ny, nz, N, NV])
-    for i, j, k in product(range(nx_), range(ny), range(nz)):
-        uL, uR, uCL, uCR = extract_stencils(uBC[:, j, k], i + N - 1)
-        coeffs(Wx[i, j, k], uL, uR, uCL, uCR)
-    if ny == 1:
-        return Wx
+        # We are reconstructing along dimension d and so we lose N-1 cells in
+        # this dimension at each end. We group the remaining dimensions.
+        shape = rec.shape
+        shape0 = shape[:d]
+        shape1 = shape[d + 1 : NDIM]
 
-    ny_ = ny - 2 * (N - 1)
-    Wxy = zeros([nx_, ny_, nz, N, N, NV])
-    for i, j, k, a in product(range(nx_), range(ny_), range(nz), range(N)):
-        uL, uR, uCL, uCR = extract_stencils(Wx[i, :, k, a], j + N - 1)
-        coeffs(Wxy[i, j, k, a], uL, uR, uCL, uCR)
+        n1 = int(prod(shape0))
+        n2 = shape[d] - 2 * (N - 1)
+        n3 = int(prod(shape1))
+        n4 = N**d
 
-    if nz == 1:
-        return Wxy
+        tmp = zeros([n1, n2, n3, n4, N, NV])
+        rec_ = rec.reshape(n1, shape[d], n3, n4, NV)
 
-    nz_ = nz - 2 * (N - 1)
-    Wxyz = zeros([nx_, ny_, nz_, N, N, N, NV])
-    for i, j, k, a, b in product(range(nx_), range(ny_), range(nz_), range(N), range(N)):
-        uL, uR, uCL, uCR = extract_stencils(Wxy[i, j, :, a, b], k + N - 1)
-        coeffs(Wxyz[i, j, k, a, b], uL, uR, uCL, uCR)
+        for i, j, k, a in product(range(n1), range(n2), range(n3), range(n4)):
+            strip = rec_[i, :, k, a]
+            uL, uR, uCL, uCR = stencils(strip, j + N - 1)
+            coeffs(tmp[i, j, k, a], uL, uR, uCL, uCR)
 
-    return Wxyz
+        rec = tmp.reshape(shape0 + (n2,) + shape1 + (N,)*(d + 1) + (NV,))
+
+    return rec
