@@ -139,7 +139,7 @@ def piston_IC():
 
 def piston_BC(u):
     ret = standard_BC(u)
-    ret[:N, 0, 0, 2:5] = ret[N, 0, 0, 0] * array([0.002, 0, 0])
+    ret[:N, 2:5] = ret[N, 0] * array([0.002, 0, 0])
     return ret
 
 

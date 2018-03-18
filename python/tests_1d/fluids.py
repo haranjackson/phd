@@ -147,7 +147,7 @@ def viscous_shock_IC(center=0):
 
     v -= v[0]           # Velocity in shock 0
 
-    u = zeros([nx, 1, 1, NV])
+    u = zeros([nx, NV])
     for i in range(nx):
         A = (ρ[i])**(1 / 3) * eye(3)
         J = zeros(3)
@@ -196,8 +196,8 @@ def hagen_poiseuille_BC(u):
     nx = u.shape[0]
     ret = zeros(u.shape)
     for i in range(nx):
-        Q = u[i,0,0]
+        Q = u[i]
         P = Cvec_to_Pclass(Q, MP)
-        ret[i,0,0] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
+        ret[i] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
 
     return standard_BC(ret, [1])

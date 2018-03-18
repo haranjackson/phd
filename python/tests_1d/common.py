@@ -10,7 +10,7 @@ def cell_sizes(Lx, nx, Ly=1, ny=1, Lz=1, nz=1):
 
 def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
 
-    u = zeros([nx, 1, 1, NV])
+    u = zeros([nx, NV])
 
     if RGFM:
 
@@ -21,7 +21,7 @@ def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
             else:
                 u[i] = QR
 
-            u[i, 0, 0, -1] = (i + 0.5) * dX[0] - x0
+            u[i, -1] = (i + 0.5) * dX[0] - x0
 
         return u, [MPL, MPR], tf, dX
 

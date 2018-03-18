@@ -1,14 +1,11 @@
 from itertools import product
 
-from numpy import array, dot, zeros
+from numpy import arange, array, dot, zeros
 from scipy.optimize import newton_krylov
 
 from solvers.basis import DERVALS
 from system import source, system
 from options import N, NT, NV, NDIM, N_K_IG, DG_TOL
-
-
-IDX = [N] * NDIM + [1] * (3 - NDIM)
 
 
 def standard_initial_guess(w):
@@ -18,37 +15,52 @@ def standard_initial_guess(w):
     return ret.reshape([NT, NV])
 
 
+def index(coords):
+
+    if len(coords) == 0:
+        return 0
+    elif len(coords) == 1:
+        return coords[0]
+    else:
+        return N * index(coords[:-1]) + coords[-1]
+
+
 def stiff_initial_guess(w, dtGAPS, dX, MP):
     """ Returns an initial guess based on the underlying equations
     """
-    q = zeros([N] + IDX + [NV])
-    qt = w.reshape(IDX + [NV])
+    q = zeros([N] * (NDIM + 1) + [NV])
+    qt = w.reshape([N] * NDIM + [NV])
+    coordList = [arange(N)] * NDIM
 
     for t in range(N):
 
         dt = dtGAPS[t]
 
-        for x, y, z in product(range(IDX[0]), range(IDX[1]), range(IDX[2])):
+        # loop over the coordinates of each spatial node
+        for coords in product(*coordList):
 
-            q_ = qt[x, y, z]
-            qx = qt[:, y, z]
-            qy = qt[x, :, z]
-            qz = qt[x, y, :]
-            qi = [qx, qy, qz]
+            q_ = qt[coords]     # the value of q at the current spatial node
+
+            # qi[d] holds the coefficients at the nodes lying in a strip in the
+            # dth direction, at the current spatial node
+            qi = []
+            for d in range(NDIM):
+                i = index(coords[:d])
+                j = index(coords[d + 1:])
+                qi.append(qt.reshape([N**d, N, N**(NDIM - d - 1), NV])[i, :, j])
 
             Mdqdx = zeros(NV)
-            inds = [x, y, z]
             for d in range(NDIM):
-                dqdxi = dot(DERVALS[inds[d]], qi[d])
+                dqdxi = dot(DERVALS[coords[d]], qi[d])
                 Mdqdx += dot(system(q_, d, MP), dqdxi) / dX[d]
 
             S = source(q_, MP)
 
             if N_K_IG:
                 def f(X): return X - q_ + dt * (Mdqdx - (S + source(X, MP)) / 2)
-                q[t, x, y, z] = newton_krylov(f, q_, f_tol=DG_TOL)
+                q[(t,) + coords] = newton_krylov(f, q_, f_tol=DG_TOL)
             else:
-                q[t, x, y, z] = q_ - dt * (Mdqdx - S)
+                q[(t,) + coords] = q_ - dt * (Mdqdx - S)
 
         qt = q[t]
 
