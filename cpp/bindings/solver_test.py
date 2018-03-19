@@ -7,7 +7,7 @@ from scipy.sparse.linalg import lgmres
 
 from solvers.basis import GAPS
 from solvers.dg.dg import DG_W, DG_U, predictor, rhs
-from solvers.dg.dg import standard_initial_guess, hidalgo_initial_guess
+from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
 from solvers.split.split import weno_midstepper
 from solvers.split.analytical import ode_stepper_analytical
 from solvers.weno.weno import weno_launcher
@@ -15,7 +15,7 @@ from solvers.weno.weno import weno_launcher
 from test_functions import check, generate_vector
 
 from options import NDIM, NV, N, NT
-from options import STIFF, HIDALGO, DG_TOL
+from options import STIFF, STIFF_IG, DG_TOL
 
 
 ### NEWTON-KRYLOV ###
@@ -34,12 +34,16 @@ def newton_krylov_test(u, dt, dX, MP):
 
     nx, ny = u.shape[:2]
     wh = weno_launcher(u)
-    w = wh[int(nx / 2), int(ny / 2), 0].reshape([N**NDIM, NV])
+
+    if NDIM == 1:
+        w = wh[int(nx / 2)].reshape([N**NDIM, NV])
+    elif NDIM == 2:
+        w = wh[int(nx / 2), int(ny / 2)].reshape([N**NDIM, NV])
     Ww = dot(DG_W, w)
 
-    if HIDALGO:
+    if STIFF_IG:
         dtGAPS = dt * GAPS
-        q = hidalgo_initial_guess(w, dtGAPS, MP)
+        q = stiff_initial_guess(w, dtGAPS, dX, MP)
     else:
         q = standard_initial_guess(w)
 
@@ -86,12 +90,17 @@ def weno_test():
 
 
 def rhs_test(u, dX, dt, MP):
-    wh_py = weno_launcher(u)
-    Q = wh_py[0, 0, 0]
+
+    wh = weno_launcher(u)
+    if NDIM == 1:
+        Q = wh[0]
+    elif NDIM == 2:
+        Q = wh[0, 0]
+
     Q_py = array([Q] * N).reshape([N**(NDIM + 1), NV])
     Q_cp = Q_py[:, :NV]
 
-    w = wh_py[0, 0, 0].reshape([N**NDIM, NV])
+    w = Q.reshape([N**NDIM, NV])
     Ww_py = dot(DG_W, w)
     Ww_cp = Ww_py[:, :NV]
 
@@ -107,9 +116,15 @@ def rhs_test(u, dX, dt, MP):
 
 
 def obj_test(u, dX, dt, MP):
-    nx = u.shape[0]
-    wh_py = weno_launcher(u)
-    Q = wh_py[int(nx / 2), 0, 0]
+
+    nx, ny = u.shape[:2]
+    wh = weno_launcher(u)
+
+    if NDIM == 1:
+        Q = wh[int(nx / 2)]
+    elif NDIM == 2:
+        Q = wh[int(nx / 2), int(ny / 2)]
+
     Q_py = array([Q] * N).reshape([N**(NDIM + 1), NV])
     Q_cp = Q_py[:, :NV]
 
@@ -122,8 +137,7 @@ def obj_test(u, dX, dt, MP):
     if NDIM == 1:
         obj_cp = GPRpy.solvers.dg.obj1(Q_cp.ravel(), Ww_cp, dt, dX[0], MP)
     else:
-        obj_cp = GPRpy.solvers.dg.obj2(
-            Q_cp.ravel(), Ww_cp, dt, dX[0], dX[1], MP)
+        obj_cp = GPRpy.solvers.dg.obj2(Q_cp.ravel(), Ww_cp, dt, dX[0], dX[1], MP)
 
     obj_cp = obj_cp.reshape([N**(NDIM + 1), NV])
     obj_py = rhs_py - dot(DG_U, Q_py)
@@ -139,7 +153,7 @@ def dg_test(u, dX, dt, MP):
     qh_py = predictor(wh_py, dt, dX, MP)
 
     qh_cp = zeros(len(wh_cp) * N)
-    GPRpy.solvers.dg.predictor(qh_cp, wh_cp, NDIM, dt, dX, STIFF, HIDALGO, MP)
+    GPRpy.solvers.dg.predictor(qh_cp, wh_cp, NDIM, dt, dX, STIFF, STIFF_IG, MP)
     qh_cp = qh_cp.reshape(qh_py.shape)
 
     print("DG    ", check(qh_cp, qh_py))

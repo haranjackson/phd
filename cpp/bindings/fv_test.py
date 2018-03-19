@@ -5,8 +5,8 @@ from numpy import array, dot, int32, zeros
 from gpr.misc.structures import Cvec_to_Pclass
 from gpr.systems.eigenvalues import Xi1, Xi2
 
-from solvers.fv.fluxes import Bint, D_OSH, D_ROE, D_RUS
-from solvers.fv.fv import interfaces, endpoints, extend_dimensions, fv_terms, centers
+from solvers.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
+from solvers.fv.fv import interfaces, endpoints, fv_terms, centers
 
 from test_functions import check, generate_vector
 
@@ -33,7 +33,7 @@ def Bint_test(d, MP):
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
     Bint_cp = GPRpy.solvers.fv.Bint(Q1, Q2, d, MP)
-    Bint_py = Bint(Q1, Q2, d, MP)
+    Bint_py = B_INT(Q1, Q2, d, MP)
 
     print("Bint  ", check(Bint_cp, Bint_py))
     return Bint_cp, Bint_py
@@ -78,21 +78,27 @@ SOURCES = not SPLIT
 
 def FVc_test(qh_py, dX, dt, MP):
 
-    qh0 = extend_dimensions(qh_py)
-    nx, ny, nz = qh0.shape[:3]
+    nx, ny = qh_py.shape[:2]
 
-    FVc_py = dt * centers(qh0, dX, MP, HOMOGENEOUS)
+    FVc_py = dt * centers(qh_py, dX, MP, HOMOGENEOUS)
 
-    FVc_cp = zeros([(nx - 2) * (ny - 2) * NV])
     if NDIM == 1:
-        GPRpy.solvers.fv.centers1(FVc_cp, qh_py.ravel(), nx - 2, dt, dX[0],
+        qh_cp = qh_py[1:-1].ravel()
+        FVc_cp = zeros([(nx - 2) * NV])
+        GPRpy.solvers.fv.centers1(FVc_cp, qh_cp, nx - 2, dt, dX[0],
                                   SOURCES, TIME, MP)
-    else:
-        GPRpy.solvers.fv.centers2(FVc_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
-                                  dX[0], dX[1], SOURCES, TIME, MP)
 
-    FVc_cp = FVc_cp.reshape([nx - 2, ny - 2, NV])
-    FVc_py = FVc_py.reshape([nx - 2, ny - 2, NV])
+        FVc_cp = FVc_cp.reshape([nx - 2, NV])
+        FVc_py = FVc_py.reshape([nx - 2, NV])
+
+    else:
+        qh_cp = qh_py[1:-1, 1:-1].ravel()
+        FVc_cp = zeros([(nx - 2) * (ny - 2) * NV])
+        GPRpy.solvers.fv.centers2(FVc_cp, qh_cp, nx - 2, ny - 2, dt, dX[0], dX[1],
+                                  SOURCES, TIME, MP)
+
+        FVc_cp = FVc_cp.reshape([nx - 2, ny - 2, NV])
+        FVc_py = FVc_py.reshape([nx - 2, ny - 2, NV])
 
     print("FVc   ", check(FVc_cp, FVc_py))
     return FVc_cp, FVc_py
@@ -100,22 +106,28 @@ def FVc_test(qh_py, dX, dt, MP):
 
 def FVi_test(qh_py, dX, dt, MP):
 
-    qh0 = extend_dimensions(qh_py)
-    nx, ny, nz = qh0.shape[:3]
-    qEnd = endpoints(qh0)
+    nx, ny = qh_py.shape[:2]
+    qEnd = endpoints(qh_py)
 
     FVi_py = -0.5 * dt / dX[0] * interfaces(qEnd, dX, MP)
-    FVi_cp = zeros([(nx - 2) * (ny - 2) * NV])
 
     if NDIM == 1:
+        FVi_cp = zeros([(nx - 2) * NV])
+
         GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dX[0],
                                   TIME, FLUX, PERR_FROB, MP)
-    else:
-        GPRpy.solvers.fv.interfs2(FVi_cp, qh_py.ravel(), nx - 2, ny - 2, dt, dX[0], dX[1],
-                                  TIME, FLUX, PERR_FROB, MP)
 
-    FVi_cp = FVi_cp.reshape([nx - 2, ny - 2, NV])
-    FVi_py = FVi_py.reshape([nx - 2, ny - 2, NV])
+        FVi_cp = FVi_cp.reshape([(nx - 2), NV])
+        FVi_py = FVi_py.reshape([(nx - 2), NV])
+
+    else:
+        FVi_cp = zeros([nx * ny * NV])
+
+        GPRpy.solvers.fv.interfs2(FVi_cp, qh_py.ravel(), nx, ny, dt,
+                                  dX[0], dX[1], TIME, FLUX, PERR_FROB, MP)
+
+        FVi_cp = FVi_cp.reshape([nx, ny, NV])
+        FVi_py = FVi_py.reshape([nx, ny, NV])
 
     print("FVi   ", check(FVi_cp, FVi_py))
     return FVi_cp, FVi_py

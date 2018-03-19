@@ -1,6 +1,6 @@
 """ System Parameters """
 
-NDIM = 2                    # Number of dimensions
+NDIM = 1                    # Number of dimensions
 NV   = 17                   # Number of variables - should be:
                             # 5 + VISCOUS*9 + THERMAL*3 + MULTI*2 + REACTIVE + LSET
 

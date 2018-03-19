@@ -103,7 +103,7 @@ def predictor(wh, dt, dX, MP):
             else:
                 qh[i] = failed(w, obj, dtGAPS, dX, MP)
 
-    return qh.reshape(shape[:NDIM] + (NT, NV))
+    return qh.reshape(shape[:NDIM] + (N,) * (NDIM + 1) + (NV,))
 
 
 def dg_launcher(pool, wh, dt, dX, MP):

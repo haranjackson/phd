@@ -22,7 +22,7 @@ from options import NDIM, SPLIT
 
 
 if NDIM == 1:
-    u, MPs, _, dX = fluids.hagen_poiseuille_IC()
+    u, MPs, _, dX = fluids.first_stokes_problem_IC()
 else:
     u, MPs, _, dX = validation.hagen_poiseuille_IC()
 

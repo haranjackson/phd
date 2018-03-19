@@ -3,6 +3,7 @@ from itertools import product
 from numpy import arange, array, dot, zeros
 from scipy.optimize import newton_krylov
 
+from etc.grids import flat_index
 from solvers.basis import DERVALS
 from system import source, system
 from options import N, NT, NV, NDIM, N_K_IG, DG_TOL
@@ -13,16 +14,6 @@ def standard_initial_guess(w):
     """
     ret = array([w for i in range(N)])
     return ret.reshape([NT, NV])
-
-
-def index(coords):
-
-    if len(coords) == 0:
-        return 0
-    elif len(coords) == 1:
-        return coords[0]
-    else:
-        return N * index(coords[:-1]) + coords[-1]
 
 
 def stiff_initial_guess(w, dtGAPS, dX, MP):
@@ -45,8 +36,8 @@ def stiff_initial_guess(w, dtGAPS, dX, MP):
             # dth direction, at the current spatial node
             qi = []
             for d in range(NDIM):
-                i = index(coords[:d])
-                j = index(coords[d + 1:])
+                i = flat_index(coords[:d])
+                j = flat_index(coords[d + 1:])
                 qi.append(qt.reshape([N**d, N, N**(NDIM - d - 1), NV])[i, :, j])
 
             Mdqdx = zeros(NV)
