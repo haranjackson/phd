@@ -1,3 +1,5 @@
+#include "../src/options.h"
+
 #include "../src/etc/types.h"
 
 #include "../include/pybind11/eigen.h"
@@ -38,6 +40,9 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(GPRpy, m) {
   m.doc() = "Python bindings to the GPRcpp library";
+
+  m.def("N", []() { return N; });
+  m.def("NV", []() { return V; });
 
   pybind11::module m_classes =
       m.def_submodule("classes", "Classes used by GPRpy");

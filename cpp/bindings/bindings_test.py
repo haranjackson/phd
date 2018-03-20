@@ -1,24 +1,26 @@
 # Some scripts to test the Python bindings for the C++ GPR implementation
 # Make sure Git/GPR-cpp and Git/GPR/python are in PYTHONPATH
+import GPRpy
 
 from tests_1d import fluids
 from tests_2d import validation
 
-from system_test import flux_test, source_test, block_test, Bdot_test, system_test
+from bindings_tests.system_tests import flux_test, source_test, block_test, Bdot_test, system_test
 
-from solver_test import lgmres_test, newton_krylov_test
-from solver_test import weno_test, rhs_test, obj_test, dg_test
-from solver_test import midstepper_test, ode_test
+from bindings_tests.solver_tests import lgmres_test, newton_krylov_test
+from bindings_tests.solver_tests import weno_test, rhs_test, obj_test, dg_test
+from bindings_tests.solver_tests import midstepper_test, ode_test
 
-from fv_test import TAT_test, Bint_test, D_RUS_test, D_ROE_test, D_OSH_test
-from fv_test import FVc_test, FVi_test, FV_test
+from bindings_tests.fv_tests import TAT_test, Bint_test, D_RUS_test, D_ROE_test, D_OSH_test
+from bindings_tests.fv_tests import FVc_test, FVi_test, FV_test
 
 from solvers.weno.weno import weno_launcher
 
-from options import NDIM, SPLIT
+from options import NDIM, SPLIT, N, NV
 
 
-### ENSURE N,V are equal ###
+assert(GPRpy.N() == N)
+assert(GPRpy.NV() == NV)
 
 
 if NDIM == 1:

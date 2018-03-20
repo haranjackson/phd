@@ -3,7 +3,7 @@ import GPRpy
 from numpy import zeros
 from numpy.random import rand
 
-from test_functions import check, generate_vector
+from bindings_tests.test_functions import check, generate_vector
 
 from system import flux_ref, source_ref, block_ref, Bdot, system
 

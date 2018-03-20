@@ -12,7 +12,7 @@ from solvers.split.split import weno_midstepper
 from solvers.split.analytical import ode_stepper_analytical
 from solvers.weno.weno import weno_launcher
 
-from test_functions import check, generate_vector
+from bindings_tests.test_functions import check, generate_vector
 
 from options import NDIM, NV, N, NT
 from options import STIFF, STIFF_IG, DG_TOL
