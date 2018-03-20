@@ -33,8 +33,8 @@ def D_OSH(qL, qR, d, MP):
     for i in range(N):
         q = qL + NODES[i] * Δq
         M = system(q, d, MP)
-        λ, R = eig(M, overwrite_a=1, check_finite=0)
-        b = solve(R, Δq, check_finite=0)
+        λ, R = eig(M, overwrite_a=1)
+        b = solve(R, Δq)
         ret += WGHTS[i] * dot(R, abs(λ) * b)
 
     return ret.real
@@ -50,8 +50,8 @@ def D_ROE(qL, qR, d, MP):
         q = qL + NODES[i] * Δq
         M += WGHTS[i] * system(q, d, MP)
 
-    λ, R = eig(M, overwrite_a=1, check_finite=0)
-    b = solve(R, Δq, check_finite=0)
+    λ, R = eig(M, overwrite_a=1)
+    b = solve(R, Δq)
     return dot(R, abs(λ) * b).real
 
 

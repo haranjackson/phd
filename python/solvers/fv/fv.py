@@ -27,16 +27,16 @@ def endpoints(qh):
                   for d in range(NDIM)])
 
 
-def interfaces(qEnd, dX, MP):
+def interfaces(ret, qEnd, dX, MP):
     """ Returns the contribution to the finite volume update coming from the
         fluxes at the interfaces
     """
-    dims = [dim - 2 for dim in qEnd.shape[2:NDIM + 2]]
+    dims = ret.shape[:NDIM]
     nweights = len(WGHT_END)
-    ret = zeros(dims + [NV])
 
     for d in range(NDIM):
 
+        # dimensions of cells traversed when calculating fluxes in direction d
         dimensions = [arange(1, dim + 1) for dim in dims[:d]] + \
                      [arange(1, dims[d] + 2)] + \
                      [arange(1, dim + 1) for dim in dims[d + 1:]]
@@ -50,9 +50,9 @@ def interfaces(qEnd, dX, MP):
             qL = qEnd[lcoords].reshape([nweights, NV])
             qR = qEnd[rcoords].reshape([nweights, NV])
 
-            # Integrate the flux over the interface
-            fEnd = zeros(NV)
-            BEnd = zeros(NV)
+            # integrate the flux over the surface normal to direction d
+            fEnd = zeros(NV)    # flux from conservative terms
+            BEnd = zeros(NV)    # flux from non-conservative terms
             for ind in range(nweights):
                 qL_ = qL[ind]
                 qR_ = qR[ind]
@@ -75,20 +75,15 @@ def interfaces(qEnd, dX, MP):
             if rcoords_[d] < dims[d]:
                 ret[rcoords_] += fEnd + BEnd
 
-    return ret
 
-
-def centers(qh, dX, MP, HOMOGENEOUS):
+def centers(ret, qh, dX, MP, HOMOGENEOUS):
     """ Returns the space-time averaged source term and non-conservative terms
     """
-    dims = tuple(s - 2 for s in qh.shape[:NDIM])
-    s = zeros(dims + (NV,))
-
-    for coords in product(*[arange(dim) for dim in dims]):
+    for coords in product(*[arange(dim) for dim in ret.shape[:NDIM]]):
 
         qhi = qh[tuple(coord + 1 for coord in coords)]
 
-        # Integrate across volume of spacetime cell (i,j,k)
+        # Integrate across volume of spacetime cell
         for inds in product(*[arange(s) for s in WGHT.shape]):
 
             q = qhi[inds]
@@ -107,24 +102,26 @@ def centers(qh, dX, MP, HOMOGENEOUS):
 
             for d in range(NDIM):
                 ind = inds[d + 1]
-                dxdxi = dot(DERVALS[ind], qi[d])
+                dqdx = dot(DERVALS[ind], qi[d]) # derivative of q in direction d
                 temp = zeros(NV)
-                Bdot(temp, dxdxi, q, d, MP)
+                Bdot(temp, dqdx, q, d, MP)
                 tmp -= temp / dX[d]
 
-            s[coords] += WGHT[inds] * tmp
-
-    return s
+            ret[coords] += WGHT[inds] * tmp
 
 
 def fv_terms(qh, dt, dX, MP, HOMOGENEOUS=0):
     """ Returns the space-time averaged interface terms, jump terms,
         source terms, and non-conservative terms
     """
+    dims = [s - 2 for s in qh.shape[:NDIM]]
     qEnd = endpoints(qh)
-    s = centers(qh, dX, MP, HOMOGENEOUS)
-    s -= 0.5 * interfaces(qEnd, dX, MP)
-    return dt * s
+
+    ret = zeros(dims + [NV])
+    centers(ret, qh, dX, MP, HOMOGENEOUS)
+    interfaces(ret, qEnd, dX, MP)
+
+    return dt * ret
 
 
 def fv_launcher(pool, qh, dt, dX, MP, HOMOGENEOUS=0):

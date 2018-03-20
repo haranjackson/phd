@@ -87,7 +87,7 @@ def predictor(wh, dt, dX, MP):
         else:
             for count in range(DG_IT):
 
-                qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP), check_finite=False)
+                qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP))
 
                 if (absolute(qNew) > MAX_TOL).any():
                     qh[i] = failed(w, obj, dtGAPS, dX, MP)

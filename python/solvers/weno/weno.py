@@ -16,7 +16,7 @@ def calculate_coeffs(uList):
     """ Calculate coefficients of basis polynomials and weights
     """
     n = len(uList)
-    wList = [solve(WN_M[i], uList[i], overwrite_b=1, check_finite=0)
+    wList = [solve(WN_M[i], uList[i], overwrite_b=1)
              for i in range(n)]
     σList = [((w.T).dot(WN_Σ).dot(w)).diagonal() for w in wList]
     oList = [LAMS[i] / (abs(σList[i]) + eps)**rc for i in range(n)]
