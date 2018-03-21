@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from numpy import arange, linspace, mgrid, zeros
+from numpy import arange, linspace, mgrid, prod, zeros
 from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot
 from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
 
@@ -41,40 +41,42 @@ def plot2d(x, style, y=None):
 
 def plot_simple(u, style, x, lab, col, title, sci, ind, divρ):
 
-    nx, ny = u.shape[:2]
+    NDIM = len(u.shape) - 1
 
-    if ny == 1:
-        y = u[:, 0, 0, ind]
+    if NDIM == 1:
+        y = u[:, ind]
         if divρ:
-            y /= u[:, 0, 0, 0]
+            y /= u[:, 0]
         plot1d(y, style, x, lab, col, title, sci=sci)
     else:
-        y = u[:, :, 0, ind]
+        y = u[:, :, ind]
         if divρ:
-            y /= u[:, :, 0, 0]
+            y /= u[:, :, 0]
         plot2d(y, 'colormap')
 
 
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None, j=None):
 
-    nx, ny = u.shape[:2]
-    y = zeros([nx, ny])
-    for ii in range(nx):
-        for jj in range(ny):
-            Q = u[ii, jj, 0]
-            MP = MPs[get_material_index(Q, MPs)]
-            P = Cvec_to_Pclass(Q, MP)
-            var = getattr(P, attr)()
-            if j is None:
-                if i is None:
-                    y[ii, jj] = var
-                else:
-                    y[ii, jj] = var[i]
-            else:
-                y[ii, jj] = var[i, j]
+    NDIM = u.ndim - 1
+    n = prod(u.shape[:-1])
+    NV = u.shape[-1]
+    y = zeros(n)
 
-    if ny == 1:
-        plot1d(y[:, 0], style, x, lab, col, title, sci=sci)
+    for ii in range(n):
+        Q = u.reshape([n, NV])[ii]
+        MP = MPs[get_material_index(Q)]
+        P = Cvec_to_Pclass(Q, MP)
+        var = getattr(P, attr)()
+        if j is None:
+            if i is None:
+                y[ii] = var
+            else:
+                y[ii] = var[i]
+        else:
+            y[ii] = var[i, j]
+
+    if NDIM == 1:
+        plot1d(y, style, x, lab, col, title, sci=sci)
     else:
         plot2d(y, 'colormap')
 
@@ -95,15 +97,15 @@ def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
                   square=0):
 
     figure(2 + i, figsize=fig_size(square))
-    nx, ny = u.shape[:2]
+    NDIM = len(u.shape) - 1
 
-    if ny == 1:
-        y = u[:, 0, 0, 2 + i] / u[:, 0, 0, 0]
+    if NDIM == 1:
+        y = u[:, 2 + i] / u[:, 0]
         plot1d(y, style, x, lab, col, 'Velocity Component %d' % (i + 1),
                sci=sci)
     else:
-        x = u[:, :, 0, 2] / u[:, :, 0, 0]
-        y = u[:, :, 0, 3] / u[:, :, 0, 0]
+        x = u[:, :, 2] / u[:, :, 0]
+        y = u[:, :, 3] / u[:, :, 0]
         plot2d(x, 'streams', y)
 
 

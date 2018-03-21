@@ -1,6 +1,8 @@
+from numpy import sum
+
 from multi.riemann import star_states
 
-from options import ISO_FIX
+from options import ISO_FIX, LSET
 
 
 def get_levelset_root(u, i, m):
@@ -36,11 +38,6 @@ def add_ghost_cells(mats, MPs, dt):
             uR[j, 0, 0, :-(m - 1)] = QR_
 
 
-def get_material_index(Q, MPs):
+def get_material_index(Q):
     NV = len(Q)
-    LSET = len(MPs) - 1
-    N = NV - LSET
-    for i in range(LSET):
-        if Q[N + i] > 0:
-            return i + 1
-    return 0
+    return sum(Q[NV-LSET:] < 0)

@@ -2,7 +2,7 @@ from numpy import complex128, dot, zeros
 from scipy.linalg import eig, solve
 
 from solvers.basis import NODES, WGHTS
-from system import Bdot, system, max_eig
+from system import nonconservative_product, system_matrix, max_eig
 from options import N, NV
 
 
@@ -11,20 +11,20 @@ ROE = 1
 OSHER = 2
 
 
-def B_INT(qL, qR, d, MP):
+def B_INT(qL, qR, d, *args):
     """ Returns the jump matrix for B, in the dth direction.
     """
     ret = zeros(NV)
     Δq = qR - qL
     for i in range(N):
         q = qL + NODES[i] * Δq
-        tmp = zeros(NV)
-        Bdot(tmp, Δq, q, d, MP)
-        ret += WGHTS[i] * tmp
+        BΔq = zeros(NV)
+        nonconservative_product(BΔq, Δq, q, d, *args)
+        ret += WGHTS[i] * BΔq
     return ret
 
 
-def D_OSH(qL, qR, d, MP):
+def D_OSH(qL, qR, d, *args):
     """ Returns the Osher flux component, in the dth direction
     """
     ret = zeros(NV, dtype=complex128)
@@ -32,7 +32,7 @@ def D_OSH(qL, qR, d, MP):
 
     for i in range(N):
         q = qL + NODES[i] * Δq
-        M = system(q, d, MP)
+        M = system_matrix(q, d, *args)
         λ, R = eig(M, overwrite_a=1)
         b = solve(R, Δq)
         ret += WGHTS[i] * dot(R, abs(λ) * b)
@@ -40,7 +40,7 @@ def D_OSH(qL, qR, d, MP):
     return ret.real
 
 
-def D_ROE(qL, qR, d, MP):
+def D_ROE(qL, qR, d, *args):
     """ Returns the Roe flux component, in the dth direction
     """
     M = zeros([NV, NV])
@@ -48,16 +48,16 @@ def D_ROE(qL, qR, d, MP):
 
     for i in range(N):
         q = qL + NODES[i] * Δq
-        M += WGHTS[i] * system(q, d, MP)
+        M += WGHTS[i] * system_matrix(q, d, *args)
 
     λ, R = eig(M, overwrite_a=1)
     b = solve(R, Δq)
     return dot(R, abs(λ) * b).real
 
 
-def D_RUS(qL, qR, d, MP):
+def D_RUS(qL, qR, d, *args):
     """ Returns the Rusanov flux component, in the dth direction
     """
-    max1 = max_eig(qL, d, MP)
-    max2 = max_eig(qR, d, MP)
+    max1 = max_eig(qL, d, *args)
+    max2 = max_eig(qR, d, *args)
     return max(max1, max2) * (qR - qL)

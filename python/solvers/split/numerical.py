@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import array, einsum, eye, outer, zeros
+from numpy import arange, array, einsum, eye, outer, zeros
 from scipy.integrate import odeint
 from scipy.linalg import inv, norm
 
@@ -96,13 +96,16 @@ def jac(y, t0, ρ, E, v, MP):
     return ret
 
 
-def ode_stepper_numerical(u, dt, MP, USE_JAC=False):
+def ode_stepper_numerical(u, dt, *args):
     """ Full numerical solver for the ODE system
     """
-    nx, ny, nz = u.shape[:3]
+    USE_JACOBIAN = False
+
+    MP = args[0]
+
     y0 = zeros([12])
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        Q = u[i, j, k]
+    for coords in product(*[arange(s) for s in u.shape[:-1]]):
+        Q = u[coords]
         P = Cvec_to_Pclass(Q, MP)
         ρ = P.ρ
         E = P.E
@@ -112,7 +115,7 @@ def ode_stepper_numerical(u, dt, MP, USE_JAC=False):
         y0[9:] = Q[14:17] / ρ
         t = array([0, dt])
 
-        if USE_JAC:
+        if USE_JACOBIAN:
             y1 = odeint(f, y0, t, args=(ρ, E, v, MP), Dfun=jac)[1]
         else:
             y1 = odeint(f, y0, t, args=(ρ, E, v, MP))[1]

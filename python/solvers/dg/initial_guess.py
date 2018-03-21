@@ -5,18 +5,18 @@ from scipy.optimize import newton_krylov
 
 from etc.grids import flat_index
 from solvers.basis import DERVALS
-from system import source, system
-from options import N, NT, NV, NDIM, N_K_IG, DG_TOL
+from system import source, system_matrix
+from options import N, NV, NDIM, N_K_IG, DG_TOL
 
 
 def standard_initial_guess(w):
     """ Returns a Galerkin intial guess consisting of the value of q at t=0
     """
     ret = array([w for i in range(N)])
-    return ret.reshape([NT, NV])
+    return ret.reshape([N**(NDIM + 1), NV])
 
 
-def stiff_initial_guess(w, dtGAPS, dX, MP):
+def stiff_initial_guess(w, dtGAPS, dX, *args):
     """ Returns an initial guess based on the underlying equations
     """
     q = zeros([N] * (NDIM + 1) + [NV])
@@ -43,16 +43,25 @@ def stiff_initial_guess(w, dtGAPS, dX, MP):
             Mdqdx = zeros(NV)
             for d in range(NDIM):
                 dqdxi = dot(DERVALS[coords[d]], qi[d])
-                Mdqdx += dot(system(q_, d, MP), dqdxi) / dX[d]
+                Mdqdx += dot(system_matrix(q_, d, *args), dqdxi) / dX[d]
 
-            S = source(q_, MP)
+            S0 = zeros(NV)
+            source(S0, q_, *args)
 
             if N_K_IG:
-                def f(X): return X - q_ + dt * (Mdqdx - (S + source(X, MP)) / 2)
+
+                S1 = zeros(NV)
+
+                def f(X):
+                    source(S1, X, *args)
+                    S = (S0 + S1) / 2
+                    return X - q_ + dt * (Mdqdx - S)
+
                 q[(t,) + coords] = newton_krylov(f, q_, f_tol=DG_TOL)
+
             else:
-                q[(t,) + coords] = q_ - dt * (Mdqdx - S)
+                q[(t,) + coords] = q_ - dt * (Mdqdx - S0)
 
         qt = q[t]
 
-    return q.reshape([NT, NV])
+    return q.reshape([N**(NDIM + 1), NV])

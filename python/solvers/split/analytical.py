@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arctan, array, cos, dot, exp, log, prod, sqrt
+from numpy import arange, arctan, array, cos, dot, exp, log, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
@@ -100,13 +100,14 @@ def solver_thermal_analytic(ρ, E, A, J, v, dt, MP):
 ### GENERAL ###
 
 
-def ode_stepper_analytical(u, dt, MP):
+def ode_stepper_analytical(u, dt, *args):
     """ Solves the ODE analytically by approximating the distortion equations
         and solving the thermal impulse equations
     """
-    nx, ny, nz = u.shape[:3]
-    for i, j, k in product(range(nx), range(ny), range(nz)):
-        Q = u[i, j, k]
+    MP = args[0]
+
+    for coords in product(*[arange(s) for s in u.shape[:-1]]):
+        Q = u[coords]
         ρ = Q[0]
         A = Q[5:14].reshape([3, 3])
 

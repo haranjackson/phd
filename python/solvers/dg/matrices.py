@@ -4,7 +4,7 @@ from numpy import concatenate, diag, eye, ones, zeros
 
 from solvers.basis import NODES, WGHTS, PSI, PSID, DERVALS
 from gpr.misc.functions import kron_prod
-from options import NDIM, N, NT, NV
+from options import NDIM, N, NV
 
 
 # Inner products required for Galerkin matrices
@@ -27,16 +27,16 @@ for a, b in product(range(N), range(N)):
 DG_W = concatenate([PSI[a](0) * kron_prod([I1] * NDIM) for a in range(N)])
 
 # Stiffness matrices
-DG_V = zeros([NDIM, NT, NT])
+DG_V = zeros([NDIM, N**(NDIM + 1), N**(NDIM + 1)])
 for i in range(1, NDIM + 1):
     DG_V[i - 1] = kron_prod([I1] * i + [I2] + [I1] * (NDIM - i))
 
 DG_U = kron_prod([I11 - I2.T] + [I1] * NDIM)
 
 # Mass matrix
-DG_M = (diag(kron_prod([I1] * (NDIM + 1))) * ones([NV, NT])).T
+DG_M = (diag(kron_prod([I1] * (NDIM + 1))) * ones([NV, N**(NDIM + 1)])).T
 
 # Differentiation operator matrix
-DG_D = zeros([NDIM, NT, NT])
+DG_D = zeros([NDIM, N**(NDIM + 1), N**(NDIM + 1)])
 for i in range(1, NDIM + 1):
     DG_D[i - 1] = kron_prod([I] * i + [DERVALS] + [I] * (NDIM - i))

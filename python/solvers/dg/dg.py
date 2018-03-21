@@ -6,15 +6,16 @@ from scipy.optimize import newton_krylov
 from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
 from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_M, DG_D
 from solvers.basis import GAPS
-from system import flux_ref, source_ref, Bdot
-from options import NDIM, N, NT, NV
+from system import flux, source, nonconservative_product
+from options import NDIM, N, NV
 from options import STIFF, STIFF_IG, DG_TOL, DG_IT, PARA_DG, NCORE
 
 
-MAX_TOL = 1e16  # values above this level will cause an error
+MAX_SIZE = 1e16  # variable values above this level will cause an error
+NT = N**(NDIM + 1)
 
 
-def rhs(q, Ww, dt, dX, MP):
+def rhs(q, Ww, dt, dX, *args):
     """ Returns the right-handside of the system governing coefficients of qh
     """
     ret = zeros([NT, NV])
@@ -28,10 +29,10 @@ def rhs(q, Ww, dt, dX, MP):
 
     for i in range(NT):
         qi = q[i]
-        source_ref(ret[i], qi, MP)
+        source(ret[i], qi, *args)
         for d in range(NDIM):
-            flux_ref(Fq[d, i], qi, d, MP)
-            Bdot(Bq[d, i], Dq[d, i], qi, d, MP)
+            flux(Fq[d, i], qi, d, *args)
+            nonconservative_product(Bq[d, i], Dq[d, i], qi, d, *args)
 
     for d in range(NDIM):
         ret -= Bq[d] / dX[d]
@@ -43,12 +44,11 @@ def rhs(q, Ww, dt, dX, MP):
     return dt * ret + Ww
 
 
-def failed(w, f, dtGAPS, dX, MP):
-    """ Attempts to find DG coefficients with Newton-Krylov, if standard
-        method has failed
+def failed(w, f, dtGAPS, dX, *args):
+    """ Finds DG coefficients with Newton-Krylov, if iteration has failed
     """
     if STIFF_IG:
-        q = stiff_initial_guess(w, dtGAPS, dX, MP)
+        q = stiff_initial_guess(w, dtGAPS, dX, *args)
     else:
         q = standard_initial_guess(w)
     return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
@@ -60,7 +60,7 @@ def unconverged(q, qNew):
     return (absolute(q - qNew) > DG_TOL * (1 + absolute(q))).any()
 
 
-def predictor(wh, dt, dX, MP):
+def predictor(wh, dt, dX, *args):
     """ Returns the Galerkin predictor, given the WENO reconstruction at tn
     """
     shape = wh.shape
@@ -74,10 +74,10 @@ def predictor(wh, dt, dX, MP):
         w = wh[i]
         Ww = dot(DG_W, w)
 
-        def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, MP)
+        def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, *args)
 
         if STIFF_IG:
-            q = stiff_initial_guess(w, dtGAPS, dX, MP)
+            q = stiff_initial_guess(w, dtGAPS, dX, *args)
         else:
             q = standard_initial_guess(w)
 
@@ -87,10 +87,10 @@ def predictor(wh, dt, dX, MP):
         else:
             for count in range(DG_IT):
 
-                qNew = solve(DG_U, rhs(q, Ww, dt, dX, MP))
+                qNew = solve(DG_U, rhs(q, Ww, dt, dX, *args))
 
-                if (absolute(qNew) > MAX_TOL).any():
-                    qh[i] = failed(w, obj, dtGAPS, dX, MP)
+                if (absolute(qNew) > MAX_SIZE).any():
+                    qh[i] = failed(w, obj, dtGAPS, dX, *args)
                     break
 
                 elif unconverged(q, qNew):
@@ -101,21 +101,24 @@ def predictor(wh, dt, dX, MP):
                     qh[i] = qNew
                     break
             else:
-                qh[i] = failed(w, obj, dtGAPS, dX, MP)
+                qh[i] = failed(w, obj, dtGAPS, dX, *args)
 
     return qh.reshape(shape[:NDIM] + (N,) * (NDIM + 1) + (NV,))
 
 
-def dg_launcher(pool, wh, dt, dX, MP):
+def dg_launcher(pool, wh, dt, dX, *args):
     """ Controls the parallel computation of the Galerkin predictor
     """
     if PARA_DG:
+
         nx = wh.shape[0]
         step = int(nx / NCORE)
         chunk = array([i * step for i in range(NCORE)] + [nx + 1])
         n = len(chunk) - 1
-        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i + 1]], dt, dX, MP)
+
+        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i + 1]], dt, dX, *args)
                       for i in range(n))
         return concatenate(qhList)
+
     else:
-        return predictor(wh, dt, dX, MP)
+        return predictor(wh, dt, dX, *args)

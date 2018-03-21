@@ -1,49 +1,40 @@
 from itertools import product
 
-from numpy import sum
+from numpy import arange, sum, zeros
 
-from multi.gfm import get_levelset_root
-
-from options import CFL, NDIM, NV
+from multi.gfm import get_material_index
+from options import CFL, NDIM
 from system import max_eig
 
 
 def make_u(mats):
     """ Builds u across the domain, from the different material grids
     """
-    m = len(mats)
-    u = mats[0]
-    N = NV - (m - 1)
-    u[:, :, :, N:] = sum([mat[:, :, :, N:] for mat in mats], axis=0) / m
+    u = zeros(mats[0].shape)
+    av = sum(mats, axis=0) / len(mats)
 
-    for i in range(1, m):
-        ind = get_levelset_root(u, i - 1, m)
-        u[ind:, :, :, :N] = mats[i][ind:, :, :, :N]
+    for coords in product(*[arange(s) for s in av.shape[:NDIM]]):
+
+        materialIndex = get_material_index(av[coords])
+        u[coords] = mats[materialIndex][coords]
 
     return u
 
 
-def timestep(mats, count, t, tf, dX, MPs):
+def timestep(u, count, t, tf, dX, MPs):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
-    m = len(mats)
     MAX = 0
-    for ind in range(m):
+    for coords in product(*[arange(s) for s in u.shape[:NDIM]]):
 
-        u = mats[ind]
-        MP = MPs[ind]
-        nx, ny, nz = u.shape[:3]
+        Q = u[coords]
+        materialIndex = get_material_index(Q)
+        MP = MPs[materialIndex]
 
-        for i, j, k in product(range(nx), range(ny), range(nz)):
-
-            Q = u[i, j, k]
-            for d in range(NDIM):
-                MAX = max(MAX, max_eig(Q, d, MP) / dX[d])
+        for d in range(NDIM):
+            MAX = max(MAX, max_eig(Q, d, MP) / dX[d])
 
     dt = CFL / MAX
     if count <= 5:
         dt *= 0.2
-    if t + dt > tf:
-        return tf - t
-    else:
-        return dt
+    return min(tf - t, dt)

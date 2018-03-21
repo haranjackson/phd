@@ -20,9 +20,9 @@ def flux_cons_ref(ret, Q, d, MP):
     vd = v[d]
     ρvd = ρ * vd
 
-    ret[0] += z * ρ1 * vd
-    ret[1] += ρvd * E + p * vd
-    ret[2:5] += ρvd * v
+    ret[0] = z * ρ1 * vd
+    ret[1] = ρvd * E + p * vd
+    ret[2:5] = ρvd * v
     ret[2 + d] += p
 
     if MP.VISCOUS:
@@ -35,9 +35,9 @@ def flux_cons_ref(ret, Q, d, MP):
         ret[2:5] -= σd
 
         Av = dot(A, v)
-        ret[5 + d] += Av[0]
-        ret[8 + d] += Av[1]
-        ret[11 + d] += Av[2]
+        ret[5 + d] = Av[0]
+        ret[8 + d] = Av[1]
+        ret[11 + d] = Av[2]
 
     if MP.THERMAL:
 
@@ -48,7 +48,7 @@ def flux_cons_ref(ret, Q, d, MP):
         q = P.q()
 
         ret[1] += q[d]
-        ret[14:17] += ρvd * J
+        ret[14:17] = ρvd * J
         ret[14 + d] += T
 
     if MP.MULTI:
@@ -56,29 +56,10 @@ def flux_cons_ref(ret, Q, d, MP):
         λ = P.λ
         ρ2 = P.ρ2
 
-        ret[17] += (1 - z) * ρ2 * vd
-        ret[18] += ρvd * z
+        ret[17] = (1 - z) * ρ2 * vd
+        ret[18] = ρvd * z
         if MP.REACTIVE:
-            ret[19] += (1 - z) * ρ2 * vd * λ
-
-
-def block_cons_ref(ret, Q, d, MP):
-
-    if MP.VISCOUS:
-
-        P = Cvec_to_Pclass(Q, MP)
-
-        v = P.v
-        vd = v[d]
-
-        for i in range(5, 14):
-            ret[i, i] = vd
-        ret[5 + d, 5 + d:8 + d] -= v
-        ret[8 + d, 8 + d:11 + d] -= v
-        ret[11 + d, 11 + d:14 + d] -= v
-
-        for i in range(1, LSET + 1):
-            ret[-i, -i] = vd
+            ret[19] = (1 - z) * ρ2 * vd * λ
 
 
 def source_cons_ref(ret, Q, MP):
@@ -160,7 +141,7 @@ def B2dot(ret, x, v):
         ret[-i] = v2 * x[-i]
 
 
-def Bdot_cons(ret, x, Q, d, MP):
+def nonconservative_product_cons(ret, x, Q, d, MP):
 
     if MP.VISCOUS:
         P = Cvec_to_Pclass(Q, MP)

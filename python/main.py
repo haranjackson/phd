@@ -20,7 +20,7 @@ from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
 
 
 ### CHECK ARGUMENTS ###
-IC = solids.barton1_IC
+IC = solids.elastic1_IC
 BC = boundaries.standard_BC
 
 
@@ -33,7 +33,7 @@ pool = Parallel(n_jobs=NCORE)
 
 if CPP_LVL > 0:
 
-    nX = array(u.shape[:3], dtype=int32)
+    nX = array(u.shape[:NDIM] + (1,)*(3-NDIM), dtype=int32)
     extDims = GPRpy.solvers.extended_dimensions(nX, 1)
     wh = zeros(extDims * int(pow(N, NDIM)) * NV)
     qh = zeros(extDims * int(pow(N, NDIM + 1)) * NV)
@@ -41,6 +41,29 @@ if CPP_LVL > 0:
     cppIterator = GPRpy.solvers.iterator
     cppSplitStepper = GPRpy.solvers.split_stepper
     cppAderStepper = GPRpy.solvers.ader_stepper
+
+
+def stepper(mat, matBC, dt, *args):
+
+    if CPP_LVL == 1:
+
+        matr = mat.ravel()
+        matBCr = matBC.ravel()
+
+        if SPLIT:
+            cppSplitStepper(matr, matBCr, wh, NDIM, nX, dt, dX,
+                            STRANG, HALF_STEP, FLUX, PERR_FROB, *args)
+        else:
+            cppAderStepper(matr, matBCr, wh, qh, NDIM, nX, dt, dX,
+                           STIFF, FLUX, PERR_FROB, *args)
+
+        mat = matr.reshape([nX[0], nX[1], nX[2], NV])
+
+    else:
+        if SPLIT:
+            split_stepper(pool, mat, matBC, dt, dX, *args)
+        else:
+            ader_stepper(pool, mat, matBC, dt, dX, *args)
 
 
 def main(t, tf, count, data):
@@ -58,39 +81,19 @@ def main(t, tf, count, data):
         while t < tf:
 
             t0 = time()
+            dt = timestep(u, count, t, tf, dX, MPs)
 
             mats = array([u for i in range(m)])
-            dt = timestep(mats, count, t, tf, dX, MPs)
-
             if RGFM:
                 add_ghost_cells(mats, MPs, dt)
 
             print_stats(count, t, dt)
 
             for i in range(m):
-
                 mat = mats[i]
                 matBC = BC(mat)
                 MP = MPs[i]
-
-                if CPP_LVL == 1:
-                    matr = mat.ravel()
-                    matBCr = matBC.ravel()
-
-                    if SPLIT:
-                        cppSplitStepper(matr, matBCr, wh, NDIM, nX, dt, dX,
-                                        STRANG, HALF_STEP, FLUX, PERR_FROB, MP)
-                    else:
-                        cppAderStepper(matr, matBCr, wh, qh, NDIM, nX, dt, dX,
-                                       STIFF, FLUX, PERR_FROB, MP)
-
-                    mat = matr.reshape([nX[0], nX[1], nX[2], NV])
-
-                else:
-                    if SPLIT:
-                        split_stepper(pool, mat, matBC, dt, dX, MP)
-                    else:
-                        ader_stepper(pool, mat, matBC, dt, dX, MP)
+                stepper(mat, matBC, dt, MP)
 
             u = make_u(mats)
             data.append(Data(u, t))

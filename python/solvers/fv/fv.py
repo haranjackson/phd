@@ -7,7 +7,7 @@ from etc.grids import flat_index
 from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
 from solvers.fv.matrices import WGHT, WGHT_END, TN
 from solvers.basis import ENDVALS, DERVALS
-from system import Bdot, source_ref, flux_ref
+from system import nonconservative_product, source, flux
 from options import NDIM, NV, FLUX, PARA_FV, NCORE, N
 
 
@@ -27,7 +27,7 @@ def endpoints(qh):
                   for d in range(NDIM)])
 
 
-def interfaces(ret, qEnd, dX, MP):
+def interfaces(ret, qEnd, dX, *args):
     """ Returns the contribution to the finite volume update coming from the
         fluxes at the interfaces
     """
@@ -53,18 +53,17 @@ def interfaces(ret, qEnd, dX, MP):
             # integrate the flux over the surface normal to direction d
             fInt = zeros(NV)    # flux from conservative terms
             BInt = zeros(NV)    # flux from non-conservative terms
+            fL = zeros(NV)      # contains flux on the left
+            fR = zeros(NV)      # contains flux on the right
             for ind in range(nweights):
                 qL_ = qL[ind]
                 qR_ = qR[ind]
 
-                ftemp = zeros(NV)
-                flux_ref(ftemp, qL_, d, MP)
-                flux_ref(ftemp, qR_, d, MP)
-                ftemp -= D_FUN(qL_, qR_, d, MP).real
-                Btemp = B_INT(qL_, qR_, d, MP)
+                flux(fL, qL_, d, *args)
+                flux(fR, qR_, d, *args)
 
-                fInt += WGHT_END[ind] * ftemp
-                BInt += WGHT_END[ind] * Btemp
+                fInt += WGHT_END[ind] * (fL + fR - D_FUN(qL_, qR_, d, *args))
+                BInt += WGHT_END[ind] * B_INT(qL_, qR_, d, *args)
 
             rcoords_ = tuple(c - 1 for c in rcoords[2:])
             lcoords_ = rcoords_[:d] + (rcoords_[d] - 1,) + rcoords_[d + 1:]
@@ -76,7 +75,7 @@ def interfaces(ret, qEnd, dX, MP):
                 ret[rcoords_] += (fInt - BInt) / dX[d]
 
 
-def centers(ret, qh, dX, MP, HOMOGENEOUS):
+def centers(ret, qh, dX, HOMOGENEOUS, *args):
     """ Returns the space-time averaged source term and non-conservative terms
     """
     for coords in product(*[arange(dim) for dim in ret.shape[:NDIM]]):
@@ -98,19 +97,20 @@ def centers(ret, qh, dX, MP, HOMOGENEOUS):
             tmp = zeros(NV)
 
             if not HOMOGENEOUS:
-                source_ref(tmp, q, MP)
+                source(tmp, q, *args)
 
             for d in range(NDIM):
                 ind = inds[d + 1]
                 dqdx = dot(DERVALS[ind], qi[d]) # derivative of q in direction d
-                temp = zeros(NV)
-                Bdot(temp, dqdx, q, d, MP)
-                tmp -= temp / dX[d]
+
+                Bdqdx = zeros(NV)
+                nonconservative_product(Bdqdx, dqdx, q, d, *args)
+                tmp -= Bdqdx / dX[d]
 
             ret[coords] += WGHT[inds] * tmp
 
 
-def fv_terms(qh, dt, dX, MP, HOMOGENEOUS=0):
+def fv_terms(qh, dt, dX, HOMOGENEOUS, *args):
     """ Returns the space-time averaged interface terms, jump terms,
         source terms, and non-conservative terms
     """
@@ -121,24 +121,26 @@ def fv_terms(qh, dt, dX, MP, HOMOGENEOUS=0):
     qEnd = endpoints(qh)
 
     ret = zeros(dims + [NV])
-    centers(ret, qh, dX, MP, HOMOGENEOUS)
-    interfaces(ret, qEnd, dX, MP)
+    centers(ret, qh, dX, HOMOGENEOUS, *args)
+    interfaces(ret, qEnd, dX, *args)
 
     return dt * ret
 
 
-def fv_launcher(pool, qh, dt, dX, MP, HOMOGENEOUS=0):
+def fv_launcher(pool, qh, dt, dX, HOMOGENEOUS, *args):
     """ Controls the parallel computation of the Finite Volume interface terms
     """
     if PARA_FV:
+
         nx = qh.shape[0]
         step = int(nx / NCORE)
         chunk = array([i * step for i in range(NCORE)] + [nx + 1])
         chunk[0] += 1
         chunk[-1] -= 1
         n = len(chunk) - 1
+
         qhList = pool(delayed(fv_terms)(qh[chunk[i] - 1:chunk[i + 1] + 1], dt,
-                                        dX, MP, HOMOGENEOUS) for i in range(n))
+                                        dX, HOMOGENEOUS, *args) for i in range(n))
         return concatenate(qhList)
     else:
-        return fv_terms(qh, dt, dX, MP, HOMOGENEOUS)
+        return fv_terms(qh, dt, dX, HOMOGENEOUS, *args)
