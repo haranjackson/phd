@@ -78,25 +78,22 @@ SOURCES = not SPLIT
 
 def FVc_test(qh_py, dX, dt, MP):
 
+    if HOMOGENEOUS:
+        shape = qh_py.shape
+        qh_py = qh_py.reshape(shape[:NDIM] + (1,) + shape[NDIM:])
+
     nx, ny = qh_py.shape[:2]
 
     if NDIM == 1:
         FVc_py = zeros([nx - 2, NV])
-
-        qh_cp = qh_py[1:-1].ravel()
-
         FVc_cp = zeros((nx - 2) * NV)
-        GPRpy.solvers.fv.centers1(FVc_cp, qh_cp, nx - 2, dt, dX[0],
+        GPRpy.solvers.fv.centers1(FVc_cp, qh_py.ravel(), nx - 2, dt, dX[0],
                                   SOURCES, TIME, MP)
 
     elif NDIM == 2:
         FVc_py = zeros([nx - 2, ny - 2, NV])
-
-        qh_cp = qh_py[1:-1, 1:-1].ravel()
-
         FVc_cp = zeros((nx - 2) * (ny - 2) * NV)
-
-        GPRpy.solvers.fv.centers2(FVc_cp, qh_cp, nx - 2, ny - 2, dt,
+        GPRpy.solvers.fv.centers2(FVc_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
                                   dX[0], dX[1], SOURCES, TIME, MP)
 
     centers(FVc_py, qh_py, dX, MP, HOMOGENEOUS)
@@ -108,6 +105,10 @@ def FVc_test(qh_py, dX, dt, MP):
 
 
 def FVi_test(qh_py, dX, dt, MP):
+
+    if HOMOGENEOUS:
+        shape = qh_py.shape
+        qh_py = qh_py.reshape(shape[:NDIM] + (1,) + shape[NDIM:])
 
     nx, ny = qh_py.shape[:2]
     qEnd = endpoints(qh_py)

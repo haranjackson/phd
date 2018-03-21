@@ -51,8 +51,8 @@ def interfaces(ret, qEnd, dX, MP):
             qR = qEnd[rcoords].reshape([nweights, NV])
 
             # integrate the flux over the surface normal to direction d
-            fEnd = zeros(NV)    # flux from conservative terms
-            BEnd = zeros(NV)    # flux from non-conservative terms
+            fInt = zeros(NV)    # flux from conservative terms
+            BInt = zeros(NV)    # flux from non-conservative terms
             for ind in range(nweights):
                 qL_ = qL[ind]
                 qR_ = qR[ind]
@@ -63,17 +63,17 @@ def interfaces(ret, qEnd, dX, MP):
                 ftemp -= D_FUN(qL_, qR_, d, MP).real
                 Btemp = B_INT(qL_, qR_, d, MP)
 
-                fEnd += WGHT_END[ind] * ftemp / dX[d]
-                BEnd += WGHT_END[ind] * Btemp / dX[d]
+                fInt += WGHT_END[ind] * ftemp
+                BInt += WGHT_END[ind] * Btemp
 
             rcoords_ = tuple(c - 1 for c in rcoords[2:])
             lcoords_ = rcoords_[:d] + (rcoords_[d] - 1,) + rcoords_[d + 1:]
 
             if lcoords_[d] >= 0:
-                ret[lcoords_] -= fEnd - BEnd
+                ret[lcoords_] -= (fInt + BInt) / dX[d]
 
             if rcoords_[d] < dims[d]:
-                ret[rcoords_] += fEnd + BEnd
+                ret[rcoords_] += (fInt - BInt) / dX[d]
 
 
 def centers(ret, qh, dX, MP, HOMOGENEOUS):
@@ -114,6 +114,9 @@ def fv_terms(qh, dt, dX, MP, HOMOGENEOUS=0):
     """ Returns the space-time averaged interface terms, jump terms,
         source terms, and non-conservative terms
     """
+    if HOMOGENEOUS:
+        qh = qh.reshape(qh.shape[:NDIM] + (1,) + qh.shape[NDIM:])
+
     dims = [s - 2 for s in qh.shape[:NDIM]]
     qEnd = endpoints(qh)
 
