@@ -1,6 +1,8 @@
 from models.gpr.systems.conserved import flux_cons_ref, nonconservative_product_cons
 from models.gpr.systems.conserved import source_cons_ref, system_cons
 from models.gpr.systems.eigenvalues import max_abs_eigs
+from models.gpr.systems.analytical import ode_solver_cons
+from models.gpr.systems.jacobians import dSdQ
 
 
 def flux(ret, Q, d, *args):
@@ -31,8 +33,7 @@ def flux(ret, Q, d, *args):
 
 
 def nonconservative_product(ret, x, Q, d, *args):
-    """ Returns the product of the matrix of nonconservative terms, and a
-    given vector x (in place)
+    """ Returns the product of the matrix of nonconservative terms, and a given vector x (in place)
 
     Parameters
     ----------
@@ -161,3 +162,76 @@ def max_eig(Q, d, *args):
     """
     λ = max_abs_eigs(Q, d, *args)
     return λ
+
+
+def ode_solver_analytical(Q, dt, *args):
+    """ Returns the analytic solution of the temporal ODEs of the system at time t=dt
+
+    Parameters
+    ----------
+    Q : array
+        The vector of conserved variables at time t=0
+    dt : double
+        The final time at which the solution is to be calculated
+    *args : optional
+        Any other parameters that are required by the system
+
+    Returns
+    -------
+    sol : array
+        The analytic solution to the temporal ODEs at time t=dt, given initial
+        state Q
+
+    Notes
+    -----
+    This function calculates the analytic solution to the following system of
+    ODEs at time t=dt:
+
+    .. math::
+
+        \\frac{dQ}{dt} = S(Q)
+
+    where
+
+    .. math::
+
+        \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
+
+    """
+    sol = ode_solver_cons(Q, dt, *args)
+    return sol
+
+
+def source_jacobian(Q, *args):
+    """ Returns the jacobian of the source terms with respect to the conserved variables
+
+    Parameters
+    ----------
+    Q : array
+        The vector of conserved variables with which the source jacobian is to
+        be calculated
+    *args : optional
+        Any other parameters that are required by the system
+
+    Returns
+    -------
+    dSdQ : array
+        The jacobian of the source terms with respect to the conserved variables
+
+    Notes
+    -----
+    This function calculates the jacobian of the source terms with respect to
+    the conserved variables:
+
+    .. math::
+
+        \\frac{\partial S}{\partial Q}
+
+    where
+
+    .. math::
+
+        \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
+
+    """
+    return dSdQ(Q, *args)

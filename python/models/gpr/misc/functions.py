@@ -1,5 +1,5 @@
 from numba import jit
-from numpy import array, dot, eye, kron, sqrt
+from numpy import array, dot, eye, sqrt
 
 
 def lim(x):
@@ -113,15 +113,6 @@ def gram_rev(A):
     """ Returns the Gram matrix for A^T
     """
     return dot(A, A.T)
-
-
-def kron_prod(matList):
-    """ Returns the kronecker product of the matrices in matList
-    """
-    ret = matList[0]
-    for i in range(1, len(matList)):
-        ret = kron(ret, matList[i])
-    return ret
 
 
 def reorder(X, order='typical'):

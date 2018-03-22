@@ -3,11 +3,8 @@ from itertools import product
 from numpy import array, zeros
 from scipy.integrate import odeint
 
-from system import source
+from system import source, ode_solver_analytical, source_jacobian
 from options import NV, NUM_ODE
-
-from models.gpr.systems.jacobians import dSdQ
-from models.gpr.systems.analytical import ode_solver_analytical
 
 
 def f(y, t0, *args):
@@ -17,7 +14,7 @@ def f(y, t0, *args):
 
 
 def jac(y, t0, *args):
-    return dSdQ(y, *args)
+    return source_jacobian(y, *args)
 
 
 def ode_solver_numerical(Q, dt, *args):

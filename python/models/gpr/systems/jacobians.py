@@ -193,10 +193,9 @@ def dFdP(P, d):
     return ret
 
 
-def dSdQ(Q, *args):
+def dSdQ(Q, MP):
     """ WARNING: incomplete, and does not work for plastic solids
     """
-    MP = args[0]
     P = Cvec_to_Pclass(Q, MP)
     A = P.A
 

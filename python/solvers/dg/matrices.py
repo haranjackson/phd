@@ -1,10 +1,18 @@
 from itertools import product
 
-from numpy import concatenate, diag, eye, ones, zeros
+from numpy import concatenate, diag, eye, kron, ones, zeros
 
 from solvers.basis import NODES, WGHTS, PSI, PSID, DERVALS
-from models.gpr.misc.functions import kron_prod
 from options import NDIM, N, NV
+
+
+def kron_prod(matList):
+    """ Returns the kronecker product of the matrices in matList
+    """
+    ret = matList[0]
+    for i in range(1, len(matList)):
+        ret = kron(ret, matList[i])
+    return ret
 
 
 # Inner products required for Galerkin matrices

@@ -98,12 +98,10 @@ def solver_thermal_analytic(ρ, E, A, J, v, dt, MP):
 ### GENERAL ###
 
 
-def ode_solver_analytical(Q, dt, *args):
+def ode_solver_cons(Q, dt, MP):
     """ Solves the ODE analytically by approximating the distortion equations
         and solving the thermal impulse equations
     """
-    MP = args[0]
-
     ρ = Q[0]
     A = Q[5:14].reshape([3, 3])
 
