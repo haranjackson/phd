@@ -2,13 +2,13 @@ from numpy import dot, sign
 from numpy.linalg import solve
 from numpy.random import rand
 
-from gpr.misc.functions import det3
-from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
+from models.gpr.misc.functions import det3
+from models.gpr.misc.objects import material_parameters
+from models.gpr.misc.structures import Cvec_to_Pclass, Cvec, Cvec_to_Pvec
 
-from gpr.systems.conserved import system_cons
-from gpr.systems.primitive import system_prim
-from gpr.systems.jacobians import dQdP
+from models.gpr.systems.conserved import system_cons
+from models.gpr.systems.primitive import system_prim
+from models.gpr.systems.jacobians import dQdP
 
 
 def systems(Q, d, MP):

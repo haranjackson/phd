@@ -8,8 +8,8 @@ from scipy.sparse.linalg import lgmres
 from solvers.basis import GAPS
 from solvers.dg.dg import DG_W, DG_U, predictor, rhs
 from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
-from solvers.split.split import weno_midstepper
-from solvers.split.analytical import ode_stepper_analytical
+from solvers.split.homogeneous import weno_midstepper
+from models.gpr.systems.analytical import ode_solver_analytical
 from solvers.weno.weno import weno_launcher
 
 from bindings_tests.test_functions import check, generate_vector
@@ -181,11 +181,8 @@ def midstepper_test(u, dX, dt, MP):
 def ode_test(dt, MP):
     ode_py = generate_vector(MP)
     ode_cp = ode_py.copy()
-    u = zeros([1, 1, 1, NV])
-    u[0] = ode_py
     GPRpy.solvers.split.ode_launcher(ode_cp, dt, MP)
-    ode_stepper_analytical(u, dt, MP)
-    ode_py = u[0, 0, 0]
+    ode_solver_analytical(ode_py, dt, MP)
 
     print("ODEs  ", check(ode_cp, ode_py))
     return ode_cp, ode_py

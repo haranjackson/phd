@@ -6,10 +6,6 @@ from joblib import Parallel
 from numpy import array, int32, zeros
 
 from etc import boundaries
-from tests_1d import fluids, solids, multi, toro
-from tests_2d import validation
-from gpr.misc.plot import *
-
 from etc.iterator import timestep, make_u
 from etc.save import Data, print_stats, save_all
 from multi.gfm import add_ghost_cells
@@ -17,6 +13,10 @@ from solvers.solvers import ader_stepper, split_stepper
 
 from options import NV, NDIM, N, NCORE, CFL, RGFM
 from options import SPLIT, CPP_LVL, STRANG, HALF_STEP, STIFF, FLUX, PERR_FROB
+
+from models.gpr.tests.one import fluids, solids, multi, toro
+from models.gpr.tests.two import validation
+from models.gpr.misc.plot import *
 
 
 ### CHECK ARGUMENTS ###

@@ -5,10 +5,8 @@ from scipy.optimize import newton_krylov
 
 from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
 from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_M, DG_D
-from solvers.basis import GAPS
 from system import flux, source, nonconservative_product
-from options import NDIM, N, NV
-from options import STIFF, STIFF_IG, DG_TOL, DG_IT, PARA_DG, NCORE
+from options import NDIM, N, NV, STIFF, STIFF_IG, DG_TOL, DG_IT, PARA_DG, NCORE
 
 
 MAX_SIZE = 1e16  # variable values above this level will cause an error
@@ -44,11 +42,11 @@ def rhs(q, Ww, dt, dX, *args):
     return dt * ret + Ww
 
 
-def failed(w, f, dtGAPS, dX, *args):
+def failed(w, f, dt, dX, *args):
     """ Finds DG coefficients with Newton-Krylov, if iteration has failed
     """
     if STIFF_IG:
-        q = stiff_initial_guess(w, dtGAPS, dX, *args)
+        q = stiff_initial_guess(w, dt, dX, *args)
     else:
         q = standard_initial_guess(w)
     return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
@@ -67,7 +65,6 @@ def predictor(wh, dt, dX, *args):
     n = prod(shape[:NDIM])
     wh = wh.reshape(n, N**NDIM, NV)
     qh = zeros([n, NT, NV])
-    dtGAPS = dt * GAPS
 
     for i in range(n):
 
@@ -77,7 +74,7 @@ def predictor(wh, dt, dX, *args):
         def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, *args)
 
         if STIFF_IG:
-            q = stiff_initial_guess(w, dtGAPS, dX, *args)
+            q = stiff_initial_guess(w, dt, dX, *args)
         else:
             q = standard_initial_guess(w)
 
@@ -90,7 +87,7 @@ def predictor(wh, dt, dX, *args):
                 qNew = solve(DG_U, rhs(q, Ww, dt, dX, *args))
 
                 if (absolute(qNew) > MAX_SIZE).any():
-                    qh[i] = failed(w, obj, dtGAPS, dX, *args)
+                    qh[i] = failed(w, obj, dt, dX, *args)
                     break
 
                 elif unconverged(q, qNew):
@@ -101,7 +98,7 @@ def predictor(wh, dt, dX, *args):
                     qh[i] = qNew
                     break
             else:
-                qh[i] = failed(w, obj, dtGAPS, dX, *args)
+                qh[i] = failed(w, obj, dt, dX, *args)
 
     return qh.reshape(shape[:NDIM] + (N,) * (NDIM + 1) + (NV,))
 

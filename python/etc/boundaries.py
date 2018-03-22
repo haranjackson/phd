@@ -1,5 +1,4 @@
-from numpy import arange, array, concatenate, dot, prod
-from numpy.linalg import det, svd
+from numpy import arange, array, concatenate, prod
 
 from etc.grids import extend_grid
 from options import NDIM, N, NV
@@ -37,12 +36,3 @@ def periodic_BC(u):
         ret = extend_grid(ret, N, d, 2)
 
     return ret
-
-
-def destress(Q, MP):
-    """ Removes the stress and associated energy from state Q
-    """
-    A = Q[5:14].reshape([3,3])
-    detA = det(A)
-    U, _, Vh = svd(A)
-    Q[5:14] = detA**(1 / 3) * dot(U, Vh).ravel()

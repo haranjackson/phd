@@ -4,8 +4,8 @@ from scipy.optimize import newton_krylov, leastsq, root, anderson
 from solvers.basis import end_values, derivative_values, quad
 from solvers.dg.dg import rhs
 from solvers.dg.matrices import system_matrices
-from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec_to_Pclass, Cvec
+from models.gpr.misc.objects import material_parameters
+from models.gpr.misc.structures import Cvec_to_Pclass, Cvec
 from options import NV, N, NT
 
 

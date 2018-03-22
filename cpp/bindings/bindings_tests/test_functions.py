@@ -2,8 +2,8 @@ from numpy import amax, arange, sign
 from numpy.linalg import det
 from numpy.random import rand
 
-from gpr.misc.structures import Cvec
-from gpr.variables.eos import total_energy
+from models.gpr.misc.structures import Cvec
+from models.gpr.variables.eos import total_energy
 
 
 def generate_vector(MP):

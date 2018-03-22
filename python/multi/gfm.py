@@ -1,6 +1,6 @@
 from numpy import sum
 
-from multi.riemann import star_states
+from models.gpr.multi.riemann import star_states
 
 from options import ISO_FIX, LSET
 

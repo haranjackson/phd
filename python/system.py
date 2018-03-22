@@ -1,6 +1,6 @@
-from gpr.systems.conserved import flux_cons_ref, nonconservative_product_cons
-from gpr.systems.conserved import source_cons_ref, system_cons
-from gpr.systems.eigenvalues import max_abs_eigs
+from models.gpr.systems.conserved import flux_cons_ref, nonconservative_product_cons
+from models.gpr.systems.conserved import source_cons_ref, system_cons
+from models.gpr.systems.eigenvalues import max_abs_eigs
 
 
 def flux(ret, Q, d, *args):

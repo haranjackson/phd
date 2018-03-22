@@ -4,7 +4,7 @@ from numpy import arange, array, dot, zeros
 from scipy.optimize import newton_krylov
 
 from etc.grids import flat_index
-from solvers.basis import DERVALS
+from solvers.basis import DERVALS, GAPS
 from system import source, system_matrix
 from options import N, NV, NDIM, N_K_IG, DG_TOL
 
@@ -16,7 +16,7 @@ def standard_initial_guess(w):
     return ret.reshape([N**(NDIM + 1), NV])
 
 
-def stiff_initial_guess(w, dtGAPS, dX, *args):
+def stiff_initial_guess(w, dt, dX, *args):
     """ Returns an initial guess based on the underlying equations
     """
     q = zeros([N] * (NDIM + 1) + [NV])
@@ -25,7 +25,7 @@ def stiff_initial_guess(w, dtGAPS, dX, *args):
 
     for t in range(N):
 
-        dt = dtGAPS[t]
+        dt_ = dt * GAPS[t]
 
         # loop over the coordinates of each spatial node
         for coords in product(*coordList):
@@ -55,12 +55,12 @@ def stiff_initial_guess(w, dtGAPS, dX, *args):
                 def f(X):
                     source(S1, X, *args)
                     S = (S0 + S1) / 2
-                    return X - q_ + dt * (Mdqdx - S)
+                    return X - q_ + dt_ * (Mdqdx - S)
 
                 q[(t,) + coords] = newton_krylov(f, q_, f_tol=DG_TOL)
 
             else:
-                q[(t,) + coords] = q_ - dt * (Mdqdx - S0)
+                q[(t,) + coords] = q_ - dt_ * (Mdqdx - S0)
 
         qt = q[t]
 

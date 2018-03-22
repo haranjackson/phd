@@ -2,8 +2,8 @@ import GPRpy
 
 from numpy import array, dot, int32, zeros
 
-from gpr.misc.structures import Cvec_to_Pclass
-from gpr.systems.eigenvalues import Xi1, Xi2
+from models.gpr.misc.structures import Cvec_to_Pclass
+from models.gpr.systems.eigenvalues import Xi1, Xi2
 
 from solvers.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
 from solvers.fv.fv import interfaces, endpoints, fv_terms, centers

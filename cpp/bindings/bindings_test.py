@@ -2,8 +2,8 @@
 # Make sure Git/GPR-cpp and Git/GPR/python are in PYTHONPATH
 import GPRpy
 
-from tests_1d import fluids
-from tests_2d import validation
+from models.gpr.tests.one import fluids
+from models.gpr.tests.two import validation
 
 from bindings_tests.system_tests import flux_test, source_test
 from bindings_tests.system_tests import nonconservative_product_test, system_test
