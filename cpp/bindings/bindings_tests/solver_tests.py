@@ -14,7 +14,7 @@ from solvers.weno.weno import weno_launcher
 
 from bindings_tests.test_functions import check, generate_vector
 
-from options import NDIM, NV, N, NT
+from options import NDIM, NV, N
 from options import STIFF, STIFF_IG, DG_TOL
 
 
@@ -32,6 +32,7 @@ def lgmres_test():
 
 def newton_krylov_test(u, dt, dX, MP):
 
+    NT = N**(NDIM + 1)
     nx, ny = u.shape[:2]
     wh = weno_launcher(u)
 
@@ -137,7 +138,8 @@ def obj_test(u, dX, dt, MP):
     if NDIM == 1:
         obj_cp = GPRpy.solvers.dg.obj1(Q_cp.ravel(), Ww_cp, dt, dX[0], MP)
     else:
-        obj_cp = GPRpy.solvers.dg.obj2(Q_cp.ravel(), Ww_cp, dt, dX[0], dX[1], MP)
+        obj_cp = GPRpy.solvers.dg.obj2(
+            Q_cp.ravel(), Ww_cp, dt, dX[0], dX[1], MP)
 
     obj_cp = obj_cp.reshape([N**(NDIM + 1), NV])
     obj_py = rhs_py - dot(DG_U, Q_py)
@@ -165,16 +167,13 @@ def dg_test(u, dX, dt, MP):
 
 def midstepper_test(u, dX, dt, MP):
 
-    wh = weno_launcher(u)
-    nx, ny = wh.shape[:2]
-    mid_py = wh.reshape([nx, ny, 1] + [N] * NDIM + [NV])
+    mid_py = weno_launcher(u)
     mid_cp = mid_py.ravel()
 
     weno_midstepper(mid_py, dt, dX, MP)
     GPRpy.solvers.split.midstepper(mid_cp, NDIM, dt, dX, MP)
-    mid_cp = mid_cp.reshape([nx, ny] + [N] * NDIM + [NV])
-    mid_py = mid_py.reshape([nx, ny] + [N] * NDIM + [NV])
 
+    mid_cp = mid_cp.reshape(mid_py.shape)
     print("Step  ", check(mid_cp, mid_py))
     return mid_cp, mid_py
 

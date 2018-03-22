@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arange, array, einsum, eye, outer, zeros
+from numpy import array, einsum, eye, outer, zeros
 from scipy.integrate import odeint
 from scipy.linalg import inv, norm
 
@@ -104,7 +104,7 @@ def ode_stepper_numerical(u, dt, *args):
     MP = args[0]
 
     y0 = zeros([12])
-    for coords in product(*[arange(s) for s in u.shape[:-1]]):
+    for coords in product(*[range(s) for s in u.shape[:-1]]):
         Q = u[coords]
         P = Cvec_to_Pclass(Q, MP)
         ρ = P.ρ

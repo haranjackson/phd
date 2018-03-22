@@ -5,7 +5,8 @@ import GPRpy
 from tests_1d import fluids
 from tests_2d import validation
 
-from bindings_tests.system_tests import flux_test, source_test, block_test, Bdot_test, system_test
+from bindings_tests.system_tests import flux_test, source_test
+from bindings_tests.system_tests import nonconservative_product_test, system_test
 
 from bindings_tests.solver_tests import lgmres_test, newton_krylov_test
 from bindings_tests.solver_tests import weno_test, rhs_test, obj_test, dg_test
@@ -24,7 +25,7 @@ assert(GPRpy.NV() == NV)
 
 
 if NDIM == 1:
-    u, MPs, _, dX = fluids.first_stokes_problem_IC()
+    u, MPs, _, dX = fluids.heat_conduction_IC()
 else:
     u, MPs, _, dX = validation.hagen_poiseuille_IC()
 
@@ -36,8 +37,7 @@ dx = dX[0]
 
 F_cp, F_py = flux_test(d, MP)
 S_cp, S_py = source_test(d, MP)
-B_cp, B_py = block_test(d, MP)
-Bx_cp, Bx_py = Bdot_test(d, MP)
+Bx_cp, Bx_py = nonconservative_product_test(d, MP)
 M_cp, M_py = system_test(d, MP)
 
 lgmres_cp, lgmres_py = lgmres_test()

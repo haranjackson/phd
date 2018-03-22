@@ -154,12 +154,34 @@ def nonconservative_product_cons(ret, x, Q, d, MP):
             B2dot(ret, x, v)
 
 
+def block_cons(Q, d, MP):
+
+    ret = zeros([NV, NV])
+
+    if MP.VISCOUS:
+
+        P = Cvec_to_Pclass(Q, MP)
+
+        v = P.v
+        vd = v[d]
+
+        for i in range(5, 14):
+            ret[i, i] = vd
+        ret[5 + d, 5 + d:8 + d] -= v
+        ret[8 + d, 8 + d:11 + d] -= v
+        ret[11 + d, 11 + d:14 + d] -= v
+
+        for i in range(1, LSET + 1):
+            ret[-i, -i] = vd
+
+    return ret
+
+
 def system_cons(Q, d, MP):
     """ Returns the Jacobian in the dth direction
     """
     P = Cvec_to_Pclass(Q, MP)
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
-    B = zeros([NV, NV])
-    block_cons_ref(B, Q, d, MP)
+    B = block_cons(Q, d, MP)
     return dot(DFDP, DPDQ) + B

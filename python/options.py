@@ -5,8 +5,8 @@ NV   = 17                   # Number of variables
 
 """ Solver Options """
 
-CPP_LVL = 0                 # Level of C++ use (0=none, 1=some, 2=full)
-SPLIT = 0                   # Whether or not to use a split solver
+CPP_LVL = 1                 # Level of C++ use (0=none, 1=some, 2=full)
+SPLIT = 1                   # Whether or not to use a split solver
 
 N = 2                       # Order of the method
 CFL = 0.6                   # CFL number

@@ -1,7 +1,7 @@
 from itertools import product
 
 from joblib import delayed
-from numpy import arange, array, concatenate, dot, tensordot, zeros
+from numpy import array, concatenate, dot, tensordot, zeros
 
 from etc.grids import flat_index
 from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
@@ -37,9 +37,9 @@ def interfaces(ret, qEnd, dX, *args):
     for d in range(NDIM):
 
         # dimensions of cells traversed when calculating fluxes in direction d
-        dimensions = [arange(1, dim + 1) for dim in dims[:d]] + \
-                     [arange(1, dims[d] + 2)] + \
-                     [arange(1, dim + 1) for dim in dims[d + 1:]]
+        dimensions = [range(1, dim + 1) for dim in dims[:d]] + \
+                     [range(1, dims[d] + 2)] + \
+                     [range(1, dim + 1) for dim in dims[d + 1:]]
 
         for coords in product(*dimensions):
 
@@ -78,12 +78,12 @@ def interfaces(ret, qEnd, dX, *args):
 def centers(ret, qh, dX, HOMOGENEOUS, *args):
     """ Returns the space-time averaged source term and non-conservative terms
     """
-    for coords in product(*[arange(dim) for dim in ret.shape[:NDIM]]):
+    for coords in product(*[range(dim) for dim in ret.shape[:NDIM]]):
 
         qhi = qh[tuple(coord + 1 for coord in coords)]
 
         # Integrate across volume of spacetime cell
-        for inds in product(*[arange(s) for s in WGHT.shape]):
+        for inds in product(*[range(s) for s in WGHT.shape]):
 
             q = qhi[inds]
             qi = []

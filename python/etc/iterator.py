@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arange, sum, zeros
+from numpy import sum, zeros
 
 from multi.gfm import get_material_index
 from options import CFL, NDIM
@@ -13,7 +13,7 @@ def make_u(mats):
     u = zeros(mats[0].shape)
     av = sum(mats, axis=0) / len(mats)
 
-    for coords in product(*[arange(s) for s in av.shape[:NDIM]]):
+    for coords in product(*[range(s) for s in av.shape[:NDIM]]):
 
         materialIndex = get_material_index(av[coords])
         u[coords] = mats[materialIndex][coords]
@@ -25,7 +25,7 @@ def timestep(u, count, t, tf, dX, MPs):
     """ Calculates dt, based on the maximum wavespeed across the domain
     """
     MAX = 0
-    for coords in product(*[arange(s) for s in u.shape[:NDIM]]):
+    for coords in product(*[range(s) for s in u.shape[:NDIM]]):
 
         Q = u[coords]
         materialIndex = get_material_index(Q)

@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import arange, arctan, array, cos, dot, exp, log, prod, sqrt
+from numpy import arctan, array, cos, dot, exp, log, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
@@ -106,7 +106,7 @@ def ode_stepper_analytical(u, dt, *args):
     """
     MP = args[0]
 
-    for coords in product(*[arange(s) for s in u.shape[:-1]]):
+    for coords in product(*[range(s) for s in u.shape[:-1]]):
         Q = u[coords]
         ρ = Q[0]
         A = Q[5:14].reshape([3, 3])

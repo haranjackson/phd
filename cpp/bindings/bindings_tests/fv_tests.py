@@ -96,7 +96,7 @@ def FVc_test(qh_py, dX, dt, MP):
         GPRpy.solvers.fv.centers2(FVc_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
                                   dX[0], dX[1], SOURCES, TIME, MP)
 
-    centers(FVc_py, qh_py, dX, MP, HOMOGENEOUS)
+    centers(FVc_py, qh_py, dX, HOMOGENEOUS, MP)
     FVc_py *= dt
 
     FVc_cp = FVc_cp.reshape(FVc_py.shape)
@@ -147,7 +147,7 @@ def FV_test(qh_py, dX, dt, MP):
         FV_cp = zeros((nx - 2) * (ny - 2) * NV)
         nX = array([nx - 2, ny - 2, 1], dtype=int32)
 
-    FV_py = fv_terms(qh_py, dt, dX, MP, HOMOGENEOUS)
+    FV_py = fv_terms(qh_py, dt, dX, HOMOGENEOUS, MP)
 
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), NDIM, nX, dt, dX,
                                  SOURCES, TIME, FLUX, PERR_FROB, MP)
