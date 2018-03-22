@@ -10,7 +10,7 @@ from solvers.fv.fv import interfaces, endpoints, fv_terms, centers
 
 from bindings_tests.test_functions import check, generate_vector
 
-from options import SPLIT, FLUX, PERR_FROB, NV, NDIM
+from options import SPLIT, FLUX, NV, NDIM
 
 
 ### FLUXES ###
@@ -42,7 +42,7 @@ def Bint_test(d, MP):
 def D_RUS_test(d, MP):
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
-    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, PERR_FROB, MP)
+    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, MP)
     D_RUS_py = -D_RUS(Q1, Q2, d, MP)
 
     print("D_RUS ", check(D_RUS_cp, D_RUS_py))
@@ -118,14 +118,14 @@ def FVi_test(qh_py, dX, dt, MP):
 
         FVi_cp = zeros((nx - 2) * NV)
         GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dX[0],
-                                  TIME, FLUX, PERR_FROB, MP)
+                                  TIME, FLUX, MP)
 
     elif NDIM == 2:
         FVi_py = zeros([nx - 2, ny - 2, NV])
 
         FVi_cp = zeros((nx - 2) * (ny - 2) * NV)
         GPRpy.solvers.fv.interfs2(FVi_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
-                                  dX[0], dX[1], TIME, FLUX, PERR_FROB, MP)
+                                  dX[0], dX[1], TIME, FLUX, MP)
 
     interfaces(FVi_py, qEnd, dX, MP)
     FVi_py *= dt
@@ -150,7 +150,7 @@ def FV_test(qh_py, dX, dt, MP):
     FV_py = fv_terms(qh_py, dt, dX, HOMOGENEOUS, MP)
 
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), NDIM, nX, dt, dX,
-                                 SOURCES, TIME, FLUX, PERR_FROB, MP)
+                                 SOURCES, TIME, FLUX, MP)
 
     FV_cp = FV_cp.reshape(FV_py.shape)
     print("FV    ", check(FV_cp, FV_py))

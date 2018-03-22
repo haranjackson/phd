@@ -73,12 +73,10 @@ int main() {
   bool HALF_STEP = true;
   bool STIFF = false;
   int FLUX = 1;
-  bool PERR_FROB = false;
 
   Vec u = heat_conduction_1d(MP, nX(0));
 
-  iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT, STRANG, HALF_STEP, STIFF, FLUX,
-           PERR_FROB, MP);
+  iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT, STRANG, HALF_STEP, STIFF, FLUX, MP);
 
   std::cout << "Hello World" << std::endl;
   return 0;

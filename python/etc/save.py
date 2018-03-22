@@ -6,7 +6,7 @@ from numpy import array, linspace, int64, save
 
 from options import RGFM, ISO_FIX, STAR_TOL, STIFF_RGFM
 from options import CPP_LVL, SPLIT
-from options import N, CFL, FLUX, PERR_FROB
+from options import N, CFL, FLUX
 from options import NUM_ODE, HALF_STEP, STRANG
 from options import STIFF, STIFF_IG, N_K_IG, DG_TOL, DG_IT
 from options import rc, λc, λs, eps
@@ -32,8 +32,7 @@ def save_config(path):
 
         f.write('N    = %i\n' % N)
         f.write('CFL  = %f\n' % CFL)
-        f.write('FLUX = %i\n' % FLUX)
-        f.write('PERR_FROB = %i\n\n' % PERR_FROB)
+        f.write('FLUX = %i\n\n' % FLUX)
 
         f.write('NUM_ODE   = %i\n' % NUM_ODE)
         f.write('HALF_STEP = %i\n' % HALF_STEP)

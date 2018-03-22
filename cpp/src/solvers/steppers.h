@@ -5,11 +5,11 @@
 #include "../system/objects/gpr_objects.h"
 
 void ader_stepper(Vecr u, Vecr ub, Vecr wh, Vecr qh, int ndim, Veci3r nX,
-                  double dt, Vec3r dX, bool STIFF, int FLUX, bool PERR_FROB,
+                  double dt, Vec3r dX, bool STIFF, int FLUX, 
                   Par &MP);
 
 void split_stepper(Vecr u, Vecr ub, Vecr wh, int ndim, Veci3r nX, double dt,
                    Vec3r dX, bool STRANG, bool HALF_STEP, int FLUX,
-                   bool PERR_FROB, Par &MP);
+                    Par &MP);
 
 #endif // SOLVERS_H

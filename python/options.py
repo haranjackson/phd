@@ -5,13 +5,12 @@ NV   = 17                   # Number of variables
 
 """ Solver Options """
 
-CPP_LVL = 1                 # Level of C++ use (0=none, 1=some, 2=full)
-SPLIT = 1                   # Whether or not to use a split solver
+CPP_LVL = 2                 # Level of C++ use (0=none, 1=some, 2=full)
+SPLIT = 0                   # Whether or not to use a split solver
 
 N = 2                       # Order of the method
 CFL = 0.6                   # CFL number
 FLUX = 0                    # Flux type (0=Rusanov, 1=Roe, 2=Osher)
-PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 
 NUM_ODE   = 0               # Use numerical ODE solver (SPLIT=1)
 HALF_STEP = 1               # Step forwards WENO solver by dt/2 (SPLIT=1)

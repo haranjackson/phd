@@ -54,8 +54,8 @@ VecV D_ROE(VecVr qL, VecVr qR, int d, Par &MP) {
   return (es.eigenvectors() * b).real();
 }
 
-VecV D_RUS(VecVr qL, VecVr qR, int d, bool PERR_FROB, Par &MP) {
-  double max1 = max_abs_eigs(qL, d, PERR_FROB, MP);
-  double max2 = max_abs_eigs(qR, d, PERR_FROB, MP);
+VecV D_RUS(VecVr qL, VecVr qR, int d, Par &MP) {
+  double max1 = max_abs_eigs(qL, d, MP);
+  double max2 = max_abs_eigs(qR, d, MP);
   return std::max(max1, max2) * (qL - qR);
 }

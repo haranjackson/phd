@@ -40,24 +40,13 @@ Mat4_4 thermo_acoustic_tensor(VecVr Q, int d, Par &MP) {
   return Xi1 * Xi2;
 }
 
-double max_abs_eigs(VecVr Q, int d, bool PERR_FROB, Par &MP) {
+double max_abs_eigs(VecVr Q, int d, Par &MP) {
   // Returns the maximum of the absolute values of  the eigenvalues of the GPR
   // system
   Mat4_4 O = thermo_acoustic_tensor(Q, d, MP);
   double vd = Q(2 + d) / Q(0);
 
-  double lam;
-  if (PERR_FROB) {
-    double r01 = std::max(O.row(0).sum(), O.row(1).sum());
-    double r23 = std::max(O.row(2).sum(), O.row(3).sum());
-    double c01 = std::max(O.col(0).sum(), O.col(1).sum());
-    double c23 = std::max(O.col(2).sum(), O.col(3).sum());
-    double r = std::max(r01, r23);
-    double c = std::max(c01, c23);
-    lam = sqrt(std::min(r, c));
-  } else {
-    lam = sqrt(O.eigenvalues().array().abs().maxCoeff());
-  }
+  double lam = sqrt(O.eigenvalues().array().abs().maxCoeff());
   if (vd > 0)
     return vd + lam;
   else

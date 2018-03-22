@@ -16,9 +16,9 @@ def get_levelset_root(u, i, m):
     return n
 
 
-def add_ghost_cells(mats, MPs, dt):
+def add_ghost_cells(mats, dt, *args):
 
-    m = len(MPs)
+    m = len(args[0])
     for i in range(m - 1):
         uL = mats[i]
         uR = mats[i + 1]

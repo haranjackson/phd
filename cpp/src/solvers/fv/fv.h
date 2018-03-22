@@ -10,11 +10,11 @@ void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
               bool SOURCES, bool TIME, Par &MP);
 
 void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
-              int FLUX, bool PERR_FROB, Par &MP);
+              int FLUX,  Par &MP);
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool TIME, int FLUX, bool PERR_FROB, Par &MP);
+              bool TIME, int FLUX,  Par &MP);
 
 void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
-                 bool SOURCES, bool TIME, int FLUX, bool PERR_FROB, Par &MP);
+                 bool SOURCES, bool TIME, int FLUX,  Par &MP);
 
 #endif // FV_H

@@ -4,8 +4,6 @@ from numpy.linalg import eigvals
 from models.gpr.misc.structures import Cvec_to_Pclass
 from models.gpr.variables.wavespeeds import c_0, c_h
 
-from options import PERR_FROB
-
 
 def Xi1(P, d):
 
@@ -60,6 +58,8 @@ def Xi2(P, d):
 def max_abs_eigs(Q, d, MP):
     """ Returns maximum absolute value of the eigenvalues of the GPR system
     """
+    PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
+
     P = Cvec_to_Pclass(Q, MP)
     vd = P.v[d]
     Ξ1 = Xi1(P, d)

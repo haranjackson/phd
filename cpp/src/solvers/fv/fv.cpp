@@ -92,7 +92,7 @@ void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
 }
 
 void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
-                    double wght_t, int FLUX, bool PERR_FROB, Par &MP) {
+                    double wght_t, int FLUX, Par &MP) {
 
   double k = wght_t / (2. * dx);
   VecV ql, qr, f, b;
@@ -113,7 +113,7 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
       f = D_ROE(ql, qr, 0, MP);
       break;
     case RUSANOV:
-      f = D_RUS(ql, qr, 0, PERR_FROB, MP);
+      f = D_RUS(ql, qr, 0, MP);
       break;
     }
     flux(f, ql, 0, MP);
@@ -128,18 +128,17 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
 }
 
 void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
-              int FLUX, bool PERR_FROB, Par &MP) {
+              int FLUX, Par &MP) {
 
   if (TIME)
     for (int t = 0; t < N; t++)
-      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), FLUX, PERR_FROB, MP);
+      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), FLUX, MP);
   else
-    interfs1_inner(u, rec, nx, dx, 1, 0, dt, FLUX, PERR_FROB, MP);
+    interfs1_inner(u, rec, nx, dx, 1, 0, dt, FLUX, MP);
 }
 
 void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
-                    int nt, int t, double wghts_t, int FLUX, bool PERR_FROB,
-                    Par &MP) {
+                    int nt, int t, double wghts_t, int FLUX, Par &MP) {
 
   MatN_V q0x, q0y, q1x, q1y;
   VecV qlx, qrx, qly, qry, fx, bx, fy, by;
@@ -183,7 +182,7 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           fx = D_ROE(qlx, qrx, 0, MP);
           break;
         case RUSANOV:
-          fx = D_RUS(qlx, qrx, 0, PERR_FROB, MP);
+          fx = D_RUS(qlx, qrx, 0, MP);
           break;
         }
         flux(fx, qlx, 0, MP);
@@ -198,7 +197,7 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           fy = D_ROE(qly, qry, 1, MP);
           break;
         case RUSANOV:
-          fy = D_RUS(qly, qry, 1, PERR_FROB, MP);
+          fy = D_RUS(qly, qry, 1, MP);
           break;
         }
         flux(fy, qly, 1, MP);
@@ -218,17 +217,16 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 }
 
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool TIME, int FLUX, bool PERR_FROB, Par &MP) {
+              bool TIME, int FLUX, Par &MP) {
   if (TIME)
     for (int t = 0; t < N; t++)
-      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), FLUX,
-                     PERR_FROB, MP);
+      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), FLUX, MP);
   else
-    interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, PERR_FROB, MP);
+    interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, MP);
 }
 
 void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
-                 bool SOURCES, bool TIME, int FLUX, bool PERR_FROB, Par &MP) {
+                 bool SOURCES, bool TIME, int FLUX, Par &MP) {
   int nx = nX(0);
   int ny = nX(1);
   double dx = dX(0);
@@ -237,11 +235,11 @@ void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
   switch (ndim) {
   case 1:
     centers1(u, rec, nx, dt, dx, SOURCES, TIME, MP);
-    interfs1(u, rec, nx, dt, dx, TIME, FLUX, PERR_FROB, MP);
+    interfs1(u, rec, nx, dt, dx, TIME, FLUX, MP);
     break;
   case 2:
     centers2(u, rec, nx, ny, dt, dx, dy, SOURCES, TIME, MP);
-    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, FLUX, PERR_FROB, MP);
+    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, FLUX, MP);
     break;
     // case 3 : TODO
   }
