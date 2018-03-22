@@ -9,7 +9,7 @@ from solvers.basis import GAPS
 from solvers.dg.dg import DG_W, DG_U, predictor, rhs
 from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
 from solvers.split.homogeneous import weno_midstepper
-from models.gpr.systems.analytical import ode_solver_analytical
+from system import ode_solver_analytical
 from solvers.weno.weno import weno_launcher
 
 from bindings_tests.test_functions import check, generate_vector
