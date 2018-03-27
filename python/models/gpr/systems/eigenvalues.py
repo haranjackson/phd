@@ -1,7 +1,7 @@
 from numpy import dot, sqrt, zeros
 from numpy.linalg import eigvals
 
-from models.gpr.misc.structures import Cvec_to_Pclass
+from models.gpr.misc.structures import State
 from models.gpr.variables.wavespeeds import c_0, c_h
 
 
@@ -10,7 +10,11 @@ def Xi1(P, d):
     ρ = P.ρ
     MP = P.MP
 
-    ret = zeros([4, 5])
+    if MP.THERMAL:
+        ret = zeros([4, 5])
+    else:
+        ret = zeros([3, 5])
+
     ret[0, 1] = 1 / ρ
 
     if MP.VISCOUS:
@@ -36,7 +40,11 @@ def Xi2(P, d):
     MP = P.MP
     c0 = c_0(ρ, p, A, MP)
 
-    ret = zeros([5, 4])
+    if MP.THERMAL:
+        ret = zeros([5, 4])
+    else:
+        ret = zeros([5, 3])
+
     ret[0, 0] = ρ
     ret[1, d] = ρ * c0**2
 
@@ -60,14 +68,11 @@ def max_abs_eigs(Q, d, MP):
     """
     PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
     vd = P.v[d]
     Ξ1 = Xi1(P, d)
     Ξ2 = Xi2(P, d)
     O = dot(Ξ1, Ξ2)
-
-    if not MP.THERMAL:
-        O = O[:3, :3]
 
     if PERR_FROB:
         rowSum = [sum(o) for o in O]

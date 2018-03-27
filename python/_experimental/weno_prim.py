@@ -4,7 +4,7 @@ from numpy import array, dot, zeros
 
 from solvers.basis import PSI
 from solvers.weno.weno import weno
-from models.gpr.misc.structures import Cvec_to_Pvec
+from _experimental.stiff_riemann import Cvec_to_Pvec
 
 
 # The values of the basis polynomials at x=0.5

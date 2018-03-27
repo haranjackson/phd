@@ -787,6 +787,10 @@ where
 Eigenvectors
 \end_layout
 
+\begin_layout Subsection
+With Heat Conduction
+\end_layout
+
 \begin_layout Standard
 By hyperbolicity of the system, 
 \begin_inset Formula $\Xi$
@@ -1018,6 +1022,412 @@ Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & -
 \left(\begin{array}{cc}
 0_{2,15} & I_{2}\end{array}\right)
 \end{array}\right\} \label{eq:Left-Eigenvectors}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Without Heat Conduction
+\end_layout
+
+\begin_layout Standard
+If the system does not include the heat conduction terms, the eigenstructure
+ of the system matrix changes.
+ 
+\begin_inset Formula $\Xi_{1},\Xi_{2},\Xi$
+\end_inset
+
+ now take the following values:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{1}=\left(\begin{array}{ccccc}
+-\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial\rho} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}}\\
+-\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}}\\
+-\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{2}=\left(\begin{array}{ccc}
+\rho & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)\\
+A_{11} & A_{12} & A_{13}\\
+A_{21} & A_{22} & A_{23}\\
+A_{31} & A_{32} & A_{33}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi=\Xi_{1}\Xi_{2}=\left(\begin{array}{ccc}
+\Omega_{11}^{1}+\left(c_{0}^{2}+\frac{\sigma_{11}}{\rho}-\frac{\partial\sigma_{11}}{\partial\rho}\right) & \Omega_{12}^{1}+\left(\frac{\sigma_{21}}{\rho}-\frac{\partial\sigma_{21}}{\partial\rho}\right) & \Omega_{13}^{1}+\left(\frac{\sigma_{31}}{\rho}-\frac{\partial\sigma_{31}}{\partial\rho}\right)\\
+\Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1}\\
+\Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the eigendecomposition 
+\begin_inset Formula $\Xi=Q^{-1}D^{2}Q$
+\end_inset
+
+ as before, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R=\left\{ \left(\begin{array}{cc}
+\frac{1}{2}\Xi_{2}\left(D^{2}Q\right)^{-1} & \frac{1}{2}\Xi_{2}\left(D^{2}Q\right)^{-1}\\
+0_{6,3} & 0_{6,3}\\
+\frac{1}{2}\left(DQ\right)^{-1} & -\frac{1}{2}\left(DQ\right)^{-1}
+\end{array}\right),\left(\begin{array}{cc}
+1 & 0\\
+0 & 1\\
+-\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
+\boldsymbol{0_{9}} & \boldsymbol{0_{9}}
+\end{array}\right),\left(\begin{array}{cc}
+0_{2,3} & 0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2} & -\Pi_{1}^{-1}\Pi_{3}\\
+I_{3} & 0_{3,3}\\
+0_{3,3} & I_{3}\\
+0_{3,3} & 0_{3,3}
+\end{array}\right)\right\} \label{eq:Right-Eigenvectors-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By considering their products with the first 8 columns of 
+\begin_inset Formula $R$
+\end_inset
+
+, two of the left eigenvectors corresponding the the 7th and 8th right eigenvect
+ors must come in the form of the rows of the following matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cccc}
+W & X & Y & Z\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $W\in\mathbb{R}^{2,5}$
+\end_inset
+
+ and 
+\begin_inset Formula $X,Y,Z\in\mathbb{R}^{2,3}$
+\end_inset
+
+, and:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+W\Xi_{2}\left(D^{2}Q\right)^{-1}+Z\left(DQ\right)^{-1} & =0\\
+W\Xi_{2}\left(D^{2}Q\right)^{-1}-Z\left(DQ\right)^{-1} & =0\\
+W\left(\begin{array}{c}
+0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2}
+\end{array}\right)+X & =0\\
+W\left(\begin{array}{c}
+0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{3}
+\end{array}\right)+Y & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+Z & =0\\
+X & =-W_{:,3:5}\Pi_{1}^{-1}\Pi_{2}\\
+Y & =-W_{:,3:5}\Pi_{1}^{-1}\Pi_{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W\left(\begin{array}{ccccc}
+\rho & 0 & 0 & 1 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & 0 & 1\\
+A_{11} & A_{12} & A_{13} & \vdots & \vdots\\
+A_{21} & A_{22} & A_{23} & -\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
+A_{31} & A_{32} & A_{33} & \vdots & \vdots
+\end{array}\right)=WM=\left(\begin{array}{ccccc}
+0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 0 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By the properties of block matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+M^{-1}=\left(\begin{array}{cc}
+-A^{-1}C\left(I-BA^{-1}C\right)^{-1} & A^{-1}\left(I+C\left(I-BA^{-1}C\right)^{-1}BA^{-1}\right)\\
+\left(I-BA^{-1}C\right)^{-1} & -\left(I-BA^{-1}C\right)^{-1}BA^{-1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+B & =\left(\begin{array}{ccc}
+\rho & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)
+\end{array}\right)\\
+C & =\left(\begin{array}{ccc}
+\cdots & -\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \cdots\\
+\cdots & \Pi_{1}^{-1}\boldsymbol{e_{1}} & \cdots
+\end{array}\right)^{T}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W=\left(\begin{array}{cc}
+\left(I-BA^{-1}C\right)^{-1} & -\left(I-BA^{-1}C\right)^{-1}BA^{-1}\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+W & =\left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{cc}
+I_{2} & -BA^{-1}\end{array}\right)\\
+X & =\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{2}\\
+Y & =\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L=\left\{ \begin{array}{c}
+\left(\begin{array}{ccccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & DQ & 0_{4,2}\\
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & -DQ & 0_{4,2}
+\end{array}\right)\\
+\left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
+I_{2} & -BA^{-1} & BA^{-1}\Pi_{1}^{-1}\Pi_{2} & BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
+\left(\begin{array}{cccc}
+0_{3,5} & I_{3} & 0_{3,3} & 0_{3,3}\\
+0_{3,5} & 0_{3,3} & I_{3} & 0_{3,3}
+\end{array}\right)
+\end{array}\right\} \label{eq:Left-Eigenvectors-Non-Thermal}
 \end{equation}
 
 \end_inset

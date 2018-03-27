@@ -4,7 +4,7 @@ from scipy.special import erf
 
 from etc.boundaries import standard_BC
 from models.gpr.misc.objects import material_parameters
-from models.gpr.misc.structures import Cvec, Cvec_to_Pclass
+from models.gpr.misc.structures import Cvec, State
 from models.gpr.variables.wavespeeds import c_0
 from models.gpr.tests.one.common import riemann_IC, MP_AIR, cell_sizes
 from options import NV, N
@@ -197,7 +197,7 @@ def hagen_poiseuille_BC(u):
     ret = zeros(u.shape)
     for i in range(nx):
         Q = u[i]
-        P = Cvec_to_Pclass(Q, MP)
+        P = State(Q, MP)
         ret[i] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
 
     return standard_BC(ret, [1])

@@ -1,14 +1,14 @@
 from numpy import dot, zeros
 
 from models.gpr.systems.jacobians import dFdP, dPdQ
-from models.gpr.misc.structures import Cvec_to_Pclass
+from models.gpr.misc.structures import State
 
 from options import NV, LSET
 
 
 def flux_cons_ref(ret, Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
 
     ρ1 = P.ρ1
     ρ = P.ρ
@@ -64,7 +64,7 @@ def flux_cons_ref(ret, Q, d, MP):
 
 def source_cons_ref(ret, Q, MP):
 
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
 
     ρ = P.ρ
 
@@ -144,7 +144,7 @@ def B2dot(ret, x, v):
 def nonconservative_product_cons(ret, x, Q, d, MP):
 
     if MP.VISCOUS:
-        P = Cvec_to_Pclass(Q, MP)
+        P = State(Q, MP)
         v = P.v
         if d == 0:
             B0dot(ret, x, v)
@@ -160,7 +160,7 @@ def block_cons(Q, d, MP):
 
     if MP.VISCOUS:
 
-        P = Cvec_to_Pclass(Q, MP)
+        P = State(Q, MP)
 
         v = P.v
         vd = v[d]
@@ -180,7 +180,7 @@ def block_cons(Q, d, MP):
 def system_cons(Q, d, MP):
     """ Returns the Jacobian in the dth direction
     """
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
     B = block_cons(Q, d, MP)

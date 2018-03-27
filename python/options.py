@@ -1,7 +1,7 @@
 """ System Parameters """
 
 NDIM = 1                    # Number of dimensions
-NV   = 17                   # Number of variables
+NV   = 14                   # Number of variables
 
 """ Solver Options """
 

@@ -5,7 +5,7 @@ from numpy import arange, linspace, mgrid, prod, zeros
 from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot
 from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
 
-from models.gpr.misc.structures import Cvec_to_Pclass
+from models.gpr.misc.structures import State
 from multi.gfm import get_material_index
 from solvers.basis import NODES, PSI
 
@@ -65,7 +65,7 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None, j=None):
     for ii in range(n):
         Q = u.reshape([n, NV])[ii]
         MP = MPs[get_material_index(Q)]
-        P = Cvec_to_Pclass(Q, MP)
+        P = State(Q, MP)
         var = getattr(P, attr)()
         if j is None:
             if i is None:

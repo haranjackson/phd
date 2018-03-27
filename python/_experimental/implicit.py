@@ -5,7 +5,7 @@ from solvers.basis import end_values, derivative_values, quad
 from solvers.dg.dg import rhs
 from solvers.dg.matrices import system_matrices
 from models.gpr.misc.objects import material_parameters
-from models.gpr.misc.structures import Cvec_to_Pclass, Cvec
+from models.gpr.misc.structures import State, Cvec
 from options import NV, N, NT
 
 
@@ -45,8 +45,8 @@ def obj_eul(x, WwL, WwR, dt, MPL, MPR):
     ΣL_ = zeros([N, 3])
     ΣR_ = zeros([N, 3])
     for i in range(N):
-        PL_ = Cvec_to_Pclass(qL_[i], MPL)
-        PR_ = Cvec_to_Pclass(qR_[i], MPR)
+        PL_ = State(qL_[i], MPL)
+        PR_ = State(qR_[i], MPR)
         vL_[i] = PL_.v
         vR_[i] = PR_.v
         ΣL_[i] = PL_.Σ()[0]
@@ -90,8 +90,8 @@ if __name__ == "__main__":
     QL = Cvec(ρL, pL, vL, AL, JL, MPR)
     QR = Cvec(ρR, pR, vR, AR, JR, MPL)
 
-    PL = Cvec_to_Pclass(QL, MPL)
-    PR = Cvec_to_Pclass(QR, MPL)
+    PL = State(QL, MPL)
+    PR = State(QR, MPL)
 
     wL = array([QL for i in range(N)])
     wR = array([QR for i in range(N)])

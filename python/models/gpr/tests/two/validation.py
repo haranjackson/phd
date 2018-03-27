@@ -2,7 +2,7 @@ from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
 from etc.boundaries import standard_BC
 from models.gpr.misc.objects import material_parameters
-from models.gpr.misc.structures import Cvec, Cvec_to_Pclass
+from models.gpr.misc.structures import Cvec, State
 from models.gpr.tests.boundaries import destress
 from models.gpr.tests.one.common import cell_sizes
 from options import NV, N
@@ -183,7 +183,7 @@ def hagen_poiseuille_BC(u):
             pi = p - (i + 1) * ddp
             for j in range(ny):
                 Q = ret[i, j, 0]
-                P = Cvec_to_Pclass(Q, MP)
+                P = State(Q, MP)
                 ret[i, j, 0] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
 
     ret = standard_BC(u, [0, 1])

@@ -10,23 +10,42 @@ from models.gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
 from options import NV
 
 
-class Cvec_to_Pclass():
+def extract_densities(Q, MP, state):
+    if MP.MULTI:
+        state.ρ = Q[0] + Q[17]
+        state.z = Q[18] / state.ρ
+        state.ρ1 = Q[0] / state.z
+        state.ρ2 = Q[17] / state.z
+        if MP.REACTIVE:
+            state.λ = Q[19] / Q[17]
+    else:
+        state.ρ = Q[0]
+
+
+def calculate_pressure(state):
+    if hasattr(state, 'p_'):
+        return state.p_
+    else:
+        if state.MP.THERMAL:
+            if state.MP.REACTIVE:
+                state.p_ = pressure(state.ρ, state.E, state.v, state.A, state.J,
+                                    state.MP, state.λ)
+            else:
+                state.p_ = pressure(state.ρ, state.E, state.v, state.A, state.J,
+                                    state.MP)
+        else:
+            state.p_ = pressure(state.ρ, state.E, state.v, state.A, zeros(3),
+                                state.MP)
+        return state.p_
+
+
+class State():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
 
     def __init__(self, Q, MP):
 
-        if MP.MULTI:
-            self.ρ = Q[0] + Q[17]
-            self.z = Q[18] / self.ρ
-            self.ρ1 = Q[0] / self.z
-            self.ρ2 = Q[17] / self.z
-            if MP.REACTIVE:
-                self.λ = Q[19] / Q[17]
-        else:
-            self.ρ = Q[0]
-            self.ρ1 = self.ρ
-            self.z = 1
+        extract_densities(Q, MP, self)
 
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
@@ -36,8 +55,6 @@ class Cvec_to_Pclass():
 
         if MP.THERMAL:
             self.J = Q[14:17] / self.ρ
-        else:
-            self.J = zeros(3)
 
         self.MP = MP
 
@@ -45,16 +62,7 @@ class Cvec_to_Pclass():
         return gram(self.A)
 
     def p(self):
-        if hasattr(self, 'p_'):
-            return self.p_
-        else:
-            if self.MP.REACTIVE:
-                self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J,
-                                   self.MP, self.λ)
-            else:
-                self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J,
-                                   self.MP)
-            return self.p_
+        return calculate_pressure(self)
 
     def T(self):
         if hasattr(self, 'T_'):
@@ -143,67 +151,3 @@ def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
         Q[14:17] = ρ * J
 
     return Q
-
-
-def Pvec(P):
-    ret = zeros(NV)
-    ret[0] = P.ρ
-    ret[1] = P.p()
-    ret[2:5] = P.v
-    ret[5:14] = P.A.ravel()
-    ret[14:17] = P.J
-    return ret
-
-
-def Pvec_to_Cvec(P, MP):
-    """ Returns the vector of conserved variables, given the vector of
-        primitive variables
-    """
-    Q = P.copy()
-    ρ = P[0]
-    A = P[5:14].reshape([3, 3])
-
-    if MP.REACTIVE:
-        λ = P[17]
-    else:
-        λ = 0
-
-    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP)
-    Q[2:5] *= ρ
-    Q[14:] *= ρ
-    return Q
-
-
-def Cvec_to_Pvec(Q, MP):
-    """ Returns the vector of primitive variables in standard ordering,
-        given the vector of conserved variables.
-    """
-    ρ = Q[0]
-    E = Q[1] / ρ
-    v = Q[2:5] / ρ
-    A = Q[5:14].reshape([3, 3])
-    J = Q[14:17] / ρ
-
-    if MP.REACTIVE:
-        λ = Q[17] / ρ
-    else:
-        λ = None
-
-    p = pressure(ρ, E, v, A, J, MP, λ)
-
-    ret = Q.copy()
-    ret[1] = p
-    ret[2:5] /= ρ
-    ret[14:] /= ρ
-
-    return ret
-
-
-def Cgrid_to_Pgrid(u, MP):
-    nx, ny, nz = u.shape[:3]
-    ret = zeros(u.shape)
-    for i in range(nx):
-        for j in range(ny):
-            for k in range(nz):
-                ret[i, j, k] = Cvec_to_Pvec(u[i, j, k], MP)
-    return ret

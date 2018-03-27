@@ -1,7 +1,7 @@
 from numpy import eye, zeros
 
 from models.gpr.misc.functions import L2_1D, L2_2D
-from models.gpr.misc.structures import Cvec_to_Pclass
+from models.gpr.misc.structures import State
 from models.gpr.variables.shear import c_s2, dc_s2dρ
 from models.gpr.variables.wavespeeds import c_0, c_h
 
@@ -32,14 +32,14 @@ def source_prim_ref(ret, P):
 
 def source_prim(Q, MP):
     ret = zeros(NV)
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
     source_prim_ref(ret, P)
     return ret
 
 
 def system_prim(Q, d, MP):
 
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
 
     ρ = P.ρ
     p = P.p()

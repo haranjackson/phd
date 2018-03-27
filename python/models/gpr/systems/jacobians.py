@@ -196,7 +196,7 @@ def dFdP(P, d):
 def dSdQ(Q, MP):
     """ WARNING: incomplete, and does not work for plastic solids
     """
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
     A = P.A
 
     ret = zeros([NV, NV])
