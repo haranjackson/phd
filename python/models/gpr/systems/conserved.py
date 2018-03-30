@@ -10,17 +10,21 @@ def flux_cons_ref(ret, Q, d, MP):
 
     P = State(Q, MP)
 
-    ρ1 = P.ρ1
     ρ = P.ρ
     p = P.p()
     E = P.E
     v = P.v
-    z = P.z
 
     vd = v[d]
     ρvd = ρ * vd
 
-    ret[0] = z * ρ1 * vd
+    if MP.MULTI:
+        ρ1 = P.ρ1
+        z = P.z
+        ret[0] = z * ρ1 * vd
+    else:
+        ret[0] = ρvd
+
     ret[1] = ρvd * E + p * vd
     ret[2:5] = ρvd * v
     ret[2 + d] += p

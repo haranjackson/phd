@@ -44,7 +44,7 @@ def K_arr(ρ, λ, T, MP):
     Ea = MP.Ea
     Rc = MP.Rc
 
-    return Bc * ρ * λ * exp(-Ea / (Rc * T))
+    return Bc * λ * exp(-Ea / (Rc * T))
 
 
 def K_dis(ρ, λ, T, MP):
@@ -55,7 +55,7 @@ def K_dis(ρ, λ, T, MP):
     Kc = MP.Kc
 
     if T > Ti:
-        return ρ * λ * Kc
+        return λ * Kc
     else:
         return 0
 
