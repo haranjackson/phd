@@ -15,7 +15,7 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics}
+\fancyhead[L]{Solving Godunov-Romenski-Type Continuum Models by Eigendecomposition of the Cauchy Tensor}
 \fancyhead[R]{\thepage}
 
 \usepackage[printwatermark]{xwatermark}
@@ -98,8 +98,8 @@ theorems-std
 \end_layout
 
 \begin_layout Title
-A Solver Based on Eigendecomposition of the Cauchy Tensor for Godunov-Romenski-T
-ype Continuum Models
+Solving Godunov-Romenski-Type Continuum Models by Eigendecomposition of
+ the Cauchy Tensor
 \end_layout
 
 \begin_layout Author
@@ -142,6 +142,20 @@ hj305@cam.ac.uk
 
 \begin_layout Author
 Geraint Harcombe
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Nikos Nikiforakis
 \begin_inset Argument 1
 status open
 
@@ -917,7 +931,7 @@ The strain dissipation time
 \begin_inset Formula $\tau_{1}$
 \end_inset
 
- of the HPR model is a continuous analogue of Frenkel's 
+ of the GPR model is a continuous analogue of Frenkel's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -949,7 +963,7 @@ key "jacovfrenkel1947"
 \end_inset
 
  for inviscid fluids.
- It is in this way that the HPR model seeks to describe all three major
+ It is in this way that the GPR model seeks to describe all three major
  phases of matter, as long as a continuum description is appropriate for
  the material at hand.
 \end_layout
@@ -1902,7 +1916,7 @@ where
 \end_layout
 
 \begin_layout Subsection
-Bounds on the Eigenvalues of the GPR System
+Perturbative Approximate Solution
 \end_layout
 
 \begin_layout Section
@@ -2096,7 +2110,7 @@ References
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/misc_refs,../../refs"
+bibfiles "../../refs/phd_refs,../../refs/mphil_refs"
 options "elsarticle-harv"
 
 \end_inset
@@ -2111,14 +2125,6 @@ Acknowledgments
 \begin_layout Standard
 I acknowledge financial support from the EPSRC Centre for Doctoral Training
  in Computational Methods for Materials Science under grant EP/L015552/1.
-\end_layout
-
-\begin_layout Section
-Appendix
-\end_layout
-
-\begin_layout Subsection
-System Matrices for the GPR Model
 \end_layout
 
 \end_body
