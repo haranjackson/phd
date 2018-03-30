@@ -5,7 +5,7 @@ from scipy.optimize import newton_krylov
 
 from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
 from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_M, DG_D
-from system import flux, source, nonconservative_product
+from system import flux, source, nonconservative_matrix
 from options import NDIM, N, NV, STIFF, STIFF_IG, DG_TOL, DG_IT, PARA_DG, NCORE
 
 
@@ -27,10 +27,11 @@ def rhs(q, Ww, dt, dX, *args):
 
     for i in range(NT):
         qi = q[i]
-        source(ret[i], qi, *args)
+        ret[i] = source(qi, *args)
         for d in range(NDIM):
-            flux(Fq[d, i], qi, d, *args)
-            nonconservative_product(Bq[d, i], Dq[d, i], qi, d, *args)
+            Fq[d, i] = flux(qi, d, *args)
+            B = nonconservative_matrix(qi, d, *args)
+            Bq[d, i] = dot(B, Dq[d, i])
 
     for d in range(NDIM):
         ret -= Bq[d] / dX[d]

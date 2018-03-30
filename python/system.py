@@ -1,17 +1,15 @@
-from models.gpr.systems.conserved import flux_cons_ref, nonconservative_product_cons
-from models.gpr.systems.conserved import source_cons_ref, system_cons
+from models.gpr.systems.conserved import flux_cons, nonconservative_matrix_cons
+from models.gpr.systems.conserved import source_cons, system_cons
 from models.gpr.systems.eigenvalues import max_abs_eigs
 from models.gpr.systems.analytical import ode_solver_cons
-from models.gpr.systems.jacobians import dSdQ
+from models.gpr.systems.jacobians import dSdQ_cons
 
 
-def flux(ret, Q, d, *args):
-    """ Returns the flux terms of the system (in place)
+def flux(Q, d, *args):
+    """ Returns the flux terms of the system
 
     Parameters
     ----------
-    ret : array
-        The array into which the flux will be writen
     Q : array
         The vector of conserved variables for which the flux is being calculated
     d : int
@@ -19,6 +17,11 @@ def flux(ret, Q, d, *args):
         d=1 for the y-axis, etc.)
     *args : optional
         Any other parameters that are required by the system
+
+    Returns
+    -------
+    F : array
+        The flux vector in direction d
 
     Notes
     -----
@@ -29,16 +32,15 @@ def flux(ret, Q, d, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    flux_cons_ref(ret, Q, d, *args)
+    F = flux_cons(Q, d, *args)
+    return F
 
 
-def nonconservative_product(ret, x, Q, d, *args):
-    """ Returns the product of the matrix of nonconservative terms, and a given vector x (in place)
+def nonconservative_matrix(Q, d, *args):
+    """ Returns the matrix of nonconservative terms
 
     Parameters
     ----------
-    ret : array
-        The array into which the product of B(Q) and x will be written
     x : array
         The vector that is to be multiplied by B(Q)
     Q : array
@@ -50,6 +52,11 @@ def nonconservative_product(ret, x, Q, d, *args):
     *args : optional
         Any other parameters that are required by the system
 
+    Returns
+    -------
+    B : array
+        The matrix of nonconservative terms
+
     Notes
     -----
     This function calculates component d of :math:`B`, where
@@ -59,21 +66,25 @@ def nonconservative_product(ret, x, Q, d, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    nonconservative_product_cons(ret, x, Q, d, *args)
+    B = nonconservative_matrix_cons(Q, d, *args)
+    return B
 
 
-def source(ret, Q, *args):
-    """ Returns the source terms of the system (in place)
+def source(Q, *args):
+    """ Returns the source terms of the system
 
     Parameters
     ----------
-    ret : array
-        The array into which the source terms will be writen
     Q : array
         The vector of conserved variables for which the source terms are being
         calculated
     *args : optional
         Any other parameters that are required by the system
+
+    Returns
+    -------
+    S : array
+        The vector of source terms
 
     Notes
     -----
@@ -84,7 +95,8 @@ def source(ret, Q, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    source_cons_ref(ret, Q, *args)
+    S = source_cons(Q, *args)
+    return S
 
 
 def system_matrix(Q, d, *args):
@@ -234,4 +246,5 @@ def source_jacobian(Q, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    return dSdQ(Q, *args)
+    dSdQ = dSdQ_cons(Q, *args)
+    return dSdQ

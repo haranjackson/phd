@@ -1,16 +1,14 @@
 from itertools import product
 
-from numpy import array, zeros
+from numpy import array
 from scipy.integrate import odeint
 
 from system import source, ode_solver_analytical, source_jacobian
-from options import NV, NUM_ODE
+from options import NUM_ODE
 
 
 def f(y, t0, *args):
-    ret = zeros(NV)
-    source(ret, y, *args)
-    return ret
+    return source(y, *args)
 
 
 def jac(y, t0, *args):

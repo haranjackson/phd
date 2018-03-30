@@ -59,7 +59,6 @@ def dPdQ(P):
     ρ = P.ρ
     v = P.v
     E = P.E
-    J = P.J
 
     Eρ = P.dEdρ()
     Ep = P.dEdp()
@@ -68,6 +67,7 @@ def dPdQ(P):
     tmp = L2_1D(v) - (E + ρ * Eρ)
     if MP.THERMAL:
         cα2 = MP.cα2
+        J = P.J
         tmp += cα2 * L2_1D(J)
     Υ = Γ * tmp
 
@@ -193,7 +193,7 @@ def dFdP(P, d):
     return ret
 
 
-def dSdQ(Q, MP):
+def dSdQ_cons(Q, MP):
     """ WARNING: incomplete, and does not work for plastic solids
     """
     P = State(Q, MP)

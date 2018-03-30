@@ -2,7 +2,7 @@ from numpy import complex128, dot, zeros
 from scipy.linalg import eig, solve
 
 from solvers.basis import NODES, WGHTS
-from system import nonconservative_product, system_matrix, max_eig
+from system import nonconservative_matrix, system_matrix, max_eig
 from options import N, NV
 
 
@@ -18,9 +18,8 @@ def B_INT(qL, qR, d, *args):
     Δq = qR - qL
     for i in range(N):
         q = qL + NODES[i] * Δq
-        BΔq = zeros(NV)
-        nonconservative_product(BΔq, Δq, q, d, *args)
-        ret += WGHTS[i] * BΔq
+        B = nonconservative_matrix(q, d, *args)
+        ret += WGHTS[i] * dot(B, Δq)
     return ret
 
 

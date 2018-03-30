@@ -4,7 +4,7 @@ from numpy import dot, zeros
 
 from etc.grids import flat_index
 from solvers.basis import DERVALS
-from system import nonconservative_product, flux, system_matrix
+from system import nonconservative_matrix, flux, system_matrix
 from options import NV, N, NDIM
 
 
@@ -23,7 +23,7 @@ def weno_midstepper(wh, dt, dX, *args):
             F = [zeros([N] * NDIM + [NV])] * NDIM
             for d in range(NDIM):
                 for inds in product(*[range(N)] * NDIM):
-                    flux(F[d][inds], w[inds], d, *args)
+                    F[d][inds] = flux(w[inds], d, *args)
 
         for inds in product(*[range(N)] * NDIM):
 
@@ -44,8 +44,8 @@ def weno_midstepper(wh, dt, dX, *args):
                 else:
                     Fi = F[d].reshape([N**d, N, N**(NDIM - d - 1), NV])[i, :, j]
                     dFdx = dot(DERVALS[inds[d]], Fi)
-                    Bdwdx = zeros(NV)
-                    nonconservative_product(Bdwdx, dwdx, w[inds], d, *args)
+                    B = nonconservative_matrix(w[inds], d, *args)
+                    Bdwdx = dot(B, dwdx)
                     tmp += (dFdx + Bdwdx) / dX[d]
 
             w[inds] -= dt / 2 * tmp

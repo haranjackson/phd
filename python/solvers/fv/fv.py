@@ -7,7 +7,7 @@ from etc.grids import flat_index
 from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
 from solvers.fv.matrices import WGHT, WGHT_END, TN
 from solvers.basis import ENDVALS, DERVALS
-from system import nonconservative_product, source, flux
+from system import nonconservative_matrix, source, flux
 from options import NDIM, NV, FLUX, PARA_FV, NCORE, N
 
 
@@ -53,14 +53,12 @@ def interfaces(ret, qEnd, dX, *args):
             # integrate the flux over the surface normal to direction d
             fInt = zeros(NV)    # flux from conservative terms
             BInt = zeros(NV)    # flux from non-conservative terms
-            fL = zeros(NV)      # contains flux on the left
-            fR = zeros(NV)      # contains flux on the right
             for ind in range(nweights):
                 qL_ = qL[ind]
                 qR_ = qR[ind]
 
-                flux(fL, qL_, d, *args)
-                flux(fR, qR_, d, *args)
+                fL = flux(qL_, d, *args)
+                fR = flux(qR_, d, *args)
 
                 fInt += WGHT_END[ind] * (fL + fR - D_FUN(qL_, qR_, d, *args))
                 BInt += WGHT_END[ind] * B_INT(qL_, qR_, d, *args)
@@ -97,14 +95,15 @@ def centers(ret, qh, dX, HOMOGENEOUS, *args):
             tmp = zeros(NV)
 
             if not HOMOGENEOUS:
-                source(tmp, q, *args)
+                tmp = source(q, *args)
 
             for d in range(NDIM):
                 ind = inds[d + 1]
                 dqdx = dot(DERVALS[ind], qi[d]) # derivative of q in direction d
 
-                Bdqdx = zeros(NV)
-                nonconservative_product(Bdqdx, dqdx, q, d, *args)
+                B = nonconservative_matrix(q, d, *args)
+                Bdqdx = dot(B, dqdx)
+
                 tmp -= Bdqdx / dX[d]
 
             ret[coords] += WGHT[inds] * tmp

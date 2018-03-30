@@ -6,7 +6,9 @@ from models.gpr.misc.structures import State
 from options import NV, LSET
 
 
-def flux_cons_ref(ret, Q, d, MP):
+def flux_cons(Q, d, MP):
+
+    ret = zeros(NV)
 
     P = State(Q, MP)
 
@@ -65,8 +67,12 @@ def flux_cons_ref(ret, Q, d, MP):
         if MP.REACTIVE:
             ret[19] = (1 - z) * ρ2 * vd * λ
 
+    return ret
 
-def source_cons_ref(ret, Q, MP):
+
+def source_cons(Q, MP):
+
+    ret = zeros(NV)
 
     P = State(Q, MP)
 
@@ -90,75 +96,10 @@ def source_cons_ref(ret, Q, MP):
         K = - P.K()
         ret[19] = (1 - z) * ρ2 * K
 
-
-def B0dot(ret, x, v):
-    v0 = v[0]
-    v1 = v[1]
-    v2 = v[2]
-    ret[5] = - v1 * x[6] - v2 * x[7]
-    ret[6] = v0 * x[6]
-    ret[7] = v0 * x[7]
-    ret[8] = - v1 * x[9] - v2 * x[10]
-    ret[9] = v0 * x[9]
-    ret[10] = v0 * x[10]
-    ret[11] = - v1 * x[12] - v2 * x[13]
-    ret[12] = v0 * x[12]
-    ret[13] = v0 * x[13]
-
-    for i in range(1, LSET + 1):
-        ret[-i] = v0 * x[-i]
+    return ret
 
 
-def B1dot(ret, x, v):
-    v0 = v[0]
-    v1 = v[1]
-    v2 = v[2]
-    ret[5] = v1 * x[5]
-    ret[6] = - v0 * x[5] - v2 * x[7]
-    ret[7] = v1 * x[7]
-    ret[8] = v1 * x[8]
-    ret[9] = - v0 * x[8] - v2 * x[10]
-    ret[10] = v1 * x[10]
-    ret[11] = v1 * x[11]
-    ret[12] = - v0 * x[11] - v2 * x[13]
-    ret[13] = v1 * x[13]
-
-    for i in range(1, LSET + 1):
-        ret[-i] = v1 * x[-i]
-
-
-def B2dot(ret, x, v):
-    v0 = v[0]
-    v1 = v[1]
-    v2 = v[2]
-    ret[5] = v2 * x[5]
-    ret[6] = v2 * x[6]
-    ret[7] = - v0 * x[5] - v1 * x[6]
-    ret[8] = v2 * x[8]
-    ret[9] = v2 * x[9]
-    ret[10] = - v0 * x[8] - v1 * x[9]
-    ret[11] = v2 * x[11]
-    ret[12] = v2 * x[12]
-    ret[13] = - v0 * x[11] - v1 * x[12]
-
-    for i in range(1, LSET + 1):
-        ret[-i] = v2 * x[-i]
-
-
-def nonconservative_product_cons(ret, x, Q, d, MP):
-
-    if MP.VISCOUS:
-        P = State(Q, MP)
-        v = P.v
-        if d == 0:
-            B0dot(ret, x, v)
-        elif d == 1:
-            B1dot(ret, x, v)
-        else:
-            B2dot(ret, x, v)
-
-
-def block_cons(Q, d, MP):
+def nonconservative_matrix_cons(Q, d, MP):
 
     ret = zeros([NV, NV])
 
@@ -187,5 +128,5 @@ def system_cons(Q, d, MP):
     P = State(Q, MP)
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
-    B = block_cons(Q, d, MP)
+    B = nonconservative_matrix_cons(Q, d, MP)
     return dot(DFDP, DPDQ) + B

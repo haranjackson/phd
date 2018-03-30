@@ -45,16 +45,13 @@ def stiff_initial_guess(w, dt, dX, *args):
                 dqdxi = dot(DERVALS[coords[d]], qi[d])
                 Mdqdx += dot(system_matrix(q_, d, *args), dqdxi) / dX[d]
 
-            S0 = zeros(NV)
-            source(S0, q_, *args)
+            S0 = source(q_, *args)
 
             if N_K_IG:
 
-                S1 = zeros(NV)
-
                 def f(X):
-                    source(S1, X, *args)
-                    S = (S0 + S1) / 2
+
+                    S = (S0 + source(X, *args)) / 2
                     return X - q_ + dt_ * (Mdqdx - S)
 
                 q[(t,) + coords] = newton_krylov(f, q_, f_tol=DG_TOL)
