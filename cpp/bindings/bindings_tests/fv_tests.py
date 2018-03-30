@@ -2,7 +2,7 @@ import GPRpy
 
 from numpy import array, dot, int32, zeros
 
-from models.gpr.misc.structures import Cvec_to_Pclass
+from models.gpr.misc.structures import State
 from models.gpr.systems.eigenvalues import Xi1, Xi2
 
 from solvers.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
@@ -18,12 +18,16 @@ from options import SPLIT, FLUX, NV, NDIM
 
 def TAT_test(d, MP):
     Q = generate_vector(MP)
-    P = Cvec_to_Pclass(Q, MP)
+    P = State(Q, MP)
 
     Ξ1 = Xi1(P, d)
     Ξ2 = Xi2(P, d)
     TAT_py = dot(Ξ1, Ξ2)
     TAT_cp = GPRpy.system.thermo_acoustic_tensor(Q, d, MP)
+
+    if not MP.THERMAL:
+        assert(all(TAT_cp[-1] == 0) and all(TAT_cp[:, -1] == 0))
+        TAT_cp = TAT_cp[:3, :3]
 
     print("TAT   ", check(TAT_cp, TAT_py))
     return TAT_cp, TAT_py

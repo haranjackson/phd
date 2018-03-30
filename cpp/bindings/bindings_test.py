@@ -17,11 +17,12 @@ from bindings_tests.fv_tests import FVc_test, FVi_test, FV_test
 
 from solvers.weno.weno import weno_launcher
 
-from options import NDIM, SPLIT, N, NV
+from options import NDIM, SPLIT, N, NV, CPP_LVL
 
 
 assert(GPRpy.N() == N)
 assert(GPRpy.NV() == NV)
+assert(CPP_LVL > 0)
 
 
 if NDIM == 1:
