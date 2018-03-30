@@ -1417,9 +1417,9 @@ end{subequations}
 \begin_inset Formula 
 \begin{equation}
 L=\left\{ \begin{array}{c}
-\left(\begin{array}{ccccc}
-Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & DQ & 0_{4,2}\\
-Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & -DQ & 0_{4,2}
+\left(\begin{array}{cccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & DQ\\
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & -DQ
 \end{array}\right)\\
 \left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
 I_{2} & -BA^{-1} & BA^{-1}\Pi_{1}^{-1}\Pi_{2} & BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
