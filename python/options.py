@@ -1,11 +1,11 @@
 """ System Parameters """
 
-NDIM = 1                    # Number of dimensions
-NV   = 14                   # Number of variables
+NDIM = 2                    # Number of dimensions
+NV   = 17                   # Number of variables
 
 """ Solver Options """
 
-CPP_LVL = 2                 # Level of C++ use (0=none, 1=some, 2=full)
+CPP_LVL = 1                 # Level of C++ use (0=none, 1=some, 2=full)
 SPLIT = 0                   # Whether or not to use a split solver
 
 N = 2                       # Order of the method
@@ -27,10 +27,10 @@ DG_IT  = 50                 # Max number of non-stiff iterations attempted
 
 """ WENO Parameters """
 
-rc = 8                      # Exponent used in oscillation indicator
-λc = 1e5                    # WENO coefficient of central stencils
-λs = 1                      # WENO coefficient of side stencils
-eps = 1e-14                 # Ensures oscillation indicators don't blow up
+WENO_r  = 8                 # Exponent used in oscillation indicator
+WENO_λC = 1e5               # WENO coefficient of central stencils
+WENO_λS = 1                 # WENO coefficient of side stencils
+WENO_ε  = 1e-14             # Ensures oscillation indicators don't blow up
 
 """ Speed-Up Parameters """
 

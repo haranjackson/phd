@@ -9,7 +9,7 @@ from options import CPP_LVL, SPLIT
 from options import N, CFL, FLUX
 from options import NUM_ODE, HALF_STEP, STRANG
 from options import STIFF, STIFF_IG, N_K_IG, DG_TOL, DG_IT
-from options import rc, λc, λs, eps
+from options import WENO_r, WENO_λc, WENO_λs, WENO_ε
 from options import PARA_DG, PARA_FV, NCORE
 
 
@@ -45,10 +45,10 @@ def save_config(path):
         f.write('DG_TOL = %e\n' % DG_TOL)
         f.write('DG_IT  = %i\n\n' % DG_IT)
 
-        f.write('rc  = %f\n' % rc)
-        f.write('λc  = %e\n' % λc)
-        f.write('λs  = %e\n' % λs)
-        f.write('eps = %e\n\n' % eps)
+        f.write('WENO_r  = %f\n' % WENO_r)
+        f.write('WENO_λc = %e\n' % WENO_λc)
+        f.write('WENO_λs = %e\n' % WENO_λs)
+        f.write('WENO_ε  = %e\n\n' % WENO_ε)
 
         f.write('PARA_DG = %i\n' % PARA_DG)
         f.write('PARA_FV = %i\n' % PARA_FV)

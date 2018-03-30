@@ -5,21 +5,21 @@ from itertools import product
 from numpy import multiply, prod, zeros
 from scipy.linalg import solve
 
-from solvers.weno.matrices import fHalfN, cHalfN, WN_M, WN_Σ
-from options import rc, λc, λs, eps, N, NV, NDIM
+from solvers.weno.matrices import fHalfN, cHalfN, WENO_M, WENO_Σ
+from options import WENO_R, WENO_λC, WENO_λS, WENO_ε, N, NV, NDIM
 
 
-LAMS = [λs, λs, λc, λc]
+LAMS = [WENO_λS, WENO_λS, WENO_λC, WENO_λC]
 
 
 def calculate_coeffs(uList):
     """ Calculate coefficients of basis polynomials and weights
     """
     n = len(uList)
-    wList = [solve(WN_M[i], uList[i], overwrite_b=1)
+    wList = [solve(WENO_M[i], uList[i], overwrite_b=1)
              for i in range(n)]
-    σList = [((w.T).dot(WN_Σ).dot(w)).diagonal() for w in wList]
-    oList = [LAMS[i] / (abs(σList[i]) + eps)**rc for i in range(n)]
+    σList = [((w.T).dot(WENO_Σ).dot(w)).diagonal() for w in wList]
+    oList = [LAMS[i] / (abs(σList[i]) + WENO_ε)**WENO_r for i in range(n)]
 
     oSum = zeros(NV)
     numerator = zeros([N, NV])
