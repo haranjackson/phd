@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from numpy import zeros
 
 from models.gpr.variables.mg import eos_text_to_code
@@ -204,8 +206,7 @@ def material_parameters(EOS, ρ0, cv, p0,
         import GPRpy
         MP = GPRpy.classes.Par()
     else:
-        class MP:
-            pass
+        MP = SimpleNamespace()
 
     params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
            ρ0, p0, Tref, T0, cv,
