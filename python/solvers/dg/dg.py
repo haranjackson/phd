@@ -1,5 +1,4 @@
-from joblib import delayed, Parallel
-from numpy import absolute, array, concatenate, dot, prod, zeros
+from numpy import absolute, dot, prod, zeros
 from scipy.linalg import solve
 from scipy.optimize import newton_krylov
 
@@ -19,21 +18,12 @@ def unconverged(q, qNew, TOL):
     return (absolute(q - qNew) > TOL * (1 + absolute(q))).any()
 
 
-def get_chunks(n, ncore):
-    """ Splits array of length n into ncore chunks. Returns the start and end
-        indices of each chunk.
-    """
-    step = int(n / ncore)
-    inds = array([i * step for i in range(ncore)] + [n + 1])
-    return [(inds[i], inds[i+1]) for i in range(len(inds)-1)]
-
-
 class DiscontinuousGalerkinSolver():
 
     def __init__(self, N, NV, NDIM, flux, source=None,
                  nonconservative_matrix=None, model_params=None,
                  stiff=False, stiff_ig=False, nk_ig=False,
-                 tol=1e-6, max_iter=50, ncore=1, max_size=1e16):
+                 tol=1e-6, max_iter=50, max_size=1e16):
 
         self.N = N
         self.NV = NV
@@ -55,10 +45,6 @@ class DiscontinuousGalerkinSolver():
         else:
             self.initial_guess = standard_initial_guess
         self.nk_ig = nk_ig
-
-        self.ncore = ncore
-        if ncore > 1:
-            self.pool = Parallel(n_jobs=ncore)
 
         self.DG_W, self.DG_V, self.DG_U, self.DG_M, self.DG_D = galerkin_matrices(
             N, NDIM, NV)
@@ -106,7 +92,7 @@ class DiscontinuousGalerkinSolver():
         def f(x): return dot(self.DG_U, x) - self.rhs(x, Ww, dt, dX)
         return newton_krylov(f, q, f_tol=self.tol, method='bicgstab')
 
-    def predictor(self, wh, dt, dX):
+    def solve(self, wh, dt, dX):
         """ Returns the Galerkin predictor, given the WENO reconstruction at tn
         """
         shape = wh.shape
@@ -144,23 +130,3 @@ class DiscontinuousGalerkinSolver():
                     qh[i] = self.root_find(w, Ww, dt, dX)
 
         return qh.reshape(shape[:self.NDIM] + (self.N,) * (self.NDIM + 1) + (self.NV,))
-
-    def solve(self, wh, dt, dX):
-        """ Controls the parallel computation of the Galerkin predictor
-        """
-        if self.ncore > 1:
-
-            chunks = get_chunks(wh.shape[0], self.ncore)
-
-            qhList = self.pool(delayed(self.predictor)(wh[chunk[0]:chunk[1]],
-                                                       dt, dX)
-                               for chunk in chunks)
-            return concatenate(qhList)
-
-        else:
-            return self.predictor(wh, dt, dX)
-
-    def __getstate__(self):
-        self_dict = self.__dict__.copy()
-        del self_dict['pool']
-        return self_dict

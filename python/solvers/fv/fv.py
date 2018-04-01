@@ -1,23 +1,11 @@
 from itertools import product
 
-from joblib import delayed, Parallel
-from numpy import array, concatenate, dot, tensordot, zeros
+from numpy import array, dot, tensordot, zeros
 
 from etc.grids import flat_index
 from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE
 from solvers.fv.matrices import quad_weights
 from solvers.basis import ENDVALS, DERVALS
-
-
-def get_chunks(n, ncore):
-    """ Splits array of length n into ncore chunks. Returns the start and end
-        indices of each chunk.
-    """
-    step = int(n / ncore)
-    inds = array([i * step for i in range(ncore)] + [n + 1])
-    inds[0] += 1
-    inds[-1] -= 1
-    return [(inds[i] - 1, inds[i + 1] + 1) for i in range(len(inds) - 1)]
 
 
 def endpoints(qh, NDIM):
@@ -32,8 +20,7 @@ class FiniteVolumeSolver():
 
     def __init__(self, N, NV, NDIM, flux, source=None,
                  nonconservative_matrix=None, system_matrix=None, max_eig=None,
-                 model_params=None, riemann_solver='rusanov', ncore=1,
-                 split=False):
+                 model_params=None, riemann_solver='rusanov', time_rec=True):
 
         self.N = N
         self.NV = NV
@@ -56,12 +43,8 @@ class FiniteVolumeSolver():
             raise ValueError("Choice of 'riemann_solver' choice not recognised.\n" +
                              "Choose from 'rusanov', 'roe', and 'osher'.")
 
-        self.ncore = ncore
-        if ncore > 1:
-            self.pool = Parallel(n_jobs=ncore)
-
-        self.split = split
-        self.TN, self.WGHT, self.WGHT_END = quad_weights(N, NDIM, split)
+        self.time_rec = time_rec
+        self.TN, self.WGHT, self.WGHT_END = quad_weights(N, NDIM, time_rec)
 
     def interfaces(self, ret, qEnd, dX):
         """ Returns the contribution to the finite volume update coming from the
@@ -150,11 +133,11 @@ class FiniteVolumeSolver():
 
                 ret[coords] += self.WGHT[inds] * tmp
 
-    def fv_terms(self, qh, dt, dX):
+    def solve(self, qh, dt, dX):
         """ Returns the space-time averaged interface terms, jump terms,
             source terms, and non-conservative terms
         """
-        if self.split:
+        if not self.time_rec:
             qh = qh.reshape(qh.shape[:self.NDIM] + (1,) + qh.shape[self.NDIM:])
 
         qEnd = endpoints(qh, self.NDIM)
@@ -167,20 +150,3 @@ class FiniteVolumeSolver():
         self.interfaces(ret, qEnd, dX)
 
         return dt * ret
-
-    def solve(self, qh, dt, dX):
-        """ Controls the parallel computation of the Finite Volume interface terms
-        """
-        if self.ncore > 1:
-            chunks = get_chunks(qh.shape[0], self.ncore)
-            qhList = self.pool(delayed(self.fv_terms)(qh[chunk[0]:chunk[1]], dt,
-                                                      dX)
-                               for chunk in chunks)
-            return concatenate(qhList)
-        else:
-            return self.fv_terms(qh, dt, dX)
-
-    def __getstate__(self):
-        self_dict = self.__dict__.copy()
-        del self_dict['pool']
-        return self_dict

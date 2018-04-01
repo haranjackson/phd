@@ -5,7 +5,7 @@ from numpy import arange, array, zeros
 from solvers.basis import WGHTS
 
 
-def quad_weights(N, NDIM, split=False):
+def quad_weights(N, NDIM, time_rec=True):
     """ WGHT contains quadrature weights for integration over a spacetime cell
         (the cartesian product of the temporal and spatial quadrature weights)
 
@@ -14,7 +14,7 @@ def quad_weights(N, NDIM, split=False):
         Th factor of 0.5 comes from the factor of 1/2 in fluxes - applied here
         for numerical reasona
     """
-    TWGHTS = array([1]) if split else WGHTS
+    TWGHTS = WGHTS if time_rec else array([1])
     TN = len(TWGHTS)
 
     WGHT = zeros([TN] + [N] * NDIM)

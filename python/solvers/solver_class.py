@@ -1,7 +1,8 @@
 from itertools import product
 from time import time
 
-from numpy import abs, amax
+from joblib import delayed, Parallel
+from numpy import abs, array, amax, concatenate
 from numpy.linalg import eigvals
 from tangent import autodiff
 
@@ -9,6 +10,17 @@ from etc.boundaries import standard_BC, periodic_BC
 from solvers.weno.weno import WenoSolver
 from solvers.dg.dg import DiscontinuousGalerkinSolver
 from solvers.fv.fv import FiniteVolumeSolver
+
+
+def get_blocks(uBC, N, ncore):
+    """ Splits array of length n into ncore chunks. Returns the start and end
+        indices of each chunk.
+    """
+    n = len(uBC)
+    step = int(n / ncore)
+    inds = array([i * step for i in range(ncore)] + [n - N])
+    inds[0] += N
+    return [uBC[inds[i] - N: inds[i + 1] + N] for i in range(len(inds) - 1)]
 
 
 def make_system_matrix(flux, nonconservative_matrix):
@@ -70,18 +82,19 @@ class Solver():
         self.dgSolver = DiscontinuousGalerkinSolver(self.N, self.NV, self.NDIM,
                                                     self.flux, self.source,
                                                     self.nonconservative_matrix,
-                                                    model_params = self.model_params,
+                                                    model_params=self.model_params,
                                                     stiff=stiff_dg,
                                                     stiff_ig=stiff_dg_initial_guess,
                                                     nk_ig=newton_dg_initial_guess,
-                                                    tol=DG_TOL, max_iter=DG_IT,
-                                                    ncore=ncore)
+                                                    tol=DG_TOL, max_iter=DG_IT)
 
         self.fvSolver = FiniteVolumeSolver(self.N, self.NV, self.NDIM,
                                            self.flux, self.source,
                                            self.nonconservative_matrix,
                                            self.system_matrix, self.max_eig,
-                 self.model_params, riemann_solver, ncore)
+                                           self.model_params, riemann_solver)
+
+        self.ncore = ncore
 
     def timestep(self, u, dX, count=None, t=None, final_time=None):
         """ Calculates dt, based on the maximum wavespeed across the domain
@@ -103,7 +116,7 @@ class Solver():
         else:
             return dt
 
-    def stepper(self, u, uBC, dt, dX, verbose=False):
+    def stepper(self, uBC, dt, dX, verbose=False):
         t0 = time()
 
         wh = self.wenoSolver.solve(uBC)
@@ -115,21 +128,59 @@ class Solver():
         du = self.fvSolver.solve(qh, dt, dX)
         t3 = time()
 
-        u += du
-
         if verbose:
             print('WENO: {:.3f}s'.format(t1 - t0))
             print('DG:   {:.3f}s'.format(t2 - t1))
             print('FV:   {:.3f}s'.format(t3 - t2))
-            print('Iteration Time: {:.3f}s\n'.format(time() -t0))
+            print('Iteration Time: {:.3f}s\n'.format(time() - t0))
+
+        return du
+
+    def parallel_stepper(self, pool, uBC, dt, dX, verbose=False):
+        t0 = time()
+
+        blocks = get_blocks(uBC, self.N, self.ncore)
+        dui = pool(delayed(self.stepper)(b, dt, dX) for b in blocks)
+        du = concatenate(dui)
+
+        if verbose:
+            print(time() - t0, '\n')
+
+        return du
+
+    def resume(self, verbose=False):
+
+        with Parallel(n_jobs=self.ncore) as pool:
+
+            while self.t < self.final_time:
+
+                dt = self.timestep(self.u, self.dX, count=self.count, t=self.t,
+                                   final_time=self.final_time)
+
+                if verbose:
+                    print('Iteration:', self.count)
+                    print('t  = {:.3e}'.format(self.t))
+                    print('dt = {:.3e}'.format(dt))
+
+                uBC = self.BC(self.u, self.N, self.NDIM)
+
+                self.u += self.parallel_stepper(pool, uBC, dt, self.dX, verbose)
+                self.t += dt
+                self.count += 1
+
+                if self.callback is not None:
+                    self.callback(self.u, self.t, self.count)
+
+        return self.u
 
     def solve(self, initial_grid, final_time, dX, cfl=0.9,
-              boundary_conditions='transitive', verbose=False):
+              boundary_conditions='transitive', verbose=False, callback=None):
 
         self.u = initial_grid
+        self.final_time = final_time
+        self.dX = dX
         self.cfl = cfl
-        self.t = 0
-        self.count = 0
+        self.callback = callback
 
         if boundary_conditions == 'transitive':
             self.BC = standard_BC
@@ -141,20 +192,7 @@ class Solver():
             raise ValueError("'boundary_conditions' must either be equal to " +
                              "'transitivie', 'periodic', or a callable function.")
 
-        while self.t < final_time:
+        self.t = 0
+        self.count = 0
 
-            dt = self.timestep(self.u, dX, count=self.count, t=self.t,
-                               final_time=final_time)
-
-            if verbose:
-                print('Iteration:', self.count)
-                print('t  = {:.3e}'.format(self.t))
-                print('dt = {:.3e}'.format(dt))
-
-            uBC = self.BC(self.u, self.N, self.NDIM)
-            self.stepper(self.u, uBC, dt, dX, verbose)
-
-            self.t += dt
-            self.count += 1
-
-        return self.u
+        return self.resume(verbose)
