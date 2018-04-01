@@ -5,7 +5,7 @@ from models.gpr.systems.analytical import ode_solver_cons
 from models.gpr.systems.jacobians import dSdQ_cons
 
 
-def flux(Q, d, *args):
+def flux(Q, d, model_params=None):
     """ Returns the flux terms of the system
 
     Parameters
@@ -15,7 +15,7 @@ def flux(Q, d, *args):
     d : int
         The direction in which the flux is to be calculated (d=0 for the x-axis,
         d=1 for the y-axis, etc.)
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -32,11 +32,11 @@ def flux(Q, d, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    F = flux_cons(Q, d, *args)
+    F = flux_cons(Q, d, model_params)
     return F
 
 
-def nonconservative_matrix(Q, d, *args):
+def nonconservative_matrix(Q, d, model_params=None):
     """ Returns the matrix of nonconservative terms
 
     Parameters
@@ -49,7 +49,7 @@ def nonconservative_matrix(Q, d, *args):
     d : int
         The direction in which the nonconservative terms are to be calculated
         (d=0 for the x-axis, d=1 for the y-axis, etc.)
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -66,11 +66,11 @@ def nonconservative_matrix(Q, d, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    B = nonconservative_matrix_cons(Q, d, *args)
+    B = nonconservative_matrix_cons(Q, d, model_params)
     return B
 
 
-def source(Q, *args):
+def source(Q, model_params=None):
     """ Returns the source terms of the system
 
     Parameters
@@ -78,7 +78,7 @@ def source(Q, *args):
     Q : array
         The vector of conserved variables for which the source terms are being
         calculated
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -95,11 +95,11 @@ def source(Q, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    S = source_cons(Q, *args)
+    S = source_cons(Q, model_params)
     return S
 
 
-def system_matrix(Q, d, *args):
+def system_matrix(Q, d, model_params=None):
     """ Returns the system matrix M
 
     Parameters
@@ -110,7 +110,7 @@ def system_matrix(Q, d, *args):
     d : int
         The direction in which the system is to be considered (d=0 for the
         x-axis, d=1 for the y-axis, etc.)
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -133,11 +133,11 @@ def system_matrix(Q, d, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    M = system_cons(Q, d, *args)
+    M = system_cons(Q, d, model_params)
     return M
 
 
-def max_eig(Q, d, *args):
+def max_eig(Q, d, model_params=None):
     """ Returns the largest absolute size of the eigenvalues of the system
 
     Parameters
@@ -148,7 +148,7 @@ def max_eig(Q, d, *args):
     d : int
         The direction in which the system is to be considered (d=0 for the
         x-axis, d=1 for the y-axis, etc.)
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -172,11 +172,11 @@ def max_eig(Q, d, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    λ = max_abs_eigs(Q, d, *args)
+    λ = max_abs_eigs(Q, d, model_params)
     return λ
 
 
-def ode_solver_analytical(Q, dt, *args):
+def ode_solver_analytical(Q, dt, model_params=None):
     """ Returns the analytic solution of the temporal ODEs of the system at time t=dt
 
     Parameters
@@ -185,7 +185,7 @@ def ode_solver_analytical(Q, dt, *args):
         The vector of conserved variables at time t=0
     dt : double
         The final time at which the solution is to be calculated
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -210,11 +210,11 @@ def ode_solver_analytical(Q, dt, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    sol = ode_solver_cons(Q, dt, *args)
+    sol = ode_solver_cons(Q, dt, model_params)
     return sol
 
 
-def source_jacobian(Q, *args):
+def source_jacobian(Q, model_params=None):
     """ Returns the jacobian of the source terms with respect to the conserved variables
 
     Parameters
@@ -222,7 +222,7 @@ def source_jacobian(Q, *args):
     Q : array
         The vector of conserved variables with which the source jacobian is to
         be calculated
-    *args : optional
+    model_params : optional
         Any other parameters that are required by the system
 
     Returns
@@ -246,5 +246,5 @@ def source_jacobian(Q, *args):
         \\frac{\partial Q}{\partial t} + \\nabla \cdot F + B \cdot  \\nabla Q = S
 
     """
-    dSdQ = dSdQ_cons(Q, *args)
+    dSdQ = dSdQ_cons(Q, model_params)
     return dSdQ

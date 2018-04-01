@@ -1,122 +1,166 @@
-from joblib import delayed
+from joblib import delayed, Parallel
 from numpy import absolute, array, concatenate, dot, prod, zeros
 from scipy.linalg import solve
 from scipy.optimize import newton_krylov
 
 from solvers.dg.initial_guess import standard_initial_guess, stiff_initial_guess
-from solvers.dg.matrices import DG_W, DG_U, DG_V, DG_M, DG_D
-from system import flux, source, nonconservative_matrix
-from options import NDIM, N, NV, STIFF, STIFF_IG, DG_TOL, DG_IT, PARA_DG, NCORE
+from solvers.dg.matrices import galerkin_matrices
 
 
-MAX_SIZE = 1e16  # variable values above this level will cause an error
-NT = N**(NDIM + 1)
-
-
-def rhs(q, Ww, dt, dX, *args):
-    """ Returns the right-handside of the system governing coefficients of qh
+def blowup(qNew, max_size):
+    """ Check whether qNew has blown up larger than max_size
     """
-    ret = zeros([NT, NV])
-
-    # Dq[d,i]: dq/dx at position i in direction d
-    # Fq[d,i]: F(q) at position i in direction d
-    # Bq[d,i]: B.dq/dx at position i in direction d
-    Dq = dot(DG_D, q)
-    Fq = zeros([NDIM, NT, NV])
-    Bq = zeros([NDIM, NT, NV])
-
-    for i in range(NT):
-        qi = q[i]
-        ret[i] = source(qi, *args)
-        for d in range(NDIM):
-            Fq[d, i] = flux(qi, d, *args)
-            B = nonconservative_matrix(qi, d, *args)
-            Bq[d, i] = dot(B, Dq[d, i])
-
-    for d in range(NDIM):
-        ret -= Bq[d] / dX[d]
-
-    ret *= DG_M
-    for d in range(NDIM):
-        ret -= dot(DG_V[d], Fq[d]) / dX[d]
-
-    return dt * ret + Ww
+    return (absolute(qNew) > max_size).any()
 
 
-def failed(w, f, dt, dX, *args):
-    """ Finds DG coefficients with Newton-Krylov, if iteration has failed
-    """
-    if STIFF_IG:
-        q = stiff_initial_guess(w, dt, dX, *args)
-    else:
-        q = standard_initial_guess(w)
-    return newton_krylov(f, q, f_tol=DG_TOL, method='bicgstab')
-
-
-def unconverged(q, qNew):
+def unconverged(q, qNew, TOL):
     """ Mixed convergence condition
     """
-    return (absolute(q - qNew) > DG_TOL * (1 + absolute(q))).any()
+    return (absolute(q - qNew) > TOL * (1 + absolute(q))).any()
 
 
-def predictor(wh, dt, dX, *args):
-    """ Returns the Galerkin predictor, given the WENO reconstruction at tn
+def get_chunks(n, ncore):
+    """ Splits array of length n into ncore chunks. Returns the start and end
+        indices of each chunk.
     """
-    shape = wh.shape
-    n = prod(shape[:NDIM])
-    wh = wh.reshape(n, N**NDIM, NV)
-    qh = zeros([n, NT, NV])
+    step = int(n / ncore)
+    inds = array([i * step for i in range(ncore)] + [n + 1])
+    return [(inds[i], inds[i+1]) for i in range(len(inds)-1)]
 
-    for i in range(n):
 
-        w = wh[i]
-        Ww = dot(DG_W, w)
+class DiscontinuousGalerkinSolver():
 
-        def obj(X): return dot(DG_U, X) - rhs(X, Ww, dt, dX, *args)
+    def __init__(self, N, NV, NDIM, flux, source=None,
+                 nonconservative_matrix=None, model_params=None,
+                 stiff=False, stiff_ig=False, nk_ig=False,
+                 tol=1e-6, max_iter=50, ncore=1, max_size=1e16):
 
-        if STIFF_IG:
-            q = stiff_initial_guess(w, dt, dX, *args)
+        self.N = N
+        self.NV = NV
+        self.NDIM = NDIM
+        self.NT = N**(NDIM + 1)
+
+        self.flux = flux
+        self.source = source
+        self.nonconservative_matrix = nonconservative_matrix
+        self.model_params = model_params
+
+        self.max_iter = max_iter
+        self.tol = tol
+        self.max_size = max_size
+
+        self.stiff = stiff
+        if stiff_ig:
+            self.initial_guess = stiff_initial_guess
         else:
-            q = standard_initial_guess(w)
+            self.initial_guess = standard_initial_guess
+        self.nk_ig = nk_ig
 
-        if STIFF:
-            qh[i] = newton_krylov(obj, q, f_tol=DG_TOL, method='bicgstab')
+        self.ncore = ncore
+        if ncore > 1:
+            self.pool = Parallel(n_jobs=ncore)
 
-        else:
-            for count in range(DG_IT):
+        self.DG_W, self.DG_V, self.DG_U, self.DG_M, self.DG_D = galerkin_matrices(
+            N, NDIM, NV)
 
-                qNew = solve(DG_U, rhs(q, Ww, dt, dX, *args))
+    def rhs(self, q, Ww, dt, dX):
+        """ Returns the right-handside of the system governing coefficients of qh
+        """
+        ret = zeros([self.NT, self.NV])
 
-                if (absolute(qNew) > MAX_SIZE).any():
-                    qh[i] = failed(w, obj, dt, dX, *args)
-                    break
+        # Dq[d,i]: dq/dx at position i in direction d
+        # Fq[d,i]: F(q) at position i in direction d
+        # Bq[d,i]: B.dq/dx at position i in direction d
+        Dq = dot(self.DG_D, q)
+        Fq = zeros([self.NDIM, self.NT, self.NV])
+        Bq = zeros([self.NDIM, self.NT, self.NV])
 
-                elif unconverged(q, qNew):
-                    q = qNew
-                    continue
+        for i in range(self.NT):
+            qi = q[i]
 
-                else:
-                    qh[i] = qNew
-                    break
+            if self.source is not None:
+                ret[i] = self.source(qi, self.model_params)
+
+            for d in range(self.NDIM):
+                Fq[d, i] = self.flux(qi, d, self.model_params)
+
+                if self.nonconservative_matrix is not None:
+                    B = self.nonconservative_matrix(qi, d, self.model_params)
+                    Bq[d, i] = dot(B, Dq[d, i])
+
+        if self.nonconservative_matrix is not None:
+            for d in range(self.NDIM):
+                ret -= Bq[d] / dX[d]
+
+        ret *= self.DG_M
+        for d in range(self.NDIM):
+            ret -= dot(self.DG_V[d], Fq[d]) / dX[d]
+
+        return dt * ret + Ww
+
+    def root_find(self, w, Ww, dt, dX):
+        """ Finds DG coefficients with Newton-Krylov, if iteration has failed
+        """
+        q = self.initial_guess(self, w, dt, dX)
+
+        def f(x): return dot(self.DG_U, x) - self.rhs(x, Ww, dt, dX)
+        return newton_krylov(f, q, f_tol=self.tol, method='bicgstab')
+
+    def predictor(self, wh, dt, dX):
+        """ Returns the Galerkin predictor, given the WENO reconstruction at tn
+        """
+        shape = wh.shape
+        n = prod(shape[:self.NDIM])
+        wh = wh.reshape(n, self.N**self.NDIM, self.NV)
+        qh = zeros([n, self.NT, self.NV])
+
+        for i in range(n):
+
+            w = wh[i]
+            Ww = dot(self.DG_W, w)
+
+            if self.stiff:
+                qh[i] = self.root_find(w, Ww, dt, dX)
+
             else:
-                qh[i] = failed(w, obj, dt, dX, *args)
+                q = self.initial_guess(self, w, dt, dX)
 
-    return qh.reshape(shape[:NDIM] + (N,) * (NDIM + 1) + (NV,))
+                for count in range(self.max_iter):
 
+                    qNew = solve(self.DG_U, self.rhs(q, Ww, dt, dX))
 
-def dg_launcher(pool, wh, dt, dX, *args):
-    """ Controls the parallel computation of the Galerkin predictor
-    """
-    if PARA_DG:
+                    if blowup(qNew, self.max_size):
+                        qh[i] = self.root_find(w, Ww, dt, dX)
+                        break
 
-        nx = wh.shape[0]
-        step = int(nx / NCORE)
-        chunk = array([i * step for i in range(NCORE)] + [nx + 1])
-        n = len(chunk) - 1
+                    elif unconverged(q, qNew, self.tol):
+                        q = qNew
+                        continue
 
-        qhList = pool(delayed(predictor)(wh[chunk[i]:chunk[i + 1]], dt, dX, *args)
-                      for i in range(n))
-        return concatenate(qhList)
+                    else:
+                        qh[i] = qNew
+                        break
+                else:
+                    qh[i] = self.root_find(w, Ww, dt, dX)
 
-    else:
-        return predictor(wh, dt, dX, *args)
+        return qh.reshape(shape[:self.NDIM] + (self.N,) * (self.NDIM + 1) + (self.NV,))
+
+    def solve(self, wh, dt, dX):
+        """ Controls the parallel computation of the Galerkin predictor
+        """
+        if self.ncore > 1:
+
+            chunks = get_chunks(wh.shape[0], self.ncore)
+
+            qhList = self.pool(delayed(self.predictor)(wh[chunk[0]:chunk[1]],
+                                                       dt, dX)
+                               for chunk in chunks)
+            return concatenate(qhList)
+
+        else:
+            return self.predictor(wh, dt, dX)
+
+    def __getstate__(self):
+        self_dict = self.__dict__.copy()
+        del self_dict['pool']
+        return self_dict

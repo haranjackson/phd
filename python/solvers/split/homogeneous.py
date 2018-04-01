@@ -34,7 +34,7 @@ def weno_midstepper(wh, dt, dX, *args):
             for d in range(NDIM):
                 i = flat_index(inds[:d])
                 j = flat_index(inds[d + 1:])
-                wi = w.reshape([N**d, N, N**(NDIM - d - 1), NV])[i, :, j]
+                wi = w.reshape(N**d, N, N**(NDIM - d - 1), NV)[i, :, j]
                 dwdx = dot(DERVALS[inds[d]], wi)
 
                 if USE_JACOBIAN:
@@ -42,7 +42,7 @@ def weno_midstepper(wh, dt, dX, *args):
                     tmp += dot(M, dwdx) / dX[d]
 
                 else:
-                    Fi = F[d].reshape([N**d, N, N**(NDIM - d - 1), NV])[i, :, j]
+                    Fi = F[d].reshape(N**d, N, N**(NDIM - d - 1), NV)[i, :, j]
                     dFdx = dot(DERVALS[inds[d]], Fi)
                     B = nonconservative_matrix(w[inds], d, *args)
                     Bdwdx = dot(B, dwdx)

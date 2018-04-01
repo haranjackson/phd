@@ -1,25 +1,26 @@
 from itertools import product
 
-from joblib import delayed
+from joblib import delayed, Parallel
 from numpy import array, concatenate, dot, tensordot, zeros
 
 from etc.grids import flat_index
-from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE, RUSANOV, OSHER, ROE
-from solvers.fv.matrices import WGHT, WGHT_END, TN
+from solvers.fv.fluxes import B_INT, D_OSH, D_RUS, D_ROE
+from solvers.fv.matrices import quad_weights
 from solvers.basis import ENDVALS, DERVALS
-from system import nonconservative_matrix, source, flux
-from options import NDIM, NV, FLUX, PARA_FV, NCORE, N
 
 
-if FLUX == RUSANOV:
-    D_FUN = D_RUS
-elif FLUX == ROE:
-    D_FUN = D_ROE
-elif FLUX == OSHER:
-    D_FUN = D_OSH
+def get_chunks(n, ncore):
+    """ Splits array of length n into ncore chunks. Returns the start and end
+        indices of each chunk.
+    """
+    step = int(n / ncore)
+    inds = array([i * step for i in range(ncore)] + [n + 1])
+    inds[0] += 1
+    inds[-1] -= 1
+    return [(inds[i] - 1, inds[i + 1] + 1) for i in range(len(inds) - 1)]
 
 
-def endpoints(qh):
+def endpoints(qh, NDIM):
     """ Returns tensor T where T[d,e,i1,...,in] is the set of DG coefficients in
         the dth direction, at end e (either 0 or 1), in cell (i1,...,in)
     """
@@ -27,119 +28,159 @@ def endpoints(qh):
                   for d in range(NDIM)])
 
 
-def interfaces(ret, qEnd, dX, *args):
-    """ Returns the contribution to the finite volume update coming from the
-        fluxes at the interfaces
-    """
-    dims = ret.shape[:NDIM]
-    nweights = len(WGHT_END)
+class FiniteVolumeSolver():
 
-    for d in range(NDIM):
+    def __init__(self, N, NV, NDIM, flux, source=None,
+                 nonconservative_matrix=None, system_matrix=None, max_eig=None,
+                 model_params=None, riemann_solver='rusanov', ncore=1,
+                 split=False):
 
-        # dimensions of cells traversed when calculating fluxes in direction d
-        dimensions = [range(1, dim + 1) for dim in dims[:d]] + \
-                     [range(1, dims[d] + 2)] + \
-                     [range(1, dim + 1) for dim in dims[d + 1:]]
+        self.N = N
+        self.NV = NV
+        self.NDIM = NDIM
 
-        for coords in product(*dimensions):
+        self.flux = flux
+        self.source = source
+        self.nonconservative_matrix = nonconservative_matrix
+        self.system_matrix = system_matrix
+        self.max_eig = max_eig
+        self.model_params = model_params
 
-            # qL,qR are the sets of polynomial coefficients for the DG
-            # reconstruction at the left and right sides of the interface
-            lcoords = (d, 1) + coords[:d] + (coords[d] - 1,) + coords[d + 1:]
-            rcoords = (d, 0) + coords
-            qL = qEnd[lcoords].reshape([nweights, NV])
-            qR = qEnd[rcoords].reshape([nweights, NV])
+        if riemann_solver == 'rusanov':
+            self.D_FUN = D_RUS
+        elif riemann_solver == 'roe':
+            self.D_FUN = D_ROE
+        elif riemann_solver == 'osher':
+            self.D_FUN = D_OSH
+        else:
+            raise ValueError("Choice of 'riemann_solver' choice not recognised.\n" +
+                             "Choose from 'rusanov', 'roe', and 'osher'.")
 
-            # integrate the flux over the surface normal to direction d
-            fInt = zeros(NV)    # flux from conservative terms
-            BInt = zeros(NV)    # flux from non-conservative terms
-            for ind in range(nweights):
-                qL_ = qL[ind]
-                qR_ = qR[ind]
+        self.ncore = ncore
+        if ncore > 1:
+            self.pool = Parallel(n_jobs=ncore)
 
-                fL = flux(qL_, d, *args)
-                fR = flux(qR_, d, *args)
+        self.split = split
+        self.TN, self.WGHT, self.WGHT_END = quad_weights(N, NDIM, split)
 
-                fInt += WGHT_END[ind] * (fL + fR - D_FUN(qL_, qR_, d, *args))
-                BInt += WGHT_END[ind] * B_INT(qL_, qR_, d, *args)
+    def interfaces(self, ret, qEnd, dX):
+        """ Returns the contribution to the finite volume update coming from the
+            fluxes at the interfaces
+        """
+        dims = ret.shape[:self.NDIM]
+        nweights = len(self.WGHT_END)
 
-            rcoords_ = tuple(c - 1 for c in rcoords[2:])
-            lcoords_ = rcoords_[:d] + (rcoords_[d] - 1,) + rcoords_[d + 1:]
+        for d in range(self.NDIM):
 
-            if lcoords_[d] >= 0:
-                ret[lcoords_] -= (fInt + BInt) / dX[d]
+            # dimensions of cells traversed when calculating fluxes in direction d
+            dimensions = [range(1, dim + 1) for dim in dims[:d]] + \
+                         [range(1, dims[d] + 2)] + \
+                         [range(1, dim + 1) for dim in dims[d + 1:]]
 
-            if rcoords_[d] < dims[d]:
-                ret[rcoords_] += (fInt - BInt) / dX[d]
+            for coords in product(*dimensions):
 
+                # qL,qR are the sets of polynomial coefficients for the DG
+                # reconstruction at the left and right sides of the interface
+                lcoords = (d, 1) + coords[:d] + \
+                    (coords[d] - 1,) + coords[d + 1:]
+                rcoords = (d, 0) + coords
+                qL = qEnd[lcoords].reshape(nweights, self.NV)
+                qR = qEnd[rcoords].reshape(nweights, self.NV)
 
-def centers(ret, qh, dX, HOMOGENEOUS, *args):
-    """ Returns the space-time averaged source term and non-conservative terms
-    """
-    for coords in product(*[range(dim) for dim in ret.shape[:NDIM]]):
+                # integrate the flux over the surface normal to direction d
+                fInt = zeros(self.NV)    # flux from conservative terms
+                BInt = zeros(self.NV)    # flux from non-conservative terms
+                for ind in range(nweights):
+                    qL_ = qL[ind]
+                    qR_ = qR[ind]
 
-        qhi = qh[tuple(coord + 1 for coord in coords)]
+                    fL = self.flux(qL_, d, self.model_params)
+                    fR = self.flux(qR_, d, self.model_params)
 
-        # Integrate across volume of spacetime cell
-        for inds in product(*[range(s) for s in WGHT.shape]):
+                    fInt += self.WGHT_END[ind] * (fL + fR - self.D_FUN(self, qL_, qR_, d))
 
-            q = qhi[inds]
-            qi = []
-            for d in range(NDIM):
-                t = inds[0]
-                i = flat_index(inds[1:d])
-                j = flat_index(inds[d + 2:])
-                qhi_r = qhi.reshape([TN, N**d, N, N**(NDIM - d - 1), NV])
-                qi.append(qhi_r[t, i, :, j])
+                    if self.nonconservative_matrix is not None:
+                        BInt += self.WGHT_END[ind] * B_INT(self, qL_, qR_, d)
 
-            tmp = zeros(NV)
+                rcoords_ = tuple(c - 1 for c in rcoords[2:])
+                lcoords_ = rcoords_[:d] + (rcoords_[d] - 1,) + rcoords_[d + 1:]
 
-            if not HOMOGENEOUS:
-                tmp = source(q, *args)
+                if lcoords_[d] >= 0:
+                    ret[lcoords_] -= (fInt + BInt) / dX[d]
 
-            for d in range(NDIM):
-                ind = inds[d + 1]
-                dqdx = dot(DERVALS[ind], qi[d]) # derivative of q in direction d
+                if rcoords_[d] < dims[d]:
+                    ret[rcoords_] += (fInt - BInt) / dX[d]
 
-                B = nonconservative_matrix(q, d, *args)
-                Bdqdx = dot(B, dqdx)
+    def centers(self, ret, qh, dX):
+        """ Returns the space-time averaged source term and non-conservative terms
+        """
+        for coords in product(*[range(dim) for dim in ret.shape[:self.NDIM]]):
 
-                tmp -= Bdqdx / dX[d]
+            qhi = qh[tuple(coord + 1 for coord in coords)]
 
-            ret[coords] += WGHT[inds] * tmp
+            # Integrate across volume of spacetime cell
+            for inds in product(*[range(s) for s in self.WGHT.shape]):
 
+                q = qhi[inds]
+                qi = []
+                for d in range(self.NDIM):
+                    t = inds[0]
+                    i = flat_index(inds[1:d])
+                    j = flat_index(inds[d + 2:])
+                    qhi_r = qhi.reshape(self.TN, self.N**d, self.N,
+                                        self.N**(self.NDIM - d - 1), self.NV)
+                    qi.append(qhi_r[t, i, :, j])
 
-def fv_terms(qh, dt, dX, HOMOGENEOUS, *args):
-    """ Returns the space-time averaged interface terms, jump terms,
-        source terms, and non-conservative terms
-    """
-    if HOMOGENEOUS:
-        qh = qh.reshape(qh.shape[:NDIM] + (1,) + qh.shape[NDIM:])
+                tmp = zeros(self.NV)
 
-    dims = [s - 2 for s in qh.shape[:NDIM]]
-    qEnd = endpoints(qh)
+                if self.source is not None:
+                    tmp = self.source(q, self.model_params)
 
-    ret = zeros(dims + [NV])
-    centers(ret, qh, dX, HOMOGENEOUS, *args)
-    interfaces(ret, qEnd, dX, *args)
+                if self.nonconservative_matrix is not None:
 
-    return dt * ret
+                    for d in range(self.NDIM):
+                        ind = inds[d + 1]
+                        # derivative of q in direction d
+                        dqdx = dot(DERVALS[ind], qi[d])
 
+                        B = self.nonconservative_matrix(q, d, self.model_params)
+                        Bdqdx = dot(B, dqdx)
 
-def fv_launcher(pool, qh, dt, dX, HOMOGENEOUS, *args):
-    """ Controls the parallel computation of the Finite Volume interface terms
-    """
-    if PARA_FV:
+                        tmp -= Bdqdx / dX[d]
 
-        nx = qh.shape[0]
-        step = int(nx / NCORE)
-        chunk = array([i * step for i in range(NCORE)] + [nx + 1])
-        chunk[0] += 1
-        chunk[-1] -= 1
-        n = len(chunk) - 1
+                ret[coords] += self.WGHT[inds] * tmp
 
-        qhList = pool(delayed(fv_terms)(qh[chunk[i] - 1:chunk[i + 1] + 1], dt,
-                                        dX, HOMOGENEOUS, *args) for i in range(n))
-        return concatenate(qhList)
-    else:
-        return fv_terms(qh, dt, dX, HOMOGENEOUS, *args)
+    def fv_terms(self, qh, dt, dX):
+        """ Returns the space-time averaged interface terms, jump terms,
+            source terms, and non-conservative terms
+        """
+        if self.split:
+            qh = qh.reshape(qh.shape[:self.NDIM] + (1,) + qh.shape[self.NDIM:])
+
+        qEnd = endpoints(qh, self.NDIM)
+
+        ret = zeros([s - 2 for s in qh.shape[:self.NDIM]] + [self.NV])
+
+        if self.source is not None or self.nonconservative_matrix is not None:
+            self.centers(ret, qh, dX)
+
+        self.interfaces(ret, qEnd, dX)
+
+        return dt * ret
+
+    def solve(self, qh, dt, dX):
+        """ Controls the parallel computation of the Finite Volume interface terms
+        """
+        if self.ncore > 1:
+            chunks = get_chunks(qh.shape[0], self.ncore)
+            qhList = self.pool(delayed(self.fv_terms)(qh[chunk[0]:chunk[1]], dt,
+                                                      dX)
+                               for chunk in chunks)
+            return concatenate(qhList)
+        else:
+            return self.fv_terms(qh, dt, dX)
+
+    def __getstate__(self):
+        self_dict = self.__dict__.copy()
+        del self_dict['pool']
+        return self_dict
