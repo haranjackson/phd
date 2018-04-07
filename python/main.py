@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     u, MPs, tf, dX = solids.elastic1_IC()
     nvar = u.shape[-1]
-    ndim = u.ndim
+    ndim = u.ndim - 1
     m = len(MPs)
 
     from gpr.systems.conserved import F_cons, B_cons, S_cons, M_cons
@@ -57,4 +57,4 @@ if __name__ == "__main__":
                         order=2, ncore=1, split=False, ode_solver=None)
 
     solver.solve(u, tf, dX, cfl=0.9, boundary_conditions='transitive',
-                 verbose=True, callback=None, cpp_level=0)
+                 verbose=True, callback=None, cpp_level=2)

@@ -9,7 +9,7 @@ from ader.etc.basis import Basis, derivative
 class SplitSolver():
 
     def __init__(self, N, NV, NDIM, F, S=None, B=None, M=None, dSdQ=None,
-                 model_params=None):
+                 ode_solver=None, model_params=None):
 
         self.N = N
         self.NV = NV
@@ -19,7 +19,8 @@ class SplitSolver():
         self.S = S
         self.M = M
         self.dSdQ = dSdQ
-        self.model_params = model_params
+        self.ode_solver = ode_solver
+        self.pars = model_params
 
         basis = Basis(N)
         self.DERVALS = basis.DERVALS
@@ -38,7 +39,7 @@ class SplitSolver():
                 F = [zeros(w.shape)] * self.NDIM
                 for d in range(self.NDIM):
                     for inds in product(*[range(self.N)] * self.NDIM):
-                        F[d][inds] = self.F(w[inds], d, self.model_params)
+                        F[d][inds] = self.F(w[inds], d, self.pars)
 
             for inds in product(*[range(self.N)] * self.NDIM):
 
@@ -51,39 +52,39 @@ class SplitSolver():
                                       self.DERVALS)
 
                     if self.M is None:
-                        dFdx = derivative(self.N, self.NV, self.NDIM, F, inds,
-                                          d, self.DERVALS)
-                        B = self.B(w[inds], d, self.model_params)
+                        dFdx = derivative(self.N, self.NV, self.NDIM, F[d],
+                                          inds, d, self.DERVALS)
+                        B = self.B(w[inds], d, self.pars)
                         Bdwdx = dot(B, dwdx)
                         tmp += (dFdx + Bdwdx) / dX[d]
 
                     else:
-                        M = self.M(w[inds], d, self.model_params)
+                        M = self.M(w[inds], d, self.pars)
                         tmp += dot(M, dwdx) / dX[d]
 
                 w[inds] -= dt / 2 * tmp
 
-        def f(self, y, t0):
-            return self.S(y, self.model_params)
+    def f(self, y, t0):
+        return self.S(y, self.pars)
 
-        def jac(self, y, t0):
-            return self.dSdQ(y, self.model_params)
+    def jac(self, y, t0):
+        return self.dSdQ(y, self.pars)
 
-        def ode_solver_numerical(self, Q, dt):
-            """ Full numerical solver for the ODE system
-            """
-            y0 = Q.copy()
-            t = array([0, dt])
+    def ode_solver_numerical(self, Q, dt):
+        """ Full numerical solver for the ODE system
+        """
+        y0 = Q.copy()
+        t = array([0, dt])
 
-            if self.dSdQ is not None:
-                Q[:] = odeint(f, y0, t, Dfun=jac)[1]
+        if self.dSdQ is not None:
+            Q[:] = odeint(self.f, y0, t, Dfun=self.jac)[1]
+        else:
+            Q[:] = odeint(self.f, y0, t)[1]
+
+    def ode_launcher(self, u, dt):
+
+        for coords in product(*[range(s) for s in u.shape[:-1]]):
+            if self.ode_solver is not None:
+                self.ode_solver(u[coords], dt, self.pars)
             else:
-                Q[:] = odeint(f, y0, t)[1]
-
-        def ode_launcher(self, u, dt):
-
-            for coords in product(*[range(s) for s in u.shape[:-1]]):
-                if self.ode_solver is not None:
-                    self.ode_solver(u[coords], dt, self.model_params)
-                else:
-                    self.ode_solver_numerical(u[coords], dt)
+                self.ode_solver_numerical(u[coords], dt)

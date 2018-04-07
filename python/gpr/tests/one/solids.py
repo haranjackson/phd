@@ -4,7 +4,7 @@ from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
 from gpr.variables.hyp import Cvec_hyp
-from gpr.tests.one.common import riemann_IC, cell_sizes
+from gpr.tests.one.common import riemann_IC
 from gpr.tests.one.common import HYP_COP, MP_COP_GR, MP_COP_SMG_P
 from gpr.tests.one.common import MP_ALU_SG
 
@@ -23,7 +23,7 @@ def barton1_IC():
     nx = 500
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     vL = array([0, 0.5, 1])
     FL = array([[0.98, 0, 0],
@@ -47,7 +47,7 @@ def barton2_IC():
     nx = 500
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     vL = array([2, 0, 0.1])
     FL = array([[1, 0, 0],
@@ -71,7 +71,7 @@ def elastic1_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     FL = array([[0.95, 0, 0],
                 [0, 1, 0],
@@ -95,7 +95,7 @@ def elastic2_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     FL = array([[0.95, 0, 0],
                 [0.05, 1, 0],
@@ -119,7 +119,7 @@ def piston_IC():
     nx = 300
     Lx = 1.5
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     MP = MP_COP_SMG_P
     ρ = MP.ρ0
@@ -150,7 +150,7 @@ def favrie1_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     MP = MP_ALU_SG
 
@@ -175,7 +175,7 @@ def favrie2_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     MP = MP_ALU_SG
 

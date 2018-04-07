@@ -4,7 +4,6 @@ from ader.etc.boundaries import standard_BC
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec, State
 from gpr.tests.boundaries import destress
-from gpr.tests.one.common import cell_sizes
 
 
 def vortex(x, y, x0, y0, ε, γ, ρ):
@@ -35,7 +34,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
     v = array([1, 1, 0])
     J = zeros(3)
 
-    dX = cell_sizes(Lx, nx, Ly, ny)
+    dX = [Lx / nx, Ly / ny]
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ,
                              b0=0.5, cα=1, μ=μ, κ=κ)
@@ -64,7 +63,7 @@ def circular_explosion_IC():
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
                              b0=0.5, cα=0.5, μ=1e-4, κ=1e-4)
 
-    dX = cell_sizes(Lx, nx, Ly, ny)
+    dX = [Lx / nx, Ly / ny]
 
     v = zeros([3])
     J = zeros([3])
@@ -119,7 +118,7 @@ def laminar_boundary_layer_IC():
             u[i, j] = Q
 
     print("LAMINAR BOUNDARY LAYER: N =", N)
-    return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
+    return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
 def hagen_poiseuille_IC():
@@ -152,7 +151,7 @@ def hagen_poiseuille_IC():
             u[i, j] = Q
 
     print("HAGEN-POISEUILLE DUCT: N =", N)
-    return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
+    return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
 def hagen_poiseuille_BC(u):
@@ -232,7 +231,7 @@ def lid_driven_cavity_IC():
             u[i, j] = Q
 
     print("LID-DRIVEN CAVITY: N =", N)
-    return u, [MP], tf, cell_sizes(Lx, nx, Ly, ny)
+    return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
 def lid_driven_cavity_BC(u):
@@ -274,7 +273,7 @@ def double_shear_layer_IC():
     J = zeros(3)
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=2e-4)
-    dX = cell_sizes(Lx, nx, Ly, ny)
+    dX = [Lx / nx, Ly / ny]
 
     ρ_ = 30
     δ = 0.05
@@ -316,7 +315,7 @@ def taylor_green_vortex_IC():
     J = zeros(3)
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=10, μ=1e-2)
-    dX = cell_sizes(Lx, nx, Ly, ny)
+    dX = [Lx / nx, Ly / ny]
 
     u = zeros([nx, ny, 1, NV])
 

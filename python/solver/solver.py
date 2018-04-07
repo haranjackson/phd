@@ -31,6 +31,7 @@ class SolverPlus(Solver):
         self.strang = strang
         self.half_step = half_step
         self.ode_solver = ode_solver
+        self.stiff_dg = stiff_dg
         self.flux_type = flux_types[riemann_solver]
 
         self.fvSolver = FVSolver(self.N, self.NV, self.NDIM, F=self.F,
@@ -41,31 +42,32 @@ class SolverPlus(Solver):
 
         if split:
             self.splitSolver = SplitSolver(order, nvar, ndim, F, B=B, S=S,
+                                           ode_solver=ode_solver,
                                            model_params=model_params)
 
     def split_stepper(self, uBC, dt, dX, verbose=False):
 
         t0 = time()
 
-        self.splitSolver.ode_launcher(uBC, dt / 2, self.model_params)
+        self.splitSolver.ode_launcher(uBC, dt / 2)
         t1 = time()
 
         wh = self.wenoSolver.solve(uBC)
         if self.half_step:
-            self.splitSolver.weno_midstepper(wh, dt, dX, self.model_params)
+            self.splitSolver.weno_midstepper(wh, dt, dX)
         t2 = time()
 
         self.u += self.fvSolver.solve(wh, dt, dX)
         t3 = time()
 
-        self.splitSolver.ode_launcher(self.u, dt / 2, self.model_params)
+        self.splitSolver.ode_launcher(self.u, dt / 2)
         t4 = time()
 
         if verbose:
             print('ODE1:', t1 - t0)
             print('WENO:', t2 - t1)
             print('FV:  ', t3 - t2)
-            print('ODE2:', t4 - t3)
+            print('ODE2:', t4 - t3, '\n')
 
     def cpp_stepper(self, uBC, dt, dX):
         if self.split:
@@ -75,7 +77,7 @@ class SolverPlus(Solver):
 
     def resume(self, verbose=False):
 
-        if self.split:
+        if self.split or self.cpp_level > 0:
 
             while self.t < self.final_time:
 

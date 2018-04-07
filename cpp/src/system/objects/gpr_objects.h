@@ -61,6 +61,8 @@ struct Par {
   double cα2;
   double τ2;
 
+  int NV;
+
   Vec3 δp;
 };
 

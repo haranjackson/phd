@@ -1,6 +1,6 @@
 from numpy import array, zeros
 
-from gpr.tests.one.common import MP_AIR, cell_sizes
+from gpr.tests.one.common import MP_AIR
 from gpr.tests.one.fluids import fluids_IC
 
 
@@ -10,7 +10,7 @@ def toro1_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1
     pL = 1
@@ -29,7 +29,7 @@ def toro2_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1
     pL = 0.4
@@ -48,7 +48,7 @@ def toro3_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1
     pL = 1000
@@ -67,7 +67,7 @@ def toro4_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1
     pL = 0.01
@@ -86,7 +86,7 @@ def toro_test5_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 5.99924
     pL = 460.894

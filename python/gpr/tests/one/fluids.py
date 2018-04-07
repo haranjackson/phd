@@ -7,7 +7,7 @@ from ader.etc.boundaries import standard_BC
 from gpr.misc.objects import material_parameters
 from gpr.misc.structures import Cvec, State
 from gpr.variables.wavespeeds import c_0
-from gpr.tests.one.common import riemann_IC, MP_AIR, cell_sizes
+from gpr.tests.one.common import riemann_IC, MP_AIR
 
 
 def fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
@@ -43,7 +43,7 @@ def heat_conduction_IC():
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
                              b0=1, cα=2, μ=1e-2, κ=1e-2)
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     print("HEAT CONDUCTION IN A GAS")
     return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
@@ -74,7 +74,7 @@ def first_stokes_problem_IC():
 
     MP = material_parameters(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0,
                              b0=1, cα=1e-16, μ=μ, Pr=0.75)
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     print("FIST STOKES PROBLEM: μ =", μ)
     return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP)
@@ -136,7 +136,7 @@ def viscous_shock_IC(center=0):
 
     MP = material_parameters(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0,
                              b0=5, cα=5, μ=2e-2, Pr=0.75)
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     x = arange(-Lx / 2, Lx / 2, 1 / nx)
     ρ = zeros(nx)
@@ -180,7 +180,7 @@ def hagen_poiseuille_IC():
     u = array([Q] * nx).reshape([nx, 1, 1, NV])
 
     print("HAGEN-POISEUILLE DUCT")
-    return u, [MP], tf, cell_sizes(Lx, nx)
+    return u, [MP], tf, [Lx / nx]
 
 
 def hagen_poiseuille_BC(u):

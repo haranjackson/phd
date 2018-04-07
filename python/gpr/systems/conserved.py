@@ -71,6 +71,7 @@ def F_cons(Q, d, MP):
 
 def S_cons(Q, MP):
 
+    NV = MP.NV
     ret = zeros(NV)
 
     P = State(Q, MP)
@@ -100,6 +101,7 @@ def S_cons(Q, MP):
 
 def B_cons(Q, d, MP):
 
+    NV = MP.NV
     ret = zeros([NV, NV])
 
     if MP.VISCOUS:
@@ -115,8 +117,8 @@ def B_cons(Q, d, MP):
         ret[8 + d, 8 + d:11 + d] -= v
         ret[11 + d, 11 + d:14 + d] -= v
 
-        for i in range(1, LSET + 1):
-            ret[-i, -i] = vd
+#        for i in range(1, LSET + 1):
+#            ret[-i, -i] = vd
 
     return ret
 

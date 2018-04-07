@@ -2,7 +2,6 @@ from numpy import array, eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
 from gpr.tests.one.common import MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
-from gpr.tests.one.common import cell_sizes
 from gpr.tests.one.fluids import fluids_IC
 
 
@@ -12,7 +11,7 @@ def sod_shock_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1
     pL = 1
@@ -31,7 +30,7 @@ def water_gas_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1000
     pL = 1e9
@@ -50,7 +49,7 @@ def water_water_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
 
     ρL = 1000
     pL = 7e8
@@ -69,7 +68,7 @@ def helium_bubble_IC():
     nx = 200
     Lx = 1
 
-    dX = cell_sizes(Lx, nx)
+    dX = [Lx / nx]
     dx = dX[0]
 
     ρL = 1.3333
