@@ -1,8 +1,8 @@
 from numpy import concatenate, dot, zeros
 
-from models.gpr.systems.eigenvectors import eigen
-from models.gpr.systems.primitive import source_prim
-from models.gpr.misc.structures import State
+from gpr.systems.eigenvectors import eigen
+from gpr.systems.primitive import S_prim
+from gpr.misc.structures import State
 from scipy.optimize import newton_krylov
 
 

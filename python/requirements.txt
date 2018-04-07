@@ -1,4 +1,6 @@
-joblib
+ader
+matplotlib
+numba
 numpy
 scipy
-tangent
+spyder

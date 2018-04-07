@@ -4,11 +4,11 @@ from numpy.random import rand
 from scipy.integrate import quad
 from scipy.optimize import newton_krylov
 
-from models.gpr.misc.functions import dev
-from models.gpr.misc.objects import material_parameters
-from models.gpr.misc.plot import plot_energy, plot_distortion, plot_sigma, colors
-from models.gpr.misc.structures import Cvec
-from models.gpr.variables.eos import E_2A
+from gpr.misc.functions import dev
+from gpr.misc.objects import material_parameters
+from gpr.misc.plot import plot_energy, plot_distortion, plot_sigma, colors
+from gpr.misc.structures import Cvec
+from gpr.variables.eos import E_2A
 
 
 A = rand(3, 3)

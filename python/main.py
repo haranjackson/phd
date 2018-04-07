@@ -1,44 +1,21 @@
 from time import time
 
-from joblib import Parallel
 from numpy import array
 
-from etc import boundaries
-from etc.cpp import cpp_ader_stepper, cpp_split_stepper, run_cpp
-from etc.iterator import timestep, make_u
-from etc.save import Data, print_stats, save_all
-from multi.gfm import add_ghost_cells
-from solvers.solvers import ader_stepper, split_stepper
-
-from options import NV, NDIM, NCORE, RGFM, SPLIT, CPP_LVL
-
-from models.gpr.tests.one import fluids, solids
-from models.gpr.tests.two import validation
-from models.gpr.misc.plot import *
+from gpr.tests.one import fluids, solids
+from gpr.tests.two import validation
+from gpr.misc.plot import *
+from solver.gfm import add_ghost_cells, make_u
+from solver.solver import SolverPlus
 
 
-### CHECK ARGUMENTS ###
-IC = solids.elastic1_IC
-BC = boundaries.standard_BC
+""" GFM Options """
+
+LSET = 0                    # Number of level sets
+RGFM = 0                    # Use Riemann GFM
 
 
-def stepper(pool, mat, matBC, dt, dX, *args):
-
-    if CPP_LVL == 1:
-
-        if SPLIT:
-            cpp_split_stepper(mat, matBC, dt, dX, *args)
-        else:
-            cpp_ader_stepper(mat, matBC, dt, dX, *args)
-
-    else:
-        if SPLIT:
-            split_stepper(pool, mat, matBC, dt, dX, *args)
-        else:
-            ader_stepper(pool, mat, matBC, dt, dX, *args)
-
-
-def run_py(pool, u, dX, t, tf, count, data, *args):
+def run(solver, u, dX, t, tf, count, data, MPs):
 
     tStart = time()
     u = data[count].grid
@@ -52,16 +29,7 @@ def run_py(pool, u, dX, t, tf, count, data, *args):
         if RGFM:
             add_ghost_cells(mats, dt, *args)
 
-        print_stats(count, t, dt)
-
-        for i in range(m):
-            mat = mats[i]
-            matBC = BC(mat)
-            MP = args[0][i]
-            stepper(pool, mat, matBC, dt, dX, MP)
-
         u = make_u(mats)
-        data.append(Data(u, t))
 
         if RGFM:
             # reinitialize level sets
@@ -76,17 +44,17 @@ def run_py(pool, u, dX, t, tf, count, data, *args):
 
 if __name__ == "__main__":
 
-    u, MPs, tf, dX = IC()
-    data = [Data(u, 0)]
+    u, MPs, tf, dX = solids.elastic1_IC()
+    nvar = u.shape[-1]
+    ndim = u.ndim
     m = len(MPs)
 
-    assert(u.ndim == NDIM + 1)
-    assert(u.shape[-1] == NV)
-    pool = Parallel(n_jobs=NCORE)
+    from gpr.systems.conserved import F_cons, B_cons, S_cons, M_cons
+    from gpr.systems.eigenvalues import max_eig
 
-    if CPP_LVL == 2:
-        run_cpp(u, dX, 0, tf, 0, data, MPs)
-    else:
-        run_py(pool, u, dX, 0, tf, 0, data, MPs)
+    solver = SolverPlus(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
+                        model_params=MPs[0], M=M_cons, max_eig=max_eig,
+                        order=2, ncore=1, split=False, ode_solver=None)
 
-    # save_all(data)
+    solver.solve(u, tf, dX, cfl=0.9, boundary_conditions='transitive',
+                 verbose=True, callback=None, cpp_level=0)

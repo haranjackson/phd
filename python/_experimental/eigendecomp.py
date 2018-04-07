@@ -3,9 +3,9 @@ from scipy.integrate import odeint
 from scipy.linalg import svd
 import matplotlib.pyplot as plt
 
-from models.gpr.misc.functions import det3, dev, lim
-from models.gpr.misc.objects import material_parameters
-from models.gpr.variables.eos import dEdA_s
+from gpr.misc.functions import det3, dev, lim
+from gpr.misc.objects import material_parameters
+from gpr.variables.eos import dEdA_s
 
 
 ### Options ###
