@@ -1,6 +1,7 @@
 from numpy import dot, sqrt, zeros
 from numpy.linalg import eigvals
 
+from gpr.misc.functions import get_material_indices
 from gpr.misc.structures import State
 from gpr.variables.wavespeeds import c_0, c_h
 
@@ -63,9 +64,13 @@ def Xi2(P, d):
     return ret
 
 
-def max_eig(Q, d, MP):
+def max_eig(Q, d, MPs):
     """ Returns maximum absolute value of the eigenvalues of the GPR system
     """
+
+    _, ind = get_material_indices(Q, MPs)
+    MP = MPs[ind]
+
     PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
 
     P = State(Q, MP)

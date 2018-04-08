@@ -37,22 +37,24 @@ def calculate_pressure(state):
         return state.p_
 
 
+def get_NV(MP):
+    return 17 + int(MP.REACTIVE) + int(MP.MULTI)
+
+
 class State():
     """ Returns the primitive varialbes, given a vector of conserved variables
     """
 
     def __init__(self, Q, MP):
 
+        self.NV = len(Q)
+
         extract_densities(Q, MP, self)
 
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
-
-        if MP.VISCOUS:
-            self.A = Q[5:14].reshape([3, 3])
-
-        if MP.THERMAL:
-            self.J = Q[14:17] / self.ρ
+        self.A = Q[5:14].reshape([3, 3])
+        self.J = Q[14:17] / self.ρ
 
         self.MP = MP
 
@@ -126,8 +128,7 @@ class State():
 def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     """ Returns the vector of conserved variables, given the primitive variables
     """
-    NV = MP.NV
-    Q = zeros(NV)
+    Q = zeros(17)
 
     if MP.MULTI:
         ρ = z * ρ1 + (1 - z) * ρ2

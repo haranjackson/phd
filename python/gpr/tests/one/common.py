@@ -1,26 +1,29 @@
-from numpy import array, inf, sqrt, zeros
+from numpy import inf, sqrt, zeros
 
 from gpr.misc.objects import material_parameters, hyperelastic_params
 
 
-def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0, RGFM=False):
+def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0):
 
-    u = zeros([nx, len(QL)])
+    if MPR is not None:
 
-    if RGFM:
+        n = len(QL)
+        u = zeros([nx, n + 1])
 
         for i in range(nx):
 
             if i * dX[0] < x0:
-                u[i] = QL
+                u[i, :n] = QL
             else:
-                u[i] = QR
+                u[i, :n] = QR
 
             u[i, -1] = (i + 0.5) * dX[0] - x0
 
         return u, [MPL, MPR], tf, dX
 
     else:
+
+        u = zeros([nx, len(QL)])
 
         for i in range(nx):
 
@@ -32,17 +35,13 @@ def riemann_IC(tf, nx, dX, QL, QR, MPL, MPR, x0, RGFM=False):
         return u, [MPL], tf, dX
 
 
-MP_AIR = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0,
-                             b0=1, cα=1, μ=5e-4, Pr=2 / 3)
+MP_AIR = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0) #, b0=1, cα=1, μ=5e-4, Pr=2 / 3)
 
-MP_WAT2 = material_parameters(EOS='sg', ρ0=1000, cv=950, p0=1e5, γ=4.4, pINF=6e8,
-                              b0=1e-4, cα=1e-4, μ=1e-3, Pr=7)
+MP_WAT2 = material_parameters(EOS='sg', ρ0=1000, cv=950, p0=1e5, γ=4.4, pINF=6e8) #, b0=1e-4, cα=1e-4, μ=1e-3, Pr=7)
 
-MP_AIR2 = material_parameters(EOS='sg', ρ0=1.18, cv=721, p0=10100, γ=1.4, pINF=0,
-                              b0=1, cα=1, μ=1.85e-5, Pr=0.714)
+MP_AIR2 = material_parameters(EOS='sg', ρ0=1.18, cv=721, p0=10100, γ=1.4, pINF=0) #, b0=1, cα=1, μ=1.85e-5, Pr=0.714)
 
-MP_HEL2 = material_parameters(EOS='sg', ρ0=0.163, cv=3127, p0=10100, γ=1.66, pINF=0,
-                              b0=1, cα=1, μ=1.99e-5, Pr=0.688)
+MP_HEL2 = material_parameters(EOS='sg', ρ0=0.163, cv=3127, p0=10100, γ=1.66, pINF=0) #, b0=1, cα=1, μ=1.99e-5, Pr=0.688)
 
 
 HYP_ALU = hyperelastic_params(ρ0=2.71, α=1, β=3.577, γ=2.088, cv=9e-4, T0=300,

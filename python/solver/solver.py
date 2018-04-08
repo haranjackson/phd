@@ -45,7 +45,7 @@ class SolverPlus(Solver):
                                            ode_solver=ode_solver,
                                            model_params=model_params)
 
-    def split_stepper(self, uBC, dt, dX, verbose=False):
+    def split_stepper(self, uBC, dt):
 
         t0 = time()
 
@@ -54,58 +54,42 @@ class SolverPlus(Solver):
 
         wh = self.wenoSolver.solve(uBC)
         if self.half_step:
-            self.splitSolver.weno_midstepper(wh, dt, dX)
+            self.splitSolver.weno_midstepper(wh, dt, self.dX)
         t2 = time()
 
-        self.u += self.fvSolver.solve(wh, dt, dX)
+        self.u += self.fvSolver.solve(wh, dt, self.dX)
         t3 = time()
 
         self.splitSolver.ode_launcher(self.u, dt / 2)
         t4 = time()
 
-        if verbose:
+        if self.verbose:
             print('ODE1:', t1 - t0)
             print('WENO:', t2 - t1)
             print('FV:  ', t3 - t2)
             print('ODE2:', t4 - t3, '\n')
 
-    def cpp_stepper(self, uBC, dt, dX):
+    def cpp_stepper(self, uBC, dt):
         if self.split:
-            cpp_split_stepper(self, self.u, uBC, dt, dX)
+            cpp_split_stepper(self, self.u, uBC, dt, self.dX)
         else:
-            cpp_ader_stepper(self, self.u, uBC, dt, dX)
+            cpp_ader_stepper(self, self.u, uBC, dt, self.dX)
 
-    def resume(self, verbose=False):
+    def stepper(self, executor, dt):
 
-        if self.split or self.cpp_level > 0:
+        uBC = self.BC(self.u, self.N, self.NDIM)
 
-            while self.t < self.final_time:
+        if self.cpp_level > 0:
+            self.cpp_stepper(uBC, dt)
 
-                dt = self.timestep(self.u, self.dX, count=self.count, t=self.t,
-                                   final_time=self.final_time)
-
-                if verbose:
-                    print('Iteration:', self.count)
-                    print('t  = {:.3e}'.format(self.t))
-                    print('dt = {:.3e}'.format(dt))
-
-                uBC = self.BC(self.u, self.N, self.NDIM)
-
-                if self.cpp_level == 1:
-                    self.cpp_stepper(uBC, dt, self.dX)
-                else:
-                    self.split_stepper(uBC, dt, self.dX, verbose)
-
-                self.t += dt
-                self.count += 1
-
-                if self.callback is not None:
-                    self.callback(self.u, self.t, self.count)
-
-            return self.u
+        elif self.split:
+            self.split_stepper(uBC, dt)
 
         else:
-            return Solver.resume(self, verbose)
+            if self.ncore == 1:
+                self.u += self.ader_stepper(uBC, dt, self.verbose)
+            else:
+                self.u += self.parallel_ader_stepper(executor, uBC, dt)
 
     def solve(self, initial_grid, final_time, dX, cfl=0.9,
               boundary_conditions='transitive', verbose=False, callback=None,
@@ -114,7 +98,8 @@ class SolverPlus(Solver):
         self.cpp_level = cpp_level
 
         if cpp_level == 2:
-            return solve_full_cpp(self, initial_grid, final_time, dX, cfl)
+            self.u = solve_full_cpp(self, initial_grid, final_time, dX, cfl)
+            return self.u
 
         else:
             return Solver.solve(self, initial_grid, final_time, dX, cfl=cfl,

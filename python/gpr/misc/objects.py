@@ -150,8 +150,6 @@ def params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
     else:
         MP.δp = δp
 
-    MP.NV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(REACTIVE) + int(MULTI)
-
 
 def material_parameters(EOS, ρ0, cv, p0,
                         Tref=None, α=None, β=None, γ=None, pINF=None,

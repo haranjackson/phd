@@ -8,7 +8,7 @@ from gpr.tests.one.fluids import fluids_IC
 def sod_shock_IC():
 
     tf = 0.2
-    nx = 200
+    nx = 400
     Lx = 1
 
     dX = [Lx / nx]
@@ -21,12 +21,12 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR, MP_AIR, 0.5)
 
 
 def water_gas_IC():
 
-    tf = 237.44e-6
+    tf = 2.3744e-4
     nx = 200
     Lx = 1
 
@@ -64,7 +64,7 @@ def water_water_IC():
 
 def helium_bubble_IC():
 
-    tf = 0.0014
+    tf = 14e-4
     nx = 200
     Lx = 1
 
@@ -88,24 +88,24 @@ def helium_bubble_IC():
 
     J = zeros(3)
 
-    u = zeros([nx, 17])
+    u = zeros([nx, 20])
     Q1 = Cvec(ρL, pL, vL, AL, J, MP_AIR2)
     Q2 = Cvec(ρM, pM, vM, AM, J, MP_AIR2)
     Q3 = Cvec(ρR, pR, vR, AR, J, MP_HEL2)
 
     for i in range(nx):
 
-        u[i, 0, 0, -3] = i * dx - 0.05
-        u[i, 0, 0, -2] = i * dx - 0.4
-        u[i, 0, 0, -1] = i * dx - 0.6
+        u[i, -3] = i * dx - 0.05
+        u[i, -2] = i * dx - 0.4
+        u[i, -1] = i * dx - 0.6
 
         if i * dx < 0.05:
-            u[i, 0, 0, :-3] = Q1
+            u[i, :-3] = Q1
         elif i * dx < 0.4:
-            u[i, 0, 0, :-3] = Q2
+            u[i, :-3] = Q2
         elif i * dx < 0.6:
-            u[i, 0, 0, :-3] = Q3
+            u[i, :-3] = Q3
         else:
-            u[i, 0, 0, :-3] = Q2
+            u[i, :-3] = Q2
 
     return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2], tf, dX

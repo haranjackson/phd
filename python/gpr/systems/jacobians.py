@@ -9,7 +9,7 @@ def dQdP(P):
     """
     MP = P.MP
 
-    ret = eye(MP.NV)
+    ret = eye(P.NV)
 
     ρ = P.ρ
     v = P.v
@@ -52,7 +52,7 @@ def dPdQ(P):
     """
     MP = P.MP
 
-    ret = eye(MP.NV)
+    ret = eye(P.NV)
 
     ρ = P.ρ
     v = P.v
@@ -105,7 +105,7 @@ def dFdP(P, d):
         NOTE: Primitive variables are assumed to be in standard ordering
     """
     MP = P.MP
-    NV = MP.NV
+    NV = P.NV
 
     ρ = P.ρ
     p = P.p()
@@ -196,7 +196,7 @@ def dSdQ_cons(Q, MP):
     """ WARNING: incomplete, and does not work for plastic solids
     """
     P = State(Q, MP)
-    NV = MP.NV
+    NV = len(Q)
     A = P.A
 
     ret = zeros([NV, NV])

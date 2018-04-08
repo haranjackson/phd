@@ -1,12 +1,14 @@
 from numpy import dot, zeros
 
 from gpr.systems.jacobians import dFdP, dPdQ
+from gpr.misc.functions import get_material_indices
 from gpr.misc.structures import State
 
 
-def F_cons(Q, d, MP):
+def F_cons(Q, d, MPs):
 
-    NV = MP.NV
+    NV, ind = get_material_indices(Q, MPs)
+    MP = MPs[ind]
     ret = zeros(NV)
 
     P = State(Q, MP)
@@ -69,9 +71,10 @@ def F_cons(Q, d, MP):
     return ret
 
 
-def S_cons(Q, MP):
+def S_cons(Q, MPs):
 
-    NV = MP.NV
+    NV, ind = get_material_indices(Q, MPs)
+    MP = MPs[ind]
     ret = zeros(NV)
 
     P = State(Q, MP)
@@ -99,9 +102,10 @@ def S_cons(Q, MP):
     return ret
 
 
-def B_cons(Q, d, MP):
+def B_cons(Q, d, MPs):
 
-    NV = MP.NV
+    NV, ind = get_material_indices(Q, MPs)
+    MP = MPs[ind]
     ret = zeros([NV, NV])
 
     if MP.VISCOUS:
@@ -123,10 +127,12 @@ def B_cons(Q, d, MP):
     return ret
 
 
-def M_cons(Q, d, MP):
+def M_cons(Q, d, MPs):
     """ Returns the Jacobian in the dth direction
     """
+    NV, ind = get_material_indices(Q, MPs)
+    MP = MPs[ind]
     P = State(Q, MP)
     DFDP = dFdP(P, d)
     DPDQ = dPdQ(P)
-    return dot(DFDP, DPDQ) + B_cons(Q, d, MP)
+    return dot(DFDP, DPDQ) + B_cons(Q, d, MPs)

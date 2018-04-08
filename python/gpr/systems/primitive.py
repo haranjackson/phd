@@ -9,6 +9,7 @@ from gpr.variables.wavespeeds import c_0, c_h
 def M_prim(Q, d, MP):
 
     P = State(Q, MP)
+    NV = len(Q)
 
     ρ = P.ρ
     p = P.p()
@@ -17,7 +18,7 @@ def M_prim(Q, d, MP):
 
     c0 = c_0(ρ, p, A, MP)
 
-    ret = v[d] * eye(MP.NV)
+    ret = v[d] * eye(NV)
     ret[0, 2 + d] = ρ
     ret[1, 2 + d] = ρ * c0**2
     ret[2 + d, 1] = 1 / ρ
@@ -52,7 +53,8 @@ def M_prim(Q, d, MP):
 
 def S_prim(Q, MP):
 
-    ret = zeros(MP.NV)
+    NV = len(Q)
+    ret = zeros(NV)
     P = State(Q, MP)
 
     ρ = P.ρ

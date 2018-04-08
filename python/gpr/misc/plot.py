@@ -7,8 +7,8 @@ from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
 
 from ader.etc.basis import Basis
 
+from gpr.misc.functions import get_material_indices
 from gpr.misc.structures import State
-from solver.gfm import get_material_index
 
 
 def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
@@ -65,7 +65,8 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None,
 
     for ii in range(n):
         Q = u.reshape([n, NV])[ii]
-        MP = MPs[get_material_index(Q)]
+        _, ind = get_material_indices(Q, MPs)
+        MP = MPs[ind]
         P = State(Q, MP)
         var = getattr(P, attr)()
         if j is None:

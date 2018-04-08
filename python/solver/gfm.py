@@ -51,8 +51,3 @@ def add_ghost_cells(mats, dt, MPs, ISO_FIX=0):
             uL[j, 0, 0, :-(m - 1)] = QL_
         for j in range(ind):
             uR[j, 0, 0, :-(m - 1)] = QR_
-
-
-def get_material_index(Q, LSET):
-    NV = len(Q)
-    return sum(Q[NV-LSET:] < 0)

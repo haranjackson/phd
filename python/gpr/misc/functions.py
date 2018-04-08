@@ -124,3 +124,9 @@ def reorder(X, order='typical'):
         perm = array([0, 1, 5, 8, 11, 6, 9, 12, 7, 10, 13, 2, 3, 4, 14, 15, 16])
 
     return X[perm]
+
+
+def get_material_indices(Q, MPs):
+    NV = len(Q)
+    LSET = len(MPs) - 1
+    return NV, sum(Q[NV-LSET:] >= 0)
