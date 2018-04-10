@@ -5,6 +5,12 @@ from numpy import sum, zeros
 from gpr.multi.riemann import star_states
 
 
+def get_material_index(Q, m):
+    NV = len(Q)
+    LSET = m - 1
+    return sum(Q[NV-LSET:] >= 0)
+
+
 def make_u(mats):
     """ Builds u across the domain, from the different material grids
     """
@@ -14,7 +20,7 @@ def make_u(mats):
 
     for coords in product(*[range(s) for s in av.shape[:NDIM]]):
 
-        materialIndex = get_material_index(av[coords])
+        materialIndex = get_material_index(av[coords], len(mats))
         u[coords] = mats[materialIndex][coords]
 
     return u

@@ -42,7 +42,7 @@ from solver.solver import SolverPlus
 
 if __name__ == "__main__":
 
-    u, MPs, tf, dX = multi.helium_bubble_IC()
+    u, MPs, tf, dX = fluids.first_stokes_problem_IC()
     nvar = u.shape[-1]
     ndim = u.ndim - 1
     m = len(MPs)
@@ -51,9 +51,9 @@ if __name__ == "__main__":
     from gpr.systems.eigenvalues import max_eig
 
     solver = SolverPlus(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
-                        model_params=MPs, M=M_cons, max_eig=max_eig,
+                        model_params=MPs[0], M=M_cons, max_eig=max_eig,
                         order=2, ncore=1, split=False, ode_solver=None,
-                        riemann_solver='roe')
+                        riemann_solver='osher')
 
     grids = []
 

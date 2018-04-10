@@ -2,13 +2,13 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from numpy import arange, linspace, mgrid, prod, zeros
-from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot
-from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel, xlim
+from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot, xlim
+from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel
 
 from ader.etc.basis import Basis
 
-from gpr.misc.functions import get_material_indices
 from gpr.misc.structures import State
+from solver.gfm import get_material_index
 
 
 def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
@@ -65,7 +65,7 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None,
 
     for ii in range(n):
         Q = u.reshape([n, NV])[ii]
-        _, ind = get_material_indices(Q, MPs)
+        _, ind = get_material_index(Q, len(MPs))
         MP = MPs[ind]
         P = State(Q, MP)
         var = getattr(P, attr)()
