@@ -5,6 +5,13 @@ from numpy import sum, zeros
 from gpr.multi.riemann import star_states
 
 
+def sign(x):
+    if x <= 0:
+        return -1
+    else:
+        return 1
+
+
 def get_material_index(Q, m):
     NV = len(Q)
     LSET = m - 1
@@ -25,6 +32,26 @@ def make_u(mats):
 
     return u
 
+
+def find_interface_cells(u, i, m):
+    """ Finds the cells lying on the ith interface,
+        given that there are m interfaces
+    """
+    NDIM = u.ndim - 1
+    ii = (i - (m - 1),)
+    ret = zeros(u.shape[:-1])
+
+    for indsL in product(*[range(s) for s in ret.shape]):
+        for d in range(NDIM):
+
+            indsR = indsL[:d] + (indsL[d] + 1,) + indsL[d + 1:]
+            uL = u[indsL + ii]
+            uR = u[indsR + ii]
+
+            if uL * uR <= 1:
+                ret[indsL] = sign(uL)
+                ret[indsR] = sign(uR)
+    return ret
 
 def get_levelset_root(u, i, m):
     """ return the location of interface i
