@@ -100,6 +100,17 @@
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $E$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $G,S$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 E=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|G\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|G\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)+\frac{b_{0}^{2}}{4}\left|G\right|^{\beta/2}\left(\tr\left(G^{2}\right)-\frac{\tr\left(G\right)^{2}}{3}\right)
@@ -121,6 +132,17 @@ E=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|G\right|^{\alpha/2}-1\right)^{2}+c_{v
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $\rho,G,S$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -167,6 +189,17 @@ pI-\sigma=\rho\left(\frac{c_{0}^{2}}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\ri
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $\rho,G,p$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard

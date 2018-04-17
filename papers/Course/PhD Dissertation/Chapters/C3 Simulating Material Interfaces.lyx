@@ -1779,6 +1779,244 @@ end{subequations}
 
 \end_layout
 
+\begin_layout Subsection*
+The Case without Heat Conduction
+\end_layout
+
+\begin_layout Standard
+If the heat conduction terms are dropped from the GPR model, the eigenstructure
+ of the system changes, along with the solution of the linear conditions.
+ 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ retains the same definition, but is now a 
+\begin_inset Formula $3\times3$
+\end_inset
+
+ matrix (comprising the top-left corner of 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ under heat conduction).
+ Thus, 
+\begin_inset Formula $Q,D$
+\end_inset
+
+ are also 
+\begin_inset Formula $3\times3$
+\end_inset
+
+ matrices.
+ Taking the eigenvectors 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-Non-Thermal"
+
+\end_inset
+
+, the linear conditions become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}_{K}=\left\{ \begin{array}{c}
+\left(\begin{array}{ccccc}
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & -\Pi_{1} & -\Pi_{2} & -\Pi_{3}\end{array}\right)\\
+\left(\begin{array}{cccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & \xi DQ\end{array}\right)\\
+\left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
+I_{2} & -BA^{-1} & BA^{-1}\Pi_{1}^{-1}\Pi_{2} & BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
+\left(\begin{array}{cccc}
+0_{3,5} & I_{3} & 0_{3,3} & 0_{3,3}\\
+0_{3,5} & 0_{3,3} & I_{3} & 0_{3,3}
+\end{array}\right)
+\end{array}\right\} \label{eq:Left-Conditions-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}_{K}^{-1}=\left\{ \left(\begin{array}{c}
+X\\
+0_{6,3}\\
+Y
+\end{array}\right),\left(\begin{array}{c}
+0_{11,3}\\
+\xi\left(DQ\right)^{-1}
+\end{array}\right),\left(\begin{array}{cc}
+1 & 0\\
+0 & 1\\
+-\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
+\boldsymbol{0_{9}} & \boldsymbol{0_{9}}
+\end{array}\right),\left(\begin{array}{cc}
+0_{2,3} & 0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2} & -\Pi_{1}^{-1}\Pi_{3}\\
+I_{3} & 0_{3,3}\\
+0_{3,3} & I_{3}\\
+0_{3,3} & 0_{3,3}
+\end{array}\right)\right\} \label{eq:Right-Conditions-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X=\left(\begin{array}{ccccc}
+\vdots & \vdots & \ddots & \vdots & \iddots\\
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
+\vdots & \vdots & \iddots & \vdots & \ddots\\
+\vdots & \iddots & \ddots & \vdots & \iddots\\
+\left(I-BA^{-1}C\right)^{-1} & \cdots & \cdots & -\left(I-BA^{-1}C\right)^{-1}BA^{-1} & \cdots
+\end{array}\right)^{-1}\left(\begin{array}{cccc}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1\\
+0 & 0 & 0 & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By inversion of block matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{ccccc}
+\vdots & \vdots & \ddots & \vdots & \iddots\\
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
+\vdots & \vdots & \iddots & \vdots & \ddots\\
+\vdots & \iddots & \ddots & \vdots & \iddots\\
+\left(I-BA^{-1}C\right)^{-1} & \cdots & \cdots & -\left(I-BA^{-1}C\right)^{-1}BA^{-1} & \cdots
+\end{array}\right)^{-1}=\left(\begin{array}{cc}
+-BA^{-1}\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1} & \left(I+BA^{-1}\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
+-\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1} & \left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tilde{B} & =\left(\begin{array}{ccc}
+\cdots & -\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \cdots\\
+\cdots & \boldsymbol{e_{1}} & \cdots
+\end{array}\right)^{T}\\
+B & =\left(\begin{array}{ccc}
+\rho & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)
+\end{array}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Results
 \end_layout

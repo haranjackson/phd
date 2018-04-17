@@ -1,0 +1,175 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation landscape
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\int_{0}^{T}\int_{TS_{L}}^{TS_{R}}\left(\frac{\partial Q}{\partial t}+\frac{\partial F}{\partial x}+B\frac{\partial Q}{\partial x}-S\right)dxdt=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\int_{TS_{L}}^{TS_{R}}Q\left(x,T\right)dx=\int_{TS_{L}}^{TS_{R}}Q\left(x,0\right)dx+\int_{0}^{T}F\left(TS_{L},t\right)dt-\int_{0}^{T}F\left(TS_{R},t\right)dt+\int_{0}^{T}\int_{TS_{L}}^{TS_{R}}\left(S-B\frac{\partial Q}{\partial x}\right)dxdt
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\int_{TS_{L}}^{TS_{R}}Q\left(x,T\right)dx=TS_{R}Q_{R}-TS_{L}Q_{L}+TF_{L}-TF_{R}+\int_{0}^{T}\int_{TS_{L}}^{TS_{R}}\left(S-B\frac{\partial Q}{\partial x}\right)dxdt
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{T\left(S_{R}-S_{L}\right)}\int_{TS_{L}}^{TS_{R}}Q\left(x,T\right)dx=\frac{S_{R}Q_{R}-S_{L}Q_{L}+F_{L}-F_{R}}{S_{R}-S_{L}}+\int_{0}^{T}\left(\frac{1}{T\left(S_{R}-S_{L}\right)}\int_{TS_{L}}^{TS_{R}}\left(S-B\frac{\partial Q}{\partial x}\right)dx\right)dt
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $T\rightarrow0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\frac{S_{R}-S^{*}}{S_{R}-S_{L}}\right)Q_{R}^{*}-\left(\frac{S_{L}-S^{*}}{S_{R}-S_{L}}\right)Q_{L}^{*}=\frac{S_{R}Q_{R}-S_{L}Q_{L}+F_{L}-F_{R}-\left(\tilde{B}\left(Q_{L},Q_{L}^{*}\right)\left(Q_{L}^{*}-Q_{L}\right)+\tilde{B}\left(Q_{L}^{*},Q_{R}^{*}\right)\left(Q_{R}^{*}-Q_{L}^{*}\right)+\tilde{B}\left(Q_{R}^{*},Q_{R}\right)\left(Q_{R}-Q_{R}^{*}\right)\right)}{S_{R}-S_{L}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+S^{*}=v_{1L}^{*}=v_{1R}^{*}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+v_{2L}=v_{2L}^{*},\quad v_{2R}^{*}=v_{2R}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+v_{3L}=v_{3L}^{*},\quad v_{3R}^{*}=v_{3R}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
