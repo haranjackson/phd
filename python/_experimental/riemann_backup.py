@@ -1,20 +1,15 @@
 from numpy import amax, array, concatenate, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve
 
+from _experimental.stiff_riemann import star_states_stiff
 from gpr.misc.functions import reorder
 from gpr.misc.structures import State
 from gpr.systems.eigenvalues import Xi1, Xi2
 from gpr.systems.eigenvectors import eigen
-from gpr.variables.eos import total_energy
+from gpr.systems.primitive import S_prim
 
 
 def Pvec(P, THERMAL):
-
-    if THERMAL:
-        NV = 17
-    else:
-        NV = 14
-
     ret = zeros(NV)
     ret[0] = P.ρ
     ret[1] = P.p()
@@ -116,7 +111,9 @@ def riemann_constraints(P, sgn, MP):
     return Lhat, Rhat
 
 
-def star_stepper(QL, QR, MPL, MPR):
+def star_stepper(QL, QR, dt, MPL, MPR, SL=None, SR=None):
+
+    d = 0
 
     PL = State(QL, MPL)
     PR = State(QR, MPR)
@@ -125,25 +122,36 @@ def star_stepper(QL, QR, MPL, MPR):
     YL = RL[11:15, :4]
     YR = RR[11:15, :4]
 
-    xL = concatenate([PL.Σ()[0], [PL.T()]])
-    xR = concatenate([PR.Σ()[0], [PR.T()]])
+    xL = concatenate([PL.Σ()[d], [PL.T()]])
+    xR = concatenate([PR.Σ()[d], [PR.T()]])
 
-    Ξ1L = Xi1(PL, 0)
-    Ξ2L = Xi2(PL, 0)
+    Ξ1L = Xi1(PL, d)
+    Ξ2L = Xi2(PL, d)
     OL = dot(Ξ1L, Ξ2L)
-    Ξ1R = Xi1(PR, 0)
-    Ξ2R = Xi2(PR, 0)
+    Ξ1R = Xi1(PR, d)
+    Ξ2R = Xi2(PR, d)
     OR = dot(Ξ1R, Ξ2R)
 
     _, QL_1 = eig(OL)
     _, QR_1 = eig(OR)
 
-    yL = concatenate([PL.v, [PL.J[0]]])
-    yR = concatenate([PR.v, [PR.J[0]]])
-    x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
+    if SL is not None:
+        cL = dot(LL, reorder(SL, order='atypical'))
+        cR = dot(LR, reorder(SR, order='atypical'))
 
-    cL = zeros(17)
-    cR = zeros(17)
+        XL = dot(QL_1, cL[4:8])
+        XR = dot(QR_1, cR[4:8])
+
+        yL = concatenate([PL.v, [PL.J[d]]])
+        yR = concatenate([PR.v, [PR.J[d]]])
+        x_ = solve(YL - YR, yR - yL - dt * (XL + XR) + dot(YL, xL) - dot(YR, xR))
+
+    else:
+        yL = concatenate([PL.v, [PL.J[d]]])
+        yR = concatenate([PR.v, [PR.J[d]]])
+        x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
+
+
     cL[:4] = x_ - xL
     cR[:4] = x_ - xR
 
@@ -156,9 +164,22 @@ def star_stepper(QL, QR, MPL, MPR):
     return QL_, QR_
 
 
-def star_states(QL_, QR_, MPL, MPR):
+def star_states_iterative(QL_, QR_, dt, MPL, MPR, SOURCES=False):
 
     while not check_star_convergence(QL_, QR_, MPL, MPR):
-        QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR)
+        if SOURCES:
+            SL = source_prim(QL_, MPL)
+            SR = source_prim(QR_, MPR)
+            return star_stepper(QL_, QR_, dt, MPL, MPR, SL, SR)
+        else:
+            return star_stepper(QL_, QR_, dt, MPL, MPR)
 
     return QL_, QR_
+
+
+def star_states(QL, QR, dt, MPL, MPR, STIFF_RGFM=False):
+
+    if STIFF_RGFM:
+        return star_states_stiff(QL, QR, dt, MPL, MPR)
+    else:
+        return star_states_iterative(QL, QR, dt, MPL, MPR)

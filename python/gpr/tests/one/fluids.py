@@ -13,13 +13,13 @@ from gpr.tests.one.common import riemann_IC, MP_AIR
 def fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MPL, MPR=None, x0=0.5):
     """ constructs the riemann problem corresponding to the parameters given
     """
-    AL = ρL**(1 / 3) * eye(3)
-    JL = zeros(3)
-    AR = ρR**(1 / 3) * eye(3)
-    JR = zeros(3)
-
     if MPR is None:
         MPR = MPL
+
+    AL = (ρL / MPL.ρ0)**(1 / 3) * eye(3)
+    JL = zeros(3)
+    AR = (ρR / MPR.ρ0)**(1 / 3) * eye(3)
+    JR = zeros(3)
 
     QL = Cvec(ρL, pL, vL, AL, JL, MPL)
     QR = Cvec(ρR, pR, vR, AR, JR, MPR)
