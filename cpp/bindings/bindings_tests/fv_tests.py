@@ -2,21 +2,25 @@ import GPRpy
 
 from numpy import array, dot, int32, zeros
 
-from models.gpr.misc.structures import State
-from models.gpr.systems.eigenvalues import Xi1, Xi2
+from ader.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
+from ader.fv.fv import endpoints
 
-from solvers.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
-from solvers.fv.fv import interfaces, endpoints, fv_terms, centers
+from gpr.misc.structures import State
+from gpr.systems.eigenvalues import Xi1, Xi2
 
-from bindings_tests.test_functions import check, generate_vector
-
-from options import SPLIT, FLUX, NV, NDIM
+from bindings_tests.test_functions import check, generate_vector, cpp_dx
 
 
-### FLUXES ###
+convert_fluxes = {D_RUS: 0,
+                  D_ROE: 1,
+                  D_OSH: 2}
+
+
+""" FLUXES """
 
 
 def TAT_test(d, MP):
+
     Q = generate_vector(MP)
     P = State(Q, MP)
 
@@ -33,58 +37,78 @@ def TAT_test(d, MP):
     return TAT_cp, TAT_py
 
 
-def Bint_test(d, MP):
+def Bint_test(d, fvSolver):
+
+    MP = fvSolver.pars
+
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
+
     Bint_cp = GPRpy.solvers.fv.Bint(Q1, Q2, d, MP)
-    Bint_py = B_INT(Q1, Q2, d, MP)
+    Bint_py = B_INT(fvSolver, Q1, Q2, d)
 
     print("Bint  ", check(Bint_cp, Bint_py))
     return Bint_cp, Bint_py
 
 
-def D_RUS_test(d, MP):
+def D_RUS_test(d, fvSolver):
+
+    MP = fvSolver.pars
+
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
-    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, MP)
-    D_RUS_py = -D_RUS(Q1, Q2, d, MP)
+
+    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, fvSolver.pars)
+    D_RUS_py = D_RUS(fvSolver, Q1, Q2, d,)
 
     print("D_RUS ", check(D_RUS_cp, D_RUS_py))
     return D_RUS_cp, D_RUS_py
 
 
-def D_ROE_test(d, MP):
+def D_ROE_test(d, fvSolver):
+
+    MP = fvSolver.pars
+
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
+
     D_ROE_cp = GPRpy.solvers.fv.D_ROE(Q1, Q2, d, MP)
-    D_ROE_py = -D_ROE(Q1, Q2, d, MP)
+    D_ROE_py = D_ROE(fvSolver, Q1, Q2, d)
 
     print("D_ROE ", check(D_ROE_cp, D_ROE_py))
     return D_ROE_cp, D_ROE_py
 
 
-def D_OSH_test(d, MP):
+def D_OSH_test(d, fvSolver):
+
+    MP = fvSolver.pars
+
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
+
     D_OSH_cp = GPRpy.solvers.fv.D_OSH(Q1, Q2, d, MP)
-    D_OSH_py = -D_OSH(Q1, Q2, d, MP)
+    D_OSH_py = D_OSH(fvSolver, Q1, Q2, d)
 
     print("D_OSH ", check(D_OSH_cp, D_OSH_py))
     return D_OSH_cp, D_OSH_py
 
-### FINITE VOLUME (NDIM=1) ###
+
+""" FINITE VOLUME (NDIM=1) """
 
 
-HOMOGENEOUS = SPLIT
-TIME = not SPLIT
-SOURCES = not SPLIT
+def FVc_test(qh_py, dX, dt, fvSolver):
 
+    SOURCES = fvSolver.S is not None
+    TIME = fvSolver.time_rec
+    NV = fvSolver.NV
+    NDIM = fvSolver.NDIM
+    MP = fvSolver.pars
+    mask = None
 
-def FVc_test(qh_py, dX, dt, MP):
-
-    if HOMOGENEOUS:
+    if not SOURCES:
         shape = qh_py.shape
-        qh_py = qh_py.reshape(shape[:NDIM] + (1,) + shape[NDIM:])
+        newShape = shape[:NDIM] + (1,) + shape[NDIM:]
+        qh_py = qh_py.reshape(newShape)
 
     nx, ny = qh_py.shape[:2]
 
@@ -100,7 +124,7 @@ def FVc_test(qh_py, dX, dt, MP):
         GPRpy.solvers.fv.centers2(FVc_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
                                   dX[0], dX[1], SOURCES, TIME, MP)
 
-    centers(FVc_py, qh_py, dX, HOMOGENEOUS, MP)
+    fvSolver.centers(FVc_py, qh_py, dX, mask)
     FVc_py *= dt
 
     FVc_cp = FVc_cp.reshape(FVc_py.shape)
@@ -108,14 +132,24 @@ def FVc_test(qh_py, dX, dt, MP):
     return FVc_cp, FVc_py
 
 
-def FVi_test(qh_py, dX, dt, MP):
+def FVi_test(qh_py, dX, dt, fvSolver):
 
-    if HOMOGENEOUS:
+    SOURCES = fvSolver.S is not None
+    TIME = fvSolver.time_rec
+    NV = fvSolver.NV
+    NDIM = fvSolver.NDIM
+    MP = fvSolver.pars
+    FLUX = convert_fluxes[fvSolver.D_FUN]
+    ENDVALS = fvSolver.ENDVALS
+    mask = None
+
+    if not SOURCES:
         shape = qh_py.shape
-        qh_py = qh_py.reshape(shape[:NDIM] + (1,) + shape[NDIM:])
+        newShape = shape[:NDIM] + (1,) + shape[NDIM:]
+        qh_py = qh_py.reshape(newShape)
 
     nx, ny = qh_py.shape[:2]
-    qEnd = endpoints(qh_py)
+    qEnd = endpoints(qh_py, NDIM, ENDVALS)
 
     if NDIM == 1:
         FVi_py = zeros([nx - 2, NV])
@@ -131,7 +165,7 @@ def FVi_test(qh_py, dX, dt, MP):
         GPRpy.solvers.fv.interfs2(FVi_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
                                   dX[0], dX[1], TIME, FLUX, MP)
 
-    interfaces(FVi_py, qEnd, dX, MP)
+    fvSolver.interfaces(FVi_py, qEnd, dX, mask)
     FVi_py *= dt
 
     FVi_cp = FVi_cp.reshape(FVi_py.shape)
@@ -139,7 +173,14 @@ def FVi_test(qh_py, dX, dt, MP):
     return FVi_cp, FVi_py
 
 
-def FV_test(qh_py, dX, dt, MP):
+def FV_test(qh_py, dX, dt, fvSolver):
+
+    SOURCES = fvSolver.S is not None
+    TIME = fvSolver.time_rec
+    FLUX = convert_fluxes[fvSolver.D_FUN]
+    NV = fvSolver.NV
+    NDIM = fvSolver.NDIM
+    MP = fvSolver.pars
 
     nx, ny = qh_py.shape[:2]
 
@@ -151,10 +192,10 @@ def FV_test(qh_py, dX, dt, MP):
         FV_cp = zeros((nx - 2) * (ny - 2) * NV)
         nX = array([nx - 2, ny - 2, 1], dtype=int32)
 
-    FV_py = fv_terms(qh_py, dt, dX, HOMOGENEOUS, MP)
+    FV_py = fvSolver.solve(qh_py, dt, dX)
 
-    GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), NDIM, nX, dt, dX,
-                                 SOURCES, TIME, FLUX, MP)
+    GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), NDIM, nX, dt,
+                                 cpp_dx(dX), SOURCES, TIME, FLUX, MP)
 
     FV_cp = FV_cp.reshape(FV_py.shape)
     print("FV    ", check(FV_cp, FV_py))

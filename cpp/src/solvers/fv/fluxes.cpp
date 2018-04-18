@@ -35,7 +35,10 @@ VecV D_OSH(VecVr qL, VecVr qR, int d, Par &MP) {
         es.eigenvalues().array().abs();
     ret += WGHTS(i) * (es.eigenvectors() * b);
   }
-  return ret.real();
+  VecV f = ret.real();
+  flux(f, qL, d, MP);
+  flux(f, qR, d, MP);
+  return f;
 }
 
 VecV D_ROE(VecVr qL, VecVr qR, int d, Par &MP) {
@@ -51,11 +54,20 @@ VecV D_ROE(VecVr qL, VecVr qR, int d, Par &MP) {
   Eigen::EigenSolver<MatV_V> es(J);
   VeccV b = es.eigenvectors().colPivHouseholderQr().solve(Δqc).array() *
             es.eigenvalues().array().abs();
-  return (es.eigenvectors() * b).real();
+
+  VecV f = (es.eigenvectors() * b).real();
+  flux(f, qL, d, MP);
+  flux(f, qR, d, MP);
+  return f;
 }
 
 VecV D_RUS(VecVr qL, VecVr qR, int d, Par &MP) {
+
   double max1 = max_abs_eigs(qL, d, MP);
   double max2 = max_abs_eigs(qR, d, MP);
-  return std::max(max1, max2) * (qL - qR);
+
+  VecV f = std::max(max1, max2) * (qL - qR);
+  flux(f, qL, d, MP);
+  flux(f, qR, d, MP);
+  return f;
 }

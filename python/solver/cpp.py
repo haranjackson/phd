@@ -25,8 +25,8 @@ def cpp_split_stepper(obj, mat, matBC, dt, dX):
     matBCr = matBC.ravel()
 
     GPRpy.solvers.split_stepper(matr, matBCr, wh, obj.NDIM, nX, dt,
-                                convert_dX(dX), obj.strang, obj.half_step,
-                                obj.flux_type, obj.pars)
+                                convert_dX(dX), obj.half_step, obj.flux_type,
+                                obj.pars)
 
     mat = matr.reshape(mat.shape)
 
@@ -52,6 +52,6 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl):
     nX = get_dimensions(initial_grid)
     u = initial_grid.ravel()
     GPRpy.solvers.iterator(u, final_time, nX, convert_dX(dX), cfl, False,
-                           obj.split, obj.strang, obj.half_step, obj.stiff_dg,
+                           obj.split, obj.half_step, obj.stiff_dg,
                            obj.flux_type, obj.pars)
     return u.reshape(initial_grid.shape)

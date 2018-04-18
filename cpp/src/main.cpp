@@ -69,14 +69,13 @@ int main() {
   double CFL = 0.6;
   bool PERIODIC = false;
   bool SPLIT = false;
-  bool STRANG = true;
   bool HALF_STEP = true;
   bool STIFF = false;
   int FLUX = 1;
 
   Vec u = heat_conduction_1d(MP, nX(0));
 
-  iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT, STRANG, HALF_STEP, STIFF, FLUX, MP);
+  iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT, HALF_STEP, STIFF, FLUX, MP);
 
   std::cout << "Hello World" << std::endl;
   return 0;

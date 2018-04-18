@@ -116,8 +116,6 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
       f = D_RUS(ql, qr, 0, MP);
       break;
     }
-    flux(f, ql, 0, MP);
-    flux(f, qr, 0, MP);
     b = Bint(ql, qr, 0, MP);
 
     if (i > 0)
@@ -185,8 +183,6 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           fx = D_RUS(qlx, qrx, 0, MP);
           break;
         }
-        flux(fx, qlx, 0, MP);
-        flux(fx, qrx, 0, MP);
         bx = Bint(qlx, qrx, 0, MP);
 
         switch (FLUX) {
@@ -200,8 +196,6 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           fy = D_RUS(qly, qry, 1, MP);
           break;
         }
-        flux(fy, qly, 1, MP);
-        flux(fy, qry, 1, MP);
         by = Bint(qly, qry, 1, MP);
 
         if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {

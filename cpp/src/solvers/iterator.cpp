@@ -9,7 +9,7 @@
 #include <iostream>
 
 double timestep(Vecr u, Vec3r dX, int ndim, double CFL, double t, double tf,
-                int count,  Par &MP) {
+                int count, Par &MP) {
   double MIN = 1e5;
   int ncell = u.size() / V;
   VecV q;
@@ -17,7 +17,7 @@ double timestep(Vecr u, Vec3r dX, int ndim, double CFL, double t, double tf,
   for (int ind = 0; ind < ncell; ind++) {
     q = u.segment<V>(ind * V);
     for (int d = 0; d < ndim; d++)
-      MIN = std::min(MIN, dX(d) / max_abs_eigs(q, d,  MP));
+      MIN = std::min(MIN, dX(d) / max_abs_eigs(q, d, MP));
   }
 
   double dt = CFL * MIN;
@@ -32,8 +32,7 @@ double timestep(Vecr u, Vec3r dX, int ndim, double CFL, double t, double tf,
 }
 
 void iterator(Vecr u, double tf, Veci3r nX, Vec3r dX, double CFL, bool PERIODIC,
-              bool SPLIT, bool STRANG, bool HALF_STEP, bool STIFF, int FLUX,
-               Par &MP) {
+              bool SPLIT, bool HALF_STEP, bool STIFF, int FLUX, Par &MP) {
 
   int nx = nX(0);
   int ny = nX(1);
@@ -49,14 +48,13 @@ void iterator(Vecr u, double tf, Veci3r nX, Vec3r dX, double CFL, bool PERIODIC,
 
   while (t < tf) {
 
-    double dt = timestep(u, dX, ndim, CFL, t, tf, count,  MP);
+    double dt = timestep(u, dX, ndim, CFL, t, tf, count, MP);
     boundaries(u, ub, ndim, nX, PERIODIC);
 
     if (SPLIT)
-      split_stepper(u, ub, wh, ndim, nX, dt, dX, STRANG, HALF_STEP, FLUX,
-                     MP);
+      split_stepper(u, ub, wh, ndim, nX, dt, dX, HALF_STEP, FLUX, MP);
     else
-      ader_stepper(u, ub, wh, qh, ndim, nX, dt, dX, STIFF, FLUX,  MP);
+      ader_stepper(u, ub, wh, qh, ndim, nX, dt, dX, STIFF, FLUX, MP);
     t += dt;
     count += 1;
 

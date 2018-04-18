@@ -39,7 +39,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ,
                              b0=0.5, cα=1, μ=μ, κ=κ)
 
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 17])
     for i in range(nx):
         for j in range(ny):
             x = (i + 0.5) * dX[0]
@@ -47,7 +47,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
             dv, dT, dρ, dp, A = vortex(x, y, Lx / 2 + t, Ly / 2 + t, ε, γ, ρ)
             u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, A, J, MP)
 
-    print("CONVECTED ISENTROPIC VORTEX: N =", N)
+    print("CONVECTED ISENTROPIC VORTEX")
     return u, [MP], tf, dX
 
 
@@ -78,7 +78,7 @@ def circular_explosion_IC():
     Ao = 0.5 * eye(3)
     Qo = Cvec(ρo, po, v, Ao, J, MP)
 
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 17])
     for i in range(nx):
         for j in range(ny):
             x = -Lx / 2 + (i + 0.5) * dX[0]
@@ -89,7 +89,7 @@ def circular_explosion_IC():
             else:
                 u[i, j] = Qo
 
-    print("CIRCULAR EXPLOSION: N =", N)
+    print("CIRCULAR EXPLOSION")
     return u, [MP], tf, dX
 
 
@@ -111,13 +111,13 @@ def laminar_boundary_layer_IC():
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-3)
 
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, A, J, MP)
     for i in range(nx):
         for j in range(ny):
             u[i, j] = Q
 
-    print("LAMINAR BOUNDARY LAYER: N =", N)
+    print("LAMINAR BOUNDARY LAYER")
     return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
@@ -143,14 +143,14 @@ def hagen_poiseuille_IC():
                              γ=γ, b0=8, μ=1e-2, δp=δp)
 
     ddp = dp / (nx + 1)
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 14])
     for i in range(nx):
         pi = p - (i + 1) * ddp if FIX_DOMAIN_P else p
         Q = Cvec(ρ, pi, v, A, J, MP)
         for j in range(ny):
             u[i, j] = Q
 
-    print("HAGEN-POISEUILLE DUCT: N =", N)
+    print("HAGEN-POISEUILLE DUCT")
     return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
@@ -174,23 +174,23 @@ def hagen_poiseuille_BC(u):
     for i in range(nx):
 
         if DESTRESS:
-            destress(ret[i, 0, 0], MP)
-            destress(ret[i, -1, 0], MP)
+            destress(ret[i, 0], MP)
+            destress(ret[i, -1], MP)
 
         if FIX_DOMAIN_P:
             pi = p - (i + 1) * ddp
             for j in range(ny):
-                Q = ret[i, j, 0]
+                Q = ret[i, j]
                 P = State(Q, MP)
-                ret[i, j, 0] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
+                ret[i, j] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
 
     ret = standard_BC(u, [0, 1])
 
     if FIX_OUTLET_P:
         ny = ret.shape[1]
         for j in range(N, ny - N):
-            QL = ret[0, j, 0]
-            QR = ret[-1, j, 0]
+            QL = ret[0, j]
+            QR = ret[-1, j]
             ρL = QL[0]
             ρR = QR[0]
             vL = QL[2:5] / ρL
@@ -199,8 +199,8 @@ def hagen_poiseuille_BC(u):
             AR = QR[5:14].reshape([3, 3])
             J = zeros(3)
             for i in range(N):
-                #ret[N - 1 - i, j, 0] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
-                ret[nx + N + i, j, 0] = Cvec(ρR, p - dp - i * ddp, vR, AR, J,
+                #ret[N - 1 - i, j] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
+                ret[nx + N + i, j] = Cvec(ρR, p - dp - i * ddp, vR, AR, J,
                                              MP)
 
     return ret
@@ -224,13 +224,13 @@ def lid_driven_cavity_IC():
 
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
 
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, A, J, MP)
     for i in range(nx):
         for j in range(ny):
             u[i, j] = Q
 
-    print("LID-DRIVEN CAVITY: N =", N)
+    print("LID-DRIVEN CAVITY")
     return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
@@ -240,19 +240,19 @@ def lid_driven_cavity_BC(u):
     nx, ny = ret.shape[:2]
 
     for i in range(nx):
-        v = 2 - ret[i, 1, 0, 2] / ret[i, 1, 0, 0]
-        ret[i, 0, 0, 2] = ret[i, 0, 0, 0] * v
-        ret[i, 0, 0, 3] *= -1
-        ret[i, -1, 0, 2:5] *= -1
+        v = 2 - ret[i, 1, 2] / ret[i, 1, 0]
+        ret[i, 0, 2] = ret[i, 0, 0] * v
+        ret[i, 0, 3] *= -1
+        ret[i, -1, 2:5] *= -1
 
     for j in range(ny):
-        ret[0, j, 0, 2:5] *= -1
-        ret[-1, j, 0, 2:5] *= -1
+        ret[0, j, 2:5] *= -1
+        ret[-1, j, 2:5] *= -1
 
-    ret[0, 0, 0, 2:5] *= 0
-    ret[0, -1, 0, 2:5] *= 0
-    ret[-1, 0, 0, 2:5] *= 0
-    ret[-1, -1, 0, 2:5] *= 0
+    ret[0, 0, 2:5] *= 0
+    ret[0, -1, 2:5] *= 0
+    ret[-1, 0, 2:5] *= 0
+    ret[-1, -1, 2:5] *= 0
 
     return ret
 
@@ -278,7 +278,7 @@ def double_shear_layer_IC():
     ρ_ = 30
     δ = 0.05
 
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 14])
     for i in range(nx):
         for j in range(ny):
             x = (i + 0.5) * dX[0]
@@ -291,7 +291,7 @@ def double_shear_layer_IC():
             v = array([v1, v2, 0])
             u[i, j] = Cvec(ρ, p, v, A, J, MP)
 
-    print("DOUBLE SHEAR LAYER: N =", N)
+    print("DOUBLE SHEAR LAYER")
     return u, [MP], tf, dX
 
 
@@ -317,15 +317,15 @@ def taylor_green_vortex_IC():
     MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=10, μ=1e-2)
     dX = [Lx / nx, Ly / ny]
 
-    u = zeros([nx, ny, 1, NV])
+    u = zeros([nx, ny, 14])
 
     for i in range(nx):
         for j in range(ny):
             x = (i + 0.5) * dX[0]
             y = (j + 0.5) * dX[1]
-            v = array([sin(x) * cos(y), -cos(x) * sin(y), 0])
+            v = array([sin(x) * cos(y), -cos(x) * sin(y)])
             pi = p + (cos(2 * x) + cos(2 * y)) / 4
             u[i, j] = Cvec(ρ, pi, v, A, J, MP)
 
-    print("TAYLOR-GREEN VORTEX: N =", N)
+    print("TAYLOR-GREEN VORTEX")
     return u, [MP], tf, dX

@@ -1,9 +1,9 @@
-from numpy import amax, arange, sign
+from numpy import amax, arange, sign, zeros
 from numpy.linalg import det
 from numpy.random import rand
 
-from models.gpr.misc.structures import Cvec
-from models.gpr.variables.eos import total_energy
+from gpr.misc.structures import Cvec
+from gpr.variables.eos import total_energy
 
 
 def generate_vector(MP):
@@ -22,3 +22,11 @@ def check(x1, x2):
         return "✓"
     else:
         return amax(abs(x1 - x2))
+
+
+def cpp_dx(dX):
+
+    ret = zeros(3)
+    for i in range(len(dX)):
+        ret[i] = dX[i]
+    return ret

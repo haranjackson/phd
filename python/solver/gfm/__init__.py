@@ -22,7 +22,7 @@ class MultiSolver():
                  M=None, max_eig=None, order=2, ncore=4,
                  riemann_solver='rusanov', stiff_dg=False,
                  stiff_dg_guess=False, newton_dg_guess=False, split=False,
-                 strang=True, half_step=True, ode_solver=None):
+                 half_step=True, ode_solver=None):
 
         self.NDIM = ndim
         self.N = order

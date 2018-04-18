@@ -2,7 +2,7 @@
 #define OPTIONS_H
 
 const int N = 2;  // Order of accuracy
-const int V = 14; // Number of variables
+const int V = 17; // Number of variables
 
 // WENO Constants //
 const double LAMS = 1.;   // WENO side stencil weighting

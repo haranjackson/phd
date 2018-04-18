@@ -128,7 +128,10 @@ class State():
 def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
     """ Returns the vector of conserved variables, given the primitive variables
     """
-    Q = zeros(17)
+    if MP.THERMAL:
+        Q = zeros(17)
+    else:
+        Q = zeros(14)
 
     if MP.MULTI:
         ρ = z * ρ1 + (1 - z) * ρ2

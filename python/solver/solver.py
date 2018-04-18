@@ -21,7 +21,7 @@ class SolverPlus(Solver):
                  M=None, max_eig=None, order=2, ncore=4,
                  riemann_solver='rusanov', stiff_dg=False,
                  stiff_dg_guess=False, newton_dg_guess=False, split=False,
-                 strang=True, half_step=True, ode_solver=None):
+                 half_step=True, ode_solver=None):
 
         Solver.__init__(self, nvar, ndim, F, B=B, S=S,
                         model_params=model_params, M=M, max_eig=max_eig,
@@ -31,7 +31,6 @@ class SolverPlus(Solver):
                         newton_dg_guess=newton_dg_guess)
 
         self.split = split
-        self.strang = strang
         self.half_step = half_step
         self.ode_solver = ode_solver
         self.stiff_dg = stiff_dg
