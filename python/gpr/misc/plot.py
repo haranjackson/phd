@@ -65,7 +65,7 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None,
 
     for ii in range(n):
         Q = u.reshape([n, NV])[ii]
-        _, ind = get_material_index(Q, len(MPs))
+        ind = get_material_index(Q, len(MPs))
         MP = MPs[ind]
         P = State(Q, MP)
         var = getattr(P, attr)()

@@ -1,6 +1,9 @@
 from time import time
 
+from numpy import expand_dims
+
 from ader.solver import Solver
+from ader.etc.boundaries import extend_mask
 from ader.fv.fv import FVSolver
 
 from solver.cpp import solve_full_cpp, cpp_split_stepper, cpp_ader_stepper
@@ -45,7 +48,7 @@ class SolverPlus(Solver):
                                            ode_solver=ode_solver,
                                            model_params=model_params)
 
-    def split_stepper(self, uBC, dt):
+    def split_stepper(self, uBC, dt, maskBC):
 
         t0 = time()
 
@@ -54,10 +57,10 @@ class SolverPlus(Solver):
 
         wh = self.wenoSolver.solve(uBC)
         if self.half_step:
-            self.splitSolver.weno_midstepper(wh, dt, self.dX)
+            self.splitSolver.weno_midstepper(wh, dt, self.dX, maskBC)
         t2 = time()
 
-        self.u += self.fvSolver.solve(wh, dt, self.dX)
+        self.u += self.fvSolver.solve(wh, dt, self.dX, maskBC)
         t3 = time()
 
         self.splitSolver.ode_launcher(self.u, dt / 2)
@@ -75,21 +78,31 @@ class SolverPlus(Solver):
         else:
             cpp_ader_stepper(self, self.u, uBC, dt, self.dX)
 
-    def stepper(self, executor, dt):
+    def stepper(self, executor, dt, mask=None):
 
         uBC = self.BC(self.u, self.N, self.NDIM)
+
+        if mask is None:
+            maskBC = None
+        else:
+            maskBC = extend_mask(mask)
 
         if self.cpp_level > 0:
             self.cpp_stepper(uBC, dt)
 
         elif self.split:
-            self.split_stepper(uBC, dt)
+            self.split_stepper(uBC, dt, maskBC)
 
         else:
             if self.ncore == 1:
-                self.u += self.ader_stepper(uBC, dt, self.verbose)
+                du = self.ader_stepper(uBC, dt, self.verbose, maskBC)
             else:
-                self.u += self.parallel_ader_stepper(executor, uBC, dt)
+                du = self.parallel_ader_stepper(executor, uBC, dt, maskBC)
+
+            if mask is None:
+                self.u += du
+            else:
+                self.u += du * expand_dims(mask, -1)
 
     def solve(self, initial_grid, final_time, dX, cfl=0.9,
               boundary_conditions='transitive', verbose=False, callback=None,

@@ -25,44 +25,46 @@ class SplitSolver():
         basis = Basis(N)
         self.DERVALS = basis.DERVALS
 
-    def weno_midstepper(self, wh, dt, dX):
-        """ Steps the WENO reconstruction forwards by dt/2, under the homogeneous
-            system
+    def weno_midstepper(self, wh, dt, dX, mask=None):
+        """ Steps the WENO reconstruction forwards by dt/2, under the
+            homogeneous system
         """
         for coords in product(*[range(s) for s in wh.shape[:self.NDIM]]):
 
-            w = wh[coords]
+            if mask is None or mask[coords]:
 
-            if self.M is None:
+                w = wh[coords]
 
-                # calculate the flux at each node, in each direction
-                F = [zeros(w.shape)] * self.NDIM
-                for d in range(self.NDIM):
-                    for inds in product(*[range(self.N)] * self.NDIM):
-                        F[d][inds] = self.F(w[inds], d, self.pars)
+                if self.M is None:
 
-            for inds in product(*[range(self.N)] * self.NDIM):
+                    # calculate the flux at each node, in each direction
+                    F = [zeros(w.shape)] * self.NDIM
+                    for d in range(self.NDIM):
+                        for inds in product(*[range(self.N)] * self.NDIM):
+                            F[d][inds] = self.F(w[inds], d, self.pars)
 
-                tmp = zeros(self.NV)
+                for inds in product(*[range(self.N)] * self.NDIM):
 
-                # wi holds the coefficients at the nodes lying in a strip in
-                # the dth direction, at the node given by inds
-                for d in range(self.NDIM):
-                    dwdx = derivative(self.N, self.NV, self.NDIM, w, inds, d,
-                                      self.DERVALS)
+                    tmp = zeros(self.NV)
 
-                    if self.M is None:
-                        dFdx = derivative(self.N, self.NV, self.NDIM, F[d],
-                                          inds, d, self.DERVALS)
-                        B = self.B(w[inds], d, self.pars)
-                        Bdwdx = dot(B, dwdx)
-                        tmp += (dFdx + Bdwdx) / dX[d]
+                    # wi holds the coefficients at the nodes lying in a strip
+                    # in the dth direction, at the node given by inds
+                    for d in range(self.NDIM):
+                        dwdx = derivative(self.N, self.NV, self.NDIM, w, inds,
+                                          d, self.DERVALS)
 
-                    else:
-                        M = self.M(w[inds], d, self.pars)
-                        tmp += dot(M, dwdx) / dX[d]
+                        if self.M is None:
+                            dFdx = derivative(self.N, self.NV, self.NDIM, F[d],
+                                              inds, d, self.DERVALS)
+                            B = self.B(w[inds], d, self.pars)
+                            Bdwdx = dot(B, dwdx)
+                            tmp += (dFdx + Bdwdx) / dX[d]
 
-                w[inds] -= dt / 2 * tmp
+                        else:
+                            M = self.M(w[inds], d, self.pars)
+                            tmp += dot(M, dwdx) / dX[d]
+
+                    w[inds] -= dt / 2 * tmp
 
     def f(self, y, t0):
         return self.S(y, self.pars)

@@ -99,7 +99,7 @@ def S_cons(Q, MP):
     return ret
 
 
-def B_cons(Q, d, MP):
+def B_cons_lset(Q, d, MP, LSET):
 
     NV = len(Q)
     ret = zeros([NV, NV])
@@ -117,8 +117,8 @@ def B_cons(Q, d, MP):
         ret[8 + d, 8 + d:11 + d] -= v
         ret[11 + d, 11 + d:14 + d] -= v
 
-#        for i in range(1, LSET + 1):
-#            ret[-i, -i] = vd
+        for i in range(1, LSET + 1):
+            ret[-i, -i] = vd
 
     return ret
 

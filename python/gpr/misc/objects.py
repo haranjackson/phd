@@ -1,5 +1,5 @@
 import GPRpy
-# from types import SimpleNamespace
+from types import SimpleNamespace
 
 from numpy import zeros
 
@@ -201,8 +201,8 @@ def material_parameters(EOS, ρ0, cv, p0,
     REACTIVE = REACTION is not None
     MULTI = REACTIVE  # should be amended in future
 
-    MP = GPRpy.classes.Par()
-#   MP = SimpleNamespace()
+#    MP = GPRpy.classes.Par()
+    MP = SimpleNamespace()
 
     params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
            ρ0, p0, Tref, T0, cv,

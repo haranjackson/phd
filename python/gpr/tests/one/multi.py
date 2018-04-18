@@ -8,7 +8,7 @@ from gpr.tests.one.fluids import fluids_IC
 def sod_shock_IC():
 
     tf = 0.2
-    nx = 400
+    nx = 100
     Lx = 1
 
     dX = [Lx / nx]
@@ -109,3 +109,22 @@ def helium_bubble_IC():
             u[i, :-3] = Q2
 
     return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2], tf, dX
+
+
+def heat_conduction_IC():
+
+    tf = 1
+    nx = 200
+    Lx = 1
+
+    ρL = 2
+    pL = 1
+    vL = zeros(3)
+
+    ρR = 0.5
+    pR = 1
+    vR = zeros(3)
+
+    dX = [Lx / nx]
+
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR, MP_AIR)

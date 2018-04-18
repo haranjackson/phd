@@ -1,7 +1,9 @@
 from itertools import product
 
-from numpy import array, logical_or, zeros
+from numpy import array, logical_or, ones, prod, zeros
 from skfmm import distance
+
+from ader.etc.boundaries import neighbor_cells
 
 from gpr.multi.riemann import star_states
 from solver.gfm.functions import finite_difference, normal, sign
@@ -36,12 +38,11 @@ def boundary_inds(ind, φ, Δφ, dx):
     """
     xp = (array(ind) + 0.5) * dx
     n = normal(Δφ[ind])
-    absφ = abs(φ[ind])
 
-    xip = xp + absφ * n
+    xip = xp - φ[ind] * n
     xL = xip - 1.5 * dx * n
     xR = xip + 1.5 * dx * n
-    xp_ = xp + 2 * absφ * n
+    xp_ = xp - 2 * φ[ind] * n
 
     # TODO: replace with interpolated values
     iL = array(xL / dx, dtype=int)
@@ -51,62 +52,68 @@ def boundary_inds(ind, φ, Δφ, dx):
     return iL, iR, i_
 
 
-def fill_boundary_cells(u, ret, intMask, i, φ, Δφ, dx, indList, MPL, MPR):
+def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR):
 
-    for ind in product(*indList):
+    for ind in product(*[range(s) for s in intMask.shape]):
 
         if intMask[ind] != 0:
             iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
 
             # TODO: rotate vector quantities towards the normal
-            QL = u[tuple(iL)].take(range(17))
-            QR = u[tuple(iR)].take(range(17))
+            QL = u[tuple(iL)][:17]
+            QR = u[tuple(iR)][:17]
             QL_, QR_ = star_states(QL, QR, MPL, MPR)
 
+        # TODO: investigate where QR_, QL_ should be reversed, and if the
+        # inside cell should be filled
         if intMask[ind] == -1:
-            ret[i][ind][:17] = QR_
+            grids[i][ind][:17] = QR_
+            grids[i][tuple(i_)][:17] = QR_
 
         elif intMask[ind] == 1:
-            ret[i+1][ind][:17] = QL_
+            grids[i+1][ind][:17] = QL_
+            grids[i+1][tuple(i_)][:17] = QL_
 
 
-def fill_from_neighbor(u, Δφ, ind, dx):
+def fill_from_neighbor(grid, Δφ, ind, dx, sgn):
     """ makes the value of cell ind equal to the value of its neighbor in the
         direction of the interface
         TODO: replace with interpolated values
     """
     n = normal(Δφ[ind])
     x = (array(ind) + 0.5) * dx
-    xn = x + dx * n
-    u[ind] = u[array(xn / dx, dtype=int)]
+    xn = x + sgn * dx * n
+    grid[ind] = grid[array(xn / dx, dtype=int)]
 
 
-def fill_neighbor_cells(ret, Δφ, dx, N, NDIM, indList, intMask):
+def fill_neighbor_cells(grids, intMask, i, Δφ, dx, N, NDIM):
 
-    for N0 in range(1, N-1):
-        for ind in product(*indList):
+    shape = intMask.shape
+    inds = [range(s) for s in shape]
+
+    for N0 in range(1, N + 1):
+        for ind in product(*inds):
 
             if intMask[ind] == 0:
 
-                neighbors = [intMask[ind[:d] + (ind[d] - 1,) + ind[d + 1:]]
-                             for d in range(NDIM)] + \
-                            [intMask[ind[:d] + (ind[d] + 1,) + ind[d + 1:]]
-                             for d in range(NDIM)]
+                neighbors = neighbor_cells(intMask, ind)
 
                 if N0 in neighbors:
                     intMask[ind] = N0 + 1
-                    fill_from_neighbor(ret[i+1], Δφ, ind, dx)
+                    fill_from_neighbor(grids[i], Δφ, ind, dx, -1)
 
                 if -N0 in neighbors:
                     intMask[ind] = -(N0 + 1)
-                    fill_from_neighbor(ret[i], Δφ, ind, dx)
+                    fill_from_neighbor(grids[i+1], Δφ, ind, dx, 1)
 
 
 def fill_ghost_cells(u, m, N, dX, MPs):
 
     NDIM = u.ndim - 1
     shape = u.shape[:-1]
-    ret = [u.copy() for i in range(m)]
+    ncells = prod(shape)
+
+    grids = [u.copy() for i in range(m)]
     masks = [ones(shape, dtype=bool) for i in range(m)]
     dx = dX[0]
 
@@ -118,15 +125,14 @@ def fill_ghost_cells(u, m, N, dX, MPs):
         intMask = find_interface_cells(u, i, m)
         φ = distance(u.take(i - (m-1), axis=-1), dx=dx)
         Δφ = finite_difference(φ, dX)
-        indList = [range(s) for s in intMask.shape]
 
-        fill_boundary_cells(u, ret, intMask, i, φ, Δφ, dx, indList, MPL, MPR)
-        fill_neighbor_cells(ret, Δφ, dx, N, NDIM, indList, intMask)
+        fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR)
+        fill_neighbor_cells(grids, intMask, i, Δφ, dx, N, NDIM)
 
-        maskL = logical_or((φ <= 0), (intMask == 1))
-        maskR = logical_or((φ >= 0), (intMask == -1))
+        masks[i] *= logical_or((φ <= 0), (intMask == 1))
+        masks[i+1] *= logical_or((φ >= 0), (intMask == -1))
 
-        masks[i] *= maskL
-        masks[i+1] *= maskR
+        for j in range(m):
+            grids[j].reshape([ncells, -1])[:, i - (m-1)] = φ
 
-    return ret, masks
+    return grids, masks
