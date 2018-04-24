@@ -109,7 +109,7 @@ def riemann_constraints(P, sgn, MP):
     Y0 = dot(Q_1, dot(D_1, Q))
     Rhat[11:15, :4] = -sgn * dot(Y0, dot(Ξ1, X))
     Rhat[:, 4:8] = 0
-    Rhat[11:15, 4:8] = sgn * Q_1
+    Rhat[11:15, 4:8] = sgn * dot(Q_1, D_1)
 
     return Lhat, Rhat
 
