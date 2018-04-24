@@ -1,25 +1,24 @@
 from numpy import dot, eye, outer
 
-from ..misc.functions import AdevG, gram
-
-from . import mg
-
-from .derivatives import dEdA_s, dEdJ
-from .eos import E_2A, E_2J, E_3, E_R
-from .shear import c_s2, dc_s2dρ
+from gpr.misc.functions import AdevG, gram
+from gpr.opts import VISCOUS, THERMAL, REACTIVE
+from gpr.vars import mg
+from gpr.vars.derivatives import dEdA_s, dEdJ
+from gpr.vars.eos import E_2A, E_2J, E_3, E_R
+from gpr.vars.shear import c_s2, dc_s2dρ
 
 
 def pressure(ρ, E, v, A, J, MP, λ=None):
 
     E1 = E - E_3(v)
 
-    if MP.VISCOUS:
+    if VISCOUS:
         E1 -= E_2A(ρ, A, MP)
 
-    if MP.THERMAL:
+    if THERMAL:
         E1 -= E_2J(J, MP)
 
-    if MP.REACTIVE:
+    if REACTIVE:
         E1 -= E_R(λ, MP)
 
     p = mg.pressure(ρ, E1, MP)
@@ -69,9 +68,9 @@ def dsigmadAdd(ρ, A, d, MP):
     cs2 = c_s2(ρ, MP)
     G = gram(A)
     ret = AdevG(A, G)
-    ret[:,d] *= 2
-    ret += 1/3 * outer(A[:,d],G[d])
-    ret += G[d,d] * A
+    ret[:, d] *= 2
+    ret += 1/3 * outer(A[:, d], G[d])
+    ret += G[d, d] * A
     return -ρ * cs2 * ret.T
 
 

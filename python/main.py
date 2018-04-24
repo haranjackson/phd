@@ -1,4 +1,5 @@
-from gpr.systems.eigenvalues import max_eig
+from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
+from gpr.sys.eigenvalues import max_eig
 from gpr.tests.one import fluids, solids, multi, toro
 from gpr.tests.two import validation
 from gpr.misc.plot import *
@@ -9,8 +10,9 @@ from solver.gfm import MultiSolver
 
 if __name__ == "__main__":
 
-    # u, MPs, tf, dX, sys = fluids.heat_conduction_IC()
-    u, MPs, tf, dX, sys = multi.heat_conduction_IC()
+    # u, MPs, tf, dX = fluids.heat_conduction_IC()
+    u, MPs, tf, dX = multi.heat_conduction_IC()
+    # u, MPs, tf, dX = multi.helium_bubble_IC()
 
     nvar = u.shape[-1]
     ndim = u.ndim - 1
@@ -22,8 +24,8 @@ if __name__ == "__main__":
 
     if len(MPs) == 1:
 
-        solver = SolverPlus(nvar, ndim, F=sys.F, B=sys.B, S=sys.S,
-                            model_params=MPs[0], M=sys.M, max_eig=max_eig,
+        solver = SolverPlus(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
+                            model_params=MPs[0], M=M_cons, max_eig=max_eig,
                             order=2, ncore=1, split=True, ode_solver=None,
                             riemann_solver='rusanov')
 
@@ -32,10 +34,10 @@ if __name__ == "__main__":
 
     else:
 
-        solver = MultiSolver(nvar, ndim, F=sys.F, B=sys.B, S=sys.S,
-                             model_params=MPs, M=sys.M, max_eig=max_eig,
+        solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
+                             model_params=MPs, M=M_cons, max_eig=max_eig,
                              order=2, ncore=1, split=False, ode_solver=None,
                              riemann_solver='rusanov')
 
         solver.solve(u, tf, dX, cfl=0.9, boundary_conditions='transitive',
-                     verbose=True, callback=callback, cpp_level=0)
+                     verbose=True, callback=callback, cpp_level=1)

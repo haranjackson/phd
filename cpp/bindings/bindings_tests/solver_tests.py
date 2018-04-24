@@ -7,7 +7,7 @@ from scipy.sparse.linalg import lgmres
 
 from ader.dg.initial_guess import stiff_initial_guess
 
-from gpr.systems.analytical import ode_solver_cons
+from gpr.sys.analytical import ode_solver_cons
 
 from bindings_tests.test_functions import check, generate_vector, cpp_dx
 

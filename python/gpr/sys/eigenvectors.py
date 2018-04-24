@@ -1,11 +1,22 @@
 from numpy import array, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve, norm
 
-from ..misc.functions import reorder
-from ..systems.eigenvalues import Xi1, Xi2
-from ..systems.jacobians import dQdP, dPdQ
-from ..variables.wavespeeds import c_0, c_h
-from ..variables import mg
+from gpr.misc.functions import reorder
+from gpr.opts import THERMAL
+from gpr.sys.eigenvalues import Xi1, Xi2
+from gpr.vars import mg
+from gpr.vars.wavespeeds import c_0
+
+
+def get_indexes():
+
+    n1 = 3 + int(THERMAL)
+    n2 = 6 + 2 * int(THERMAL)
+    n3 = 8 + int(THERMAL)
+    n4 = 11 + int(THERMAL)
+    n5 = 14 + int(THERMAL)
+
+    return n1, n2, n3, n4, n5
 
 
 def decompose_Ξ(Ξ1, Ξ2):
@@ -25,57 +36,51 @@ def decompose_Ξ(Ξ1, Ξ2):
     return Q, Q_1, D, D_1
 
 
-def convert_to_conservative(P, R, L):
+def convert_to_conservative(P, R, L, MP):
     """ Effectively multiplies matrices by relevant jacobians
-        NOTE: Doesn't work for non-thermal systems
+        TODO: Fix for non-thermal systems
     """
-    E = P.E
-    J = P.J
-
     Eρ = P.dEdρ()
     EA = P.dEdA().ravel(order='F')
     H = P.H()
 
-    Γ = mg.Γ_MG(ρ, MP)
+    Γ = mg.Γ_MG(P.ρ, MP)
 
-    if RIGHT:
+    if R is not None:
 
         b = zeros(17)
-        b[0] = E + ρ * Eρ
+        b[0] = P.E + P.ρ * Eρ
         b[1] = 1 / Γ
-        b[2:11] = ρ * EA
-        b[11:14] = ρ * v
-        b[14:17] = ρ * H
+        b[2:11] = P.ρ * EA
+        b[11:14] = P.ρ * P.v
+        b[14:17] = P.ρ * H
 
         R[1] = dot(b, R)
         for i in range(3):
-            R[11 + i] = v[i] * R[0] + ρ * R[11 + i]
+            R[11 + i] = P.v[i] * R[0] + P.ρ * R[11 + i]
         for i in range(3):
-            R[14 + i] = J[i] * R[0] + ρ * R[14 + i]
+            R[14 + i] = P.J[i] * R[0] + P.ρ * R[14 + i]
 
-    if LEFT:
+    if L is not None:
 
-        tmp = norm(v)**2 - (E + ρ * Eρ)
+        tmp = norm(P.v)**2 - (P.E + P.ρ * Eρ)
         if THERMAL:
             cα2 = MP.cα2
-            tmp += cα2 * norm(J)**2
+            tmp += cα2 * norm(P.J)**2
         Υ = Γ * tmp
 
-        L[:, 0] += Υ * L[:, 1] - 1 / ρ * \
-            (dot(L[:, 11:14], v) + dot(L[:, 14:17], J))
+        L[:, 0] += Υ * L[:, 1] - 1 / P.ρ * \
+            (dot(L[:, 11:14], P.v) + dot(L[:, 14:17], P.J))
         L[:, 1] *= Γ
         for i in range(9):
-            L[:, 2 + i] -= ρ * EA[i] * L[:, 1]
+            L[:, 2 + i] -= P.ρ * EA[i] * L[:, 1]
         for i in range(3):
-            L[:, 11 + i] = 1 / ρ * L[:, 11 + i] - v[i] * L[:, 1]
+            L[:, 11 + i] = 1 / P.ρ * L[:, 11 + i] - P.v[i] * L[:, 1]
         for i in range(3):
-            L[:, 14 + i] = 1 / ρ * L[:, 14 + i] - H[i] * L[:, 1]
+            L[:, 14 + i] = 1 / P.ρ * L[:, 14 + i] - H[i] * L[:, 1]
 
 
-def eigen(P, d, CONS, MP, RIGHT=1, LEFT=1):
-
-    R = zeros([17, 17])
-    L = zeros([17, 17])
+def eigen(P, d, CONS, MP, right=True, left=True):
 
     ρ = P.ρ
     A = P.A
@@ -93,16 +98,14 @@ def eigen(P, d, CONS, MP, RIGHT=1, LEFT=1):
     Ξ2 = Xi2(P, d, MP)
     Q, Q_1, D, D_1 = decompose_Ξ(Ξ1, Ξ2)
 
-    THERMAL = MP.THERMAL
-    e0 = array([1, 0, 0])
-    e1 = array([0, 1, 0])
-    n1 = 3 + int(THERMAL)
-    n2 = 6 + 2 * int(THERMAL)
-    n3 = 8 + int(THERMAL)
-    n4 = 11 + int(THERMAL)
-    n5 = 14 + int(THERMAL)
+    n1, n2, n3, n4, n5 = get_indexes()
 
-    if RIGHT:
+    e0 = array([1, 0, 0])
+
+    if right:
+
+        R = zeros([17, 17])
+
         tmp1 = 0.5 * dot(Ξ2, dot(Q_1, D_1**2))
         tmp2 = 0.5 * dot(Q_1, D_1)
 
@@ -134,7 +137,17 @@ def eigen(P, d, CONS, MP, RIGHT=1, LEFT=1):
         for i in range(6):
             R[5 + i, n3 + i] = 1
 
-    if LEFT:
+        R = reorder(R)
+        if not THERMAL:
+            R = R[:14, :14]
+
+    else:
+        R = None
+
+    if left:
+
+        L = zeros([17, 17])
+
         tmp1 = dot(Q, Ξ1)
         tmp2 = -dot(Q[:, :3], Π2) / ρ
         tmp3 = -dot(Q[:, :3], Π3) / ρ
@@ -184,33 +197,39 @@ def eigen(P, d, CONS, MP, RIGHT=1, LEFT=1):
         for i in range(6):
             L[n3 + i, 5 + i] = 1
 
+        L = reorder(L.T).T
+        if not THERMAL:
+            L = L[:14, :14]
+
+    else:
+        L = None
+
     if CONS:
-        convert_to_conservative(P, R, L)
+        convert_to_conservative(P, R, L, MP)
 
-    l = array([vd + λ for λ in diag(D)] + [vd - λ for λ in diag(D)] + [vd] * n3)
-    L = reorder(L.T).T
-    R = reorder(R)
-
-    if not THERMAL:
-        L = L[:14, :14]
-        R = R[:14, :14]
+    l = array([vd + λ for λ in diag(D)] +
+              [vd - λ for λ in diag(D)] + [vd] * n3)
 
     return l, L, R
 
 
 def test(Q, d, CONS, MP):
 
-    from gpr.misc.structures import State
-    P = State(Q, MP)
-    l, L, R = eigen(P, d, MP, CONS=CONS)
+    from numpy import amax, sort
+    from numpy.linalg import eigvals
 
-    n = 17 if MP.THERMAL else 14
+    from gpr.misc.structures import State
+
+    P = State(Q, MP)
+    l, L, R = eigen(P, d, CONS, MP)
+
+    n = 17 if THERMAL else 14
 
     if CONS:
-        from gpr.systems.conserved import M_cons
+        from gpr.sys.conserved import M_cons
         M = M_cons(Q, d, MP)[:n, :n]
     else:
-        from gpr.systems.primitive import M_prim
+        from gpr.sys.primitive import M_prim
         M = M_prim(Q, d, MP)[:n, :n]
 
     print("Λ:", amax(abs(sort(eigvals(M)) - sort(l))))
@@ -218,4 +237,5 @@ def test(Q, d, CONS, MP):
     for i in range(n):
         print(i)
         print('L:', amax(abs(dot(L[i], M) - (l[i] * L[i]))[L[i] != 0]))
-        print('R:', amax(abs(dot(M, R[:, i]) - (l[i] * R[:, i]))[R[:, i] != 0]))
+        print('R:', amax(
+            abs(dot(M, R[:, i]) - (l[i] * R[:, i]))[R[:, i] != 0]))

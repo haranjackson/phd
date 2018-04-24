@@ -9,7 +9,7 @@ from ader.etc.basis import Basis
 
 from solver.gfm import get_material_index
 
-from .structures import State
+from gpr.misc.structures import State
 
 
 def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):

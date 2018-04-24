@@ -1,9 +1,9 @@
 from numpy import array, eye, sqrt, zeros
 
-from ...systems.conserved import SystemConserved
-
-from .common import fluids_IC
-from .params import MP_Air_ND, MP_Air, MP_He, MP_H20
+from gpr.misc.structures import Cvec
+from gpr.opts import NV
+from gpr.tests.one.common import fluids_IC
+from gpr.tests.one.params import MP_Air_ND, MP_Air, MP_He, MP_H20
 
 
 def sod_shock_IC():
@@ -22,10 +22,8 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
-    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND,
-                     MP_Air_ND, 0.5)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND, MP_Air_ND,
+                     0.5)
 
 
 def water_gas_IC():
@@ -44,9 +42,7 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
-    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20, MP_Air, 0.7)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20, MP_Air, 0.7)
 
 
 def water_water_IC():
@@ -65,9 +61,7 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
-    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20)
 
 
 def helium_bubble_IC():
@@ -96,29 +90,27 @@ def helium_bubble_IC():
 
     J = zeros(3)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
-    u = zeros([nx, 20])
-    Q1 = sys.Cvec(ρL, pL, vL, AL, J, MP_Air)
-    Q2 = sys.Cvec(ρM, pM, vM, AM, J, MP_Air)
-    Q3 = sys.Cvec(ρR, pR, vR, AR, J, MP_He)
+    u = zeros([nx, NV])
+    Q1 = Cvec(ρL, pL, vL, AL, J, MP_Air)
+    Q2 = Cvec(ρM, pM, vM, AM, J, MP_Air)
+    Q3 = Cvec(ρR, pR, vR, AR, J, MP_He)
 
     for i in range(nx):
 
-        u[i, -3] = i * dx - 0.05
+        if i * dx < 0.05:
+            u[i] = Q1
+        elif i * dx < 0.4:
+            u[i] = Q2
+        elif i * dx < 0.6:
+            u[i] = Q3
+        else:
+            u[i] = Q2
+
+        # u[i, -3] = i * dx - 0.05
         u[i, -2] = i * dx - 0.4
         u[i, -1] = i * dx - 0.6
 
-        if i * dx < 0.05:
-            u[i, :-3] = Q1
-        elif i * dx < 0.4:
-            u[i, :-3] = Q2
-        elif i * dx < 0.6:
-            u[i, :-3] = Q3
-        else:
-            u[i, :-3] = Q2
-
-    return u, [MP_Air, MP_Air, MP_He, MP_Air], tf, dX, sys
+    return u, [MP_Air, MP_Air, MP_He, MP_Air], tf, dX
 
 
 def heat_conduction_IC():
@@ -135,8 +127,6 @@ def heat_conduction_IC():
     pR = 1
     vR = zeros(3)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
     dX = [Lx / nx]
 
-    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND, MP_Air_ND)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND, MP_Air_ND)

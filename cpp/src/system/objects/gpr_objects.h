@@ -24,11 +24,6 @@ struct Par {
   double Rc;
   int EOS;
 
-  bool VISCOUS;
-  bool THERMAL;
-  bool REACTIVE;
-  bool MULTI;
-
   double ρ0;
   double p0;
   double T0;

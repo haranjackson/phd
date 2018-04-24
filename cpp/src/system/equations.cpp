@@ -23,7 +23,7 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
   ret.segment<3>(2) += vd * ρv;
   ret(2 + d) += p;
 
-  if (MP.VISCOUS) {
+  if (VISCOUS) {
     Mat3_3Map A = get_A(Q);
     Vec3 σd = sigma(Q, MP, d);
 
@@ -34,12 +34,12 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
     ret(8 + d) += Av(1);
     ret(11 + d) += Av(2);
   }
-  if (MP.THERMAL) {
+  if (THERMAL) {
     Vec3Map ρJ = get_ρJ(Q);
     double T = temperature(ρ, p, MP);
 
     ret(1) += MP.cα2 * T * ρJ(d) / ρ;
-    ret.tail<3>() += vd * ρJ;
+    ret.segment<3>(14) += vd * ρJ;
     ret(14 + d) += T;
   }
 }
@@ -51,37 +51,46 @@ void source(VecVr ret, VecVr Q, Par &MP) {
 
   f_body(ret.segment<3>(2), MP);
 
-  if (MP.VISCOUS) {
+  if (VISCOUS) {
     Mat3_3 Asource = -dEdA_s(Q, MP) * theta1inv(Q, MP);
     ret.segment<9>(5) = VecMap(Asource.data(), 9);
   } else
     ret.segment<9>(5).setZero();
-  if (MP.THERMAL)
-    ret.tail<3>() = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
+
+  if (THERMAL)
+    ret.segment<3>(14) = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
   else
-    ret.tail<3>().setZero();
+    ret.segment<3>(14).setZero();
+
+  ret.tail<V - 17>().setZero();
 }
 
 void block(MatV_Vr ret, VecVr Q, int d) {
+
   double ρ = Q(0);
   Vec3Map ρv = get_ρv(Q);
   double vd = ρv(d) / ρ;
-  for (int i = 5; i < 14; i++)
-    ret(i, i) = vd;
-  for (int i = 0; i < 3; i++) {
-    double vi = ρv(i) / ρ;
-    ret(5 + d, 5 + d + i) -= vi;
-    ret(8 + d, 8 + d + i) -= vi;
-    ret(11 + d, 11 + d + i) -= vi;
+
+  if (VISCOUS) {
+    for (int i = 5; i < 14; i++)
+      ret(i, i) = vd;
+    for (int i = 0; i < 3; i++) {
+      double vi = ρv(i) / ρ;
+      ret(5 + d, 5 + d + i) -= vi;
+      ret(8 + d, 8 + d + i) -= vi;
+      ret(11 + d, 11 + d + i) -= vi;
+    }
   }
+
+  for (int i = 1; i < LSET + 1; i++)
+    ret(V - i, V - i) = vd;
 }
 
-void B0dot(VecVr ret, VecVr x, Vec3 v) {
+void B0dot(VecVr ret, VecVr x, Vec3r v) {
   double v0 = v(0);
   double v1 = v(1);
   double v2 = v(2);
   ret.head<5>().setZero();
-  ret.tail<3>().setZero();
   ret(5) = -v1 * x(6) - v2 * x(7);
   ret(6) = v0 * x(6);
   ret(7) = v0 * x(7);
@@ -91,14 +100,17 @@ void B0dot(VecVr ret, VecVr x, Vec3 v) {
   ret(11) = -v1 * x(12) - v2 * x(13);
   ret(12) = v0 * x(12);
   ret(13) = v0 * x(13);
+  ret.tail<V - 14>().setZero();
+
+  for (int i = 1; i < LSET + 1; i++)
+    ret(V - i) = v0 * x(V - i);
 }
 
-void B1dot(VecVr ret, VecVr x, Vec3 v) {
+void B1dot(VecVr ret, VecVr x, Vec3r v) {
   double v0 = v(0);
   double v1 = v(1);
   double v2 = v(2);
   ret.head<5>().setZero();
-  ret.tail<3>().setZero();
   ret(5) = v1 * x(5);
   ret(6) = -v0 * x(5) - v2 * x(7);
   ret(7) = v1 * x(7);
@@ -108,14 +120,17 @@ void B1dot(VecVr ret, VecVr x, Vec3 v) {
   ret(11) = v1 * x(11);
   ret(12) = -v0 * x(11) - v2 * x(13);
   ret(13) = v1 * x(13);
+  ret.tail<V - 14>().setZero();
+
+  for (int i = 1; i < LSET + 1; i++)
+    ret(V - i) = v1 * x(V - i);
 }
 
-void B2dot(VecVr ret, VecVr x, Vec3 v) {
+void B2dot(VecVr ret, VecVr x, Vec3r v) {
   double v0 = v(0);
   double v1 = v(1);
   double v2 = v(2);
   ret.head<5>().setZero();
-  ret.tail<3>().setZero();
   ret(5) = v2 * x(5);
   ret(6) = v2 * x(6);
   ret(7) = -v0 * x(5) - v1 * x(6);
@@ -125,11 +140,15 @@ void B2dot(VecVr ret, VecVr x, Vec3 v) {
   ret(11) = v2 * x(11);
   ret(12) = v2 * x(12);
   ret(13) = -v0 * x(11) - v1 * x(12);
+  ret.tail<V - 14>().setZero();
+
+  for (int i = 1; i < LSET + 1; i++)
+    ret(V - i) = v2 * x(V - i);
 }
 
 void Bdot(VecVr ret, VecVr Q, VecVr x, int d, Par &MP) {
 
-  if (MP.VISCOUS) {
+  if (VISCOUS) {
     double ρ = Q(0);
     Vec3 v = get_ρv(Q) / ρ;
 

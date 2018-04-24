@@ -63,15 +63,15 @@ void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
 
   double ea = exp(-c1 * dt / 2);
   double den = 1 - c2 / c1 * (1 - ea * ea) * ρJ.squaredNorm() / (ρ * ρ);
-  Q.tail<3>() *= ea / sqrt(den);
+  Q.segment<3>(14) *= ea / sqrt(den);
 }
 
 void ode_stepper_analytic(VecVr Q, double dt, Par &MP) {
   // Solves the ODE analytically by linearising the distortion equations and
   // providing an analytic approximation to the thermal impulse evolution
 
-  if (MP.VISCOUS)
+  if (VISCOUS)
     analyticSolver_distortion(Q, dt, MP);
-  if (MP.THERMAL)
+  if (THERMAL)
     analyticSolver_thermal(Q, dt, MP);
 }

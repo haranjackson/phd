@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from gpr.misc.functions import det3, dev, lim
 from gpr.misc.objects import material_params
-from gpr.variables.eos import dEdA_s
+from gpr.vars.eos import dEdA_s
 
 
 ### Options ###

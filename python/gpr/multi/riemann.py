@@ -1,14 +1,15 @@
 from numpy import amax, array, concatenate, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve
 
-from ..misc.functions import reorder
-from ..misc.structures import State
-from ..systems.eigenvalues import Xi1, Xi2
-from ..systems.eigenvectors import eigen
-from ..variables.eos import total_energy
+from gpr.misc.functions import reorder
+from gpr.misc.structures import State
+from gpr.opts import THERMAL
+from gpr.sys.eigenvalues import Xi1, Xi2
+from gpr.sys.eigenvectors import eigen
+from gpr.vars.eos import total_energy
 
 
-def Pvec(P, THERMAL):
+def Pvec(P):
 
     if THERMAL:
         NV = 17
@@ -35,8 +36,7 @@ def Pvec_to_Cvec(P, MP):
 
     λ = 0
 
-    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP, VISCOUS=True,
-                            THERMAL=True, REACTIVE=False)
+    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP)
     Q[2:5] *= ρ
     Q[14:] *= ρ
     return Q
@@ -65,8 +65,8 @@ def riemann_constraints(P, sgn, MP):
         J*L = J*R
     """
     _, Lhat, Rhat = eigen(P, 0, False, MP)
+
     Lhat = reorder(Lhat.T, order='atypical').T
-    Rhat = reorder(Rhat, order='atypical')
 
     σA = P.dσdA()
     σρ = P.dσdρ()
@@ -79,35 +79,35 @@ def riemann_constraints(P, sgn, MP):
         Lhat[:3, 2 + 3 * i:5 + 3 * i] = -σA[0, :, :, i]
     Lhat[:3, 11:] = 0
 
-    if MP.THERMAL:
+    if THERMAL:
         Lhat[3, 0] = Tρ
         Lhat[3, 1] = Tp
         Lhat[3, 2:] = 0
 
     Lhat[4:8, 11:15] *= -sgn
 
+    tmp = zeros([5, 5])
+    tmp[:4] = Lhat[:4, :5]
+    tmp[4] = Lhat[8, :5]
+
+    Rhat = reorder(Rhat, order='atypical')
+
     Ξ1 = Xi1(P, 0, MP)
     Ξ2 = Xi2(P, 0, MP)
-    O = dot(Ξ1, Ξ2)
-    w, vl, vr = eig(O, left=1)
+    Ξ = dot(Ξ1, Ξ2)
+    w, vl, vr = eig(Ξ, left=1)
 
     D_1 = diag(1 / sqrt(w.real))
     Q = vl.T
     Q_1 = vr
-    I = dot(Q, Q_1)
-    Q = solve(I, Q)
-
-    tmp = zeros([5, 5])
-    tmp[:4] = Lhat[:4, :5]
-    tmp[4] = Lhat[8, :5]
+    Q = solve(dot(Q, Q_1), Q)
     b = zeros([5, 4])
     b[:4, :4] = eye(4)
     X = solve(tmp, b)
     Rhat[:5, :4] = X
 
     Y0 = dot(Q_1, dot(D_1, Q))
-    Y = -sgn * dot(Y0, dot(Ξ1, X))
-    Rhat[11:15, :4] = Y
+    Rhat[11:15, :4] = -sgn * dot(Y0, dot(Ξ1, X))
     Rhat[:, 4:8] = 0
     Rhat[11:15, 4:8] = sgn * Q_1
 
@@ -118,26 +118,18 @@ def star_stepper(QL, QR, MPL, MPR):
 
     PL = State(QL, MPL)
     PR = State(QR, MPR)
-    LL, RL = riemann_constraints(PL, 1, MPL)
-    LR, RR = riemann_constraints(PR, -1, MPR)
+
+    _, RL = riemann_constraints(PL, 1, MPL)
+    _, RR = riemann_constraints(PR, -1, MPR)
+
     YL = RL[11:15, :4]
     YR = RR[11:15, :4]
 
     xL = concatenate([PL.Σ()[0], [PL.T()]])
     xR = concatenate([PR.Σ()[0], [PR.T()]])
 
-    Ξ1L = Xi1(PL, 0, MPL)
-    Ξ2L = Xi2(PL, 0, MPL)
-    OL = dot(Ξ1L, Ξ2L)
-    Ξ1R = Xi1(PR, 0, MPR)
-    Ξ2R = Xi2(PR, 0, MPR)
-    OR = dot(Ξ1R, Ξ2R)
-
-    _, QL_1 = eig(OL)
-    _, QR_1 = eig(OR)
-
-    yL = concatenate([PL.v, [PL.J[0]]])
-    yR = concatenate([PR.v, [PR.J[0]]])
+    yL = concatenate([PL.v, PL.J[:1]])
+    yR = concatenate([PR.v, PR.J[:1]])
     x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
 
     cL = zeros(17)
@@ -145,12 +137,13 @@ def star_stepper(QL, QR, MPL, MPR):
     cL[:4] = x_ - xL
     cR[:4] = x_ - xR
 
-    PLvec = reorder(Pvec(PL, MPL.THERMAL), order='atypical')
-    PRvec = reorder(Pvec(PR, MPR.THERMAL), order='atypical')
+    PLvec = reorder(Pvec(PL), order='atypical')
+    PRvec = reorder(Pvec(PR), order='atypical')
     PL_vec = dot(RL, cL) + PLvec
     PR_vec = dot(RR, cR) + PRvec
     QL_ = Pvec_to_Cvec(reorder(PL_vec), MPL)
     QR_ = Pvec_to_Cvec(reorder(PR_vec), MPR)
+
     return QL_, QR_
 
 

@@ -1,13 +1,14 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
-from ..misc.functions import L2_1D
+from gpr.misc.functions import L2_1D
+from gpr.opts import VISCOUS, THERMAL, REACTIVE, NV
 
 
-def dQdP(system, P, MP):
+def dQdP(P, MP):
     """ Returns the Jacobian of the conserved variables with respect to the
         primitive variables
     """
-    ret = eye(system.NV)
+    ret = eye(NV)
 
     ρ = P.ρ
     v = P.v
@@ -23,11 +24,11 @@ def dQdP(system, P, MP):
     for i in range(2, 5):
         ret[i, i] = ρ
 
-    if system.VISCOUS:
+    if VISCOUS:
         ψ_ = P.dEdA()
         ret[1, 5:14] = ρ * ψ_.ravel()
 
-    if system.THERMAL:
+    if THERMAL:
         J = P.J
         H = P.H()
         ret[1, 14:17] = ρ * H
@@ -35,7 +36,7 @@ def dQdP(system, P, MP):
         for i in range(14, 17):
             ret[i, i] = ρ
 
-    if system.REACTIVE:
+    if REACTIVE:
         Qc = MP.Qc
         ret[1, 17] = Qc * ρ
         ret[17, 0] = P.λ
@@ -44,11 +45,11 @@ def dQdP(system, P, MP):
     return ret
 
 
-def dPdQ(system, P, MP):
+def dPdQ(P, MP):
     """ Returns the Jacobian of the primitive variables with respect to the
         conserved variables
     """
-    ret = eye(system.NV)
+    ret = eye(NV)
 
     ρ = P.ρ
     v = P.v
@@ -59,7 +60,7 @@ def dPdQ(system, P, MP):
     Γ = 1 / (ρ * Ep)
 
     tmp = L2_1D(v) - (E + ρ * Eρ)
-    if system.THERMAL:
+    if THERMAL:
         cα2 = MP.cα2
         J = P.J
         tmp += cα2 * L2_1D(J)
@@ -73,18 +74,18 @@ def dPdQ(system, P, MP):
     for i in range(2, 5):
         ret[i, i] = 1 / ρ
 
-    if system.VISCOUS:
+    if VISCOUS:
         ψ_ = P.dEdA()
         ret[1, 5:14] = -Γ * ρ * ψ_.ravel()
 
-    if system.THERMAL:
+    if THERMAL:
         H = P.H()
         ret[1, 14:17] = -Γ * H
         ret[14:17, 0] = -J / ρ
         for i in range(14, 17):
             ret[i, i] = 1 / ρ
 
-    if system.REACTIVE:
+    if REACTIVE:
         λ = P.λ
         Qc = MP.Qc
         ret[17, 0] = -λ / ρ
@@ -95,13 +96,11 @@ def dPdQ(system, P, MP):
     return ret
 
 
-def dFdP(system, P, d, MP):
+def dFdP(P, d, MP):
     """ Returns the Jacobian of the flux vector with respect to the
         primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
-    NV = system.NV
-
     ρ = P.ρ
     p = P.p()
     A = P.A
@@ -119,7 +118,7 @@ def dFdP(system, P, d, MP):
     Δ = (E + ρ * Eρ) * v
     Π = (ρ * Ep + 1) * v
 
-    if MP.VISCOUS:
+    if VISCOUS:
 
         σ = P.σ()
         ψ_ = P.dEdA()
@@ -131,7 +130,7 @@ def dFdP(system, P, d, MP):
         Ω = ρ * outer(v, ψ_).reshape([3, 3, 3]) - tensordot(v, σA, axes=(0, 0))
         Δ -= dot(σρ, v)
 
-    if MP.THERMAL:
+    if THERMAL:
 
         Tρ = P.dTdρ()
         Tp = P.dTdp()
@@ -153,7 +152,7 @@ def dFdP(system, P, d, MP):
     ret[2:5, 2 + d] += ρ * v
     ret[2 + d, 1] = 1
 
-    if MP.VISCOUS:
+    if VISCOUS:
         ret[1, 5:14] = Ω[d].ravel()
         ret[2:5, 5:14] = -σA[d].reshape([3, 9])
         ret[5 + d, 2:5] = A[0]
@@ -163,7 +162,7 @@ def dFdP(system, P, d, MP):
         ret[8 + d, 8:11] = v
         ret[11 + d, 11:14] = v
 
-    if MP.THERMAL:
+    if THERMAL:
         T = P.T()
         J = P.J
         cα2 = MP.cα2
@@ -176,7 +175,7 @@ def dFdP(system, P, d, MP):
         for i in range(14, 17):
             ret[i, i] = ρvd
 
-    if MP.REACTIVE:
+    if REACTIVE:
         λ = P.λ
         Qc = MP.Qc
         ret[17, 0] = v[d] * λ
@@ -191,12 +190,11 @@ def dSdQ_cons(Q, MP):
     """ WARNING: incomplete, and does not work for plastic solids
     """
     P = State(Q, MP)
-    NV = len(Q)
     A = P.A
 
     ret = zeros([NV, NV])
 
-    if MP.VISCOUS:
+    if VISCOUS:
         τ1 = MP.τ1
         G = gram(A)
         Grev = gram_rev(A)
@@ -219,7 +217,7 @@ def dSdQ_cons(Q, MP):
         ret *= -3 / τ1 * det3(A)**(5 / 3)
         ret[5:14, 5:14] = ret.reshape([9, 9])
 
-    if MP.THERMAL:
+    if THERMAL:
         ret[14:17, 14:17] = -MP.α2 * P.θ2_1() * eye(3)
 
     return ret

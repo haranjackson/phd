@@ -3,7 +3,7 @@ from numpy.linalg import det
 from numpy.random import rand
 
 from gpr.misc.structures import Cvec
-from gpr.variables.eos import total_energy
+from gpr.vars.eos import total_energy
 
 
 def generate_vector(MP):

@@ -5,7 +5,7 @@ from numpy.random import rand
 
 from bindings_tests.test_functions import check, generate_vector
 
-from gpr.systems.conserved import F_cons, S_cons, B_cons, M_cons
+from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 
 
 """ EQUATIONS """

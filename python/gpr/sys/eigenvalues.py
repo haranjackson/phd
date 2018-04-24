@@ -1,28 +1,29 @@
 from numpy import dot, sqrt, zeros
 from numpy.linalg import eigvals
 
-from ..misc.structures import State
-from ..variables.wavespeeds import c_0, c_h
+from gpr.misc.structures import State
+from gpr.opts import VISCOUS, THERMAL
+from gpr.vars.wavespeeds import c_0, c_h
 
 
 def Xi1(P, d, MP):
 
     ρ = P.ρ
 
-    if MP.cα2 != 0:
+    if THERMAL:
         ret = zeros([4, 5])
     else:
         ret = zeros([3, 5])
 
     ret[0, 1] = 1 / ρ
 
-    if MP.VISCOUS:
+    if VISCOUS:
         dσdρ = P.dσdρ()
         dσdA = P.dσdA()
         ret[:3, 0] = -1 / ρ * dσdρ[d]
         ret[:3, 2:] = -1 / ρ * dσdA[d, :, :, d]
 
-    if MP.THERMAL:
+    if THERMAL:
         dTdρ = P.dTdρ()
         dTdp = P.dTdp()
         ret[3, 0] = dTdρ / ρ
@@ -38,7 +39,7 @@ def Xi2(P, d, MP):
     A = P.A
     c0 = c_0(ρ, p, A, MP)
 
-    if MP.THERMAL:
+    if THERMAL:
         ret = zeros([5, 4])
     else:
         ret = zeros([5, 3])
@@ -46,13 +47,13 @@ def Xi2(P, d, MP):
     ret[0, 0] = ρ
     ret[1, d] = ρ * c0**2
 
-    if MP.VISCOUS:
+    if VISCOUS:
         σ = P.σ()
         dσdρ = P.dσdρ()
         ret[1, :3] += σ[d] - ρ * dσdρ[d]
         ret[2:, :3] = A
 
-    if MP.THERMAL:
+    if THERMAL:
         T = P.T()
         dTdp = P.dTdp()
         ch = c_h(ρ, T, MP)
@@ -61,23 +62,17 @@ def Xi2(P, d, MP):
     return ret
 
 
+
 def max_eig(Q, d, MP):
     """ Returns maximum absolute value of the eigenvalues of the GPR system
     """
-    PERR_FROB = 0               # Use Perron-Frobenius approximation to max λ
-
     P = State(Q, MP)
     vd = P.v[d]
     Ξ1 = Xi1(P, d, MP)
     Ξ2 = Xi2(P, d, MP)
     O = dot(Ξ1, Ξ2)
 
-    if PERR_FROB:
-        rowSum = [sum(o) for o in O]
-        colSum = [sum(oT) for oT in O.T]
-        lam = sqrt(min(max(rowSum), max(colSum)))
-    else:
-        lam = sqrt(eigvals(O).max())
+    lam = sqrt(eigvals(O).max())
 
     if vd > 0:
         return vd + lam

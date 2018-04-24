@@ -6,7 +6,8 @@ from ader.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
 from ader.fv.fv import endpoints
 
 from gpr.misc.structures import State
-from gpr.systems.eigenvalues import Xi1, Xi2
+from gpr.opts import THERMAL
+from gpr.sys.eigenvalues import Xi1, Xi2
 
 from bindings_tests.test_functions import check, generate_vector, cpp_dx
 
@@ -24,12 +25,12 @@ def TAT_test(d, MP):
     Q = generate_vector(MP)
     P = State(Q, MP)
 
-    Ξ1 = Xi1(P, d)
-    Ξ2 = Xi2(P, d)
+    Ξ1 = Xi1(P, d, MP)
+    Ξ2 = Xi2(P, d, MP)
     TAT_py = dot(Ξ1, Ξ2)
     TAT_cp = GPRpy.system.thermo_acoustic_tensor(Q, d, MP)
 
-    if not MP.THERMAL:
+    if not THERMAL:
         assert(all(TAT_cp[-1] == 0) and all(TAT_cp[:, -1] == 0))
         TAT_cp = TAT_cp[:3, :3]
 

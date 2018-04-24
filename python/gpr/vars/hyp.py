@@ -1,7 +1,7 @@
 from numpy import dot, exp, eye, zeros
 from numpy.linalg import det, inv
 
-from ..misc.functions import I_1, I_2, I_3, gram
+from gpr.misc.functions import I_1, I_2, I_3, gram
 
 
 I = eye(3)

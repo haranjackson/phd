@@ -2,11 +2,10 @@ from numpy import array, eye, zeros
 
 from ader.etc.boundaries import standard_BC
 
-from ...variables.hyp import Cvec_hyp
-from ...systems.conserved import SystemConserved
-
-from .common import riemann_IC
-from .params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
+from gpr.misc.structures import Cvec
+from gpr.vars.hyp import Cvec_hyp
+from gpr.tests.one.common import riemann_IC
+from gpr.tests.one.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
 
 
 def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
@@ -14,9 +13,7 @@ def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
     QL = Cvec_hyp(FL, SL, vL, HYP)
     QR = Cvec_hyp(FR, SR, vR, HYP)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=False)
-
-    return riemann_IC(sys, tf, nx, dX, QL, QR, MP, MP, x0)
+    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, x0)
 
 
 def barton1_IC():
@@ -130,9 +127,7 @@ def piston_IC():
     A = eye(3)
     J = zeros(3)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=False)
-
-    Q = sys.Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, A, J, MP)
 
     u = zeros([nx, 17])
 
@@ -140,7 +135,7 @@ def piston_IC():
         u[i] = Q
 
     print("ELASTO-PLASTIC PISTON")
-    return u, [MP], tf, dX, sys
+    return u, [MP], tf, dX
 
 
 def piston_BC(u, N):
@@ -167,10 +162,8 @@ def favrie1_IC():
     vL = array([0, 500, 0])
     vR = array([0, -500, 0])
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=False)
-
-    QL = sys.Cvec(ρ, p, vL, A, J, MP)
-    QR = sys.Cvec(ρ, p, vR, A, J, MP)
+    QL = Cvec(ρ, p, vL, A, J, MP)
+    QR = Cvec(ρ, p, vR, A, J, MP)
 
     print("FAVRIE1")
     return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)
@@ -194,10 +187,8 @@ def favrie2_IC():
     vL = array([100, 500, 0])
     vR = array([-100, -500, 0])
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=False)
-
-    QL = sys.Cvec(ρ, p, vL, A, J, MP)
-    QR = sys.Cvec(ρ, p, vR, A, J, MP)
+    QL = Cvec(ρ, p, vL, A, J, MP)
+    QR = Cvec(ρ, p, vR, A, J, MP)
 
     print("FAVRIE2")
     return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)

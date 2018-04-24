@@ -1,9 +1,11 @@
 from numpy import eye, zeros
 
-from ..misc.functions import L2_1D, L2_2D
-from ..misc.structures import State
-from ..variables.shear import c_s2, dc_s2dρ
-from ..variables.wavespeeds import c_0, c_h
+from gpr import VISCOUS, THERMAL
+
+from gpr.misc.functions import L2_1D, L2_2D
+from gpr.misc.structures import State
+from gpr.vars.shear import c_s2, dc_s2dρ
+from gpr.vars.wavespeeds import c_0, c_h
 
 
 def M_prim(Q, d, MP):
@@ -23,7 +25,7 @@ def M_prim(Q, d, MP):
     ret[1, 2 + d] = ρ * c0**2
     ret[2 + d, 1] = 1 / ρ
 
-    if MP.VISCOUS:
+    if VISCOUS:
 
         σ = P.σ()
         dσdρ = P.dσdρ()
@@ -37,7 +39,7 @@ def M_prim(Q, d, MP):
         ret[8 + d, 2:5] = A[1]
         ret[11 + d, 2:5] = A[2]
 
-    if MP.THERMAL:
+    if THERMAL:
 
         dTdρ = P.dTdρ()
         dTdp = P.dTdp()
@@ -51,7 +53,7 @@ def M_prim(Q, d, MP):
     return ret
 
 
-def S_prim(Q, MP):
+def S_prim(SYS, Q, MP):
 
     NV = len(Q)
     ret = zeros(NV)
@@ -62,13 +64,13 @@ def S_prim(Q, MP):
     cs2 = c_s2(ρ, MP)
     dcs2dρ = dc_s2dρ(ρ, MP)
 
-    if MP.VISCOUS:
+    if VISCOUS:
         ψ = P.ψ()
         θ1_1 = P.θ1_1()
         ret[1] = (1 / dEdp - ρ**2 / cs2 * dcs2dρ) * L2_2D(ψ) * θ1_1
         ret[5:14] = -ψ.ravel() * θ1_1
 
-    if MP.THERMAL:
+    if THERMAL:
         H = P.H()
         θ2_1 = P.θ2_1()
         ret[1] += 1 / dEdp * L2_1D(H) * θ2_1

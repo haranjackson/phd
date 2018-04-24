@@ -4,13 +4,11 @@ from scipy.special import erf
 
 from ader.etc.boundaries import standard_BC
 
-from ...misc.objects import material_params
-from ...misc.structures import State
-from ...systems.conserved import SystemConserved
-from ...variables.wavespeeds import c_0
-
-from .common import fluids_IC
-from .params import MP_Air_ND
+from gpr.misc.objects import material_params
+from gpr.misc.structures import Cvec, State
+from gpr.vars.wavespeeds import c_0
+from gpr.tests.one.common import fluids_IC
+from gpr.tests.one.params import MP_Air_ND
 
 
 def heat_conduction_IC():
@@ -30,12 +28,10 @@ def heat_conduction_IC():
     MP = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0, b0=1,
                          cα=2, μ=1e-2, κ=1e-2)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
     dX = [Lx / nx]
 
     print("HEAT CONDUCTION IN A GAS")
-    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
 
 
 def first_stokes_problem_exact(μ, n=100, v0=0.1, t=1):
@@ -64,12 +60,10 @@ def first_stokes_problem_IC():
     MP = material_params(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0, b0=1,
                          cα=1e-16, μ=μ, Pr=0.75)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
     dX = [Lx / nx]
 
     print("FIST STOKES PROBLEM: μ =", μ)
-    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP)
 
 
 def viscous_shock_exact(x, Ms, MP, μ, center=0):
@@ -127,8 +121,6 @@ def viscous_shock_IC(center=0):
     MP = material_params(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0, b0=5,
                          cα=5, μ=2e-2, Pr=0.75)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=True)
-
     dX = [Lx / nx]
 
     x = arange(-Lx / 2, Lx / 2, 1 / nx)
@@ -145,10 +137,10 @@ def viscous_shock_IC(center=0):
         A = (ρ[i])**(1 / 3) * eye(3)
         J = zeros(3)
         λ = 0
-        u[i] = sys.Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
+        u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
     print("VISCOUS SHOCK")
-    return u, [MP], tf, dX, sys
+    return u, [MP], tf, dX
 
 
 def hagen_poiseuille_IC():
@@ -168,13 +160,11 @@ def hagen_poiseuille_IC():
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=1, μ=1e-2, δp=δp)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=False)
-
-    Q = sys.Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, A, J, MP)
     u = array([Q] * nx).reshape([nx, 1, 1, NV])
 
     print("HAGEN-POISEUILLE DUCT")
-    return u, [MP], tf, [Lx / nx], sys
+    return u, [MP], tf, [Lx / nx]
 
 
 def hagen_poiseuille_BC(u):
@@ -186,13 +176,11 @@ def hagen_poiseuille_BC(u):
     δp = array([0, dp, 0])
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=1, μ=1e-2, δp=δp)
 
-    sys = SystemConserved(VISCOUS=True, THERMAL=False)
-
     nx = u.shape[0]
     ret = zeros(u.shape)
     for i in range(nx):
         Q = u[i]
         P = State(Q, MP)
-        ret[i] = sys.Cvec(P.ρ, p, P.v, P.A, P.J, MP)
+        ret[i] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
 
     return standard_BC(ret, [1])

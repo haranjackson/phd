@@ -36,7 +36,7 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
   ret.block<3, 1>(2, 2 + d) += ρ * v;
   ret(2 + d, 1) = 1.;
 
-  if (MP.VISCOUS) {
+  if (VISCOUS) {
     Vec3 σ = sigma(Q, MP, d);
     Vec3 σρ = dsigmadρ(Q, MP, d);
     Mat3_3 ψ_ = dEdA(Q, MP);
@@ -64,7 +64,7 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
     ret.block<1, 3>(8 + d, 8) = v;
     ret.block<1, 3>(11 + d, 11) = v;
   }
-  if (MP.THERMAL) {
+  if (THERMAL) {
 
     double cα2 = MP.cα2;
     double T = temperature(ρ, p, MP);
@@ -112,7 +112,7 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
   double Γ_ = 1 / (ρ * Ep);
 
   double tmp = v.squaredNorm() - (E + ρ * Eρ);
-  if (MP.THERMAL) {
+  if (THERMAL) {
     double cα2 = MP.cα2;
     tmp += cα2 * J.squaredNorm();
   }
@@ -126,11 +126,11 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
   for (int i = 2; i < 5; i++)
     ret(i, i) = 1 / ρ;
 
-  if (MP.VISCOUS) {
+  if (VISCOUS) {
     Mat3_3 ψ_ = dEdA(Q, MP);
     ret.block<1, 9>(1, 5) = -Γ_ * ρ * Vec9Map(ψ_.data());
   }
-  if (MP.THERMAL) {
+  if (THERMAL) {
     Vec3 H = dEdJ(Q, MP);
     ret.block<1, 3>(1, 14) = -Γ_ * H;
     ret.block<3, 1>(14, 0) = -J / ρ;

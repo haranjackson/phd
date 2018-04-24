@@ -4,9 +4,9 @@ from scipy.linalg import eig, solve
 from _experimental.stiff_riemann import star_states_stiff
 from gpr.misc.functions import reorder
 from gpr.misc.structures import State
-from gpr.systems.eigenvalues import Xi1, Xi2
-from gpr.systems.eigenvectors import eigen
-from gpr.systems.primitive import S_prim
+from gpr.sys.eigenvalues import Xi1, Xi2
+from gpr.sys.eigenvectors import eigen
+from gpr.sys.primitive import S_prim
 
 
 def Pvec(P, THERMAL):

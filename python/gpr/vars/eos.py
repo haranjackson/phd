@@ -1,8 +1,7 @@
-from ..misc.functions import dev, gram, L2_1D, L2_2D
-
-from . import mg
-
-from .shear import C_0
+from gpr.misc.functions import dev, gram, L2_1D, L2_2D
+from gpr.opts import VISCOUS, THERMAL, REACTIVE
+from gpr.vars import mg
+from gpr.vars.shear import C_0
 
 
 def E_1(ρ, p, MP):
@@ -40,7 +39,7 @@ def E_R(λ, MP):
     return Qc * (λ - 1)
 
 
-def total_energy(ρ, p, v, A, J, λ, MP, VISCOUS, THERMAL, REACTIVE):
+def total_energy(ρ, p, v, A, J, λ, MP):
     """ Returns the total energy
     """
     ret = E_1(ρ, p, MP)

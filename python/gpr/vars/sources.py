@@ -1,9 +1,9 @@
 from numpy import exp, inf
 
-from ..misc.functions import det3, sigma_norm
+from gpr.misc.functions import det3, sigma_norm
 
-from .state import sigma
-from .shear import c_s2
+from gpr.vars.state import sigma
+from gpr.vars.shear import c_s2
 
 
 def theta1inv(ρ, A, MP):

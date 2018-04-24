@@ -6,9 +6,10 @@ from ader.dg.dg import DGSolver
 from ader.fv.fv import FVSolver
 from ader.weno.weno import WENOSolver
 
-from gpr.systems.conserved import F_cons, S_cons, B_cons, M_cons
-from gpr.systems.eigenvalues import max_eig
-from gpr.tests.one import fluids
+from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET
+from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
+from gpr.sys.eigenvalues import max_eig
+from gpr.tests.one import fluids, multi
 from gpr.tests.two import validation
 
 from solver.split import SplitSolver
@@ -25,8 +26,8 @@ from bindings_tests.fv_tests import TAT_test, Bint_test, D_RUS_test, \
 
 """ OPTIONS """
 
-#IC = validation.hagen_poiseuille_IC
-IC = fluids.heat_conduction_IC
+# IC = validation.hagen_poiseuille_IC
+IC = multi.heat_conduction_IC
 d = 0
 dt = 0.0001
 
@@ -42,15 +43,17 @@ dx = dX[0]
 
 N = GPRpy.N()
 print('N =', N)
-assert(NV == GPRpy.NV())
+
+assert(VISCOUS == GPRpy.VISCOUS() and THERMAL == GPRpy.THERMAL() and
+       REACTIVE == GPRpy.REACTIVE() and MULTI == GPRpy.MULTI() and
+       LSET == GPRpy.LSET())
 
 
 wenoSolver = WENOSolver(N, NV, NDIM)
 
 dgSolver = DGSolver(N, NV, NDIM, F=F_cons, S=S_cons, B=B_cons, M=M_cons,
                     pars=MP, stiff=False, stiff_guess=False,
-                    newton_guess=False, tol=1e-6, max_iter=50,
-                    max_size=1e16)
+                    newton_guess=False, tol=1e-6, max_iter=50, max_size=1e16)
 
 splitSolver = SplitSolver(N, NV, NDIM, F=F_cons, S=S_cons, B=B_cons, M=M_cons,
                           dSdQ=None, ode_solver=None, model_params=MP)

@@ -1,9 +1,10 @@
 from numpy import arctan, array, cos, dot, exp, log, prod, sqrt
 from numpy.linalg import svd
 
-from ..misc.functions import L2_1D
-from ..variables.eos import E_2A, E_3
-from ..variables.shear import c_s2
+from gpr.misc.functions import L2_1D
+from gpr.opts import VISCOUS, THERMAL
+from gpr.vars.eos import E_2A, E_3
+from gpr.vars.shear import c_s2
 
 
 ### DISTORTION ###
@@ -105,11 +106,11 @@ def ode_solver_cons(Q, dt, MP):
     ρ = Q[0]
     A = Q[5:14].reshape([3, 3])
 
-    if MP.VISCOUS:
+    if VISCOUS:
         A1 = solver_distortion_analytic(A, dt, MP)
         Q[5:14] = A1.ravel()
 
-    if MP.THERMAL:
+    if THERMAL:
         J = Q[14:17] / ρ
         E = Q[1] / ρ
         v = Q[2:5] / ρ

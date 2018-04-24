@@ -2,10 +2,10 @@ from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
 from ader.etc.boundaries import standard_BC
 
-from ...misc.objects import material_params
-from ...misc.structures import State
+from gpr.misc.objects import material_params
+from gpr.misc.structures import State
 
-from ..boundaries import destress
+from gpr.tests.boundaries import destress
 
 
 def vortex(x, y, x0, y0, ε, γ, ρ):

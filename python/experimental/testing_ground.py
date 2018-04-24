@@ -5,9 +5,9 @@ from numpy.random import rand
 from gpr.misc.functions import det3
 from gpr.misc.structures import State, Cvec
 
-from gpr.systems.conserved import M_cons
-from gpr.systems.primitive import M_prim
-from gpr.systems.jacobians import dQdP
+from gpr.sys.conserved import M_cons
+from gpr.sys.primitive import M_prim
+from gpr.sys.jacobians import dQdP
 
 
 def systems(Q, d, MP):

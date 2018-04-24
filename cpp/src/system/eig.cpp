@@ -20,7 +20,7 @@ Mat4_4 thermo_acoustic_tensor(VecVr Q, int d, Par &MP) {
   Xi2(0, 0) = ρ;
   Xi2(1, d) = ρ * c0 * c0;
 
-  if (MP.VISCOUS) {
+  if (VISCOUS) {
     Vec3 σ = sigma(Q, MP, d);
     Vec3 dσdρ = dsigmadρ(Q, MP, d);
     Mat3_3 dσdA = dsigmadA(Q, MP, d);
@@ -29,7 +29,7 @@ Mat4_4 thermo_acoustic_tensor(VecVr Q, int d, Par &MP) {
     Xi2.block<1, 3>(1, 0) += σ - ρ * dσdρ;
     Xi2.bottomLeftCorner(3, 3) = A;
   }
-  if (MP.THERMAL) {
+  if (THERMAL) {
     double ch = c_h(ρ, T, MP);
     double dT_dρ = dTdρ(ρ, p, MP);
     double dT_dp = dTdp(ρ, MP);
