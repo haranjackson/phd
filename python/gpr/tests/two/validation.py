@@ -1,8 +1,8 @@
 from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
 from ader.etc.boundaries import standard_BC
-from gpr.misc.objects import material_parameters
-from gpr.misc.structures import Cvec, State
+from gpr.misc.objects import material_params
+from gpr.misc.structures import State
 from gpr.tests.boundaries import destress
 
 
@@ -36,8 +36,8 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
 
     dX = [Lx / nx, Ly / ny]
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ,
-                             b0=0.5, cα=1, μ=μ, κ=κ)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ, b0=0.5, cα=1, μ=μ,
+                         κ=κ)
 
     u = zeros([nx, ny, 17])
     for i in range(nx):
@@ -60,7 +60,7 @@ def circular_explosion_IC():
     ny = 400
 
     R = 0.25 * Lx
-    MP = material_parameters(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
+    MP = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
                              b0=0.5, cα=0.5, μ=1e-4, κ=1e-4)
 
     dX = [Lx / nx, Ly / ny]
@@ -109,7 +109,7 @@ def laminar_boundary_layer_IC():
     A = eye(3)
     J = zeros(3)
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-3)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-3)
 
     u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, A, J, MP)
@@ -139,7 +139,7 @@ def hagen_poiseuille_IC():
     J = zeros(3)
     δp = array([dp, 0, 0])
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p,
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p,
                              γ=γ, b0=8, μ=1e-2, δp=δp)
 
     ddp = dp / (nx + 1)
@@ -165,7 +165,7 @@ def hagen_poiseuille_BC(u):
     γ = 1.4
     ρ = 1
     p = 100 / γ
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
 
     nx, ny = u.shape[:2]
     ddp = dp / (nx + 1)
@@ -201,7 +201,7 @@ def hagen_poiseuille_BC(u):
             for i in range(N):
                 #ret[N - 1 - i, j] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
                 ret[nx + N + i, j] = Cvec(ρR, p - dp - i * ddp, vR, AR, J,
-                                             MP)
+                                          MP)
 
     return ret
 
@@ -222,7 +222,7 @@ def lid_driven_cavity_IC():
     A = eye(3)
     J = zeros(3)
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
 
     u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, A, J, MP)
@@ -272,7 +272,7 @@ def double_shear_layer_IC():
     A = eye(3)
     J = zeros(3)
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=2e-4)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=2e-4)
     dX = [Lx / nx, Ly / ny]
 
     ρ_ = 30
@@ -314,7 +314,7 @@ def taylor_green_vortex_IC():
     A = eye(3)
     J = zeros(3)
 
-    MP = material_parameters(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=10, μ=1e-2)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=10, μ=1e-2)
     dX = [Lx / nx, Ly / ny]
 
     u = zeros([nx, ny, 14])

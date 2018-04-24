@@ -2,11 +2,10 @@ from numpy import array, eye, zeros
 
 from ader.etc.boundaries import standard_BC
 
-from gpr.misc.structures import Cvec
 from gpr.variables.hyp import Cvec_hyp
+from gpr.systems.conserved import SystemConserved
 from gpr.tests.one.common import riemann_IC
-from gpr.tests.one.common import HYP_COP, MP_COP_GR, MP_COP_SMG_P
-from gpr.tests.one.common import MP_ALU_SG
+from gpr.tests.one.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
 
 
 def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
@@ -14,7 +13,9 @@ def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
     QL = Cvec_hyp(FL, SL, vL, HYP)
     QR = Cvec_hyp(FR, SR, vR, HYP)
 
-    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, x0)
+    sys = SystemConserved(VISCOUS=True, THERMAL=False)
+
+    return riemann_IC(sys, tf, nx, dX, QL, QR, MP, MP, x0)
 
 
 def barton1_IC():
@@ -38,7 +39,7 @@ def barton1_IC():
     SR = 0
 
     print("BARTON1")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
 
 
 def barton2_IC():
@@ -62,7 +63,7 @@ def barton2_IC():
     SR = 0
 
     print("BARTON2")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
 
 
 def elastic1_IC():
@@ -86,7 +87,7 @@ def elastic1_IC():
     SR = 0
 
     print("ELASTIC1")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
 
 
 def elastic2_IC():
@@ -110,7 +111,7 @@ def elastic2_IC():
     SR = 0
 
     print("ELASTIC2")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_COP, MP_COP_GR)
+    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
 
 
 def piston_IC():
@@ -121,13 +122,16 @@ def piston_IC():
 
     dX = [Lx / nx]
 
-    MP = MP_COP_SMG_P
+    MP = MP_Cu_SMG_P
     ρ = MP.ρ0
     p = MP.p0
     v = zeros(3)
     A = eye(3)
     J = zeros(3)
-    Q = Cvec(ρ, p, v, A, J, MP)
+
+    sys = SystemConserved(VISCOUS=True, THERMAL=False)
+
+    Q = sys.Cvec(ρ, p, v, A, J, MP)
 
     u = zeros([nx, 17])
 
@@ -135,7 +139,7 @@ def piston_IC():
         u[i] = Q
 
     print("ELASTO-PLASTIC PISTON")
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, sys
 
 
 def piston_BC(u, N):
@@ -152,7 +156,7 @@ def favrie1_IC():
 
     dX = [Lx / nx]
 
-    MP = MP_ALU_SG
+    MP = MP_Al_SG
 
     ρ = MP.ρ0
     p = MP.p0
@@ -162,8 +166,10 @@ def favrie1_IC():
     vL = array([0, 500, 0])
     vR = array([0, -500, 0])
 
-    QL = Cvec(ρ, p, vL, A, J, MP)
-    QR = Cvec(ρ, p, vR, A, J, MP)
+    sys = SystemConserved(VISCOUS=True, THERMAL=False)
+
+    QL = sys.Cvec(ρ, p, vL, A, J, MP)
+    QR = sys.Cvec(ρ, p, vR, A, J, MP)
 
     print("FAVRIE1")
     return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)
@@ -177,7 +183,7 @@ def favrie2_IC():
 
     dX = [Lx / nx]
 
-    MP = MP_ALU_SG
+    MP = MP_Al_SG
 
     ρ = MP.ρ0
     p = MP.p0
@@ -187,8 +193,10 @@ def favrie2_IC():
     vL = array([100, 500, 0])
     vR = array([-100, -500, 0])
 
-    QL = Cvec(ρ, p, vL, A, J, MP)
-    QR = Cvec(ρ, p, vR, A, J, MP)
+    sys = SystemConserved(VISCOUS=True, THERMAL=False)
+
+    QL = sys.Cvec(ρ, p, vL, A, J, MP)
+    QR = sys.Cvec(ρ, p, vR, A, J, MP)
 
     print("FAVRIE2")
     return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)

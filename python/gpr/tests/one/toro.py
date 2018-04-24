@@ -1,7 +1,7 @@
 from numpy import array, zeros
 
-from gpr.tests.one.common import MP_AIR
 from gpr.tests.one.fluids import fluids_IC
+from gpr.tests.one.params import MP_Air_ND
 
 
 def toro1_IC():
@@ -20,7 +20,7 @@ def toro1_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
 
 
 def toro2_IC():
@@ -39,7 +39,7 @@ def toro2_IC():
     pR = 0.4
     vR = array([2, 0, 0])
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
 
 
 def toro3_IC():
@@ -58,7 +58,7 @@ def toro3_IC():
     pR = 0.01
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
 
 
 def toro4_IC():
@@ -77,7 +77,7 @@ def toro4_IC():
     pR = 100
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
 
 
 def toro_test5_IC():
@@ -96,4 +96,4 @@ def toro_test5_IC():
     pR = 46.095
     vR = array([-6.19633, 0, 0])
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR)
+    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)

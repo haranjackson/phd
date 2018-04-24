@@ -5,9 +5,8 @@ from scipy.integrate import quad
 from scipy.optimize import newton_krylov
 
 from gpr.misc.functions import dev
-from gpr.misc.objects import material_parameters
+from gpr.misc.objects import material_params
 from gpr.misc.plot import plot_energy, plot_distortion, plot_sigma, colors
-from gpr.misc.structures import Cvec
 from gpr.variables.eos import E_2A
 
 
@@ -105,8 +104,8 @@ def bingham(a=1e2, b=1e9, σ0=1):
 
 def test():
 
-    MP = material_parameters('sg', 1, 1, 1, γ=1.4,
-                             b0=0.219, n=4, σY=9e-4, τ1=0.1, PLASTIC=1)
+    MP = material_params('sg', 1, 1, 1, γ=1.4,
+                         b0=0.219, n=4, σY=9e-4, τ1=0.1, PLASTIC=1)
 
     n = 100
     tf = 0.00001

@@ -1,8 +1,8 @@
 from numpy import array, eye, sqrt, zeros
 
-from gpr.misc.structures import Cvec
-from gpr.tests.one.common import MP_AIR, MP_AIR2, MP_HEL2, MP_WAT2
-from gpr.tests.one.fluids import fluids_IC
+from gpr.systems.conserved import SystemConserved
+from gpr.tests.one.common import fluids_IC
+from gpr.tests.one.params import MP_Air_ND, MP_Air, MP_He, MP_H20
 
 
 def sod_shock_IC():
@@ -21,7 +21,10 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR, MP_AIR, 0.5)
+    sys = SystemConserved(VISCOUS=True, THERMAL=True)
+
+    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND,
+                     MP_Air_ND, 0.5)
 
 
 def water_gas_IC():
@@ -40,7 +43,9 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR2, MP_WAT2, 0.7)
+    sys = SystemConserved(VISCOUS=True, THERMAL=True)
+
+    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20, MP_Air, 0.7)
 
 
 def water_water_IC():
@@ -59,7 +64,9 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_WAT2)
+    sys = SystemConserved(VISCOUS=True, THERMAL=True)
+
+    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20)
 
 
 def helium_bubble_IC():
@@ -88,10 +95,12 @@ def helium_bubble_IC():
 
     J = zeros(3)
 
+    sys = SystemConserved(VISCOUS=True, THERMAL=True)
+
     u = zeros([nx, 20])
-    Q1 = Cvec(ρL, pL, vL, AL, J, MP_AIR2)
-    Q2 = Cvec(ρM, pM, vM, AM, J, MP_AIR2)
-    Q3 = Cvec(ρR, pR, vR, AR, J, MP_HEL2)
+    Q1 = sys.Cvec(ρL, pL, vL, AL, J, MP_Air)
+    Q2 = sys.Cvec(ρM, pM, vM, AM, J, MP_Air)
+    Q3 = sys.Cvec(ρR, pR, vR, AR, J, MP_He)
 
     for i in range(nx):
 
@@ -108,7 +117,7 @@ def helium_bubble_IC():
         else:
             u[i, :-3] = Q2
 
-    return u, [MP_AIR2, MP_AIR2, MP_HEL2, MP_AIR2], tf, dX
+    return u, [MP_Air, MP_Air, MP_He, MP_Air], tf, dX, sys
 
 
 def heat_conduction_IC():
@@ -125,6 +134,8 @@ def heat_conduction_IC():
     pR = 1
     vR = zeros(3)
 
+    sys = SystemConserved(VISCOUS=True, THERMAL=True)
+
     dX = [Lx / nx]
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_AIR, MP_AIR)
+    return fluids_IC(sys, tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND, MP_Air_ND)

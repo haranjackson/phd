@@ -4,7 +4,7 @@ from scipy.optimize import newton_krylov, leastsq, root, anderson
 from solvers.basis import end_values, derivative_values, quad
 from solvers.dg.dg import rhs
 from solvers.dg.matrices import system_matrices
-from gpr.misc.objects import material_parameters
+from gpr.misc.objects import material_params
 from gpr.misc.structures import State, Cvec
 
 
@@ -69,7 +69,7 @@ def dΧ(xh, dt):
 
 if __name__ == "__main__":
 
-    MP = material_parameters(EOS='sg', ρ0=1, cv=1, γ=1.4, pINF=0, p0=1,
+    MP = material_params(EOS='sg', ρ0=1, cv=1, γ=1.4, pINF=0, p0=1,
                              b0=1, cα=1, μ=1e-2, Pr=0.75)
     """
     ρL = 1

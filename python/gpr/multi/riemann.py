@@ -33,12 +33,10 @@ def Pvec_to_Cvec(P, MP):
     ρ = P[0]
     A = P[5:14].reshape([3, 3])
 
-    if MP.REACTIVE:
-        λ = P[17]
-    else:
-        λ = 0
+    λ = 0
 
-    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP)
+    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP, VISCOUS=True,
+                            THERMAL=True, REACTIVE=False)
     Q[2:5] *= ρ
     Q[14:] *= ρ
     return Q
@@ -66,7 +64,7 @@ def riemann_constraints(P, sgn, MP):
         v*L = v*R
         J*L = J*R
     """
-    _, Lhat, Rhat = eigen(P, 0, False)
+    _, Lhat, Rhat = eigen(P, 0, False, MP)
     Lhat = reorder(Lhat.T, order='atypical').T
     Rhat = reorder(Rhat, order='atypical')
 
@@ -88,8 +86,8 @@ def riemann_constraints(P, sgn, MP):
 
     Lhat[4:8, 11:15] *= -sgn
 
-    Ξ1 = Xi1(P, 0)
-    Ξ2 = Xi2(P, 0)
+    Ξ1 = Xi1(P, 0, MP)
+    Ξ2 = Xi2(P, 0, MP)
     O = dot(Ξ1, Ξ2)
     w, vl, vr = eig(O, left=1)
 
@@ -128,11 +126,11 @@ def star_stepper(QL, QR, MPL, MPR):
     xL = concatenate([PL.Σ()[0], [PL.T()]])
     xR = concatenate([PR.Σ()[0], [PR.T()]])
 
-    Ξ1L = Xi1(PL, 0)
-    Ξ2L = Xi2(PL, 0)
+    Ξ1L = Xi1(PL, 0, MPL)
+    Ξ2L = Xi2(PL, 0, MPL)
     OL = dot(Ξ1L, Ξ2L)
-    Ξ1R = Xi1(PR, 0)
-    Ξ2R = Xi2(PR, 0)
+    Ξ1R = Xi1(PR, 0, MPR)
+    Ξ2R = Xi2(PR, 0, MPR)
     OR = dot(Ξ1R, Ξ2R)
 
     _, QL_1 = eig(OL)

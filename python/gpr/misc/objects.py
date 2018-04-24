@@ -151,20 +151,20 @@ def params(MP, Rc, EOS, VISCOUS, THERMAL, REACTIVE, MULTI,
         MP.δp = δp
 
 
-def material_parameters(EOS, ρ0, cv, p0,
-                        Tref=None, α=None, β=None, γ=None, pINF=None,
-                        c0=None, Γ0=None, s=None, e0=None,
-                        A=None, B=None, R1=None, R2=None,
-                        b0=None, μ=None, τ1=None,
-                        σY=None, n=None, PLASTIC=False,
-                        cα=None, κ=None, Pr=None,
-                        REACTION=None, Qc=None,
-                        Kc=None, Ti=None,
-                        Bc=None, Ea=None,
-                        I=None, G1=None, G2=None, a=None, b=None, c=None,
-                        d=None, e=None, g=None, x=None, y=None, z=None,
-                        φIG=None, φG1=None, φG2=None,
-                        δp=None, Rc=8.31445985):
+def material_params(EOS, ρ0, cv, p0,
+                    Tref=None, α=None, β=None, γ=None, pINF=None,
+                    c0=None, Γ0=None, s=None, e0=None,
+                    A=None, B=None, R1=None, R2=None,
+                    b0=None, μ=None, τ1=None,
+                    σY=None, n=None, PLASTIC=False,
+                    cα=None, κ=None, Pr=None,
+                    REACTION=None, Qc=None,
+                    Kc=None, Ti=None,
+                    Bc=None, Ea=None,
+                    I=None, G1=None, G2=None, a=None, b=None, c=None,
+                    d=None, e=None, g=None, x=None, y=None, z=None,
+                    φIG=None, φG1=None, φG2=None,
+                    δp=None, Rc=8.31445985):
     """ An object to hold the material constants
     """
     assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr'])

@@ -2,7 +2,6 @@ from numpy import zeros
 
 from gpr.misc.functions import gram
 from gpr.variables.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
-from gpr.variables.eos import total_energy
 from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing, f_δp
 from gpr.variables.state import heat_flux, pressure, temperature
 from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
@@ -24,8 +23,8 @@ def calculate_pressure(state):
     if hasattr(state, 'p_'):
         return state.p_
     else:
-        if state.MP.THERMAL:
-            if state.MP.REACTIVE:
+        if state.MP.cα2:
+            if hasattr(state, 'λ'):
                 state.p_ = pressure(state.ρ, state.E, state.v, state.A, state.J,
                                     state.MP, state.λ)
             else:
@@ -47,15 +46,12 @@ class State():
 
     def __init__(self, Q, MP):
 
-        self.NV = len(Q)
-
         extract_densities(Q, MP, self)
 
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
         self.A = Q[5:14].reshape([3, 3])
         self.J = Q[14:17] / self.ρ
-
         self.MP = MP
 
     def G(self):
@@ -123,34 +119,3 @@ class State():
 
     def f_body(self):
         return f_δp(self.MP)
-
-
-def Cvec(ρ1, p, v, A, J, MP, ρ2=None, z=1, λ=None):
-    """ Returns the vector of conserved variables, given the primitive variables
-    """
-    if MP.THERMAL:
-        Q = zeros(17)
-    else:
-        Q = zeros(14)
-
-    if MP.MULTI:
-        ρ = z * ρ1 + (1 - z) * ρ2
-        Q[0] = z * ρ1
-        Q[17] = (1 - z) * ρ2
-        Q[18] = z * ρ
-        if MP.REACTIVE:
-            Q[19] = (1 - z) * ρ2 * λ
-    else:
-        ρ = ρ1
-        Q[0] = ρ
-
-    Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, MP)
-    Q[2:5] = ρ * v
-
-    if MP.VISCOUS:
-        Q[5:14] = A.ravel()
-
-    if MP.THERMAL:
-        Q[14:17] = ρ * J
-
-    return Q

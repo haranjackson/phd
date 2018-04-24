@@ -5,12 +5,11 @@ from gpr.misc.structures import State
 from gpr.variables.wavespeeds import c_0, c_h
 
 
-def Xi1(P, d):
+def Xi1(P, d, MP):
 
     ρ = P.ρ
-    MP = P.MP
 
-    if MP.THERMAL:
+    if MP.cα2 != 0:
         ret = zeros([4, 5])
     else:
         ret = zeros([3, 5])
@@ -32,12 +31,11 @@ def Xi1(P, d):
     return ret
 
 
-def Xi2(P, d):
+def Xi2(P, d, MP):
 
     ρ = P.ρ
     p = P.p()
     A = P.A
-    MP = P.MP
     c0 = c_0(ρ, p, A, MP)
 
     if MP.THERMAL:
@@ -70,8 +68,8 @@ def max_eig(Q, d, MP):
 
     P = State(Q, MP)
     vd = P.v[d]
-    Ξ1 = Xi1(P, d)
-    Ξ2 = Xi2(P, d)
+    Ξ1 = Xi1(P, d, MP)
+    Ξ2 = Xi2(P, d, MP)
     O = dot(Ξ1, Ξ2)
 
     if PERR_FROB:

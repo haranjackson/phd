@@ -3,13 +3,11 @@ from numpy import dot, eye, outer, tensordot, zeros
 from gpr.misc.functions import L2_1D
 
 
-def dQdP(P):
+def dQdP(system, P, MP):
     """ Returns the Jacobian of the conserved variables with respect to the
         primitive variables
     """
-    MP = P.MP
-
-    ret = eye(P.NV)
+    ret = eye(system.NV)
 
     ρ = P.ρ
     v = P.v
@@ -25,11 +23,11 @@ def dQdP(P):
     for i in range(2, 5):
         ret[i, i] = ρ
 
-    if MP.VISCOUS:
+    if system.VISCOUS:
         ψ_ = P.dEdA()
         ret[1, 5:14] = ρ * ψ_.ravel()
 
-    if MP.THERMAL:
+    if system.THERMAL:
         J = P.J
         H = P.H()
         ret[1, 14:17] = ρ * H
@@ -37,7 +35,7 @@ def dQdP(P):
         for i in range(14, 17):
             ret[i, i] = ρ
 
-    if MP.REACTIVE:
+    if system.REACTIVE:
         Qc = MP.Qc
         ret[1, 17] = Qc * ρ
         ret[17, 0] = P.λ
@@ -46,13 +44,11 @@ def dQdP(P):
     return ret
 
 
-def dPdQ(P):
+def dPdQ(system, P, MP):
     """ Returns the Jacobian of the primitive variables with respect to the
         conserved variables
     """
-    MP = P.MP
-
-    ret = eye(P.NV)
+    ret = eye(system.NV)
 
     ρ = P.ρ
     v = P.v
@@ -63,7 +59,7 @@ def dPdQ(P):
     Γ = 1 / (ρ * Ep)
 
     tmp = L2_1D(v) - (E + ρ * Eρ)
-    if MP.THERMAL:
+    if system.THERMAL:
         cα2 = MP.cα2
         J = P.J
         tmp += cα2 * L2_1D(J)
@@ -77,18 +73,18 @@ def dPdQ(P):
     for i in range(2, 5):
         ret[i, i] = 1 / ρ
 
-    if MP.VISCOUS:
+    if system.VISCOUS:
         ψ_ = P.dEdA()
         ret[1, 5:14] = -Γ * ρ * ψ_.ravel()
 
-    if MP.THERMAL:
+    if system.THERMAL:
         H = P.H()
         ret[1, 14:17] = -Γ * H
         ret[14:17, 0] = -J / ρ
         for i in range(14, 17):
             ret[i, i] = 1 / ρ
 
-    if MP.REACTIVE:
+    if system.REACTIVE:
         λ = P.λ
         Qc = MP.Qc
         ret[17, 0] = -λ / ρ
@@ -99,13 +95,12 @@ def dPdQ(P):
     return ret
 
 
-def dFdP(P, d):
+def dFdP(system, P, d, MP):
     """ Returns the Jacobian of the flux vector with respect to the
         primitive variables
         NOTE: Primitive variables are assumed to be in standard ordering
     """
-    MP = P.MP
-    NV = P.NV
+    NV = system.NV
 
     ρ = P.ρ
     p = P.p()

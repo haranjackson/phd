@@ -61,7 +61,7 @@ def riemann_constraints(P, sgn, MP):
         v*L = v*R
         J*L = J*R
     """
-    _, Lhat, Rhat = eigen(P, 0, False)
+    _, Lhat, Rhat = eigen(P, 0, MP, False)
     Lhat = reorder(Lhat.T, order='atypical').T
     Rhat = reorder(Rhat, order='atypical')
 
@@ -83,8 +83,8 @@ def riemann_constraints(P, sgn, MP):
 
     Lhat[4:8, 11:15] *= -sgn
 
-    Ξ1 = Xi1(P, 0)
-    Ξ2 = Xi2(P, 0)
+    Ξ1 = Xi1(P, 0, MP)
+    Ξ2 = Xi2(P, 0, MP)
     O = dot(Ξ1, Ξ2)
     w, vl, vr = eig(O, left=1)
 
@@ -125,11 +125,11 @@ def star_stepper(QL, QR, dt, MPL, MPR, SL=None, SR=None):
     xL = concatenate([PL.Σ()[d], [PL.T()]])
     xR = concatenate([PR.Σ()[d], [PR.T()]])
 
-    Ξ1L = Xi1(PL, d)
-    Ξ2L = Xi2(PL, d)
+    Ξ1L = Xi1(PL, d, MPL)
+    Ξ2L = Xi2(PL, d, MPL)
     OL = dot(Ξ1L, Ξ2L)
-    Ξ1R = Xi1(PR, d)
-    Ξ2R = Xi2(PR, d)
+    Ξ1R = Xi1(PR, d, MPR)
+    Ξ2R = Xi2(PR, d, MPR)
     OR = dot(Ξ1R, Ξ2R)
 
     _, QL_1 = eig(OL)

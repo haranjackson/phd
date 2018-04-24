@@ -38,18 +38,18 @@ def E_R(λ, MP):
     return Qc * (λ - 1)
 
 
-def total_energy(ρ, p, v, A, J, λ, MP):
+def total_energy(ρ, p, v, A, J, λ, MP, VISCOUS, THERMAL, REACTIVE):
     """ Returns the total energy
     """
     ret = E_1(ρ, p, MP)
 
-    if MP.VISCOUS:
+    if VISCOUS:
         ret += E_2A(ρ, A, MP)
 
-    if MP.THERMAL:
+    if THERMAL:
         ret += E_2J(J, MP)
 
-    if MP.REACTIVE:
+    if REACTIVE:
         ret += E_R(λ, MP)
 
     ret += E_3(v)

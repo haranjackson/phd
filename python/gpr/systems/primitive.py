@@ -58,8 +58,6 @@ def S_prim(Q, MP):
     P = State(Q, MP)
 
     ρ = P.ρ
-    MP = P.MP
-
     dEdp = P.dEdp()
     cs2 = c_s2(ρ, MP)
     dcs2dρ = dc_s2dρ(ρ, MP)

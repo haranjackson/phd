@@ -4,7 +4,7 @@ from scipy.linalg import svd
 import matplotlib.pyplot as plt
 
 from gpr.misc.functions import det3, dev, lim
-from gpr.misc.objects import material_parameters
+from gpr.misc.objects import material_params
 from gpr.variables.eos import dEdA_s
 
 
@@ -13,7 +13,7 @@ from gpr.variables.eos import dEdA_s
 RAND = 1
 
 if RAND:
-    ε = rand(3,3)
+    ε = rand(3, 3)
     ε -= 0.5
     ε *= 2
     Λ = rand(3)
@@ -31,7 +31,7 @@ includeSources = 1
 n = 50
 
 
-PAR = material_parameters('sg', 1, 1, p0=1, γ=1.4, b0=1, τ1=τ)
+PAR = material_params('sg', 1, 1, p0=1, γ=1.4, b0=1, τ1=τ)
 
 
 ### Auxiliary Functions ###
@@ -42,32 +42,36 @@ def sgn(x):
     else:
         return -1
 
+
 def sec(x):
     return 1/lim(cos(x))
 
+
 def plot_eigenvec(a, Vold, Vnew):
     for i in range(3):
-        if i==0:
-            plot(x,Vold[:,i,a], label='Original ODEs', color=cm[0])
-            plot(x,Vnew[:,i,a], label='Eigendecomp ODEs', color=cm[2],
+        if i == 0:
+            plot(x, Vold[:, i, a], label='Original ODEs', color=cm[0])
+            plot(x, Vnew[:, i, a], label='Eigendecomp ODEs', color=cm[2],
                  marker='x', linestyle='None')
         else:
-            plot(x,Vold[:,i,a], color=cm[0])
-            plot(x,Vnew[:,i,a], color=cm[2], marker='x', linestyle='None')
+            plot(x, Vold[:, i, a], color=cm[0])
+            plot(x, Vnew[:, i, a], color=cm[2], marker='x', linestyle='None')
 
 ### Standard Formulation ###
 
+
 def f_standard(y, t):
-    A = y.reshape([3,3])
-    ret = -dot(A,ε)
+    A = y.reshape([3, 3])
+    ret = -dot(A, ε)
     if includeSources:
-        ret -= dEdA_s(det3(A), A,PAR)/τ
+        ret -= dEdA_s(det3(A), A, PAR)/τ
     return ret.ravel()
+
 
 def solver_standard(A, dt):
     t = array([0, dt])
     y0 = A.ravel()
-    return odeint(f_standard, y0, t, rtol=1e-12, atol=1e-12)[1].reshape([3,3])
+    return odeint(f_standard, y0, t, rtol=1e-12, atol=1e-12)[1].reshape([3, 3])
 
 
 ### Vectors Formulaiton ###
@@ -89,11 +93,11 @@ def f_vectors(y, t):
     #b3 = -dot(v2, dot(ε + ε.T, v1)) / lim(λ1-λ2)
 
     ret = zeros(12)
-    ret[0] = -2 * dot(v1,dot(ε,v1))
-    ret[1] = -2 * dot(v2,dot(ε,v2))
-    ret[2] = -2 * dot(v3,dot(ε,v3))
-    ret[3:6]  = b3*v2 - b2*v3
-    ret[6:9]  = b1*v3 - b3*v1
+    ret[0] = -2 * dot(v1, dot(ε, v1))
+    ret[1] = -2 * dot(v2, dot(ε, v2))
+    ret[2] = -2 * dot(v3, dot(ε, v3))
+    ret[3:6] = b3*v2 - b2*v3
+    ret[6:9] = b1*v3 - b3*v1
     ret[9:12] = b2*v1 - b1*v2
 
     if includeSources:
@@ -102,20 +106,21 @@ def f_vectors(y, t):
 
     return ret
 
+
 def solver_vectors(A0, dt):
     t = array([0, dt])
-    G = dot(A0.T,A0)
-    l,V = eig(G)
+    G = dot(A0.T, A0)
+    l, V = eig(G)
     y0 = zeros(12)
     y0[:3] = l
     y0[3:] = V.ravel(order='F')
     ret = odeint(f_vectors, y0, t)[1]
-    return ret[:3], ret[3:].reshape([3,3], order='F')
+    return ret[:3], ret[3:].reshape([3, 3], order='F')
 
 
 ### Angles Formulation ###
 
-def rotmat_angles(x,y,z):
+def rotmat_angles(x, y, z):
     cx = cos(x)
     sx = sin(x)
     cy = cos(y)
@@ -123,28 +128,31 @@ def rotmat_angles(x,y,z):
     cz = cos(z)
     sz = sin(z)
 
-    ret = zeros([3,3])
-    ret[0,0] = cy*cz
-    ret[0,1] = sx*sy*cz - cx*sz
-    ret[0,2] = cx*sy*cz + sx*sz
-    ret[1,0] = cy*sz
-    ret[1,1] = sx*sy*sz + cx*cz
-    ret[1,2] = cx*sy*sz - sx*cz
-    ret[2,0] = -sy
-    ret[2,1] = sx*cy
-    ret[2,2] = cx*cy
+    ret = zeros([3, 3])
+    ret[0, 0] = cy*cz
+    ret[0, 1] = sx*sy*cz - cx*sz
+    ret[0, 2] = cx*sy*cz + sx*sz
+    ret[1, 0] = cy*sz
+    ret[1, 1] = sx*sy*sz + cx*cz
+    ret[1, 2] = cx*sy*sz - sx*cz
+    ret[2, 0] = -sy
+    ret[2, 1] = sx*cy
+    ret[2, 2] = cx*cy
     return ret
 
-def Minv(x,y,z,λ1,λ2,λ3):
+
+def Minv(x, y, z, λ1, λ2, λ3):
     return array([[cos(x)*tan(y)/lim(λ1-λ2), -sin(x)*tan(y)/lim(λ1-λ3), 1/lim(λ2-λ3)],
                   [-sin(x)/lim(λ1-λ2),       -cos(x)/lim(λ1-λ3),        0],
                   [cos(x)*sec(y)/lim(λ1-λ2), -sec(y)*sin(x)/lim(λ1-λ3), 0]])
 
-def b_angles(x,y,z,λ1,λ2,λ3):
-    R = rotmat_angles(x,y,z)
-    Λ = diag([λ1,λ2,λ3])
-    RHS = -(dot(Λ,dot(R.T,dot(ε,R))) + dot(dot(R.T,dot(ε.T,R)),Λ))
-    return array([RHS[0,1], RHS[0,2], RHS[1,2]])
+
+def b_angles(x, y, z, λ1, λ2, λ3):
+    R = rotmat_angles(x, y, z)
+    Λ = diag([λ1, λ2, λ3])
+    RHS = -(dot(Λ, dot(R.T, dot(ε, R))) + dot(dot(R.T, dot(ε.T, R)), Λ))
+    return array([RHS[0, 1], RHS[0, 2], RHS[1, 2]])
+
 
 def f_angles(y0, t):
     λ1 = y0[0]
@@ -154,22 +162,23 @@ def f_angles(y0, t):
     y = y0[4]
     z = y0[5]
 
-    V = rotmat_angles(x,y,z)
-    v1 = V[:,0]
-    v2 = V[:,1]
-    v3 = V[:,2]
+    V = rotmat_angles(x, y, z)
+    v1 = V[:, 0]
+    v2 = V[:, 1]
+    v3 = V[:, 2]
 
     ret = zeros(6)
-    ret[0] = -2 * λ1 * dot(v1,dot(ε,v1))
-    ret[1] = -2 * λ2 * dot(v2,dot(ε,v2))
-    ret[2] = -2 * λ3 * dot(v3,dot(ε,v3))
-    ret[3:] = dot(Minv(x,y,z,λ1,λ2,λ3), b_angles(x,y,z,λ1,λ2,λ3))
+    ret[0] = -2 * λ1 * dot(v1, dot(ε, v1))
+    ret[1] = -2 * λ2 * dot(v2, dot(ε, v2))
+    ret[2] = -2 * λ3 * dot(v3, dot(ε, v3))
+    ret[3:] = dot(Minv(x, y, z, λ1, λ2, λ3), b_angles(x, y, z, λ1, λ2, λ3))
 
     if includeSources:
         Λ = diag(y0[:3])
         ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
 
     return ret
+
 
 def solver_angles(Λ, dt):
     t = array([0, dt])
@@ -183,7 +192,7 @@ def solver_angles(Λ, dt):
 ### Quaternions Formulation ###
 
 def rotmat_quaternions(x, y, z, s_sign):
-    ret = zeros([3,3])
+    ret = zeros([3, 3])
     x2 = x*x
     y2 = y*y
     z2 = z*z
@@ -194,26 +203,28 @@ def rotmat_quaternions(x, y, z, s_sign):
     sx = s*x
     sy = s*y
     sz = s*z
-    ret[0,0] = 0.5 - y2 - z2
-    ret[1,1] = 0.5 - z2 - x2
-    ret[2,2] = 0.5 - x2 - y2
-    ret[0,1] = xy - sz
-    ret[1,0] = xy + sz
-    ret[0,2] = zx + sy
-    ret[2,0] = zx - sy
-    ret[1,2] = yz - sx
-    ret[2,1] = yz + sx
+    ret[0, 0] = 0.5 - y2 - z2
+    ret[1, 1] = 0.5 - z2 - x2
+    ret[2, 2] = 0.5 - x2 - y2
+    ret[0, 1] = xy - sz
+    ret[1, 0] = xy + sz
+    ret[0, 2] = zx + sy
+    ret[2, 0] = zx - sy
+    ret[1, 2] = yz - sx
+    ret[2, 1] = yz + sx
     ret *= 2
     return ret
 
-def qaxis(x,y,z):
+
+def qaxis(x, y, z):
     """ Returns the axis of rotation corresponding to quaternion components
         x, y, z
     """
     mod = sqrt(x*x + y*y + z*z)
-    return array([x,y,z]) / mod
+    return array([x, y, z]) / mod
 
-def qangle(x,y,z):
+
+def qangle(x, y, z):
     """ Returns the angle of rotation corresponding to quaternion components
         x, y, z
     """
@@ -221,10 +232,12 @@ def qangle(x,y,z):
     mod = sqrt(x*x + y*y + z*z)
     return 2 * arctan2(s, mod)
 
+
 def b_quaternions(V, λ):
     Λ = diag(λ)
-    RHS = dot(Λ, dot(V.T, dot(ε, V))) + dot( dot(V.T, dot(ε.T, V)), Λ)
-    return array([RHS[1,2], RHS[0,2], RHS[0,1]])
+    RHS = dot(Λ, dot(V.T, dot(ε, V))) + dot(dot(V.T, dot(ε.T, V)), Λ)
+    return array([RHS[1, 2], RHS[0, 2], RHS[0, 1]])
+
 
 def f_quaternions(y0, t):
     λ1 = y0[0]
@@ -237,9 +250,9 @@ def f_quaternions(y0, t):
     S_SIGN = 1
 
     V = rotmat_quaternions(x, y, z, S_SIGN)
-    v1 = V[:,0]
-    v2 = V[:,1]
-    v3 = V[:,2]
+    v1 = V[:, 0]
+    v2 = V[:, 1]
+    v3 = V[:, 2]
     s = - S_SIGN * sqrt(1 - x*x - y*y - z*z)
 
     M = -0.5 * array([[s, -z, y],
@@ -247,9 +260,9 @@ def f_quaternions(y0, t):
                       [-y, x, s]])
 
     ret = zeros(6)
-    ret[0] = -2 * λ1 * dot(v1,dot(ε,v1))
-    ret[1] = -2 * λ2 * dot(v2,dot(ε,v2))
-    ret[2] = -2 * λ3 * dot(v3,dot(ε,v3))
+    ret[0] = -2 * λ1 * dot(v1, dot(ε, v1))
+    ret[1] = -2 * λ2 * dot(v2, dot(ε, v2))
+    ret[2] = -2 * λ3 * dot(v3, dot(ε, v3))
     ret[3:] = - b_quaternions(V, y0[:3])
     ret[3] /= lim(λ2 - λ3)
     ret[4] /= lim(λ3 - λ1)
@@ -261,6 +274,7 @@ def f_quaternions(y0, t):
         ret[:3] -= 2/τ * diag(dot(Λ, dev(Λ)))
 
     return ret
+
 
 def solver_quaternions(Λ, dt):
     t = array([0, dt])
@@ -276,11 +290,11 @@ def solver_quaternions(Λ, dt):
 def test_standard(Λ):
     A0 = diag(sqrt(Λ))
 
-    l = zeros([n,3])
-    V = zeros([n,3,3])
-    A = zeros([n,3,3])
-    U = zeros([n,3,3])
-    Σ = zeros([n,3])
+    l = zeros([n, 3])
+    V = zeros([n, 3, 3])
+    A = zeros([n, 3, 3])
+    U = zeros([n, 3, 3])
+    Σ = zeros([n, 3])
     for i in range(n):
         dt = i*5e-9/n * tScale
         A[i] = solver_standard(A0, dt)
@@ -290,35 +304,38 @@ def test_standard(Λ):
 
     return l, V, A, U, Σ
 
+
 def test_vectors(Λ, start=1):
     _, _, A, _, _ = test_standard(Λ)
     A0 = A[start]
     m = n - start
-    l = zeros([m,3])
-    V = zeros([m,3,3])
+    l = zeros([m, 3])
+    V = zeros([m, 3, 3])
     for i in range(m):
         dt = i*5e-9/n * tScale
         l[i], V[i] = solver_vectors(A0, dt)
     return l, V
 
+
 def test_angles(Λ):
-    l = zeros([n,3])
-    V = zeros([n,3,3])
-    θ = zeros([n,3])
+    l = zeros([n, 3])
+    V = zeros([n, 3, 3])
+    θ = zeros([n, 3])
     for i in range(n):
         dt = i*5e-9/n * tScale
         l[i], θ[i] = solver_angles(Λ, dt)
-        V[i] = rotmat_angles(θ[i,0],θ[i,1],θ[i,2])
+        V[i] = rotmat_angles(θ[i, 0], θ[i, 1], θ[i, 2])
     return l, V, θ
 
+
 def test_quaternions(Λ):
-    l = zeros([n,3])
-    V = zeros([n,3,3])
-    θ = zeros([n,3])
+    l = zeros([n, 3])
+    V = zeros([n, 3, 3])
+    θ = zeros([n, 3])
     for i in range(n):
         dt = i*5e-9/n * tScale
         l[i], θ[i] = solver_quaternions(Λ, dt)
-        V[i] = rotmat_quaternions(θ[i,0], θ[i,1], θ[i,2], 1)
+        V[i] = rotmat_quaternions(θ[i, 0], θ[i, 1], θ[i, 2], 1)
     return l, V, θ
 
 
@@ -329,10 +346,11 @@ if __name__ == "__main__":
     print('ε =', ε)
     print('Λ =', Λ)
 
-    f, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+    f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
+        2, 2, sharex='col', sharey='row')
     plt.suptitle('Eigenvalues')
 
-    l_stan, V_stan, _, _ , _ = test_standard(Λ)
+    l_stan, V_stan, _, _, _ = test_standard(Λ)
     ax1.plot(l_stan)
     ax1.set_title('Standard')
 
@@ -348,7 +366,8 @@ if __name__ == "__main__":
     ax4.plot(l_quat)
     ax4.set_title('Quaternions')
 
-    f, ((ax1,ax2),(ax3,ax4)) = plt.subplots(2, 2, sharex='col', sharey='row')
+    f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(
+        2, 2, sharex='col', sharey='row')
     plt.suptitle('Smallest Eigenvector')
 
     V_stan_end = V_stan[:, :, argmin(l_stan[-1])]
@@ -356,10 +375,10 @@ if __name__ == "__main__":
     V_ang_end = V_ang[:, :, argmin(l_ang[-1])]
     V_quat_end = V_quat[:, :, argmin(l_quat[-1])]
 
-    V_stan_end *= sgn(V_stan_end[-1,0])
-    V_vec_end *= sgn(V_vec_end[-1,0])
-    V_ang_end *= sgn(V_ang_end[-1,0])
-    V_quat_end *= sgn(V_quat_end[-1,0])
+    V_stan_end *= sgn(V_stan_end[-1, 0])
+    V_vec_end *= sgn(V_vec_end[-1, 0])
+    V_ang_end *= sgn(V_ang_end[-1, 0])
+    V_quat_end *= sgn(V_quat_end[-1, 0])
 
     ax1.plot(V_stan_end)
     ax1.set_title('Standard')

@@ -72,12 +72,10 @@ def convert_to_conservative(P, R, L):
             L[:, 14 + i] = 1 / ρ * L[:, 14 + i] - H[i] * L[:, 1]
 
 
-def eigen(P, d, CONS, RIGHT=1, LEFT=1):
+def eigen(P, d, CONS, MP, RIGHT=1, LEFT=1):
 
     R = zeros([17, 17])
     L = zeros([17, 17])
-
-    MP = P.MP
 
     ρ = P.ρ
     A = P.A
@@ -91,8 +89,8 @@ def eigen(P, d, CONS, RIGHT=1, LEFT=1):
     Π2 = σA[d, :, :, 1]
     Π3 = σA[d, :, :, 2]
 
-    Ξ1 = Xi1(P, d)
-    Ξ2 = Xi2(P, d)
+    Ξ1 = Xi1(P, d, MP)
+    Ξ2 = Xi2(P, d, MP)
     Q, Q_1, D, D_1 = decompose_Ξ(Ξ1, Ξ2)
 
     THERMAL = MP.THERMAL
@@ -204,7 +202,7 @@ def test(Q, d, CONS, MP):
 
     from gpr.misc.structures import State
     P = State(Q, MP)
-    l, L, R = eigen(P, d, CONS=CONS)
+    l, L, R = eigen(P, d, MP, CONS=CONS)
 
     n = 17 if MP.THERMAL else 14
 

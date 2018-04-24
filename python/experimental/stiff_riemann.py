@@ -38,7 +38,7 @@ def riemann_constraints2(P, side, MP):
         v*L = v*R
         T*L = T*R
     """
-    _, Lhat, _ = eigen(P, 0, 0)
+    _, Lhat, _ = eigen(P, 0, MP, False)
 
     ρ = P.ρ
     p = P.p()
