@@ -1,11 +1,11 @@
 from numpy import amax, array, concatenate, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve
 
-from gpr.misc.functions import reorder
-from gpr.misc.structures import State
-from gpr.systems.eigenvalues import Xi1, Xi2
-from gpr.systems.eigenvectors import eigen
-from gpr.variables.eos import total_energy
+from ..misc.functions import reorder
+from ..misc.structures import State
+from ..systems.eigenvalues import Xi1, Xi2
+from ..systems.eigenvectors import eigen
+from ..variables.eos import total_energy
 
 
 def Pvec(P, THERMAL):

@@ -1,6 +1,8 @@
-from gpr.variables import mg
-from gpr.variables.shear import C_0
-from gpr.misc.functions import dev, gram, L2_1D, L2_2D
+from ..misc.functions import dev, gram, L2_1D, L2_2D
+
+from . import mg
+
+from .shear import C_0
 
 
 def E_1(ρ, p, MP):

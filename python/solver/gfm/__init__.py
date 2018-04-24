@@ -6,8 +6,9 @@ from numpy import sum
 
 from ader.etc.boundaries import standard_BC, periodic_BC
 
+from solver import SolverPlus
+
 from solver.gfm.fill import fill_ghost_cells
-from solver.solver import SolverPlus
 
 
 def get_material_index(Q, m):

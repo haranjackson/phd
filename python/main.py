@@ -2,14 +2,15 @@ from gpr.systems.eigenvalues import max_eig
 from gpr.tests.one import fluids, solids, multi, toro
 from gpr.tests.two import validation
 from gpr.misc.plot import *
-from solver.solver import SolverPlus
+
+from solver import SolverPlus
 from solver.gfm import MultiSolver
 
 
 if __name__ == "__main__":
 
-    u, MPs, tf, dX, sys = fluids.heat_conduction_IC()
-    # u, MPs, tf, dX, sys = multi.heat_conduction_IC()
+    # u, MPs, tf, dX, sys = fluids.heat_conduction_IC()
+    u, MPs, tf, dX, sys = multi.heat_conduction_IC()
 
     nvar = u.shape[-1]
     ndim = u.ndim - 1

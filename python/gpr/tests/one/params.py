@@ -1,6 +1,6 @@
 from numpy import inf, sqrt
 
-from gpr.misc.objects import material_params, hyperelastic_params
+from ...misc.objects import material_params, hyperelastic_params
 
 
 MP_Air_ND = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0, b0=1,

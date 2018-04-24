@@ -1,4 +1,4 @@
-from gpr.variables import mg
+from . import mg
 
 
 def c_s2(ρ, MP):

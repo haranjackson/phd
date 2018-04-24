@@ -1,10 +1,12 @@
 from numpy import dot, eye, outer
 
-from gpr.misc.functions import AdevG, gram
-from gpr.variables import mg
-from gpr.variables.derivatives import dEdA_s, dEdJ
-from gpr.variables.eos import E_2A, E_2J, E_3, E_R
-from gpr.variables.shear import c_s2, dc_s2dρ
+from ..misc.functions import AdevG, gram
+
+from . import mg
+
+from .derivatives import dEdA_s, dEdJ
+from .eos import E_2A, E_2J, E_3, E_R
+from .shear import c_s2, dc_s2dρ
 
 
 def pressure(ρ, E, v, A, J, MP, λ=None):

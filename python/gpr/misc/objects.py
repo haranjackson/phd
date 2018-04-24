@@ -3,8 +3,8 @@ from types import SimpleNamespace
 
 from numpy import zeros
 
-from gpr.variables.mg import eos_text_to_code
-from gpr.variables.state import temperature
+from ..variables.mg import eos_text_to_code
+from ..variables.state import temperature
 
 
 class hyperelastic_params():

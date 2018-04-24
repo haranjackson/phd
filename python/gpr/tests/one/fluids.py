@@ -4,12 +4,13 @@ from scipy.special import erf
 
 from ader.etc.boundaries import standard_BC
 
-from gpr.misc.objects import material_params
-from gpr.misc.structures import State
-from gpr.tests.one.common import fluids_IC
-from gpr.tests.one.params import MP_Air_ND
-from gpr.systems.conserved import SystemConserved
-from gpr.variables.wavespeeds import c_0
+from ...misc.objects import material_params
+from ...misc.structures import State
+from ...systems.conserved import SystemConserved
+from ...variables.wavespeeds import c_0
+
+from .common import fluids_IC
+from .params import MP_Air_ND
 
 
 def heat_conduction_IC():

@@ -1,6 +1,6 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
-from gpr.misc.functions import L2_1D
+from ..misc.functions import L2_1D
 
 
 def dQdP(system, P, MP):

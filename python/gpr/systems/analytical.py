@@ -1,9 +1,9 @@
 from numpy import arctan, array, cos, dot, exp, log, prod, sqrt
 from numpy.linalg import svd
 
-from gpr.misc.functions import L2_1D
-from gpr.variables.eos import E_2A, E_3
-from gpr.variables.shear import c_s2
+from ..misc.functions import L2_1D
+from ..variables.eos import E_2A, E_3
+from ..variables.shear import c_s2
 
 
 ### DISTORTION ###

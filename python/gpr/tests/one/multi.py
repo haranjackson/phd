@@ -1,8 +1,9 @@
 from numpy import array, eye, sqrt, zeros
 
-from gpr.systems.conserved import SystemConserved
-from gpr.tests.one.common import fluids_IC
-from gpr.tests.one.params import MP_Air_ND, MP_Air, MP_He, MP_H20
+from ...systems.conserved import SystemConserved
+
+from .common import fluids_IC
+from .params import MP_Air_ND, MP_Air, MP_He, MP_H20
 
 
 def sod_shock_IC():

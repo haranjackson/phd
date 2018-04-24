@@ -1,8 +1,8 @@
 from numpy import dot, zeros
 
-from gpr.misc.structures import State
-from gpr.systems.jacobians import dFdP, dPdQ
-from gpr.variables.eos import total_energy
+from ..misc.structures import State
+from ..systems.jacobians import dFdP, dPdQ
+from ..variables.eos import total_energy
 
 
 class SystemConserved():

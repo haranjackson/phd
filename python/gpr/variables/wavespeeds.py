@@ -1,6 +1,6 @@
 from numpy import sqrt
 
-from gpr.variables.derivatives import dEdρ, dEdp
+from .derivatives import dEdρ, dEdp
 
 
 def c_0(ρ, p, A, MP):

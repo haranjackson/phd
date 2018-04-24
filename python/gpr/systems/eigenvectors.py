@@ -1,11 +1,11 @@
 from numpy import array, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, solve, norm
 
-from gpr.misc.functions import reorder
-from gpr.systems.eigenvalues import Xi1, Xi2
-from gpr.systems.jacobians import dQdP, dPdQ
-from gpr.variables.wavespeeds import c_0, c_h
-from gpr.variables import mg
+from ..misc.functions import reorder
+from ..systems.eigenvalues import Xi1, Xi2
+from ..systems.jacobians import dQdP, dPdQ
+from ..variables.wavespeeds import c_0, c_h
+from ..variables import mg
 
 
 def decompose_Ξ(Ξ1, Ξ2):

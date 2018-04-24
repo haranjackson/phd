@@ -1,6 +1,7 @@
-from gpr.variables import mg
-from gpr.misc.functions import AdevG, dev, gram, L2_2D
-from gpr.variables.shear import c_s2, C_0, dC_0dρ
+from ..misc.functions import AdevG, dev, gram, L2_2D
+from ..variables import mg
+
+from .shear import c_s2, C_0, dC_0dρ
 
 
 def dEdρ(ρ, p, A, MP):

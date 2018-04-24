@@ -1,10 +1,11 @@
 from numpy import zeros
 
-from gpr.misc.functions import gram
-from gpr.variables.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
-from gpr.variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing, f_δp
-from gpr.variables.state import heat_flux, pressure, temperature
-from gpr.variables.state import sigma, dsigmadρ, dsigmadA, Sigma
+from ..variables.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
+from ..variables.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing, f_δp
+from ..variables.state import heat_flux, pressure, temperature, sigma, \
+    dsigmadρ, dsigmadA, Sigma
+
+from .functions import gram
 
 
 def extract_densities(Q, MP, state):

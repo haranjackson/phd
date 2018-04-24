@@ -2,10 +2,11 @@ from numpy import array, eye, zeros
 
 from ader.etc.boundaries import standard_BC
 
-from gpr.variables.hyp import Cvec_hyp
-from gpr.systems.conserved import SystemConserved
-from gpr.tests.one.common import riemann_IC
-from gpr.tests.one.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
+from ...variables.hyp import Cvec_hyp
+from ...systems.conserved import SystemConserved
+
+from .common import riemann_IC
+from .params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
 
 
 def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):

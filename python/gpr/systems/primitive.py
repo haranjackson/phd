@@ -1,9 +1,9 @@
 from numpy import eye, zeros
 
-from gpr.misc.functions import L2_1D, L2_2D
-from gpr.misc.structures import State
-from gpr.variables.shear import c_s2, dc_s2dρ
-from gpr.variables.wavespeeds import c_0, c_h
+from ..misc.functions import L2_1D, L2_2D
+from ..misc.structures import State
+from ..variables.shear import c_s2, dc_s2dρ
+from ..variables.wavespeeds import c_0, c_h
 
 
 def M_prim(Q, d, MP):
