@@ -464,13 +464,13 @@ status open
 \rho\\
 p\\
 A_{11}\\
-A_{12}\\
-A_{13}\\
 A_{21}\\
-A_{22}\\
-A_{23}\\
 A_{31}\\
+A_{12}\\
+A_{22}\\
 A_{32}\\
+A_{13}\\
+A_{23}\\
 A_{33}\\
 v_{1}\\
 v_{2}\\
@@ -503,18 +503,18 @@ status open
 \boldsymbol{S_{p}}=\frac{1}{\theta_{1}}\left(\begin{array}{c}
 0\\
 \left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}\\
-0\\
-0\\
-0\\
 -\psi_{11}\\
--\psi_{12}\\
--\psi_{13}\\
 -\psi_{21}\\
--\psi_{22}\\
--\psi_{23}\\
 -\psi_{31}\\
+-\psi_{12}\\
+-\psi_{22}\\
 -\psi_{32}\\
+-\psi_{13}\\
+-\psi_{23}\\
 -\psi_{33}\\
+0\\
+0\\
+0\\
 0\\
 0\\
 0
@@ -1233,8 +1233,8 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 Z & =0\\
-X & =-W_{:,3:5}\Pi_{1}^{-1}\Pi_{2}\\
-Y & =-W_{:,3:5}\Pi_{1}^{-1}\Pi_{3}
+X & =W_{:,3:5}\Pi_{1}^{-1}\Pi_{2}\\
+Y & =W_{:,3:5}\Pi_{1}^{-1}\Pi_{3}
 \end{align}
 
 \end_inset
@@ -1388,8 +1388,8 @@ begin{subequations}
 \begin{align}
 W & =\left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{cc}
 I_{2} & -BA^{-1}\end{array}\right)\\
-X & =\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{2}\\
-Y & =\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{3}
+X & =-\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{2}\\
+Y & =-\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{3}
 \end{align}
 
 \end_inset
@@ -1422,7 +1422,7 @@ Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & DQ\\
 Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & -DQ
 \end{array}\right)\\
 \left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
-I_{2} & -BA^{-1} & BA^{-1}\Pi_{1}^{-1}\Pi_{2} & BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
+I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
 \left(\begin{array}{cccc}
 0_{3,5} & I_{3} & 0_{3,3} & 0_{3,3}\\
 0_{3,5} & 0_{3,3} & I_{3} & 0_{3,3}

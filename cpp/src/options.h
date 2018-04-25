@@ -2,7 +2,7 @@
 #define OPTIONS_H
 
 const bool VISCOUS = true;
-const bool THERMAL = true;
+const bool THERMAL = false;
 const bool MULTI = false;
 const bool REACTIVE = false;
 const int LSET = 1;
@@ -11,6 +11,8 @@ const int N = 2; // Order of accuracy
 
 const int V = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(REACTIVE) +
               int(MULTI) * 2 + LSET;
+
+const int EXTRA_V = V - (5 + int(VISCOUS) * 9 + int(THERMAL) * 3);
 
 // WENO Constants //
 const double LAMS = 1.;   // WENO side stencil weighting

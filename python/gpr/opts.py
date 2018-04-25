@@ -1,5 +1,5 @@
 VISCOUS = True
-THERMAL = True
+THERMAL = False
 REACTIVE = False
 MULTI = False
 LSET = 1

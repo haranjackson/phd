@@ -400,7 +400,7 @@ filename "Chapters/C5 Conclusions & Discussion.lyx"
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../refs/phd_refs,../../refs/mphil_refs,/home/hari/Git/private/PhD/papers/refs/my_publications"
+bibfiles "../../refs/phd_refs,../../refs/mphil_refs,../../refs/my_publications"
 options "siam"
 
 \end_inset

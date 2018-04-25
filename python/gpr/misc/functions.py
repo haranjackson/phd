@@ -115,12 +115,12 @@ def gram_rev(A):
     return dot(A, A.T)
 
 
-def reorder(X, order='typical'):
-    """ Reorders the columns of X
+def reorder(X):
+    """ Reorders the columns of X from atypical ordering to typical ordering
     """
-    if order == 'typical':
+    if len(X) == 17:
         perm = array([0, 1, 11, 12, 13, 2, 5, 8, 3, 6, 9, 4, 7, 10, 14, 15, 16])
-    elif order == 'atypical':
-        perm = array([0, 1, 5, 8, 11, 6, 9, 12, 7, 10, 13, 2, 3, 4, 14, 15, 16])
+    else:
+        perm = array([0, 1, 11, 12, 13, 2, 5, 8, 3, 6, 9, 4, 7, 10])
 
     return X[perm]

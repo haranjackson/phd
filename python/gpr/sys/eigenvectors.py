@@ -80,7 +80,7 @@ def convert_to_conservative(P, R, L, MP):
             L[:, 14 + i] = 1 / P.ρ * L[:, 14 + i] - H[i] * L[:, 1]
 
 
-def eigen(P, d, CONS, MP, right=True, left=True):
+def eigen(P, d, CONS, MP, right=True, left=True, typical_order=True):
 
     ρ = P.ρ
     A = P.A
@@ -137,7 +137,9 @@ def eigen(P, d, CONS, MP, right=True, left=True):
         for i in range(6):
             R[5 + i, n3 + i] = 1
 
-        R = reorder(R)
+        if typical_order:
+            R = reorder(R)
+
         if not THERMAL:
             R = R[:14, :14]
 
@@ -188,16 +190,18 @@ def eigen(P, d, CONS, MP, right=True, left=True):
             BA_1 = solve(A.T, B.T).T
             Z = eye(2) - dot(BA_1, C)
             X = zeros([2, 14])
-            X[:2, :2] = eye(2)
-            X[:2, 2:5] = -BA_1
-            X[:2, 5:8] = dot(BA_1, solve(Π1, Π2))
-            X[:2, 5:8] = dot(BA_1, solve(Π1, Π3))
+            X[:, :2] = eye(2)
+            X[:, 2:5] = -BA_1
+            X[:, 5:8] = -dot(BA_1, solve(Π1, Π2))
+            X[:, 8:11] = -dot(BA_1, solve(Π1, Π3))
             L[6:8, :14] = solve(Z, X)
 
         for i in range(6):
             L[n3 + i, 5 + i] = 1
 
-        L = reorder(L.T).T
+        if typical_order:
+            L = reorder(L.T).T
+
         if not THERMAL:
             L = L[:14, :14]
 

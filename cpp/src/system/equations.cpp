@@ -59,10 +59,8 @@ void source(VecVr ret, VecVr Q, Par &MP) {
 
   if (THERMAL)
     ret.segment<3>(14) = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
-  else
-    ret.segment<3>(14).setZero();
 
-  ret.tail<V - 17>().setZero();
+  ret.tail<EXTRA_V>().setZero();
 }
 
 void block(MatV_Vr ret, VecVr Q, int d) {

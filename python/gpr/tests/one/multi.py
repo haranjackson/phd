@@ -3,6 +3,8 @@ from numpy import array, eye, sqrt, zeros
 from gpr.misc.structures import Cvec
 from gpr.opts import NV
 from gpr.tests.one.common import fluids_IC
+from gpr.tests.one.fluids import heat_conduction_IC
+from gpr.tests.one.solids import barton1_IC
 from gpr.tests.one.params import MP_Air_ND, MP_Air, MP_He, MP_H20
 
 
@@ -11,6 +13,7 @@ def sod_shock_IC():
     tf = 0.2
     nx = 100
     Lx = 1
+    MPs = [MP_Air_ND, MP_Air_ND]
 
     dX = [Lx / nx]
 
@@ -22,8 +25,8 @@ def sod_shock_IC():
     pR = 0.1
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND, MP_Air_ND,
-                     0.5)
+    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
+    return u, MPs, tf, dX
 
 
 def water_gas_IC():
@@ -31,6 +34,7 @@ def water_gas_IC():
     tf = 2.3744e-4
     nx = 200
     Lx = 1
+    MPs = [MP_H20, MP_Air]
 
     dX = [Lx / nx]
 
@@ -42,7 +46,8 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20, MP_Air, 0.7)
+    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.7)
+    return u, MPs, tf, dX
 
 
 def water_water_IC():
@@ -50,6 +55,7 @@ def water_water_IC():
     tf = 1.5e-4
     nx = 200
     Lx = 1
+    MPs = [MP_H20, MP_H20]
 
     dX = [Lx / nx]
 
@@ -61,7 +67,8 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_H20)
+    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
+    return u, MPs, tf, dX
 
 
 def helium_bubble_IC():
@@ -113,20 +120,9 @@ def helium_bubble_IC():
     return u, [MP_Air, MP_Air, MP_He, MP_Air], tf, dX
 
 
-def heat_conduction_IC():
+def heat_conduction_multi_IC():
+    return heat_conduction_IC(isMulti=True)
 
-    tf = 1
-    nx = 200
-    Lx = 1
 
-    ρL = 2
-    pL = 1
-    vL = zeros(3)
-
-    ρR = 0.5
-    pR = 1
-    vR = zeros(3)
-
-    dX = [Lx / nx]
-
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND, MP_Air_ND)
+def barton1_multi_IC():
+    return barton1_IC(isMulti=True)

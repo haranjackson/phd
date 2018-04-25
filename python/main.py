@@ -11,7 +11,7 @@ from solver.gfm import MultiSolver
 if __name__ == "__main__":
 
     # u, MPs, tf, dX = fluids.heat_conduction_IC()
-    u, MPs, tf, dX = multi.heat_conduction_IC()
+    u, MPs, tf, dX = multi.barton1_multi_IC()
     # u, MPs, tf, dX = multi.helium_bubble_IC()
 
     nvar = u.shape[-1]

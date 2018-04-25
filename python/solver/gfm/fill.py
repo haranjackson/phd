@@ -5,8 +5,12 @@ from skfmm import distance
 
 from ader.etc.boundaries import neighbor_cells
 
+from gpr.opts import THERMAL
 from gpr.multi.riemann import star_states
 from solver.gfm.functions import finite_difference, normal, sign
+
+
+NVARS = 17 if THERMAL else 14
 
 
 def find_interface_cells(u, i, m):
@@ -62,19 +66,19 @@ def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR):
             iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
 
             # TODO: rotate vector quantities towards the normal
-            QL = u[tuple(iL)][:17]
-            QR = u[tuple(iR)][:17]
+            QL = u[tuple(iL)][:NVARS]
+            QR = u[tuple(iR)][:NVARS]
             QL_, QR_ = star_states(QL, QR, MPL, MPR)
 
         # TODO: investigate where QR_, QL_ should be reversed, and if the
         # inside cell should be filled
         if intMask[ind] == -1:
-            grids[i][ind][:17] = QL_
-            grids[i][tuple(i_)][:17] = QL_
+            grids[i][ind][:NVARS] = QR_
+            grids[i][tuple(i_)][:NVARS] = QR_
 
         elif intMask[ind] == 1:
-            grids[i+1][ind][:17] = QR_
-            grids[i+1][tuple(i_)][:17] = QR_
+            grids[i+1][ind][:NVARS] = QL_
+            grids[i+1][tuple(i_)][:NVARS] = QL_
 
 
 def fill_from_neighbor(grid, Δφ, ind, dx, sgn):
