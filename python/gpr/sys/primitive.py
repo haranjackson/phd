@@ -1,9 +1,8 @@
 from numpy import eye, zeros
 
-from gpr import VISCOUS, THERMAL
-
 from gpr.misc.functions import L2_1D, L2_2D
 from gpr.misc.structures import State
+from gpr.opts import VISCOUS, THERMAL
 from gpr.vars.shear import c_s2, dc_s2dρ
 from gpr.vars.wavespeeds import c_0, c_h
 

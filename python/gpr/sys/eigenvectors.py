@@ -188,10 +188,10 @@ def eigen(P, d, CONS, MP, right=True, left=True):
             BA_1 = solve(A.T, B.T).T
             Z = eye(2) - dot(BA_1, C)
             X = zeros([2, 14])
-            X[:2, :2] = eye(2)
-            X[:2, 2:5] = -BA_1
-            X[:2, 5:8] = dot(BA_1, solve(Π1, Π2))
-            X[:2, 5:8] = dot(BA_1, solve(Π1, Π3))
+            X[:, :2] = eye(2)
+            X[:, 2:5] = -BA_1
+            X[:, 5:8] = -dot(BA_1, solve(Π1, Π2))
+            X[:, 8:11] = -dot(BA_1, solve(Π1, Π3))
             L[6:8, :14] = solve(Z, X)
 
         for i in range(6):
