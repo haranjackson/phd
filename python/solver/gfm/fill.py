@@ -39,9 +39,11 @@ def boundary_inds(ind, φ, Δφ, dx):
     xp = (array(ind) + 0.5) * dx
     n = normal(Δφ[ind])
 
+    d = 1.5
+
     xip = xp - φ[ind] * n
-    xL = xip - 1.5 * dx * n
-    xR = xip + 1.5 * dx * n
+    xL = xip - d * dx * n
+    xR = xip + d * dx * n
     xp_ = xp - 2 * φ[ind] * n
 
     # TODO: replace with interpolated values
@@ -67,12 +69,12 @@ def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR):
         # TODO: investigate where QR_, QL_ should be reversed, and if the
         # inside cell should be filled
         if intMask[ind] == -1:
-            grids[i][ind][:17] = QR_
-            grids[i][tuple(i_)][:17] = QR_
+            grids[i][ind][:17] = QL_
+            grids[i][tuple(i_)][:17] = QL_
 
         elif intMask[ind] == 1:
-            grids[i+1][ind][:17] = QL_
-            grids[i+1][tuple(i_)][:17] = QL_
+            grids[i+1][ind][:17] = QR_
+            grids[i+1][tuple(i_)][:17] = QR_
 
 
 def fill_from_neighbor(grid, Δφ, ind, dx, sgn):
