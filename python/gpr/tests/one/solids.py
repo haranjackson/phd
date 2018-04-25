@@ -3,24 +3,21 @@ from numpy import array, eye, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
-from gpr.vars.hyp import Cvec_hyp
-from gpr.tests.one.common import riemann_IC
+from gpr.tests.one.common import riemann_IC, hyperelastic_solid_IC
 from gpr.tests.one.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
 
 
-def solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP, MP, x0=0.5):
-
-    QL = Cvec_hyp(FL, SL, vL, HYP)
-    QR = Cvec_hyp(FR, SR, vR, HYP)
-
-    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, x0)
-
-
-def barton1_IC():
+def barton1_IC(isMulti=False):
 
     tf = 0.06
     nx = 500
     Lx = 1
+    HYPs = [HYP_Cu]
+    MPs = [MP_Cu_GR]
+
+    if isMulti:
+        HYPs = 2 * HYPs
+        MPs = 2 * MPs
 
     dX = [Lx / nx]
 
@@ -36,15 +33,22 @@ def barton1_IC():
                 [0, 0, 1]])
     SR = 0
 
+    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
     print("BARTON1")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
+    return u, MPs, tf, dX
 
 
-def barton2_IC():
+def barton2_IC(isMulti=False):
 
     tf = 0.06
     nx = 500
     Lx = 1
+    HYPs = [HYP_Cu]
+    MPs = [MP_Cu_GR]
+
+    if isMulti:
+        HYPs = 2 * HYPs
+        MPs = 2 * MPs
 
     dX = [Lx / nx]
 
@@ -60,15 +64,22 @@ def barton2_IC():
                 [-0.01, 0, 0.9]])
     SR = 0
 
-    print("BARTON2")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
+    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    print("BARTON1")
+    return u, MPs, tf, dX
 
 
-def elastic1_IC():
+def elastic1_IC(isMulti=False):
 
     tf = 0.06
     nx = 200
     Lx = 1
+    HYPs = [HYP_Cu]
+    MPs = [MP_Cu_GR]
+
+    if isMulti:
+        HYPs = 2 * HYPs
+        MPs = 2 * MPs
 
     dX = [Lx / nx]
 
@@ -84,15 +95,22 @@ def elastic1_IC():
     vR = zeros(3)
     SR = 0
 
-    print("ELASTIC1")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
+    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    print("BARTON1")
+    return u, MPs, tf, dX
 
 
-def elastic2_IC():
+def elastic2_IC(isMulti=False):
 
     tf = 0.06
     nx = 200
     Lx = 1
+    HYPs = [HYP_Cu]
+    MPs = [MP_Cu_GR]
+
+    if isMulti:
+        HYPs = 2 * HYPs
+        MPs = 2 * MPs
 
     dX = [Lx / nx]
 
@@ -108,8 +126,9 @@ def elastic2_IC():
     vR = zeros(3)
     SR = 0
 
-    print("ELASTIC2")
-    return solid_IC(tf, nx, dX, vL, vR, FL, FR, SL, SR, HYP_Cu, MP_Cu_GR)
+    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    print("BARTON1")
+    return u, MPs, tf, dX
 
 
 def piston_IC():
@@ -165,8 +184,9 @@ def favrie1_IC():
     QL = Cvec(ρ, p, vL, A, J, MP)
     QR = Cvec(ρ, p, vR, A, J, MP)
 
+    u = riemann_IC(nx, dX, QL, QR, 0.5, False)
     print("FAVRIE1")
-    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)
+    return u, [MP], tf, dX
 
 
 def favrie2_IC():
@@ -190,5 +210,6 @@ def favrie2_IC():
     QL = Cvec(ρ, p, vL, A, J, MP)
     QR = Cvec(ρ, p, vR, A, J, MP)
 
+    u = riemann_IC(nx, dX, QL, QR, 0.5, False)
     print("FAVRIE2")
-    return riemann_IC(tf, nx, dX, QL, QR, MP, MP, 0.5)
+    return u, [MP], tf, dX

@@ -1,4 +1,4 @@
-from numpy import array, eye, arange, exp, sqrt, zeros
+from numpy import array, eye, arange, exp, linspace, sqrt, zeros
 from scipy.optimize import brentq
 from scipy.special import erf
 
@@ -6,16 +6,21 @@ from ader.etc.boundaries import standard_BC
 
 from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec, State
+from gpr.opts import NV
 from gpr.vars.wavespeeds import c_0
 from gpr.tests.one.common import fluids_IC
-from gpr.tests.one.params import MP_Air_ND
 
 
-def heat_conduction_IC():
+def heat_conduction_IC(isMulti=False):
 
     tf = 1
     nx = 200
     Lx = 1
+    MPs = [material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0, b0=1,
+                           cα=2, μ=1e-2, κ=1e-2)]
+
+    if isMulti:
+        MPs = 2 * MPs
 
     ρL = 2
     pL = 1
@@ -25,13 +30,11 @@ def heat_conduction_IC():
     pR = 1
     vR = zeros(3)
 
-    MP = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0, b0=1,
-                         cα=2, μ=1e-2, κ=1e-2)
-
     dX = [Lx / nx]
 
+    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
     print("HEAT CONDUCTION IN A GAS")
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP_Air_ND)
+    return u, MPs, tf, dX
 
 
 def first_stokes_problem_exact(μ, n=100, v0=0.1, t=1):
@@ -40,7 +43,7 @@ def first_stokes_problem_exact(μ, n=100, v0=0.1, t=1):
     return v0 * erf(x / (2 * sqrt(μ * t)))
 
 
-def first_stokes_problem_IC():
+def first_stokes_problem_IC(isMulti=False):
 
     tf = 1
     nx = 200
@@ -48,6 +51,12 @@ def first_stokes_problem_IC():
 
     γ = 1.4
     μ = 1e-2  # 1e-3 # 1e-4
+
+    MPs = [material_params(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0, b0=1,
+                           cα=1e-16, μ=μ, Pr=0.75)]
+
+    if isMulti:
+        MPs = 2 * MPs
 
     ρL = 1
     pL = 1 / γ
@@ -57,13 +66,11 @@ def first_stokes_problem_IC():
     pR = 1 / γ
     vR = array([0, 0.1, 0])
 
-    MP = material_params(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0, b0=1,
-                         cα=1e-16, μ=μ, Pr=0.75)
-
     dX = [Lx / nx]
 
+    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
     print("FIST STOKES PROBLEM: μ =", μ)
-    return fluids_IC(tf, nx, dX, ρL, pL, vL, ρR, pR, vR, MP)
+    return u, MPs, tf, dX
 
 
 def viscous_shock_exact(x, Ms, MP, μ, center=0):
@@ -74,7 +81,6 @@ def viscous_shock_exact(x, Ms, MP, μ, center=0):
     ρ0 = MP.ρ0
     p0 = MP.p0
     γ = MP.γ
-    pINF = MP.pINF
 
     if Ms == 2:
         L = 0.3
@@ -113,7 +119,6 @@ def viscous_shock_IC(center=0):
 
     Ms = 2
     γ = 1.4
-    pINF = 0
     ρ0 = 1
     p0 = 1 / γ
     μ = 2e-2
@@ -136,7 +141,6 @@ def viscous_shock_IC(center=0):
     for i in range(nx):
         A = (ρ[i])**(1 / 3) * eye(3)
         J = zeros(3)
-        λ = 0
         u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
     print("VISCOUS SHOCK")
