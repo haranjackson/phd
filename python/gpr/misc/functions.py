@@ -118,6 +118,9 @@ def gram_rev(A):
 def reorder(X):
     """ Reorders the columns of X from atypical ordering to typical ordering
     """
-    perm = array([0, 1, 11, 12, 13, 2, 5, 8, 3, 6, 9, 4, 7, 10, 14, 15, 16])
+    if len(X) == 17:
+        perm = array([0, 1, 11, 12, 13, 2, 5, 8, 3, 6, 9, 4, 7, 10, 14, 15, 16])
+    else:
+        perm = array([0, 1, 11, 12, 13, 2, 5, 8, 3, 6, 9, 4, 7, 10])
 
     return X[perm]

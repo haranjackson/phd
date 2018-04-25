@@ -114,26 +114,35 @@ def riemann_constraints(P, sgn, MP):
 
 def star_stepper(QL, QR, MPL, MPR):
 
+    n = 17 if THERMAL else 14
+    n1, n2, n3, n4, n5 = get_indexes()
+
     PL = State(QL, MPL)
     PR = State(QR, MPR)
 
     _, RL = riemann_constraints(PL, 1, MPL)
     _, RR = riemann_constraints(PR, -1, MPR)
 
-    YL = RL[11:15, :4]
-    YR = RR[11:15, :4]
+    YL = RL[11:n5, :n1]
+    YR = RR[11:n5, :n1]
 
-    xL = concatenate([PL.Σ()[0], [PL.T()]])
-    xR = concatenate([PR.Σ()[0], [PR.T()]])
+    if THERMAL:
+        xL = concatenate([PL.Σ()[0], [PL.T()]])
+        xR = concatenate([PR.Σ()[0], [PR.T()]])
+        yL = concatenate([PL.v, PL.J[:1]])
+        yR = concatenate([PR.v, PR.J[:1]])
+    else:
+        xL = PL.Σ()[0]
+        xR = PR.Σ()[0]
+        yL = PL.v
+        yR = PR.v
 
-    yL = concatenate([PL.v, PL.J[:1]])
-    yR = concatenate([PR.v, PR.J[:1]])
     x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
 
-    cL = zeros(17)
-    cR = zeros(17)
-    cL[:4] = x_ - xL
-    cR[:4] = x_ - xR
+    cL = zeros(n)
+    cR = zeros(n)
+    cL[:n1] = x_ - xL
+    cR[:n1] = x_ - xR
 
     PLvec = Pvec(PL)
     PRvec = Pvec(PR)
