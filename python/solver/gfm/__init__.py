@@ -6,13 +6,12 @@ from numpy import sum
 
 from ader.etc.boundaries import standard_BC, periodic_BC
 
+from gpr.opts import NV
 from solver import SolverPlus
-
 from solver.gfm.fill import fill_ghost_cells
 
 
 def get_material_index(Q, m):
-    NV = len(Q)
     LSET = m - 1
     return sum(Q[NV-LSET:] >= 0)
 

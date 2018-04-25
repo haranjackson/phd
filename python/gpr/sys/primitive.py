@@ -2,15 +2,16 @@ from numpy import eye, zeros
 
 from gpr.misc.functions import L2_1D, L2_2D
 from gpr.misc.structures import State
-from gpr.opts import VISCOUS, THERMAL
+from gpr.opts import VISCOUS, THERMAL, NV
 from gpr.vars.shear import c_s2, dc_s2dρ
 from gpr.vars.wavespeeds import c_0, c_h
 
 
 def M_prim(Q, d, MP):
-
+    """ The system jacobian of the primitive system
+        NOTE: Uses typical ordering
+    """
     P = State(Q, MP)
-    NV = len(Q)
 
     ρ = P.ρ
     p = P.p()
@@ -53,8 +54,9 @@ def M_prim(Q, d, MP):
 
 
 def S_prim(SYS, Q, MP):
-
-    NV = len(Q)
+    """ The source terms of the primitive system
+        NOTE: Uses typical ordering
+    """
     ret = zeros(NV)
     P = State(Q, MP)
 
