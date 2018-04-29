@@ -12,13 +12,12 @@ from gpr.sys.jacobians import dQdP
 
 def systems(Q, d, MP):
     P = State(Q, MP)
-    DQDP = dQdP(P)
+    DQDP = dQdP(P, MP)
 
-    M1 = M_prim(Q, d, MP, pForm=1)
-    M2 = M_prim(Q, d, MP, pForm=0)
-    M3 = M_cons(Q, d, MP)
-    M4 = solve(DQDP, dot(M3, DQDP))
-    return M1, M2, M3, M4
+    M1 = M_prim(Q, d, MP)
+    M2 = M_cons(Q, d, MP)
+    M3 = solve(DQDP, dot(M2, DQDP))
+    return M1, M2, M3
 
 
 def generate_vecs(MP):

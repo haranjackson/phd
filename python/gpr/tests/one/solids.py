@@ -3,8 +3,8 @@ from numpy import array, eye, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
+from gpr.tests.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
 from gpr.tests.one.common import riemann_IC, hyperelastic_solid_IC
-from gpr.tests.one.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
 
 
 def barton1_IC(isMulti=False):

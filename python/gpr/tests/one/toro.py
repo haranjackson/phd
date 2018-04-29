@@ -1,7 +1,7 @@
 from numpy import array, zeros
 
+from gpr.tests.params import MP_Air_ND
 from gpr.tests.one.fluids import fluids_IC
-from gpr.tests.one.params import MP_Air_ND
 
 
 def toro1_IC():

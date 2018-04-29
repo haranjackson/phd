@@ -2,10 +2,10 @@ from numpy import array, eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
 from gpr.opts import NV
+from gpr.tests.params import MP_Air_ND, MP_Air, MP_He, MP_H20
 from gpr.tests.one.common import fluids_IC
 from gpr.tests.one.fluids import heat_conduction_IC
 from gpr.tests.one.solids import barton1_IC
-from gpr.tests.one.params import MP_Air_ND, MP_Air, MP_He, MP_H20
 
 
 def sod_shock_IC():
