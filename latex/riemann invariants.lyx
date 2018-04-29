@@ -1,0 +1,249 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula $\lambda=v_{1}\pm\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dp}{dt}-\frac{\partial\sigma_{11}}{\partial\rho}\frac{d\rho}{dt}-\Pi_{1}\frac{d\boldsymbol{A}_{1}}{dt}-\Pi_{2}\frac{d\boldsymbol{A}_{2}}{dt}-\Pi_{3}\frac{d\boldsymbol{A}_{3}}{dt}\pm\rho Q^{-1}DQ\frac{d\boldsymbol{v}}{dt}=\frac{1}{\theta_{1}}\left(\left(\begin{array}{c}
+\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}\\
+0\\
+0
+\end{array}\right)+\Pi_{1}\left(\begin{array}{c}
+\psi_{11}\\
+\psi_{21}\\
+\psi_{31}
+\end{array}\right)+\Pi_{2}\left(\begin{array}{c}
+\psi_{12}\\
+\psi_{22}\\
+\psi_{32}
+\end{array}\right)+\Pi_{3}\left(\begin{array}{c}
+\psi_{13}\\
+\psi_{23}\\
+\psi_{33}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\boldsymbol{\Sigma_{1}}}{dt}\pm\rho Q^{-1}DQ\frac{d\boldsymbol{v}}{dt}=\frac{1}{\theta_{1}}\left(\left(\begin{array}{c}
+\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}\\
+0\\
+0
+\end{array}\right)+\Pi_{1}\boldsymbol{\psi}_{1}+\Pi_{2}\boldsymbol{\psi}_{2}+\Pi_{3}\boldsymbol{\psi}_{3}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda=v_{1}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\frac{d\rho}{dt}\\
+\frac{dp}{dt}
+\end{array}\right)-BA^{-1}\frac{d\boldsymbol{A}_{1}}{dt}=\frac{1}{\theta_{1}}\left(\left(\begin{array}{c}
+0\\
+\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}
+\end{array}\right)+BA^{-1}\left(\begin{array}{c}
+\psi_{11}\\
+\psi_{21}\\
+\psi_{31}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d}{dt}\left(\begin{array}{c}
+A_{12}\\
+A_{22}\\
+A_{32}\\
+A_{13}\\
+A_{23}\\
+A_{33}
+\end{array}\right)=-\frac{1}{\theta_{1}}\left(\begin{array}{c}
+\psi_{12}\\
+\psi_{22}\\
+\psi_{32}\\
+\psi_{13}\\
+\psi_{23}\\
+\psi_{33}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\rho}{dt}-\rho\left(\boldsymbol{e}_{1}^{T}A^{-1}\frac{d\boldsymbol{A}_{1}}{dt}+\boldsymbol{e}_{2}^{T}A^{-1}\frac{d\boldsymbol{A}_{2}}{dt}+\boldsymbol{e}_{3}^{T}A^{-1}\frac{d\boldsymbol{A}_{3}}{dt}\right)=\frac{1}{\theta_{1}}\rho\left(\boldsymbol{e}_{1}^{T}A^{-1}\boldsymbol{\psi}_{1}+\boldsymbol{e}_{2}^{T}A^{-1}\boldsymbol{\psi}_{2}+\boldsymbol{e}_{3}^{T}A^{-1}\boldsymbol{\psi}_{3}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\rho_{0}}\frac{d\rho}{dt}-\frac{\partial\left|A\right|}{\partial A_{nm}}\frac{dA_{nm}}{dt}=\frac{1}{\theta_{1}}\left|A\right|A_{mn}^{-T}\psi_{mn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tr\left(A^{-1}\psi\right)=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dp}{dt}-c_{0}^{2}\frac{d\rho}{dt}-\left(\boldsymbol{\sigma}_{1}-\rho\frac{\partial\boldsymbol{\sigma}_{1}}{\partial\rho}\right)^{T}A^{-1}\frac{d\boldsymbol{A}_{1}}{dt}=\frac{1}{\theta_{1}}\left(\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}+\left(\boldsymbol{\sigma}_{1}-\rho\frac{\partial\boldsymbol{\sigma}_{1}}{\partial\rho}\right)^{T}A^{-1}\boldsymbol{\psi}_{1}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\frac{d}{dt}\rho\\
+\frac{d}{dt}p
+\end{array}\right)-B\left(\Pi_{1}A\right)^{-1}\frac{d\boldsymbol{\sigma_{1}}}{dt}=\frac{1}{\theta_{1}}\left(\left(\begin{array}{c}
+0\\
+\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}
+\end{array}\right)+B\left(\Pi_{1}A\right)^{-1}\left(\Pi_{1}\boldsymbol{\psi}_{1}+\Pi_{2}\boldsymbol{\psi}_{2}+\Pi_{3}\boldsymbol{\psi}_{3}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

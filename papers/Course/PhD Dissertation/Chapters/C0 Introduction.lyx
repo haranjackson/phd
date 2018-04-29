@@ -900,7 +900,7 @@ key "Peshkov2016"
 
 \begin_layout Standard
 The GPR model and Godunov and Romenski's 1970s model of elastoplastic deformatio
-n in fact relie upon the same equations.
+n in fact relies upon the same equations.
  The realization of Peshkov and Romenski was that these are the equations
  of motion for an arbitrary continuum - not just a solid - and so the model
  can be applied to fluids too.

@@ -1827,7 +1827,7 @@ reference "eq:Left-Eigenvectors-Non-Thermal"
 \left(\begin{array}{cccc}
 Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & \xi DQ\end{array}\right)\\
 \left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
-I_{2} & -BA^{-1} & BA^{-1}\Pi_{1}^{-1}\Pi_{2} & BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
+I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
 \left(\begin{array}{cccc}
 0_{3,5} & I_{3} & 0_{3,3} & 0_{3,3}\\
 0_{3,5} & 0_{3,3} & I_{3} & 0_{3,3}
