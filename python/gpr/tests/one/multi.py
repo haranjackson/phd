@@ -119,7 +119,7 @@ def helium_bubble_IC():
         u[i, -2] = i * dx - 0.4
         u[i, -1] = i * dx - 0.6
 
-    return u, [MP_Air, MP_Air, MP_He, MP_Air], tf, dX
+    return u, [MP_Air, MP_He, MP_Air], tf, dX
 
 
 def gas_solid_IC():
