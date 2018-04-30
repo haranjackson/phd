@@ -10,6 +10,10 @@ from gpr.sys.eigenvectors import eigen, decompose_Ξ, get_indexes
 from gpr.vars.eos import total_energy
 
 
+RELAXATION = True
+STAR_TOL = 1e-6
+
+
 def Pvec(P):
     """ Vector of primitive variables
         NOTE: Uses atypical ordering
@@ -45,7 +49,7 @@ def Pvec_to_Cvec(P, MP):
     return Q
 
 
-def check_star_convergence(QL_, QR_, MPL, MPR, STAR_TOL=1e-6):
+def check_star_convergence(QL_, QR_, MPL, MPR):
 
     PL_ = State(QL_, MPL)
     PR_ = State(QR_, MPR)
@@ -90,9 +94,9 @@ def riemann_constraints(P, sgn, MP):
         Lhat[3, 0] = Tρ
         Lhat[3, 1] = Tp
         Lhat[3, 2:] = 0
-        tmp = Lhat[array([0,1,2,3,8]), :5]
+        tmp = Lhat[array([0, 1, 2, 3, 8]), :5]
     else:
-        tmp = Lhat[array([0,1,2,6,7]), :5]
+        tmp = Lhat[array([0, 1, 2, 6, 7]), :5]
 
     Lhat[n1:n2, 11:n5] *= -sgn
 
@@ -190,8 +194,11 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
 def star_states(QL_, QR_, MPL, MPR, dt):
 
     while not check_star_convergence(QL_, QR_, MPL, MPR):
+
+        if RELAXATION:
+            ode_solver_cons(QL_, dt / 2, MPL)
+            ode_solver_cons(QR_, dt / 2, MPR)
+
         QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR)
-        ode_solver_cons(QL_, dt / 2, MPL)
-        ode_solver_cons(QR_, dt / 2, MPR)
 
     return QL_, QR_
