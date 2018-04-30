@@ -194,15 +194,22 @@ def fig_size(square):
 
 
 def plot_weno(wh, var, MPs=None):
-    n, _, _, N, NV = wh.shape
+
+    NDIM = int((wh.ndim - 1) / 2)
+    shape = wh.shape[:NDIM]
+    N = wh.shape[-2]
+    NV = wh.shape[-1]
+
     basis = Basis(N)
-    x = zeros(N * n)
-    u = zeros([N * n, 1, 1, NV])
-    for i in range(n):
-        ind = N * i
+    inds = [N * s for s in shape]
+    x = zeros(inds)
+    u = zeros(inds + [NV])
+
+    for i in range(shape[0]):
+        ind = i * N
         for j in range(N):
             x[ind + j] = i + basis.NODES[j]
-            u[ind + j] = wh[i, 0, 0, j]
+            u[ind + j] = wh[i, j]
 
     if var == 'density':
         plot_density(u, x=x)
