@@ -112,7 +112,7 @@ def riemann_constraints(P, sgn, MP):
     return Lhat, Rhat
 
 
-def star_stepper(QL, QR, MPL, MPR):
+def star_stepper(QL, QR, MPL, MPR, STICK=False):
 
     n = 17 if THERMAL else 14
     n1, n2, n3, n4, n5 = get_indexes()
@@ -123,26 +123,43 @@ def star_stepper(QL, QR, MPL, MPR):
     _, RL = riemann_constraints(PL, 1, MPL)
     _, RR = riemann_constraints(PR, -1, MPR)
 
-    YL = RL[11:n5, :n1]
-    YR = RR[11:n5, :n1]
-
-    if THERMAL:
-        xL = concatenate([PL.Σ()[0], [PL.T()]])
-        xR = concatenate([PR.Σ()[0], [PR.T()]])
-        yL = concatenate([PL.v, PL.J[:1]])
-        yR = concatenate([PR.v, PR.J[:1]])
-    else:
-        xL = PL.Σ()[0]
-        xR = PR.Σ()[0]
-        yL = PL.v
-        yR = PR.v
-
-    x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
-
     cL = zeros(n)
     cR = zeros(n)
-    cL[:n1] = x_ - xL
-    cR[:n1] = x_ - xR
+
+    if STICK:
+
+        YL = RL[11:n5, :n1]
+        YR = RR[11:n5, :n1]
+
+        if THERMAL:
+            xL = concatenate([PL.Σ()[0], [PL.T()]])
+            xR = concatenate([PR.Σ()[0], [PR.T()]])
+            yL = concatenate([PL.v, PL.J[:1]])
+            yR = concatenate([PR.v, PR.J[:1]])
+        else:
+            xL = PL.Σ()[0]
+            xR = PR.Σ()[0]
+            yL = PL.v
+            yR = PR.v
+
+        x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
+        cL[:n1] = x_ - xL
+        cR[:n1] = x_ - xR
+
+    else:  # slip conditions - only implemented for non-thermal
+
+        YL = RL[11, :n1]
+        YR = RR[11, :n1]
+
+        xL = PL.Σ()[0]
+        xR = PR.Σ()[0]
+        yL = PL.v[0]
+        yR = PR.v[0]
+
+        x_ = (yR - yL + dot(YL, xL) - dot(YR, xR)) / (YL - YR)[0]
+        x_ = array([x_, 0, 0])
+        cL[:n1] = x_ - xL
+        cR[:n1] = x_ - xR
 
     PLvec = Pvec(PL)
     PRvec = Pvec(PR)

@@ -124,6 +124,33 @@ Thus:
 \end_layout
 
 \begin_layout Standard
+Alternatively:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\frac{dp}{dt}\\
+0\\
+0
+\end{array}\right)-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho}\frac{d\rho}{dt}-\Pi_{1}\frac{d\boldsymbol{A}_{1}}{dt}\pm\rho Q^{-1}DQ\frac{d\boldsymbol{v}}{dt}=\frac{1}{\theta_{1}}\left(\left(\begin{array}{c}
+\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}\\
+0\\
+0
+\end{array}\right)+\Pi_{1}\left(\begin{array}{c}
+\psi_{11}\\
+\psi_{21}\\
+\psi_{31}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula $\lambda=v_{1}$
 \end_inset
 

@@ -1,9 +1,11 @@
 from numpy import array, eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
+from gpr.vars.hyp import Cvec_hyp
 from gpr.opts import NV
-from gpr.tests.params import MP_Air_ND, MP_Air, MP_He, MP_H20
-from gpr.tests.one.common import fluids_IC
+
+from gpr.tests.params import MP_Air_ND, MP_Air, MP_He, MP_H20, MP_Cu_SMG, HYP_Cu
+from gpr.tests.one.common import riemann_IC, fluids_IC
 from gpr.tests.one.fluids import heat_conduction_IC
 from gpr.tests.one.solids import barton1_IC
 
@@ -118,6 +120,30 @@ def helium_bubble_IC():
         u[i, -1] = i * dx - 0.6
 
     return u, [MP_Air, MP_Air, MP_He, MP_Air], tf, dX
+
+
+def gas_solid_IC():
+
+    tf = 0.5e-6
+    nx = 250
+    Lx = 1
+    MPs = [MP_Air, MP_Cu_SMG]
+
+    dX = [Lx / nx]
+
+    vL = zeros(3)
+    ρL = 1.18
+    pL = 18.9  # pressure is in Km^2 s^-2 g cm^-3 = 10^9 Kg m^-1 s^-2
+    AL = eye(3)
+    QL = Cvec(ρL, pL, vL, AL, zeros(3), MP_Air)
+
+    vR = zeros(3)
+    FR = eye(3)
+    SR = 0
+    QR = Cvec_hyp(FR, SR, vR, HYP_Cu)
+
+    u = riemann_IC(nx, dX, QL, QR, 0.5, True)
+    return u, MPs, tf, dX
 
 
 def heat_conduction_multi_IC():
