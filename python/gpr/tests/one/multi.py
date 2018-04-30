@@ -124,7 +124,7 @@ def helium_bubble_IC():
 
 def gas_solid_IC():
 
-    tf = 0.5e-6
+    tf = 0.05
     nx = 250
     Lx = 1
     MPs = [MP_Air, MP_Cu_SMG]
