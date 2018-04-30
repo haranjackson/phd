@@ -20,7 +20,7 @@ def find_interface_cells(u, i, m):
     NDIM = u.ndim - 1
     ii = i - (m - 1)
     shape = u.shape[:-1]
-    mask = zeros(shape)
+    intMask = zeros(shape)
 
     for indsL in product(*[range(s) for s in shape]):
         for d in range(NDIM):
@@ -31,10 +31,10 @@ def find_interface_cells(u, i, m):
                 φR = u[indsR][ii]
 
                 if φL * φR <= 0:
-                    mask[indsL] = sign(φL)
-                    mask[indsR] = sign(φR)
+                    intMask[indsL] = sign(φL)
+                    intMask[indsR] = sign(φR)
 
-    return mask
+    return intMask
 
 
 def boundary_inds(ind, φ, Δφ, dx):
@@ -45,17 +45,18 @@ def boundary_inds(ind, φ, Δφ, dx):
 
     d = 1.5
 
-    xip = xp - φ[ind] * n
-    xL = xip - d * dx * n
-    xR = xip + d * dx * n
-    xp_ = xp - 2 * φ[ind] * n
+    xip = xp - φ[ind] * n       # interface position
+    xL = xip - d * dx * n       # probe on left side
+    xR = xip + d * dx * n       # probe on right side
+    xp_ = xp - 2 * φ[ind] * n   # point xp reflected in interface
 
     # TODO: replace with interpolated values
+    ip = array(xip / dx, dtype=int)
     iL = array(xL / dx, dtype=int)
     iR = array(xR / dx, dtype=int)
     i_ = array(xp_ / dx, dtype=int)
 
-    return iL, iR, i_
+    return ip, iL, iR, i_
 
 
 def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR):
@@ -63,22 +64,20 @@ def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR):
     for ind in product(*[range(s) for s in intMask.shape]):
 
         if intMask[ind] != 0:
-            iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
+            ip, iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
 
             # TODO: rotate vector quantities towards the normal
             QL = u[tuple(iL)][:NVARS]
             QR = u[tuple(iR)][:NVARS]
             QL_, QR_ = star_states(QL, QR, MPL, MPR)
 
-        # TODO: investigate where QR_, QL_ should be reversed, and if the
-        # inside cell should be filled
         if intMask[ind] == -1:
-            grids[i][ind][:NVARS] = QR_
-            grids[i][tuple(i_)][:NVARS] = QR_
+            grids[i][tuple(ip)][:NVARS] = QL_
+            grids[i][tuple(i_)][:NVARS] = QL_
 
         elif intMask[ind] == 1:
-            grids[i+1][ind][:NVARS] = QL_
-            grids[i+1][tuple(i_)][:NVARS] = QL_
+            grids[i+1][tuple(ip)][:NVARS] = QR_
+            grids[i+1][tuple(i_)][:NVARS] = QR_
 
 
 def fill_from_neighbor(grid, Δφ, ind, dx, sgn):
