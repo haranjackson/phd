@@ -51,12 +51,14 @@ class MultiSolver():
 
         with ProcessPoolExecutor(max_workers=self.ncore) as executor:
 
+            dt = 0
+
             while self.t < self.final_time:
 
                 t0 = time()
 
                 grids, masks = fill_ghost_cells(self.u, self.m, self.N,
-                                                self.dX, self.MPs)
+                                                self.dX, self.MPs, dt)
 
                 for i in range(self.m):
                     self.solvers[i].u = grids[i]
@@ -83,7 +85,7 @@ class MultiSolver():
 
         return self.u
 
-    def initialize_solver(self, solver):
+    def initialize_sub_solver(self, solver):
 
         solver.u = self.u
         solver.t = self.t
@@ -99,9 +101,9 @@ class MultiSolver():
 
         solver.BC = self.BC
 
-    def solve(self, initial_grid, final_time, dX, cfl=0.9,
-              boundary_conditions='transitive', verbose=False, callback=None,
-              cpp_level=0):
+    def initialize(self, initial_grid, final_time, dX, cfl=0.9,
+                   boundary_conditions='transitive', verbose=False,
+                   callback=None, cpp_level=0):
 
         self.u = initial_grid
         self.t = 0
@@ -123,6 +125,13 @@ class MultiSolver():
             self.BC = boundary_conditions
 
         for solver in self.solvers:
-            self.initialize_solver(solver)
+            self.initialize_sub_solver(solver)
+
+    def solve(self, initial_grid, final_time, dX, cfl=0.9,
+              boundary_conditions='transitive', verbose=False, callback=None,
+              cpp_level=0):
+
+        self.initialize(initial_grid, final_time, dX, cfl, boundary_conditions,
+                        verbose, callback, cpp_level)
 
         return self.resume()

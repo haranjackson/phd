@@ -45,38 +45,38 @@ def boundary_inds(ind, φ, Δφ, dx):
 
     d = 1.5
 
-    xip = xp - φ[ind] * n       # interface position
-    xL = xip - d * dx * n       # probe on left side
-    xR = xip + d * dx * n       # probe on right side
-    xp_ = xp - 2 * φ[ind] * n   # point xp reflected in interface
+    xi = xp - φ[ind] * n               # interface position
+    xL = xi - d * dx * n               # probe on left side
+    xR = xi + d * dx * n               # probe on right side
+    x_ = xi - dx * sign(φ[ind]) * n    # point on opposite side of interface
 
     # TODO: replace with interpolated values
-    ip = array(xip / dx, dtype=int)
+    ii = array(xi / dx, dtype=int)
     iL = array(xL / dx, dtype=int)
     iR = array(xR / dx, dtype=int)
-    i_ = array(xp_ / dx, dtype=int)
+    i_ = array(x_ / dx, dtype=int)
 
-    return ip, iL, iR, i_
+    return ii, iL, iR, i_
 
 
-def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR):
+def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR, dt):
 
     for ind in product(*[range(s) for s in intMask.shape]):
 
         if intMask[ind] != 0:
-            ip, iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
+            ii, iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
 
             # TODO: rotate vector quantities towards the normal
             QL = u[tuple(iL)][:NVARS]
             QR = u[tuple(iR)][:NVARS]
-            QL_, QR_ = star_states(QL, QR, MPL, MPR)
+            QL_, QR_ = star_states(QL, QR, MPL, MPR, dt)
 
         if intMask[ind] == -1:
-            grids[i][tuple(ip)][:NVARS] = QL_
+            grids[i][tuple(ii)][:NVARS] = QL_
             grids[i][tuple(i_)][:NVARS] = QL_
 
         elif intMask[ind] == 1:
-            grids[i+1][tuple(ip)][:NVARS] = QR_
+            grids[i+1][tuple(ii)][:NVARS] = QR_
             grids[i+1][tuple(i_)][:NVARS] = QR_
 
 
@@ -112,7 +112,7 @@ def fill_neighbor_cells(grids, intMask, i, Δφ, dx, N, NDIM):
                     fill_from_neighbor(grids[i+1], Δφ, ind, dx, 1)
 
 
-def fill_ghost_cells(u, m, N, dX, MPs):
+def fill_ghost_cells(u, m, N, dX, MPs, dt):
 
     NDIM = u.ndim - 1
     shape = u.shape[:-1]
@@ -131,7 +131,7 @@ def fill_ghost_cells(u, m, N, dX, MPs):
         φ = distance(u.take(i - (m-1), axis=-1), dx=dx)
         Δφ = finite_difference(φ, dX)
 
-        fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR)
+        fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR, dt)
         fill_neighbor_cells(grids, intMask, i, Δφ, dx, N, NDIM)
 
         masks[i] *= logical_or((φ <= 0), (intMask == 1))

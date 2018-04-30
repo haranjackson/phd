@@ -4,6 +4,7 @@ from scipy.linalg import solve
 from gpr.misc.functions import reorder
 from gpr.misc.structures import State
 from gpr.opts import THERMAL
+from gpr.sys.analytical import ode_solver_cons
 from gpr.sys.eigenvalues import Xi1, Xi2
 from gpr.sys.eigenvectors import eigen, decompose_Ξ, get_indexes
 from gpr.vars.eos import total_energy
@@ -186,9 +187,11 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
     return QL_, QR_
 
 
-def star_states(QL_, QR_, MPL, MPR):
+def star_states(QL_, QR_, MPL, MPR, dt):
 
     while not check_star_convergence(QL_, QR_, MPL, MPR):
         QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR)
+        ode_solver_cons(QL_, dt / 2, MPL)
+        ode_solver_cons(QR_, dt / 2, MPR)
 
     return QL_, QR_
