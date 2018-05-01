@@ -254,7 +254,7 @@ double dTdρ(double ρ, double p, Par &MP) {
 }
 
 double dTdp(double ρ, Par &MP) {
-  // Returns the derivative of the MGtemperature with respect to p
+  // Returns the derivative of the MG temperature with respect to p
   double cv = MP.cv;
   return dedp(ρ, MP) / cv;
 }

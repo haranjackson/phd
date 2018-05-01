@@ -30,10 +30,6 @@ def TAT_test(d, MP):
     TAT_py = dot(Ξ1, Ξ2)
     TAT_cp = GPRpy.system.thermo_acoustic_tensor(Q, d, MP)
 
-    if not THERMAL:
-        assert(all(TAT_cp[-1] == 0) and all(TAT_cp[:, -1] == 0))
-        TAT_cp = TAT_cp[:3, :3]
-
     print("TAT   ", check(TAT_cp, TAT_py))
     return TAT_cp, TAT_py
 

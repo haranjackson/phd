@@ -25,14 +25,17 @@
 
 #include "../src/solvers/split/homogeneous.h"
 #include "../src/solvers/split/ode.h"
-#include "../src/solvers/split/ode_analytic.h"
 
 #include "../src/solvers/fv/fluxes.h"
 #include "../src/solvers/fv/fv.h"
 
+#include "../src/system/analytic.h"
 #include "../src/system/eig.h"
 #include "../src/system/equations.h"
 #include "../src/system/jacobians.h"
+
+#include "../src/system/multi/eigenvecs.h"
+#include "../src/system/multi/riemann.h"
 
 #include "../src/system/variables/derivatives.h"
 
@@ -56,6 +59,8 @@ PYBIND11_MODULE(GPRpy, m) {
 
   pybind11::module m_system =
       m.def_submodule("system", "System vectors and matrices");
+  pybind11::module m_multi =
+      m_system.def_submodule("multi", "Functions related to multimaterial GPR");
 
   pybind11::module m_solvers = m.def_submodule("solvers", "Solver functions");
   pybind11::module m_solvers_common =
@@ -95,8 +100,8 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("n", &Par::n)
       .def_readwrite("cα2", &Par::cα2)
       .def_readwrite("τ2", &Par::τ2)
-      .def_readwrite("δp", &Par::δp)
-      .def_readwrite("NV", &Par::NV);
+      .def_readwrite("Qc", &Par::Qc)
+      .def_readwrite("δp", &Par::δp);
 
   pybind11::class_<poly>(m_classes, "poly")
       .def(pybind11::init<Vec>())
@@ -125,6 +130,10 @@ PYBIND11_MODULE(GPRpy, m) {
 
   m_system.def("dFdP", &dFdP);
   m_system.def("dPdQ", &dPdQ);
+
+  m_multi.def("eigen", &eigen);
+  m_multi.def("riemann_constraints", &riemann_constraints);
+  m_multi.def("star_states", &star_states);
 
   m_solvers_common.def("basis_polys", &basis_polys);
   m_solvers_common.def("scaled_nodes", &scaled_nodes);

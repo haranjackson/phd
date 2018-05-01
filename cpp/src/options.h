@@ -12,7 +12,8 @@ const int N = 2; // Order of accuracy
 const int V = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(REACTIVE) +
               int(MULTI) * 2 + LSET;
 
-const int EXTRA_V = V - (5 + int(VISCOUS) * 9 + int(THERMAL) * 3);
+const int BV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3;
+const int EXTRA_V = V - BV;
 
 // WENO Constants //
 const double LAMS = 1.;   // WENO side stencil weighting

@@ -1,8 +1,8 @@
-#include "../../../include/eigen3/SVD"
-#include "../../etc/globals.h"
-#include "../../system/functions/matrices.h"
-#include "../../system/functions/vectors.h"
-#include "../../system/variables/eos.h"
+#include "../../include/eigen3/SVD"
+#include "../etc/globals.h"
+#include "functions/matrices.h"
+#include "functions/vectors.h"
+#include "variables/eos.h"
 #include <cmath>
 
 double pos(double x) { return std::max(0., x); }
@@ -54,8 +54,11 @@ void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
   // Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS
   double ρ = Q(0);
   double E = Q(1) / ρ;
+  Vec3 v = get_ρv(Q) / ρ;
+  Mat3_3Map A = get_A(Q);
   Vec3Map ρJ = get_ρJ(Q);
-  double c1 = E - E_2A(Q, MP) - E_3(Q);
+
+  double c1 = E - E_2A(ρ, A, MP) - E_3(v);
   double c2 = MP.cα2 / 2.;
   double k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv);
   c1 *= k;

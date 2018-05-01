@@ -1,5 +1,5 @@
 #include "../../etc/globals.h"
-#include "ode_analytic.h"
+#include "../../system/analytic.h"
 
 void ode_launcher(Vecr u, double dt, Par &MP) {
   int ncell = u.size() / V;

@@ -1,3 +1,4 @@
+#include "state.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
 #include "../objects/gpr_objects.h"
@@ -10,13 +11,18 @@ double pressure(VecVr Q, Par &MP) {
   // Returns the pressure under the Mie-Gruneisen EOS
   double ρ = Q(0);
   double E = Q(1) / ρ;
-  double E1 = E - E_3(Q);
+  Vec3 v = get_ρv(Q) / ρ;
+  double E1 = E - E_3(v);
 
-  if (VISCOUS)
-    E1 -= E_2A(Q, MP);
+  if (VISCOUS) {
+    Mat3_3Map A = get_A(Q);
+    E1 -= E_2A(ρ, A, MP);
+  }
 
-  if (THERMAL)
-    E1 -= E_2J(Q, MP);
+  if (THERMAL) {
+    Vec3 J = get_ρJ(Q) / ρ;
+    E1 -= E_2J(J, MP);
+  }
 
   double Γ = Γ_MG(ρ, MP);
   double pr = p_ref(ρ, MP);
@@ -41,6 +47,15 @@ Vec3 sigma(VecVr Q, Par &MP, int d) {
   return -ρ * E_A.transpose() * A.col(d);
 }
 
+Vec3 Sigma(VecVr Q, Par &MP, int d) {
+  // Returns the dth column of the total stress tensor
+  double p = pressure(Q, MP);
+  Vec3 Sig = sigma(Q, MP, d);
+  Sig *= -1;
+  Sig(d) += p;
+  return Sig;
+}
+
 Vec3 dsigmadρ(VecVr Q, Par &MP, int d) {
   // Returns dσ_di / dρ
   double ρ = Q(0);
@@ -50,7 +65,7 @@ Vec3 dsigmadρ(VecVr Q, Par &MP, int d) {
 }
 
 Mat3_3 dsigmadA(VecVr Q, Par &MP, int d) {
-  // Returns dσ_dj / dA_md, holding ρ constant.
+  // Returns Mij = dσ_di / dA_jd, holding ρ constant.
   // NOTE: Only valid for EOS with E_2A = cs^2/4 * |devG|^2
   double ρ = Q(0);
   double cs2 = c_s2(ρ, MP);
@@ -85,6 +100,12 @@ double temperature(double ρ, double p, Par &MP) {
   double Γ = Γ_MG(ρ, MP);
   double pr = p_ref(ρ, MP);
   return (p - pr) / (ρ * Γ * cv);
+}
+
+double temperature(VecVr Q, Par &MP) {
+  double ρ = Q(0);
+  double p = pressure(Q, MP);
+  return temperature(ρ, p, MP);
 }
 
 Vec3 heat_flux(double T, Vec3r J, Par &MP) {

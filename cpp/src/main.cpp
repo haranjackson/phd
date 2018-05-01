@@ -13,11 +13,7 @@ VecV Qvec(double ρ, double p, Vec3r v, Mat3_3r A, Vec3r J, Par &MP) {
   Q.segment<3>(2) = ρ * v;
   Q.segment<9>(5) = VecMap(A.data(), 9);
   Q.segment<3>(14) = ρ * J;
-  double E = E_1(ρ, p, MP);
-  E += E_2A(Q, MP);
-  E += E_2J(Q, MP);
-  E += E_3(Q);
-  Q(1) = ρ * E;
+  Q(1) = ρ * total_energy(Q, MP);
   return Q;
 }
 

@@ -67,17 +67,17 @@ def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR, dt):
             ii, iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
 
             # TODO: rotate vector quantities towards the normal
-            QL = u[tuple(iL)][:NVARS]
-            QR = u[tuple(iR)][:NVARS]
+            QL = u[tuple(iL)]
+            QR = u[tuple(iR)]
             QL_, QR_ = star_states(QL, QR, MPL, MPR, dt)
 
         if intMask[ind] == -1:
-            grids[i][tuple(ii)][:NVARS] = QL_
-            grids[i][tuple(i_)][:NVARS] = QL_
+            grids[i][tuple(ii)] = QL_
+            grids[i][tuple(i_)] = QL_
 
         elif intMask[ind] == 1:
-            grids[i+1][tuple(ii)][:NVARS] = QR_
-            grids[i+1][tuple(i_)][:NVARS] = QR_
+            grids[i+1][tuple(ii)] = QR_
+            grids[i+1][tuple(i_)] = QR_
 
 
 def fill_from_neighbor(grid, Δφ, ind, dx, sgn):

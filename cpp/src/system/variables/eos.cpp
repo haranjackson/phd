@@ -8,32 +8,57 @@
 
 double E_1(double ρ, double p, Par &MP) {
   // Returns the microscale energy under the MG EOS
-
   double Γ = Γ_MG(ρ, MP);
   double pr = p_ref(ρ, MP);
   double er = e_ref(ρ, MP);
   return er + (p - pr) / (ρ * Γ);
 }
 
-double E_2A(VecVr Q, Par &MP) {
+double E_2A(double ρ, Mat3_3r A, Par &MP) {
   // Returns the mesoscale energy dependent on the distortion
-
-  double ρ = Q(0);
-  Mat3_3Map A = get_A(Q);
   double C0 = C_0(ρ, MP);
   return C0 / 4 * devGsq(A);
 }
 
-double E_2J(VecVr Q, Par &MP) {
+double E_2J(Vec3r J, Par &MP) {
   // Returns the mesoscale energy dependent on the thermal impulse
-  double ρ = Q(0);
-  Vec3Map ρJ = get_ρJ(Q);
-  return MP.cα2 * ρJ.squaredNorm() / (2 * ρ * ρ);
+  return MP.cα2 * J.squaredNorm() / 2;
 }
 
-double E_3(VecVr Q) {
+double E_3(Vec3r v) {
   // Returns the macroscale kinetic energy
-  double ρ = Q(0);
-  Vec3Map ρv = get_ρv(Q);
-  return ρv.squaredNorm() / (2 * ρ * ρ);
+  return v.squaredNorm() / 2;
+}
+
+double E_R(double λ, Par &MP) {
+  // Returns the microscale energy corresponding to the chemical energy in a
+  // reactive material
+  return MP.Qc * (λ - 1);
+}
+
+double total_energy(double ρ, double p, Vec3r v, Par &MP) {
+  double E = E_1(ρ, p, MP) + E_3(v);
+  return E;
+}
+
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r v, Par &MP) {
+  double E = E_1(ρ, p, MP) + E_3(v);
+  E += E_2A(ρ, A, MP);
+  return E;
+}
+
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, Par &MP) {
+  double E = E_1(ρ, p, MP) + E_3(v);
+  E += E_2A(ρ, A, MP);
+  E += E_2J(J, MP);
+  return E;
+}
+
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, double λ,
+                    Par &MP) {
+  double E = E_1(ρ, p, MP) + E_3(v);
+  E += E_2A(ρ, A, MP);
+  E += E_2J(J, MP);
+  E += E_R(λ, MP);
+  return E;
 }

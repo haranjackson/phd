@@ -38,17 +38,20 @@ SET(SRCS src/etc/globals.cpp
 
          src/solvers/split/homogeneous.cpp
          src/solvers/split/ode.cpp
-         src/solvers/split/ode_analytic.cpp
 
          src/solvers/dg/dg.cpp
          src/solvers/dg/dg_matrices.cpp
 
+         src/system/analytic.cpp
          src/system/eig.cpp
          src/system/equations.cpp
          src/system/jacobians.cpp
 
          src/system/functions/matrices.cpp
          src/system/functions/vectors.cpp
+
+         src/system/multi/eigenvecs.cpp
+         src/system/multi/riemann.cpp
 
          src/system/variables/derivatives.cpp
          src/system/variables/eos.cpp

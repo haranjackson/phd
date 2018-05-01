@@ -1,5 +1,5 @@
 from numpy import array, diag, dot, eye, sqrt, zeros
-from scipy.linalg import eig, solve, norm
+from scipy.linalg import eig, inv, solve, norm
 
 from gpr.misc.functions import reorder
 from gpr.opts import THERMAL
@@ -180,7 +180,7 @@ def left_eigenvectors(P, d, MP, typical_order):
     L[n1:n2, 11:n5] = -tmp4
 
     if THERMAL:
-        tmp = solve(A.T, e0)
+        tmp = inv(A)[0]
         L[8, 0] = -1 / ρ
         L[8, 2:5] = tmp
         L[8, 5:8] = dot(tmp, solve(Π1, Π2))
@@ -202,7 +202,7 @@ def left_eigenvectors(P, d, MP, typical_order):
         C[:, 0] = -solve(Π1, σρ[0])
         C[:, 1] = solve(Π1, e0)
 
-        BA_1 = solve(A.T, B.T).T
+        BA_1 = dot(B, inv(A))
         Z = eye(2) - dot(BA_1, C)
         X = zeros([2, 14])
         X[:, :2] = eye(2)

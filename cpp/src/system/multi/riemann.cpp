@@ -1,0 +1,262 @@
+#include <cmath>
+
+#include "../../etc/types.h"
+#include "../analytic.h"
+#include "../eig.h"
+#include "../functions/vectors.h"
+#include "../objects/gpr_objects.h"
+#include "../variables/eos.h"
+#include "../variables/mg.h"
+#include "../variables/state.h"
+#include "../variables/wavespeeds.h"
+#include "eigenvecs.h"
+
+bool STICK = true;
+bool RELAXATION = true;
+double STAR_TOL = 1e-6;
+
+VecBV Pvec(VecBVr Q, Par &MP) {
+  // Vector of primitive variables
+  // NOTE: Uses atypical ordering
+  VecBV P;
+
+  double ρ = Q(0);
+  double p = pressure(Q, MP);
+  Vec3Map ρv = get_ρv(Q);
+  Mat3_3Map A = get_A(Q);
+
+  P(0) = ρ;
+  P(1) = p;
+  P.segment<3>(2) = A.col(0);
+  P.segment<3>(5) = A.col(1);
+  P.segment<3>(8) = A.col(2);
+  P.segment<3>(11) = ρv / ρ;
+
+  if (THERMAL) {
+    Vec3Map ρJ = get_ρJ(Q);
+    P.tail<3>() = ρJ / ρ;
+  }
+  return P;
+}
+
+VecBV Pvec_to_Cvec(VecBVr P, Par &MP) {
+  // Returns vector of conserved vars, given vector of primitive vars
+  VecBV Q;
+
+  double ρ = P(0);
+  double p = P(1);
+
+  Mat3_3 A;
+  for (int j = 0; j < 3; j++)
+    for (int i = 0; i < 3; i++)
+      A(i, j) = P(2 + 3 * j + i);
+
+  Vec3 v = P.segment<3>(11);
+  Q.segment<3>(2) = ρ * v;
+
+  if (THERMAL) {
+    Vec3 J = P.segment<3>(14);
+    Q(1) = ρ * total_energy(ρ, p, A, J, v, MP);
+    Q.segment<3>(14) = ρ * J;
+  } else
+    Q(1) = ρ * total_energy(ρ, p, A, v, MP);
+
+  return Q;
+}
+
+bool check_star_convergence(VecBVr QL_, VecBVr QR_, Par &MPL, Par &MPR) {
+
+  Vec3 ΣL_ = Sigma(QL_, MPL, 0);
+  Vec3 ΣR_ = Sigma(QR_, MPR, 0);
+
+  bool cond = (ΣL_ - ΣR_).norm() < STAR_TOL;
+
+  if (THERMAL) {
+    double TL_ = temperature(QL_, MPL);
+    double TR_ = temperature(QR_, MPR);
+    cond = cond && (abs(TL_ - TR_) < STAR_TOL);
+  }
+  return cond;
+}
+
+MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP) {
+  /* K=R: sgn = -1
+   * K=L: sgn = 1
+   * NOTE: Uses atypical ordering
+   *
+   * Extra constraints are:
+   * dΣ = dΣ/dρ * dρ + dΣ/dp * dp + dΣ/dA * dA
+   * dT = dT/dρ * dρ + dT/dp * dp
+   * v*L = v*R
+   * J*L = J*R
+  */
+  MatBV Rhat = eigen(Q, 0, MP);
+
+  double ρ = Q(0);
+  double p = pressure(Q, MP);
+  Mat3_3Map A = get_A(Q);
+  Vec3 σρ0 = dsigmadρ(Q, MP, 0);
+
+  Mat3_3 Ainv = A.inverse();
+  Vec3 e0;
+  e0 << 1., 0., 0.;
+
+  Mat3_3 Π1 = dsigmadA(Q, MP, 0);
+
+  Mat tmp = Mat::Zero(5, 5);
+  tmp.topLeftCorner<3, 1>() = -σρ0;
+  tmp(0, 1) = 1.;
+  tmp.block<3, 3>(0, 2) = -Π1;
+
+  if (THERMAL) {
+    tmp(3, 0) = dTdρ(ρ, p, MP);
+    tmp(3, 1) = dTdp(ρ, MP);
+    tmp(4, 0) = -1. / ρ;
+    tmp.block<1, 3>(4, 2) = Ainv.row(0);
+  } else {
+    double c0 = c_0(ρ, p, A, MP);
+
+    Mat B = Mat::Zero(2, 3);
+    B(0, 0) = ρ;
+    B.row(1) = sigma(Q, MP, 0) - ρ * σρ0;
+    B(1, 0) += ρ * c0 * c0;
+
+    Mat rhs(3, 2);
+    rhs << -σρ0, e0;
+    Mat3_3 Π1_1 = Π1.inverse();
+    Mat C = Π1_1 * rhs;
+
+    Mat3_3 BA_1 = B * Ainv;
+    Mat Z = Mat::Identity(2, 2);
+    Z -= BA_1 * C;
+    Mat W(2, 5);
+    W << Mat::Identity(2, 2), -BA_1;
+    tmp.bottomRows(2) = Z.inverse() * W;
+  }
+
+  Mat b = Mat::Identity(5, n1);
+  Mat X = tmp.colPivHouseholderQr().solve(b);
+
+  Mat Ξ1 = Xi1(ρ, p, Q, MP, 0);
+  Mat Ξ2 = Xi2(ρ, p, Q, MP, 0);
+  Mat Ξ = Ξ1 * Ξ2;
+
+  Eigen::EigenSolver<Mat> es(Ξ);
+  Mat Q_1 = es.eigenvectors().real();
+  Mat D_1 = es.eigenvalues().real().cwiseInverse().cwiseSqrt().asDiagonal();
+  Mat Q1 = Q_1.inverse();
+
+  Mat Y0 = Q_1 * D_1 * Q1;
+
+  Rhat.topLeftCorner<5, n1>() = X;
+  Rhat.block<n1, n1>(11, 0) = -sgn * Y0 * Ξ1 * X;
+  Rhat.block<11, n2 - n1>(0, n1).setZero();
+  Rhat.block<n1, n2 - n1>(11, n1) = sgn * Q_1 * D_1;
+
+  return Rhat;
+}
+
+void star_stepper(VecBVr QL, VecBVr QR, Par &MPL, Par &MPR) {
+
+  MatBV RL = riemann_constraints(QL, 1, MPL);
+  MatBV RR = riemann_constraints(QR, -1, MPR);
+
+  VecBV cL = VecBV::Zero();
+  VecBV cR = VecBV::Zero();
+
+  Vec xL(n1);
+  Vec xR(n1);
+  xL.head<3>() = Sigma(QL, MPL, 0);
+  xR.head<3>() = Sigma(QR, MPR, 0);
+
+  if (THERMAL) {
+    xL(3) = temperature(QL, MPL);
+    xR(3) = temperature(QR, MPR);
+  }
+
+  Vec x_(n1);
+
+  if (STICK) {
+    Mat YL = RL.block<n1, n1>(11, 0);
+    Mat YR = RR.block<n1, n1>(11, 0);
+
+    Vec3 vL = get_ρv(QL) / QL(0);
+    Vec3 vR = get_ρv(QR) / QR(0);
+
+    Vec yL(n1);
+    Vec yR(n1);
+
+    yL.head<3>() = vL;
+    yR.head<3>() = vR;
+
+    if (THERMAL) {
+      yL(3) = QL(14) / QL(0);
+      yR(3) = QR(14) / QR(0);
+    }
+    x_ = (YL - YR).inverse() * (yR - yL + YL * xL - YR * xR);
+
+  } else {
+
+    if (THERMAL) {
+      Mat YL(2, n1);
+      Mat YR(2, n1);
+      YL << RL.block<1, n1>(11, 0), RL.block<1, n1>(14, 0);
+      YL << RR.block<1, n1>(11, 0), RR.block<1, n1>(14, 0);
+
+      Vec yL(2);
+      Vec yR(2);
+      yL << QL(2) / QL(0), QL(14) / QL(0);
+      yR << QR(2) / QR(0), QR(14) / QR(0);
+
+      Mat M(2, 2);
+      M << YL.col(0) - YR.col(0), YL.col(n1 - 1) - YR.col(n1 - 1);
+      Vec tmp = M.inverse() * (yR - yL + YL * xL - YR * xR);
+      x_ << tmp(0), 0., 0., tmp(1);
+
+    } else {
+      Vec YL = RL.block<1, n1>(11, 0);
+      Vec YR = RR.block<1, n1>(11, 0);
+
+      double yL = QL(2) / QL(0);
+      double yR = QR(2) / QR(0);
+
+      double tmp = (yR - yL + YL.transpose() * xL - YR.transpose() * xR) /
+                   (YL(0) - YR(0));
+      x_ << tmp, 0., 0.;
+    }
+  }
+  cL.head<n1>() = x_ - xL;
+  cR.head<n1>() = x_ - xR;
+  VecBV PLvec = Pvec(QL, MPL);
+  VecBV PRvec = Pvec(QR, MPR);
+  VecBV PL_vec = RL * cL + PLvec;
+  VecBV PR_vec = RR * cR + PRvec;
+  QL = Pvec_to_Cvec(PL_vec, MPL);
+  QR = Pvec_to_Cvec(PR_vec, MPR);
+}
+
+std::vector<VecV> star_states(VecVr QL, VecVr QR, Par &MPL, Par &MPR,
+                              double dt) {
+
+  VecBVr QL_ = QL.head<BV>();
+  VecBVr QR_ = QR.head<BV>();
+
+  while (!check_star_convergence(QL_, QR_, MPL, MPR)) {
+
+    if (RELAXATION) {
+      ode_stepper_analytic(QL_, dt / 2, MPL);
+      ode_stepper_analytic(QR_, dt / 2, MPR);
+    }
+    star_stepper(QL_, QR_, MPL, MPR);
+  }
+
+  VecV retL;
+  VecV retR;
+  retL.head<BV>() = QL_;
+  retR.head<BV>() = QR_;
+  retL.tail<EXTRA_V>() = QL.tail<EXTRA_V>();
+  retR.tail<EXTRA_V>() = QR.tail<EXTRA_V>();
+
+  std::vector<VecV> ret = {retL, retR};
+  return ret;
+}

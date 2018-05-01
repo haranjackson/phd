@@ -4,8 +4,12 @@
 #include "../etc/globals.h"
 #include "objects/gpr_objects.h"
 
-Mat4_4 thermo_acoustic_tensor(VecVr Q, int d, Par &MP);
+Mat Xi1(double ρ, double p, VecVr Q, Par &MP, int d);
 
-double max_abs_eigs(VecVr Q, int d,  Par &MP);
+Mat Xi2(double ρ, double p, VecVr Q, Par &MP, int d);
+
+Mat thermo_acoustic_tensor(VecVr Q, int d, Par &MP);
+
+double max_abs_eigs(VecVr Q, int d, Par &MP);
 
 #endif // EIG_H

@@ -5,8 +5,13 @@
 #include "../objects/gpr_objects.h"
 
 double E_1(double ρ, double p, Par &MP);
-double E_2A(VecVr Q, Par &MP);
-double E_2J(VecVr Q, Par &MP);
-double E_3(VecVr Q);
+double E_2A(double ρ, Mat3_3r A, Par &MP);
+double E_2J(Vec3r J, Par &MP);
+double E_3(Vec3r v);
+double total_energy(double ρ, double p, Vec3r v, Par &MP);
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r v, Par &MP);
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, Par &MP);
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, double λ,
+                    Par &MP);
 
 #endif // EOS_H
