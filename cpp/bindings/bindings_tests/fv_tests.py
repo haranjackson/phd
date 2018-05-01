@@ -59,7 +59,7 @@ def D_RUS_test(d, fvSolver):
     Q1 = generate_vector(MP)
     Q2 = generate_vector(MP)
 
-    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, fvSolver.pars)
+    D_RUS_cp = GPRpy.solvers.fv.D_RUS(Q1, Q2, d, MP)
     D_RUS_py = D_RUS(fvSolver, Q1, Q2, d,)
 
     print("D_RUS ", check(D_RUS_cp, D_RUS_py))

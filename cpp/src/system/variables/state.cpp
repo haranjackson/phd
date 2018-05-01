@@ -10,7 +10,13 @@ double pressure(VecVr Q, Par &MP) {
   // Returns the pressure under the Mie-Gruneisen EOS
   double ρ = Q(0);
   double E = Q(1) / ρ;
-  double E1 = E - E_2A(Q, MP) - E_2J(Q, MP) - E_3(Q);
+  double E1 = E - E_3(Q);
+
+  if (VISCOUS)
+    E1 -= E_2A(Q, MP);
+
+  if (THERMAL)
+    E1 -= E_2J(Q, MP);
 
   double Γ = Γ_MG(ρ, MP);
   double pr = p_ref(ρ, MP);

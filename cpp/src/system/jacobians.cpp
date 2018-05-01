@@ -85,7 +85,7 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
       ret(i, i) = ρvd;
   }
   /*
-  if (MP.REACTIVE) {
+  if (REACTIVE) {
     double λ = P.λ;
     double Qc = MP.Qc;
     ret(1, 17) += Qc * ρvd;
@@ -105,7 +105,7 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
   double p = pressure(Q, MP);
   Vec3 v = get_ρv(Q) / ρ;
   Mat3_3Map A = get_A(Q);
-  Vec3 J = get_ρJ(Q) / ρ;
+  Vec3 J;
 
   double Eρ = dEdρ(ρ, p, A, MP);
   double Ep = dEdp(ρ, MP);
@@ -113,6 +113,7 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
 
   double tmp = v.squaredNorm() - (E + ρ * Eρ);
   if (THERMAL) {
+    J = get_ρJ(Q) / ρ;
     double cα2 = MP.cα2;
     tmp += cα2 * J.squaredNorm();
   }
@@ -138,7 +139,7 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
       ret(i, i) = 1 / ρ;
   }
   /*
-  if (MP.REACTIVE) {
+  if (REACTIVE) {
     double λ = Q(17) / Q(0);
     double Qc = MP.Qc;
     ret(17, 0) = -λ / ρ;

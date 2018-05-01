@@ -79,7 +79,6 @@ void block(MatV_Vr ret, VecVr Q, int d) {
       ret(11 + d, 11 + d + i) -= vi;
     }
   }
-
   for (int i = 1; i < LSET + 1; i++)
     ret(V - i, V - i) = vd;
 }
