@@ -1,4 +1,4 @@
-from numpy import amax, array, concatenate, dot, eye, zeros
+from numpy import amax, array, column_stack, concatenate, dot, eye, zeros
 from scipy.linalg import solve
 
 from gpr.misc.functions import reorder
@@ -64,23 +64,10 @@ def check_star_convergence(QL_, QR_, MPL, MPR):
     return cond1 and cond2
 
 
-def riemann_constraints(P, sgn, MP):
-    """ K=R: sgn = -1
-        K=L: sgn = 1
-        NOTE: Uses atypical ordering
+def left_riemann_constraints(P, Lhat, sgn):
 
-        Extra constraints are:
-        dΣ = dΣ/dρ * dρ + dΣ/dp * dp + dΣ/dA * dA
-        dT = dT/dρ * dρ + dT/dp * dp
-        v*L = v*R
-        J*L = J*R
-    """
-    _, Lhat, Rhat = eigen(P, 0, False, MP, typical_order=False)
-
-    σA = P.dσdA()
     σρ = P.dσdρ()
-    Tρ = P.dTdρ()
-    Tp = P.dTdp()
+    σA = P.dσdA()
 
     Lhat[:3, 0] = -σρ[0]
     Lhat[:3, 1] = array([1, 0, 0])
@@ -91,25 +78,83 @@ def riemann_constraints(P, sgn, MP):
     n1, n2, n3, n4, n5 = get_indexes()
 
     if THERMAL:
-        Lhat[3, 0] = Tρ
-        Lhat[3, 1] = Tp
+        Lhat[3, 0] = P.dTdρ()
+        Lhat[3, 1] = P.dTdp()
         Lhat[3, 2:] = 0
-        tmp = Lhat[array([0, 1, 2, 3, 8]), :5]
-    else:
-        tmp = Lhat[array([0, 1, 2, 6, 7]), :5]
 
     Lhat[n1:n2, 11:n5] *= -sgn
 
-    Ξ1 = Xi1(P, 0, MP)
-    Ξ2 = Xi2(P, 0, MP)
-    Q, Q_1, _, D_1 = decompose_Ξ(Ξ1, Ξ2)
+    return Lhat
+
+
+def riemann_constraints(P, sgn, MP, left=False):
+    """ K=R: sgn = -1
+        K=L: sgn = 1
+        NOTE: Uses atypical ordering
+
+        Extra constraints are:
+        dΣ = dΣ/dρ * dρ + dΣ/dp * dp + dΣ/dA * dA
+        dT = dT/dρ * dρ + dT/dp * dp
+        v*L = v*R
+        J*L = J*R
+    """
+    _, Lhat, Rhat = eigen(P, 0, False, MP, values=False, right=True, left=left,
+                          typical_order=False)
+
+    if left:
+        Lhat = left_riemann_constraints(P, Lhat, sgn)
+
+    n1, n2, n3, n4, n5 = get_indexes()
+
+    ρ = P.ρ
+    A = P.A
+    σρ = P.dσdρ()
+    σA = P.dσdA()
+
+    e0 = array([1, 0, 0])
+    Π1 = σA[0, :, :, 0]
+
+    tmp = zeros([5, 5])
+    tmp[:3, 0] = -σρ[0]
+    tmp[0, 1] = 1
+    tmp[:3, 2:5] = -Π1
+
+    if THERMAL:
+
+        tmp[3, 0] = P.dTdρ()
+        tmp[3, 1] = P.dTdp()
+        tmp[4, 0] = -1 / ρ
+        tmp[4, 2:5] = solve(A.T, e0)
+
+    else:
+
+        p = P.p()
+        σ = P.σ()
+        c0 = c_0(ρ, p, A, MP)
+
+        B = zeros([2, 3])
+        B[0, 0] = ρ
+        B[1] = σ[0] - ρ * σρ[0]
+        B[1, 0] += ρ * c0**2
+
+        rhs = column_stack((-σρ[0], e0))
+        C = solve(Π1, rhs)
+
+        BA_1 = solve(A.T, B.T).T
+        Z = eye(2) - dot(BA_1, C)
+        X = concatenate([eye(2), -BA_1], axis=1)
+        tmp[3:5] = solve(Z, X)
 
     b = zeros([5, n1])
     b[:n1, :n1] = eye(n1)
     X = solve(tmp, b)
-    Rhat[:5, :n1] = X
 
+    Ξ1 = Xi1(P, 0, MP)
+    Ξ2 = Xi2(P, 0, MP)
+    Q, Q_1, _, D_1 = decompose_Ξ(Ξ1, Ξ2)
     Y0 = dot(Q_1, dot(D_1, Q))
+
+    Rhat[:5, :n1] = X
     Rhat[11:n5, :n1] = -sgn * dot(Y0, dot(Ξ1, X))
     Rhat[:11, n1:n2] = 0
     Rhat[11:n5, n1:n2] = sgn * dot(Q_1, D_1)

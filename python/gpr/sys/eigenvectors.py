@@ -80,12 +80,7 @@ def convert_to_conservative(P, R, L, MP):
             L[:, 14 + i] = 1 / P.ρ * L[:, 14 + i] - H[i] * L[:, 1]
 
 
-def eigen(P, d, CONS, MP, right=True, left=True, typical_order=True):
-
-    ρ = P.ρ
-    A = P.A
-    v = P.v
-    vd = v[d]
+def right_eigenvectors(P, d, MP, typical_order):
 
     σA = P.dσdA()
     σρ = P.dσdρ()
@@ -102,117 +97,171 @@ def eigen(P, d, CONS, MP, right=True, left=True, typical_order=True):
 
     e0 = array([1, 0, 0])
 
+    R = zeros([17, 17])
+
+    tmp1 = 0.5 * dot(Ξ2, dot(Q_1, D_1**2))
+    tmp2 = 0.5 * dot(Q_1, D_1)
+
+    R[:5, :n1] = tmp1
+    R[:5, n1:n2] = tmp1
+    R[11:n5, :n1] = tmp2
+    R[11:n5, n1:n2] = -tmp2
+
+    if THERMAL:
+
+        ρ = P.ρ
+        A = P.A
+        Tρ = P.dTdρ()
+        Tp = P.dTdp()
+
+        b = Tp * σρ[d] + Tρ * e0
+        c = 1 / (solve(dot(Π1, A), b)[d] + Tp / ρ)
+
+        R[0, 8] = -c * Tp
+        R[1, 8] = c * Tρ
+        R[2:5, 8] = c * solve(Π1, b)
+        R[15, 15] = 1
+        R[16, 16] = 1
+
+    else:
+        R[0, 6] = 1
+        R[1, 7] = 1
+        R[2:5, 6] = -solve(Π1, σρ[0])
+        R[2:5, 7] = solve(Π1, e0)
+
+    R[2:5, n3:n4] = -solve(Π1, Π2)
+    R[2:5, n4:n5] = -solve(Π1, Π3)
+    for i in range(6):
+        R[5 + i, n3 + i] = 1
+
+    if typical_order:
+        R = reorder(R)
+
+    if not THERMAL:
+        R = R[:14, :14]
+
+    return R
+
+
+def left_eigenvectors(P, d, MP, typical_order):
+
+    ρ = P.ρ
+    A = P.A
+
+    σA = P.dσdA()
+    σρ = P.dσdρ()
+
+    Π1 = σA[d, :, :, 0]
+    Π2 = σA[d, :, :, 1]
+    Π3 = σA[d, :, :, 2]
+
+    Ξ1 = Xi1(P, d, MP)
+    Ξ2 = Xi2(P, d, MP)
+    Q, Q_1, D, D_1 = decompose_Ξ(Ξ1, Ξ2)
+
+    n1, n2, n3, n4, n5 = get_indexes()
+
+    e0 = array([1, 0, 0])
+
+    L = zeros([17, 17])
+
+    tmp1 = dot(Q, Ξ1)
+    tmp2 = -dot(Q[:, :3], Π2) / ρ
+    tmp3 = -dot(Q[:, :3], Π3) / ρ
+    tmp4 = dot(D, Q)
+
+    L[:n1, :5] = tmp1
+    L[n1:n2, :5] = tmp1
+    L[:n1, 5:8] = tmp2
+    L[n1:n2, 5:8] = tmp2
+    L[:n1, 8:11] = tmp3
+    L[n1:n2, 8:11] = tmp3
+    L[:n1, 11:n5] = tmp4
+    L[n1:n2, 11:n5] = -tmp4
+
+    if THERMAL:
+        tmp = solve(A.T, e0)
+        L[8, 0] = -1 / ρ
+        L[8, 2:5] = tmp
+        L[8, 5:8] = dot(tmp, solve(Π1, Π2))
+        L[8, 8:11] = dot(tmp, solve(Π1, Π3))
+        L[15, 15] = 1
+        L[16, 16] = 1
+
+    else:
+        σ = P.σ()
+        p = P.p()
+        c0 = c_0(ρ, p, A, MP)
+
+        B = zeros([2, 3])
+        B[0, 0] = ρ
+        B[1] = σ[0] - ρ * σρ[0]
+        B[1, 0] += ρ * c0**2
+
+        C = zeros([3, 2])
+        C[:, 0] = -solve(Π1, σρ[0])
+        C[:, 1] = solve(Π1, e0)
+
+        BA_1 = solve(A.T, B.T).T
+        Z = eye(2) - dot(BA_1, C)
+        X = zeros([2, 14])
+        X[:, :2] = eye(2)
+        X[:, 2:5] = -BA_1
+        X[:, 5:8] = -dot(BA_1, solve(Π1, Π2))
+        X[:, 8:11] = -dot(BA_1, solve(Π1, Π3))
+        L[6:8, :14] = solve(Z, X)
+
+    for i in range(6):
+        L[n3 + i, 5 + i] = 1
+
+    if typical_order:
+        L = reorder(L.T).T
+
+    if not THERMAL:
+        L = L[:14, :14]
+
+    return L
+
+
+def eigenvalues(P, d, MP):
+
+    v = P.v
+    vd = v[d]
+    n1, n2, n3, n4, n5 = get_indexes()
+
+    Ξ1 = Xi1(P, d, MP)
+    Ξ2 = Xi2(P, d, MP)
+    Ξ = dot(Ξ1, Ξ2)
+
+    w, vl, vr = eig(Ξ, left=1)
+    sw = sqrt(w.real)
+    D = diag(sw)
+
+    l = array([vd + λ for λ in diag(D)] +
+              [vd - λ for λ in diag(D)] + [vd] * n3)
+
+    return l
+
+
+def eigen(P, d, CONS, MP, values=True, right=True, left=True, typical_order=True):
+
     if right:
-
-        R = zeros([17, 17])
-
-        tmp1 = 0.5 * dot(Ξ2, dot(Q_1, D_1**2))
-        tmp2 = 0.5 * dot(Q_1, D_1)
-
-        R[:5, :n1] = tmp1
-        R[:5, n1:n2] = tmp1
-        R[11:n5, :n1] = tmp2
-        R[11:n5, n1:n2] = -tmp2
-
-        if THERMAL:
-            Tρ = P.dTdρ()
-            Tp = P.dTdp()
-            b = Tp * σρ[d] + Tρ * e0
-            c = 1 / (solve(dot(Π1, A), b)[d] + Tp / ρ)
-
-            R[0, 8] = -c * Tp
-            R[1, 8] = c * Tρ
-            R[2:5, 8] = c * solve(Π1, b)
-            R[15, 15] = 1
-            R[16, 16] = 1
-
-        else:
-            R[0, 6] = 1
-            R[1, 7] = 1
-            R[2:5, 6] = -solve(Π1, σρ[0])
-            R[2:5, 7] = solve(Π1, e0)
-
-        R[2:5, n3:n4] = -solve(Π1, Π2)
-        R[2:5, n4:n5] = -solve(Π1, Π3)
-        for i in range(6):
-            R[5 + i, n3 + i] = 1
-
-        if typical_order:
-            R = reorder(R)
-
-        if not THERMAL:
-            R = R[:14, :14]
-
+        R = right_eigenvectors(P, d, MP, typical_order)
     else:
         R = None
 
     if left:
-
-        L = zeros([17, 17])
-
-        tmp1 = dot(Q, Ξ1)
-        tmp2 = -dot(Q[:, :3], Π2) / ρ
-        tmp3 = -dot(Q[:, :3], Π3) / ρ
-        tmp4 = dot(D, Q)
-
-        L[:n1, :5] = tmp1
-        L[n1:n2, :5] = tmp1
-        L[:n1, 5:8] = tmp2
-        L[n1:n2, 5:8] = tmp2
-        L[:n1, 8:11] = tmp3
-        L[n1:n2, 8:11] = tmp3
-        L[:n1, 11:n5] = tmp4
-        L[n1:n2, 11:n5] = -tmp4
-
-        if THERMAL:
-            tmp = solve(A.T, e0)
-            L[8, 0] = -1 / ρ
-            L[8, 2:5] = tmp
-            L[8, 5:8] = dot(tmp, solve(Π1, Π2))
-            L[8, 8:11] = dot(tmp, solve(Π1, Π3))
-            L[15, 15] = 1
-            L[16, 16] = 1
-
-        else:
-            σ = P.σ()
-            p = P.p()
-            c0 = c_0(ρ, p, A, MP)
-
-            B = zeros([2, 3])
-            B[0, 0] = ρ
-            B[1] = σ[0] - ρ * σρ[0]
-            B[1, 0] += ρ * c0**2
-
-            C = zeros([3, 2])
-            C[:, 0] = -solve(Π1, σρ[0])
-            C[:, 1] = solve(Π1, e0)
-
-            BA_1 = solve(A.T, B.T).T
-            Z = eye(2) - dot(BA_1, C)
-            X = zeros([2, 14])
-            X[:, :2] = eye(2)
-            X[:, 2:5] = -BA_1
-            X[:, 5:8] = -dot(BA_1, solve(Π1, Π2))
-            X[:, 8:11] = -dot(BA_1, solve(Π1, Π3))
-            L[6:8, :14] = solve(Z, X)
-
-        for i in range(6):
-            L[n3 + i, 5 + i] = 1
-
-        if typical_order:
-            L = reorder(L.T).T
-
-        if not THERMAL:
-            L = L[:14, :14]
-
+        L = left_eigenvectors(P, d, MP, typical_order)
     else:
         L = None
 
     if CONS:
         convert_to_conservative(P, R, L, MP)
 
-    l = array([vd + λ for λ in diag(D)] +
-              [vd - λ for λ in diag(D)] + [vd] * n3)
+    if values:
+        l = eigenvalues(P, d, MP)
+    else:
+        l = None
 
     return l, L, R
 
