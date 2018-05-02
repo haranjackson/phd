@@ -272,5 +272,32 @@ Thus:
 
 \end_layout
 
+\begin_layout Standard
+Note:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Pi_{1}\left(\begin{array}{c}
+\psi_{11}\\
+\psi_{21}\\
+\psi_{31}
+\end{array}\right)+\Pi_{2}\left(\begin{array}{c}
+\psi_{12}\\
+\psi_{22}\\
+\psi_{32}
+\end{array}\right)+\Pi_{3}\left(\begin{array}{c}
+\psi_{13}\\
+\psi_{23}\\
+\psi_{33}
+\end{array}\right)=\sum_{n}\frac{\partial\sigma_{i1}}{\partial A_{jn}}\psi_{jn}=-\rho\sum_{n}\frac{\partial}{\partial A_{jn}}\left(A^{T}\psi\right)\psi_{jn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
