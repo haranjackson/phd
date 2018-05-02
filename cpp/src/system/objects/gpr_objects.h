@@ -13,10 +13,6 @@ typedef Eigen::Ref<Mat3_3> Mat3_3r;
 
 typedef Eigen::Matrix<double, 9, 1> Vec9;
 typedef Eigen::Ref<Vec9> Vec9r;
-typedef Eigen::Matrix<double, BV, 1> VecBV;
-typedef Eigen::Ref<VecBV> VecBVr;
-typedef Eigen::Matrix<double, BV, BV> MatBV;
-typedef Eigen::Ref<MatBV> MatBVr;
 
 typedef Eigen::Map<Mat3_3, 0, Eigen::OuterStride<3>> Mat3_3Map;
 typedef Eigen::Map<Vec3, 0, Eigen::InnerStride<1>> Vec3Map;
