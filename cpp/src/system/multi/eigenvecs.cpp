@@ -7,7 +7,9 @@
 #include "../variables/mg.h"
 #include "../variables/state.h"
 
-MatBV eigen(VecBVr Q, int d, Par &MP) {
+MatV_V eigen(VecVr Q, int d, Par &MP) {
+
+  MatV_V R = MatV_V::Zero();
 
   double ρ = Q(0);
   double p = pressure(Q, MP);
@@ -26,7 +28,6 @@ MatBV eigen(VecBVr Q, int d, Par &MP) {
       Π2(i, j) = dsigmadA(ρ, B0, A, G, A_devG, d, i, j, 1);
       Π3(i, j) = dsigmadA(ρ, B0, A, G, A_devG, d, i, j, 2);
     }
-
   Mat Ξ1 = Xi1(ρ, p, Q, MP, d);
   Mat Ξ2 = Xi2(ρ, p, Q, MP, d);
   Mat Ξ = Ξ1 * Ξ2;
@@ -35,8 +36,6 @@ MatBV eigen(VecBVr Q, int d, Par &MP) {
   Mat Q_1 = es.eigenvectors().real();
   Mat D_2 = es.eigenvalues().real().cwiseInverse().asDiagonal();
   Mat D_1 = D_2.array().sqrt();
-
-  MatBV R = MatBV::Zero();
 
   Mat tmp1 = 0.5 * Ξ2 * Q_1 * D_2;
   Mat tmp2 = 0.5 * Q_1 * D_1;
@@ -58,8 +57,9 @@ MatBV eigen(VecBVr Q, int d, Par &MP) {
     R(0, 8) = -c * Tp;
     R(1, 8) = c * Tρ;
     R.block<3, 1>(2, 8) = c * Π1.inverse() * b;
-    R(15, 15) = 1.;
-    R(16, 16) = 1.;
+
+    for (int i = 15; i < V; i++)
+      R(i, i) = 1.;
   } else {
     Mat3_3 Π1_1 = Π1.inverse();
     R(0, 6) = 1.;
@@ -70,7 +70,9 @@ MatBV eigen(VecBVr Q, int d, Par &MP) {
     R.block<3, 3>(2, n3) = -Π1_1 * Π2;
     R.block<3, 3>(2, n4) = -Π1_1 * Π3;
     for (int i = 0; i < 6; i++)
-      R(5 + i, n3 + i) = 1;
+      R(5 + i, n3 + i) = 1.;
+    for (int i = 14; i < V; i++)
+      R(i, i) = 1.;
   }
   return R;
 }

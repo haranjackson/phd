@@ -15,34 +15,29 @@ bool STICK = true;
 bool RELAXATION = true;
 double STAR_TOL = 1e-6;
 
-VecBV Pvec(VecBVr Q, Par &MP) {
-  // Vector of primitive variables
-  // NOTE: Uses atypical ordering
-  VecBV P;
-
+VecV Cvec_to_Pvec(VecV Q, Par &MP) {
+  // Returns vector of primitive variables (atypical ordering), given a vector
+  // of conserved variables (typical ordering)
   double ρ = Q(0);
   double p = pressure(Q, MP);
   Vec3Map ρv = get_ρv(Q);
   Mat3_3Map A = get_A(Q);
 
-  P(0) = ρ;
-  P(1) = p;
-  P.segment<3>(2) = A.col(0);
-  P.segment<3>(5) = A.col(1);
-  P.segment<3>(8) = A.col(2);
-  P.segment<3>(11) = ρv / ρ;
+  Q(1) = p;
+  Q.segment<3>(2) = A.col(0);
+  Q.segment<3>(5) = A.col(1);
+  Q.segment<3>(8) = A.col(2);
+  Q.segment<3>(11) = ρv / ρ;
 
-  if (THERMAL) {
-    Vec3Map ρJ = get_ρJ(Q);
-    P.tail<3>() = ρJ / ρ;
-  }
-  return P;
+  if (THERMAL)
+    Q.segment<3>(14) /= ρ;
+
+  return Q;
 }
 
-VecBV Pvec_to_Cvec(VecBVr P, Par &MP) {
-  // Returns vector of conserved vars, given vector of primitive vars
-  VecBV Q;
-
+VecV Pvec_to_Cvec(VecV P, Par &MP) {
+  // Returns vector of conserved variables (typical ordering), given a vector of
+  // primitive variables (atypical ordering)
   double ρ = P(0);
   double p = P(1);
 
@@ -52,19 +47,21 @@ VecBV Pvec_to_Cvec(VecBVr P, Par &MP) {
       A(i, j) = P(2 + 3 * j + i);
 
   Vec3 v = P.segment<3>(11);
-  Q.segment<3>(2) = ρ * v;
+
+  P.segment<3>(2) = ρ * v;
+  P.segment<9>(5) = VecMap(A.data(), 9);
 
   if (THERMAL) {
     Vec3 J = P.segment<3>(14);
-    Q(1) = ρ * total_energy(ρ, p, A, J, v, MP);
-    Q.segment<3>(14) = ρ * J;
+    P(1) = ρ * total_energy(ρ, p, A, J, v, MP);
+    P.segment<3>(14) *= ρ;
   } else
-    Q(1) = ρ * total_energy(ρ, p, A, v, MP);
+    P(1) = ρ * total_energy(ρ, p, A, v, MP);
 
-  return Q;
+  return P;
 }
 
-bool check_star_convergence(VecBVr QL_, VecBVr QR_, Par &MPL, Par &MPR) {
+bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
   Vec3 ΣL_ = Sigma(QL_, MPL, 0);
   Vec3 ΣR_ = Sigma(QR_, MPR, 0);
@@ -79,7 +76,7 @@ bool check_star_convergence(VecBVr QL_, VecBVr QR_, Par &MPL, Par &MPR) {
   return cond;
 }
 
-MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP) {
+MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP) {
   /* K=R: sgn = -1
    * K=L: sgn = 1
    * NOTE: Uses atypical ordering
@@ -90,7 +87,7 @@ MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP) {
    * v*L = v*R
    * J*L = J*R
   */
-  MatBV Rhat = eigen(Q, 0, MP);
+  MatV_V Rhat = eigen(Q, 0, MP);
 
   double ρ = Q(0);
   double p = pressure(Q, MP);
@@ -100,11 +97,11 @@ MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP) {
   Mat3_3 Ainv = A.inverse();
   Vec3 e0;
   e0 << 1., 0., 0.;
-
   Mat3_3 Π1 = dsigmadA(Q, MP, 0);
 
   Mat tmp = Mat::Zero(5, 5);
   tmp.topLeftCorner<3, 1>() = -σρ0;
+
   tmp(0, 1) = 1.;
   tmp.block<3, 3>(0, 2) = -Π1;
 
@@ -126,7 +123,7 @@ MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP) {
     Mat3_3 Π1_1 = Π1.inverse();
     Mat C = Π1_1 * rhs;
 
-    Mat3_3 BA_1 = B * Ainv;
+    Mat BA_1 = B * Ainv;
     Mat Z = Mat::Identity(2, 2);
     Z -= BA_1 * C;
     Mat W(2, 5);
@@ -156,13 +153,13 @@ MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP) {
   return Rhat;
 }
 
-void star_stepper(VecBVr QL, VecBVr QR, Par &MPL, Par &MPR) {
+void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
 
-  MatBV RL = riemann_constraints(QL, 1, MPL);
-  MatBV RR = riemann_constraints(QR, -1, MPR);
+  MatV_V RL = riemann_constraints(QL, 1, MPL);
+  MatV_V RR = riemann_constraints(QR, -1, MPR);
 
-  VecBV cL = VecBV::Zero();
-  VecBV cR = VecBV::Zero();
+  VecV cL = VecV::Zero();
+  VecV cR = VecV::Zero();
 
   Vec xL(n1);
   Vec xR(n1);
@@ -227,19 +224,16 @@ void star_stepper(VecBVr QL, VecBVr QR, Par &MPL, Par &MPR) {
   }
   cL.head<n1>() = x_ - xL;
   cR.head<n1>() = x_ - xR;
-  VecBV PLvec = Pvec(QL, MPL);
-  VecBV PRvec = Pvec(QR, MPR);
-  VecBV PL_vec = RL * cL + PLvec;
-  VecBV PR_vec = RR * cR + PRvec;
+  VecV PLvec = Cvec_to_Pvec(QL, MPL);
+  VecV PRvec = Cvec_to_Pvec(QR, MPR);
+  VecV PL_vec = RL * cL + PLvec;
+  VecV PR_vec = RR * cR + PRvec;
   QL = Pvec_to_Cvec(PL_vec, MPL);
   QR = Pvec_to_Cvec(PR_vec, MPR);
 }
 
-std::vector<VecV> star_states(VecVr QL, VecVr QR, Par &MPL, Par &MPR,
+std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR,
                               double dt) {
-
-  VecBVr QL_ = QL.head<BV>();
-  VecBVr QR_ = QR.head<BV>();
 
   while (!check_star_convergence(QL_, QR_, MPL, MPR)) {
 
@@ -249,14 +243,6 @@ std::vector<VecV> star_states(VecVr QL, VecVr QR, Par &MPL, Par &MPR,
     }
     star_stepper(QL_, QR_, MPL, MPR);
   }
-
-  VecV retL;
-  VecV retR;
-  retL.head<BV>() = QL_;
-  retR.head<BV>() = QR_;
-  retL.tail<EXTRA_V>() = QL.tail<EXTRA_V>();
-  retR.tail<EXTRA_V>() = QR.tail<EXTRA_V>();
-
-  std::vector<VecV> ret = {retL, retR};
+  std::vector<VecV> ret = {QL_, QR_};
   return ret;
 }

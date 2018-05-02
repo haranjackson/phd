@@ -5,9 +5,9 @@
 #include "../objects/gpr_objects.h"
 #include "eigenvecs.h"
 
-MatBV riemann_constraints(VecBVr Q, double sgn, Par &MP);
+MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP);
 
-std::vector<VecV> star_states(VecVr QL, VecVr QR, Par &MPL, Par &MPR,
+std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR,
                               double dt);
 
 #endif // RIEMANN_H

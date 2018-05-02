@@ -47,20 +47,16 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
 void source(VecVr ret, VecVr Q, Par &MP) {
   double ρ = Q(0);
 
-  ret.head<2>().setZero();
+  ret.setZero();
 
   f_body(ret.segment<3>(2), MP);
 
   if (VISCOUS) {
     Mat3_3 Asource = -dEdA_s(Q, MP) * theta1inv(Q, MP);
     ret.segment<9>(5) = VecMap(Asource.data(), 9);
-  } else
-    ret.segment<9>(5).setZero();
-
+  }
   if (THERMAL)
     ret.segment<3>(14) = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
-
-  ret.tail<EXTRA_V>().setZero();
 }
 
 void block(MatV_Vr ret, VecVr Q, int d) {
