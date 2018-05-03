@@ -23,6 +23,8 @@ void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
   double u0 =
       ((s0 - s1) * (s0 - s1) + (s1 - s2) * (s1 - s2) + (s2 - s0) * (s2 - s0)) /
       3.;
+
+  if (u0 >= 1e-12) {
   double τ = 2 * detA * detA * detA1_3 / MP.τ1 * dt;
 
   double c0 = exp(-9 * τ);
@@ -48,6 +50,7 @@ void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
     Vmat.row(i) *= detA1_3 * sqrt(x[2 - i]); // s sorted in descending order
 
   A.noalias() = svd.matrixU() * Vmat;
+  }
 }
 
 void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {

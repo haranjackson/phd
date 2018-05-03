@@ -66,7 +66,7 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
   Vec3 ΣL_ = Sigma(QL_, MPL, 0);
   Vec3 ΣR_ = Sigma(QR_, MPR, 0);
 
-  bool cond = (ΣL_ - ΣR_).norm() < STAR_TOL;
+  bool cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() < STAR_TOL;
 
   if (THERMAL) {
     double TL_ = temperature(QL_, MPL);
@@ -147,8 +147,8 @@ MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP) {
 
   Rhat.topLeftCorner<5, n1>() = X;
   Rhat.block<n1, n1>(11, 0) = -sgn * Y0 * Ξ1 * X;
-  Rhat.block<11, n2 - n1>(0, n1).setZero();
-  Rhat.block<n1, n2 - n1>(11, n1) = sgn * Q_1 * D_1;
+  Rhat.block<11, n1>(0, n1).setZero();
+  Rhat.block<n1, n1>(11, n1) = sgn * Q_1 * D_1;
 
   return Rhat;
 }
@@ -157,9 +157,6 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
 
   MatV_V RL = riemann_constraints(QL, 1, MPL);
   MatV_V RR = riemann_constraints(QR, -1, MPR);
-
-  VecV cL = VecV::Zero();
-  VecV cR = VecV::Zero();
 
   Vec xL(n1);
   Vec xR(n1);
@@ -222,12 +219,16 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
       x_ << tmp, 0., 0.;
     }
   }
+  VecV cL = VecV::Zero();
+  VecV cR = VecV::Zero();
   cL.head<n1>() = x_ - xL;
   cR.head<n1>() = x_ - xR;
+
   VecV PLvec = Cvec_to_Pvec(QL, MPL);
   VecV PRvec = Cvec_to_Pvec(QR, MPR);
   VecV PL_vec = RL * cL + PLvec;
   VecV PR_vec = RR * cR + PRvec;
+
   QL = Pvec_to_Cvec(PL_vec, MPL);
   QR = Pvec_to_Cvec(PR_vec, MPR);
 }

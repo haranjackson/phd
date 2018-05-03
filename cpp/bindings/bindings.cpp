@@ -133,6 +133,7 @@ PYBIND11_MODULE(GPRpy, m) {
 
   m_multi.def("eigen", &eigen);
   m_multi.def("riemann_constraints", &riemann_constraints);
+  m_multi.def("star_stepper", &star_stepper);
   m_multi.def("star_states", &star_states);
 
   m_solvers_common.def("basis_polys", &basis_polys);

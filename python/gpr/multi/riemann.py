@@ -171,9 +171,6 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
     _, RL = riemann_constraints(PL, 1, MPL)
     _, RR = riemann_constraints(PR, -1, MPR)
 
-    cL = zeros(n5)
-    cR = zeros(n5)
-
     if STICK:
 
         YL = RL[11:n5, :n1]
@@ -191,8 +188,6 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
             yR = PR.v
 
         x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
-        cL[:n1] = x_ - xL
-        cR[:n1] = x_ - xR
 
     else:  # slip conditions - only implemented for non-thermal
 
@@ -221,8 +216,10 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
             x_ = (yR - yL + dot(YL, xL) - dot(YR, xR)) / (YL - YR)[0]
             x_ = array([x_, 0, 0])
 
-        cL[:n1] = x_ - xL
-        cR[:n1] = x_ - xR
+    cL = zeros(n5)
+    cR = zeros(n5)
+    cL[:n1] = x_ - xL
+    cR[:n1] = x_ - xR
 
     PLvec = Pvec(PL)
     PRvec = Pvec(PR)
