@@ -5,11 +5,11 @@
 
 #include "types.h"
 
-void print(Matr M) {
+void print(Mat M) {
   std::ostringstream oss;
 
   if (M.cols() == 1)
-    M = M.transpose();
+    M.transposeInPlace();
   else
     oss << "[";
 

@@ -1,4 +1,4 @@
-from numpy import arctan, array, cos, dot, exp, log, prod, sqrt
+from numpy import arctan, array, cos, dot, exp, log, pi, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
@@ -45,10 +45,12 @@ def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
 
 
 def solver_distortion_analytic(A, dt, MP):
+
     U, s, V = svd(A)
     ρ_ρ0 = prod(s)
     ρ = ρ_ρ0 * MP.ρ0
     detA3 = ρ_ρ0**(1 / 3)
+
     s0 = (s / detA3)**2
     m0 = sum(s0) / 3
     u0 = ((s0[0] - s0[1])**2 + (s0[1] - s0[2])**2 + (s0[2] - s0[0])**2) / 3
@@ -64,7 +66,13 @@ def solver_distortion_analytic(A, dt, MP):
 
     Δ = -2 * m**3 + m * u + 2
     arg1 = pos(6 * u**3 - 81 * Δ**2)
-    θ = arctan(sqrt(arg1) / max(1e-8, 9 * Δ))
+
+    if arg1 < 1e-12:
+        θ = 0
+    elif abs(Δ) < 1e-12:
+        θ = sign(Δ) * pi / 2
+    else:
+        θ = arctan(sqrt(arg1) / (9 * Δ))
 
     x1 = sqrt(6 * u) / 3 * cos(θ / 3) + m
     temp2 = 3 * m - x1

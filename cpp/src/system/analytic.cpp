@@ -25,31 +25,41 @@ void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
       3.;
 
   if (u0 >= 1e-12) {
-  double τ = 2 * detA * detA * detA1_3 / MP.τ1 * dt;
 
-  double c0 = exp(-9 * τ);
-  double c1 = (9 * m0 - u0 - 9) * exp(3 * τ);
-  double c2 = 6 * m0 - u0 - 6;
-  double m = 1 + c0 / 3 * (c1 - c2);
-  double u = pos(c0 * (2 * c1 - 3 * c2));
-  double delta = -2 * m * m * m + m * u + 2;
-  double arg1 = pos(6 * u * u * u - 81 * delta * delta);
-  double theta = atan(sqrt(arg1) / std::max(1e-8, 9. * delta));
+      double τ = 2 * detA * detA * detA1_3 / MP.τ1 * dt;
 
-  double x1 = sqrt(6 * u) / 3 * cos(theta / 3) + m;
-  double tmp = 3 * m - x1;
-  double arg2 = pos(x1 * tmp * tmp - 4);
-  double x2 = 0.5 * (sqrt(arg2 / x1) + tmp);
-  double x3 = 1 / (x1 * x2);
+      double c0 = exp(-9 * τ);
+      double c1 = (9 * m0 - u0 - 9) * exp(3 * τ);
+      double c2 = 6 * m0 - u0 - 6;
+      double m = 1 + c0 / 3 * (c1 - c2);
+      double u = pos(c0 * (2 * c1 - 3 * c2));
 
-  double x[3]{x1, x2, x3};
-  std::sort(x, x + 3); // sorts in ascending order
-  Mat3_3 Vmat = svd.matrixV().transpose();
+      double Δ = -2 * m * m * m + m * u + 2;
+      double arg1 = pos(6 * u * u * u - 81 * Δ * Δ);
+      double θ;
 
-  for (int i = 0; i < 3; i++)
-    Vmat.row(i) *= detA1_3 * sqrt(x[2 - i]); // s sorted in descending order
+      if (arg1 < 1e-12)
+          θ = 0.;
+      else if (abs(Δ) < 1e-12)
+          θ = sgn(Δ) * M_PI / 2;
+      else
+          θ = atan(sqrt(arg1) / (9. * Δ));
 
-  A.noalias() = svd.matrixU() * Vmat;
+      double x1 = sqrt(6 * u) / 3 * cos(θ / 3) + m;
+      double tmp = 3 * m - x1;
+      double arg2 = pos(x1 * tmp * tmp - 4);
+      double x2 = 0.5 * (sqrt(arg2 / x1) + tmp);
+      double x3 = 1 / (x1 * x2);
+
+      double x[3]{x1, x2, x3};
+      std::sort(x, x + 3); // sorts in ascending order
+      Mat3_3 Vmat = svd.matrixV().transpose();
+
+      for (int i = 0; i < 3; i++)
+        Vmat.row(i) *= detA1_3 * sqrt(x[2 - i]); // s sorted in descending order
+
+      A.noalias() = svd.matrixU() * Vmat;
+
   }
 }
 

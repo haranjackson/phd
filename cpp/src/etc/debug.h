@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void print(Matr M);
+void print(Mat M);
 void print(double x);
 void print(std::string x);
 

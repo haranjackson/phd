@@ -7,6 +7,8 @@
 //#define EIGEN_DONT_VECTORIZE
 //#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
+#define M_PI 3.14159265358979323846
+
 #include "../../include/eigen3/Eigen"
 #include "../options.h"
 
@@ -59,5 +61,9 @@ typedef Eigen::HouseholderQR<Mat> DecQR;
 typedef Eigen::ColPivHouseholderQR<Mat> Dec;
 
 typedef std::function<Vec(Vecr)> VecFunc;
+
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
 
 #endif
