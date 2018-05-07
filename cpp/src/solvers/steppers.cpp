@@ -19,6 +19,7 @@ void ader_stepper(Vecr u, Vecr ub, Vecr wh, Vecr qh, int ndim, Veci3r nX,
 void split_stepper(Vecr u, Vecr ub, Vecr wh, int ndim, Veci3r nX, double dt,
                    Vec3r dX, bool HALF_STEP, int FLUX, Par &MP) {
 
+  ode_launcher(u, dt / 2, MP);
   ode_launcher(ub, dt / 2, MP);
 
   weno_launcher(wh, ub, ndim, nX);

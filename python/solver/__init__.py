@@ -36,24 +36,31 @@ class SolverPlus(Solver):
         self.stiff_dg = stiff_dg
         self.flux_type = flux_types[riemann_solver]
 
-        self.fvSolver = FVSolver(self.N, self.NV, self.NDIM, F=self.F,
-                                 S=self.S, B=self.B, M=self.M,
-                                 max_eig=self.max_eig, pars=self.pars,
-                                 riemann_solver=riemann_solver,
-                                 time_rec=not split)
-
         if split:
+            self.fvSolver = FVSolver(self.N, self.NV, self.NDIM, F=self.F,
+                                     B=self.B, M=self.M, max_eig=self.max_eig,
+                                     pars=self.pars,
+                                     riemann_solver=riemann_solver,
+                                     time_rec=False)
+
             self.splitSolver = SplitSolver(order, nvar, ndim, F, B=B, S=S,
                                            ode_solver=ode_solver,
                                            model_params=model_params)
+        else:
+            self.fvSolver = FVSolver(self.N, self.NV, self.NDIM, F=self.F,
+                                     S=self.S, B=self.B, M=self.M,
+                                     max_eig=self.max_eig, pars=self.pars,
+                                     riemann_solver=riemann_solver)
 
-    def split_stepper(self, uBC, dt, maskBC):
+
+    def split_stepper(self, dt, maskBC):
 
         t0 = time()
 
-        self.splitSolver.ode_launcher(uBC, dt / 2)
+        self.splitSolver.ode_launcher(self.u, dt / 2)
         t1 = time()
 
+        uBC = self.BC(self.u, self.N, self.NDIM)
         wh = self.wenoSolver.solve(uBC)
         if self.half_step:
             self.splitSolver.weno_midstepper(wh, dt, self.dX, maskBC)
@@ -90,7 +97,7 @@ class SolverPlus(Solver):
             self.cpp_stepper(uBC, dt)
 
         elif self.split:
-            self.split_stepper(uBC, dt, maskBC)
+            self.split_stepper(dt, maskBC)
 
         else:
             if self.ncore == 1:
