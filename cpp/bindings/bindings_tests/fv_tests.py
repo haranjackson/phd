@@ -6,7 +6,6 @@ from ader.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
 from ader.fv.fv import endpoints
 
 from gpr.misc.structures import State
-from gpr.opts import THERMAL
 from gpr.sys.eigenvalues import Xi1, Xi2
 
 from bindings_tests.test_functions import check, generate_vector, cpp_dx

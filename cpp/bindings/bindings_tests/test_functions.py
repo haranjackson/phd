@@ -18,10 +18,16 @@ def generate_vector(MP):
 
 
 def check(x1, x2):
-    if amax(abs(x1 - x2)) < 1e-12:
+    diff = x1-x2
+    absDiff=amax(abs(diff))
+    diff[abs(diff)<1e-11] = 0
+    relDiff1 = amax(abs(diff[x1!=0]/x1[x1!=0]))
+    relDiff2 = amax(abs(diff[x2!=0]/x2[x2!=0]))
+    relDiff = max(relDiff1, relDiff2)
+    if relDiff < 1e-12:
         return "✓"
     else:
-        return amax(abs(x1 - x2))
+        return "abs:", absDiff, "rel:", relDiff
 
 
 def cpp_dx(dX):
