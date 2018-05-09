@@ -3,11 +3,13 @@ from scipy.linalg import inv, solve
 
 from gpr.misc.functions import reorder
 from gpr.misc.structures import State
+from gpr.multi.boundaries import slip_bcs, stick_bcs
+from gpr.multi.rotations import rotation_matrix, rotate_tensors
+from gpr.multi.vectors import Pvec, Pvec_to_Cvec
 from gpr.opts import THERMAL
 from gpr.sys.analytical import ode_solver_cons
 from gpr.sys.eigenvalues import Xi1, Xi2
 from gpr.sys.eigenvectors import eigen, decompose_Ξ, get_indexes
-from gpr.vars.eos import total_energy
 from gpr.vars.wavespeeds import c_0
 
 
@@ -16,41 +18,6 @@ STAR_TOL = 1e-6
 
 
 n1, n2, n3, n4, n5 = get_indexes()
-
-
-def Pvec(P):
-    """ Vector of primitive variables
-        NOTE: Uses atypical ordering
-    """
-    if THERMAL:
-        ret = zeros(17)
-        ret[14:17] = P.J
-    else:
-        ret = zeros(14)
-
-    ret[0] = P.ρ
-    ret[1] = P.p()
-    ret[2:11] = P.A.ravel(order='F')
-    ret[11:14] = P.v
-
-    return ret
-
-
-def Pvec_to_Cvec(P, MP):
-    """ Returns the vector of conserved variables, given the vector of
-        primitive variables
-    """
-    Q = P.copy()
-    ρ = P[0]
-    A = P[5:14].reshape([3, 3])
-
-    λ = 0
-
-    Q[1] = ρ * total_energy(ρ, P[1], P[2:5], A, P[14:17], λ, MP)
-    Q[2:5] *= ρ
-    Q[14:] *= ρ
-
-    return Q
 
 
 def check_star_convergence(QL_, QR_, MPL, MPR):
@@ -163,7 +130,7 @@ def riemann_constraints(P, sgn, MP, left=False):
     return Lhat, Rhat
 
 
-def star_stepper(QL, QR, MPL, MPR, STICK=True):
+def star_stepper(QL, QR, MPL, MPR, boundary='stick'):
 
     PL = State(QL, MPL)
     PR = State(QR, MPR)
@@ -171,50 +138,10 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
     _, RL = riemann_constraints(PL, 1, MPL)
     _, RR = riemann_constraints(PR, -1, MPR)
 
-    if STICK:
-
-        YL = RL[11:n5, :n1]
-        YR = RR[11:n5, :n1]
-
-        if THERMAL:
-            xL = concatenate([PL.Σ()[0], [PL.T()]])
-            xR = concatenate([PR.Σ()[0], [PR.T()]])
-            yL = concatenate([PL.v, PL.J[:1]])
-            yR = concatenate([PR.v, PR.J[:1]])
-        else:
-            xL = PL.Σ()[0]
-            xR = PR.Σ()[0]
-            yL = PL.v
-            yR = PR.v
-
-        x_ = solve(YL - YR, yR - yL + dot(YL, xL) - dot(YR, xR))
-
-    else:  # slip conditions - only implemented for non-thermal
-
-        if THERMAL:
-            YL = RL[[11, 14], :n1]
-            YR = RR[[11, 14], :n1]
-
-            xL = array([PL.Σ()[0], PL.T()])
-            xR = array([PR.Σ()[0], PR.T()])
-            yL = array([PL.v[0], PL.J[0]])
-            yR = array([PR.v[0], PR.J[0]])
-
-            M = YL[:, [0, -1]] - YR[:, [0, -1]]
-            x_ = solve(M, yR - yL + dot(YL, xL) - dot(YR, xR))
-            x_ = array([x_[0], 0, 0, x_[1]])
-
-        else:
-            YL = RL[11, :n1]
-            YR = RR[11, :n1]
-
-            xL = PL.Σ()[0]
-            xR = PR.Σ()[0]
-            yL = PL.v[0]
-            yR = PR.v[0]
-
-            x_ = (yR - yL + dot(YL, xL) - dot(YR, xR)) / (YL - YR)[0]
-            x_ = array([x_, 0, 0])
+    if boundary == 'stick':
+        xL, xR, x_ = stick_bcs(RL, RR, PL, PR)
+    else:
+        xL, xR, x_ = slip_bcs(RL, RR, PL, PR)
 
     cL = zeros(n5)
     cR = zeros(n5)
@@ -231,23 +158,12 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
     return QL_, QR_
 
 
-def rotate_tensors(Q, R):
-
-    Q[2:5] = dot(R, Q[2:5])
-
-    A = Q[5:14].reshape([3,3])
-    A_ = dot(R, dot(A, R.T))
-    Q[5:14] = A_.ravel()
-
-    if THERMAL:
-        Q[14:17] = dot(R, Q[14:17])
-
-
-def star_states(QL, QR, MPL, MPR, dt, R):
+def star_states(QL, QR, MPL, MPR, dt, n):
 
     QL_ = QL[:n5].copy()
     QR_ = QR[:n5].copy()
 
+    R = rotation_matrix(n)
     rotate_tensors(QL_, R)
     rotate_tensors(QR_, R)
 
