@@ -231,10 +231,25 @@ def star_stepper(QL, QR, MPL, MPR, STICK=True):
     return QL_, QR_
 
 
-def star_states(QL, QR, MPL, MPR, dt):
+def rotate_tensors(Q, R):
+
+    Q[2:5] = dot(R, Q[2:5])
+
+    A = Q[5:14].reshape([3,3])
+    A_ = dot(R, dot(A, R.T))
+    Q[5:14] = A_.ravel()
+
+    if THERMAL:
+        Q[14:17] = dot(R, Q[14:17])
+
+
+def star_states(QL, QR, MPL, MPR, dt, R):
 
     QL_ = QL[:n5].copy()
     QR_ = QR[:n5].copy()
+
+    rotate_tensors(QL_, R)
+    rotate_tensors(QR_, R)
 
     while not check_star_convergence(QL_, QR_, MPL, MPR):
 
@@ -243,6 +258,9 @@ def star_states(QL, QR, MPL, MPR, dt):
             ode_solver_cons(QR_, dt / 2, MPR)
 
         QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR)
+
+    rotate_tensors(QL_, R.T)
+    rotate_tensors(QR_, R.T)
 
     retL = QL.copy()
     retR = QR.copy()
