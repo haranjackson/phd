@@ -1,16 +1,12 @@
 from itertools import product
 
-from numpy import array, logical_or, ones, prod, zeros
+from numpy import array, dot, logical_or, ones, prod, sqrt, vstack, zeros
 from skfmm import distance
 
 from ader.etc.boundaries import neighbor_cells
 
-from gpr.opts import THERMAL
 from gpr.multi.riemann import star_states
 from solver.gfm.functions import finite_difference, normal, sign
-
-
-NVARS = 17 if THERMAL else 14
 
 
 def find_interface_cells(u, i, m):
@@ -59,6 +55,28 @@ def boundary_inds(ind, φ, Δφ, dx):
     return ii, iL, iR, i_
 
 
+def rotation_matrix(n):
+    """ returns the matrix that rotates vector quantities into a coordinate
+        system defined by e1=n, e2,e3 ⟂ n
+    """
+    e1 = zeros(3)
+    e1[:len(n)] = n
+
+    if abs(e1[1] + e1[2]) <= abs(e1[1] - e1[2]):
+        den = sqrt(2 * (1 - e1[0] * e1[1] - e1[1] * e1[2] - e1[2] * e1[0]))
+        e2 = array([e1[1] - e1[2], e1[2] - e1[0], e1[0] - e1[1]]) / den
+        e3 = (e1 * sum(e1) - dot(e1, e1)) / den
+
+    else:
+        den = sqrt(2 * (1 + e1[0] * e1[1] + e1[1] * e1[2] - e1[2] * e1[0]))
+        e2 = array([e1[1] + e1[2], e1[2] - e1[0], - e1[0] - e1[1]]) / den
+        Sum = e1[0] - e1[1] + e1[2]
+        Sq = dot(e1, e1)
+        e3 = array([e1[0] * Sum - Sq, e1[1] * Sum + Sq, e1[2] * Sum - Sq]) / den
+
+    return vstack([e1, e2, e3])
+
+
 def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR, dt):
 
     for ind in product(*[range(s) for s in intMask.shape]):
@@ -66,10 +84,12 @@ def fill_boundary_cells(u, grids, intMask, i, φ, Δφ, dx, MPL, MPR, dt):
         if intMask[ind] != 0:
             ii, iL, iR, i_ = boundary_inds(ind, φ, Δφ, dx)
 
-            # TODO: rotate vector quantities towards the normal
             QL = u[tuple(iL)]
             QR = u[tuple(iR)]
-            QL_, QR_ = star_states(QL, QR, MPL, MPR, dt)
+
+            n = normal(Δφ[ind])
+            R = rotation_matrix(n)
+            QL_, QR_ = star_states(QL, QR, MPL, MPR, dt, R)
 
         if intMask[ind] == -1:
             grids[i][tuple(ii)] = QL_

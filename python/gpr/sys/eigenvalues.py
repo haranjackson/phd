@@ -1,4 +1,4 @@
-from numpy import dot, sqrt, zeros
+from numpy import dot, iscomplex, sqrt, zeros
 from numpy.linalg import eigvals
 
 from gpr.misc.structures import State
@@ -72,7 +72,7 @@ def max_eig(Q, d, MP):
     Ξ2 = Xi2(P, d, MP)
     O = dot(Ξ1, Ξ2)
 
-    lam = sqrt(eigvals(O).max())
+    lam = sqrt(eigvals(O).max().real)
 
     if vd > 0:
         return vd + lam

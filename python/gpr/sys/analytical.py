@@ -1,4 +1,4 @@
-from numpy import arctan, array, cos, dot, exp, log, pi, prod, sqrt
+from numpy import arctan, array, cbrt, cos, dot, exp, log, pi, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
@@ -61,23 +61,30 @@ def solver_distortion_analytic(A, dt, MP):
     τ = nondimensionalized_time(ρ, detA3, m0, u0, dt, MP)
     e_6τ = exp(-6 * τ)
     e_9τ = exp(-9 * τ)
-    m = 1 + (3 * m0 - u0 / 3 - 3) * e_6τ - (2 * m0 - u0 / 3 - 2) * e_9τ
-    u = pos((18 * m0 - 2 * u0 - 18) * e_6τ - (18 * m0 - 3 * u0 - 18) * e_9τ)
+
+    a = 3 * m0 - u0 / 3 - 3
+    b = 2 * m0 - u0 / 3 - 2
+    m = 1 + a * e_6τ - b * e_9τ
+    u = pos(6 * a * e_6τ - 9 * b * e_9τ)
 
     Δ = -2 * m**3 + m * u + 2
     arg1 = pos(6 * u**3 - 81 * Δ**2)
 
-    if arg1 < 1e-12:
-        θ = 0
-    elif abs(Δ) < 1e-12:
-        θ = sign(Δ) * pi / 2
+    if abs(Δ) < 1e-12:
+        # θ = pi / 2
+        x1 = sqrt(6 * u) / 3 * cos(pi / 6) + m
+
+    elif arg1 == 0:
+        tmp = cbrt(54 * Δ)
+        x1 = tmp / 6 + u / tmp + m
+
     else:
         θ = arctan(sqrt(arg1) / (9 * Δ))
+        x1 = sqrt(6 * u) / 3 * cos(θ / 3) + m
 
-    x1 = sqrt(6 * u) / 3 * cos(θ / 3) + m
-    temp2 = 3 * m - x1
-    arg2 = pos(x1 * temp2**2 - 4)
-    x2 = 0.5 * (sqrt(arg2 / x1) + temp2)
+    tmp2 = 3 * m - x1
+    arg2 = pos(x1 * tmp2**2 - 4)
+    x2 = 0.5 * (sqrt(arg2 / x1) + tmp2)
     x3 = 1 / (x1 * x2)
 
     s1 = detA3 * sqrt(array([x1, x2, x3]))
