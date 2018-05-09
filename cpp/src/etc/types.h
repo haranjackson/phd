@@ -15,10 +15,17 @@
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     Mat;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vec;
-typedef Eigen::Ref<Mat> Matr;
-typedef Eigen::Ref<Vec> Vecr;
+typedef Eigen::Matrix<bool, Eigen::Dynamic, 1> bVec;
+typedef Eigen::Matrix<int, Eigen::Dynamic, 1> iVec;
+typedef Eigen::Matrix<long, Eigen::Dynamic, 1> lVec;
 typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     Arr;
+
+typedef Eigen::Ref<Mat> Matr;
+typedef Eigen::Ref<Vec> Vecr;
+typedef Eigen::Ref<bVec> bVecr;
+typedef Eigen::Ref<iVec> iVecr;
+typedef Eigen::Ref<lVec> lVecr;
 
 typedef Eigen::Matrix<double, 2, N, Eigen::RowMajor> Mat2_N;
 typedef Eigen::Matrix<double, V, V, Eigen::RowMajor> MatV_V;
@@ -38,8 +45,8 @@ typedef Eigen::Ref<Mat2N_V> Mat2N_Vr;
 
 typedef Eigen::Matrix<double, 3, 1> Vec3;
 typedef Eigen::Ref<Vec3> Vec3r;
-typedef Eigen::Matrix<int, 3, 1> Veci3;
-typedef Eigen::Ref<Veci3> Veci3r;
+typedef Eigen::Matrix<int, 3, 1> iVec3;
+typedef Eigen::Ref<iVec3> iVec3r;
 
 typedef Eigen::Matrix<double, N, 1> VecN;
 typedef Eigen::Matrix<double, V, 1> VecV;
@@ -62,8 +69,6 @@ typedef Eigen::ColPivHouseholderQR<Mat> Dec;
 
 typedef std::function<Vec(Vecr)> VecFunc;
 
-template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-}
+template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
 
 #endif

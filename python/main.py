@@ -8,10 +8,10 @@ from solver import SolverPlus
 from solver.gfm import MultiSolver
 
 
-u, MPs, tf, dX = fluids.first_stokes_problem_IC()
+# u, MPs, tf, dX = fluids.first_stokes_problem_IC()
 # u, MPs, tf, dX = multi.heat_conduction_multi_IC()
 # u, MPs, tf, dX = multi.helium_bubble_IC()
-# u, MPs, tf, dX = multi.water_gas_IC()
+u, MPs, tf, dX = multi.water_gas_IC()
 # u, MPs, tf, dX = multi.gas_solid_IC()
 
 
@@ -41,4 +41,4 @@ else:
                          riemann_solver='rusanov')
 
     solver.solve(u, tf, dX, cfl=0.9, boundary_conditions='transitive',
-                 verbose=True, callback=callback, cpp_level=1)
+                 verbose=True, callback=callback, cpp_level=0)

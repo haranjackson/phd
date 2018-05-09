@@ -10,6 +10,8 @@
 #include "../src/etc/globals.h"
 #include "../src/etc/grid.h"
 
+#include "../src/multi/pfmm.h"
+
 #include "../src/scipy/lgmres.h"
 #include "../src/scipy/poly.h"
 
@@ -55,11 +57,14 @@ PYBIND11_MODULE(GPRpy, m) {
   pybind11::module m_classes =
       m.def_submodule("classes", "Classes used by GPRpy");
 
+  pybind11::module m_multi =
+      m.def_submodule("multi", "Generic multimaterial functions");
+
   pybind11::module m_scipy = m.def_submodule("scipy", "SciPy functions");
 
   pybind11::module m_system =
       m.def_submodule("system", "System vectors and matrices");
-  pybind11::module m_multi =
+  pybind11::module m_system_multi =
       m_system.def_submodule("multi", "Functions related to multimaterial GPR");
 
   pybind11::module m_solvers = m.def_submodule("solvers", "Solver functions");
@@ -110,6 +115,8 @@ PYBIND11_MODULE(GPRpy, m) {
       .def("diff", &poly::diff)
       .def("eval", &poly::eval);
 
+  m_multi.def("distance", &distance);
+
   m_scipy.def("lgmres_wrapper", &lgmres_wrapper, py::arg("A"), py::arg("b"),
               py::arg("x0") = Vec(0), py::arg("M") = Mat(0, 0),
               py::arg("tol") = 1e-5, py::arg("maxiter") = 1000,
@@ -131,10 +138,10 @@ PYBIND11_MODULE(GPRpy, m) {
   m_system.def("dFdP", &dFdP);
   m_system.def("dPdQ", &dPdQ);
 
-  m_multi.def("eigen", &eigen);
-  m_multi.def("riemann_constraints", &riemann_constraints);
-  m_multi.def("star_stepper", &star_stepper);
-  m_multi.def("star_states", &star_states);
+  m_system_multi.def("eigen", &eigen);
+  m_system_multi.def("riemann_constraints", &riemann_constraints);
+  m_system_multi.def("star_stepper", &star_stepper);
+  m_system_multi.def("star_states", &star_states);
 
   m_solvers_common.def("basis_polys", &basis_polys);
   m_solvers_common.def("scaled_nodes", &scaled_nodes);

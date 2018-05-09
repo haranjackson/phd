@@ -5,16 +5,16 @@
 #include "../../system/objects/gpr_objects.h"
 
 void centers1(Vecr u, Vecr rec, int nx, double dt, double dx, bool SOURCES,
-              bool TIME, Par &MP);
+              bool TIME, Par &MP, bVecr mask);
 void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool SOURCES, bool TIME, Par &MP);
+              bool SOURCES, bool TIME, Par &MP, bVecr mask);
 
 void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
-              int FLUX,  Par &MP);
+              int FLUX, Par &MP, bVecr mask);
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool TIME, int FLUX,  Par &MP);
+              bool TIME, int FLUX, Par &MP, bVecr mask);
 
-void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
-                 bool SOURCES, bool TIME, int FLUX,  Par &MP);
+void fv_launcher(Vecr u, Vecr rec, int ndim, iVec3r nX, double dt, Vec3r dX,
+                 bool SOURCES, bool TIME, int FLUX, Par &MP, bVecr mask);
 
 #endif // FV_H

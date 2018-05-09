@@ -31,7 +31,7 @@ double timestep(Vecr u, Vec3r dX, int ndim, double CFL, double t, double tf,
     return dt;
 }
 
-void iterator(Vecr u, double tf, Veci3r nX, Vec3r dX, double CFL, bool PERIODIC,
+void iterator(Vecr u, double tf, iVec3r nX, Vec3r dX, double CFL, bool PERIODIC,
               bool SPLIT, bool HALF_STEP, bool STIFF, int FLUX, Par &MP) {
 
   int nx = nX(0);
@@ -51,10 +51,12 @@ void iterator(Vecr u, double tf, Veci3r nX, Vec3r dX, double CFL, bool PERIODIC,
     double dt = timestep(u, dX, ndim, CFL, t, tf, count, MP);
     boundaries(u, ub, ndim, nX, PERIODIC);
 
+    bVec mask(0);
+
     if (SPLIT)
-      split_stepper(u, ub, wh, ndim, nX, dt, dX, HALF_STEP, FLUX, MP);
+      split_stepper(u, ub, wh, ndim, nX, dt, dX, HALF_STEP, FLUX, MP, mask);
     else
-      ader_stepper(u, ub, wh, qh, ndim, nX, dt, dX, STIFF, FLUX, MP);
+      ader_stepper(u, ub, wh, qh, ndim, nX, dt, dX, STIFF, FLUX, MP, mask);
     t += dt;
     count += 1;
 

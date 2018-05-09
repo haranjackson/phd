@@ -10,56 +10,12 @@
 #include "../variables/state.h"
 #include "../variables/wavespeeds.h"
 #include "eigenvecs.h"
+#include "riemann.h"
+#include "rotations.h"
 
 bool STICK = true;
 bool RELAXATION = true;
 double STAR_TOL = 1e-6;
-
-VecV Cvec_to_Pvec(VecV Q, Par &MP) {
-  // Returns vector of primitive variables (atypical ordering), given a vector
-  // of conserved variables (typical ordering)
-  double ρ = Q(0);
-  double p = pressure(Q, MP);
-  Vec3 ρv = get_ρv(Q);
-  Mat3_3 A = get_A(Q);
-
-  Q(1) = p;
-  Q.segment<3>(2) = A.col(0);
-  Q.segment<3>(5) = A.col(1);
-  Q.segment<3>(8) = A.col(2);
-  Q.segment<3>(11) = ρv / ρ;
-
-  if (THERMAL)
-    Q.segment<3>(14) /= ρ;
-
-  return Q;
-}
-
-VecV Pvec_to_Cvec(VecV P, Par &MP) {
-  // Returns vector of conserved variables (typical ordering), given a vector of
-  // primitive variables (atypical ordering)
-  double ρ = P(0);
-  double p = P(1);
-
-  Mat3_3 A;
-  for (int j = 0; j < 3; j++)
-    for (int i = 0; i < 3; i++)
-      A(i, j) = P(2 + 3 * j + i);
-
-  Vec3 v = P.segment<3>(11);
-
-  P.segment<3>(2) = ρ * v;
-  P.segment<9>(5) = VecMap(A.data(), 9);
-
-  if (THERMAL) {
-    Vec3 J = P.segment<3>(14);
-    P(1) = ρ * total_energy(ρ, p, A, J, v, MP);
-    P.segment<3>(14) *= ρ;
-  } else
-    P(1) = ρ * total_energy(ρ, p, A, v, MP);
-
-  return P;
-}
 
 bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
@@ -86,7 +42,7 @@ MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP) {
    * dT = dT/dρ * dρ + dT/dp * dp
    * v*L = v*R
    * J*L = J*R
-  */
+   */
   MatV_V Rhat = eigen(Q, 0, MP);
 
   double ρ = Q(0);
@@ -233,8 +189,12 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
   QR = Pvec_to_Cvec(PR_vec, MPR);
 }
 
-std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR,
-                              double dt) {
+StarStates star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
+                       Vecr n) {
+
+  Mat3_3 R = rotation_matrix(n);
+  rotate_tensors(QL_, R);
+  rotate_tensors(QR_, R);
 
   while (!check_star_convergence(QL_, QR_, MPL, MPR)) {
 
@@ -244,6 +204,10 @@ std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR,
     }
     star_stepper(QL_, QR_, MPL, MPR);
   }
-  std::vector<VecV> ret = {QL_, QR_};
+  Mat3_3 RT = R.transpose();
+  rotate_tensors(QL_, RT);
+  rotate_tensors(QR_, RT);
+
+  StarStates ret = {QL_, QR_};
   return ret;
 }

@@ -7,6 +7,7 @@ SET(MKLROOT "/opt/intel/mkl")
 
 include_directories(include/pybind11
                     include/eigen3
+                    include/skfmm
                     include
                     ${PYTHON_DIR})
 
@@ -17,8 +18,16 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3 -fPIC")
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I${MKLROOT}/include")
 #SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl")
 
-SET(SRCS src/etc/globals.cpp
+SET(SRCS ../include/skfmm/base_marcher.cpp
+         ../include/skfmm/distance_marcher.cpp
+         ../include/skfmm/heap.cpp
+
+         src/etc/globals.cpp
          src/etc/grid.cpp
+
+         src/multi/fill.cpp
+         src/multi/functions.cpp
+         src/multi/pfmm.cpp
 
          src/scipy/legendre.cpp
          src/scipy/lgmres.cpp
@@ -41,6 +50,7 @@ SET(SRCS src/etc/globals.cpp
 
          src/solvers/dg/dg.cpp
          src/solvers/dg/dg_matrices.cpp
+         src/solvers/dg/initial_guess.cpp
 
          src/system/analytic.cpp
          src/system/eig.cpp
@@ -52,6 +62,7 @@ SET(SRCS src/etc/globals.cpp
 
          src/system/multi/eigenvecs.cpp
          src/system/multi/riemann.cpp
+         src/system/multi/rotations.cpp
 
          src/system/variables/derivatives.cpp
          src/system/variables/eos.cpp

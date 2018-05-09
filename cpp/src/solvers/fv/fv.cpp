@@ -9,44 +9,49 @@ int ind(int i, int t, int nt) { return i * nt + t; }
 int ind(int i, int j, int t, int ny, int nt) { return (i * ny + j) * nt + t; }
 
 void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
-                    double wght_t, bool SOURCES, Par &MP) {
+                    double wght_t, bool SOURCES, Par &MP, bVecr mask) {
   MatN_V dqh_dx;
   VecV dqdxs, qs, S, tmpx;
 
+  bool useMask = mask.size() > 0;
   for (int i = 0; i < nx; i++) {
-    int idx = ind(i + 1, t, nt) * N * V;
-    MatN_VMap qh(rec.data() + idx, OuterStride(V));
-    dqh_dx.noalias() = DERVALS * qh;
+    if (!useMask || mask(i)) {
 
-    for (int s = 0; s < N; s++) {
-      qs = qh.row(s);
-      dqdxs = dqh_dx.row(s);
+      int idx = ind(i + 1, t, nt) * N * V;
+      MatN_VMap qh(rec.data() + idx, OuterStride(V));
+      dqh_dx.noalias() = DERVALS * qh;
 
-      if (SOURCES)
-        source(S, qs, MP);
-      else
-        S.setZero(V);
+      for (int s = 0; s < N; s++) {
+        qs = qh.row(s);
+        dqdxs = dqh_dx.row(s);
 
-      Bdot(tmpx, qs, dqdxs, 0, MP);
+        if (SOURCES)
+          source(S, qs, MP);
+        else
+          S.setZero(V);
 
-      S -= tmpx / dx;
+        Bdot(tmpx, qs, dqdxs, 0, MP);
 
-      u.segment<V>(i * V) += wght_t * WGHTS(s) * S;
+        S -= tmpx / dx;
+
+        u.segment<V>(i * V) += wght_t * WGHTS(s) * S;
+      }
     }
   }
 }
 
 void centers1(Vecr u, Vecr rec, int nx, double dt, double dx, bool SOURCES,
-              bool TIME, Par &MP) {
+              bool TIME, Par &MP, bVecr mask) {
   if (TIME)
     for (int t = 0; t < N; t++)
-      centers1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), SOURCES, MP);
+      centers1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), SOURCES, MP, mask);
   else
-    centers1_inner(u, rec, nx, dx, 1, 0, dt, SOURCES, MP);
+    centers1_inner(u, rec, nx, dx, 1, 0, dt, SOURCES, MP, mask);
 }
 
 void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
-                    int nt, int t, double wght_t, bool SOURCES, Par &MP) {
+                    int nt, int t, double wght_t, bool SOURCES, Par &MP,
+                    bVecr mask) {
   MatN2_V dqh_dx, dqh_dy;
   VecV qs, dqdxs, dqdys, S, tmpx, tmpy;
 
@@ -82,17 +87,18 @@ void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 }
 
 void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool SOURCES, bool TIME, Par &MP) {
+              bool SOURCES, bool TIME, Par &MP, bVecr mask) {
 
   if (TIME)
     for (int t = 0; t < N; t++)
-      centers2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), SOURCES, MP);
+      centers2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), SOURCES, MP,
+                     mask);
   else
-    centers2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, SOURCES, MP);
+    centers2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, SOURCES, MP, mask);
 }
 
 void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
-                    double wght_t, int FLUX, Par &MP) {
+                    double wght_t, int FLUX, Par &MP, bVecr mask) {
 
   double k = wght_t / (2. * dx);
   VecV ql, qr, f, b;
@@ -126,17 +132,18 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
 }
 
 void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
-              int FLUX, Par &MP) {
+              int FLUX, Par &MP, bVecr mask) {
 
   if (TIME)
     for (int t = 0; t < N; t++)
-      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), FLUX, MP);
+      interfs1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), FLUX, MP, mask);
   else
-    interfs1_inner(u, rec, nx, dx, 1, 0, dt, FLUX, MP);
+    interfs1_inner(u, rec, nx, dx, 1, 0, dt, FLUX, MP, mask);
 }
 
 void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
-                    int nt, int t, double wghts_t, int FLUX, Par &MP) {
+                    int nt, int t, double wghts_t, int FLUX, Par &MP,
+                    bVecr mask) {
 
   MatN_V q0x, q0y, q1x, q1y;
   VecV qlx, qrx, qly, qry, fx, bx, fy, by;
@@ -211,16 +218,17 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 }
 
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool TIME, int FLUX, Par &MP) {
+              bool TIME, int FLUX, Par &MP, bVecr mask) {
   if (TIME)
     for (int t = 0; t < N; t++)
-      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), FLUX, MP);
+      interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), FLUX, MP,
+                     mask);
   else
-    interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, MP);
+    interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, MP, mask);
 }
 
-void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
-                 bool SOURCES, bool TIME, int FLUX, Par &MP) {
+void fv_launcher(Vecr u, Vecr rec, int ndim, iVec3r nX, double dt, Vec3r dX,
+                 bool SOURCES, bool TIME, int FLUX, Par &MP, bVecr mask) {
   int nx = nX(0);
   int ny = nX(1);
   double dx = dX(0);
@@ -228,13 +236,12 @@ void fv_launcher(Vecr u, Vecr rec, int ndim, Veci3r nX, double dt, Vec3r dX,
 
   switch (ndim) {
   case 1:
-    centers1(u, rec, nx, dt, dx, SOURCES, TIME, MP);
-    interfs1(u, rec, nx, dt, dx, TIME, FLUX, MP);
+    centers1(u, rec, nx, dt, dx, SOURCES, TIME, MP, mask);
+    interfs1(u, rec, nx, dt, dx, TIME, FLUX, MP, mask);
     break;
   case 2:
-    centers2(u, rec, nx, ny, dt, dx, dy, SOURCES, TIME, MP);
-    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, FLUX, MP);
+    centers2(u, rec, nx, ny, dt, dx, dy, SOURCES, TIME, MP, mask);
+    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, FLUX, MP, mask);
     break;
-    // case 3 : TODO
   }
 }

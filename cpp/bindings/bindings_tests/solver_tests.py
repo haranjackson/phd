@@ -1,6 +1,6 @@
 import GPRpy
 
-from numpy import array, dot, int32, zeros
+from numpy import array, dot, int32, ones, zeros
 from numpy.random import rand
 from scipy.optimize import newton_krylov
 from scipy.sparse.linalg import lgmres
@@ -190,10 +190,11 @@ def midstepper_test(u, dX, dt, wenoSolver, splitSolver):
 
     mid_py = wenoSolver.solve(u)
     mid_cp = mid_py.ravel()
+    mask = ones(int(u.size / u.shape[-1]), dtype=bool)
 
     splitSolver.weno_midstepper(mid_py, dt, dX)
     GPRpy.solvers.split.midstepper(mid_cp, NDIM, dt, cpp_dx(dX),
-                                   splitSolver.pars)
+                                   splitSolver.pars, mask)
 
     mid_cp = mid_cp.reshape(mid_py.shape)
     print("Step  ", check(mid_cp, mid_py))
