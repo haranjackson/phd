@@ -9,13 +9,12 @@ void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
   double dx = dX(0);
   double dy = dX(1);
 
-  bool useMask = mask.size() > 0;
   if (ndim == 1) {
     MatN_V F, dwdx, dFdx;
     VecV Bdwdx;
 
     for (int ind = 0; ind < ncell; ind += 1) {
-      if (!useMask || mask(ind)) {
+      if (mask(ind)) {
         MatN_VMap w(wh.data() + ind * N * V, OuterStride(V));
         F.setZero(N, V);
         for (int a = 0; a < N; a++)
@@ -36,7 +35,7 @@ void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
     VecV Bdwdx, Bdwdy;
 
     for (int ind = 0; ind < ncell; ind += 1) {
-      if (!useMask || mask(ind)) {
+      if (mask(ind)) {
         MatN2_VMap w(wh.data() + ind * N * N * V, OuterStride(V));
         F.setZero(N * N, V);
         G.setZero(N * N, V);

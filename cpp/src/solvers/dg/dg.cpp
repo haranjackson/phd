@@ -150,10 +150,9 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
   Mat Ww(NT * N, V);
   Mat q0(NT * N, V);
 
-  bool useMask = mask.size() > 0;
   for (int ind = 0; ind < ncell; ind++) {
 
-    if (!useMask || mask(ind)) {
+    if (mask(ind)) {
 
       MatMap wi(wh.data() + (ind * NT * V), NT, V, OuterStride(V));
       MatMap qi(qh.data() + (ind * NT * N * V), NT * N, V, OuterStride(V));

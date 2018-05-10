@@ -13,9 +13,8 @@ void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
   MatN_V dqh_dx;
   VecV dqdxs, qs, S, tmpx;
 
-  bool useMask = mask.size() > 0;
   for (int i = 0; i < nx; i++) {
-    if (!useMask || mask(i)) {
+    if (mask(i + 1)) {
 
       int idx = ind(i + 1, t, nt) * N * V;
       MatN_VMap qh(rec.data() + idx, OuterStride(V));
@@ -57,32 +56,34 @@ void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 
   for (int i = 0; i < nx; i++)
     for (int j = 0; j < ny; j++) {
-      int idx = ind(i + 1, j + 1, t, ny + 2, nt) * N * N * V;
+      if (mask(ind(i + 1, j + 1, ny + 2))) {
+        int idx = ind(i + 1, j + 1, t, ny + 2, nt) * N * N * V;
 
-      MatN2_VMap qh(rec.data() + idx, OuterStride(V));
-      derivs2d(dqh_dx, qh, 0);
-      derivs2d(dqh_dy, qh, 1);
+        MatN2_VMap qh(rec.data() + idx, OuterStride(V));
+        derivs2d(dqh_dx, qh, 0);
+        derivs2d(dqh_dy, qh, 1);
 
-      for (int a = 0; a < N; a++)
-        for (int b = 0; b < N; b++) {
-          int s = a * N + b;
-          qs = qh.row(s);
-          dqdxs = dqh_dx.row(s);
-          dqdys = dqh_dy.row(s);
+        for (int a = 0; a < N; a++)
+          for (int b = 0; b < N; b++) {
+            int s = a * N + b;
+            qs = qh.row(s);
+            dqdxs = dqh_dx.row(s);
+            dqdys = dqh_dy.row(s);
 
-          if (SOURCES)
-            source(S, qs, MP);
-          else
-            S.setZero(V);
+            if (SOURCES)
+              source(S, qs, MP);
+            else
+              S.setZero(V);
 
-          Bdot(tmpx, qs, dqdxs, 0, MP);
-          Bdot(tmpy, qs, dqdys, 1, MP);
+            Bdot(tmpx, qs, dqdxs, 0, MP);
+            Bdot(tmpy, qs, dqdys, 1, MP);
 
-          S -= tmpx / dx;
-          S -= tmpy / dy;
+            S -= tmpx / dx;
+            S -= tmpy / dy;
 
-          u.segment<V>((i * ny + j) * V) += wght_t * WGHTS(a) * WGHTS(b) * S;
-        }
+            u.segment<V>((i * ny + j) * V) += wght_t * WGHTS(a) * WGHTS(b) * S;
+          }
+      }
     }
 }
 
@@ -104,30 +105,32 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
   VecV ql, qr, f, b;
 
   for (int i = 0; i < nx + 1; i++) {
-    int indl = ind(i, t, nt) * N * V;
-    int indr = ind(i + 1, t, nt) * N * V;
-    MatN_VMap qhl(rec.data() + indl, OuterStride(V));
-    MatN_VMap qhr(rec.data() + indr, OuterStride(V));
-    ql.noalias() = ENDVALS.row(1) * qhl;
-    qr.noalias() = ENDVALS.row(0) * qhr;
+    if (mask(i) && mask(i + 1)) {
+      int indl = ind(i, t, nt) * N * V;
+      int indr = ind(i + 1, t, nt) * N * V;
+      MatN_VMap qhl(rec.data() + indl, OuterStride(V));
+      MatN_VMap qhr(rec.data() + indr, OuterStride(V));
+      ql.noalias() = ENDVALS.row(1) * qhl;
+      qr.noalias() = ENDVALS.row(0) * qhr;
 
-    switch (FLUX) {
-    case OSHER:
-      f = D_OSH(ql, qr, 0, MP);
-      break;
-    case ROE:
-      f = D_ROE(ql, qr, 0, MP);
-      break;
-    case RUSANOV:
-      f = D_RUS(ql, qr, 0, MP);
-      break;
+      switch (FLUX) {
+      case OSHER:
+        f = D_OSH(ql, qr, 0, MP);
+        break;
+      case ROE:
+        f = D_ROE(ql, qr, 0, MP);
+        break;
+      case RUSANOV:
+        f = D_RUS(ql, qr, 0, MP);
+        break;
+      }
+      b = Bint(ql, qr, 0, MP);
+
+      if (i > 0)
+        u.segment<V>((i - 1) * V) -= k * (b + f);
+      if (i < nx)
+        u.segment<V>(i * V) -= k * (b - f);
     }
-    b = Bint(ql, qr, 0, MP);
-
-    if (i > 0)
-      u.segment<V>((i - 1) * V) -= k * (b + f);
-    if (i < nx)
-      u.segment<V>(i * V) -= k * (b - f);
   }
 }
 
@@ -153,66 +156,84 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 
   for (int i = 0; i < nx + 1; i++)
     for (int j = 0; j < ny + 1; j++) {
+
       if ((i == 0 || i == nx + 1) && (j == 0 || j == ny + 1))
         continue;
 
-      int uind0 = ind(i - 1, j - 1, ny) * V;
-      int uindx = ind(i, j - 1, ny) * V;
-      int uindy = ind(i - 1, j, ny) * V;
+      if (mask(ind(i, j, ny + 2))) {
 
-      int ind0 = ind(i, j, t, ny + 2, nt) * N * N * V;
-      int indx = ind(i + 1, j, t, ny + 2, nt) * N * N * V;
-      int indy = ind(i, j + 1, t, ny + 2, nt) * N * N * V;
+        int uind0 = ind(i - 1, j - 1, ny) * V;
+        int ind0 = ind(i, j, t, ny + 2, nt) * N * N * V;
 
-      MatN2_VMap qh0(rec.data() + ind0, OuterStride(V));
-      MatN2_VMap qhx(rec.data() + indx, OuterStride(V));
-      MatN2_VMap qhy(rec.data() + indy, OuterStride(V));
+        MatN2_VMap qh0(rec.data() + ind0, OuterStride(V));
 
-      endpts2d(q0x, qh0, 0, 1);
-      endpts2d(q0y, qh0, 1, 1);
-      endpts2d(q1x, qhx, 0, 0);
-      endpts2d(q1y, qhy, 1, 0);
+        if (mask(ind(i + 1, j, ny + 2))) {
 
-      for (int s = 0; s < N; s++) {
-        qlx = q0x.row(s);
-        qrx = q1x.row(s);
-        qly = q0y.row(s);
-        qry = q1y.row(s);
+          int uindx = ind(i, j - 1, ny) * V;
+          int indx = ind(i + 1, j, t, ny + 2, nt) * N * N * V;
 
-        switch (FLUX) {
-        case OSHER:
-          fx = D_OSH(qlx, qrx, 0, MP);
-          break;
-        case ROE:
-          fx = D_ROE(qlx, qrx, 0, MP);
-          break;
-        case RUSANOV:
-          fx = D_RUS(qlx, qrx, 0, MP);
-          break;
+          MatN2_VMap qhx(rec.data() + indx, OuterStride(V));
+          endpts2d(q0x, qh0, 0, 1);
+          endpts2d(q1x, qhx, 0, 0);
+
+          for (int s = 0; s < N; s++) {
+
+            qlx = q0x.row(s);
+            qrx = q1x.row(s);
+
+            switch (FLUX) {
+            case OSHER:
+              fx = D_OSH(qlx, qrx, 0, MP);
+              break;
+            case ROE:
+              fx = D_ROE(qlx, qrx, 0, MP);
+              break;
+            case RUSANOV:
+              fx = D_RUS(qlx, qrx, 0, MP);
+              break;
+            }
+            bx = Bint(qlx, qrx, 0, MP);
+
+            if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {
+              u.segment<V>(uind0) -= WGHTS(s) * kx * (bx + fx);
+            }
+            if (i < nx && j > 0 and j < ny + 1)
+              u.segment<V>(uindx) -= WGHTS(s) * kx * (bx - fx);
+          }
         }
-        bx = Bint(qlx, qrx, 0, MP);
+        if (mask(ind(i, j + 1, ny + 2))) {
 
-        switch (FLUX) {
-        case OSHER:
-          fy = D_OSH(qly, qry, 1, MP);
-          break;
-        case ROE:
-          fy = D_ROE(qly, qry, 1, MP);
-          break;
-        case RUSANOV:
-          fy = D_RUS(qly, qry, 1, MP);
-          break;
-        }
-        by = Bint(qly, qry, 1, MP);
+          int uindy = ind(i - 1, j, ny) * V;
+          int indy = ind(i, j + 1, t, ny + 2, nt) * N * N * V;
 
-        if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {
-          u.segment<V>(uind0) -= WGHTS(s) * kx * (bx + fx);
-          u.segment<V>(uind0) -= WGHTS(s) * ky * (by + fy);
+          MatN2_VMap qhy(rec.data() + indy, OuterStride(V));
+          endpts2d(q0y, qh0, 1, 1);
+          endpts2d(q1y, qhy, 1, 0);
+
+          for (int s = 0; s < N; s++) {
+            qly = q0y.row(s);
+            qry = q1y.row(s);
+
+            switch (FLUX) {
+            case OSHER:
+              fy = D_OSH(qly, qry, 1, MP);
+              break;
+            case ROE:
+              fy = D_ROE(qly, qry, 1, MP);
+              break;
+            case RUSANOV:
+              fy = D_RUS(qly, qry, 1, MP);
+              break;
+            }
+            by = Bint(qly, qry, 1, MP);
+
+            if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {
+              u.segment<V>(uind0) -= WGHTS(s) * ky * (by + fy);
+            }
+            if (i > 0 && i < nx + 1 && j < ny)
+              u.segment<V>(uindy) -= WGHTS(s) * ky * (by - fy);
+          }
         }
-        if (i < nx && j > 0 and j < ny + 1)
-          u.segment<V>(uindx) -= WGHTS(s) * kx * (bx - fx);
-        if (i > 0 && i < nx + 1 && j < ny)
-          u.segment<V>(uindy) -= WGHTS(s) * ky * (by - fy);
       }
     }
 }
