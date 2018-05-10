@@ -12,7 +12,7 @@ void ader_stepper(Vecr u, Vecr ub, Vecr wh, Vecr qh, int ndim, iVec3r nX,
 
   weno_launcher(wh, ub, ndim, nX);
 
-  predictor(qh, wh, ndim, dt, dX, STIFF, false, MP);
+  predictor(qh, wh, ndim, dt, dX, STIFF, false, MP, mask);
 
   fv_launcher(u, qh, ndim, nX, dt, dX, true, true, FLUX, MP, mask);
 }

@@ -174,7 +174,8 @@ def dg_test(u, dX, dt, wenoSolver, dgSolver):
 
     qh_cp = zeros(len(wh_cp) * N)
     GPRpy.solvers.dg.predictor(qh_cp, wh_cp, NDIM, dt, cpp_dx(dX),
-                               dgSolver.stiff, stiff_guess, dgSolver.pars)
+                               dgSolver.stiff, stiff_guess, dgSolver.pars,
+                               zeros(0, dtype=bool))
     qh_cp = qh_cp.reshape(qh_py.shape)
 
     print("DG    ", check(qh_cp, qh_py))

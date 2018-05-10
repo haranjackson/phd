@@ -78,11 +78,11 @@ class SolverPlus(Solver):
             print('FV:  ', t3 - t2)
             print('ODE2:', t4 - t3, '\n')
 
-    def cpp_stepper(self, uBC, dt):
+    def cpp_stepper(self, uBC, dt, maskBC):
         if self.split:
-            cpp_split_stepper(self, self.u, uBC, dt, self.dX)
+            cpp_split_stepper(self, self.u, uBC, dt, self.dX, maskBC)
         else:
-            cpp_ader_stepper(self, self.u, uBC, dt, self.dX)
+            cpp_ader_stepper(self, self.u, uBC, dt, self.dX, maskBC)
 
     def stepper(self, executor, dt, mask=None):
 
@@ -94,7 +94,7 @@ class SolverPlus(Solver):
             maskBC = extend_mask(mask)
 
         if self.cpp_level > 0:
-            self.cpp_stepper(uBC, dt)
+            self.cpp_stepper(uBC, dt, maskBC)
 
         elif self.split:
             self.split_stepper(dt, maskBC)

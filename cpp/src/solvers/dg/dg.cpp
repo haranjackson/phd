@@ -140,7 +140,7 @@ void initial_condition(Matr Ww, Matr w, int ndim) {
 }
 
 void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
-               bool HIDALGO, Par &MP) {
+               bool HIDALGO, Par &MP, bVecr mask) {
 
   int ncell = qh.size() / (int(pow(N, ndim + 1)) * V);
   int NT = int(pow(N, ndim));
@@ -150,59 +150,63 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
   Mat Ww(NT * N, V);
   Mat q0(NT * N, V);
 
+  bool useMask = mask.size() > 0;
   for (int ind = 0; ind < ncell; ind++) {
 
-    MatMap wi(wh.data() + (ind * NT * V), NT, V, OuterStride(V));
-    MatMap qi(qh.data() + (ind * NT * N * V), NT * N, V, OuterStride(V));
+    if (!useMask || mask(ind)) {
 
-    initial_condition(Ww, wi, ndim);
+      MatMap wi(wh.data() + (ind * NT * V), NT, V, OuterStride(V));
+      MatMap qi(qh.data() + (ind * NT * N * V), NT * N, V, OuterStride(V));
 
-    using std::placeholders::_1;
-    VecFunc obj_bound;
-    if (ndim == 1)
-      obj_bound = std::bind(obj1, _1, Ww, dt, dx, MP);
-    else if (ndim == 2)
-      obj_bound = std::bind(obj2, _1, Ww, dt, dx, dy, MP);
+      initial_condition(Ww, wi, ndim);
 
-    if (HIDALGO)
-      hidalgo_initial_guess(q0, wi, NT, dt, MP);
-    else
-      standard_initial_guess(q0, wi, NT);
+      using std::placeholders::_1;
+      VecFunc obj_bound;
+      if (ndim == 1)
+        obj_bound = std::bind(obj1, _1, Ww, dt, dx, MP);
+      else if (ndim == 2)
+        obj_bound = std::bind(obj2, _1, Ww, dt, dx, dy, MP);
 
-    if (STIFF) {
-      VecMap q0v(q0.data(), NT * N * V);
-      qh.segment(ind * NT * N * V, NT * N * V) =
-          nonlin_solve(obj_bound, q0v, DG_TOL);
-    } else {
-
-      bool FAIL = true;
-      for (int count = 0; count < DG_IT; count++) {
-
-        Mat q1;
-        if (ndim == 1)
-          q1 = DG_U1.solve(rhs1(q0, Ww, dt, dx, MP));
-        else if (ndim == 2)
-          q1 = DG_U2.solve(rhs2(q0, Ww, dt, dx, dy, MP));
-
-        Arr absDiff = (q1 - q0).array().abs();
-
-        if ((absDiff > DG_TOL * (1 + q0.array().abs())).any()) {
-          q0 = q1;
-          continue;
-        } else if (q1.array().isNaN().any()) {
-          FAIL = true;
-          break;
-        } else {
-          qi = q1;
-          FAIL = false;
-          break;
-        }
-      }
-      if (FAIL) {
+      if (HIDALGO)
         hidalgo_initial_guess(q0, wi, NT, dt, MP);
+      else
+        standard_initial_guess(q0, wi, NT);
+
+      if (STIFF) {
         VecMap q0v(q0.data(), NT * N * V);
         qh.segment(ind * NT * N * V, NT * N * V) =
             nonlin_solve(obj_bound, q0v, DG_TOL);
+      } else {
+
+        bool FAIL = true;
+        for (int count = 0; count < DG_IT; count++) {
+
+          Mat q1;
+          if (ndim == 1)
+            q1 = DG_U1.solve(rhs1(q0, Ww, dt, dx, MP));
+          else if (ndim == 2)
+            q1 = DG_U2.solve(rhs2(q0, Ww, dt, dx, dy, MP));
+
+          Arr absDiff = (q1 - q0).array().abs();
+
+          if ((absDiff > DG_TOL * (1 + q0.array().abs())).any()) {
+            q0 = q1;
+            continue;
+          } else if (q1.array().isNaN().any()) {
+            FAIL = true;
+            break;
+          } else {
+            qi = q1;
+            FAIL = false;
+            break;
+          }
+        }
+        if (FAIL) {
+          hidalgo_initial_guess(q0, wi, NT, dt, MP);
+          VecMap q0v(q0.data(), NT * N * V);
+          qh.segment(ind * NT * N * V, NT * N * V) =
+              nonlin_solve(obj_bound, q0v, DG_TOL);
+        }
       }
     }
   }

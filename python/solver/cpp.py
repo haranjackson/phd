@@ -15,23 +15,24 @@ def convert_dX(dX):
     return dX_
 
 
-def cpp_split_stepper(obj, mat, matBC, dt, dX):
+def cpp_split_stepper(obj, mat, matBC, dt, dX, maskBC):
 
     nX = get_dimensions(mat)
     extDims = GPRpy.solvers.extended_dimensions(nX, 1)
     wh = zeros(extDims * int(pow(obj.N, obj.NDIM)) * obj.NV)
+    print(nX,extDims,maskBC.shape,matBC.shape)
 
     matr = mat.ravel()
     matBCr = matBC.ravel()
 
     GPRpy.solvers.split_stepper(matr, matBCr, wh, obj.NDIM, nX, dt,
                                 convert_dX(dX), obj.half_step, obj.flux_type,
-                                obj.pars)
+                                obj.pars, maskBC)
 
     mat = matr.reshape(mat.shape)
 
 
-def cpp_ader_stepper(obj, mat, matBC, dt, dX):
+def cpp_ader_stepper(obj, mat, matBC, dt, dX, maskBC):
 
     nX = get_dimensions(mat)
     extDims = GPRpy.solvers.extended_dimensions(nX, 1)
@@ -43,7 +44,7 @@ def cpp_ader_stepper(obj, mat, matBC, dt, dX):
 
     GPRpy.solvers.ader_stepper(matr, matBCr, wh, qh, obj.NDIM, nX, dt,
                                convert_dX(dX), obj.stiff_dg, obj.flux_type,
-                               obj.pars)
+                               obj.pars, maskBC)
 
     mat = matr.reshape(mat.shape)
 

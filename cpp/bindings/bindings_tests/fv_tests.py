@@ -112,13 +112,14 @@ def FVc_test(qh_py, dX, dt, fvSolver):
         FVc_py = zeros([nx - 2, NV])
         FVc_cp = zeros((nx - 2) * NV)
         GPRpy.solvers.fv.centers1(FVc_cp, qh_py.ravel(), nx - 2, dt, dX[0],
-                                  SOURCES, TIME, MP)
+                                  SOURCES, TIME, MP, zeros(0, dtype=bool))
 
     elif NDIM == 2:
         FVc_py = zeros([nx - 2, ny - 2, NV])
         FVc_cp = zeros((nx - 2) * (ny - 2) * NV)
         GPRpy.solvers.fv.centers2(FVc_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
-                                  dX[0], dX[1], SOURCES, TIME, MP)
+                                  dX[0], dX[1], SOURCES, TIME, MP,
+                                  zeros(0, dtype=bool))
 
     fvSolver.centers(FVc_py, qh_py, dX, mask)
     FVc_py *= dt
@@ -152,14 +153,15 @@ def FVi_test(qh_py, dX, dt, fvSolver):
 
         FVi_cp = zeros((nx - 2) * NV)
         GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dX[0],
-                                  TIME, FLUX, MP)
+                                  TIME, FLUX, MP, zeros(0, dtype=bool))
 
     elif NDIM == 2:
         FVi_py = zeros([nx - 2, ny - 2, NV])
 
         FVi_cp = zeros((nx - 2) * (ny - 2) * NV)
         GPRpy.solvers.fv.interfs2(FVi_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
-                                  dX[0], dX[1], TIME, FLUX, MP)
+                                  dX[0], dX[1], TIME, FLUX, MP,
+                                  zeros(0, dtype=bool))
 
     fvSolver.interfaces(FVi_py, qEnd, dX, mask)
     FVi_py *= dt
@@ -191,7 +193,8 @@ def FV_test(qh_py, dX, dt, fvSolver):
     FV_py = fvSolver.solve(qh_py, dt, dX)
 
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), NDIM, nX, dt,
-                                 cpp_dx(dX), SOURCES, TIME, FLUX, MP)
+                                 cpp_dx(dX), SOURCES, TIME, FLUX, MP,
+                                 zeros(0, dtype=bool))
 
     FV_cp = FV_cp.reshape(FV_py.shape)
     print("FV    ", check(FV_cp, FV_py))
