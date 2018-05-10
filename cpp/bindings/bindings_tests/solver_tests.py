@@ -1,6 +1,6 @@
 import GPRpy
 
-from numpy import array, dot, int32, ones, zeros
+from numpy import array, dot, int32, ones, prod, zeros
 from numpy.random import rand
 from scipy.optimize import newton_krylov
 from scipy.sparse.linalg import lgmres
@@ -162,6 +162,7 @@ def obj_test(u, dX, dt, wenoSolver, dgSolver):
 
 def dg_test(u, dX, dt, wenoSolver, dgSolver):
 
+    ncell = prod(u.shape[:-1])
     stiff_guess = dgSolver.initial_guess == stiff_initial_guess
 
     N = wenoSolver.N
@@ -175,7 +176,7 @@ def dg_test(u, dX, dt, wenoSolver, dgSolver):
     qh_cp = zeros(len(wh_cp) * N)
     GPRpy.solvers.dg.predictor(qh_cp, wh_cp, NDIM, dt, cpp_dx(dX),
                                dgSolver.stiff, stiff_guess, dgSolver.pars,
-                               zeros(0, dtype=bool))
+                               ones(ncell, dtype=bool))
     qh_cp = qh_cp.reshape(qh_py.shape)
 
     print("DG    ", check(qh_cp, qh_py))
@@ -188,14 +189,14 @@ def dg_test(u, dX, dt, wenoSolver, dgSolver):
 def midstepper_test(u, dX, dt, wenoSolver, splitSolver):
 
     NDIM = wenoSolver.NDIM
+    ncell = prod(u.shape[:-1])
 
     mid_py = wenoSolver.solve(u)
     mid_cp = mid_py.ravel()
-    mask = ones(int(u.size / u.shape[-1]), dtype=bool)
 
     splitSolver.weno_midstepper(mid_py, dt, dX)
     GPRpy.solvers.split.midstepper(mid_cp, NDIM, dt, cpp_dx(dX),
-                                   splitSolver.pars, mask)
+                                   splitSolver.pars, ones(ncell, dtype=bool))
 
     mid_cp = mid_cp.reshape(mid_py.shape)
     print("Step  ", check(mid_cp, mid_py))

@@ -1,6 +1,6 @@
 import GPRpy
 
-from numpy import array, dot, int32, zeros
+from numpy import array, dot, int32, ones, zeros
 
 from ader.fv.fluxes import B_INT, D_OSH, D_ROE, D_RUS
 from ader.fv.fv import endpoints
@@ -109,17 +109,19 @@ def FVc_test(qh_py, dX, dt, fvSolver):
     nx, ny = qh_py.shape[:2]
 
     if NDIM == 1:
+        ncell = nx
         FVc_py = zeros([nx - 2, NV])
         FVc_cp = zeros((nx - 2) * NV)
         GPRpy.solvers.fv.centers1(FVc_cp, qh_py.ravel(), nx - 2, dt, dX[0],
-                                  SOURCES, TIME, MP, zeros(0, dtype=bool))
+                                  SOURCES, TIME, MP, ones(ncell, dtype=bool))
 
     elif NDIM == 2:
+        ncell = nx * ny
         FVc_py = zeros([nx - 2, ny - 2, NV])
         FVc_cp = zeros((nx - 2) * (ny - 2) * NV)
         GPRpy.solvers.fv.centers2(FVc_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
                                   dX[0], dX[1], SOURCES, TIME, MP,
-                                  zeros(0, dtype=bool))
+                                  ones(ncell, dtype=bool))
 
     fvSolver.centers(FVc_py, qh_py, dX, mask)
     FVc_py *= dt
@@ -149,19 +151,21 @@ def FVi_test(qh_py, dX, dt, fvSolver):
     qEnd = endpoints(qh_py, NDIM, ENDVALS)
 
     if NDIM == 1:
+        ncell = nx
         FVi_py = zeros([nx - 2, NV])
 
         FVi_cp = zeros((nx - 2) * NV)
         GPRpy.solvers.fv.interfs1(FVi_cp, qh_py.ravel(), nx - 2, dt, dX[0],
-                                  TIME, FLUX, MP, zeros(0, dtype=bool))
+                                  TIME, FLUX, MP, ones(ncell, dtype=bool))
 
     elif NDIM == 2:
+        ncell = nx * ny
         FVi_py = zeros([nx - 2, ny - 2, NV])
 
         FVi_cp = zeros((nx - 2) * (ny - 2) * NV)
         GPRpy.solvers.fv.interfs2(FVi_cp, qh_py.ravel(), nx - 2, ny - 2, dt,
                                   dX[0], dX[1], TIME, FLUX, MP,
-                                  zeros(0, dtype=bool))
+                                  ones(ncell, dtype=bool))
 
     fvSolver.interfaces(FVi_py, qEnd, dX, mask)
     FVi_py *= dt
@@ -185,16 +189,18 @@ def FV_test(qh_py, dX, dt, fvSolver):
     if NDIM == 1:
         FV_cp = zeros((nx - 2) * NV)
         nX = array([nx - 2, 1, 1], dtype=int32)
+        ncell = nx
 
     elif NDIM == 2:
         FV_cp = zeros((nx - 2) * (ny - 2) * NV)
         nX = array([nx - 2, ny - 2, 1], dtype=int32)
+        ncell = nx * ny
 
     FV_py = fvSolver.solve(qh_py, dt, dX)
 
     GPRpy.solvers.fv.fv_launcher(FV_cp, qh_py.ravel(), NDIM, nX, dt,
                                  cpp_dx(dX), SOURCES, TIME, FLUX, MP,
-                                 zeros(0, dtype=bool))
+                                 ones(ncell, dtype=bool))
 
     FV_cp = FV_cp.reshape(FV_py.shape)
     print("FV    ", check(FV_cp, FV_py))
