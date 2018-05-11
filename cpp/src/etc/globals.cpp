@@ -5,17 +5,11 @@
 #include "../solvers/weno/weno_matrices.h"
 #include "../system/functions/matrices.h"
 
-Mat minv(Mat m) {
-  switch (N) {
-  case 1:
+MatN_N minv(Mat m) {
+  if (N <= 4)
     return m.inverse();
-  case 2:
-    return inv2(m);
-  case 3:
-    return inv3(m);
-  default:
-    return Mat::Zero(N, N);
-  }
+  else
+    return MatN_N::Zero();
 }
 
 std::vector<poly> basis = basis_polys();

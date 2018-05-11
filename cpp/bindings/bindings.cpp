@@ -10,6 +10,7 @@
 #include "../src/etc/globals.h"
 #include "../src/etc/grid.h"
 
+#include "../src/multi/fill.h"
 #include "../src/multi/pfmm.h"
 
 #include "../src/scipy/lgmres.h"
@@ -116,6 +117,11 @@ PYBIND11_MODULE(GPRpy, m) {
       .def("eval", &poly::eval);
 
   m_multi.def("distance", &distance);
+  m_multi.def("find_interface_cells", &find_interface_cells);
+  m_multi.def("fill_boundary_cells", &fill_boundary_cells);
+  m_multi.def("fill_from_neighbor", &fill_from_neighbor);
+  m_multi.def("fill_neighbor_cells", &fill_neighbor_cells);
+  m_multi.def("fill_ghost_cells", &fill_ghost_cells);
 
   m_scipy.def("lgmres_wrapper", &lgmres_wrapper, py::arg("A"), py::arg("b"),
               py::arg("x0") = Vec(0), py::arg("M") = Mat(0, 0),

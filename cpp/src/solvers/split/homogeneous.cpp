@@ -2,12 +2,12 @@
 #include "../../system/equations.h"
 #include "../evaluations.h"
 
-void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
+void midstepper(Vecr wh, int ndim, double dt, Vecr dX, Par &MP, bVecr mask) {
   // Steps the WENO reconstruction forwards by dt/2
   // NOTE: Only for the homogeneous system
-  const int ncell = wh.size() / (int(pow(N, ndim)) * V);
+
+  int ncell = mask.size();
   double dx = dX(0);
-  double dy = dX(1);
 
   if (ndim == 1) {
     MatN_V F, dwdx, dFdx;
@@ -15,7 +15,9 @@ void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
 
     for (int ind = 0; ind < ncell; ind += 1) {
       if (mask(ind)) {
+
         MatN_VMap w(wh.data() + ind * N * V, OuterStride(V));
+
         F.setZero(N, V);
         for (int a = 0; a < N; a++)
           flux(F.row(a), w.row(a), 0, MP);
@@ -31,15 +33,17 @@ void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
     }
   }
   if (ndim == 2) {
+    double dy = dX(1);
     MatN2_V F, G, dwdx, dwdy, dFdx, dGdy;
     VecV Bdwdx, Bdwdy;
 
     for (int ind = 0; ind < ncell; ind += 1) {
       if (mask(ind)) {
+
         MatN2_VMap w(wh.data() + ind * N * N * V, OuterStride(V));
+
         F.setZero(N * N, V);
         G.setZero(N * N, V);
-
         for (int s = 0; s < N * N; s++) {
           flux(F.row(s), w.row(s), 0, MP);
           flux(G.row(s), w.row(s), 1, MP);

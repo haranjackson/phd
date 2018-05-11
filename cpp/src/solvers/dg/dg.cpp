@@ -139,13 +139,12 @@ void initial_condition(Matr Ww, Matr w, int ndim) {
   }
 }
 
-void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
-               bool HIDALGO, Par &MP, bVecr mask) {
+void predictor(Vecr qh, Vecr wh, double dt, Vecr dX, bool STIFF, bool STIFF_IG,
+               Par &MP, bVecr mask) {
 
-  int ncell = qh.size() / (int(pow(N, ndim + 1)) * V);
+  int ndim = dX.size();
+  int ncell = mask.size();
   int NT = int(pow(N, ndim));
-  double dx = dX(0);
-  double dy = dX(1);
 
   Mat Ww(NT * N, V);
   Mat q0(NT * N, V);
@@ -162,12 +161,12 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
       using std::placeholders::_1;
       VecFunc obj_bound;
       if (ndim == 1)
-        obj_bound = std::bind(obj1, _1, Ww, dt, dx, MP);
+        obj_bound = std::bind(obj1, _1, Ww, dt, dX(0), MP);
       else if (ndim == 2)
-        obj_bound = std::bind(obj2, _1, Ww, dt, dx, dy, MP);
+        obj_bound = std::bind(obj2, _1, Ww, dt, dX(0), dX(1), MP);
 
-      if (HIDALGO)
-        hidalgo_initial_guess(q0, wi, NT, dt, MP);
+      if (STIFF_IG)
+        stiff_initial_guess(q0, wi, NT, dt, MP);
       else
         standard_initial_guess(q0, wi, NT);
 
@@ -182,9 +181,9 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
 
           Mat q1;
           if (ndim == 1)
-            q1 = DG_U1.solve(rhs1(q0, Ww, dt, dx, MP));
+            q1 = DG_U1.solve(rhs1(q0, Ww, dt, dX(0), MP));
           else if (ndim == 2)
-            q1 = DG_U2.solve(rhs2(q0, Ww, dt, dx, dy, MP));
+            q1 = DG_U2.solve(rhs2(q0, Ww, dt, dX(0), dX(1), MP));
 
           Arr absDiff = (q1 - q0).array().abs();
 
@@ -201,7 +200,7 @@ void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
           }
         }
         if (FAIL) {
-          hidalgo_initial_guess(q0, wi, NT, dt, MP);
+          stiff_initial_guess(q0, wi, NT, dt, MP);
           VecMap q0v(q0.data(), NT * N * V);
           qh.segment(ind * NT * N * V, NT * N * V) =
               nonlin_solve(obj_bound, q0v, DG_TOL);

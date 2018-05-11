@@ -1,4 +1,4 @@
-from numpy import amax, arange, sign, zeros
+from numpy import abs, amax, arange, sign, zeros
 from numpy.linalg import det
 from numpy.random import rand
 
@@ -17,22 +17,13 @@ def generate_vector(MP):
     return Cvec(ρ, p, v, A, J, MP)
 
 
+def relative_diff(x1, x2):
+    return amax(abs(x1 - x2) / (1 + abs(x1)))
+
+
 def check(x1, x2):
-    diff = x1-x2
-    absDiff=amax(abs(diff))
-    diff[abs(diff)<1e-11] = 0
-    relDiff1 = amax(abs(diff[x1!=0]/x1[x1!=0]))
-    relDiff2 = amax(abs(diff[x2!=0]/x2[x2!=0]))
-    relDiff = max(relDiff1, relDiff2)
+    relDiff = max(relative_diff(x1, x2), relative_diff(x2, x1))
     if relDiff < 1e-12:
         return "✓"
     else:
-        return "abs:", absDiff, "rel:", relDiff
-
-
-def cpp_dx(dX):
-
-    ret = zeros(3)
-    for i in range(len(dX)):
-        ret[i] = dX[i]
-    return ret
+        return "abs:", amax(abs(x1 - x2)), "rel:", relDiff

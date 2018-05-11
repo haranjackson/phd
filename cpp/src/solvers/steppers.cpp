@@ -6,29 +6,34 @@
 #include "split/ode.h"
 #include "weno/weno.h"
 
-void ader_stepper(Vecr u, Vecr ub, Vecr wh, Vecr qh, int ndim, iVec3r nX,
-                  double dt, Vec3r dX, bool STIFF, int FLUX, Par &MP,
-                  bVecr mask) {
+void ader_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX, bool STIFF,
+                  int FLUX, Par &MP, bVecr mask) {
 
-  weno_launcher(wh, ub, ndim, nX);
+  int ndim = nX.size();
+  Vec wh(extended_dimensions(nX, 1) * int(pow(N, ndim)) * V);
+  Vec qh(extended_dimensions(nX, 1) * int(pow(N, ndim + 1)) * V);
 
-  predictor(qh, wh, ndim, dt, dX, STIFF, false, MP, mask);
+  weno_launcher(wh, ub, nX);
 
-  fv_launcher(u, qh, ndim, nX, dt, dX, true, true, FLUX, MP, mask);
+  predictor(qh, wh, dt, dX, STIFF, false, MP, mask);
+
+  fv_launcher(u, qh, nX, dt, dX, true, true, FLUX, MP, mask);
 }
 
-void split_stepper(Vecr u, Vecr ub, Vecr wh, int ndim, iVec3r nX, double dt,
-                   Vec3r dX, bool HALF_STEP, int FLUX, Par &MP, bVecr mask) {
+void split_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
+                   bool HALF_STEP, int FLUX, Par &MP, bVecr mask) {
 
+  int ndim = nX.size();
   ode_launcher(u, dt / 2, MP);
   ode_launcher(ub, dt / 2, MP);
 
-  weno_launcher(wh, ub, ndim, nX);
+  Vec wh(extended_dimensions(nX, 1) * int(pow(N, ndim)) * V);
+  weno_launcher(wh, ub, nX);
 
   if (HALF_STEP)
     midstepper(wh, ndim, dt, dX, MP, mask);
 
-  fv_launcher(u, wh, ndim, nX, dt, dX, false, false, FLUX, MP, mask);
+  fv_launcher(u, wh, nX, dt, dX, false, false, FLUX, MP, mask);
 
   ode_launcher(u, dt / 2, MP);
 }

@@ -1,8 +1,9 @@
 #include "../../include/skfmm/distance_marcher.h"
 #include "../etc/types.h"
 
-Vec distance(Vecr phi, Vecr dX, iVecr nX, int NDIM) {
+Vec distance(Vecr phi, Vecr dX, iVecr nX) {
 
+  int ndim = nX.size();
   int ncell = nX.prod();
   Vec dist(ncell);
   dist.setZero(ncell);
@@ -17,7 +18,7 @@ Vec distance(Vecr phi, Vecr dX, iVecr nX, int NDIM) {
 
   baseMarcher *marcher = 0;
   marcher = new distanceMarcher(phi.data(), dX.data(), FLAG.data(), dist.data(),
-                                NDIM, nX.data(), TEST, ORDER, NARROW, PERIODIC);
+                                ndim, nX.data(), TEST, ORDER, NARROW, PERIODIC);
   marcher->march();
   delete marcher;
 

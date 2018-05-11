@@ -248,21 +248,18 @@ void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
     interfs2_inner(u, rec, nx, ny, dx, dy, 1, 0, dt, FLUX, MP, mask);
 }
 
-void fv_launcher(Vecr u, Vecr rec, int ndim, iVec3r nX, double dt, Vec3r dX,
-                 bool SOURCES, bool TIME, int FLUX, Par &MP, bVecr mask) {
-  int nx = nX(0);
-  int ny = nX(1);
-  double dx = dX(0);
-  double dy = dX(1);
+void fv_launcher(Vecr u, Vecr rec, iVecr nX, double dt, Vecr dX, bool SOURCES,
+                 bool TIME, int FLUX, Par &MP, bVecr mask) {
 
+  int ndim = nX.size();
   switch (ndim) {
   case 1:
-    centers1(u, rec, nx, dt, dx, SOURCES, TIME, MP, mask);
-    interfs1(u, rec, nx, dt, dx, TIME, FLUX, MP, mask);
+    centers1(u, rec, nX(0), dt, dX(0), SOURCES, TIME, MP, mask);
+    interfs1(u, rec, nX(0), dt, dX(0), TIME, FLUX, MP, mask);
     break;
   case 2:
-    centers2(u, rec, nx, ny, dt, dx, dy, SOURCES, TIME, MP, mask);
-    interfs2(u, rec, nx, ny, dt, dx, dy, TIME, FLUX, MP, mask);
+    centers2(u, rec, nX(0), nX(1), dt, dX(0), dX(1), SOURCES, TIME, MP, mask);
+    interfs2(u, rec, nX(0), nX(1), dt, dX(0), dX(1), TIME, FLUX, MP, mask);
     break;
   }
 }

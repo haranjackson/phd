@@ -1,14 +1,13 @@
 #include "../../etc/types.h"
 #include "../../system/objects/gpr_objects.h"
 
-
 void standard_initial_guess(Matr q, Matr w, int NT) {
   // Returns a Galerkin intial guess consisting of the value of q at t=0
   for (int i = 0; i < N; i++)
     q.block(i * NT, 0, NT, V) = w;
 }
 
-void hidalgo_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
+void stiff_initial_guess(Matr q, Matr w, int NT, double dt, Par &MP) {
   // Returns the initial guess found in DOI: 10.1007/s10915-010-9426-6
 
   standard_initial_guess(q, w, NT);

@@ -9,9 +9,54 @@
 #include "steppers.h"
 #include <iostream>
 
-double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vec3r dX,
+int get_material_index(VecVr Q) {
+  int ret = 0;
+  for (int i = V - LSET; i < V; i++)
+    if (Q(i) >= 0.)
+      ret += 1;
+  return ret;
+}
+
+void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
+  // Builds u across the domain, from the different material grids
+
+  int ndim = nX.size();
+  int ncell = u.size() / V;
+  int nmat = grids.size();
+
+  Vec av = grids[0];
+  for (int i = 1; i < grids.size(); i++)
+    av += grids[i];
+  av /= nmat;
+
+  MatMap avMap(av.data(), ncell, V, OuterStride(V));
+
+  int nx = nX(0);
+  switch (ndim) {
+
+  case 1:
+    for (int i = 0; i < nx; i++) {
+      int ind = get_material_index(avMap.row(i));
+      u(i) = grids[ind](i);
+    }
+    break;
+
+  case 2:
+    int ny = nX(1);
+    for (int i = 0; i < nx; i++)
+      for (int j = 0; j < ny; j++) {
+        int idx = i * ny + j;
+        int ind = get_material_index(avMap.row(idx));
+        u(idx) = grids[ind](idx);
+      }
+    break;
+  }
+}
+
+double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr dX,
                 int ndim, double CFL, double t, double tf, int count,
                 std::vector<Par> &MPs, int nmat) {
+
   double MIN = 1e5;
   int ncell = grids[0].size() / V;
   VecV Q;
@@ -35,19 +80,14 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vec3r dX,
     return dt;
 }
 
-void iterator(Vecr u, double tf, iVec3r nX, Vec3r dX, double CFL, bool PERIODIC,
+void iterator(Vecr u, double tf, iVecr nX, Vecr dX, double CFL, bool PERIODIC,
               bool SPLIT, bool HALF_STEP, bool STIFF, int FLUX,
               std::vector<Par> &MPs) {
 
   int nmat = MPs.size();
-  int nx = nX(0);
-  int ny = nX(1);
-  int nz = nX(2);
-  int ndim = int(nx > 1) + int(ny > 1) + int(nz > 1);
+  int ndim = nX.size();
 
   Vec ub(extended_dimensions(nX, N) * V);
-  Vec wh(extended_dimensions(nX, 1) * int(pow(N, ndim)) * V);
-  Vec qh(extended_dimensions(nX, 1) * int(pow(N, ndim + 1)) * V);
 
   std::vector<Vec> grids(nmat);
   std::vector<bVec> masks(nmat);
@@ -59,19 +99,21 @@ void iterator(Vecr u, double tf, iVec3r nX, Vec3r dX, double CFL, bool PERIODIC,
 
   while (t < tf) {
 
-    fill_ghost_cells(grids, masks, u, ndim, nX, dX, dt, MPs);
+    fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
 
     dt = timestep(grids, masks, dX, ndim, CFL, t, tf, count, MPs, nmat);
 
     for (int i = 0; i < nmat; i++) {
-      boundaries(grids[i], ub, ndim, nX, PERIODIC);
+
+      boundaries(grids[i], ub, nX, PERIODIC);
+
       if (SPLIT)
-        split_stepper(grids[i], ub, wh, ndim, nX, dt, dX, HALF_STEP, FLUX,
-                      MPs[i], masks[i]);
+        split_stepper(grids[i], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[i],
+                      masks[i]);
       else
-        ader_stepper(grids[i], ub, wh, qh, ndim, nX, dt, dX, STIFF, FLUX,
-                     MPs[i], masks[i]);
+        ader_stepper(grids[i], ub, nX, dt, dX, STIFF, FLUX, MPs[i], masks[i]);
     }
+    make_u(u, grids, nX);
     t += dt;
     count += 1;
 

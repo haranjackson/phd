@@ -100,30 +100,20 @@ void boundaries2(Vecr u, Vecr ub, int nx, int ny, bool PERIODIC) {
   }
 }
 
-void boundaries(Vecr u, Vecr ub, int ndim, iVec3r nX, bool PERIODIC) {
+void boundaries(Vecr u, Vecr ub, iVecr nX, bool PERIODIC) {
   // If periodic is true, applies periodic boundary conditions,
   // else applies transmissive boundary conditions
-
-  int nx = nX(0);
-  int ny = nX(1);
+  int ndim = nX.size();
   switch (ndim) {
   case 1:
-    boundaries1(u, ub, nx, PERIODIC);
+    boundaries1(u, ub, nX(0), PERIODIC);
     break;
   case 2:
-    boundaries2(u, ub, nx, ny, PERIODIC);
+    boundaries2(u, ub, nX(0), nX(1), PERIODIC);
     break;
   }
 }
 
-int extended_dimensions(iVec3r nX, int ext) {
-  int nx = nX(0);
-  int ny = nX(1);
-  int nz = nX(2);
-  if (nz > 1)
-    return (nx + 2 * ext) * (ny + 2 * ext) * (nz + 2 * ext);
-  else if (ny > 1)
-    return (nx + 2 * ext) * (ny + 2 * ext);
-  else
-    return nx + 2 * ext;
+int extended_dimensions(iVecr nX, int ext) {
+  return (nX.array() + 2 * ext).prod();
 }

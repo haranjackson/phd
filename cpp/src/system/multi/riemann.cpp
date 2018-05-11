@@ -189,8 +189,8 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
   QR = Pvec_to_Cvec(PR_vec, MPR);
 }
 
-StarStates star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
-                       Vecr n) {
+std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
+                              Vecr n) {
 
   Mat3_3 R = rotation_matrix(n);
   rotate_tensors(QL_, R);
@@ -208,6 +208,6 @@ StarStates star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
   rotate_tensors(QL_, RT);
   rotate_tensors(QR_, RT);
 
-  StarStates ret = {QL_, QR_};
+  std::vector<VecV> ret = {QL_, QR_};
   return ret;
 }

@@ -1,31 +1,6 @@
 #include "../../etc/types.h"
 #include "../objects/gpr_objects.h"
 
-Mat2_2 inv2(Mat2_2r X) {
-  double detX = X.determinant();
-  Mat2_2 ret;
-  ret(0, 0) = X(1, 1);
-  ret(0, 1) = -X(0, 1);
-  ret(1, 0) = -X(1, 0);
-  ret(1, 1) = X(0, 0);
-  return ret / detX;
-}
-
-Mat3_3 inv3(Mat3_3r X) {
-  double detX = X.determinant();
-  Mat3_3 ret;
-  ret(0, 0) = (X(1, 1) * X(2, 2) - X(2, 1) * X(1, 2));
-  ret(0, 1) = (X(0, 2) * X(2, 1) - X(0, 1) * X(2, 2));
-  ret(0, 2) = (X(0, 1) * X(1, 2) - X(0, 2) * X(1, 1));
-  ret(1, 0) = (X(1, 2) * X(2, 0) - X(1, 0) * X(2, 2));
-  ret(1, 1) = (X(0, 0) * X(2, 2) - X(0, 2) * X(2, 0));
-  ret(1, 2) = (X(1, 0) * X(0, 2) - X(0, 0) * X(1, 2));
-  ret(2, 0) = (X(1, 0) * X(2, 1) - X(2, 0) * X(1, 1));
-  ret(2, 1) = (X(2, 0) * X(0, 1) - X(0, 0) * X(2, 1));
-  ret(2, 2) = (X(0, 0) * X(1, 1) - X(1, 0) * X(0, 1));
-  return ret / detX;
-}
-
 Mat3_3 AdevG(Mat3_3r A) {
   Mat3_3 G = A.transpose() * A;
   double x = (G(0, 0) + G(1, 1) + G(2, 2)) / 3;

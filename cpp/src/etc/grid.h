@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-void boundaries(Vecr u, Vecr ub, int ndim, iVec3r nX, bool PERIODIC);
+void boundaries(Vecr u, Vecr ub, iVecr nX, bool PERIODIC);
 
-int extended_dimensions(iVec3r nX, int ext);
+int extended_dimensions(iVecr nX, int ext);
 
 #endif // GRID_H

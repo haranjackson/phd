@@ -9,7 +9,7 @@ from ader.dg.initial_guess import stiff_initial_guess
 
 from gpr.sys.analytical import ode_solver_cons
 
-from bindings_tests.test_functions import check, generate_vector, cpp_dx
+from bindings_tests.test_functions import check, generate_vector
 
 
 """ NEWTON-KRYLOV """
@@ -66,22 +66,15 @@ def weno_test(wenoSolver):
     NV = wenoSolver.NV
     NDIM = wenoSolver.NDIM
 
-    nx = 20
-    ny = 20 if NDIM > 1 else 1
-    nz = 20 if NDIM > 2 else 1
+    nX = 20 * ones(NDIM, dtype=int32)
 
-    uBCpy = rand(nx + 2 * N,
-                 ny + 2 * N * (NDIM > 1),
-                 nz + 2 * N * (NDIM > 2),
-                 NV)
+    uBCpy = rand(*nX + 2 * N, NV)
     uBCcp = uBCpy.ravel()
 
     wh_py = wenoSolver.solve(uBCpy)
 
-    wh_cp = zeros((nx + 2) * (ny + 2 * (NDIM > 1)) *
-                  (nz + 2 * (NDIM > 2)) * N**NDIM * NV)
-    GPRpy.solvers.weno.weno_launcher(wh_cp, uBCcp, NDIM,
-                                     array([nx, ny, nz], dtype=int32))
+    wh_cp = zeros(prod(nX + 2) * N**NDIM * NV)
+    GPRpy.solvers.weno.weno_launcher(wh_cp, uBCcp, nX)
     wh_cp = wh_cp.reshape(wh_py.shape)
 
     print("WENO  ", check(wh_cp, wh_py))
@@ -162,11 +155,10 @@ def obj_test(u, dX, dt, wenoSolver, dgSolver):
 
 def dg_test(u, dX, dt, wenoSolver, dgSolver):
 
-    ncell = prod(u.shape[:-1])
+    ndim = u.ndim - 1
     stiff_guess = dgSolver.initial_guess == stiff_initial_guess
 
     N = wenoSolver.N
-    NDIM = wenoSolver.NDIM
 
     wh_py = wenoSolver.solve(u)
     wh_cp = wh_py.ravel()
@@ -174,9 +166,12 @@ def dg_test(u, dX, dt, wenoSolver, dgSolver):
     qh_py = dgSolver.solve(wh_py, dt, dX)
 
     qh_cp = zeros(len(wh_cp) * N)
-    GPRpy.solvers.dg.predictor(qh_cp, wh_cp, NDIM, dt, cpp_dx(dX),
-                               dgSolver.stiff, stiff_guess, dgSolver.pars,
-                               ones(ncell, dtype=bool))
+
+    ncell = prod(wh_py.shape[:ndim])
+    mask = ones(ncell, dtype=bool)
+    GPRpy.solvers.dg.predictor(qh_cp, wh_cp, dt, array(dX), dgSolver.stiff,
+                               stiff_guess, dgSolver.pars,
+                               mask)
     qh_cp = qh_cp.reshape(qh_py.shape)
 
     print("DG    ", check(qh_cp, qh_py))
@@ -195,8 +190,8 @@ def midstepper_test(u, dX, dt, wenoSolver, splitSolver):
     mid_cp = mid_py.ravel()
 
     splitSolver.weno_midstepper(mid_py, dt, dX)
-    GPRpy.solvers.split.midstepper(mid_cp, NDIM, dt, cpp_dx(dX),
-                                   splitSolver.pars, ones(ncell, dtype=bool))
+    GPRpy.solvers.split.midstepper(mid_cp, NDIM, dt, array(dX), splitSolver.pars,
+                                   ones(ncell, dtype=bool))
 
     mid_cp = mid_cp.reshape(mid_py.shape)
     print("Step  ", check(mid_cp, mid_py))

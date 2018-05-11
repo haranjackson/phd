@@ -27,7 +27,7 @@ from bindings_tests.fv_tests import TAT_test, Bint_test, D_RUS_test, \
 """ OPTIONS """
 
 # IC = validation.hagen_poiseuille_IC
-IC = multi.heat_conduction_IC
+IC = multi.water_water_IC
 d = 0
 dt = 0.0001
 

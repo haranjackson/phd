@@ -1,5 +1,8 @@
 #include "../../etc/globals.h"
 
+VecV oL, oR, oCL, oCR, oSum;
+MatN_V wL, wR, wCL, wCR;
+
 void weight(VecVr ret, MatN_Vr w, double LAM) {
   // Produces the WENO weight for this stencil
   // NOTE: The denominator is raised to the 8th power.
@@ -15,10 +18,8 @@ void weight(VecVr ret, MatN_Vr w, double LAM) {
 
 void coeffs(MatN_Vr ret, Mat2N_Vr data) {
   // Calculate coefficients of basis polynomials and weights
-  VecV oL, oR, oCL, oCR, oSum;
-  MatN_V wL, wR, wCL, wCR;
 
-  if (N < 3) {
+  if (N <= 4) {
     wL.noalias() = mLinv * data.block<N, V>(0, 0);
     wR.noalias() = mRinv * data.block<N, V>((N - 1), 0);
   } else {
@@ -31,7 +32,7 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
   oSum = oL + oR;
 
   if (N > 2) {
-    if (N < 3)
+    if (N <= 4)
       wCL.noalias() = mCLinv * data.block<N, V>(FN2, 0);
     else
       wCL = MCL.solve(data.block<N, V>(FN2, 0));
@@ -40,7 +41,10 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
 
     if ((N - 1) % 2) // Two central stencils (N>3)
     {
-      wCR = MCR.solve(data.block<N, V>(CN2, 0));
+      if (N <= 4)
+        wCR.noalias() = mCRinv * data.block<N, V>(CN2, 0);
+      else
+        wCR = MCR.solve(data.block<N, V>(CN2, 0));
       weight(oCR, wCR, LAMC);
       oSum += oCR;
     }
@@ -114,21 +118,23 @@ void weno3(Vecr wh, Vecr ub, int nx, int ny, int nz) {
     }
 }
 
-void weno_launcher(Vecr wh, Vecr ub, int ndim, iVec3r nX) {
+void weno_launcher(Vecr wh, Vecr ub, iVecr nX) {
   // NOTE: boundary conditions extend u by two cells in each dimension
-  int nx = nX(0);
-  int ny = nX(1);
-  int nz = nX(2);
+
+  int ndim = nX.size();
 
   switch (ndim) {
+
   case 1:
-    weno1(wh, ub, nx + 2, ny, nz);
+    weno1(wh, ub, nX(0) + 2, 1, 1);
     break;
+
   case 2:
-    weno2(wh, ub, nx + 2, ny + 2, nz);
+    weno2(wh, ub, nX(0) + 2, nX(1) + 2, 1);
     break;
+
   case 3:
-    weno3(wh, ub, nx + 2, ny + 2, nz + 2);
+    weno3(wh, ub, nX(0) + 2, nX(1) + 2, nX(2) + 2);
     break;
   }
 }

@@ -12,7 +12,7 @@ Vec obj1(Vecr q, MatN2_Vr Ww, double dt, double dx, Par &MP);
 
 Vec obj2(Vecr q, MatN3_Vr Ww, double dt, double dx, double dy, Par &MP);
 
-void predictor(Vecr qh, Vecr wh, int ndim, double dt, Vec3r dX, bool STIFF,
-               bool HIDALGO, Par &MP, bVecr mask);
+void predictor(Vecr qh, Vecr wh, double dt, Vecr dX, bool STIFF, bool STIFF_IG,
+               Par &MP, bVecr mask);
 
 #endif // DG_H

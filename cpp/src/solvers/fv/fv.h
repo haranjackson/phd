@@ -14,7 +14,7 @@ void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
               bool TIME, int FLUX, Par &MP, bVecr mask);
 
-void fv_launcher(Vecr u, Vecr rec, int ndim, iVec3r nX, double dt, Vec3r dX,
-                 bool SOURCES, bool TIME, int FLUX, Par &MP, bVecr mask);
+void fv_launcher(Vecr u, Vecr rec, iVecr nX, double dt, Vecr dX, bool SOURCES,
+                 bool TIME, int FLUX, Par &MP, bVecr mask);
 
 #endif // FV_H

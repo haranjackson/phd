@@ -8,7 +8,13 @@ from ader.etc.boundaries import standard_BC, periodic_BC
 
 from gpr.opts import NV
 from solver import SolverPlus
+from solver.cpp import solve_full_cpp
 from solver.gfm.fill import fill_ghost_cells
+
+
+flux_types = {'rusanov': 0,
+              'roe': 1,
+              'osher': 2}
 
 
 def get_material_index(Q, m):
@@ -29,6 +35,12 @@ class MultiSolver():
         self.m = len(model_params)
         self.MPs = model_params
         self.ncore = ncore
+
+        self.split = split
+        self.half_step = half_step
+        self.stiff_dg = stiff_dg
+        self.flux_type = flux_types[riemann_solver]
+        self.pars = model_params
 
         self.solvers = [SolverPlus(nvar, ndim, F=F, B=B, S=S, model_params=MP,
                                    M=M, max_eig=max_eig, order=order,
@@ -131,7 +143,11 @@ class MultiSolver():
               boundary_conditions='transitive', verbose=False, callback=None,
               cpp_level=0):
 
-        self.initialize(initial_grid, final_time, dX, cfl, boundary_conditions,
-                        verbose, callback, cpp_level)
+        if cpp_level == 2:
+            self.u = solve_full_cpp(self, initial_grid, final_time, dX, cfl)
+            return self.u
 
-        return self.resume()
+        else:
+            self.initialize(initial_grid, final_time, dX, cfl, boundary_conditions,
+                        verbose, callback, cpp_level)
+            return self.resume()
