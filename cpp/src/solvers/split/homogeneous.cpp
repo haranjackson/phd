@@ -20,12 +20,12 @@ void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
         for (int a = 0; a < N; a++)
           flux(F.row(a), w.row(a), 0, MP);
 
-        dwdx.noalias() = DERVALS * w / dx;
-        dFdx.noalias() = DERVALS * F / dx;
+        dwdx.noalias() = DERVALS * w;
+        dFdx.noalias() = DERVALS * F;
 
         for (int a = 0; a < N; a++) {
           Bdot(Bdwdx, w.row(a), dwdx.row(a), 0, MP);
-          w.row(a) -= dt / 2 * (dFdx.row(a) + Bdwdx.transpose());
+          w.row(a) -= dt / 2 * (dFdx.row(a) + Bdwdx.transpose()) / dx;
         }
       }
     }
@@ -50,17 +50,12 @@ void midstepper(Vecr wh, int ndim, double dt, Vec3r dX, Par &MP, bVecr mask) {
         derivs2d(dFdx, F, 0);
         derivs2d(dGdy, G, 1);
 
-        dwdx /= dx;
-        dwdy /= dy;
-        dFdx /= dx;
-        dGdy /= dy;
-
         for (int s = 0; s < N * N; s++) {
           Bdot(Bdwdx, w.row(s), dwdx.row(s), 0, MP);
           Bdot(Bdwdy, w.row(s), dwdy.row(s), 1, MP);
           w.row(s) -= dt / 2 *
-                      (dFdx.row(s) + dGdy.row(s) + Bdwdx.transpose() +
-                       Bdwdy.transpose());
+                      ((dFdx.row(s) + Bdwdx.transpose()) / dx +
+                       (dGdy.row(s) + Bdwdy.transpose()) / dy);
         }
       }
     }

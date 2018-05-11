@@ -43,9 +43,10 @@ class SplitSolver():
                         for inds in product(*[range(self.N)] * self.NDIM):
                             F[d][inds] = self.F(w[inds], d, self.pars)
 
-                for inds in product(*[range(self.N)] * self.NDIM):
+                # required to avoid w changing when taking derivative
+                tmp = zeros(w.shape)
 
-                    tmp = zeros(self.NV)
+                for inds in product(*[range(self.N)] * self.NDIM):
 
                     # wi holds the coefficients at the nodes lying in a strip
                     # in the dth direction, at the node given by inds
@@ -58,13 +59,13 @@ class SplitSolver():
                                               inds, d, self.DERVALS)
                             B = self.B(w[inds], d, self.pars)
                             Bdwdx = dot(B, dwdx)
-                            tmp += (dFdx + Bdwdx) / dX[d]
+                            tmp[inds] += (dFdx + Bdwdx) / dX[d]
 
                         else:
                             M = self.M(w[inds], d, self.pars)
-                            tmp += dot(M, dwdx) / dX[d]
+                            tmp[inds] += dot(M, dwdx) / dX[d]
 
-                    w[inds] -= dt / 2 * tmp
+                w -= dt / 2 * tmp
 
     def f(self, y, t0):
         return self.S(y, self.pars)
