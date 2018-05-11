@@ -54,13 +54,15 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
 }
 
 double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr dX,
-                int ndim, double CFL, double t, double tf, int count,
+                double CFL, double t, double tf, int count,
                 std::vector<Par> &MPs, int nmat) {
 
   double MIN = 1e5;
-  int ncell = grids[0].size() / V;
-  VecV Q;
 
+  int ndim = dX.size();
+  int ncell = grids[0].size() / V;
+
+  VecV Q;
   for (int i = 0; i < nmat; i++)
     for (int ind = 0; ind < ncell; ind++)
       if (masks[i](ind)) {
@@ -101,7 +103,7 @@ void iterator(Vecr u, double tf, iVecr nX, Vecr dX, double CFL, bool PERIODIC,
 
     fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
 
-    dt = timestep(grids, masks, dX, ndim, CFL, t, tf, count, MPs, nmat);
+    dt = timestep(grids, masks, dX, CFL, t, tf, count, MPs, nmat);
 
     for (int i = 0; i < nmat; i++) {
 

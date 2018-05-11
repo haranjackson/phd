@@ -31,7 +31,7 @@ void split_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
   weno_launcher(wh, ub, nX);
 
   if (HALF_STEP)
-    midstepper(wh, ndim, dt, dX, MP, mask);
+    midstepper(wh, dt, dX, MP, mask);
 
   fv_launcher(u, wh, nX, dt, dX, false, false, FLUX, MP, mask);
 

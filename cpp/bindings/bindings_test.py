@@ -69,7 +69,7 @@ Bx_cp, Bx_py = B_test(d, MP)
 M_cp, M_py = M_test(d, MP)
 
 lgmres_cp, lgmres_py = lgmres_test()
-nk_cp, nk_py = newton_krylov_test(u, dt, dX, wenoSolver, dgSolver)
+nk_cp, nk_py = newton_krylov_test(u.copy(), dt, dX, wenoSolver, dgSolver)
 
 wh_cp, wh_py = weno_test(wenoSolver)
 
@@ -79,14 +79,14 @@ D_RUS_cp, D_RUS_py = D_RUS_test(d, fvSolver)
 D_ROE_cp, D_ROE_py = D_ROE_test(d, fvSolver)
 D_OSH_cp, D_OSH_py = D_OSH_test(d, fvSolver)
 
-mid_cp, mid_py = midstepper_test(u, dX, dt, wenoSolver, splitSolver)
+mid_cp, mid_py = midstepper_test(u.copy(), dX, dt, wenoSolver, splitSolver)
 ode_cp, ode_py = ode_test(dt, MP)
-qh_py = wenoSolver.solve(u)
+qh_py = wenoSolver.solve(u.copy())
 
-rhs_cp, rhs_py = rhs_test(u, dX, dt, wenoSolver, dgSolver)
-obj_cp, obj_py = obj_test(u, dX, dt, wenoSolver, dgSolver)
-qh_cp, qh_py = dg_test(u, dX, dt, wenoSolver, dgSolver)
+rhs_cp, rhs_py = rhs_test(u.copy(), dX, dt, wenoSolver, dgSolver)
+obj_cp, obj_py = obj_test(u.copy(), dX, dt, wenoSolver, dgSolver)
+qh_cp, qh_py = dg_test(u.copy(), dX, dt, wenoSolver, dgSolver)
 
-FVc_cp, FVc_py = FVc_test(qh_py, dX, dt, fvSolver)
-FVi_cp, FVi_py = FVi_test(qh_py, dX, dt, fvSolver)
-FV_cp, FV_py = FV_test(qh_py, dX, dt, fvSolver)
+FVc_cp, FVc_py = FVc_test(qh_py.copy(), dX, dt, fvSolver)
+FVi_cp, FVi_py = FVi_test(qh_py.copy(), dX, dt, fvSolver)
+FV_cp, FV_py = FV_test(qh_py.copy(), dX, dt, fvSolver)

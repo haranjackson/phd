@@ -1,5 +1,7 @@
 import GPRpy
 
+from warnings import catch_warnings, simplefilter
+
 from numpy import array, dot, int32, ones, prod, zeros
 from numpy.random import rand
 from scipy.optimize import newton_krylov
@@ -26,35 +28,39 @@ def lgmres_test():
 
 def newton_krylov_test(u, dt, dX, wenoSolver, dgSolver):
 
-    N = wenoSolver.N
-    NV = wenoSolver.NV
-    NDIM = wenoSolver.NDIM
+    with catch_warnings():
 
-    NT = N**(NDIM + 1)
-    nx, ny = u.shape[:2]
+        simplefilter("ignore")
 
-    wh = wenoSolver.solve(u)
+        N = wenoSolver.N
+        NV = wenoSolver.NV
+        NDIM = wenoSolver.NDIM
 
-    if NDIM == 1:
-        w = wh[int(nx / 2)].reshape([N**NDIM, NV])
-    elif NDIM == 2:
-        w = wh[int(nx / 2), int(ny / 2)].reshape([N**NDIM, NV])
-    Ww = dot(dgSolver.DG_W, w)
+        NT = N**(NDIM + 1)
+        nx, ny = u.shape[:2]
 
-    q = dgSolver.initial_guess(dgSolver, w, dt, dX)
+        wh = wenoSolver.solve(u)
 
-    def obj(X): return dot(dgSolver.DG_U, X) - dgSolver.rhs(X, Ww, dt, dX)
+        if NDIM == 1:
+            w = wh[int(nx / 2)].reshape([N**NDIM, NV])
+        elif NDIM == 2:
+            w = wh[int(nx / 2), int(ny / 2)].reshape([N**NDIM, NV])
+        Ww = dot(dgSolver.DG_W, w)
 
-    def obj_cp(X):
-        X2 = X.reshape([NT, NV])
-        ret = obj(X2)
-        return ret.ravel()
+        q = dgSolver.initial_guess(dgSolver, w, dt, dX)
 
-    nk_cp = GPRpy.scipy.newton_krylov(obj_cp, q.copy().ravel(),
-                                      f_tol=dgSolver.tol)
-    nk_py = newton_krylov(obj, q, f_tol=dgSolver.tol).ravel()
-    print("N-K   ", check(nk_cp, nk_py))
-    return nk_cp, nk_py
+        def obj(X): return dot(dgSolver.DG_U, X) - dgSolver.rhs(X, Ww, dt, dX)
+
+        def obj_cp(X):
+            X2 = X.reshape([NT, NV])
+            ret = obj(X2)
+            return ret.ravel()
+
+        nk_cp = GPRpy.scipy.newton_krylov(obj_cp, q.copy().ravel(),
+                                          f_tol=dgSolver.tol)
+        nk_py = newton_krylov(obj, q, f_tol=dgSolver.tol).ravel()
+        print("N-K   ", check(nk_cp, nk_py))
+        return nk_cp, nk_py
 
 
 """ WENO """
@@ -183,14 +189,13 @@ def dg_test(u, dX, dt, wenoSolver, dgSolver):
 
 def midstepper_test(u, dX, dt, wenoSolver, splitSolver):
 
-    NDIM = wenoSolver.NDIM
-    ncell = prod(u.shape[:-1])
-
     mid_py = wenoSolver.solve(u)
-    mid_cp = mid_py.ravel()
+    mid_cp = mid_py.copy().ravel()
 
     splitSolver.weno_midstepper(mid_py, dt, dX)
-    GPRpy.solvers.split.midstepper(mid_cp, NDIM, dt, array(dX), splitSolver.pars,
+
+    ncell = prod(mid_py.shape[:u.ndim-1])
+    GPRpy.solvers.split.midstepper(mid_cp, dt, array(dX), splitSolver.pars,
                                    ones(ncell, dtype=bool))
 
     mid_cp = mid_cp.reshape(mid_py.shape)
