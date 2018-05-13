@@ -37,7 +37,7 @@ else:
 
     solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                          model_params=MPs, M=M_cons, max_eig=max_eig,
-                         order=3, ncore=1, split=False, ode_solver=None,
+                         order=3, ncore=1, split=True, ode_solver=None,
                          riemann_solver='rusanov')
 
     solver.solve(u, tf, dX, cfl=0.9, boundary_conditions='transitive',

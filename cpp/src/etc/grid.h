@@ -7,4 +7,6 @@ void boundaries(Vecr u, Vecr ub, iVecr nX, bool PERIODIC);
 
 int extended_dimensions(iVecr nX, int ext);
 
+void extend_mask(bVecr mask, bVecr maskb, iVecr nX);
+
 #endif // GRID_H

@@ -25,7 +25,7 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
   int nmat = grids.size();
 
   Vec av = grids[0];
-  for (int i = 1; i < grids.size(); i++)
+  for (int i = 1; i < nmat; i++)
     av += grids[i];
   av /= nmat;
 
@@ -35,9 +35,9 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
   switch (ndim) {
 
   case 1:
-    for (int i = 0; i < nx; i++) {
-      int ind = get_material_index(avMap.row(i));
-      u(i) = grids[ind](i);
+    for (int idx = 0; idx < nx; idx++) {
+      int ind = get_material_index(avMap.row(idx));
+      u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
     }
     break;
 
@@ -47,7 +47,7 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
       for (int j = 0; j < ny; j++) {
         int idx = i * ny + j;
         int ind = get_material_index(avMap.row(idx));
-        u(idx) = grids[ind](idx);
+        u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
       }
     break;
   }
@@ -87,12 +87,16 @@ void iterator(Vecr u, double tf, iVecr nX, Vecr dX, double CFL, bool PERIODIC,
               std::vector<Par> &MPs) {
 
   int nmat = MPs.size();
-  int ndim = nX.size();
-
   Vec ub(extended_dimensions(nX, N) * V);
+  bVec maskb(extended_dimensions(nX, 1));
 
+  int ncell = u.size() / V;
   std::vector<Vec> grids(nmat);
   std::vector<bVec> masks(nmat);
+  for (int i = 0; i < nmat; i++) {
+    grids[i] = Vec(ncell);
+    masks[i] = bVec(ncell);
+  }
 
   double t = 0.;
   long count = 0;
@@ -108,12 +112,12 @@ void iterator(Vecr u, double tf, iVecr nX, Vecr dX, double CFL, bool PERIODIC,
     for (int i = 0; i < nmat; i++) {
 
       boundaries(grids[i], ub, nX, PERIODIC);
+      extend_mask(masks[i], maskb, nX);
 
       if (SPLIT)
-        split_stepper(grids[i], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[i],
-                      masks[i]);
+        split_stepper(grids[i], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[i], maskb);
       else
-        ader_stepper(grids[i], ub, nX, dt, dX, STIFF, FLUX, MPs[i], masks[i]);
+        ader_stepper(grids[i], ub, nX, dt, dX, STIFF, FLUX, MPs[i], maskb);
     }
     make_u(u, grids, nX);
     t += dt;

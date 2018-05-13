@@ -1,11 +1,15 @@
+#include "../src/etc/types.h"
 #include "../src/options.h"
 
-#include "../src/etc/types.h"
+#include "../include/pybind11/stl.h"
+#include "../include/pybind11/stl_bind.h"
+
+PYBIND11_MAKE_OPAQUE(std::vector<Vec>);
+PYBIND11_MAKE_OPAQUE(std::vector<bVec>);
 
 #include "../include/pybind11/eigen.h"
 #include "../include/pybind11/functional.h"
 #include "../include/pybind11/pybind11.h"
-#include "../include/pybind11/stl.h"
 
 #include "../src/etc/globals.h"
 #include "../src/etc/grid.h"
@@ -46,6 +50,9 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(GPRpy, m) {
   m.doc() = "Python bindings to the GPRcpp library";
+
+  py::bind_vector<std::vector<Vec>>(m, "VectorVec");
+  py::bind_vector<std::vector<bVec>>(m, "VectorbVec");
 
   m.def("N", []() { return N; });
   m.def("NV", []() { return V; });
@@ -156,7 +163,6 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_common.def("derivative_values", &derivative_values);
 
   m_solvers.def("extended_dimensions", &extended_dimensions);
-  m_solvers.def("boundaries", &boundaries);
   m_solvers.def("ader_stepper", &ader_stepper);
   m_solvers.def("split_stepper", &split_stepper);
   m_solvers.def("iterator", &iterator);

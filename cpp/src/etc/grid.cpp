@@ -117,3 +117,59 @@ void boundaries(Vecr u, Vecr ub, iVecr nX, bool PERIODIC) {
 int extended_dimensions(iVecr nX, int ext) {
   return (nX.array() + 2 * ext).prod();
 }
+
+void extend_mask(bVecr mask, bVecr maskb, iVecr nX) {
+  // Given a mask corresponding to the cells that the user wishes to update,
+  // this function returns a mask of the cells for which the DG predictor
+  // must be calculated (i.e. the masked cells and their neighbors)
+
+  int ndim = nX.size();
+  int nx = nX(0);
+  switch (ndim) {
+
+  case 1:
+    for (int i = 0; i < nx; i++) {
+      if (mask(i) || (i > 0 && mask(i - 1)) || (i < nx - 1 && mask(i + 1)))
+        maskb(i + 1) = true;
+      else
+        maskb(i + 1) = false;
+    }
+    maskb(0) = maskb(1);
+    maskb(nx + 1) = maskb(nx);
+    break;
+
+  case 2:
+    int ny = nX(1);
+    for (int i = 0; i < nx; i++)
+      for (int j = 0; j < ny; j++) {
+
+        int ind = i * ny + j;
+        int ind_ = (i + 1) * (ny + 2) + (j + 1);
+        int indU = (i + 1) * ny + j;
+        int indD = (i - 1) * ny + j;
+        int indL = i * ny + (j - 1);
+        int indR = i * ny + (j + 1);
+
+        if (mask(ind) || (i > 0 && mask(indD)) || (i < nx - 1 && mask(indU)) ||
+            (j > 0 && mask(indL)) || (j < ny - 1 && mask(indR)))
+          maskb(ind_) = true;
+        else
+          maskb(ind_) = false;
+
+        for (int i = 0; i < nx; i++) {
+          maskb((i + 1) * (ny + 2)) = mask(i * ny);
+          maskb((i + 1) * (ny + 2) + (ny + 1)) = mask(i * ny + (ny - 1));
+        }
+        for (int j = 0; j < ny; j++) {
+          maskb(j + 1) = mask(j);
+          maskb((nx + 1) * (ny + 2) + (j + 1)) = mask((nx - 1) * ny + j);
+        }
+
+        maskb(0) = false;
+        maskb((ny + 1)) = false;
+        maskb((nx + 1) * (ny + 2)) = false;
+        maskb((nx + 1) * (ny + 2) + (ny + 1)) = false;
+      }
+    break;
+  }
+}
