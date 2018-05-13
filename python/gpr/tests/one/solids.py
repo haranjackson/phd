@@ -8,7 +8,9 @@ from gpr.tests.one.common import riemann_IC, hyperelastic_solid_IC
 
 
 def barton1_IC(isMulti=False):
-
+    """ 10.1016/j.jcp.2009.06.014
+        5.1 Testcase 1
+    """
     tf = 0.06
     nx = 500
     Lx = 1
@@ -39,7 +41,9 @@ def barton1_IC(isMulti=False):
 
 
 def barton2_IC(isMulti=False):
-
+    """ 10.1016/j.jcp.2009.06.014
+        5.2 Testcase 2
+    """
     tf = 0.06
     nx = 500
     Lx = 1
@@ -70,7 +74,9 @@ def barton2_IC(isMulti=False):
 
 
 def elastic1_IC(isMulti=False):
-
+    """ 10.1016/j.compfluid.2016.05.004
+        5.5 Purely elastic Riemann problems
+    """
     tf = 0.06
     nx = 200
     Lx = 1
@@ -101,7 +107,9 @@ def elastic1_IC(isMulti=False):
 
 
 def elastic2_IC(isMulti=False):
-
+    """ 10.1016/j.compfluid.2016.05.004
+        5.5 Purely elastic Riemann problems
+    """
     tf = 0.06
     nx = 200
     Lx = 1
@@ -132,7 +140,9 @@ def elastic2_IC(isMulti=False):
 
 
 def piston_IC():
-
+    """ 10.1016/j.compfluid.2016.05.004
+        5.6 Elastic-plastic piston problem
+    """
     tf = 1.5
     nx = 300
     Lx = 1.5

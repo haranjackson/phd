@@ -8,9 +8,16 @@ from gpr.tests.params import MP_Air_ND, MP_Air, MP_He, MP_H20, MP_Cu_SMG, HYP_Cu
 from gpr.tests.one.common import riemann_IC, fluids_IC
 from gpr.tests.one.fluids import heat_conduction_IC
 from gpr.tests.one.solids import barton1_IC
+from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET
 
 
 def sod_shock_IC():
+
+    assert(VISCOUS)
+    assert(not THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 1)
 
     tf = 0.2
     nx = 100
@@ -33,6 +40,12 @@ def sod_shock_IC():
 
 def water_gas_IC():
 
+    assert(VISCOUS)
+    assert(not THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 1)
+
     tf = 2.3744e-4
     nx = 200
     Lx = 1
@@ -54,6 +67,12 @@ def water_gas_IC():
 
 def water_water_IC():
 
+    assert(VISCOUS)
+    assert(not THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 1)
+
     tf = 1.5e-4
     nx = 200
     Lx = 1
@@ -74,6 +93,12 @@ def water_water_IC():
 
 
 def helium_bubble_IC():
+
+    assert(VISCOUS)
+    assert(not THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 2)
 
     tf = 14e-4
     nx = 200
@@ -124,6 +149,12 @@ def helium_bubble_IC():
 
 def gas_solid_IC():
 
+    assert(VISCOUS)
+    assert(not THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 1)
+
     tf = 0.05
     nx = 250
     Lx = 1
@@ -147,8 +178,22 @@ def gas_solid_IC():
 
 
 def heat_conduction_multi_IC():
+
+    assert(VISCOUS)
+    assert(THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 1)
+
     return heat_conduction_IC(isMulti=True)
 
 
 def barton1_multi_IC():
+
+    assert(VISCOUS)
+    assert(not THERMAL)
+    assert(not REACTIVE)
+    assert(not MULTI)
+    assert(LSET == 1)
+
     return barton1_IC(isMulti=True)
