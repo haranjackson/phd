@@ -86,6 +86,9 @@ class MultiSolver():
                 self.t += dt
                 self.count += 1
 
+                for i in range(self.m):
+                    self.solvers[i].count = self.count
+
                 if self.callback is not None:
                     self.callback(self.u, self.t, self.count)
 

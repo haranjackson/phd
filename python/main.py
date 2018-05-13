@@ -40,5 +40,5 @@ else:
                          order=3, ncore=1, split=True, ode_solver=None,
                          riemann_solver='rusanov')
 
-    solver.solve(u, tf, dX, cfl=0.9, boundary_conditions='transitive',
-                 verbose=True, callback=callback, cpp_level=1)
+    solver.solve(u, tf, dX, cfl=0.5, boundary_conditions='transitive',
+                 verbose=True, callback=callback, cpp_level=2)

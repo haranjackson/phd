@@ -73,7 +73,7 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr dX,
 
   double dt = CFL * MIN;
 
-  if (count < 5)
+  if (count <= 5)
     dt *= 0.2;
 
   if (t + dt > tf)
