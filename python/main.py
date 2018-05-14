@@ -11,12 +11,18 @@ from solver.gfm import MultiSolver
 # u, MPs, tf, dX = fluids.first_stokes_problem_IC()
 # u, MPs, tf, dX = multi1.heat_conduction_multi_IC()
 # u, MPs, tf, dX = multi1.helium_bubble_IC()
-# u, MPs, tf, dX = multi1.water_gas_IC()
 # u, MPs, tf, dX = multi1.gas_solid_IC()
-u, MPs, tf, dX = multi2.water_gas_IC()
+# u, MPs, tf, dX = multi2.water_gas_IC()
+u, MPs, tf, dX = solids.piston_IC()
+
+#BC = 'transitive'
+BC = solids.piston_BC
+
 
 CPP_LVL = 0
 N = 3
+CFL = 0.5
+SPLIT = True
 
 
 if CPP_LVL > 0:
@@ -36,22 +42,10 @@ def callback(u, t, count):
     grids.append(u.copy())
 
 
-if len(MPs) == 1:
+solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
+                     model_params=MPs, M=M_cons, max_eig=max_eig, order=N,
+                     ncore=1, split=SPLIT, ode_solver=None,
+                     riemann_solver='rusanov')
 
-    solver = SolverPlus(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
-                        model_params=MPs[0], M=M_cons, max_eig=max_eig,
-                        order=N, ncore=1, split=True, ode_solver=None,
-                        riemann_solver='rusanov')
-
-    solver.solve(u, tf, dX, cfl=0.5, boundary_conditions='transitive',
-                 verbose=True, callback=callback, cpp_level=CPP_LVL)
-
-else:
-
-    solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
-                         model_params=MPs, M=M_cons, max_eig=max_eig,
-                         order=N, ncore=1, split=True, ode_solver=None,
-                         riemann_solver='rusanov')
-
-    solver.solve(u, tf, dX, cfl=0.5, boundary_conditions='transitive',
-                 verbose=True, callback=callback, cpp_level=CPP_LVL)
+solver.solve(u, tf, dX, cfl=CFL, boundary_conditions=BC, verbose=True,
+             callback=callback, cpp_level=CPP_LVL)

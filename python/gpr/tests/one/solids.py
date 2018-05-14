@@ -158,7 +158,7 @@ def piston_IC():
 
     Q = Cvec(ρ, p, v, A, J, MP)
 
-    u = zeros([nx, 17])
+    u = zeros([nx, 14])
 
     for i in range(nx):
         u[i] = Q
@@ -167,8 +167,8 @@ def piston_IC():
     return u, [MP], tf, dX
 
 
-def piston_BC(u, N):
-    ret = standard_BC(u)
+def piston_BC(u, N, NDIM):
+    ret = standard_BC(u, N, NDIM)
     ret[:N, 2:5] = ret[N, 0] * array([0.002, 0, 0])
     return ret
 

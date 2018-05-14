@@ -1,6 +1,6 @@
 from time import time
 
-from numpy import expand_dims
+from numpy import expand_dims, ones
 
 from ader.solver import Solver
 from ader.etc.boundaries import extend_mask
@@ -89,7 +89,7 @@ class SolverPlus(Solver):
         uBC = self.BC(self.u, self.N, self.NDIM)
 
         if mask is None:
-            maskBC = None
+            maskBC = ones(uBC.shape[:-1], dtype=bool)
         else:
             maskBC = extend_mask(mask)
 
