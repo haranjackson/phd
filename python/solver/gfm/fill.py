@@ -84,7 +84,7 @@ def fill_from_neighbor(grid, Δφ, ind, dx, sgn):
     n = normal(Δφ[ind])
     x = (array(ind) + 0.5) * dx
     xn = x + sgn * dx * n
-    grid[ind] = grid[array(xn / dx, dtype=int)]
+    grid[ind] = grid[tuple(array(xn / dx, dtype=int))]
 
 
 def fill_neighbor_cells(grids, intMask, i, Δφ, dx, N, NDIM):
@@ -134,6 +134,6 @@ def fill_ghost_cells(u, m, N, dX, MPs, dt):
         masks[i+1] *= logical_or((φ >= 0), (intMask == -1))
 
         for j in range(m):
-            grids[j].reshape([ncells, -1])[:, i - (m-1)] = φ
+            grids[j].reshape([ncells, -1])[:, i - (m-1)] = φ.ravel()
 
     return grids, masks
