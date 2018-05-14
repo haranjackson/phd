@@ -7,10 +7,6 @@ int sign(double x);
 
 Vec normal(Vecr Δφ);
 
-int iVec_to_ind(iVecr v) { return v(0) * V; }
-
-int iVec_to_ind(iVecr v, int ny) { return (v(0) * ny + v(1)) * V; }
-
 Mat finite_difference(Vecr φ, Vecr dX, iVec nX);
 
 #endif // FUNCTIONS_H

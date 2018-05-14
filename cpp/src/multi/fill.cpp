@@ -5,6 +5,10 @@
 #include "functions.h"
 #include "pfmm.h"
 
+int iVec_to_ind(iVecr v) { return v(0) * V; }
+
+int iVec_to_ind(iVecr v, int ny) { return (v(0) * ny + v(1)) * V; }
+
 void update_int_mask(iVecr intMask, Vecr u, int indL, int indR, int ii) {
   double φL = u(indL * V + ii);
   double φR = u(indR * V + ii);
