@@ -26,13 +26,17 @@ void find_interface_cells(iVecr intMask, Vecr u, int interf, int nmat,
   intMask.setZero();
 
   int nx = nX(0);
-  if (ndim == 1) {
+  switch (ndim) {
+
+  case 1:
     for (int i = 0; i < nx - 1; i++) {
       int indL = i;
       int indR = i + 1;
       update_int_mask(intMask, u, indL, indR, ii);
     }
-  } else if (ndim == 2) {
+    break;
+
+  case 2:
     int ny = nX(1);
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
@@ -47,15 +51,17 @@ void find_interface_cells(iVecr intMask, Vecr u, int interf, int nmat,
           update_int_mask(intMask, u, indL, indR, ii);
         }
       }
+    break;
   }
 }
 
 struct BoundaryInds {
-  iVec ii, iL, iR, i_;
+  int ii, iL, iR, i_;
 };
 
-BoundaryInds boundary_inds(iVec inds, double φ, Vecr n, double dx) {
+BoundaryInds boundary_inds(iVec inds, double φ, Vecr n, double dx, iVecr nX) {
   // Calculates indexes of the boundary states at position given by inds
+
   Vec xp = (inds.cast<double>().array() + 0.5) * dx;
   double d = 1.5;
 
@@ -66,10 +72,27 @@ BoundaryInds boundary_inds(iVec inds, double φ, Vecr n, double dx) {
 
   BoundaryInds ret;
 
-  ret.ii = (xi / dx).cast<int>();
-  ret.iL = (xL / dx).cast<int>();
-  ret.iR = (xR / dx).cast<int>();
-  ret.i_ = (x_ / dx).cast<int>();
+  iVec xiVec = (xi / dx).cast<int>();
+  iVec xLVec = (xL / dx).cast<int>();
+  iVec xRVec = (xR / dx).cast<int>();
+  iVec x_Vec = (x_ / dx).cast<int>();
+
+  int ndim = nX.size();
+  switch (ndim) {
+  case 1:
+    ret.ii = iVec_to_ind(xiVec);
+    ret.iL = iVec_to_ind(xLVec);
+    ret.iR = iVec_to_ind(xRVec);
+    ret.i_ = iVec_to_ind(x_Vec);
+    break;
+  case 2:
+    int ny = nX(1);
+    ret.ii = iVec_to_ind(xiVec, ny);
+    ret.iL = iVec_to_ind(xLVec, ny);
+    ret.iR = iVec_to_ind(xRVec, ny);
+    ret.i_ = iVec_to_ind(x_Vec, ny);
+    break;
+  }
 
   return ret;
 }
@@ -78,40 +101,41 @@ void fill_boundary_cells_inner(Vecr u, Vecr grid0, Vecr grid1,
                                BoundaryInds &bInds, Par &MPL, Par &MPR,
                                double dt, Vecr n, int maskVal) {
 
-  VecV QL = u.segment<V>(iVec_to_ind(bInds.iL));
-  VecV QR = u.segment<V>(iVec_to_ind(bInds.iR));
+  VecV QL = u.segment<V>(bInds.iL);
+  VecV QR = u.segment<V>(bInds.iR);
 
   std::vector<VecV> S = star_states(QL, QR, MPL, MPR, dt, n);
 
   if (maskVal == -1) {
-    grid0.segment<V>(iVec_to_ind(bInds.ii)) = S[0];
-    grid0.segment<V>(iVec_to_ind(bInds.i_)) = S[0];
+    grid0.segment<V>(bInds.ii) = S[0];
+    grid0.segment<V>(bInds.i_) = S[0];
   } else if (maskVal == 1) {
-    grid1.segment<V>(iVec_to_ind(bInds.ii)) = S[1];
-    grid1.segment<V>(iVec_to_ind(bInds.i_)) = S[1];
+    grid1.segment<V>(bInds.ii) = S[1];
+    grid1.segment<V>(bInds.i_) = S[1];
   }
 }
 
 void fill_boundary_cells(Vecr u, Vecr grid0, Vecr grid1, iVecr intMask, Vecr φ,
                          Matr Δφ, double dx, Par &MPL, Par &MPR, double dt,
                          iVecr nX) {
-
   int ndim = nX.size();
   int nx = nX(0);
 
-  if (ndim == 1) {
-    for (int i = 0; i < nx; i++) {
-      if (intMask(i) != 0) {
-        Vec n = normal(Δφ.row(i));
-        iVec inds(1);
-        inds << i;
+  switch (ndim) {
 
-        BoundaryInds bInds = boundary_inds(inds, φ(i), n, dx);
+  case 1:
+    for (int ind = 0; ind < nx; ind++) {
+      if (intMask(ind) != 0) {
+        Vec n = normal(Δφ.row(ind));
+        iVec inds(1);
+        inds << ind;
+
+        BoundaryInds bInds = boundary_inds(inds, φ(ind), n, dx, nX);
         fill_boundary_cells_inner(u, grid0, grid1, bInds, MPL, MPR, dt, n,
-                                  intMask(i));
+                                  intMask(ind));
       }
     }
-  } else {
+  case 2:
     int ny = nX(1);
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
@@ -121,7 +145,7 @@ void fill_boundary_cells(Vecr u, Vecr grid0, Vecr grid1, iVecr intMask, Vecr φ,
           iVec inds(2);
           inds << i, j;
 
-          BoundaryInds bInds = boundary_inds(inds, φ(ind), n, dx);
+          BoundaryInds bInds = boundary_inds(inds, φ(ind), n, dx, nX);
           fill_boundary_cells_inner(u, grid0, grid1, bInds, MPL, MPR, dt, n,
                                     intMask(ind));
         }
@@ -129,16 +153,29 @@ void fill_boundary_cells(Vecr u, Vecr grid0, Vecr grid1, iVecr intMask, Vecr φ,
   }
 }
 
-void fill_from_neighbor(Vecr grid, Vecr Δφi, iVecr inds, double dx,
-                        double sgn) {
+void fill_from_neighbor(Vecr grid, Vecr Δφi, iVecr inds, double dx, double sgn,
+                        iVecr nX) {
   // makes the value of cell ind equal to the value of its neighbor in the
   // direction of the interface
-  int ind = iVec_to_ind(inds);
+  int ndim = nX.size();
+  int ind, newInd;
+
   Vec n = normal(Δφi);
   Vec x = (inds.cast<double>().array() + 0.5) * dx;
   Vec xn = x + sgn * dx * n;
   iVec newInds = (xn / dx).cast<int>();
-  int newInd = iVec_to_ind(newInds);
+
+  switch (ndim) {
+  case 1:
+    ind = iVec_to_ind(inds);
+    newInd = iVec_to_ind(newInds);
+    break;
+  case 2:
+    int ny = nX(1);
+    ind = iVec_to_ind(inds, ny);
+    newInd = iVec_to_ind(newInds, ny);
+    break;
+  }
   grid.segment<V>(ind) = grid.segment<V>(newInd);
 }
 
@@ -172,13 +209,13 @@ void fill_neighbor_cells(Vecr grid0, Vecr grid1, iVecr intMask, Matr Δφ,
             intMask(i) = N0 + 1;
             iVec inds(1);
             inds << i;
-            fill_from_neighbor(grid0, Δφ.row(i), inds, dx, -1.);
+            fill_from_neighbor(grid0, Δφ.row(i), inds, dx, -1., nX);
           }
           if (neg) {
             intMask(i) = -(N0 + 1);
             iVec inds(1);
             inds << i;
-            fill_from_neighbor(grid1, Δφ.row(i), inds, dx, 1.);
+            fill_from_neighbor(grid1, Δφ.row(i), inds, dx, 1., nX);
           }
         }
       }
@@ -219,13 +256,13 @@ void fill_neighbor_cells(Vecr grid0, Vecr grid1, iVecr intMask, Matr Δφ,
               intMask(ind) = N0 + 1;
               iVec inds(2);
               inds << i, j;
-              fill_from_neighbor(grid0, Δφ.row(ind), inds, dx, -1.);
+              fill_from_neighbor(grid0, Δφ.row(ind), inds, dx, -1., nX);
             }
             if (neg) {
               intMask(ind) = -(N0 + 1);
               iVec inds(2);
               inds << i, j;
-              fill_from_neighbor(grid1, Δφ.row(ind), inds, dx, 1.);
+              fill_from_neighbor(grid1, Δφ.row(ind), inds, dx, 1., nX);
             }
           }
         }

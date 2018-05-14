@@ -11,7 +11,8 @@ void fill_boundary_cells(Vecr u, Vecr grid0, Vecr grid1, iVecr intMask, Vecr φ,
                          Matr Δφ, double dx, Par &MPL, Par &MPR, double dt,
                          iVecr nX);
 
-void fill_from_neighbor(Vecr grid, Vecr Δφi, iVecr inds, double dx, double sgn);
+void fill_from_neighbor(Vecr grid, Vecr Δφi, iVecr inds, double dx, double sgn,
+                        iVecr nX);
 
 void fill_neighbor_cells(Vecr grid0, Vecr grid1, iVecr intMask, Matr Δφ,
                          double dx, iVecr nX);
