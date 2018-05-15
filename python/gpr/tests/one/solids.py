@@ -4,7 +4,7 @@ from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
 from gpr.tests.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
-from gpr.tests.one.common import riemann_IC, hyperelastic_solid_IC
+from gpr.tests.one.common import riemann_IC, hyperelastic_IC
 
 
 def barton1_IC(isMulti=False):
@@ -35,7 +35,7 @@ def barton1_IC(isMulti=False):
                 [0, 0, 1]])
     SR = 0
 
-    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
     print("BARTON1")
     return u, MPs, tf, dX
 
@@ -68,7 +68,7 @@ def barton2_IC(isMulti=False):
                 [-0.01, 0, 0.9]])
     SR = 0
 
-    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
     print("BARTON1")
     return u, MPs, tf, dX
 
@@ -101,7 +101,7 @@ def elastic1_IC(isMulti=False):
     vR = zeros(3)
     SR = 0
 
-    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
     print("BARTON1")
     return u, MPs, tf, dX
 
@@ -134,7 +134,7 @@ def elastic2_IC(isMulti=False):
     vR = zeros(3)
     SR = 0
 
-    u = hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
+    u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
     print("BARTON1")
     return u, MPs, tf, dX
 

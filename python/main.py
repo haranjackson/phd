@@ -10,16 +10,16 @@ from solver.gfm import MultiSolver
 
 # u, MPs, tf, dX = fluids.first_stokes_problem_IC()
 # u, MPs, tf, dX = multi1.heat_conduction_multi_IC()
-# u, MPs, tf, dX = multi1.helium_bubble_IC()
-# u, MPs, tf, dX = multi1.gas_solid_IC()
-# u, MPs, tf, dX = multi2.water_gas_IC()
-u, MPs, tf, dX = solids.piston_IC()
+u, MPs, tf, dX = multi1.helium_bubble_IC()
+# u, MPs, tf, dX = multi1.air_copper_IC()
+# u, MPs, tf, dX = multi1.water_air_IC()
+# u, MPs, tf, dX = solids.piston_IC()
 
-#BC = 'transitive'
-BC = solids.piston_BC
+BC = 'transitive'
+# BC = solids.piston_BC
 
 
-CPP_LVL = 0
+CPP_LVL = 2
 N = 3
 CFL = 0.5
 SPLIT = True

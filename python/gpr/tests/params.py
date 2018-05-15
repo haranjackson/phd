@@ -38,5 +38,9 @@ MP_Cu_SMG_P = material_params(EOS='smg', ρ0=8.93, cv=1, p0=0, c0=0.394, Γ0=2,
                               s=1.48, e0=0, b0=0.219, σY=9e-4, τ1=0.1, n=10,
                               PLASTIC=True)
 
-MP_Cu_CC = material_params(EOS='cc', ρ0=8.9, cv=4e-4, p0=0, Γ0=2, A=1.4567,
+MP_Cu_CC = material_params(EOS='cc', ρ0=8.9, cv=3.93e-4, p0=0, Γ0=2, A=1.4567,
                            B=0.1287, R1=2.99, R2=4.1, b0=2.1, τ1=inf, β=3)
+
+MP_TNT_JWL = material_params(EOS='jwl', ρ0=1.84, cv=8.15e-4, p0=0, Γ0=0.25,
+                             A=8.545, B=0.205, R1=4.6, R2=1.35, b0=2.1, τ1=inf,
+                             β=3)

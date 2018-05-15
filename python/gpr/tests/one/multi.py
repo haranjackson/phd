@@ -4,41 +4,14 @@ from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
 from gpr.opts import NV
 
-from gpr.tests.params import MP_Air_ND, MP_Air, MP_He, MP_H20, MP_Cu_SMG, HYP_Cu
-from gpr.tests.one.common import riemann_IC, fluids_IC
+from gpr.tests.params import MP_Air, MP_He, MP_H20, MP_Cu_SMG, HYP_Cu
+from gpr.tests.one.common import riemann_IC, primitive_IC
 from gpr.tests.one.fluids import heat_conduction_IC
 from gpr.tests.one.solids import barton1_IC
 from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET
 
 
-def sod_shock_IC():
-
-    assert(VISCOUS)
-    assert(not THERMAL)
-    assert(not REACTIVE)
-    assert(not MULTI)
-    assert(LSET == 1)
-
-    tf = 0.2
-    nx = 100
-    Lx = 1
-    MPs = [MP_Air_ND, MP_Air_ND]
-
-    dX = [Lx / nx]
-
-    ρL = 1
-    pL = 1
-    vL = zeros(3)
-
-    ρR = 0.125
-    pR = 0.1
-    vR = zeros(3)
-
-    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
-    return u, MPs, tf, dX
-
-
-def water_gas_IC():
+def water_air_IC():
 
     assert(VISCOUS)
     assert(not THERMAL)
@@ -61,7 +34,7 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.7)
+    u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.7)
     return u, MPs, tf, dX
 
 
@@ -88,7 +61,7 @@ def water_water_IC():
     pR = pL / 7000
     vR = zeros(3)
 
-    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
+    u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
     return u, MPs, tf, dX
 
 
@@ -98,7 +71,7 @@ def helium_bubble_IC():
     assert(not THERMAL)
     assert(not REACTIVE)
     assert(not MULTI)
-    assert(LSET == 2)
+    assert(LSET == 1)
 
     tf = 14e-4
     nx = 200
@@ -140,14 +113,15 @@ def helium_bubble_IC():
         else:
             u[i] = Q2
 
-        # u[i, -3] = i * dx - 0.05
-        u[i, -2] = i * dx - 0.4
-        u[i, -1] = i * dx - 0.6
+        if i * dx < 0.4 or i * dx >= 0.6:
+            u[i, -1] = -1
+        else:
+            u[i, -1] = 1
 
-    return u, [MP_Air, MP_He, MP_Air], tf, dX
+    return u, [MP_Air, MP_He], tf, dX
 
 
-def gas_solid_IC():
+def air_copper_IC():
 
     assert(VISCOUS)
     assert(not THERMAL)

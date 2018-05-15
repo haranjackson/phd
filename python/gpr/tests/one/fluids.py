@@ -8,7 +8,7 @@ from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec, State
 from gpr.opts import NV
 from gpr.vars.wavespeeds import c_0
-from gpr.tests.one.common import fluids_IC
+from gpr.tests.one.common import primitive_IC
 
 
 def heat_conduction_IC(isMulti=False):
@@ -32,7 +32,7 @@ def heat_conduction_IC(isMulti=False):
 
     dX = [Lx / nx]
 
-    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
+    u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
     print("HEAT CONDUCTION IN A GAS")
     return u, MPs, tf, dX
 
@@ -68,7 +68,7 @@ def first_stokes_problem_IC(isMulti=False):
 
     dX = [Lx / nx]
 
-    u = fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
+    u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
     print("FIST STOKES PROBLEM: μ =", μ)
     return u, MPs, tf, dX
 

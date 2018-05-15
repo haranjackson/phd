@@ -4,11 +4,11 @@ from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
 
 from gpr.tests.params import MP_Air, MP_H20, MP_Cu_SMG, HYP_Cu
-from gpr.tests.one.common import riemann_IC, fluids_IC
+from gpr.tests.one.common import riemann_IC, primitive_IC
 from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET
 
 
-def water_gas_IC():
+def water_air_IC():
 
     assert(VISCOUS)
     assert(not THERMAL)
@@ -34,12 +34,12 @@ def water_gas_IC():
     pR = 101325
     vR = zeros(3)
 
-    u = fluids_IC(ny, dX[1:], ρL, pL, vL, ρR, pR, vR, MPs, x0=0.7)
+    u = primitive_IC(ny, dX[1:], ρL, pL, vL, ρR, pR, vR, MPs, x0=0.7)
     u = array([u] * nx)
     return u, MPs, tf, dX
 
 
-def gas_solid_IC():
+def air_copper_IC():
 
     assert(VISCOUS)
     assert(not THERMAL)

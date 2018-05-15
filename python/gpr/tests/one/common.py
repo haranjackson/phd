@@ -13,16 +13,20 @@ def riemann_IC(nx, dX, QL, QR, x0, isMulti):
 
         if i * dX[0] < x0:
             u[i] = QL
+
+            if isMulti:
+                u[i, -1] = -1
+
         else:
             u[i] = QR
 
-        if isMulti:
-            u[i, -1] = (i + 0.5) * dX[0] - x0
+            if isMulti:
+                u[i, -1] = 1
 
     return u
 
 
-def fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5):
+def primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5):
 
     isMulti = len(MPs) > 1
     MPL = MPs[0]
@@ -39,7 +43,7 @@ def fluids_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5):
     return riemann_IC(nx, dX, QL, QR, x0, isMulti)
 
 
-def hyperelastic_solid_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs, x0=0.5):
+def hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs, x0=0.5):
 
     isMulti = len(HYPs) > 1
     HYPL = HYPs[0]
