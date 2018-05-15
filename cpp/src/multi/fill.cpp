@@ -135,6 +135,7 @@ void fill_boundary_cells(Vecr u, Vecr grid0, Vecr grid1, iVecr intMask, Vecr φ,
                                   intMask(ind));
       }
     }
+    break;
   case 2:
     int ny = nX(1);
     for (int i = 0; i < nx; i++)
@@ -150,6 +151,7 @@ void fill_boundary_cells(Vecr u, Vecr grid0, Vecr grid1, iVecr intMask, Vecr φ,
                                     intMask(ind));
         }
       }
+    break;
   }
 }
 
@@ -298,6 +300,7 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
 
     fill_boundary_cells(u, grids[i], grids[i + 1], intMask, φ, Δφ, dx, MPL, MPR,
                         dt, nX);
+
     fill_neighbor_cells(grids[i], grids[i + 1], intMask, Δφ, dX(0), nX);
 
     for (int j = 0; j < ncell; j++) {
