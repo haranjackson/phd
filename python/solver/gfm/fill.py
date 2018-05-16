@@ -135,16 +135,18 @@ def fill_ghost_cells(u, nmat, N, dX, MPs, dt):
 
     for mat in range(nmat):
 
-        φ = material_indicator(u, mat, nmat, dX)
-        Δφ = finite_difference(φ, dX)
-        intMask = find_interface_cells(φ)
+        if MPs[mat].EOS > -1:  # not a vacuum
 
-        grid = grids[mat]
-        fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt)
-        fill_neighbor_cells(grid, intMask, Δφ, dX, N)
+            φ = material_indicator(u, mat, nmat, dX)
+            Δφ = finite_difference(φ, dX)
+            intMask = find_interface_cells(φ)
 
-        masks[mat] *= logical_or((φ <= 0), (intMask == 1))
+            grid = grids[mat]
+            fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt)
+            fill_neighbor_cells(grid, intMask, Δφ, dX, N)
 
-        grid.reshape([ncells, -1])[:, - (nmat - 1):] = u.reshape([ncells, -1])[:, - (nmat - 1):]
+            masks[mat] *= logical_or((φ <= 0), (intMask == 1))
+
+            grid.reshape([ncells, -1])[:, - (nmat - 1):] = u.reshape([ncells, -1])[:, - (nmat - 1):]
 
     return grids, masks

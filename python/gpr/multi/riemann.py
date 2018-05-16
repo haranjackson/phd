@@ -23,16 +23,20 @@ n1, n2, n3, n4, n5 = get_indexes()
 def check_star_convergence(QL_, QR_, MPL, MPR):
 
     PL_ = State(QL_, MPL)
-    PR_ = State(QR_, MPR)
 
-    cond1 = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) < STAR_TOL
+    if MPR.EOS > -1:  # not a vacuum
+        PR_ = State(QR_, MPR)
+        cond = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) < STAR_TOL
+    else:
+        cond = amax(abs(PL_.Σ()[0])) < STAR_TOL
 
     if THERMAL:
-        cond2 = abs(PL_.T() - PR_.T()) < STAR_TOL
-    else:
-        cond2 = True
+        if MPR.EOS > -1:
+            cond &= abs(PL_.T() - PR_.T()) < STAR_TOL
+        else:
+            cond &= abs(PL_.T()) < STAR_TOL
 
-    return cond1 and cond2
+    return cond
 
 
 def left_riemann_constraints(P, Lhat, sgn):
@@ -131,32 +135,39 @@ def riemann_constraints(P, sgn, MP, left=False):
 
 
 def star_stepper(QL, QR, MPL, MPR, interfaceType):
-
+    """ Iterates to the next approximation of the star states.
+        NOTE: the material on the right may be a vacuum.
+    """
     PL = State(QL, MPL)
-    PR = State(QR, MPR)
-
     _, RL = riemann_constraints(PL, 1, MPL)
-    _, RR = riemann_constraints(PR, -1, MPR)
-
     cL = zeros(n5)
-    cR = zeros(n5)
 
-    if interfaceType == 'stick':
-        xL, xR, x_ = stick_bcs(RL, RR, PL, PR)
-    elif interfaceType == 'slip':
-        xL, xR, x_ = slip_bcs(RL, RR, PL, PR)
-    elif interfaceType == 'vacuum':
-        xL, xR, x_ = vacuum_bcs(PL, PR)
+    if MPR.EOS > -1:  # not a vacuum
 
-    cL[:n1] = x_ - xL
-    cR[:n1] = x_ - xR
+        PR = State(QR, MPR)
+        _, RR = riemann_constraints(PR, -1, MPR)
+        cR = zeros(n5)
+
+        if interfaceType == 'stick':
+            xL, xR, x_ = stick_bcs(RL, RR, PL, PR)
+        elif interfaceType == 'slip':
+            xL, xR, x_ = slip_bcs(RL, RR, PL, PR)
+
+        cL[:n1] = x_ - xL
+        cR[:n1] = x_ - xR
+
+        PRvec = Pvec(PR)
+        PR_vec = dot(RR, cR) + PRvec
+        QR_ = Pvec_to_Cvec(reorder(PR_vec), MPR)
+
+    else:
+        xL = vacuum_bcs(PL)
+        cL[:n1] = - xL
+        QR_ = zeros(n5)
 
     PLvec = Pvec(PL)
-    PRvec = Pvec(PR)
     PL_vec = dot(RL, cL) + PLvec
-    PR_vec = dot(RR, cR) + PRvec
     QL_ = Pvec_to_Cvec(reorder(PL_vec), MPL)
-    QR_ = Pvec_to_Cvec(reorder(PR_vec), MPR)
 
     return QL_, QR_
 

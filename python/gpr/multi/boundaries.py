@@ -58,15 +58,11 @@ def slip_bcs(RL, RR, PL, PR):
     return xL, xR, x_
 
 
-def vacuum_bcs(PL, PR):
+def vacuum_bcs(PL):
 
     if THERMAL:
         xL = concatenate([PL.Σ()[0], [PL.T()]])
-        xR = concatenate([PR.Σ()[0], [PR.T()]])
-        x_ = zeros(4)
     else:
         xL = PL.Σ()[0]
-        xR = PR.Σ()[0]
-        x_ = zeros(3)
 
-    return xL, xR, x_
+    return xL

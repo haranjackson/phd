@@ -4,7 +4,8 @@ from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
 from gpr.opts import NV
 
-from gpr.tests.params import MP_Air, MP_He, MP_H20, MP_Cu_SMG, HYP_Cu
+from gpr.tests.params import MP_Air, MP_He, MP_H20, MP_Cu_SMG, HYP_Cu, \
+    HYP_Al, MP_Al_GR, MP_VAC
 from gpr.tests.one.common import riemann_IC, primitive_IC
 from gpr.tests.one.fluids import heat_conduction_IC
 from gpr.tests.one.solids import barton1_IC
@@ -146,6 +147,31 @@ def air_copper_IC():
     FR = eye(3)
     SR = 0
     QR = Cvec_hyp(FR, SR, vR, HYP_Cu)
+
+    u = riemann_IC(nx, dX, QL, QR, 0.5, True)
+    return u, MPs, tf, dX
+
+
+def aluminium_vacuum_IC():
+    """ 10.1016/j.jcp.2010.04.012
+        5.3 Solid/vacuum problem
+    """
+    tf = 0.06
+    nx = 500
+    Lx = 1
+    MPs = [MP_Al_GR, MP_VAC]
+
+    dX = [Lx / nx]
+
+    vL = array([2, 0, 0.1])
+    FL = array([[1, 0, 0],
+                [-0.01, 0.95, 0.02],
+                [-0.015, 0, 0.9]])
+    SL = 0
+
+    QL = Cvec_hyp(FL, SL, vL, HYP_Al)
+
+    QR = zeros(NV)
 
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)
     return u, MPs, tf, dX

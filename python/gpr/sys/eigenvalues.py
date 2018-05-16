@@ -1,4 +1,4 @@
-from numpy import dot, iscomplex, sqrt, zeros
+from numpy import dot, sqrt, zeros
 from numpy.linalg import eigvals
 
 from gpr.misc.structures import State

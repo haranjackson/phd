@@ -71,10 +71,12 @@ class MultiSolver():
                     self.solvers[i].u = grids[i]
 
                 dt = min([self.solvers[i].timestep(masks[i])
-                          for i in range(self.m)])
+                          for i in range(self.m)
+                          if self.solvers[i].pars.EOS > -1])
 
                 for i in range(self.m):
-                    self.solvers[i].stepper(executor, dt, masks[i])
+                    if self.solvers[i].pars.EOS > -1:
+                        self.solvers[i].stepper(executor, dt, masks[i])
 
                 self.make_u([solver.u for solver in self.solvers])
 

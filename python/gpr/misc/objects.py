@@ -162,48 +162,52 @@ def material_params(EOS, ρ0, cv, p0,
                     δp=None, Rc=8.31445985):
     """ An object to hold the material constants
     """
-    assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr'])
+    assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr', 'vac'])
     assert(REACTION in ['a', 'd', 'ig', None])
-
-    if Tref is None:
-        Tref = 0
-
-    if (γ is not None) and (pINF is None):
-        pINF = 0
-
-    P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ,
-                   pINF, c0, Γ0, s, A, B, R1, R2)
-    T0 = temperature(ρ0, p0, P)
-
-    if b0 is not None:
-        if (not PLASTIC) and (τ1 is None):
-            τ1 = 6 * μ / (ρ0 * b0**2)
-        if β is None:
-            β = 0
-    else:
-        τ1 = None
-
-    if cα is not None:
-        if Pr is not None:
-            κ = μ * γ * cv / Pr
-        τ2 = κ * ρ0 / (T0 * cα**2)
-    else:
-        τ2 = None
 
     MP = GPRpy.classes.Par()
     # MP = SimpleNamespace()
 
-    params(MP, Rc, EOS,
-           ρ0, p0, Tref, T0, cv,
-           α, β, γ, pINF,
-           c0, Γ0, s, e0,
-           A, B, R1, R2,
-           b0, τ1, μ, σY, n, PLASTIC,
-           cα, τ2,
-           REACTION, Qc,
-           Kc, Ti,
-           Bc, Ea,
-           I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2,
-           δp)
+    if EOS == 'vac':
+        MP.EOS = -1
+
+    else:
+        if Tref is None:
+            Tref = 0
+
+        if (γ is not None) and (pINF is None):
+            pINF = 0
+
+        P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ,
+                       pINF, c0, Γ0, s, A, B, R1, R2)
+        T0 = temperature(ρ0, p0, P)
+
+        if b0 is not None:
+            if (not PLASTIC) and (τ1 is None):
+                τ1 = 6 * μ / (ρ0 * b0**2)
+            if β is None:
+                β = 0
+        else:
+            τ1 = None
+
+        if cα is not None:
+            if Pr is not None:
+                κ = μ * γ * cv / Pr
+            τ2 = κ * ρ0 / (T0 * cα**2)
+        else:
+            τ2 = None
+
+        params(MP, Rc, EOS,
+               ρ0, p0, Tref, T0, cv,
+               α, β, γ, pINF,
+               c0, Γ0, s, e0,
+               A, B, R1, R2,
+               b0, τ1, μ, σY, n, PLASTIC,
+               cα, τ2,
+               REACTION, Qc,
+               Kc, Ti,
+               Bc, Ea,
+               I, G1, G2, a, b, c, d, e, g, x, y, z, φIG, φG1, φG2,
+               δp)
 
     return MP

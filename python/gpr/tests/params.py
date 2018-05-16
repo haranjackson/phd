@@ -25,6 +25,10 @@ HYP_Cu = hyperelastic_params(ρ0=8.9, α=1, β=3, γ=2, cv=4e-4, T0=300,
 MP_Al_SG = material_params(EOS='sg', ρ0=2700, cv=897, p0=1e5, γ=3.4,
                            pINF=21.5e9, b0=3160, τ1=inf)
 
+MP_Al_GR = material_params(EOS='gr', ρ0=2.71, cv=9e-4, p0=0,
+                           c0=sqrt(6.22**2 - 4 / 3 * 3.16**2), α=1, β=3.577,
+                           γ=2.088, b0=3.16, τ1=inf, Tref=300)
+
 MP_Cu_GR = material_params(EOS='gr', ρ0=8.9, cv=4e-4, p0=0,
                            c0=sqrt(4.6**2 - 4 / 3 * 2.1**2), α=1, β=3, γ=2,
                            b0=2.1, τ1=inf, Tref=300)
@@ -44,3 +48,5 @@ MP_Cu_CC = material_params(EOS='cc', ρ0=8.9, cv=3.93e-4, p0=0, Γ0=2, A=1.4567,
 MP_TNT_JWL = material_params(EOS='jwl', ρ0=1.84, cv=8.15e-4, p0=0, Γ0=0.25,
                              A=8.545, B=0.205, R1=4.6, R2=1.35, b0=2.1, τ1=inf,
                              β=3)
+
+MP_VAC = material_params(EOS='vac', ρ0=0, cv=0, p0=0)
