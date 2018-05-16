@@ -3,7 +3,7 @@ from scipy.linalg import inv, solve
 
 from gpr.misc.functions import reorder
 from gpr.misc.structures import State
-from gpr.multi.boundaries import slip_bcs, stick_bcs
+from gpr.multi.boundaries import slip_bcs, stick_bcs, vacuum_bcs
 from gpr.multi.rotations import rotation_matrix, rotate_tensors
 from gpr.multi.vectors import Pvec, Pvec_to_Cvec
 from gpr.opts import THERMAL
@@ -130,7 +130,7 @@ def riemann_constraints(P, sgn, MP, left=False):
     return Lhat, Rhat
 
 
-def star_stepper(QL, QR, MPL, MPR, boundary='stick'):
+def star_stepper(QL, QR, MPL, MPR, interfaceType):
 
     PL = State(QL, MPL)
     PR = State(QR, MPR)
@@ -138,13 +138,16 @@ def star_stepper(QL, QR, MPL, MPR, boundary='stick'):
     _, RL = riemann_constraints(PL, 1, MPL)
     _, RR = riemann_constraints(PR, -1, MPR)
 
-    if boundary == 'stick':
-        xL, xR, x_ = stick_bcs(RL, RR, PL, PR)
-    else:
-        xL, xR, x_ = slip_bcs(RL, RR, PL, PR)
-
     cL = zeros(n5)
     cR = zeros(n5)
+
+    if interfaceType == 'stick':
+        xL, xR, x_ = stick_bcs(RL, RR, PL, PR)
+    elif interfaceType == 'slip':
+        xL, xR, x_ = slip_bcs(RL, RR, PL, PR)
+    elif interfaceType == 'vacuum':
+        xL, xR, x_ = vacuum_bcs(PL, PR)
+
     cL[:n1] = x_ - xL
     cR[:n1] = x_ - xR
 
@@ -158,7 +161,7 @@ def star_stepper(QL, QR, MPL, MPR, boundary='stick'):
     return QL_, QR_
 
 
-def star_states(QL, QR, MPL, MPR, dt, n):
+def star_states(QL, QR, MPL, MPR, dt, n, interfaceType='stick'):
 
     QL_ = QL[:n5].copy()
     QR_ = QR[:n5].copy()
@@ -173,7 +176,7 @@ def star_states(QL, QR, MPL, MPR, dt, n):
             ode_solver_cons(QL_, dt / 2, MPL)
             ode_solver_cons(QR_, dt / 2, MPR)
 
-        QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR)
+        QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR, interfaceType)
 
     rotate_tensors(QL_, R.T)
     rotate_tensors(QR_, R.T)

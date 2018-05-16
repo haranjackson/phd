@@ -1,4 +1,4 @@
-from numpy import array, concatenate, dot
+from numpy import array, concatenate, dot, zeros
 from scipy.linalg import solve
 
 from gpr.opts import THERMAL
@@ -54,5 +54,19 @@ def slip_bcs(RL, RR, PL, PR):
 
         x_ = (yR - yL + dot(YL, xL) - dot(YR, xR)) / (YL - YR)[0]
         x_ = array([x_, 0, 0])
+
+    return xL, xR, x_
+
+
+def vacuum_bcs(PL, PR):
+
+    if THERMAL:
+        xL = concatenate([PL.Σ()[0], [PL.T()]])
+        xR = concatenate([PR.Σ()[0], [PR.T()]])
+        x_ = zeros(4)
+    else:
+        xL = PL.Σ()[0]
+        xR = PR.Σ()[0]
+        x_ = zeros(3)
 
     return xL, xR, x_
