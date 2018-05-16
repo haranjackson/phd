@@ -6,7 +6,7 @@ from numpy import sum
 
 from ader.etc.boundaries import standard_BC, periodic_BC
 
-from gpr.opts import NV
+from gpr.multi import get_material_index
 from solver import SolverPlus
 from solver.cpp import solve_full_cpp
 from solver.gfm.fill import fill_ghost_cells
@@ -15,11 +15,6 @@ from solver.gfm.fill import fill_ghost_cells
 flux_types = {'rusanov': 0,
               'roe': 1,
               'osher': 2}
-
-
-def get_material_index(Q, m):
-    LSET = m - 1
-    return sum(Q[NV-LSET:] >= 0)
 
 
 class MultiSolver():

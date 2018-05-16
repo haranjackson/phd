@@ -1,25 +1,26 @@
+from numpy import array
+
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
 from gpr.tests.one import fluids, solids, multi as multi1, toro
-from gpr.tests.two import validation, multi as multi2
+from gpr.tests.two import validation, louisa, multi as multi2
 from gpr.misc.plot import *
 
-from solver import SolverPlus
 from solver.gfm import MultiSolver
 
 
 # u, MPs, tf, dX = fluids.first_stokes_problem_IC()
 # u, MPs, tf, dX = multi1.heat_conduction_multi_IC()
-u, MPs, tf, dX = multi1.helium_bubble_IC()
+# u, MPs, tf, dX = multi1.helium_bubble_IC()
 # u, MPs, tf, dX = multi1.air_copper_IC()
-# u, MPs, tf, dX = multi1.water_air_IC()
+# u, MPs, tf, dX = multi2.water_air_IC()
 # u, MPs, tf, dX = solids.piston_IC()
 
 BC = 'transitive'
 # BC = solids.piston_BC
 
 
-CPP_LVL = 2
+CPP_LVL = 1
 N = 3
 CFL = 0.5
 SPLIT = True
@@ -47,5 +48,5 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      ncore=1, split=SPLIT, ode_solver=None,
                      riemann_solver='rusanov')
 
-solver.solve(u, tf, dX, cfl=CFL, boundary_conditions=BC, verbose=True,
+solver.solve(u, tf, array(dX), cfl=CFL, boundary_conditions=BC, verbose=True,
              callback=callback, cpp_level=CPP_LVL)

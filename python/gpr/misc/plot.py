@@ -7,9 +7,8 @@ from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel
 
 from ader.etc.basis import Basis
 
-from solver.gfm import get_material_index
-
 from gpr.misc.structures import State
+from gpr.multi import get_material_index
 
 
 def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
