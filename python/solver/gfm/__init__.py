@@ -44,17 +44,20 @@ class MultiSolver():
                                    riemann_solver=riemann_solver)
                         for MP in self.MPs]
 
-    def make_u(self, av, grids):
+    def make_u(self):
         """ Builds u across the domain, from the different material grids
         """
+        realGrids = [solver.u for solver in self.solvers
+                     if solver.pars.EOS > -1]
+        av = sum(realGrids, axis=0) / len(realGrids)
+
         for coords in product(*[range(s) for s in av.shape[:self.NDIM]]):
 
             materialIndex = get_material_index(av[coords], self.m)
 
             if self.solvers[materialIndex].pars.EOS > -1:
-                self.u[coords] = grids[materialIndex][coords]
+                self.u[coords] = self.solvers[materialIndex].u[coords]
             else:
-                self.u[coords] = 0
                 self.u[coords][-(self.m - 1):] = av[coords][-(self.m - 1):]
 
     def resume(self):
@@ -81,11 +84,7 @@ class MultiSolver():
                     if solver.pars.EOS > -1:
                         solver.stepper(executor, dt, mask)
 
-                realGrids = [solver.u for solver in self.solvers
-                             if solver.pars.EOS > -1]
-                av = sum(realGrids, axis=0) / len(realGrids)
-
-                self.make_u(av, [solver.u for solver in self.solvers])
+                self.make_u()
 
                 self.t += dt
                 self.count += 1

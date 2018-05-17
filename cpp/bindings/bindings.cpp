@@ -164,6 +164,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers.def("ader_stepper", &ader_stepper);
   m_solvers.def("split_stepper", &split_stepper);
   m_solvers.def("iterator", &iterator);
+  m_solvers.def("make_u", &make_u);
 
   m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
   m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);

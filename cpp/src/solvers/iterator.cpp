@@ -20,12 +20,11 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
 
   Vec av = Vec::Zero(u.size());
   double count = 0.;
-  for (int mat = 1; mat < nmat; mat++) {
+  for (int mat = 0; mat < nmat; mat++)
     if (MPs[mat].EOS > -1) {
       av += grids[mat];
       count += 1.;
     }
-  }
   av /= count;
 
   MatMap avMap(av.data(), ncell, V, OuterStride(V));
@@ -39,7 +38,8 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
       if (MPs[ind].EOS > -1)
         u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
       else
-        u.segment<V>(idx * V) = av.segment<V>(idx * V);
+        u.segment<LSET>(idx * V + V - LSET) =
+            av.segment<LSET>(idx * V + V - LSET);
     }
     break;
 
@@ -52,7 +52,8 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
         if (MPs[ind].EOS > -1)
           u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
         else
-          u.segment<V>(idx * V) = av.segment<V>(idx * V);
+          u.segment<LSET>(idx * V + V - LSET) =
+              av.segment<LSET>(idx * V + V - LSET);
       }
     break;
   }

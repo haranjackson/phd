@@ -55,10 +55,11 @@ Mat finite_difference(Vecr φ, aVecr dX, iVec nX) {
 }
 
 void renormalize_levelsets(MatMap uMap, int nmat, aVecr dX, iVecr nX) {
-  for (int i = 0; i < nmat - 1; i++) {
-    Vec phi = uMap.col(V - (nmat - 1) + i);
+
+  for (int i = 0; i < LSET; i++) {
+    Vec phi = uMap.col(V - LSET + i);
     Vec φ = distance(phi, dX, nX);
-    uMap.col(V - (nmat - 1) + i) = φ;
+    uMap.col(V - LSET + i) = φ;
   }
 }
 
@@ -66,16 +67,16 @@ Vec material_indicator(MatMap uMap, int mat, int nmat, aVecr dX, iVecr nX) {
 
   Vec φ;
   if (mat == 0)
-    φ = uMap.col(V - (nmat - 1));
+    φ = uMap.col(V - LSET);
   else
-    φ = -uMap.col(V - (nmat - 1));
+    φ = -uMap.col(V - LSET);
 
   if (nmat > 2) {
 
     for (int i = 1; i < mat; i++)
-      φ = φ.array().max(-uMap.col(V + i - (nmat - 1)).array());
-    for (int i = mat; i < nmat - 1; i++)
-      φ = φ.array().max(uMap.col(V + i - (nmat - 1)).array());
+      φ = φ.array().max(-uMap.col(V - LSET + i).array());
+    for (int i = mat; i < LSET; i++)
+      φ = φ.array().max(uMap.col(V - LSET + i).array());
 
     return distance(φ, dX, nX);
 

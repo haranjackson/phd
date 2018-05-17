@@ -16,7 +16,7 @@
 
 bool STICK = true;
 bool RELAXATION = true;
-double STAR_TOL = 1e-12;
+double STAR_TOL = 1e-6;
 
 bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
