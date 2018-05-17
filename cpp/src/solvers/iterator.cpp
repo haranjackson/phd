@@ -11,6 +11,18 @@
 #include "steppers.h"
 #include <iostream>
 
+void make_u_inner(MatMap avMap, int idx, std::vector<Par> &MPs, Vecr u,
+                  std::vector<Vec> &grids) {
+  int ind = get_material_index(avMap.row(idx));
+  if (MPs[ind].EOS > -1) {
+    u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
+  } else {
+    u.segment<V - LSET>(idx * V).setZero();
+    u.segment<LSET>(idx * V + V - LSET) =
+        avMap.row(idx).segment<LSET>(V - LSET);
+  }
+}
+
 void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
   // Builds u across the domain, from the different material grids
 
@@ -33,14 +45,8 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
   switch (ndim) {
 
   case 1:
-    for (int idx = 0; idx < nx; idx++) {
-      int ind = get_material_index(avMap.row(idx));
-      if (MPs[ind].EOS > -1)
-        u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
-      else
-        u.segment<LSET>(idx * V + V - LSET) =
-            av.segment<LSET>(idx * V + V - LSET);
-    }
+    for (int idx = 0; idx < nx; idx++)
+      make_u_inner(avMap, idx, MPs, u, grids);
     break;
 
   case 2:
@@ -48,12 +54,7 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
         int idx = i * ny + j;
-        int ind = get_material_index(avMap.row(idx));
-        if (MPs[ind].EOS > -1)
-          u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
-        else
-          u.segment<LSET>(idx * V + V - LSET) =
-              av.segment<LSET>(idx * V + V - LSET);
+        make_u_inner(avMap, idx, MPs, u, grids);
       }
     break;
   }

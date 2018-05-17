@@ -58,6 +58,7 @@ class MultiSolver():
             if self.solvers[materialIndex].pars.EOS > -1:
                 self.u[coords] = self.solvers[materialIndex].u[coords]
             else:
+                self.u[coords][:-(self.m - 1)] = 0
                 self.u[coords][-(self.m - 1):] = av[coords][-(self.m - 1):]
 
     def resume(self):
