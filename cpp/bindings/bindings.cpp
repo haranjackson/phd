@@ -15,7 +15,6 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>);
 #include "../src/etc/grid.h"
 
 #include "../src/multi/fill.h"
-#include "../src/multi/functions.h"
 #include "../src/multi/pfmm.h"
 
 #include "../src/scipy/lgmres.h"
@@ -124,11 +123,8 @@ PYBIND11_MODULE(GPRpy, m) {
       .def("diff", &poly::diff)
       .def("eval", &poly::eval);
 
-  m_multi.def("distance", &distance);
-  m_multi.def("finite_difference", &finite_difference);
   m_multi.def("find_interface_cells", &find_interface_cells);
   m_multi.def("fill_boundary_cells", &fill_boundary_cells);
-  m_multi.def("fill_from_neighbor", &fill_from_neighbor);
   m_multi.def("fill_neighbor_cells", &fill_neighbor_cells);
   m_multi.def("fill_ghost_cells", &fill_ghost_cells);
 

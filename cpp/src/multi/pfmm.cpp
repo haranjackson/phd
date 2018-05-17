@@ -1,7 +1,7 @@
 #include "../../include/skfmm/distance_marcher.h"
 #include "../etc/types.h"
 
-Vec distance(Vecr phi, Vecr dX, iVecr nX) {
+Vec distance(Vecr phi, aVecr dX, iVecr nX) {
 
   int ndim = nX.size();
   int ncell = nX.prod();

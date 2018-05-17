@@ -1,5 +1,6 @@
 #include "../etc/types.h"
 #include "../system/objects/gpr_objects.h"
+#include "pfmm.h"
 #include <cmath>
 
 int sign(double x) {
@@ -11,7 +12,7 @@ int sign(double x) {
 
 Vec normal(Vecr Δφ) { return Δφ / Δφ.norm(); }
 
-Mat finite_difference(Vecr φ, Vecr dX, iVec nX) {
+Mat finite_difference(Vecr φ, aVecr dX, iVec nX) {
   // ret[i,j,..][d] is the derivative in the dth direction in cell (i,j,...)
 
   int ndim = nX.size();
@@ -19,6 +20,7 @@ Mat finite_difference(Vecr φ, Vecr dX, iVec nX) {
   Mat ret(ncell, ndim);
 
   switch (ndim) {
+
   case 1:
     ret.block(1, 0, ncell - 2, 1) =
         φ.segment(2, ncell - 2) - φ.segment(0, ncell - 2);
@@ -26,6 +28,7 @@ Mat finite_difference(Vecr φ, Vecr dX, iVec nX) {
     ret.row(ncell - 1) = ret.row(ncell - 2);
     ret /= 2 * dX(0);
     break;
+
   case 2:
     int nx = nX(0);
     int ny = nX(1);
@@ -49,4 +52,34 @@ Mat finite_difference(Vecr φ, Vecr dX, iVec nX) {
     break;
   }
   return ret;
+}
+
+void renormalize_levelsets(MatMap uMap, int nmat, aVecr dX, iVecr nX) {
+  for (int i = 0; i < nmat - 1; i++) {
+    Vec phi = uMap.col(V - (nmat - 1) + i);
+    Vec φ = distance(phi, dX, nX);
+    uMap.col(V - (nmat - 1) + i) = φ;
+  }
+}
+
+Vec material_indicator(MatMap uMap, int mat, int nmat, aVecr dX, iVecr nX) {
+
+  Vec φ;
+  if (mat == 0)
+    φ = uMap.col(V - (nmat - 1));
+  else
+    φ = -uMap.col(V - (nmat - 1));
+
+  if (nmat > 2) {
+
+    for (int i = 1; i < mat; i++)
+      φ = φ.array().max(-uMap.col(V + i - (nmat - 1)).array());
+    for (int i = mat; i < nmat - 1; i++)
+      φ = φ.array().max(uMap.col(V + i - (nmat - 1)).array());
+
+    return distance(φ, dX, nX);
+
+  } else {
+    return φ;
+  }
 }

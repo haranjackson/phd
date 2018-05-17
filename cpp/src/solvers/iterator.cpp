@@ -5,29 +5,28 @@
 #include "../etc/globals.h"
 #include "../etc/grid.h"
 #include "../multi/fill.h"
+#include "../options.h"
 #include "../system/eig.h"
+#include "../system/functions/vectors.h"
 #include "steppers.h"
 #include <iostream>
 
-int get_material_index(VecVr Q) {
-  int ret = 0;
-  for (int i = V - LSET; i < V; i++)
-    if (Q(i) >= 0.)
-      ret += 1;
-  return ret;
-}
-
-void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
+void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
   // Builds u across the domain, from the different material grids
 
   int ndim = nX.size();
   int ncell = u.size() / V;
   int nmat = grids.size();
 
-  Vec av = grids[0];
-  for (int i = 1; i < nmat; i++)
-    av += grids[i];
-  av /= nmat;
+  Vec av = Vec::Zero(u.size());
+  double count = 0.;
+  for (int mat = 1; mat < nmat; mat++) {
+    if (MPs[mat].EOS > -1) {
+      av += grids[mat];
+      count += 1.;
+    }
+  }
+  av /= count;
 
   MatMap avMap(av.data(), ncell, V, OuterStride(V));
 
@@ -37,7 +36,10 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
   case 1:
     for (int idx = 0; idx < nx; idx++) {
       int ind = get_material_index(avMap.row(idx));
-      u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
+      if (MPs[ind].EOS > -1)
+        u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
+      else
+        u.segment<V>(idx * V) = av.segment<V>(idx * V);
     }
     break;
 
@@ -47,31 +49,38 @@ void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX) {
       for (int j = 0; j < ny; j++) {
         int idx = i * ny + j;
         int ind = get_material_index(avMap.row(idx));
-        u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
+        if (MPs[ind].EOS > -1)
+          u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
+        else
+          u.segment<V>(idx * V) = av.segment<V>(idx * V);
       }
     break;
   }
 }
 
-double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr dX,
+double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
                 double CFL, double t, double tf, int count,
                 std::vector<Par> &MPs, int nmat) {
 
-  double MIN = 1e5;
+  double MAX = 0.;
 
   int ndim = dX.size();
   int ncell = grids[0].size() / V;
 
   VecV Q;
-  for (int i = 0; i < nmat; i++)
-    for (int ind = 0; ind < ncell; ind++)
-      if (masks[i](ind)) {
-        Q = grids[i].segment<V>(ind * V);
-        for (int d = 0; d < ndim; d++)
-          MIN = std::min(MIN, dX(d) / max_abs_eigs(Q, d, MPs[i]));
-      }
+  for (int mat = 0; mat < nmat; mat++)
+    if (MPs[mat].EOS > -1) {
 
-  double dt = CFL * MIN;
+      for (int ind = 0; ind < ncell; ind++)
+        if (masks[mat](ind)) {
+
+          Q = grids[mat].segment<V>(ind * V);
+          for (int d = 0; d < ndim; d++)
+            MAX = std::max(MAX, max_abs_eigs(Q, d, MPs[mat]) / dX(d));
+        }
+    }
+
+  double dt = CFL / MAX;
 
   if (count <= 5)
     dt *= 0.2;
@@ -82,7 +91,7 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr dX,
     return dt;
 }
 
-void iterator(Vecr u, double tf, iVecr nX, Vecr dX, double CFL, bool PERIODIC,
+void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
               bool SPLIT, bool HALF_STEP, bool STIFF, int FLUX,
               std::vector<Par> &MPs) {
 
@@ -109,17 +118,22 @@ void iterator(Vecr u, double tf, iVecr nX, Vecr dX, double CFL, bool PERIODIC,
 
     dt = timestep(grids, masks, dX, CFL, t, tf, count, MPs, nmat);
 
-    for (int i = 0; i < nmat; i++) {
+    for (int mat = 0; mat < nmat; mat++) {
+      if (MPs[mat].EOS > -1) {
 
-      boundaries(grids[i], ub, nX, PERIODIC);
-      extend_mask(masks[i], maskb, nX);
+        boundaries(grids[mat], ub, nX, PERIODIC);
+        extend_mask(masks[mat], maskb, nX);
 
-      if (SPLIT)
-        split_stepper(grids[i], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[i], maskb);
-      else
-        ader_stepper(grids[i], ub, nX, dt, dX, STIFF, FLUX, MPs[i], maskb);
+        if (SPLIT)
+          split_stepper(grids[mat], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[mat],
+                        maskb);
+        else
+          ader_stepper(grids[mat], ub, nX, dt, dX, STIFF, FLUX, MPs[mat],
+                       maskb);
+      }
     }
-    make_u(u, grids, nX);
+    make_u(u, grids, nX, MPs);
+
     t += dt;
     count += 1;
 

@@ -185,7 +185,7 @@ void predictor(Vecr qh, Vecr wh, double dt, Vecr dX, bool STIFF, bool STIFF_IG,
           else if (ndim == 2)
             q1 = DG_U2.solve(rhs2(q0, Ww, dt, dX(0), dX(1), MP));
 
-          Arr absDiff = (q1 - q0).array().abs();
+          aMat absDiff = (q1 - q0).array().abs();
 
           if ((absDiff > DG_TOL * (1 + q0.array().abs())).any()) {
             q0 = q1;

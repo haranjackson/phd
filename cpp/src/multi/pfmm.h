@@ -3,6 +3,6 @@
 
 #include "../etc/types.h"
 
-Vec distance(Vecr phi, Vecr dX, iVecr nX);
+Vec distance(Vecr phi, aVecr dX, iVecr nX);
 
 #endif // PFMM_H

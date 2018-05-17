@@ -9,25 +9,37 @@
 #include "../variables/mg.h"
 #include "../variables/state.h"
 #include "../variables/wavespeeds.h"
+#include "conditions.h"
 #include "eigenvecs.h"
 #include "riemann.h"
 #include "rotations.h"
 
 bool STICK = true;
 bool RELAXATION = true;
-double STAR_TOL = 1e-6;
+double STAR_TOL = 1e-12;
 
 bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
   Vec3 ΣL_ = Sigma(QL_, MPL, 0);
-  Vec3 ΣR_ = Sigma(QR_, MPR, 0);
 
-  bool cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() < STAR_TOL;
+  bool cond;
+
+  if (MPR.EOS > -1) {
+    Vec3 ΣR_ = Sigma(QR_, MPR, 0);
+    cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() < STAR_TOL;
+  } else {
+    cond = ΣL_.cwiseAbs().maxCoeff() < STAR_TOL;
+  }
 
   if (THERMAL) {
+    // TODO: sort this out
     double TL_ = temperature(QL_, MPL);
-    double TR_ = temperature(QR_, MPR);
-    cond = cond && (abs(TL_ - TR_) < STAR_TOL);
+    if (MPR.EOS > -1) {
+      double TR_ = temperature(QR_, MPR);
+      cond = cond && (abs(TL_ - TR_) < STAR_TOL);
+    } else {
+      cond = cond && (abs(TL_) < STAR_TOL);
+    }
   }
   return cond;
 }
@@ -110,83 +122,46 @@ MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP) {
 }
 
 void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
+  // Iterates to the next approximation of the star states.
+  // NOTE: the material on the right may be a vacuum.
 
   MatV_V RL = riemann_constraints(QL, 1, MPL);
-  MatV_V RR = riemann_constraints(QR, -1, MPR);
+  VecV cL = VecV::Zero();
 
   Vec xL(n1);
-  Vec xR(n1);
   xL.head<3>() = Sigma(QL, MPL, 0);
-  xR.head<3>() = Sigma(QR, MPR, 0);
-
-  if (THERMAL) {
+  if (THERMAL)
     xL(3) = temperature(QL, MPL);
-    xR(3) = temperature(QR, MPR);
-  }
 
-  Vec x_(n1);
+  if (MPR.EOS > -1) { // not a vacuum
 
-  if (STICK) {
-    Mat YL = RL.block<n1, n1>(11, 0);
-    Mat YR = RR.block<n1, n1>(11, 0);
+    MatV_V RR = riemann_constraints(QR, -1, MPR);
+    Vec xR(n1);
+    xR.head<3>() = Sigma(QR, MPR, 0);
+    if (THERMAL)
+      xR(3) = temperature(QR, MPR);
 
-    Vec3 vL = get_ρv(QL) / QL(0);
-    Vec3 vR = get_ρv(QR) / QR(0);
+    Vec x_(n1);
 
-    Vec yL(n1);
-    Vec yR(n1);
+    if (STICK)
+      stick_bcs(x_, RL, RR, QL, QR, xL, xR);
+    else
+      slip_bcs(x_, RL, RR, QL, QR, xL, xR);
 
-    yL.head<3>() = vL;
-    yR.head<3>() = vR;
+    VecV cR = VecV::Zero();
+    cL.head<n1>() = x_ - xL;
+    cR.head<n1>() = x_ - xR;
 
-    if (THERMAL) {
-      yL(3) = QL(14) / QL(0);
-      yR(3) = QR(14) / QR(0);
-    }
-    x_ = (YL - YR).inverse() * (yR - yL + YL * xL - YR * xR);
-
+    VecV PRvec = Cvec_to_Pvec(QR, MPR);
+    VecV PR_vec = RR * cR + PRvec;
+    QR = Pvec_to_Cvec(PR_vec, MPR);
   } else {
-
-    if (THERMAL) {
-      Mat YL(2, n1);
-      Mat YR(2, n1);
-      YL << RL.block<1, n1>(11, 0), RL.block<1, n1>(14, 0);
-      YL << RR.block<1, n1>(11, 0), RR.block<1, n1>(14, 0);
-
-      Vec yL(2);
-      Vec yR(2);
-      yL << QL(2) / QL(0), QL(14) / QL(0);
-      yR << QR(2) / QR(0), QR(14) / QR(0);
-
-      Mat M(2, 2);
-      M << YL.col(0) - YR.col(0), YL.col(n1 - 1) - YR.col(n1 - 1);
-      Vec tmp = M.inverse() * (yR - yL + YL * xL - YR * xR);
-      x_ << tmp(0), 0., 0., tmp(1);
-
-    } else {
-      Vec YL = RL.block<1, n1>(11, 0);
-      Vec YR = RR.block<1, n1>(11, 0);
-
-      double yL = QL(2) / QL(0);
-      double yR = QR(2) / QR(0);
-
-      double tmp = (yR - yL + YL.transpose() * xL - YR.transpose() * xR) /
-                   (YL(0) - YR(0));
-      x_ << tmp, 0., 0.;
-    }
+    cL.head<n1>() = -xL;
+    QR.setZero();
   }
-  VecV cL = VecV::Zero();
-  VecV cR = VecV::Zero();
-  cL.head<n1>() = x_ - xL;
-  cR.head<n1>() = x_ - xR;
-
   VecV PLvec = Cvec_to_Pvec(QL, MPL);
-  VecV PRvec = Cvec_to_Pvec(QR, MPR);
   VecV PL_vec = RL * cL + PLvec;
-  VecV PR_vec = RR * cR + PRvec;
-
   QL = Pvec_to_Cvec(PL_vec, MPL);
-  QR = Pvec_to_Cvec(PR_vec, MPR);
 }
 
 std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,

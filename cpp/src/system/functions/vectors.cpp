@@ -18,6 +18,14 @@ Vec3Map get_ρJ(VecVr Q) {
   return Vec3Map(Q.data() + 14);
 }
 
+int get_material_index(VecVr Q) {
+  int ret = 0;
+  for (int i = V - LSET; i < V; i++)
+    if (Q(i) >= 0.)
+      ret += 1;
+  return ret;
+}
+
 VecV Cvec_to_Pvec(VecV Q, Par &MP) {
   // Returns vector of primitive variables (atypical ordering), given a vector
   // of conserved variables (typical ordering)

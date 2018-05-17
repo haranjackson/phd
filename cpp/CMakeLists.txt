@@ -60,6 +60,7 @@ SET(SRCS ../include/skfmm/base_marcher.cpp
          src/system/functions/matrices.cpp
          src/system/functions/vectors.cpp
 
+         src/system/multi/conditions.cpp
          src/system/multi/eigenvecs.cpp
          src/system/multi/riemann.cpp
          src/system/multi/rotations.cpp

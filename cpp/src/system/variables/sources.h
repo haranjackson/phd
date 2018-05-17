@@ -1,5 +1,5 @@
-#ifndef MATERIAL_FUNCTIONS_H
-#define MATERIAL_FUNCTIONS_H
+#ifndef SOURCES_H
+#define SOURCES_H
 
 #include "../objects/gpr_objects.h"
 
@@ -8,4 +8,4 @@ double theta2inv(VecVr Q, Par &MP);
 
 void f_body(Vec3r x, Par &MP);
 
-#endif // MATERIAL_FUNCTIONS_H
+#endif // SOURCES_H

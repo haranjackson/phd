@@ -14,18 +14,21 @@
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     Mat;
+typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+    aMat;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vec;
 typedef Eigen::Matrix<bool, Eigen::Dynamic, 1> bVec;
 typedef Eigen::Matrix<int, Eigen::Dynamic, 1> iVec;
 typedef Eigen::Matrix<long, Eigen::Dynamic, 1> lVec;
-typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-    Arr;
+typedef Eigen::Array<double, Eigen::Dynamic, 1> aVec;
 
 typedef Eigen::Ref<Mat> Matr;
+typedef Eigen::Ref<aMat> aMatr;
 typedef Eigen::Ref<Vec> Vecr;
 typedef Eigen::Ref<bVec> bVecr;
 typedef Eigen::Ref<iVec> iVecr;
 typedef Eigen::Ref<lVec> lVecr;
+typedef Eigen::Ref<aVec> aVecr;
 
 typedef Eigen::Matrix<double, 2, N, Eigen::RowMajor> Mat2_N;
 typedef Eigen::Matrix<double, V, V, Eigen::RowMajor> MatV_V;
