@@ -13,18 +13,19 @@ from solver.gfm import MultiSolver
 # u, MPs, tf, dX = multi1.heat_conduction_multi_IC()
 # u, MPs, tf, dX = multi1.helium_bubble_IC()
 # u, MPs, tf, dX = multi1.air_copper_IC()
-# u, MPs, tf, dX = multi2.water_air_IC()
+# u, MPs, tf, dX = multi1.water_air_IC()
+# u, MPs, tf, dX = multi1.aluminium_vacuum_IC()
 # u, MPs, tf, dX = solids.piston_IC()
-u, MPs, tf, dX = multi1.aluminium_vacuum_IC()
+u, MPs, tf, dX = louisa.aluminium_plate_impact_IC()
 
 BC = 'transitive'
 # BC = solids.piston_BC
 
 
-CPP_LVL = 1
+CPP_LVL = 2
 N = 3
 CFL = 0.5
-SPLIT = False
+SPLIT = True
 
 
 if CPP_LVL > 0:

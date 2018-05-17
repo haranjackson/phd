@@ -3,7 +3,7 @@ from numpy import array, eye, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
-from gpr.tests.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG
+from gpr.tests.params import HYP_Cu, MP_Cu_GR, MP_Cu_SMG_P, MP_Al_SG_SI
 from gpr.tests.one.common import riemann_IC, hyperelastic_IC
 
 
@@ -181,7 +181,7 @@ def favrie1_IC():
 
     dX = [Lx / nx]
 
-    MP = MP_Al_SG
+    MP = MP_Al_SG_SI
 
     ρ = MP.ρ0
     p = MP.p0
@@ -207,7 +207,7 @@ def favrie2_IC():
 
     dX = [Lx / nx]
 
-    MP = MP_Al_SG
+    MP = MP_Al_SG_SI
 
     ρ = MP.ρ0
     p = MP.p0
