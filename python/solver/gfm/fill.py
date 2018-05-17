@@ -1,6 +1,6 @@
 from itertools import product
 
-from numpy import array, logical_or, ones, prod, zeros
+from numpy import array, logical_or, prod, zeros
 
 from ader.etc.boundaries import neighbor_cells
 
@@ -80,12 +80,10 @@ def fill_neighbor_cells(grid, intMask, Δφ, dX, N):
                     grid[ind] = grid[tuple(array(xn / dX, dtype=int))]
 
 
-def fill_ghost_cells(u, nmat, N, dX, MPs, dt):
+def fill_ghost_cells(grids, masks, u, nmat, N, dX, MPs, dt):
 
     ncells = prod(u.shape[:-1])
     renormalize_levelsets(u, nmat, dX, ncells)
-    grids = [u.copy() for mat in range(nmat)]
-    masks = [ones(u.shape[:-1], dtype=bool) for mat in range(nmat)]
 
     for mat in range(nmat):
 
@@ -95,15 +93,11 @@ def fill_ghost_cells(u, nmat, N, dX, MPs, dt):
             Δφ = finite_difference(φ, dX)
             intMask = find_interface_cells(φ)
 
+            grids[mat] = u.copy()
             grid = grids[mat]
             fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt)
             fill_neighbor_cells(grid, intMask, Δφ, dX, N)
 
-            masks[mat] *= logical_or((φ <= 0), (intMask == 1))
+            masks[mat] = logical_or((φ <= 0), (intMask == 1))
 
             grid.reshape([ncells, -1])[:, - (nmat - 1):] = u.reshape([ncells, -1])[:, - (nmat - 1):]
-
-        else:
-            grids[mat] *= 0
-
-    return grids, masks

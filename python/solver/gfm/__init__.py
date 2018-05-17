@@ -2,7 +2,7 @@ from concurrent.futures import ProcessPoolExecutor
 from itertools import product
 from time import time
 
-from numpy import sum
+from numpy import ones, sum
 
 from ader.etc.boundaries import standard_BC, periodic_BC
 
@@ -66,13 +66,17 @@ class MultiSolver():
         with ProcessPoolExecutor(max_workers=self.ncore) as executor:
 
             dt = 0
+            grids = [self.u.copy() for mat in range(self.m)]
+            masks = [ones(self.u.shape[:-1], dtype=bool)
+                     for mat in range(self.m)]
 
             while self.t < self.final_time:
 
                 t0 = time()
 
-                grids, masks = fill_ghost_cells(self.u, self.m, self.N,
-                                                self.dX, self.MPs, dt)
+                if self.m > 1:
+                    fill_ghost_cells(grids, masks, self.u, self.m, self.N,
+                                     self.dX, self.MPs, dt)
 
                 for solver, grid in zip(self.solvers, grids):
                     solver.u = grid
@@ -85,7 +89,10 @@ class MultiSolver():
                     if solver.pars.EOS > -1:
                         solver.stepper(executor, dt, mask)
 
-                self.make_u()
+                if self.m > 1:
+                    self.make_u()
+                else:
+                    self.u = grids[0].copy()
 
                 self.t += dt
                 self.count += 1
@@ -156,5 +163,5 @@ class MultiSolver():
 
         else:
             self.initialize(initial_grid, final_time, dX, cfl, boundary_conditions,
-                        verbose, callback, cpp_level)
+                            verbose, callback, cpp_level)
             return self.resume()

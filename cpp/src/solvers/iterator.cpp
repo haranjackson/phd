@@ -105,8 +105,8 @@ void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
   std::vector<Vec> grids(nmat);
   std::vector<bVec> masks(nmat);
   for (int i = 0; i < nmat; i++) {
-    grids[i] = Vec(ncell);
-    masks[i] = bVec(ncell);
+    grids[i] = u;
+    masks[i] = bVec::Ones(ncell);
   }
 
   double t = 0.;
@@ -116,7 +116,8 @@ void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
 
   while (t < tf) {
 
-    fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
+    if (LSET > 0)
+      fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
 
     dt = timestep(grids, masks, dX, CFL, t, tf, count, MPs, nmat);
 
@@ -134,7 +135,10 @@ void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
                        maskb);
       }
     }
-    make_u(u, grids, nX, MPs);
+    if (LSET > 0)
+      make_u(u, grids, nX, MPs);
+    else
+      u = grids[0];
 
     t += dt;
     count += 1;
