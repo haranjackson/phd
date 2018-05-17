@@ -1,13 +1,13 @@
 from itertools import product
 
-from numpy import array, logical_or, maximum, mean, ones, prod, zeros
-from skfmm import distance
+from numpy import array, logical_or, ones, prod, zeros
 
 from ader.etc.boundaries import neighbor_cells
 
 from gpr.multi import get_material_index
 from gpr.multi.riemann import star_states
-from solver.gfm.functions import finite_difference, normal, sign
+from solver.gfm.functions import finite_difference, normal, sign, boundary_inds, \
+    renormalize_levelsets, material_indicator
 
 
 def find_interface_cells(φ):
@@ -36,27 +36,6 @@ def find_interface_cells(φ):
     return intMask
 
 
-def boundary_inds(ind, φ, n, dX):
-    """ Calculates indexes of the boundary states at position given by ind
-    """
-    xp = (array(ind) + 0.5) * dX
-
-    d = 1.5
-
-    xi = xp - φ[ind] * n               # interface position
-    xL = xi - d * dX * n               # probe on left side
-    xR = xi + d * dX * n               # probe on right side
-    x_ = xi - dX * sign(φ[ind]) * n    # point on opposite side of interface
-
-    # TODO: replace with interpolated values
-    ii = array(xi / dX, dtype=int)
-    iL = array(xL / dX, dtype=int)
-    iR = array(xR / dX, dtype=int)
-    i_ = array(x_ / dX, dtype=int)
-
-    return ii, iL, iR, i_
-
-
 def fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt):
 
     MPL = MPs[mat]
@@ -78,19 +57,11 @@ def fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt):
             grid[tuple(i_)] = QL_
 
 
-def fill_from_neighbor(grid, Δφ, ind, dX, sgn):
+def fill_neighbor_cells(grid, intMask, Δφ, dX, N):
     """ makes the value of cell ind equal to the value of its neighbor in the
         direction of the interface
         TODO: replace with interpolated values
     """
-    n = normal(Δφ[ind])
-    x = (array(ind) + 0.5) * dX
-    xn = x + sgn * mean(dX) * n
-    grid[ind] = grid[tuple(array(xn / dX, dtype=int))]
-
-
-def fill_neighbor_cells(grid, intMask, Δφ, dX, N):
-
     shape = intMask.shape
     inds = [range(s) for s in shape]
 
@@ -103,27 +74,10 @@ def fill_neighbor_cells(grid, intMask, Δφ, dX, N):
 
                 if N0 in neighbors:
                     intMask[ind] = N0 + 1
-                    fill_from_neighbor(grid, Δφ, ind, dX, -1)
-
-
-def renormalize_levelsets(u, nmat, dX, ncells):
-
-    for i in range(nmat - 1):
-        ind = i - (nmat - 1)
-        φ = u.take(ind, axis=-1)
-        u.reshape([ncells, -1])[:, ind] = distance(φ, dx=dX).ravel()
-
-
-def material_indicator(u, mat, nmat, dX):
-
-    φs = [-u.take(i - (nmat-1), axis=-1) for i in range(mat)] + \
-            [u.take(i - (nmat-1), axis=-1) for i in range(mat, nmat-1)]
-
-    if len(φs) > 1:
-        φ = maximum(*φs)
-        return distance(φ, dx=dX)
-    else:
-        return φs[0]
+                    n = normal(Δφ[ind])
+                    x = (array(ind) + 0.5) * dX
+                    xn = x - dX * n
+                    grid[ind] = grid[tuple(array(xn / dX, dtype=int))]
 
 
 def fill_ghost_cells(u, nmat, N, dX, MPs, dt):

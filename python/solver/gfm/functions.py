@@ -1,5 +1,27 @@
-from numpy import stack
+from numpy import array, maximum, stack
 from numpy.linalg import norm
+from skfmm import distance
+
+
+def boundary_inds(ind, φ, n, dX):
+    """ Calculates indexes of the boundary states at position given by ind
+    """
+    xp = (array(ind) + 0.5) * dX
+
+    d = 1.5
+
+    xi = xp - φ[ind] * n               # interface position
+    xL = xi - d * dX * n               # probe on left side
+    xR = xi + d * dX * n               # probe on right side
+    x_ = xi - dX * sign(φ[ind]) * n    # point on opposite side of interface
+
+    # TODO: replace with interpolated values
+    ii = array(xi / dX, dtype=int)
+    iL = array(xL / dX, dtype=int)
+    iR = array(xR / dX, dtype=int)
+    i_ = array(x_ / dX, dtype=int)
+
+    return ii, iL, iR, i_
 
 
 def sign(x):
@@ -26,3 +48,23 @@ def finite_difference(φ, dX):
 
 def normal(Δφ):
     return Δφ / norm(Δφ)
+
+
+def renormalize_levelsets(u, nmat, dX, ncells):
+
+    for i in range(nmat - 1):
+        ind = i - (nmat - 1)
+        φ = u.take(ind, axis=-1)
+        u.reshape([ncells, -1])[:, ind] = distance(φ, dx=dX).ravel()
+
+
+def material_indicator(u, mat, nmat, dX):
+
+    φs = [-u.take(i - (nmat-1), axis=-1) for i in range(mat)] + \
+        [u.take(i - (nmat-1), axis=-1) for i in range(mat, nmat-1)]
+
+    if len(φs) > 1:
+        φ = maximum(*φs)
+        return distance(φ, dx=dX)
+    else:
+        return φs[0]
