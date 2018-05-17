@@ -3,7 +3,7 @@ from scipy.linalg import inv, solve
 
 from gpr.misc.functions import reorder
 from gpr.misc.structures import State
-from gpr.multi.boundaries import slip_bcs, stick_bcs, vacuum_bcs
+from gpr.multi.conditions import slip_bcs, stick_bcs
 from gpr.multi.rotations import rotation_matrix, rotate_tensors
 from gpr.multi.vectors import Pvec, Pvec_to_Cvec
 from gpr.opts import THERMAL
@@ -140,18 +140,32 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
     """
     PL = State(QL, MPL)
     _, RL = riemann_constraints(PL, 1, MPL)
+
+    if THERMAL:
+        xL = concatenate([PL.Σ()[0], [PL.T()]])
+    else:
+        xL = PL.Σ()[0]
+
     cL = zeros(n5)
 
     if MPR.EOS > -1:  # not a vacuum
 
         PR = State(QR, MPR)
         _, RR = riemann_constraints(PR, -1, MPR)
+
+
+        if THERMAL:
+            xR = concatenate([PR.Σ()[0], [PR.T()]])
+        else:
+            xR = PR.Σ()[0]
+
         cR = zeros(n5)
 
         if interfaceType == 'stick':
-            xL, xR, x_ = stick_bcs(RL, RR, PL, PR)
+            x_ = stick_bcs(RL, RR, PL, PR, xL, xR)
+
         elif interfaceType == 'slip':
-            xL, xR, x_ = slip_bcs(RL, RR, PL, PR)
+            x_ = slip_bcs(RL, RR, PL, PR, xL, xR)
 
         cL[:n1] = x_ - xL
         cR[:n1] = x_ - xR
@@ -161,7 +175,6 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
         QR_ = Pvec_to_Cvec(reorder(PR_vec), MPR)
 
     else:
-        xL = vacuum_bcs(PL)
         cL[:n1] = - xL
         QR_ = zeros(n5)
 
