@@ -14,7 +14,7 @@ from gpr.vars.wavespeeds import c_0
 
 
 RELAXATION = True
-STAR_TOL = 1e-6
+STAR_TOL = 1e-12
 
 
 n1, n2, n3, n4, n5 = get_indexes()

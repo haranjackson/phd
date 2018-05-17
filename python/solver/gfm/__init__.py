@@ -44,15 +44,18 @@ class MultiSolver():
                                    riemann_solver=riemann_solver)
                         for MP in self.MPs]
 
-    def make_u(self, grids):
+    def make_u(self, av, grids):
         """ Builds u across the domain, from the different material grids
         """
-        av = sum(grids, axis=0) / len(grids)
-
         for coords in product(*[range(s) for s in av.shape[:self.NDIM]]):
 
             materialIndex = get_material_index(av[coords], self.m)
-            self.u[coords] = grids[materialIndex][coords]
+
+            if self.solvers[materialIndex].pars.EOS > -1:
+                self.u[coords] = grids[materialIndex][coords]
+            else:
+                self.u[coords] = 0
+                self.u[coords][-(self.m - 1):] = av[coords][-(self.m - 1):]
 
     def resume(self):
 
@@ -67,18 +70,22 @@ class MultiSolver():
                 grids, masks = fill_ghost_cells(self.u, self.m, self.N,
                                                 self.dX, self.MPs, dt)
 
-                for i in range(self.m):
-                    self.solvers[i].u = grids[i]
+                for solver, grid in zip(self.solvers, grids):
+                    solver.u = grid
 
-                dt = min([self.solvers[i].timestep(masks[i])
-                          for i in range(self.m)
-                          if self.solvers[i].pars.EOS > -1])
+                dt = min([solver.timestep(mask)
+                          for solver, mask in zip(self.solvers, masks)
+                          if solver.pars.EOS > -1])
 
-                for i in range(self.m):
-                    if self.solvers[i].pars.EOS > -1:
-                        self.solvers[i].stepper(executor, dt, masks[i])
+                for solver, mask in zip(self.solvers, masks):
+                    if solver.pars.EOS > -1:
+                        solver.stepper(executor, dt, mask)
 
-                self.make_u([solver.u for solver in self.solvers])
+                realGrids = [solver.u for solver in self.solvers
+                             if solver.pars.EOS > -1]
+                av = sum(realGrids, axis=0) / len(realGrids)
+
+                self.make_u(av, [solver.u for solver in self.solvers])
 
                 self.t += dt
                 self.count += 1

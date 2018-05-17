@@ -67,15 +67,16 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None,
         Q = u.reshape([n, NV])[ii]
         ind = get_material_index(Q, len(MPs))
         MP = MPs[ind]
-        P = State(Q, MP)
-        var = getattr(P, attr)()
-        if j is None:
-            if i is None:
-                y[ii] = var
+        if MP.EOS > -1:  # not a vacuum
+            P = State(Q, MP)
+            var = getattr(P, attr)()
+            if j is None:
+                if i is None:
+                    y[ii] = var
+                else:
+                    y[ii] = var[i]
             else:
-                y[ii] = var[i]
-        else:
-            y[ii] = var[i, j]
+                y[ii] = var[i, j]
 
     if NDIM == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
@@ -153,6 +154,16 @@ def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
                   'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'σ',
+                  i=i, j=j)
+
+
+def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
+               fig=None, square=0):
+    if fig is None:
+        fig = 21 + i * 3 + j
+    figure(fig, figsize=fig_size(square))
+    plot_compound(u, MPs, style, x, lab, col,
+                  'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'Σ',
                   i=i, j=j)
 
 

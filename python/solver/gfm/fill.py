@@ -149,4 +149,7 @@ def fill_ghost_cells(u, nmat, N, dX, MPs, dt):
 
             grid.reshape([ncells, -1])[:, - (nmat - 1):] = u.reshape([ncells, -1])[:, - (nmat - 1):]
 
+        else:
+            grids[mat] *= 0
+
     return grids, masks

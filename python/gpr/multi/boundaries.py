@@ -1,4 +1,4 @@
-from numpy import array, concatenate, dot, zeros
+from numpy import array, concatenate, dot
 from scipy.linalg import solve
 
 from gpr.opts import THERMAL

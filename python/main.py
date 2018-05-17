@@ -24,7 +24,7 @@ BC = 'transitive'
 CPP_LVL = 1
 N = 3
 CFL = 0.5
-SPLIT = True
+SPLIT = False
 
 
 if CPP_LVL > 0:
@@ -37,6 +37,7 @@ if CPP_LVL > 0:
 
 nvar = u.shape[-1]
 ndim = u.ndim - 1
+dX = array(dX)
 
 
 grids = []
@@ -49,5 +50,5 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      ncore=1, split=SPLIT, ode_solver=None,
                      riemann_solver='rusanov')
 
-solver.solve(u, tf, array(dX), cfl=CFL, boundary_conditions=BC, verbose=True,
+solver.solve(u, tf, dX, cfl=CFL, boundary_conditions=BC, verbose=True,
              callback=callback, cpp_level=CPP_LVL)
