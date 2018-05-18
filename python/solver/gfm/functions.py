@@ -13,15 +13,13 @@ def boundary_inds(ind, φ, n, dX):
     xi = xp - φ[ind] * n               # interface position
     xL = xi - d * dX * n               # probe on left side
     xR = xi + d * dX * n               # probe on right side
-    x_ = xi - dX * sign(φ[ind]) * n    # point on opposite side of interface
 
     # TODO: replace with interpolated values
     ii = array(xi / dX, dtype=int)
     iL = array(xL / dX, dtype=int)
     iR = array(xR / dX, dtype=int)
-    i_ = array(x_ / dX, dtype=int)
 
-    return ii, iL, iR, i_
+    return ii, iL, iR
 
 
 def sign(x):

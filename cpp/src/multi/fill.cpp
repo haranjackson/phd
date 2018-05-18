@@ -55,34 +55,32 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
   aVec xp = (inds.cast<double>().array() + 0.5) * dX;
   double d = 1.5;
 
-  aVec xi = xp - φi * n;            // interface position
-  aVec xL = xi - d * dX * n;        // probe on left side
-  aVec xR = xi + d * dX * n;        // probe on right side
-  aVec x_ = xi - sign(φi) * dX * n; // point on opposite side of interface
+  aVec xi = xp - φi * n;     // interface position
+  aVec xL = xi - d * dX * n; // probe on left side
+  aVec xR = xi + d * dX * n; // probe on right side
 
   BoundaryInds ret;
 
   iVec xiVec = (xi / dX).cast<int>();
   iVec xLVec = (xL / dX).cast<int>();
   iVec xRVec = (xR / dX).cast<int>();
-  iVec x_Vec = (x_ / dX).cast<int>();
 
   int ndim = nX.size();
   switch (ndim) {
 
   case 1:
+    ret.ind = iVec_to_ind(inds);
     ret.ii = iVec_to_ind(xiVec);
     ret.iL = iVec_to_ind(xLVec);
     ret.iR = iVec_to_ind(xRVec);
-    ret.i_ = iVec_to_ind(x_Vec);
     break;
 
   case 2:
     int ny = nX(1);
+    ret.ind = iVec_to_ind(inds, ny);
     ret.ii = iVec_to_ind(xiVec, ny);
     ret.iL = iVec_to_ind(xLVec, ny);
     ret.iR = iVec_to_ind(xRVec, ny);
-    ret.i_ = iVec_to_ind(x_Vec, ny);
     break;
   }
 
@@ -98,11 +96,11 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
   VecV QL = u.segment<V>(bInds.iL);
   VecV QR = u.segment<V>(bInds.iR);
 
-  int rInd = get_material_index(QR);
+  int rMat = get_material_index(QR);
 
-  std::vector<VecV> S = star_states(QL, QR, MPs[mat], MPs[rInd], dt, n);
+  std::vector<VecV> S = star_states(QL, QR, MPs[mat], MPs[rMat], dt, n);
+  grid.segment<V>(bInds.ind) = S[0];
   grid.segment<V>(bInds.ii) = S[0];
-  grid.segment<V>(bInds.i_) = S[0];
 }
 
 void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
@@ -115,7 +113,7 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
 
   case 1:
     for (int ind = 0; ind < nx; ind++) {
-      if (intMask(ind) == -1) {
+      if (intMask(ind) == 1) {
         Vec n = normal(Δφ.row(ind));
         iVec inds(1);
         inds << ind;
@@ -128,7 +126,7 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
         int ind = i * ny + j;
-        if (intMask(ind) == -1) {
+        if (intMask(ind) == 1) {
           Vec n = normal(Δφ.row(ind));
           iVec inds(2);
           inds << i, j;

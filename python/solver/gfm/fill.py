@@ -42,10 +42,10 @@ def fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt):
 
     for ind in product(*[range(s) for s in intMask.shape]):
 
-        if intMask[ind] == -1:
+        if intMask[ind] == 1:
 
             n = normal(Δφ[ind])
-            ii, iL, iR, i_ = boundary_inds(ind, φ, n, dX)
+            ii, iL, iR = boundary_inds(ind, φ, n, dX)
 
             QL = u[tuple(iL)]
             QR = u[tuple(iR)]
@@ -53,8 +53,8 @@ def fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt):
             MPR = MPs[get_material_index(QR, len(MPs))]
             QL_, QR_ = star_states(QL, QR, MPL, MPR, dt, n)
 
+            grid[ind] = QL_
             grid[tuple(ii)] = QL_
-            grid[tuple(i_)] = QL_
 
 
 def fill_neighbor_cells(grid, intMask, Δφ, dX, N):

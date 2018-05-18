@@ -9,7 +9,7 @@ int iVec_to_ind(iVecr v) { return v(0) * V; }
 int iVec_to_ind(iVecr v, int ny) { return (v(0) * ny + v(1)) * V; }
 
 struct BoundaryInds {
-  int ii, iL, iR, i_;
+  int ii, iL, iR, ind;
 };
 
 int sign(double x);
