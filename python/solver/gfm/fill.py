@@ -48,6 +48,11 @@ def fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt):
             ii, iL, iR = boundary_inds(ind, φ, n, dX)
 
             QL = u[tuple(iL)]
+
+            # in case of thin strip of the inside material
+            if get_material_index(QL, len(MPs)) != mat:
+                QL = u[tuple(ii)]
+
             QR = u[tuple(iR)]
 
             MPR = MPs[get_material_index(QR, len(MPs))]
