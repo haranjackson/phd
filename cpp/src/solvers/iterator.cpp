@@ -93,10 +93,11 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
     return dt;
 }
 
-void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
-              bool SPLIT, bool HALF_STEP, bool STIFF, int FLUX,
-              std::vector<Par> &MPs) {
+std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
+                          bool PERIODIC, bool SPLIT, bool HALF_STEP, bool STIFF,
+                          int FLUX, std::vector<Par> &MPs, int nOut) {
 
+  std::vector<Vec> ret(nOut);
   int nmat = MPs.size();
   Vec ub(extended_dimensions(nX, N) * V);
   bVec maskb(extended_dimensions(nX, 1));
@@ -111,6 +112,7 @@ void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
 
   double t = 0.;
   long count = 0;
+  int pushCount = 0;
 
   double dt = 0.;
 
@@ -143,10 +145,17 @@ void iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL, bool PERIODIC,
     t += dt;
     count += 1;
 
+    if (t >= double(pushCount + 1) / double(nOut) * tf) {
+      ret[pushCount] = u;
+      pushCount += 1;
+    }
+
 #ifdef BINDINGS
     print(int(t / tf * 100.));
 #else
     std::cout << "\n" << int(t / tf * 100.);
 #endif
   }
+
+  return ret;
 }

@@ -31,12 +31,18 @@ def cpp_ader_stepper(obj, mat, matBC, dt, dX, maskBC):
     mat = matr.reshape(mat.shape)
 
 
-def solve_full_cpp(obj, initial_grid, final_time, dX, cfl):
+def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback):
 
     nX = get_dimensions(initial_grid)
     u = initial_grid.ravel()
 
-    GPRpy.solvers.iterator(u, final_time, nX, array(dX), cfl, False, obj.split,
-                           obj.half_step, obj.stiff_dg, obj.flux_type,
-                           obj.pars)
+    uOut = GPRpy.solvers.iterator(u, final_time, nX, array(dX), cfl, False,
+                                  obj.split, obj.half_step, obj.stiff_dg,
+                                  obj.flux_type, obj.pars, nOut)
+
+    if callback is not None:
+        shape = initial_grid.shape
+        for out, count in zip(uOut, range(nOut)):
+            callback(out.reshape(shape), (count+1) / nOut * final_time, count)
+
     return u.reshape(initial_grid.shape)
