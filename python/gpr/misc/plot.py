@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from numpy import arange, linspace, mgrid, prod, zeros
-from matplotlib.pyplot import colorbar, figure, get_cmap, imshow, plot, xlim
-from matplotlib.pyplot import streamplot, ticklabel_format, xlabel, ylabel
+from matplotlib.pyplot import colorbar, contour, figure, get_cmap, imshow, \
+    plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
 
 from ader.etc.basis import Basis
 
@@ -28,21 +28,25 @@ def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
     plt.show()
 
 
-def plot2d(x, style, y=None):
+def plot2d(x, plotType, y=None):
 
-    if style == 'colormap':
+    if plotType == 'colormap':
         im = imshow(x, get_cmap('viridis'))
         colorbar(im)
 
-    elif style == 'streams':
+    elif plotType == 'contour':
+        im = contour(x, cmap='viridis')
+        colorbar(im)
+
+    elif plotType == 'streams':
         nx, ny = x.shape[:2]
         Y, X = mgrid[0:ny, 0:nx]
         streamplot(X, Y, x.T, y.T)
 
 
-def plot_simple(u, style, x, lab, col, title, sci, ind, divρ):
+def plot_simple(u, style, x, lab, col, title, sci, ind, divρ, plotType='colormap'):
 
-    NDIM = len(u.shape) - 1
+    NDIM = u.ndim - 1
 
     if NDIM == 1:
         y = u[:, ind]
@@ -53,18 +57,18 @@ def plot_simple(u, style, x, lab, col, title, sci, ind, divρ):
         y = u[:, :, ind]
         if divρ:
             y /= u[:, :, 0]
-        plot2d(y, 'colormap')
+        plot2d(y, plotType)
 
 
-def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None,
+def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType, i=None,
                   j=None):
-    NDIM = u.ndim - 1
-    n = prod(u.shape[:-1])
-    NV = u.shape[-1]
+
+    shape = u.shape[:-1]
+    n = prod(shape)
     y = zeros(n)
 
     for ii in range(n):
-        Q = u.reshape([n, NV])[ii]
+        Q = u.reshape([n, -1])[ii]
         ind = get_material_index(Q, len(MPs))
         MP = MPs[ind]
         if MP.EOS > -1:  # not a vacuum
@@ -78,10 +82,10 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, i=None,
             else:
                 y[ii] = var[i, j]
 
-    if NDIM == 1:
+    if u.ndim - 1 == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
     else:
-        plot2d(y, 'colormap')
+        plot2d(y.reshape(shape), plotType)
 
 
 def plot_density(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
@@ -136,42 +140,45 @@ def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0,
 
 
 def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                  square=0):
+                  square=0, plotType='colormap'):
     figure(19, figsize=fig_size(square))
-    plot_compound(u, MPs, style, x, lab, col, 'Pressure', sci, 'p')
+    plot_compound(u, MPs, style, x, lab, col, 'Pressure', sci, 'p', plotType)
 
 
 def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                     square=0):
+                     square=0, plotType='colormap'):
     figure(20, figsize=fig_size(square))
-    plot_compound(u, MPs, style, x, lab, col, 'Temperature', sci, 'T')
+    plot_compound(u, MPs, style, x, lab, col,
+                  'Temperature', sci, 'T', plotType)
 
 
 def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
-               fig=None, square=0):
+               fig=None, square=0, plotType='colormap'):
     if fig is None:
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'σ',
+                  'Viscous Stress Component %d,%d' % (
+                      i + 1, j + 1), sci, 'σ', plotType,
                   i=i, j=j)
 
 
 def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
-               fig=None, square=0):
+               fig=None, square=0, plotType='colormap'):
     if fig is None:
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'Σ',
+                  'Viscous Stress Component %d,%d' % (
+                      i + 1, j + 1), sci, 'Σ', plotType,
                   i=i, j=j)
 
 
 def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                   square=0):
+                   square=0, plotType='colormap'):
     figure(30 + i, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Heat Flux Component %d' % (i + 1), sci, 'q', i=i)
+                  'Heat Flux Component %d' % (i + 1), sci, 'q', plotType, i=i)
 
 
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,
