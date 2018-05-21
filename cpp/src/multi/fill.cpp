@@ -103,8 +103,8 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
   int rMat = get_material_index(QR);
 
   std::vector<VecV> S = star_states(QL, QR, MPs[mat], MPs[rMat], dt, n);
-  grid.segment<V>(bInds.ind) = S[0];
-  grid.segment<V>(bInds.ii) = S[0];
+  grid.segment<V - LSET>(bInds.ind) = S[0].head<V - LSET>();
+  grid.segment<V - LSET>(bInds.ii) = S[0].head<V - LSET>();
 }
 
 void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
@@ -163,7 +163,7 @@ void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX) 
     newInd = iVec_to_ind(newInds, ny);
     break;
   }
-  grid.segment<V>(ind) = grid.segment<V>(newInd);
+  grid.segment<V - LSET>(ind) = grid.segment<V - LSET>(newInd);
 }
 
 void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,

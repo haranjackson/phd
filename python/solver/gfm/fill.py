@@ -4,6 +4,7 @@ from numpy import array, logical_or, prod, zeros
 
 from ader.etc.boundaries import neighbor_cells
 
+from gpr.opts import LSET
 from gpr.multi import get_material_index
 from gpr.multi.riemann import star_states
 from solver.gfm.functions import finite_difference, normal, sign, boundary_inds, \
@@ -58,8 +59,8 @@ def fill_boundary_cells(u, grid, intMask, mat, φ, Δφ, dX, MPs, dt):
             MPR = MPs[get_material_index(QR, len(MPs))]
             QL_, QR_ = star_states(QL, QR, MPL, MPR, dt, n)
 
-            grid[ind] = QL_
-            grid[tuple(ii)] = QL_
+            grid[ind][:-LSET] = QL_[:-LSET]
+            grid[tuple(ii)][:-LSET] = QL_[:-LSET]
 
 
 def fill_neighbor_cells(grid, intMask, Δφ, dX, N):
@@ -82,7 +83,8 @@ def fill_neighbor_cells(grid, intMask, Δφ, dX, N):
                     n = normal(Δφ[ind])
                     x = (array(ind) + 0.5) * dX
                     xn = x - dX * n
-                    grid[ind] = grid[tuple(array(xn / dX, dtype=int))]
+                    indn = tuple(array(xn / dX, dtype=int))
+                    grid[ind][:-LSET] = grid[indn][:-LSET]
 
 
 def fill_ghost_cells(grids, masks, u, nmat, N, dX, MPs, dt):

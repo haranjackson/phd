@@ -28,7 +28,7 @@ def check_star_convergence(QL_, QR_, MPL, MPR):
         PR_ = State(QR_, MPR)
         cond = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) < STAR_TOL
     else:
-        cond = amax(abs(PL_.Σ()[0])) < STAR_TOL
+        cond = amax(abs(PL_.Σ()[0])) / (MPL.B0 * MPL.ρ0) < STAR_TOL
 
     if THERMAL:
         if MPR.EOS > -1:
@@ -152,7 +152,6 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
 
         PR = State(QR, MPR)
         _, RR = riemann_constraints(PR, -1, MPR)
-
 
         if THERMAL:
             xR = concatenate([PR.Σ()[0], [PR.T()]])

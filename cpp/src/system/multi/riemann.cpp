@@ -28,7 +28,7 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
     Vec3 ΣR_ = Sigma(QR_, MPR, 0);
     cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() < STAR_TOL;
   } else {
-    cond = ΣL_.cwiseAbs().maxCoeff() < STAR_TOL;
+    cond = ΣL_.cwiseAbs().maxCoeff() / (MPL.B0 * MPL.ρ0) < STAR_TOL;
   }
 
   if (THERMAL) {
