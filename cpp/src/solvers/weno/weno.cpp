@@ -1,8 +1,5 @@
 #include "../../etc/globals.h"
 
-VecV oL, oR, oCL, oCR, oSum;
-MatN_V wL, wR, wCL, wCR;
-
 void weight(VecVr ret, MatN_Vr w, double LAM) {
   // Produces the WENO weight for this stencil
   // NOTE: The denominator is raised to the 8th power.
@@ -18,6 +15,9 @@ void weight(VecVr ret, MatN_Vr w, double LAM) {
 
 void coeffs(MatN_Vr ret, Mat2N_Vr data) {
   // Calculate coefficients of basis polynomials and weights
+
+  VecV oL, oR, oCL, oCR, oSum;
+  MatN_V wL, wR, wCL, wCR;
 
   if (N <= 4) {
     wL.noalias() = mLinv * data.block<N, V>(0, 0);
@@ -68,6 +68,7 @@ void weno1(Vecr wh, Vecr ub, int nx, int ny, int nz) {
   // Returns the WENO reconstruction of u using polynomials in x
   // Size of wh: nx*ny*nz*N*V
   // Size of ub: (nx+2(N-1))*ny*nz*V
+
   for (int ind = 0; ind < nx * ny * nz; ind++) {
     MatN_VMap wh_ref(wh.data() + (ind * N * V), OuterStride(V));
     Mat2N_VMap ub_ref(ub.data() + (ind * V), OuterStride(ny * nz * V));
@@ -82,6 +83,7 @@ void weno2(Vecr wh, Vecr ub, int nx, int ny, int nz) {
   Vec ux(nx * (ny + 2 * (N - 1)) * nz * N * V);
   weno1(ux, ub, nx, ny + 2 * (N - 1), nz);
 
+#pragma omp parallel for
   for (int i = 0; i < nx; i++) {
     int indi = i * ny * nz * N;
     int indii = i * (ny + 2 * (N - 1)) * nz * N;

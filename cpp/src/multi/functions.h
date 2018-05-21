@@ -16,10 +16,11 @@ int sign(double x);
 
 Vec normal(Vecr Δφ);
 
-Mat finite_difference(Vecr φ, aVecr dX, iVec nX);
+void finite_difference(Matr Δφ, Vecr φ, aVecr dX, iVec nX);
 
 void renormalize_levelsets(MatMap uMap, int nmat, aVecr dX, iVecr nX);
 
-Vec material_indicator(MatMap uMap, int mat, int nmat, aVecr dX, iVecr nX);
+void material_indicator(Vecr φ, MatMap uMap, int mat, int nmat, aVecr dX,
+                        iVecr nX);
 
 #endif // FUNCTIONS_H

@@ -154,6 +154,8 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
   double kx = wghts_t / (2 * dx);
   double ky = wghts_t / (2 * dy);
 
+#pragma omp parallel for private(q0x, q0y, q1x, q1y, qlx, qrx, qly, qry, fx,   \
+                                 bx, fy, by)
   for (int i = 0; i < nx + 1; i++)
     for (int j = 0; j < ny + 1; j++) {
 

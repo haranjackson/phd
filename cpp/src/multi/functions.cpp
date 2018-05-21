@@ -12,21 +12,20 @@ int sign(double x) {
 
 Vec normal(Vecr Δφ) { return Δφ / Δφ.norm(); }
 
-Mat finite_difference(Vecr φ, aVecr dX, iVec nX) {
-  // ret[i,j,..][d] is the derivative in the dth direction in cell (i,j,...)
+void finite_difference(Matr Δφ, Vecr φ, aVecr dX, iVec nX) {
+  // Δφ[i,j,..][d] is the derivative in the dth direction in cell (i,j,...)
 
   int ndim = nX.size();
   int ncell = φ.size();
-  Mat ret(ncell, ndim);
 
   switch (ndim) {
 
   case 1:
-    ret.block(1, 0, ncell - 2, 1) =
+    Δφ.block(1, 0, ncell - 2, 1) =
         φ.segment(2, ncell - 2) - φ.segment(0, ncell - 2);
-    ret.row(0) = ret.row(1);
-    ret.row(ncell - 1) = ret.row(ncell - 2);
-    ret /= 2 * dX(0);
+    Δφ.row(0) = Δφ.row(1);
+    Δφ.row(ncell - 1) = Δφ.row(ncell - 2);
+    Δφ /= 2 * dX(0);
     break;
 
   case 2:
@@ -41,17 +40,16 @@ Mat finite_difference(Vecr φ, aVecr dX, iVec nX) {
         (2 * dX(0));
     tmp.row(0) = tmp.row(1);
     tmp.row(nx - 1) = tmp.row(nx - 2);
-    ret.col(0) = tmpCol;
+    Δφ.col(0) = tmpCol;
 
     tmp.block(0, 1, nx, ny - 2) =
         (φMap.block(0, 2, nx, ny - 2) - φMap.block(0, 0, nx, ny - 2)) /
         (2 * dX(1));
     tmp.col(0) = tmp.col(1);
     tmp.col(ny - 1) = tmp.col(ny - 2);
-    ret.col(1) = tmpCol;
+    Δφ.col(1) = tmpCol;
     break;
   }
-  return ret;
 }
 
 void renormalize_levelsets(MatMap uMap, int nmat, aVecr dX, iVecr nX) {
@@ -63,9 +61,9 @@ void renormalize_levelsets(MatMap uMap, int nmat, aVecr dX, iVecr nX) {
   }
 }
 
-Vec material_indicator(MatMap uMap, int mat, int nmat, aVecr dX, iVecr nX) {
+void material_indicator(Vecr φ, MatMap uMap, int mat, int nmat, aVecr dX,
+                        iVecr nX) {
 
-  Vec φ;
   if (mat == 0)
     φ = uMap.col(V - LSET);
   else
@@ -78,9 +76,6 @@ Vec material_indicator(MatMap uMap, int mat, int nmat, aVecr dX, iVecr nX) {
     for (int i = mat; i < LSET; i++)
       φ = φ.array().max(uMap.col(V - LSET + i).array());
 
-    return distance(φ, dX, nX);
-
-  } else {
-    return φ;
+    φ = distance(φ, dX, nX);
   }
 }

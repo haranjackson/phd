@@ -127,6 +127,7 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
     break;
   case 2:
     int ny = nX(1);
+#pragma omp parallel for
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
         int ind = i * ny + j;
@@ -243,10 +244,13 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
 
   int nmat = grids.size();
   int ncell = u.size() / V;
+  int ndim = nX.size();
 
   MatMap uMap(u.data(), ncell, V, OuterStride(V));
   renormalize_levelsets(uMap, nmat, dX, nX);
   iVec intMask(ncell);
+  Vec φ(ncell);
+  Mat Δφ(ncell, ndim);
 
   for (int mat = 0; mat < nmat; mat++) {
 
@@ -254,8 +258,9 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
 
       grids[mat] = u;
 
-      Vec φ = material_indicator(uMap, mat, nmat, dX, nX);
-      Mat Δφ = finite_difference(φ, dX, nX);
+      material_indicator(φ, uMap, mat, nmat, dX, nX);
+
+      finite_difference(Δφ, φ, dX, nX);
 
       find_interface_cells(intMask, φ, nX);
 
