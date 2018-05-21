@@ -22,10 +22,11 @@ BC = 'transitive'
 # BC = solids.piston_BC
 
 
-CPP_LVL = 2
+CPP_LVL = 1
 N = 3
-CFL = 0.5
+CFL = 0.2
 SPLIT = True
+SOLVER = 'rusanov'
 
 
 if CPP_LVL > 0:
@@ -49,7 +50,7 @@ def callback(u, t, count):
 solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      model_params=MPs, M=M_cons, max_eig=max_eig, order=N,
                      ncore=1, split=SPLIT, ode_solver=None,
-                     riemann_solver='rusanov')
+                     riemann_solver=SOLVER)
 
 solver.solve(u, tf, dX, cfl=CFL, boundary_conditions=BC, verbose=True,
              callback=callback, cpp_level=CPP_LVL)

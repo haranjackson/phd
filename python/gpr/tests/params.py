@@ -15,12 +15,17 @@ MP_Air = material_params(EOS='sg', ρ0=1.18, cv=721, p0=10100, γ=1.4, pINF=0,
 MP_He = material_params(EOS='sg', ρ0=0.163, cv=3127, p0=10100, γ=1.66,
                         pINF=0, b0=1, cα=1, μ=1.99e-5, Pr=0.688)
 
+MP_Al_SG_SI = material_params(EOS='sg', ρ0=2700, cv=897, p0=1e5, γ=3.4,
+                              pINF=21.5e9, b0=3160, τ1=inf)
+
 MP_Al_GR_SI = material_params(EOS='gr', ρ0=2710, cv=900, p0=0,
                               c0=sqrt(6220**2 - 4 / 3 * 3160**2), α=1, β=3.577,
                               γ=2.088, b0=3160, τ1=inf, Tref=300)
 
-MP_Al_SG_SI = material_params(EOS='sg', ρ0=2700, cv=897, p0=1e5, γ=3.4,
-                              pINF=21.5e9, b0=3160, τ1=inf)
+MP_Al_P_GR_SI = material_params(EOS='gr', ρ0=2710, cv=900, p0=0,
+                                c0=sqrt(6220**2 - 4 / 3 * 3160**2), α=1,
+                                β=3.577, γ=2.088, b0=3160, σY=0.4e9, τ1=1,
+                                n=100, PLASTIC=True)
 
 
 """ Other Units """
