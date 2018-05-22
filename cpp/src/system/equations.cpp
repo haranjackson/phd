@@ -45,7 +45,6 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
 }
 
 void source(VecVr ret, VecVr Q, Par &MP) {
-  double ρ = Q(0);
 
   ret.setZero();
 
@@ -55,8 +54,10 @@ void source(VecVr ret, VecVr Q, Par &MP) {
     Mat3_3 Asource = -dEdA_s(Q, MP) * theta1inv(Q, MP);
     ret.segment<9>(5) = VecMap(Asource.data(), 9);
   }
-  if (THERMAL)
+  if (THERMAL) {
+    double ρ = Q(0);
     ret.segment<3>(14) = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
+  }
 }
 
 void block(MatV_Vr ret, VecVr Q, int d) {

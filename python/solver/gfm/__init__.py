@@ -77,8 +77,10 @@ class MultiSolver():
                 t0 = time()
 
                 if self.m > 1:
-                    #fill_ghost_cells(grids, masks, self.u, self.m, self.N,
-                    #                 self.dX, self.MPs, dt)
+                    """
+                    fill_ghost_cells(grids, masks, self.u, self.m, self.N,
+                                     self.dX, self.MPs, dt)
+                    """
                     nX = array(self.u.shape[:-1], dtype=int32)
                     grids = GPRpy.VectorVec([grid.ravel() for grid in grids])
                     masks = GPRpy.VectorbVec([mask.ravel() for mask in masks])
@@ -86,7 +88,6 @@ class MultiSolver():
                                                  nX, self.dX, dt, self.MPs)
                     grids = [grid.reshape(self.u.shape) for grid in grids]
                     masks = [mask.reshape(self.u.shape[:-1]) for mask in masks]
-
 
                 for solver, grid in zip(self.solvers, grids):
                     solver.u = grid
@@ -163,16 +164,14 @@ class MultiSolver():
         for solver in self.solvers:
             self.initialize_sub_solver(solver)
 
-    def solve(self, initial_grid, final_time, dX, cfl=0.9,
-              boundary_conditions='transitive', verbose=False, callback=None,
-              cpp_level=0, nOut=10):
+    def solve(self, u, tf, dX, cfl=0.9, boundary_conditions='transitive',
+              verbose=False, callback=None, cpp_level=0, nOut=10):
 
         if cpp_level == 2:
-            self.u = solve_full_cpp(self, initial_grid, final_time, dX, cfl,
-                                    nOut, callback)
+            self.u = solve_full_cpp(self, u, tf, dX, cfl, nOut, callback)
             return self.u
 
         else:
-            self.initialize(initial_grid, final_time, dX, cfl, boundary_conditions,
-                            verbose, callback, cpp_level)
+            self.initialize(u, tf, dX, cfl, boundary_conditions, verbose,
+                            callback, cpp_level)
             return self.resume()

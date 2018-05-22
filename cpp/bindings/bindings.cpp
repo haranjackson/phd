@@ -15,6 +15,7 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>);
 #include "../src/etc/grid.h"
 
 #include "../src/multi/fill.h"
+#include "../src/multi/functions.h"
 #include "../src/multi/pfmm.h"
 
 #include "../src/scipy/lgmres.h"
@@ -27,7 +28,6 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>);
 #include "../src/solvers/weno/weno.h"
 #include "../src/solvers/weno/weno_matrices.h"
 
-#include "../src/solvers/dg/dg.h"
 #include "../src/solvers/dg/dg_matrices.h"
 
 #include "../src/solvers/split/homogeneous.h"
@@ -123,6 +123,8 @@ PYBIND11_MODULE(GPRpy, m) {
       .def("diff", &poly::diff)
       .def("eval", &poly::eval);
 
+  m_multi.def("renormalize_levelsets", &renormalize_levelsets);
+  m_multi.def("finite_difference", &finite_difference);
   m_multi.def("find_interface_cells", &find_interface_cells);
   m_multi.def("fill_boundary_cells", &fill_boundary_cells);
   m_multi.def("fill_neighbor_cells", &fill_neighbor_cells);
@@ -169,12 +171,6 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
   m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);
   m_solvers_weno.def("weno_launcher", &weno_launcher);
-
-  m_solvers_dg.def("rhs1", &rhs1);
-  m_solvers_dg.def("rhs2", &rhs2);
-  m_solvers_dg.def("obj1", &obj1);
-  m_solvers_dg.def("obj2", &obj2);
-  m_solvers_dg.def("predictor", &predictor);
 
   m_solvers_split.def("midstepper", &midstepper);
   m_solvers_split.def("analyticSolver_distortion", &analyticSolver_distortion);

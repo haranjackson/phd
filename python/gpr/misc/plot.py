@@ -28,10 +28,10 @@ def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
     plt.show()
 
 
-def plot2d(x, plotType, y=None):
+def plot2d(x, plotType, y=None, vmin=None, vmax=None):
 
     if plotType == 'colormap':
-        im = imshow(x, get_cmap('viridis'))
+        im = imshow(x, get_cmap('viridis'), vmin=vmin, vmax=vmax)
         colorbar(im)
 
     elif plotType == 'contour':
@@ -60,8 +60,8 @@ def plot_simple(u, style, x, lab, col, title, sci, ind, divρ, plotType='colorma
         plot2d(y, plotType)
 
 
-def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType, i=None,
-                  j=None):
+def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
+                  vmin, vmax, i=None, j=None):
 
     shape = u.shape[:-1]
     n = prod(shape)
@@ -85,7 +85,7 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType, i=None
     if u.ndim - 1 == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
     else:
-        plot2d(y.reshape(shape), plotType)
+        plot2d(y.reshape(shape), plotType, vmin, vmax)
 
 
 def plot_density(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
@@ -140,45 +140,45 @@ def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0,
 
 
 def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                  square=0, plotType='colormap'):
+                  square=0, plotType='colormap', vmin=None, vmax=None):
     figure(19, figsize=fig_size(square))
-    plot_compound(u, MPs, style, x, lab, col, 'Pressure', sci, 'p', plotType)
+    plot_compound(u, MPs, style, x, lab, col, 'Pressure', sci, 'p', plotType,
+                  vmin, vmax)
 
 
 def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                     square=0, plotType='colormap'):
+                     square=0, plotType='colormap', vmin=None, vmax=None):
     figure(20, figsize=fig_size(square))
-    plot_compound(u, MPs, style, x, lab, col,
-                  'Temperature', sci, 'T', plotType)
+    plot_compound(u, MPs, style, x, lab, col, 'Temperature', sci, 'T',
+                  plotType, vmin, vmax)
 
 
 def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
-               fig=None, square=0, plotType='colormap'):
+               fig=None, square=0, plotType='colormap', vmin=None, vmax=None):
     if fig is None:
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Viscous Stress Component %d,%d' % (
-                      i + 1, j + 1), sci, 'σ', plotType,
-                  i=i, j=j)
+                  'Viscous Stress Component %d,%d' % (i + 1, j + 1),
+                  sci, 'σ', plotType, vmin, vmax, i=i, j=j)
 
 
 def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
-               fig=None, square=0, plotType='colormap'):
+               fig=None, square=0, plotType='colormap', vmin=None, vmax=None):
     if fig is None:
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Viscous Stress Component %d,%d' % (
-                      i + 1, j + 1), sci, 'Σ', plotType,
-                  i=i, j=j)
+                  'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'Σ',
+                  plotType, vmin, vmax, i=i, j=j)
 
 
 def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                   square=0, plotType='colormap'):
+                   square=0, plotType='colormap', vmin=None, vmax=None):
     figure(30 + i, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Heat Flux Component %d' % (i + 1), sci, 'q', plotType, i=i)
+                  'Heat Flux Component %d' % (i + 1), sci, 'q', plotType,
+                  vmin, vmax, i=i)
 
 
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,

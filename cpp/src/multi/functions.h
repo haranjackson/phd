@@ -4,10 +4,6 @@
 #include "../etc/types.h"
 #include "../options.h"
 
-int iVec_to_ind(iVecr v) { return v(0) * V; }
-
-int iVec_to_ind(iVecr v, int ny) { return (v(0) * ny + v(1)) * V; }
-
 struct BoundaryInds {
   int ii, iL, iR, ind;
 };
@@ -18,9 +14,8 @@ Vec normal(Vecr Δφ);
 
 void finite_difference(Matr Δφ, Vecr φ, aVecr dX, iVec nX);
 
-void renormalize_levelsets(MatMap uMap, int nmat, aVecr dX, iVecr nX);
+void renormalize_levelsets(Matr u, aVecr dX, iVecr nX);
 
-void material_indicator(Vecr φ, MatMap uMap, int mat, int nmat, aVecr dX,
-                        iVecr nX);
+void material_indicator(Vecr φ, Matr u, int mat, int nmat, aVecr dX, iVecr nX);
 
 #endif // FUNCTIONS_H

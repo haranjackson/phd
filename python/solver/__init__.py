@@ -1,3 +1,4 @@
+from itertools import product
 from time import time
 
 from numpy import expand_dims, ones
@@ -51,6 +52,25 @@ class SolverPlus(Solver):
                                      S=self.S, B=self.B, M=self.M,
                                      max_eig=self.max_eig, pars=self.pars,
                                      riemann_solver=riemann_solver)
+
+    def timestep(self, mask=None):
+        """ Calculates dt, based on the maximum wavespeed across the domain
+        """
+        MAX = 0
+        for coords in product(*[range(s) for s in self.u.shape[:self.NDIM]]):
+
+            if mask is None or mask[coords]:
+                Q = self.u[coords]
+                for d in range(self.NDIM):
+                    MAX = max(MAX, self.max_eig(Q, d, self.pars) / self.dX[d])
+
+        dt = self.cfl / MAX
+
+        # Reduce early time steps to avoid initialization errors
+        if self.count <= 5:
+            dt /= 5
+
+        return min(self.final_time - self.t, dt)
 
 
     def split_stepper(self, dt, maskBC):

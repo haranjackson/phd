@@ -5,6 +5,10 @@
 #include "../system/objects/gpr_objects.h"
 #include "functions.h"
 
+int iVec_to_ind(iVecr v) { return v(0) * V; }
+
+int iVec_to_ind(iVecr v, int ny) { return (v(0) * ny + v(1)) * V; }
+
 void update_interface_mask(iVecr intMask, Vecr φ, int indL, int indR) {
   double φL = φ(indL);
   double φR = φ(indR);
@@ -247,7 +251,7 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
   int ndim = nX.size();
 
   MatMap uMap(u.data(), ncell, V, OuterStride(V));
-  renormalize_levelsets(uMap, nmat, dX, nX);
+  renormalize_levelsets(uMap, dX, nX);
   iVec intMask(ncell);
   Vec φ(ncell);
   Mat Δφ(ncell, ndim);
