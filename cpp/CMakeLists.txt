@@ -51,6 +51,8 @@ SET(SRCS ../include/skfmm/base_marcher.cpp
          src/solvers/split/ode.cpp
 
          src/solvers/dg/dg.cpp
+         src/solvers/dg/dg1.cpp
+         src/solvers/dg/dg2.cpp
          src/solvers/dg/dg_matrices.cpp
          src/solvers/dg/initial_guess.cpp
 
