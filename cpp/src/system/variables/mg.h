@@ -3,6 +3,7 @@
 
 #include "../objects/gpr_objects.h"
 
+const int VACUUM = -1;
 const int STIFFENED_GAS = 0;
 const int SHOCK_MG = 1;
 const int JWL = 2;
