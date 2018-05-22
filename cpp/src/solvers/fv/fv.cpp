@@ -156,22 +156,18 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 
   int NNV = N * N * V;
 
-#pragma omp parallel for private(q0, q1, f, b) schedule(static, 8)             \
+#pragma omp parallel for collapse(2) private(q0, q1, f, b) schedule(static, 8) \
     num_threads(4)
   for (int i = 0; i < nx + 1; i++)
     for (int j = 0; j < ny + 1; j++) {
-
-      if ((i == 0 || i == nx + 1) && (j == 0 || j == ny + 1))
-        continue;
 
       if (mask(ind(i, j, ny + 2))) {
 
         int uind0 = ind(i - 1, j - 1, ny) * V;
         int ind0 = ind(i, j, t, ny + 2, nt) * NNV;
-
         MatN2_VMap qh0(rec.data() + ind0, OuterStride(V));
 
-        if (mask(ind(i + 1, j, ny + 2)) && j > 0 && j < ny + 1) {
+        if (mask(ind(i + 1, j, ny + 2)) && j > 0 && (i > 0 || i < nx)) {
 
           int uindx = ind(i, j - 1, ny) * V;
           int indx = ind(i + 1, j, t, ny + 2, nt) * NNV;
@@ -198,15 +194,17 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
             }
             b = Bint(q0.row(s), q1.row(s), 0, MP);
 
-            if (i > 0 && i < nx + 1)
+            if (i > 0)
               u0 += xWGHTS(s) * (b + f);
             if (i < nx)
               u1 += xWGHTS(s) * (b - f);
           }
-          u.segment<V>(uind0) -= u0;
-          u.segment<V>(uindx) -= u1;
+          if (i > 0)
+            u.segment<V>(uind0) -= u0;
+          if (i < nx)
+            u.segment<V>(uindx) -= u1;
         }
-        if (mask(ind(i, j + 1, ny + 2)) && i > 0 && i < nx + 1) {
+        if (mask(ind(i, j + 1, ny + 2)) && i > 0 && (j > 0 || j < ny)) {
 
           int uindy = ind(i - 1, j, ny) * V;
           int indy = ind(i, j + 1, t, ny + 2, nt) * NNV;
@@ -233,13 +231,15 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
             }
             b = Bint(q0.row(s), q1.row(s), 1, MP);
 
-            if (j > 0 && j < ny + 1)
+            if (j > 0)
               u0 += yWGHTS(s) * (b + f);
             if (j < ny)
               u1 += yWGHTS(s) * (b - f);
           }
-          u.segment<V>(uind0) -= u0;
-          u.segment<V>(uindy) -= u1;
+          if (j > 0)
+            u.segment<V>(uind0) -= u0;
+          if (j < ny)
+            u.segment<V>(uindy) -= u1;
         }
       }
     }
