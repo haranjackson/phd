@@ -12,7 +12,7 @@ Vec distance(Vecr phi, aVecr dX, iVecr nX) {
   FLAG.setZero(ncell);
 
   int TEST = 0;
-  int ORDER = 2;
+  int ORDER = 1;
   double NARROW = 0.;
   int PERIODIC = 0;
 

@@ -165,7 +165,7 @@ class MultiSolver():
             self.initialize_sub_solver(solver)
 
     def solve(self, u, tf, dX, cfl=0.9, boundary_conditions='transitive',
-              verbose=False, callback=None, cpp_level=0, nOut=10):
+              verbose=False, callback=None, cpp_level=0, nOut=50):
 
         if cpp_level == 2:
             self.u = solve_full_cpp(self, u, tf, dX, cfl, nOut, callback)

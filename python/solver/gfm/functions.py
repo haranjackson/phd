@@ -10,9 +10,9 @@ def boundary_inds(ind, φ, n, dX):
 
     d = 1.5
 
-    xi = xp - φ[ind] * n               # interface position
-    xL = xi - d * dX * n               # probe on left side
-    xR = xi + d * dX * n               # probe on right side
+    xi = xp - φ[ind] * n    # interface position
+    xL = xi - d * dX * n    # probe on left side
+    xR = xi + d * dX * n    # probe on right side
 
     # TODO: replace with interpolated values
     ii = array(xi / dX, dtype=int)
@@ -53,7 +53,7 @@ def renormalize_levelsets(u, nmat, dX, ncells):
     for i in range(nmat - 1):
         ind = i - (nmat - 1)
         φ = u.take(ind, axis=-1)
-        u.reshape([ncells, -1])[:, ind] = distance(φ, dx=dX).ravel()
+        u.reshape([ncells, -1])[:, ind] = distance(φ, dx=dX, order=1).ravel()
 
 
 def material_indicator(u, mat, nmat, dX):

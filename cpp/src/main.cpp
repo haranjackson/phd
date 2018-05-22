@@ -23,7 +23,7 @@ int main() {
   std::vector<Par> MPs = {air_params()};
   */
 
-  double tf = 5e-6 / 10;
+  double tf = 5e-6 / 20;
   iVec nX = aluminium_plate_impact_dims();
   aVec dX = aluminium_plate_impact_spacing();
   Vec u = aluminium_plate_impact_IC();

@@ -13,12 +13,12 @@ def aluminium_plate_impact_IC():
     assert(not MULTI)
     assert(LSET == 2)
 
-    MP = MP_Al_GR_SI
+    MP = MP_Al_P_GR_SI
 
     Lx = 0.03
     Ly = 0.04
-    nx = 60  # 6000
-    ny = 80  # 8000
+    nx = 120  # 6000
+    ny = 160  # 8000
     tf = 5e-6
 
     ρ = MP.ρ0

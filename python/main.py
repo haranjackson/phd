@@ -23,10 +23,10 @@ BC = 'transitive'
 
 
 CPP_LVL = 1
-N = 3
-CFL = 0.2
-SPLIT = True
-SOLVER = 'rusanov'
+N = 2
+CFL = 0.1
+SPLIT = False
+SOLVER = 'osher'
 
 
 if CPP_LVL > 0:
