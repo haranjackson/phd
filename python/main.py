@@ -22,7 +22,7 @@ BC = 'transitive'
 # BC = solids.piston_BC
 
 
-CPP_LVL = 1
+CPP_LVL = 2
 N = 2
 CFL = 0.1
 SPLIT = False

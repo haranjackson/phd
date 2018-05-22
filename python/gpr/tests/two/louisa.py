@@ -17,8 +17,8 @@ def aluminium_plate_impact_IC():
 
     Lx = 0.03
     Ly = 0.04
-    nx = 120  # 6000
-    ny = 160  # 8000
+    nx = 300  # 6000
+    ny = 400  # 8000
     tf = 5e-6
 
     ρ = MP.ρ0
