@@ -25,7 +25,7 @@ MP_Al_GR_SI = material_params(EOS='gr', ρ0=2710, cv=900, p0=0,
 MP_Al_P_GR_SI = material_params(EOS='gr', ρ0=2710, cv=900, p0=0,
                                 c0=sqrt(6220**2 - 4 / 3 * 3160**2), α=1,
                                 β=3.577, γ=2.088, b0=3160, σY=0.4e9, τ1=1,
-                                n=100, PLASTIC=True)
+                                n=100, PLASTIC=True, Tref=300)
 
 
 """ Other Units """

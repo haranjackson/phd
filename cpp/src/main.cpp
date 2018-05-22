@@ -13,7 +13,7 @@ VecV Qvec(double ρ, double p, Vec3r v, Mat3_3r A, Vec3r J, Par &MP) {
   Q.segment<3>(2) = ρ * v;
   Q.segment<9>(5) = VecMap(A.data(), 9);
   Q.segment<3>(14) = ρ * J;
-  Q(1) = ρ * total_energy(Q, MP);
+  Q(1) = ρ * total_energy(ρ, p, A, J, v, MP);
   return Q;
 }
 
@@ -60,18 +60,23 @@ int main() {
   MP.τ2 = κ * MP.ρ0 / (MP.T0 * MP.cα2);
 
   double tf = 0.1;
-  Veci3 nX = {200, 1, 1};
-  Vec3 dX = {1. / nX(0), 1. / nX(1), 1. / nX(2)};
+  iVec nX(1);
+  nX << 200;
+  aVec dX(1);
+  dX << 1. / nX(0);
   double CFL = 0.6;
   bool PERIODIC = false;
   bool SPLIT = false;
   bool HALF_STEP = true;
   bool STIFF = false;
   int FLUX = 1;
+  std::vector<Par> MPs = {MP};
+  int nOut = 10;
 
   Vec u = heat_conduction_1d(MP, nX(0));
 
-  iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT, HALF_STEP, STIFF, FLUX, MP);
+  std::vector<Vec> ret = iterator(u, tf, nX, dX, CFL, PERIODIC, SPLIT,
+                                  HALF_STEP, STIFF, FLUX, MPs, nOut);
 
   std::cout << "Hello World" << std::endl;
   return 0;

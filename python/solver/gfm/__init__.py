@@ -1,8 +1,10 @@
+import GPRpy
+
 from concurrent.futures import ProcessPoolExecutor
 from itertools import product
 from time import time
 
-from numpy import ones, sum
+from numpy import array, int32, ones, sum
 
 from ader.etc.boundaries import standard_BC, periodic_BC
 
@@ -75,8 +77,16 @@ class MultiSolver():
                 t0 = time()
 
                 if self.m > 1:
-                    fill_ghost_cells(grids, masks, self.u, self.m, self.N,
-                                     self.dX, self.MPs, dt)
+                    #fill_ghost_cells(grids, masks, self.u, self.m, self.N,
+                    #                 self.dX, self.MPs, dt)
+                    nX = array(self.u.shape[:-1], dtype=int32)
+                    grids = GPRpy.VectorVec([grid.ravel() for grid in grids])
+                    masks = GPRpy.VectorbVec([mask.ravel() for mask in masks])
+                    GPRpy.multi.fill_ghost_cells(grids, masks, self.u.ravel(),
+                                                 nX, self.dX, dt, self.MPs)
+                    grids = [grid.reshape(self.u.shape) for grid in grids]
+                    masks = [mask.reshape(self.u.shape[:-1]) for mask in masks]
+
 
                 for solver, grid in zip(self.solvers, grids):
                     solver.u = grid
