@@ -11,7 +11,7 @@ include_directories(include/pybind11
                     include
                     ${PYTHON_DIR})
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3 -fPIC -fopenmp")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Ofast -fPIC -fopenmp -ffast-math")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fopenmp")
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
