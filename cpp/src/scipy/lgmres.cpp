@@ -1,5 +1,4 @@
 #include "lgmres.h"
-#include "../etc/debug.h"
 #include "../etc/globals.h"
 #include <cmath>
 

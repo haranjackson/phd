@@ -1,5 +1,4 @@
 #include "newton_krylov.h"
-#include "../etc/debug.h"
 #include "../etc/globals.h"
 #include "lgmres.h"
 

@@ -148,14 +148,16 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
                     int nt, int t, double wghts_t, int FLUX, Par &MP,
                     bVecr mask) {
 
-  MatN_V q0x, q0y, q1x, q1y;
-  VecV qlx, qrx, qly, qry, fx, bx, fy, by;
+  MatN_V q0, q1;
+  VecV f, b, u0, u1;
 
-  double kx = wghts_t / (2 * dx);
-  double ky = wghts_t / (2 * dy);
+  VecN xWGHTS = wghts_t / (2. * dx) * WGHTS;
+  VecN yWGHTS = wghts_t / (2. * dy) * WGHTS;
 
-#pragma omp parallel for private(q0x, q0y, q1x, q1y, qlx, qrx, qly, qry, fx,   \
-                                 bx, fy, by)
+  int NNV = N * N * V;
+
+#pragma omp parallel for private(q0, q1, f, b) schedule(static, 8)             \
+    num_threads(4)
   for (int i = 0; i < nx + 1; i++)
     for (int j = 0; j < ny + 1; j++) {
 
@@ -165,76 +167,79 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
       if (mask(ind(i, j, ny + 2))) {
 
         int uind0 = ind(i - 1, j - 1, ny) * V;
-        int ind0 = ind(i, j, t, ny + 2, nt) * N * N * V;
+        int ind0 = ind(i, j, t, ny + 2, nt) * NNV;
 
         MatN2_VMap qh0(rec.data() + ind0, OuterStride(V));
 
-        if (mask(ind(i + 1, j, ny + 2))) {
+        if (mask(ind(i + 1, j, ny + 2)) && j > 0 && j < ny + 1) {
 
           int uindx = ind(i, j - 1, ny) * V;
-          int indx = ind(i + 1, j, t, ny + 2, nt) * N * N * V;
+          int indx = ind(i + 1, j, t, ny + 2, nt) * NNV;
 
           MatN2_VMap qhx(rec.data() + indx, OuterStride(V));
-          endpts2d(q0x, qh0, 0, 1);
-          endpts2d(q1x, qhx, 0, 0);
+          endpts2d(q0, qh0, 0, 1);
+          endpts2d(q1, qhx, 0, 0);
+
+          u0.setZero(V);
+          u1.setZero(V);
 
           for (int s = 0; s < N; s++) {
 
-            qlx = q0x.row(s);
-            qrx = q1x.row(s);
-
             switch (FLUX) {
             case OSHER:
-              fx = D_OSH(qlx, qrx, 0, MP);
+              f = D_OSH(q0.row(s), q1.row(s), 0, MP);
               break;
             case ROE:
-              fx = D_ROE(qlx, qrx, 0, MP);
+              f = D_ROE(q0.row(s), q1.row(s), 0, MP);
               break;
             case RUSANOV:
-              fx = D_RUS(qlx, qrx, 0, MP);
+              f = D_RUS(q0.row(s), q1.row(s), 0, MP);
               break;
             }
-            bx = Bint(qlx, qrx, 0, MP);
+            b = Bint(q0.row(s), q1.row(s), 0, MP);
 
-            if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {
-              u.segment<V>(uind0) -= WGHTS(s) * kx * (bx + fx);
-            }
-            if (i < nx && j > 0 and j < ny + 1)
-              u.segment<V>(uindx) -= WGHTS(s) * kx * (bx - fx);
+            if (i > 0 && i < nx + 1)
+              u0 += xWGHTS(s) * (b + f);
+            if (i < nx)
+              u1 += xWGHTS(s) * (b - f);
           }
+          u.segment<V>(uind0) -= u0;
+          u.segment<V>(uindx) -= u1;
         }
-        if (mask(ind(i, j + 1, ny + 2))) {
+        if (mask(ind(i, j + 1, ny + 2)) && i > 0 && i < nx + 1) {
 
           int uindy = ind(i - 1, j, ny) * V;
-          int indy = ind(i, j + 1, t, ny + 2, nt) * N * N * V;
+          int indy = ind(i, j + 1, t, ny + 2, nt) * NNV;
 
           MatN2_VMap qhy(rec.data() + indy, OuterStride(V));
-          endpts2d(q0y, qh0, 1, 1);
-          endpts2d(q1y, qhy, 1, 0);
+          endpts2d(q0, qh0, 1, 1);
+          endpts2d(q1, qhy, 1, 0);
+
+          u0.setZero(V);
+          u1.setZero(V);
 
           for (int s = 0; s < N; s++) {
-            qly = q0y.row(s);
-            qry = q1y.row(s);
 
             switch (FLUX) {
             case OSHER:
-              fy = D_OSH(qly, qry, 1, MP);
+              f = D_OSH(q0.row(s), q1.row(s), 1, MP);
               break;
             case ROE:
-              fy = D_ROE(qly, qry, 1, MP);
+              f = D_ROE(q0.row(s), q1.row(s), 1, MP);
               break;
             case RUSANOV:
-              fy = D_RUS(qly, qry, 1, MP);
+              f = D_RUS(q0.row(s), q1.row(s), 1, MP);
               break;
             }
-            by = Bint(qly, qry, 1, MP);
+            b = Bint(q0.row(s), q1.row(s), 1, MP);
 
-            if (i > 0 && i < nx + 1 && j > 0 && j < ny + 1) {
-              u.segment<V>(uind0) -= WGHTS(s) * ky * (by + fy);
-            }
-            if (i > 0 && i < nx + 1 && j < ny)
-              u.segment<V>(uindy) -= WGHTS(s) * ky * (by - fy);
+            if (j > 0 && j < ny + 1)
+              u0 += yWGHTS(s) * (b + f);
+            if (j < ny)
+              u1 += yWGHTS(s) * (b - f);
           }
+          u.segment<V>(uind0) -= u0;
+          u.segment<V>(uindy) -= u1;
         }
       }
     }
