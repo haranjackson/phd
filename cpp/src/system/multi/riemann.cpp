@@ -36,9 +36,9 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
     double TL_ = temperature(QL_, MPL);
     if (MPR.EOS > -1) {
       double TR_ = temperature(QR_, MPR);
-      cond = cond && (abs(TL_ - TR_) < STAR_TOL);
+      cond = cond && (std::abs(TL_ - TR_) < STAR_TOL);
     } else {
-      cond = cond && (abs(TL_) < STAR_TOL);
+      cond = cond && (std::abs(TL_) < STAR_TOL);
     }
   }
   return cond;

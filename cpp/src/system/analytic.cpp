@@ -69,7 +69,7 @@ void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
     double arg1 = pos(6. * u * u * u - 81. * Δ * Δ);
 
     double x1;
-    if (abs(Δ) < 1e-12) {
+    if (std::abs(Δ) < 1e-12) {
       // θ = pi / 2
       x1 = sqrt(6. * u) / 3. * cos(M_PI / 6.) + m;
     } else if (arg1 == 0.) {

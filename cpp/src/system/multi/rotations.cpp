@@ -12,7 +12,7 @@ Mat3_3 rotation_matrix(Vecr n) {
   double den;
   Vec3 e2, e3;
   double Sq = e1.squaredNorm();
-  if (abs(e1(1) + e1(2)) <= abs(e1(1) - e1(2))) {
+  if (std::abs(e1(1) + e1(2)) <= std::abs(e1(1) - e1(2))) {
     den = sqrt(2 * (1 - e1(0) * e1(1) - e1(1) * e1(2) - e1(2) * e1(0)));
     e2 << e1(1) - e1(2), e1(2) - e1(0), e1(0) - e1(1);
     double Sum = e1.sum();

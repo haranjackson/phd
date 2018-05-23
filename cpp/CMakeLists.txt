@@ -2,7 +2,7 @@ project(GPRcpp)
 SET(BINDINGS_NAME "GPRpy")
 cmake_minimum_required(VERSION 2.8)
 
-SET(PYTHON_DIR "/home/hari/miniconda3/include/python3.6m")
+SET(PYTHON_DIR "~/miniconda3/include/python3.6m")
 SET(MKLROOT "/opt/intel/mkl")
 
 include_directories(include/pybind11
@@ -11,7 +11,9 @@ include_directories(include/pybind11
                     include
                     ${PYTHON_DIR})
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Ofast -fPIC -fopenmp -ffast-math")
+# -ftemplate-depth=1024 required for older versions of clang
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC -ftemplate-depth=1024")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -fopenmp")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fopenmp")
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
