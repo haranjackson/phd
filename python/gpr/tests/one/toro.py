@@ -1,6 +1,6 @@
 from numpy import array, zeros
 
-from gpr.tests.params import MP_Air_ND
+from gpr.tests.params import Air_SG_ND
 from gpr.tests.one.fluids import primitive_IC
 
 
@@ -9,7 +9,7 @@ def toro1_IC():
     tf = 0.25
     nx = 200
     Lx = 1
-    MPs = [MP_Air_ND]
+    MPs = [Air_SG_ND]
 
     dX = [Lx / nx]
 
@@ -30,7 +30,7 @@ def toro2_IC():
     tf = 0.15
     nx = 200
     Lx = 1
-    MPs = [MP_Air_ND]
+    MPs = [Air_SG_ND]
 
     dX = [Lx / nx]
 
@@ -51,7 +51,7 @@ def toro3_IC():
     tf = 0.012
     nx = 200
     Lx = 1
-    MPs = [MP_Air_ND]
+    MPs = [Air_SG_ND]
 
     dX = [Lx / nx]
 
@@ -72,7 +72,7 @@ def toro4_IC():
     tf = 0.035
     nx = 200
     Lx = 1
-    MPs = [MP_Air_ND]
+    MPs = [Air_SG_ND]
 
     dX = [Lx / nx]
 
@@ -88,12 +88,12 @@ def toro4_IC():
     return u, MPs, tf, dX
 
 
-def toro_test5_IC():
+def toro5_IC():
 
     tf = 0.035
     nx = 200
     Lx = 1
-    MPs = [MP_Air_ND]
+    MPs = [Air_SG_ND]
 
     dX = [Lx / nx]
 

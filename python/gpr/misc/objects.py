@@ -56,7 +56,7 @@ class EOS_params():
 def params(MP, Rc, EOS,
            ρ0, p0, Tref, T0, cv,
            α, β, γ, pINF,
-           c0, Γ0, s, e0,
+           c0, Γ0, s,
            A, B, R1, R2,
            b0, τ1, μ, σY, n, PLASTIC,
            cα, τ2,
@@ -71,9 +71,11 @@ def params(MP, Rc, EOS,
 
     MP.ρ0 = ρ0
     MP.p0 = p0
-    MP.Tref = Tref
-    MP.T0 = T0
-    MP.cv = cv
+
+    if cv is not None:
+        MP.cv = cv
+        MP.T0 = T0
+        MP.Tref = Tref
 
     if EOS == 'sg':
         MP.γ = γ
@@ -83,7 +85,6 @@ def params(MP, Rc, EOS,
         MP.Γ0 = Γ0
         MP.c02 = c0**2
         MP.s = s
-        MP.e0 = e0
 
     if EOS == 'gr':
         MP.c02 = c0**2
@@ -146,9 +147,10 @@ def params(MP, Rc, EOS,
         MP.δp = δp
 
 
-def material_params(EOS, ρ0, cv, p0,
-                    Tref=None, α=None, β=None, γ=None, pINF=None,
-                    c0=None, Γ0=None, s=None, e0=None,
+def material_params(EOS, ρ0, p0,
+                    cv=None, Tref=None,
+                    α=None, β=None, γ=None, pINF=None,
+                    c0=None, Γ0=None, s=None,
                     A=None, B=None, R1=None, R2=None,
                     b0=None, μ=None, τ1=None,
                     σY=None, n=None, PLASTIC=False,
@@ -178,9 +180,12 @@ def material_params(EOS, ρ0, cv, p0,
         if (γ is not None) and (pINF is None):
             pINF = 0
 
-        P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ,
-                       pINF, c0, Γ0, s, A, B, R1, R2)
-        T0 = temperature(ρ0, p0, P)
+        if cv is not None:
+            P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ,
+                           pINF, c0, Γ0, s, A, B, R1, R2)
+            T0 = temperature(ρ0, p0, P)
+        else:
+            T0 = None
 
         if b0 is not None:
             if (not PLASTIC) and (τ1 is None):
@@ -200,7 +205,7 @@ def material_params(EOS, ρ0, cv, p0,
         params(MP, Rc, EOS,
                ρ0, p0, Tref, T0, cv,
                α, β, γ, pINF,
-               c0, Γ0, s, e0,
+               c0, Γ0, s,
                A, B, R1, R2,
                b0, τ1, μ, σY, n, PLASTIC,
                cα, τ2,

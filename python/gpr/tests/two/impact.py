@@ -2,10 +2,10 @@ from numpy import array, eye, zeros
 
 from gpr.misc.structures import Cvec
 from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET, NV
-from gpr.tests.params import MP_VAC, MP_Al_GR_SI, MP_Al_P_GR_SI
+from gpr.tests.params import VAC, Al_GRP_SI
 
 
-def aluminium_plate_impact_IC():
+def aluminium_plates_IC():
 
     assert(VISCOUS)
     assert(not THERMAL)
@@ -13,7 +13,7 @@ def aluminium_plate_impact_IC():
     assert(not MULTI)
     assert(LSET == 2)
 
-    MP = MP_Al_P_GR_SI
+    MP = Al_GRP_SI
 
     Lx = 0.03
     Ly = 0.04
@@ -28,7 +28,7 @@ def aluminium_plate_impact_IC():
     A = eye(3)
     J = zeros(3)
 
-    MPs = [MP_VAC, MP, MP]
+    MPs = [VAC, MP, MP]
     dX = [Lx / nx, Ly / ny]
 
     Q0 = Cvec(ρ, p, v0, A, J, MP)

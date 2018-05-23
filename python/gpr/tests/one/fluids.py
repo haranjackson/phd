@@ -33,7 +33,6 @@ def heat_conduction_IC(isMulti=False):
     dX = [Lx / nx]
 
     u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
-    print("HEAT CONDUCTION IN A GAS")
     return u, MPs, tf, dX
 
 
@@ -52,8 +51,8 @@ def first_stokes_problem_IC(isMulti=False):
     γ = 1.4
     μ = 1e-2  # 1e-3 # 1e-4
 
-    MPs = [material_params(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, pINF=0, b0=1,
-                           cα=1e-16, μ=μ, Pr=0.75)]
+    MPs = [material_params(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, b0=1, cα=1e-16,
+                           μ=μ, Pr=0.75)]
 
     if isMulti:
         MPs = 2 * MPs
@@ -69,7 +68,6 @@ def first_stokes_problem_IC(isMulti=False):
     dX = [Lx / nx]
 
     u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
-    print("FIST STOKES PROBLEM: μ =", μ)
     return u, MPs, tf, dX
 
 
@@ -143,7 +141,6 @@ def viscous_shock_IC(center=0):
         J = zeros(3)
         u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), A, J, MP)
 
-    print("VISCOUS SHOCK")
     return u, [MP], tf, dX
 
 
@@ -167,7 +164,6 @@ def hagen_poiseuille_IC():
     Q = Cvec(ρ, p, v, A, J, MP)
     u = array([Q] * nx).reshape([nx, 1, 1, NV])
 
-    print("HAGEN-POISEUILLE DUCT")
     return u, [MP], tf, [Lx / nx]
 
 
