@@ -98,7 +98,8 @@
  & =\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\frac{2}{9}\left(\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}-\left(x_{1}-x_{2}\right)\left(x_{3}-x_{1}\right)-\left(x_{2}-x_{3}\right)\left(x_{1}-x_{2}\right)-\left(x_{3}-x_{1}\right)\left(x_{2}-x_{3}\right)\right)\\
  & =\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\frac{2}{9}\left(\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}-x_{3}x_{1}+x_{1}^{2}+x_{2}x_{3}-x_{1}x_{2}-x_{1}x_{2}+x_{2}^{2}+x_{3}x_{1}-x_{2}x_{3}-x_{2}x_{3}+x_{3}^{2}+x_{1}x_{2}-x_{3}x_{1}\right)\\
  & =\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\frac{2}{9}\left(\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}+x_{1}^{2}+x_{2}^{2}+x_{3}^{2}-x_{1}x_{2}-x_{2}x_{3}-x_{3}x_{1}\right)\\
- & =\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+ & =\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}\\
+ & =\frac{c_{s}^{2}}{4}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}u
 \end{align}
 
 \end_inset

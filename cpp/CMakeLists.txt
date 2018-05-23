@@ -1,6 +1,6 @@
 project(GPRcpp)
 SET(BINDINGS_NAME "GPRpy")
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
 
 SET(PYTHON_DIR "~/miniconda3/include/python3.6m")
 SET(MKLROOT "/opt/intel/mkl")
@@ -11,20 +11,16 @@ include_directories(include/pybind11
                     include
                     ${PYTHON_DIR})
 
-# -ftemplate-depth=1024 required for older versions of clang
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC -ftemplate-depth=1024")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -fopenmp")
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fopenmp")
-
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG -Ofast -ffast-math -fopenmp")  # -march=native
+SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fopenmp")
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I${MKLROOT}/include")
 #SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -L${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -ldl")
 
-SET(SRCS ../include/skfmm/base_marcher.cpp
-         ../include/skfmm/distance_marcher.cpp
-         ../include/skfmm/heap.cpp
+SET(SRCS include/skfmm/base_marcher.cpp
+         include/skfmm/distance_marcher.cpp
+         include/skfmm/heap.cpp
 
          src/etc/globals.cpp
          src/etc/grid.cpp
