@@ -350,6 +350,87 @@ This is the general solution.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d}{dt}\left(J_{i}^{2}\right)-J_{i}^{2}\left(a-c\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)=J_{i}^{2}bu
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $S=J_{1}^{2}+J_{2}^{2}+J_{3}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $P=J_{1}^{2}J_{2}^{2}J_{3}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $M=J_{1}^{2}J_{2}^{2}+J_{2}^{2}J_{3}^{2}+J_{3}^{2}J_{1}^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dS}{dt}+S\left(a-cS\right)=Sbu
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dP}{dt}+3P\left(a-cS\right)=3Pbu
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dM}{dt}+2M\left(a-cS\right)=2Mbu
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tilde{S}}{dt}+\left(a-ce^{\tilde{S}}\right)=bu
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tilde{P}}{dt}+3\left(a-ce^{\tilde{S}}\right)=3bu
+\end{equation}
+
+\end_inset
+
 
 \end_layout
 
