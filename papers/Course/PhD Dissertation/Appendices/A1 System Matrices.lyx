@@ -83,6 +83,10 @@ name "chap:System Matrices"
 
 \end_layout
 
+\begin_layout Section
+Fluxes, Sources, and Non-Conservative Terms
+\end_layout
+
 \begin_layout Standard
 The GPR model takes the form 
 \begin_inset Formula $\frac{\partial\boldsymbol{Q}}{\partial t}+\frac{\partial\boldsymbol{F}\left(\boldsymbol{Q}\right)}{\partial x}+B\left(\boldsymbol{Q}\right)\cdot\frac{\partial\boldsymbol{Q}}{\partial x}=\boldsymbol{S}\left(\boldsymbol{Q}\right)$
@@ -323,6 +327,481 @@ B_{3}=\left(\begin{array}{ccccccccccccccccc}
 
 
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Jacobians
+\end_layout
+
+\begin_layout Subsection*
+Jacobian of the Conserved System
+\end_layout
+
+\begin_layout Standard
+Define the following variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tilde{\psi} & =\left.\frac{\partial E}{\partial A}\right|_{\rho,p}\\
+\Psi_{ij} & =\rho v_{i}v_{j}-\sigma_{ij}\\
+\Phi_{ij} & =v_{i}v_{j}-\frac{\partial\sigma_{ij}}{\partial\rho}\\
+\Omega_{ij}^{k} & =\rho v_{k}\tilde{\psi}_{ij}-v_{m}\frac{\partial\sigma_{mk}}{\partial A_{ij}}\\
+\Delta_{i} & =v_{i}\left(E+\rho\left.\frac{\partial E}{\partial\rho}\right|_{p,A}\right)-\frac{\partial\sigma_{im}}{\partial\rho}v_{m}+\frac{\partial T}{\partial\rho}H_{i}\\
+\Pi_{i} & =v_{i}\left(\rho\frac{\partial E}{\partial p}+1\right)+\frac{\partial T}{\partial p}H_{i}\\
+\Upsilon & =\Gamma\left(\left\Vert \boldsymbol{v}\right\Vert ^{2}+\alpha^{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}-\left(E+\rho\left.\frac{\partial E}{\partial\rho}\right|_{p,A}\right)\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Jacobians of the GPR system are given on the following pages.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+\frac{\partial\boldsymbol{Q}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\left(E+\rho\frac{\partial E}{\partial\rho}\right) & \frac{1}{\Gamma} & \rho v_{1} & \rho v_{2} & \rho v_{3} & \rho\tilde{\psi}_{11} & \rho\tilde{\psi}_{12} & \rho\tilde{\psi}_{13} & \rho\tilde{\psi}_{21} & \rho\tilde{\psi}_{22} & \rho\tilde{\psi}_{23} & \rho\tilde{\psi}_{31} & \rho\tilde{\psi}_{32} & \rho\tilde{\psi}_{33} & \rho H_{1} & \rho H_{2} & \rho H_{3}\\
+v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0\\
+J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0\\
+J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Float figure
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+
+\size small
+\begin_inset Formula 
+\[
+\frac{\partial\boldsymbol{P}}{\partial\boldsymbol{Q}}=\left(\begin{array}{ccccccccccccccccc}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Upsilon & \Gamma & -\Gamma v_{1} & -\Gamma v_{2} & -\Gamma v_{3} & -\Gamma\rho\tilde{\psi}_{11} & -\Gamma\rho\tilde{\psi}_{12} & -\Gamma\rho\tilde{\psi}_{13} & -\Gamma\rho\tilde{\psi}_{21} & -\Gamma\rho\tilde{\psi}_{22} & -\Gamma\rho\tilde{\psi}_{23} & -\Gamma\rho\tilde{\psi}_{31} & -\Gamma\rho\tilde{\psi}_{32} & -\Gamma\rho\tilde{\psi}_{33} & -\Gamma H_{1} & -\Gamma H_{2} & -\Gamma H_{3}\\
+-\frac{v_{1}}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+-\frac{v_{2}}{\rho} & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+-\frac{v_{3}}{\rho} & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+-\frac{J_{1}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0\\
+-\frac{J_{2}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0\\
+-\frac{J_{3}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
+\begin_inset Float figure
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+
+\size small
+\begin_inset Formula 
+\[
+\frac{\partial\boldsymbol{F_{1}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Delta_{1} & \Pi_{1} & \left(\Psi_{11}+\rho E+p\right) & \Psi_{12} & \Psi_{13} & \Omega_{11}^{1} & \Omega_{12}^{1} & \Omega_{13}^{1} & \Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1} & \Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1} & \left(\rho v_{1}H_{1}+\alpha^{2}T\right) & \rho v_{1}H_{2} & \rho v_{1}H_{3}\\
+\Phi_{11} & 1 & 2\rho v_{1} & 0 & 0 & -\frac{\sigma_{11}}{A_{11}} & -\frac{\sigma_{11}}{A_{12}} & -\frac{\sigma_{11}}{A_{13}} & -\frac{\sigma_{11}}{A_{21}} & -\frac{\sigma_{11}}{A_{22}} & -\frac{\sigma_{11}}{A_{23}} & -\frac{\sigma_{11}}{A_{31}} & -\frac{\sigma_{11}}{A_{32}} & -\frac{\sigma_{11}}{A_{33}} & 0 & 0 & 0\\
+\Phi_{12} & 0 & \rho v_{2} & \rho v_{1} & 0 & -\frac{\sigma_{12}}{A_{11}} & -\frac{\sigma_{12}}{A_{12}} & -\frac{\sigma_{12}}{A_{13}} & -\frac{\sigma_{12}}{A_{21}} & -\frac{\sigma_{12}}{A_{22}} & -\frac{\sigma_{12}}{A_{23}} & -\frac{\sigma_{12}}{A_{31}} & -\frac{\sigma_{12}}{A_{32}} & -\frac{\sigma_{12}}{A_{33}} & 0 & 0 & 0\\
+\Phi_{13} & 0 & \rho v_{3} & 0 & \rho v_{1} & -\frac{\sigma_{13}}{A_{11}} & -\frac{\sigma_{13}}{A_{12}} & -\frac{\sigma_{13}}{A_{13}} & -\frac{\sigma_{13}}{A_{21}} & -\frac{\sigma_{13}}{A_{22}} & -\frac{\sigma_{13}}{A_{23}} & -\frac{\sigma_{13}}{A_{31}} & -\frac{\sigma_{13}}{A_{32}} & -\frac{\sigma_{13}}{A_{33}} & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{1}J_{1}+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1} & 0 & 0\\
+v_{1}J_{2} & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1} & 0\\
+v_{1}J_{3} & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
+\begin_inset Float figure
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+
+\size small
+\begin_inset Formula 
+\[
+\frac{\partial\boldsymbol{F_{2}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Delta_{2} & \Pi_{2} & \Psi_{21} & \left(\Psi_{22}+\rho E+p\right) & \Psi_{23} & \Omega_{11}^{2} & \Omega_{12}^{2} & \Omega_{13}^{2} & \Omega_{21}^{2} & \Omega_{22}^{2} & \Omega_{23}^{2} & \Omega_{31}^{2} & \Omega_{32}^{2} & \Omega_{33}^{2} & \rho v_{2}H_{1} & \left(\rho v_{2}H_{2}+\alpha^{2}T\right) & \rho v_{2}H_{3}\\
+\Phi_{21} & 0 & \rho v_{2} & \rho v_{1} & 0 & -\frac{\sigma_{21}}{A_{11}} & -\frac{\sigma_{21}}{A_{12}} & -\frac{\sigma_{21}}{A_{13}} & -\frac{\sigma_{21}}{A_{21}} & -\frac{\sigma_{21}}{A_{22}} & -\frac{\sigma_{21}}{A_{23}} & -\frac{\sigma_{21}}{A_{31}} & -\frac{\sigma_{21}}{A_{32}} & -\frac{\sigma_{21}}{A_{33}} & 0 & 0 & 0\\
+\Phi_{22} & 1 & 0 & 2\rho v_{2} & 0 & -\frac{\sigma_{22}}{A_{11}} & -\frac{\sigma_{22}}{A_{12}} & -\frac{\sigma_{22}}{A_{13}} & -\frac{\sigma_{22}}{A_{21}} & -\frac{\sigma_{22}}{A_{22}} & -\frac{\sigma_{22}}{A_{23}} & -\frac{\sigma_{22}}{A_{31}} & -\frac{\sigma_{22}}{A_{32}} & -\frac{\sigma_{22}}{A_{33}} & 0 & 0 & 0\\
+\Phi_{23} & 0 & 0 & \rho v_{3} & \rho v_{2} & -\frac{\sigma_{23}}{A_{11}} & -\frac{\sigma_{23}}{A_{12}} & -\frac{\sigma_{23}}{A_{13}} & -\frac{\sigma_{23}}{A_{21}} & -\frac{\sigma_{23}}{A_{22}} & -\frac{\sigma_{23}}{A_{23}} & -\frac{\sigma_{23}}{A_{31}} & -\frac{\sigma_{23}}{A_{32}} & -\frac{\sigma_{23}}{A_{33}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+v_{2}J_{1} & 0 & 0 & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2} & 0 & 0\\
+v_{2}J_{2}+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2} & 0\\
+v_{2}J_{3} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
+\begin_inset Float figure
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+
+\size small
+\begin_inset Formula 
+\[
+\frac{\partial\boldsymbol{F_{3}}}{\partial\boldsymbol{P}}=\left(\begin{array}{ccccccccccccccccc}
+v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\Delta_{3} & \Pi_{3} & \Psi_{11} & \Psi_{12} & \left(\Psi_{13}+\rho E+p\right) & \Omega_{11}^{3} & \Omega_{12}^{3} & \Omega_{13}^{3} & \Omega_{21}^{3} & \Omega_{22}^{3} & \Omega_{23}^{3} & \Omega_{31}^{3} & \Omega_{32}^{3} & \Omega_{33}^{3} & \rho v_{3}H_{1} & \rho v_{3}H_{2} & \left(\rho v_{3}H_{3}+\alpha^{2}T\right)\\
+\Phi_{31} & 0 & \rho v_{3} & 0 & \rho v_{1} & -\frac{\sigma_{31}}{A_{11}} & -\frac{\sigma_{31}}{A_{12}} & -\frac{\sigma_{31}}{A_{13}} & -\frac{\sigma_{31}}{A_{21}} & -\frac{\sigma_{31}}{A_{22}} & -\frac{\sigma_{31}}{A_{23}} & -\frac{\sigma_{31}}{A_{31}} & -\frac{\sigma_{31}}{A_{32}} & -\frac{\sigma_{31}}{A_{33}} & 0 & 0 & 0\\
+\Phi_{32} & 0 & 0 & \rho v_{3} & \rho v_{2} & -\frac{\sigma_{32}}{A_{11}} & -\frac{\sigma_{32}}{A_{12}} & -\frac{\sigma_{32}}{A_{13}} & -\frac{\sigma_{32}}{A_{21}} & -\frac{\sigma_{32}}{A_{22}} & -\frac{\sigma_{32}}{A_{23}} & -\frac{\sigma_{32}}{A_{31}} & -\frac{\sigma_{32}}{A_{32}} & -\frac{\sigma_{32}}{A_{33}} & 0 & 0 & 0\\
+\Phi_{33} & 1 & 0 & 0 & 2\rho v_{3} & -\frac{\sigma_{33}}{A_{11}} & -\frac{\sigma_{33}}{A_{12}} & -\frac{\sigma_{33}}{A_{13}} & -\frac{\sigma_{33}}{A_{21}} & -\frac{\sigma_{33}}{A_{22}} & -\frac{\sigma_{33}}{A_{23}} & -\frac{\sigma_{33}}{A_{31}} & -\frac{\sigma_{33}}{A_{32}} & -\frac{\sigma_{33}}{A_{33}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & v_{2} & v_{3} & 0 & 0 & 0\\
+v_{3}J_{1} & 0 & 0 & 0 & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3} & 0 & 0\\
+v_{3}J_{2} & 0 & 0 & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3} & 0\\
+v_{3}J_{3}+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Jacobian of Distortion ODEs
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Jacobian-of-Distortion-ODEs"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Jacobian of the source function is used to speed up numerical integration
+ of the ODE.
+ It is derived thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\dev\left(G\right)_{ij}}{\partial A_{mn}}=\delta_{in}A_{mj}+\delta_{jn}A_{mi}-\frac{2}{3}\delta_{ij}A_{mn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\frac{\partial A_{it}}{\partial A_{mn}}\dev\left(G\right)_{tj}+A_{it}\frac{\partial\dev\left(G\right)_{tj}}{\partial A_{mn}}\\
+ & =\delta_{im}\delta_{tn}\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)+A_{it}\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)\nonumber \\
+ & =\delta_{im}A_{kn}A_{kj}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}+A_{in}A_{mj}+\delta_{jn}A_{ik}A_{mk}-\frac{2}{3}A_{ij}A_{mn}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+J_{A} & \equiv\frac{-3}{\tau_{1}}\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}}\\
+ & =\frac{-3}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\frac{5}{3}\left(A\dev\left(G\right)\right)_{ij}A_{mn}^{-T}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)\nonumber \\
+ & =\frac{1}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(-5\left(A\dev\left(G\right)\right)\otimes A^{-T}+2A\otimes A-3\left(A\otimes A\right)^{1,3}+\left\Vert A\right\Vert _{F}^{2}\left(I\otimes I\right)^{2,3}-3\left(G^{'}\otimes I+I\otimes G\right)^{2,3}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $G^{'}=AA^{T}$
+\end_inset
+
+ and 
+\begin_inset Formula $X^{a,b}$
+\end_inset
+
+ refers to tensor 
+\begin_inset Formula $X$
+\end_inset
+
+ with indices 
+\begin_inset Formula $a,b$
+\end_inset
+
+ transposed.
+\end_layout
+
+\begin_layout Subsection*
+Jacobian of Thermal Impulse ODEs
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Jacobian-of-Thermal-Impulse-ODEs"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Thermal-Impulse-ODEs"
+
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dJ_{i}}{dt}=\frac{J_{i}}{2}\left(-a+b\left(J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+a & =\frac{2\rho_{0}}{\tau_{2}T_{0}\rho c_{v}}\left(E-E_{2A}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)\right)\\
+b & =\frac{\rho_{0}\alpha^{2}}{\tau_{2}T_{0}\rho c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the Jacobian of the thermal impulse ODEs is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{ccc}
+\frac{b}{2}\left(3J_{1}^{2}+J_{2}^{2}+J_{3}^{2}\right)-\frac{a}{2} & bJ_{1}J_{2} & bJ_{1}J_{3}\\
+bJ_{1}J_{2} & \frac{b}{2}\left(J_{1}^{2}+3J_{2}^{2}+J_{3}^{2}\right)-\frac{a}{2} & bJ_{2}J_{3}\\
+bJ_{1}J_{3} & bJ_{2}J_{3} & \frac{b}{2}\left(J_{1}^{2}+J_{2}^{2}+3J_{3}^{2}\right)-\frac{a}{2}
+\end{array}\right)
+\end{equation}
 
 \end_inset
 

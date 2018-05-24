@@ -92,21 +92,17 @@ name "sec:Ghost-Fluid-Methods"
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Level Set Methods
 \end_layout
 
 \begin_layout Standard
 Given a function 
-\begin_inset Formula $f$
-\end_inset
-
- on 
-\begin_inset Formula $\mathbb{R}$
+\begin_inset Formula $\phi:\mathbb{R}^{n}\rightarrow\mathbb{R}$
 \end_inset
 
 , the level set of 
-\begin_inset Formula $f$
+\begin_inset Formula $\phi$
 \end_inset
 
  at level 
@@ -119,7 +115,7 @@ Given a function
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\Gamma_{c}=\left\{ x:f\left(x\right)=c\right\} 
+\Gamma_{c}=\left\{ \boldsymbol{x}:\phi\left(\boldsymbol{x}\right)=c\right\} 
 \end{equation}
 
 \end_inset
@@ -129,11 +125,11 @@ Given a function
 
 \begin_layout Standard
 Given velocity field 
-\begin_inset Formula $v:\mathbb{R}\rightarrow\mathbb{R}$
+\begin_inset Formula $\boldsymbol{v}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{n}$
 \end_inset
 
 , 
-\begin_inset Formula $f$
+\begin_inset Formula $\phi$
 \end_inset
 
  is advected according to the level set equation 
@@ -149,7 +145,7 @@ key "Osher2002"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{\partial f}{\partial t}=v\left|\frac{\partial f}{\partial x}\right|\label{eq:LevelSetEqn}
+\frac{\partial\phi}{\partial t}=\boldsymbol{v}\cdot\nabla\phi\label{eq:LevelSetEqn}
 \end{equation}
 
 \end_inset
@@ -204,7 +200,7 @@ reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
  function.
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 The Original Ghost Fluid Method
 \end_layout
 
@@ -620,7 +616,7 @@ The qualitative structure of the solution to the Riemann Problem, showing
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 The Riemann Ghost Fluid Method
 \end_layout
 
@@ -865,7 +861,7 @@ name "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Solving the Riemann Problem
 \end_layout
 
@@ -1501,7 +1497,7 @@ It may be necessary to iterate this process a few times to ensure convergence
  to star states for which the boundary conditions hold.
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Linear Conditions
 \end_layout
 
@@ -1779,7 +1775,7 @@ end{subequations}
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 The Case without Heat Conduction
 \end_layout
 
@@ -2033,476 +2029,7 @@ The GPR-RGFM is now assessed.
  heat conduction across interfaces.
 \end_layout
 
-\begin_layout Subsection*
-Water-Water Interface
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:Water-Water Interface"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This problem tests the GPR-RGFM for the stiffened EOS.
- The test comprises two volumes of water with different pressures, meeting
- at 
-\begin_inset Formula $x=0.5$
-\end_inset
-
- (as found in Ghaisas et al.
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Ghaisas2016"
-
-\end_inset
-
-, Test III.B.2).
- The initial conditions are found in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "tab:WaterWater"
-
-\end_inset
-
-.
- Realistic values are chosen for the material parameters: 
-\begin_inset Formula $\gamma=4.4$
-\end_inset
-
-, 
-\begin_inset Formula $p_{\infty}=6\times10^{8}$
-\end_inset
-
-, 
-\begin_inset Formula $c_{v}=950$
-\end_inset
-
-, 
-\begin_inset Formula $\mu=10^{-3}$
-\end_inset
-
-, 
-\begin_inset Formula $P_{r}=7$
-\end_inset
-
-, 
-\begin_inset Formula $\rho_{0}=1000$
-\end_inset
-
-, 
-\begin_inset Formula $T_{0}=300$
-\end_inset
-
-.
- 
-\begin_inset Formula $c_{s}$
-\end_inset
-
- and 
-\begin_inset Formula $\alpha$
-\end_inset
-
- are taken to be 55 and 500, respectively.
- The final time is 
-\begin_inset Formula $t=1.5\times10^{-4}$
-\end_inset
-
- and all simulations used 200 cells.
-\end_layout
-
-\begin_layout Standard
-The results in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:Water-Water-Test"
-
-\end_inset
-
- without the GPR-RGFM match those in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Ghaisas2016"
-
-\end_inset
-
- well.
- The sharp contact discontinuity is preserved by the GPR-RGFM.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\begin_inset Tabular
-<lyxtabular version="3" rows="3" columns="6">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\rho$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-\begin_inset Formula $\boldsymbol{v}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $A$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x<0.5$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $1000$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $7\times10^{8}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $I_{3}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x\geq0.5$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $1000$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $10^{8}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $I_{3}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "tab:WaterWater"
-
-\end_inset
-
-Initial conditions for the water-water interface test
-\end_layout
-
-\end_inset
-
-
-\begin_inset VSpace medskip
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/water_water/non_gfm/r.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/water_water/gfm/r.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/water_water/non_gfm/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/water_water/gfm/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/water_water/non_gfm/v.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/water_water/gfm/v.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Water-Water-Test"
-
-\end_inset
-
-Density, pressure, and velocity for the water-water interface test without
- GPR-RGFM (left) / with GPR-RGFM (right)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection*
+\begin_layout Subsection
 Helium Bubble
 \begin_inset CommandInset label
 LatexCommand label
@@ -3159,7 +2686,309 @@ Density, pressure, and velocity for the helium bubble test with GPR-RGFM
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
+Water-Air Shock Tube
+\end_layout
+
+\begin_layout Standard
+This test comprises an interface between water and air, with initial data
+ taken from Chinnayya et al.
+ [REF].
+ Due to the large difference in state variables are qualitative characteristics
+ of the two fluids, this is an example of a test with which the original
+ GFM does not perform well.
+ The results using the GPR-RGFM are shown, along with the exact solution
+ to the Euler equations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0\leq x<0.7$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1000$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{9}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.7\leq x\leq1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{50}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:WaterAirShockTube"
+
+\end_inset
+
+Initial conditions for the water-air shock tube test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Copper-PBX Impact
+\end_layout
+
+\begin_layout Subsection
+Aluminium in Vacuum
+\end_layout
+
+\begin_layout Subsection
 Heat Conduction in a Gas
 \begin_inset CommandInset label
 LatexCommand label
@@ -3640,7 +3469,7 @@ Temperature, heat flux, and density for the intermaterial heat conduction
 
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Intermaterial Heating-Induced Acoustic Wave
 \begin_inset CommandInset label
 LatexCommand label

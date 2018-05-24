@@ -5,7 +5,7 @@
 \save_transient_properties true
 \origin unavailable
 \textclass PhDThesisLyX
-\options a4paper,titlepage,12pt,numbered
+\options a4paper,titlepage
 \use_default_options false
 \maintain_unincluded_children false
 \language english
@@ -44,18 +44,13 @@
 \use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
-\biblio_style plain
+\biblio_style plainnat
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
 \justification true
 \use_refstyle 0
-\branch ChildOnly
-\selected 1
-\filename_suffix 0
-\color #faf0e6
-\end_branch
 \index Index
 \shortcut idx
 \color #008000
@@ -78,51 +73,27 @@
 \begin_body
 
 \begin_layout Chapter
-Impact-Induced Detonation in an Elasto-Plastic Confiner
+Material Parameters
 \end_layout
 
 \begin_layout Section
-Aluminium Plate Impact
+Ideal and Stiffened Gases
 \end_layout
 
 \begin_layout Section
-Inert Detasheet Confined by Steel
+Shock Mie-Gruneisen Materials
 \end_layout
 
 \begin_layout Section
-Reactive C4 Confined by Steel
+Cochran-Chan & JWL Materials
 \end_layout
 
 \begin_layout Section
-Reactive C4 Confined by Steel with Air Gap
+Godunov-Romenski Materials
 \end_layout
 
 \begin_layout Section
-Rod Impact on Copper Vessel
-\end_layout
-
-\begin_layout Section
-Rod Impact on Car Fuel Tank
-\end_layout
-
-\begin_layout Standard
-\begin_inset Branch ChildOnly
-status open
-
-\begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-bibfiles "../../../refs/phd_refs"
-options "plain"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+Combustible Materials
 \end_layout
 
 \end_body

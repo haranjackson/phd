@@ -3764,7 +3764,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/system_path.png
+	filename ../Figures/C2/system_path.png
 	lyxscale 20
 	width 50text%
 
@@ -4647,7 +4647,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Distortion ODEs/A11_A22_A33.png
+	filename ../Figures/C2/Distortion ODEs/A11_A22_A33.png
 	lyxscale 25
 	width 50text%
 
@@ -4655,7 +4655,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Distortion ODEs/A12_A13_A23_A21_A31_A32.png
+	filename ../Figures/C2/Distortion ODEs/A12_A13_A23_A21_A31_A32.png
 	lyxscale 25
 	width 50text%
 
@@ -4698,7 +4698,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Distortion ODEs/singular_values.png
+	filename ../Figures/C2/Distortion ODEs/singular_values.png
 	lyxscale 25
 	width 50text%
 
@@ -4706,7 +4706,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Distortion ODEs/energy.png
+	filename ../Figures/C2/Distortion ODEs/energy.png
 	lyxscale 25
 	width 50text%
 
@@ -4750,7 +4750,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Distortion ODEs/s11_s22_s33.png
+	filename ../Figures/C2/Distortion ODEs/s11_s22_s33.png
 	lyxscale 25
 	width 50text%
 
@@ -4758,7 +4758,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Distortion ODEs/s12_s13_s23.png
+	filename ../Figures/C2/Distortion ODEs/s12_s13_s23.png
 	lyxscale 25
 	width 50text%
 
@@ -5277,7 +5277,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Stokes First Problem/mu=1e-2/ader-weno.png
+	filename ../Figures/C2/Stokes First Problem/mu=1e-2/ader-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5285,28 +5285,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Stokes First Problem/mu=1e-2/split-weno.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Stokes First Problem/mu=1e-3/ader-weno.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Stokes First Problem/mu=1e-3/split-weno.png
+	filename ../Figures/C2/Stokes First Problem/mu=1e-2/split-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5319,7 +5298,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Stokes First Problem/mu=1e-4/ader-weno.png
+	filename ../Figures/C2/Stokes First Problem/mu=1e-3/ader-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5327,7 +5306,28 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Stokes First Problem/mu=1e-4/split-weno.png
+	filename ../Figures/C2/Stokes First Problem/mu=1e-3/split-weno.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Stokes First Problem/mu=1e-4/ader-weno.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Stokes First Problem/mu=1e-4/split-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5698,7 +5698,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/density_ader-weno.png
+	filename ../Figures/C2/Viscous Shock/density_ader-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5706,28 +5706,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/density_split-weno.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/velocity_ader-weno.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/velocity_split-weno.png
+	filename ../Figures/C2/Viscous Shock/density_split-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5740,7 +5719,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/pressure_ader-weno.png
+	filename ../Figures/C2/Viscous Shock/velocity_ader-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5748,7 +5727,28 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/pressure_split-weno.png
+	filename ../Figures/C2/Viscous Shock/velocity_split-weno.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Viscous Shock/pressure_ader-weno.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Viscous Shock/pressure_split-weno.png
 	lyxscale 25
 	width 50text%
 
@@ -5793,7 +5793,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/sigma.png
+	filename ../Figures/C2/Viscous Shock/sigma.png
 	lyxscale 25
 	width 50text%
 
@@ -5801,7 +5801,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Viscous Shock/heat_flux.png
+	filename ../Figures/C2/Viscous Shock/heat_flux.png
 	lyxscale 25
 	width 50text%
 
@@ -6222,7 +6222,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Heat Conduction/temperature.png
+	filename ../Figures/C2/Heat Conduction/temperature.png
 	lyxscale 25
 	width 50text%
 
@@ -6230,7 +6230,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Published/A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/Heat Conduction/heat_flux.png
+	filename ../Figures/C2/Heat Conduction/heat_flux.png
 	lyxscale 25
 	width 50text%
 
