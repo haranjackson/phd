@@ -3,7 +3,7 @@ from numpy import array
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
 from gpr.tests.one import fluids, solids, multi as multi1, toro
-from gpr.tests.two import validation, louisa, multi as multi2
+from gpr.tests.two import validation, impact, multi as multi2
 from gpr.misc.plot import *
 
 from solver.gfm import MultiSolver
@@ -11,18 +11,18 @@ from solver.gfm import MultiSolver
 
 # u, MPs, tf, dX = fluids.first_stokes_problem_IC()
 # u, MPs, tf, dX = multi1.heat_conduction_multi_IC()
-# u, MPs, tf, dX = multi1.helium_bubble_IC()
-# u, MPs, tf, dX = multi1.air_copper_IC()
 # u, MPs, tf, dX = multi1.water_air_IC()
+# u, MPs, tf, dX = multi1.helium_bubble_IC()
+# u, MPs, tf, dX = multi1.pbx_copper_IC()
 # u, MPs, tf, dX = multi1.aluminium_vacuum_IC()
 # u, MPs, tf, dX = solids.piston_IC()
-u, MPs, tf, dX = louisa.aluminium_plate_impact_IC()
+u, MPs, tf, dX = impact.aluminium_plates_IC()
 
 BC = 'transitive'
 # BC = solids.piston_BC
 
 
-CPP_LVL = 2
+CPP_LVL = 1
 N = 2
 CFL = 0.1
 SPLIT = False
