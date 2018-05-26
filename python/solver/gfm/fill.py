@@ -108,3 +108,6 @@ def fill_ghost_cells(grids, masks, u, nmat, N, dX, MPs, dt):
             masks[mat] = logical_or((φ <= 0), (intMask == 1))
 
             grid.reshape([ncells, -1])[:, - (nmat - 1):] = u.reshape([ncells, -1])[:, - (nmat - 1):]
+
+        else:
+            masks[mat] *= False

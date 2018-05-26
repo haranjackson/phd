@@ -11,52 +11,34 @@
 #include "steppers.h"
 #include <iostream>
 
-void make_u_inner(MatMap avMap, int idx, std::vector<Par> &MPs, Vecr u,
-                  std::vector<Vec> &grids) {
-  int ind = get_material_index(avMap.row(idx));
-  if (MPs[ind].EOS > -1) {
-    u.segment<V>(idx * V) = grids[ind].segment<V>(idx * V);
-  } else {
-    u.segment<V - LSET>(idx * V).setZero();
-    u.segment<LSET>(idx * V + V - LSET) =
-        avMap.row(idx).segment<LSET>(V - LSET);
-  }
-}
-
-void make_u(Vecr u, std::vector<Vec> &grids, iVecr nX, std::vector<Par> &MPs) {
+void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
+            std::vector<Par> &MPs) {
   // Builds u across the domain, from the different material grids
 
-  int ndim = nX.size();
   int ncell = u.size() / V;
   int nmat = grids.size();
+  Vec matSum(LSET);
 
-  Vec av = Vec::Zero(u.size());
-  double count = 0.;
-  for (int mat = 0; mat < nmat; mat++)
-    if (MPs[mat].EOS > -1) {
-      av += grids[mat];
-      count += 1.;
-    }
-  av /= count;
+  for (int i = 0; i < ncell; i++) {
 
-  MatMap avMap(av.data(), ncell, V, OuterStride(V));
-
-  int nx = nX(0);
-  switch (ndim) {
-
-  case 1:
-    for (int idx = 0; idx < nx; idx++)
-      make_u_inner(avMap, idx, MPs, u, grids);
-    break;
-
-  case 2:
-    int ny = nX(1);
-    for (int i = 0; i < nx; i++)
-      for (int j = 0; j < ny; j++) {
-        int idx = i * ny + j;
-        make_u_inner(avMap, idx, MPs, u, grids);
+    // take average value of level sets in all cells that have been updated.
+    // if cell hasn't been updated, keep value from previous timestep
+    matSum.setZero(LSET);
+    double matCnt = 0.;
+    for (int mat = 0; mat < nmat; mat++) {
+      if (masks[mat](i)) {
+        matSum += grids[mat].segment<LSET>(i * V + V - LSET);
+        matCnt += 1.;
       }
-    break;
+    }
+    if (matCnt > 0.)
+      u.segment<LSET>(i * V + V - LSET) = matSum / matCnt;
+
+    int mi = get_material_index(u.segment<V>(i * V));
+    if (MPs[mi].EOS > -1)
+      u.segment<V - LSET>(i * V) = grids[mi].segment<V - LSET>(i * V);
+    else
+      u.segment<V - LSET>(i * V).setZero();
   }
 }
 
@@ -138,7 +120,7 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
       }
     }
     if (LSET > 0)
-      make_u(u, grids, nX, MPs);
+      make_u(u, grids, masks, MPs);
     else
       u = grids[0];
 

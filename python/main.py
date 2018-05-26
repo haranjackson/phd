@@ -9,37 +9,38 @@ from gpr.misc.plot import *
 from solver.gfm import MultiSolver
 
 
-# u, MPs, tf, dX = fluids.first_stokes_problem_IC()
-# u, MPs, tf, dX = multi1.heat_conduction_multi_IC()
-# u, MPs, tf, dX = multi1.water_air_IC()
-# u, MPs, tf, dX = multi1.helium_bubble_IC()
-# u, MPs, tf, dX = multi1.pbx_copper_IC()
-# u, MPs, tf, dX = multi1.aluminium_vacuum_IC()
-# u, MPs, tf, dX = solids.piston_IC()
-u, MPs, tf, dX = impact.aluminium_plates_IC()
+# u0, MPs, tf, dX = fluids.first_stokes_problem_IC()
+# u0, MPs, tf, dX = multi1.heat_conduction_multi_IC()
+# u0, MPs, tf, dX = multi1.water_air_IC()
+# u0, MPs, tf, dX = multi1.helium_bubble_IC()
+# u0, MPs, tf, dX = multi1.pbx_copper_IC()
+# u0, MPs, tf, dX = multi1.aluminium_vacuum_IC()
+# u0, MPs, tf, dX = solids.piston_IC()
+u0, MPs, tf, dX = impact.aluminium_plates_IC()
 
-BC = 'transitive'
-# BC = solids.piston_BC
+bcs = 'transitive'
+# bcs = solids.piston_BC
 
 
-CPP_LVL = 1
+cpp_level = 1
 N = 2
-CFL = 0.1
+cfl = 0.2
 SPLIT = False
-SOLVER = 'osher'
+SOLVER = 'rusanov'
 
 
-if CPP_LVL > 0:
+if cpp_level > 0:
     import GPRpy
     from gpr.opts import NV
     assert(GPRpy.NV() == NV)
-    if CPP_LVL == 1:
+    if cpp_level == 1:
         assert(GPRpy.N() == N)
 
 
-nvar = u.shape[-1]
-ndim = u.ndim - 1
+nvar = u0.shape[-1]
+ndim = u0.ndim - 1
 dX = array(dX)
+verbose = True
 
 
 grids = []
@@ -52,5 +53,5 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      ncore=1, split=SPLIT, ode_solver=None,
                      riemann_solver=SOLVER)
 
-solver.solve(u, tf, dX, cfl=CFL, boundary_conditions=BC, verbose=True,
-             callback=callback, cpp_level=CPP_LVL)
+solver.solve(u0, tf, dX, cfl=cfl, bcs=bcs, verbose=verbose, callback=callback,
+             cpp_level=cpp_level)

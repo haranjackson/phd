@@ -70,7 +70,7 @@ class SolverPlus(Solver):
         if self.count <= 5:
             dt /= 5
 
-        return min(self.final_time - self.t, dt)
+        return min(self.tf - self.t, dt)
 
 
     def split_stepper(self, dt, maskBC):
@@ -130,17 +130,16 @@ class SolverPlus(Solver):
             else:
                 self.u += du * expand_dims(mask, -1)
 
-    def solve(self, initial_grid, final_time, dX, cfl=0.9,
-              boundary_conditions='transitive', verbose=False, callback=None,
+    def solve(self, u0, tf, dX, cfl=0.9,
+              bcs='transitive', verbose=False, callback=None,
               cpp_level=0):
 
         self.cpp_level = cpp_level
 
         if cpp_level == 2:
-            self.u = solve_full_cpp(self, initial_grid, final_time, dX, cfl)
+            self.u = solve_full_cpp(self, u0, tf, dX, cfl)
             return self.u
 
         else:
-            return Solver.solve(self, initial_grid, final_time, dX, cfl=cfl,
-                                boundary_conditions=boundary_conditions,
+            return Solver.solve(self, u0, tf, dX, cfl=cfl, bcs=bcs,
                                 verbose=verbose, callback=callback)

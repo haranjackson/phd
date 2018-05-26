@@ -277,6 +277,7 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
       MatMap gridMap(grids[mat].data(), ncell, V, OuterStride(V));
       gridMap.block(0, V - LSET, ncell, LSET) =
           uMap.block(0, V - LSET, ncell, LSET);
-    }
+    } else
+      masks[mat].setZero(ncell);
   }
 }
