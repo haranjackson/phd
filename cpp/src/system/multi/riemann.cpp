@@ -14,9 +14,18 @@
 #include "riemann.h"
 #include "rotations.h"
 
-bool STICK = true;
+bool STICK = false;
 bool RELAXATION = true;
-double STAR_TOL = 1e-6;
+double STAR_TOL = 1e-8;
+
+double q_dims(Par &MP) {
+  // Returns characteristic dimensions of heat flux
+  double α2 = MP.cα2;
+  double ρ0 = MP.ρ0;
+  double T0 = MP.T0;
+  double cv = MP.cv;
+  return α2 / ρ0 * T0 * sqrt(T0 / cv);
+}
 
 bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
@@ -25,20 +34,44 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
   bool cond;
 
   if (MPR.EOS > -1) {
+    double ρ0 = std::min(MPL.ρ0, MPR.ρ0);
+    double B0 = std::min(MPL.B0, MPR.B0);
+
     Vec3 ΣR_ = Sigma(QR_, MPR, 0);
-    cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() < STAR_TOL;
+    double vL_0 = QL_(2) / QL_(0);
+    double vR_0 = QR_(2) / QR_(0);
+
+    cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (B0 * ρ0) < STAR_TOL;
+    cond &= abs(vL_0 - vR_0) / sqrt(B0) < STAR_TOL;
+
   } else {
-    cond = ΣL_.cwiseAbs().maxCoeff() / (MPL.B0 * MPL.ρ0) < STAR_TOL;
+    double ρ0 = MPL.ρ0;
+    double B0 = MPL.B0;
+
+    cond = ΣL_.cwiseAbs().maxCoeff() / (B0 * ρ0) < STAR_TOL;
   }
 
   if (THERMAL) {
-    // TODO: sort this out
+
     double TL_ = temperature(QL_, MPL);
+    Vec3 JL_ = get_ρJ(QL_) / QL_(0);
+    Vec3 qL_ = heat_flux(TL_, JL_, MPL);
+
     if (MPR.EOS > -1) {
+      double q0 = std::min(q_dims(MPL), q_dims(MPR));
+      double T0 = std::min(MPL.T0, MPR.T0);
+
       double TR_ = temperature(QR_, MPR);
-      cond = cond && (std::abs(TL_ - TR_) < STAR_TOL);
+      Vec3 JR_ = get_ρJ(QR_) / QR_(0);
+      Vec3 qR_ = heat_flux(TR_, JR_, MPR);
+
+      cond &= std::abs(qL_(0) - qR_(0)) / q0 < STAR_TOL;
+      cond &= std::abs(TL_ - TR_) / T0 < STAR_TOL;
+
     } else {
-      cond = cond && (std::abs(TL_) < STAR_TOL);
+      double q0 = q_dims(MPL);
+
+      cond &= std::abs(qL_(0)) / q0 < STAR_TOL;
     }
   }
   return cond;

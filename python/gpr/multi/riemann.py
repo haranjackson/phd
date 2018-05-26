@@ -1,4 +1,4 @@
-from numpy import amax, array, column_stack, concatenate, dot, eye, zeros
+from numpy import amax, array, column_stack, concatenate, dot, eye, sqrt, zeros
 from scipy.linalg import inv, solve
 
 from gpr.misc.functions import reorder
@@ -14,10 +14,20 @@ from gpr.vars.wavespeeds import c_0
 
 
 RELAXATION = True
-STAR_TOL = 1e-6
+STAR_TOL = 1e-8
 
 
 n1, n2, n3, n4, n5 = get_indexes()
+
+
+def q_dims(MP):
+    """ Returns characteristic dimensions of heat flux
+    """
+    α2 = MP.cα2
+    ρ0 = MP.ρ0
+    T0 = MP.T0
+    cv = MP.cv
+    return α2 / ρ0 * sqrt(T0**3 / cv)
 
 
 def check_star_convergence(QL_, QR_, MPL, MPR):
@@ -26,15 +36,29 @@ def check_star_convergence(QL_, QR_, MPL, MPR):
 
     if MPR.EOS > -1:  # not a vacuum
         PR_ = State(QR_, MPR)
-        cond = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) < STAR_TOL
+
+        ρ0 = min(MPL.ρ0, MPR.ρ0)
+        B0 = min(MPL.B0, MPR.B0)
+
+        cond = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) / (B0 * ρ0) < STAR_TOL
+        cond &= abs(PL_.v[0] - PR_.v[0]) / sqrt(B0) < STAR_TOL
     else:
-        cond = amax(abs(PL_.Σ()[0])) / (MPL.B0 * MPL.ρ0) < STAR_TOL
+        ρ0 = MPL.ρ0
+        B0 = MPL.B0
+
+        cond = amax(abs(PL_.Σ()[0])) / (B0 * ρ0) < STAR_TOL
 
     if THERMAL:
         if MPR.EOS > -1:
-            cond &= abs(PL_.T() - PR_.T()) < STAR_TOL
+            q0 = min(q_dims(MPL), q_dims(MPR))
+            T0 = min(MPL.T0, MPR.T0)
+
+            cond &= abs(PL_.q()[0] - PR_.q()[0]) / q0 < STAR_TOL
+            cond &= abs(PL_.T() - PR_.T()) / T0 < STAR_TOL
         else:
-            cond &= abs(PL_.T()) < STAR_TOL
+            q0 = q_dims(MPL)
+
+            cond &= abs(PL_.q()[0]) / q0 < STAR_TOL
 
     return cond
 
@@ -184,7 +208,7 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
     return QL_, QR_
 
 
-def star_states(QL, QR, MPL, MPR, dt, n, interfaceType='stick'):
+def star_states(QL, QR, MPL, MPR, dt, n, interfaceType='slip'):
 
     QL_ = QL[:n5].copy()
     QR_ = QR[:n5].copy()
