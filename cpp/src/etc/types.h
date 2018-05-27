@@ -6,6 +6,7 @@
 //#define EIGEN_USE_MKL_ALL
 //#define EIGEN_MKL_DIRECT_CALL
 
+#define EIGEN_NO_MALLOC
 
 #define M_PI 3.14159265358979323846
 

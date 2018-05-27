@@ -1,6 +1,6 @@
 project(GPRcpp)
 SET(BINDINGS_NAME "GPRpy")
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5.1)
 
 SET(PYTHON_DIR "~/miniconda3/include/python3.6m")
 SET(MKLROOT "/opt/intel/mkl")
