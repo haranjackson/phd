@@ -42,7 +42,7 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
     double vR_0 = QR_(2) / QR_(0);
 
     cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (B0 * ρ0) < STAR_TOL;
-    cond &= abs(vL_0 - vR_0) / sqrt(B0) < STAR_TOL;
+    cond &= std::abs(vL_0 - vR_0) / sqrt(B0) < STAR_TOL;
 
   } else {
     double ρ0 = MPL.ρ0;
