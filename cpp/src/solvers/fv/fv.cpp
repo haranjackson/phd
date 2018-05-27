@@ -156,8 +156,6 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 
   int NNV = N * N * V;
 
-#pragma omp parallel for collapse(2) private(q0, q1, f, b, u0, u1)             \
-    num_threads(4)
   for (int i = 0; i < nx + 1; i++)
     for (int j = 0; j < ny + 1; j++) {
 

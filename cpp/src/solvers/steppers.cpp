@@ -2,6 +2,7 @@
 #include "../etc/grid.h"
 #include "dg/dg.h"
 #include "fv/fv.h"
+#include "omp.h"
 #include "split/homogeneous.h"
 #include "split/ode.h"
 #include "weno/weno.h"
@@ -18,6 +19,32 @@ void ader_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX, bool STIFF,
   predictor(qh, wh, dt, dX, STIFF, false, MP, mask);
 
   fv_launcher(u, qh, nX, dt, dX, true, true, FLUX, MP, mask);
+}
+
+void ader_stepper_para(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
+                       bool STIFF, int FLUX, Par &MP, bVecr mask) {
+  int nx = nX(0);
+  int uRowSize = u.size() / nx;
+  int ubRowSize = ub.size() / (nx + 2 * N);
+  int maskRowSize = mask.size() / (nx + 2);
+
+#pragma omp parallel
+  {
+    int nthreads = omp_get_num_threads();
+    int ithread = omp_get_thread_num();
+
+    int start = ithread * nx / nthreads;
+    int finish = (ithread + 1) * nx / nthreads;
+
+    iVec nX0 = nX;
+    nX0(0) = finish - start;
+
+    ader_stepper(
+        u.segment(start * uRowSize, (finish - start) * uRowSize),
+        ub.segment(start * ubRowSize, (finish + 2 * N - start) * ubRowSize),
+        nX0, dt, dX, STIFF, FLUX, MP,
+        mask.segment(start * maskRowSize, (finish + 2 - start) * maskRowSize));
+  }
 }
 
 void split_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,

@@ -164,6 +164,7 @@ PYBIND11_MODULE(GPRpy, m) {
 
   m_solvers.def("extended_dimensions", &extended_dimensions);
   m_solvers.def("ader_stepper", &ader_stepper);
+  m_solvers.def("ader_stepper_para", &ader_stepper_para);
   m_solvers.def("split_stepper", &split_stepper);
   m_solvers.def("iterator", &iterator);
   m_solvers.def("make_u", &make_u);

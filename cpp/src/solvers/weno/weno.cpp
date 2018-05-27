@@ -83,7 +83,6 @@ void weno2(Vecr wh, Vecr ub, int nx, int ny, int nz) {
   Vec ux(nx * (ny + 2 * (N - 1)) * nz * N * V);
   weno1(ux, ub, nx, ny + 2 * (N - 1), nz);
 
-#pragma omp parallel for
   for (int i = 0; i < nx; i++) {
     int indi = i * ny * nz * N;
     int indii = i * (ny + 2 * (N - 1)) * nz * N;

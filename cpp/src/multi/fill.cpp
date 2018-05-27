@@ -115,13 +115,14 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
                          iVecr nX) {
   int ndim = nX.size();
   int nx = nX(0);
+  Vec n(ndim);
 
   switch (ndim) {
 
   case 1:
     for (int ind = 0; ind < nx; ind++) {
       if (intMask(ind) == 1) {
-        Vec n = normal(Δφ.row(ind));
+        n = normal(Δφ.row(ind));
         iVec inds(1);
         inds << ind;
         fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n);
@@ -130,12 +131,12 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
     break;
   case 2:
     int ny = nX(1);
-#pragma omp parallel for
+#pragma omp parallel for collapse(2) private(n)
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
         int ind = i * ny + j;
         if (intMask(ind) == 1) {
-          Vec n = normal(Δφ.row(ind));
+          n = normal(Δφ.row(ind));
           iVec inds(2);
           inds << i, j;
           fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n);

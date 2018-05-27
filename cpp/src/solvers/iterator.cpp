@@ -51,18 +51,14 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
   int ndim = dX.size();
   int ncell = grids[0].size() / V;
 
-  VecV Q;
   for (int mat = 0; mat < nmat; mat++)
-    if (MPs[mat].EOS > -1) {
-
+    if (MPs[mat].EOS > -1)
       for (int ind = 0; ind < ncell; ind++)
-        if (masks[mat](ind)) {
-
-          Q = grids[mat].segment<V>(ind * V);
+        if (masks[mat](ind))
           for (int d = 0; d < ndim; d++)
-            MAX = std::max(MAX, max_abs_eigs(Q, d, MPs[mat]) / dX(d));
-        }
-    }
+            MAX = std::max(
+                MAX, max_abs_eigs(grids[mat].segment<V>(ind * V), d, MPs[mat]) /
+                         dX(d));
 
   double dt = CFL / MAX;
 
@@ -115,8 +111,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
           split_stepper(grids[mat], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[mat],
                         maskb);
         else
-          ader_stepper(grids[mat], ub, nX, dt, dX, STIFF, FLUX, MPs[mat],
-                       maskb);
+          ader_stepper_para(grids[mat], ub, nX, dt, dX, STIFF, FLUX, MPs[mat],
+                            maskb);
       }
     }
     if (LSET > 0)

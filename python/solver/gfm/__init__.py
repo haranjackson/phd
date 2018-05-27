@@ -82,6 +82,7 @@ class MultiSolver():
                 t0 = time()
 
                 if self.nmat > 1:
+                    """
                     fill_ghost_cells(grids, masks, self.u, self.nmat, self.N,
                                      self.dX, self.MPs, dt)
                     """
@@ -92,7 +93,6 @@ class MultiSolver():
                                                  nX, self.dX, dt, self.MPs)
                     grids = [grid.reshape(self.u.shape) for grid in grids]
                     masks = [mask.reshape(self.u.shape[:-1]) for mask in masks]
-                    """
 
                 for solver, grid in zip(self.solvers, grids):
                     solver.u = grid
