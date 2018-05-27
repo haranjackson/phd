@@ -54,11 +54,13 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
   for (int mat = 0; mat < nmat; mat++)
     if (MPs[mat].EOS > -1)
       for (int ind = 0; ind < ncell; ind++)
-        if (masks[mat](ind))
+        if (masks[mat](ind)) {
+          double tmp = 0.;
           for (int d = 0; d < ndim; d++)
-            MAX = std::max(
-                MAX, max_abs_eigs(grids[mat].segment<V>(ind * V), d, MPs[mat]) /
-                         dX(d));
+            tmp += max_abs_eigs(grids[mat].segment<V>(ind * V), d, MPs[mat]) /
+                   dX(d);
+          MAX = std::max(MAX, tmp);
+        }
 
   double dt = CFL / MAX;
 

@@ -22,11 +22,11 @@ bcs = 'transitive'
 # bcs = solids.piston_BC
 
 
-cpp_level = 1
+cpp_level = 2
 N = 2
 cfl = 0.3
 SPLIT = False
-SOLVER = 'osher'
+SOLVER = 'roe'
 
 
 if cpp_level > 0:
