@@ -101,7 +101,7 @@ def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
 
 
 def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
-                  square=0):
+                  square=0, plotType='streams'):
     figure(2 + i, figsize=fig_size(square))
     NDIM = len(u.shape) - 1
 
@@ -112,7 +112,7 @@ def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
     else:
         x = u[:, :, 2] / u[:, :, 0]
         y = u[:, :, 3] / u[:, :, 0]
-        plot2d(x, 'streams', y)
+        plot2d(x, plotType, y)
 
 
 def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0,
