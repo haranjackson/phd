@@ -12,9 +12,9 @@ include_directories(include/pybind11
                     ${PYTHON_DIR})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -fPIC")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG -Ofast -fopenmp")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -DNDEBUG -march=native -fopenmp")
 SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fopenmp")
-# -march=native kills python kernel
+# -march=native seems slower sometimes
 # -ffast-math causes nans in some tests
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -I${MKLROOT}/include")

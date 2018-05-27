@@ -1,17 +1,16 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#define EIGEN_DONT_PARALLELIZE
+//#define EIGEN_DONT_PARALLELIZE
 
 //#define EIGEN_USE_MKL_ALL
 //#define EIGEN_MKL_DIRECT_CALL
 
-//#define EIGEN_DONT_VECTORIZE
-//#define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 #define M_PI 3.14159265358979323846
 
 #include "../../include/eigen3/Eigen"
+#include "../../include/eigen3/StdVector"
 #include "../options.h"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
@@ -70,5 +69,7 @@ typedef Eigen::ColPivHouseholderQR<Mat> Dec;
 typedef std::function<Vec(Vecr)> VecFunc;
 
 template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
+
+EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(MatN_N)
 
 #endif

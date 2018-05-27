@@ -9,7 +9,6 @@ MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP);
 
 void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR);
 
-std::vector<VecV> star_states(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
-                              Vecr n);
+VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt, Vecr n);
 
 #endif // RIEMANN_H
