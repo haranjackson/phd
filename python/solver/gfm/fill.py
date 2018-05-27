@@ -11,28 +11,52 @@ from solver.gfm.functions import finite_difference, normal, sign, boundary_inds,
     renormalize_levelsets, material_indicator
 
 
+def neighbors(inds, nX, ndim):
+
+    CORNERS = False  # whether to consider corners as neighbors
+
+    if ndim == 1:
+        if inds[0] > 0:
+            return [(inds[0] - 1,)]
+        else:
+            return []
+
+    elif ndim ==2:
+        ret = []
+
+        if inds[0] > 0:
+            ret.append((inds[0] -1, inds[1]))
+
+            if CORNERS:
+                if inds[1] > 0:
+                    ret.append((inds[0] - 1, inds[1] - 1))
+                if inds[1] < nX[1] - 1:
+                    ret.append((inds[0] -1, inds[1] + 1))
+
+        if inds[1] > 0:
+            ret.append((inds[0], inds[1] - 1))
+
+        return ret
+
+
 def find_interface_cells(φ):
     """ Finds the cells lying on the interface of material i of m
         intMask = -1 on the inside and intMask = 1 on the outside
     """
     shape = φ.shape
-    NDIM = φ.ndim
+    ndim = φ.ndim
     intMask = zeros(shape)
 
     for indsL in product(*[range(s) for s in shape]):
 
-        for d in range(NDIM):
+        for indsR in neighbors(indsL, shape, ndim):
 
-            if indsL[d] < shape[d] - 1:
+            φL = φ[indsL]
+            φR = φ[indsR]
 
-                indsR = indsL[:d] + (indsL[d] + 1,) + indsL[d + 1:]
-
-                φL = φ[indsL]
-                φR = φ[indsR]
-
-                if φL * φR <= 0:
-                    intMask[indsL] = sign(φL)
-                    intMask[indsR] = sign(φR)
+            if φL * φR <= 0:
+                intMask[indsL] = sign(φL)
+                intMask[indsR] = sign(φR)
 
     return intMask
 
@@ -107,7 +131,8 @@ def fill_ghost_cells(grids, masks, u, nmat, N, dX, MPs, dt):
 
             masks[mat] = logical_or((φ <= 0), (intMask == 1))
 
-            grid.reshape([ncells, -1])[:, - (nmat - 1):] = u.reshape([ncells, -1])[:, - (nmat - 1):]
+            grid.reshape([ncells, -1])[:, - (nmat - 1)
+                         :] = u.reshape([ncells, -1])[:, - (nmat - 1):]
 
         else:
             masks[mat] *= False
