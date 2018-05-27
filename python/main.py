@@ -24,9 +24,9 @@ bcs = 'transitive'
 
 cpp_level = 1
 N = 2
-cfl = 0.2
+cfl = 0.3
 SPLIT = False
-SOLVER = 'rusanov'
+SOLVER = 'osher'
 
 
 if cpp_level > 0:
