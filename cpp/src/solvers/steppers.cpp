@@ -64,3 +64,29 @@ void split_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
 
   ode_launcher(u, dt / 2, MP);
 }
+
+void split_stepper_para(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
+                        bool STIFF, int FLUX, Par &MP, bVecr mask) {
+  int nx = nX(0);
+  int uRowSize = u.size() / nx;
+  int ubRowSize = ub.size() / (nx + 2 * N);
+  int maskRowSize = mask.size() / (nx + 2);
+
+#pragma omp parallel
+  {
+    int nthreads = omp_get_num_threads();
+    int ithread = omp_get_thread_num();
+
+    int start = ithread * nx / nthreads;
+    int finish = (ithread + 1) * nx / nthreads;
+
+    iVec nX0 = nX;
+    nX0(0) = finish - start;
+
+    split_stepper(
+        u.segment(start * uRowSize, (finish - start) * uRowSize),
+        ub.segment(start * ubRowSize, (finish + 2 * N - start) * ubRowSize),
+        nX0, dt, dX, STIFF, FLUX, MP,
+        mask.segment(start * maskRowSize, (finish + 2 - start) * maskRowSize));
+  }
+}
