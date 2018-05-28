@@ -99,7 +99,7 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
   VecV QL = u.segment<V>(bInds.iL);
 
   if (get_material_index(QL) != mat)
-    QL = u.segment<V>(bInds.ind);
+    QL = u.segment<V>(bInds.ii);
 
   VecV QR = u.segment<V>(bInds.iR);
 
