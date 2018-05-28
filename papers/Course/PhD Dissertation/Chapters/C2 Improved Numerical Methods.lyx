@@ -9051,301 +9051,6 @@ reference "eq:xk"
 \end_layout
 
 \begin_layout Subsection
-Numerical Results
-\end_layout
-
-\begin_layout Subsubsection
-Strain Relaxation Test
-\end_layout
-
-\begin_layout Standard
-Take initial data used by Barton:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-A=\left(\begin{array}{ccc}
-1 & 0 & 0\\
--0.01 & 0.95 & 0.02\\
--0.015 & 0 & 0.9
-\end{array}\right)^{-1}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The following parameter values were used: 
-\begin_inset Formula $\rho_{0}=1,c_{s}=0.219,n=4,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
-\end_inset
-
-.
- As can be seen in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:Distortion-ODEs_A-plastic"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:Distortion-ODEs_σ-plastic"
-
-\end_inset
-
-, and 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:Distortion-ODEs_Ε-plastic"
-
-\end_inset
-
-, the approximate analytic solver compares well with the exact solution
- for the distortion tensor 
-\begin_inset Formula $A$
-\end_inset
-
-, and thus also the stress tensor and the energy.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../Figures/C2/Plastic Distortion ODEs/A1.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../Figures/C2/Plastic Distortion ODEs/A2.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Distortion-ODEs_A-plastic"
-
-\end_inset
-
-The distortion tensor during the Strain Relaxation Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../Figures/C2/Plastic Distortion ODEs/σ1.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../Figures/C2/Plastic Distortion ODEs/σ2.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Distortion-ODEs_σ-plastic"
-
-\end_inset
-
-The stress tensor during the Strain Relaxation Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../Figures/C2/Plastic Distortion ODEs/E.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Distortion-ODEs_Ε-plastic"
-
-\end_inset
-
-The total energy during the Strain Relaxation Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Elastoplastic Piston Test
-\end_layout
-
-\begin_layout Standard
-In this test, a piston with speed 0.002 is driven into copper initially at
- rest.
- An elastic shock wave develops, followed by a plastic shock wave.
- The following parameters were used: 
-\begin_inset Formula $\rho_{0}=8.93,c_{s}=0.219,n=10,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
-\end_inset
-
-.
- The shock Mie-Gruneisen EOS is used for the internal energy, with 
-\begin_inset Formula $p_{0}=0,c_{0}=0.394,\Gamma_{0}=2,s=1.48$
-\end_inset
-
-.
- 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:piston"
-
-\end_inset
-
- demonstrates the results using the split solver, compared with the ADER-WENO
- solution.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../Figures/C2/Elastoplastic Piston/ρ.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../Figures/C2/Elastoplastic Piston/v.png
-	lyxscale 25
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:piston"
-
-\end_inset
-
-Density and velocity in the elastoplastic piston test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Dilatant Test
-\end_layout
-
-\begin_layout Subsubsection
-Pseudoplastic Test
-\end_layout
-
-\begin_layout Subsection
 Bingham Plastics
 \end_layout
 
@@ -9645,6 +9350,309 @@ So we have:
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Numerical Results
+\end_layout
+
+\begin_layout Subsubsection
+Strain Relaxation Test
+\end_layout
+
+\begin_layout Standard
+Take initial data used by Barton:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A=\left(\begin{array}{ccc}
+1 & 0 & 0\\
+-0.01 & 0.95 & 0.02\\
+-0.015 & 0 & 0.9
+\end{array}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following parameter values were used: 
+\begin_inset Formula $\rho_{0}=1,c_{s}=0.219,n=4,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
+\end_inset
+
+.
+ As can be seen in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Distortion-ODEs_A-plastic"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Distortion-ODEs_σ-plastic"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Distortion-ODEs_Ε-plastic"
+
+\end_inset
+
+, the approximate analytic solver compares well with the exact solution
+ for the distortion tensor 
+\begin_inset Formula $A$
+\end_inset
+
+, and thus also the stress tensor and the energy.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Plastic Distortion ODEs/A1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Plastic Distortion ODEs/A2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Distortion-ODEs_A-plastic"
+
+\end_inset
+
+The distortion tensor during the Strain Relaxation Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Plastic Distortion ODEs/σ1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Plastic Distortion ODEs/σ2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Distortion-ODEs_σ-plastic"
+
+\end_inset
+
+The stress tensor during the Strain Relaxation Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Plastic Distortion ODEs/E.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Distortion-ODEs_Ε-plastic"
+
+\end_inset
+
+The total energy during the Strain Relaxation Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Elastoplastic Piston Test
+\end_layout
+
+\begin_layout Standard
+In this test, a piston with speed 0.002 is driven into copper initially at
+ rest.
+ An elastic shock wave develops, followed by a plastic shock wave.
+ The following parameters were used: 
+\begin_inset Formula $\rho_{0}=8.93,c_{s}=0.219,n=10,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
+\end_inset
+
+.
+ The shock Mie-Gruneisen EOS is used for the internal energy, with 
+\begin_inset Formula $p_{0}=0,c_{0}=0.394,\Gamma_{0}=2,s=1.48$
+\end_inset
+
+.
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:piston"
+
+\end_inset
+
+ demonstrates the results using the split solver, compared with the ADER-WENO
+ solution.
+\end_layout
+
+\begin_layout Standard
+[RESULTS AS 
+\begin_inset Formula $n\rightarrow\infty$
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Elastoplastic Piston/ρ.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Elastoplastic Piston/v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:piston"
+
+\end_inset
+
+Density and velocity in the elastoplastic piston test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Dilatant Test
+\end_layout
+
+\begin_layout Subsubsection
+Pseudoplastic Test
 \end_layout
 
 \begin_layout Section
