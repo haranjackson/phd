@@ -13,8 +13,11 @@ def cpp_split_stepper(obj, mat, matBC, dt, dX, maskBC):
     matr = mat.ravel()
     matBCr = matBC.ravel()
 
-    GPRpy.solvers.split_stepper(matr, matBCr, nX, dt, array(dX), obj.half_step,
-                                obj.flux_type, obj.pars, maskBC.ravel())
+    # GPRpy.solvers.split_stepper(matr, matBCr, nX, dt, array(dX), obj.half_step,
+    #                            obj.flux_type, obj.pars, maskBC.ravel())
+
+    GPRpy.solvers.split_stepper_para(matr, matBCr, nX, dt, array(dX), obj.half_step,
+                                     obj.flux_type, obj.pars, maskBC.ravel())
 
     mat = matr.reshape(mat.shape)
 
@@ -25,11 +28,11 @@ def cpp_ader_stepper(obj, mat, matBC, dt, dX, maskBC):
     matr = mat.ravel()
     matBCr = matBC.ravel()
 
-    #GPRpy.solvers.ader_stepper(matr, matBCr, nX, dt, array(dX), obj.stiff_dg,
+    # GPRpy.solvers.ader_stepper(matr, matBCr, nX, dt, array(dX), obj.stiff_dg,
     #                           obj.flux_type, obj.pars, maskBC.ravel())
 
     GPRpy.solvers.ader_stepper_para(matr, matBCr, nX, dt, array(dX), obj.stiff_dg,
-                               obj.flux_type, obj.pars, maskBC.ravel())
+                                    obj.flux_type, obj.pars, maskBC.ravel())
 
     mat = matr.reshape(mat.shape)
 

@@ -35,7 +35,7 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None):
         colorbar(im)
 
     elif plotType == 'contour':
-        im = contour(x, cmap='viridis')
+        im = contour(x, 25, cmap='viridis')
         colorbar(im)
 
     elif plotType == 'streams':

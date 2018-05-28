@@ -25,7 +25,7 @@ bcs = 'transitive'
 cpp_level = 2
 N = 2
 cfl = 0.3
-SPLIT = False
+SPLIT = True
 SOLVER = 'roe'
 
 
@@ -43,10 +43,13 @@ dX = array(dX)
 verbose = True
 
 
-grids = []
-def callback(u, t, count):
-    grids.append(u.copy())
-
+uList = []
+gridList = []
+maskList = []
+def callback(u, grids, masks):
+    uList.append(u.copy())
+    gridList.append(deepcopy(grids))
+    maskList.append(deepcopy(masks))
 
 solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      model_params=MPs, M=M_cons, max_eig=max_eig, order=N,
@@ -56,4 +59,4 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
 solver.solve(u0, tf, dX, cfl=cfl, bcs=bcs, verbose=verbose, callback=callback,
              cpp_level=cpp_level)
 
-save('results', array(grids))
+save('results', array(uList))

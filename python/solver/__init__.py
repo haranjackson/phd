@@ -61,6 +61,7 @@ class SolverPlus(Solver):
 
             if mask is None or mask[coords]:
                 Q = self.u[coords]
+
                 tmp = 0
                 for d in range(self.NDIM):
                     tmp += self.max_eig(Q, d, self.pars) / self.dX[d]

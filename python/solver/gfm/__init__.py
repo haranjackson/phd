@@ -94,6 +94,9 @@ class MultiSolver():
                     grids = [grid.reshape(self.u.shape) for grid in grids]
                     masks = [mask.reshape(self.u.shape[:-1]) for mask in masks]
 
+                if self.callback is not None:
+                    self.callback(self.u, grids, masks)
+
                 for solver, grid in zip(self.solvers, grids):
                     solver.u = grid
 
@@ -115,9 +118,6 @@ class MultiSolver():
 
                 for i in range(self.nmat):
                     self.solvers[i].count = self.count
-
-                if self.callback is not None:
-                    self.callback(self.u, self.t, self.count)
 
                 if self.verbose:
                     print('\nIteration:', self.count)
