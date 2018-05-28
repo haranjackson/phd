@@ -5,7 +5,7 @@
 #include "../options.h"
 
 struct BoundaryInds {
-  int ii, iL, iR, ind;
+  int interf, L, R, ind;
 };
 
 int sign(double x);

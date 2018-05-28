@@ -35,17 +35,38 @@ void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX) {
 
   case 2:
     int ny = nX(1);
+    MatMap φMap(φ.data(), nx, ny, OuterStride(ny));
     for (int i = 0; i < nx; i++)
       for (int j = 0; j < ny; j++) {
-        int indL = i * ny + j;
-        int indR;
-        if (i < nx - 1) {
-          indR = (i + 1) * ny + j;
-          update_interface_mask(intMask, φ, indL, indR);
-        }
-        if (j < ny - 1) {
-          indR = i * ny + (j + 1);
-          update_interface_mask(intMask, φ, indL, indR);
+        int ind0 = i * ny + j;
+        if (φ(ind0) <= 0.) {
+          bool condL = (i > 0) && (φMap(i - 1, j) <= 0.);
+          bool condR = (i < nx - 1) && (φMap(i + 1, j) <= 0.);
+          bool condD = (j > 0) && (φMap(i, j - 1) <= 0.);
+          bool condU = (j < ny - 1) && (φMap(i, j + 1) <= 0.);
+
+          // not an isolated point
+          if (condL || condR || condD || condU) {
+            int ind1;
+            if (i > 0) {
+              ind1 = (i - 1) * ny + j;
+              update_interface_mask(intMask, φ, ind0, ind1);
+            }
+            if (i < nx - 1) {
+              ind1 = (i + 1) * ny + j;
+              update_interface_mask(intMask, φ, ind0, ind1);
+            }
+            if (j > 0) {
+              ind1 = i * ny + (j - 1);
+              update_interface_mask(intMask, φ, ind0, ind1);
+            }
+            if (j < ny - 1) {
+              ind1 = i * ny + (j + 1);
+              update_interface_mask(intMask, φ, ind0, ind1);
+            }
+          } else { // isolated point
+            intMask(ind0) = -2;
+          }
         }
       }
     break;
@@ -56,7 +77,7 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
   // Calculates indexes of the boundary states at position given by inds
 
   aVec xp = (inds.cast<double>().array() + 0.5) * dX;
-  double d = 1.5;
+  double d = 1.;
 
   aVec xi = xp - φi * n;     // interface position
   aVec xL = xi - d * dX * n; // probe on left side
@@ -73,17 +94,17 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
 
   case 1:
     ret.ind = iVec_to_ind(inds);
-    ret.ii = iVec_to_ind(xiVec);
-    ret.iL = iVec_to_ind(xLVec);
-    ret.iR = iVec_to_ind(xRVec);
+    ret.interf = iVec_to_ind(xiVec);
+    ret.L = iVec_to_ind(xLVec);
+    ret.R = iVec_to_ind(xRVec);
     break;
 
   case 2:
     int ny = nX(1);
     ret.ind = iVec_to_ind(inds, ny);
-    ret.ii = iVec_to_ind(xiVec, ny);
-    ret.iL = iVec_to_ind(xLVec, ny);
-    ret.iR = iVec_to_ind(xRVec, ny);
+    ret.interf = iVec_to_ind(xiVec, ny);
+    ret.L = iVec_to_ind(xLVec, ny);
+    ret.R = iVec_to_ind(xRVec, ny);
     break;
   }
 
@@ -93,21 +114,66 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
 void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
                          double φi, int mat, std::vector<Par> &MPs, double dt,
                          Vecr n) {
+  // Attempts to fill the boundary cell at location given by inds.
+  // Returns 1 if successful, and -2 if fails to find a suitable
+  // left state for the interface.
+  // TODO: handle case when QL is chosen to be an isolated point
 
   BoundaryInds bInds = boundary_inds(inds, φi, n, dX, nX);
 
-  VecV QL = u.segment<V>(bInds.iL);
+  VecV QL;
+  VecV QR = u.segment<V>(bInds.R);
+  int miR = get_material_index(QR);
 
-  if (get_material_index(QL) != mat)
-    QL = u.segment<V>(bInds.ii);
+  if (get_material_index(u.segment<V>(bInds.interf)) == mat)
+    QL = u.segment<V>(bInds.interf);
 
-  VecV QR = u.segment<V>(bInds.iR);
+  else if (get_material_index(u.segment<V>(bInds.L)) == mat)
+    QL = u.segment<V>(bInds.L);
 
-  int rMat = get_material_index(QR);
+  else { // should only happen if ndim>1
+    iVec Linds = inds;
+    int Lind;
 
-  VecV QL_ = left_star_state(QL, QR, MPs[mat], MPs[rMat], dt, n);
+    // note: n points from left side to right
+    int n0 = sgn(n(0));
+    int n1 = sgn(n(1));
+
+    if (std::abs(n(0)) > std::abs(n(1))) {
+      Linds(0) -= n0;
+      Lind = iVec_to_ind(Linds, nX(1));
+      if (get_material_index(u.segment<V>(Lind)) == mat) {
+        n(0) = n0;
+        n(1) = 0.;
+      } else {
+        Linds(0) += n0;
+        Linds(1) -= n1;
+        Lind = iVec_to_ind(Linds, nX(1));
+        n(0) = 0.;
+        n(1) = n1;
+      }
+    } else {
+      Linds(1) -= n1;
+      Lind = iVec_to_ind(Linds, nX(1));
+      if (get_material_index(u.segment<V>(Lind)) == mat) {
+        n(0) = 0.;
+        n(1) = n1;
+      } else {
+        Linds(0) -= n0;
+        Linds(1) += n1;
+        Lind = iVec_to_ind(Linds, nX(1));
+        n(0) = n0;
+        n(1) = 0.;
+      }
+    }
+    QL = u.segment<V>(Lind);
+  }
+
+  VecV QL_ = left_star_state(QL, QR, MPs[mat], MPs[miR], dt, n);
   grid.segment<V - LSET>(bInds.ind) = QL_.head<V - LSET>();
-  grid.segment<V - LSET>(bInds.ii) = QL_.head<V - LSET>();
+
+  if (get_material_index(grid.segment<V>(bInds.interf)) != mat)
+    grid.segment<V - LSET>(bInds.interf) = QL_.head<V - LSET>();
 }
 
 void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
@@ -209,7 +275,7 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
         for (int j = 0; j < ny; j++) {
 
           int ind = i * ny + j;
-          if (intMask(ind) == 0) {
+          if (intMask(ind) == 0 || intMask(ind) == -2) {
 
             bool pos = false;
 
@@ -273,7 +339,7 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
       fill_neighbor_cells(grids[mat], intMask, Δφ, dX, nX);
 
       for (int j = 0; j < ncell; j++)
-        masks[mat](j) = φ(j) <= 0. || intMask(j) == 1;
+        masks[mat](j) = (φ(j) <= 0. && intMask(j) != -2) || intMask(j) == 1;
 
       MatMap gridMap(grids[mat].data(), ncell, V, OuterStride(V));
       gridMap.block(0, V - LSET, ncell, LSET) =
