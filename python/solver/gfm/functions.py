@@ -8,7 +8,7 @@ def boundary_inds(ind, φ, n, dX):
     """
     xp = (array(ind) + 0.5) * dX
 
-    d = 1.5
+    d = 1.
 
     xi = xp - φ[ind] * n    # interface position
     xL = xi - d * dX * n    # probe on left side
