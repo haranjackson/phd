@@ -124,15 +124,41 @@ Given a function
 \end_layout
 
 \begin_layout Standard
-Given velocity field 
-\begin_inset Formula $\boldsymbol{v}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{n}$
+In this study, problems involving 
+\begin_inset Formula $m$
+\end_inset
+
+ different materials were assigned the functions 
+\begin_inset Formula $\phi_{1},\ldots,\phi_{m-1}:\mathbb{R}^{n}\rightarrow\mathbb{R}$
+\end_inset
+
+, such that the region occupied by material 
+\begin_inset Formula $i$
+\end_inset
+
+ is considered to be exactly that in which 
+\begin_inset Formula $\phi_{1},\ldots,\phi_{i-1}>0$
 \end_inset
 
 , 
+\begin_inset Formula $\phi_{i},\ldots,\phi_{m-1}<0$
+\end_inset
+
+.
+ The locations of the zero level sets correspond to the locations of the
+ interfaces.
+\end_layout
+
+\begin_layout Standard
+Given the local velocity field 
+\begin_inset Formula $\boldsymbol{v}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{3}$
+\end_inset
+
+, the functions 
 \begin_inset Formula $\phi$
 \end_inset
 
- is advected according to the level set equation 
+ are advected according to the level set equation 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Osher2002"
@@ -154,50 +180,11 @@ key "Osher2002"
 \end_layout
 
 \begin_layout Standard
-The advection of a point in a fluid with velocity 
-\begin_inset Formula $v$
+\begin_inset Formula $\phi_{1},\ldots,\phi_{m-1}$
 \end_inset
 
- can be modeled by taking 
-\begin_inset Formula $f=x-x_{0}$
-\end_inset
-
- where 
-\begin_inset Formula $x_{0}$
-\end_inset
-
- is the position of the point at time 
-\begin_inset Formula $t=0$
-\end_inset
-
-, and tracking 
-\begin_inset Formula $\Gamma_{0}$
-\end_inset
-
-.
- 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:LevelSetEqn"
-
-\end_inset
-
- is solved by an appropriate numerical method.
- The numerical methods used in this study are described in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
-
-\end_inset
-
-.
- 
-\begin_inset Formula $f$
-\end_inset
-
- will usually have to be renormalized to resemble a straight line at every
- time step, to avoid unwanted distortions such as becoming a multivalued
- function.
+ are renormalized to resemble a straight line at every time step, to avoid
+ unwanted distortions such as becoming a multivalued function.
 \end_layout
 
 \begin_layout Subsection
