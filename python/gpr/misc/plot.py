@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from numpy import arange, linspace, mgrid, prod, zeros
-from matplotlib.pyplot import colorbar, contour, figure, get_cmap, imshow, \
-    plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
+from numpy import amax, amin, arange, linspace, mgrid, prod, zeros
+from matplotlib.pyplot import colorbar, contour, contourf, figure, get_cmap, \
+    imshow, plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
 
 from ader.etc.basis import Basis
 
@@ -28,14 +28,30 @@ def plot1d(y, style, x, lab, col, ylab, xlab='x', sci=1):
     plt.show()
 
 
-def plot2d(x, plotType, y=None, vmin=None, vmax=None):
+def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
 
     if plotType == 'colormap':
-        im = imshow(x, get_cmap('viridis'), vmin=vmin, vmax=vmax)
+        im = imshow(x, vmin=vmin, vmax=vmax)
         colorbar(im)
 
     elif plotType == 'contour':
-        im = contour(x, 25, cmap='viridis')
+
+        if vmin is None:
+            vmin = amin(x)
+        if vmax is None:
+            vmax = amax(x)
+
+        levels = linspace(vmin, vmax, 25)
+        im = contour(x, levels=levels)
+
+        if lsets is not None:
+            for lset in lsets:
+                contour(lset, levels=[0], colors='black')
+
+        colorbar(im)
+
+    elif plotType == 'contourf':
+        im = contourf(x, 25, vmin=vmin, vmax=vmax)
         colorbar(im)
 
     elif plotType == 'streams':
@@ -66,10 +82,11 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
     shape = u.shape[:-1]
     n = prod(shape)
     y = zeros(n)
+    nmat = len(MPs)
 
     for ii in range(n):
         Q = u.reshape([n, -1])[ii]
-        ind = get_material_index(Q, len(MPs))
+        ind = get_material_index(Q, nmat)
         MP = MPs[ind]
         if MP.EOS > -1:  # not a vacuum
             P = State(Q, MP)
@@ -85,7 +102,8 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
     if u.ndim - 1 == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
     else:
-        plot2d(y.reshape(shape), plotType, vmin, vmax)
+        plot2d(y.reshape(shape), plotType, vmin=vmin, vmax=vmax,
+               lsets=[u[:, :, -(i+1)] for i in range(nmat-1)])
 
 
 def plot_density(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
