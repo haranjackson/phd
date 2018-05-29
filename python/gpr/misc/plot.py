@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from numpy import amax, amin, arange, linspace, mgrid, prod, zeros
+from numpy import nanmax, nanmin, arange, isnan, linspace, mgrid, prod, zeros
 from matplotlib.pyplot import colorbar, contour, contourf, figure, get_cmap, \
     imshow, plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
 
@@ -37,9 +37,9 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
     elif plotType == 'contour':
 
         if vmin is None:
-            vmin = amin(x)
+            vmin = nanmin(x)
         if vmax is None:
-            vmax = amax(x)
+            vmax = nanmax(x)
 
         levels = linspace(vmin, vmax, 25)
         im = contour(x, levels=levels)
@@ -88,16 +88,23 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
         Q = u.reshape([n, -1])[ii]
         ind = get_material_index(Q, nmat)
         MP = MPs[ind]
+
         if MP.EOS > -1:  # not a vacuum
             P = State(Q, MP)
             var = getattr(P, attr)()
+
             if j is None:
                 if i is None:
-                    y[ii] = var
+                    var = getattr(P, attr)()
                 else:
-                    y[ii] = var[i]
+                    var = getattr(P, attr)()[i]
             else:
-                y[ii] = var[i, j]
+                var = getattr(P, attr)()[i, j]
+
+            if isnan(var):
+                print('Warning: nan in cell', ii)
+            else:
+                y[ii] = var
 
     if u.ndim - 1 == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
