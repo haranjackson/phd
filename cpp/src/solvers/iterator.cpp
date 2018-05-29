@@ -110,8 +110,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
         extend_mask(masks[mat], maskb, nX);
 
         if (SPLIT)
-          split_stepper(grids[mat], ub, nX, dt, dX, HALF_STEP, FLUX, MPs[mat],
-                        maskb);
+          split_stepper_para(grids[mat], ub, nX, dt, dX, HALF_STEP, FLUX,
+                             MPs[mat], maskb);
         else
           ader_stepper_para(grids[mat], ub, nX, dt, dX, STIFF, FLUX, MPs[mat],
                             maskb);
