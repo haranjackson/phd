@@ -155,6 +155,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_system_multi.def("riemann_constraints", &riemann_constraints);
   m_system_multi.def("star_stepper", &star_stepper);
   m_system_multi.def("left_star_state", &left_star_state);
+  m_system_multi.def("distance", &distance);
 
   m_solvers_common.def("basis_polys", &basis_polys);
   m_solvers_common.def("scaled_nodes", &scaled_nodes);
