@@ -117,3 +117,34 @@ def piston_BC(u, N, NDIM):
     ret = standard_BC(u, N, NDIM)
     ret[:N, 2:5] = ret[N, 0] * array([20, 0, 0])
     return ret
+
+def piston_exact(nx, var):
+
+    eWaveSpeed = 4722
+    pWaveSpeed = 3977
+    tf = 1.5e-4
+
+    if var == 'density':
+        e = 8938.9
+        p = 8973.5
+        u = 8930
+    elif var == 'velocity':
+        e = 4.72
+        p = 2
+        u = 0
+    elif var == 'pressure':
+        e = 139.03
+        p = 681.59
+        u = 0
+    elif var == 'stress':
+        e = -199.03
+        p = -741.59
+        u = 0
+
+    ei = int(eWaveSpeed * tf *nx)
+    pi = int(pWaveSpeed * tf *nx)
+    y = zeros(nx)
+    y[:pi] = p
+    y[pi:ei] = e
+    y[ei:] = u
+    return y

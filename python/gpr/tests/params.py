@@ -28,8 +28,8 @@ Cu_SMG_SI = material_params(EOS='smg', ρ0=8930, p0=0, cv=390,
                             c0=3909, Γ0=1.99, s=1.48, b0=2100, τ1=inf, β=3)
 
 Cu_SMGP_SI = material_params(EOS='smg', ρ0=8930, p0=0, cv=390,
-                             c0=3909, Γ0=1.99, s=1.48,
-                             b0=2100, σY=9e7, τ1=1, n=500, PLASTIC=True)
+                             c0=3940, Γ0=2, s=1.49,
+                             b0=2244, σY=9e7, τ1=1, n=100, PLASTIC=True)
 
 Cu_GR_SI = material_params(EOS='gr', ρ0=8930, p0=0, cv=390, Tref=300,
                            c0=3909, α=1, β=3, γ=2, b0=2100, τ1=inf)
