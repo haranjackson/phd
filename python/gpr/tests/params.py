@@ -9,7 +9,7 @@ Air_SG_SI = material_params(EOS='sg', ρ0=1.18, p0=10100, cv=721,
                             γ=1.4, b0=1, cα=1, μ=1.85e-5, Pr=0.714)
 
 He_SG_SI = material_params(EOS='sg', ρ0=0.163, p0=10100, cv=3127,
-                           γ=1.66, b0=1, cα=1, μ=1.99e-5, Pr=0.688)
+                           γ=1.67, b0=1, cα=1, μ=1.99e-5, Pr=0.688)
 
 H20_SG_SI = material_params(EOS='sg', ρ0=1000, p0=1e5, cv=950,
                             γ=4.4, pINF=6e8, b0=1e-4, cα=1e-4, μ=1e-3, Pr=7)
@@ -25,10 +25,17 @@ Al_GRP_SI = material_params(EOS='gr', ρ0=2710, p0=0, cv=900, Tref=300,
                             σY=0.4e9, τ1=1, n=100, PLASTIC=True)
 
 Cu_SMG_SI = material_params(EOS='smg', ρ0=8930, p0=0, cv=390,
-                            c0=3909, Γ0=1.99, s=1.5, b0=2100, τ1=inf, β=3)
+                            c0=3909, Γ0=1.99, s=1.48, b0=2100, τ1=inf, β=3)
+
+Cu_SMGP_SI = material_params(EOS='smg', ρ0=8930, p0=0, cv=390,
+                             c0=3909, Γ0=1.99, s=1.48,
+                             b0=2100, σY=9e7, τ1=1, n=500, PLASTIC=True)
 
 Cu_GR_SI = material_params(EOS='gr', ρ0=8930, p0=0, cv=390, Tref=300,
                            c0=3909, α=1, β=3, γ=2, b0=2100, τ1=inf)
+
+W_SMG_SI = material_params(EOS='smg', ρ0=17600, p0=0, cv=134,
+                           c0=4030, Γ0=1.43, s=1.24, b0=2100, τ1=inf, β=3)
 
 
 """ CGS Units """
@@ -55,10 +62,6 @@ Air_SG_ND = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0, b0=1,
 
 
 """ Alternative EOSs """
-
-Cu_SMGP_ALT = material_params(EOS='smg', ρ0=8.93, p0=0,
-                              c0=0.394, Γ0=1.99, s=1.48,
-                              b0=0.219, σY=9e-4, τ1=0.1, n=10, PLASTIC=True)
 
 Al_HYP_CGS = hyperelastic_params(ρ0=2.71, α=1, β=3.577, γ=2.088, cv=9e-4,
                                  T0=300, b0=3.16, c0=6.22)

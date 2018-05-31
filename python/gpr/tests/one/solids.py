@@ -3,7 +3,7 @@ from numpy import array, eye, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
-from gpr.tests.params import Cu_HYP_CGS, Cu_GR_CGS, Cu_SMGP_ALT
+from gpr.tests.params import Cu_HYP_CGS, Cu_GR_CGS, Cu_SMGP_SI
 from gpr.tests.one.common import hyperelastic_IC
 
 
@@ -90,13 +90,13 @@ def piston_IC():
     """ 10.1016/j.compfluid.2016.05.004
         5.6 Elastic-plastic piston problem
     """
-    tf = 1.5
-    nx = 300
-    Lx = 1.5
+    tf = 1.5e-4
+    nx = 400
+    Lx = 1
 
     dX = [Lx / nx]
 
-    MP = Cu_SMGP_ALT
+    MP = Cu_SMGP_SI
     ρ = MP.ρ0
     p = MP.p0
     v = zeros(3)
@@ -115,5 +115,5 @@ def piston_IC():
 
 def piston_BC(u, N, NDIM):
     ret = standard_BC(u, N, NDIM)
-    ret[:N, 2:5] = ret[N, 0] * array([0.002, 0, 0])
+    ret[:N, 2:5] = ret[N, 0] * array([20, 0, 0])
     return ret
