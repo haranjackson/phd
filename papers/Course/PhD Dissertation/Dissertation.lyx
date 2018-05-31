@@ -442,7 +442,7 @@ filename "Appendices/A2 Eigenstructure.lyx"
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
-filename "Appendices/A3 Material Parameters.lyx"
+filename "Appendices/A3 Model Parameters.lyx"
 
 \end_inset
 

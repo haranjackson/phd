@@ -73,13 +73,17 @@
 \begin_body
 
 \begin_layout Chapter
-Material Parameters
+Model Parameters
 \end_layout
 
 \begin_layout Standard
 The parameters for different materials under different equations of state
  are given in the tables below.
  All variables are given in SI units.
+\end_layout
+
+\begin_layout Section
+Material Properties
 \end_layout
 
 \begin_layout Standard
@@ -1074,6 +1078,10 @@ Reference parameters for various materials
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Equation of State Parameters
 \end_layout
 
 \begin_layout Standard
@@ -2276,11 +2284,7 @@ Plasticity parameters for various materials
 \end_layout
 
 \begin_layout Section
-Cochran-Chan & JWL Materials
-\end_layout
-
-\begin_layout Section
-Combustible Materials
+Combustion Parameters
 \end_layout
 
 \end_body

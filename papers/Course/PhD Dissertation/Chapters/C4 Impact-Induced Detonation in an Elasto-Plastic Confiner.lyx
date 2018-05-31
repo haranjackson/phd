@@ -82,27 +82,47 @@ Impact-Induced Detonation in an Elasto-Plastic Confiner
 \end_layout
 
 \begin_layout Section
-Aluminium Plate Impact
+Impact
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
+Aluminium Plates
+\end_layout
+
+\begin_layout Subsection
+Taylor Bar
+\end_layout
+
+\begin_layout Subsection
+Rod Penetration
+\end_layout
+
+\begin_layout Subsection
 Inert Detasheet Confined by Steel
 \end_layout
 
 \begin_layout Section
+Detonation
+\end_layout
+
+\begin_layout Subsection
 Reactive C4 Confined by Steel
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Reactive C4 Confined by Steel with Air Gap
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Rod Impact on Copper Vessel
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Rod Impact on Car Fuel Tank
+\end_layout
+
+\begin_layout Section
+Conclusions
 \end_layout
 
 \begin_layout Standard

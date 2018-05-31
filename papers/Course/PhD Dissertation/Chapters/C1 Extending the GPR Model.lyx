@@ -1501,16 +1501,12 @@ If the EOS comprises a microscale energy component of Mie-Gruneisen type,
 ).
 \end_layout
 
-\begin_layout Subsection
-Validation of Equations of State
-\end_layout
-
 \begin_layout Section
-Multiphase Materials
+Multiphase Reactive Materials
 \end_layout
 
 \begin_layout Subsection
-Multiphase Model
+Extended Model
 \end_layout
 
 \begin_layout Standard
@@ -1542,7 +1538,8 @@ begin{subequations}
 \frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquationMultiphase}\\
 \frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquationMultiphase}\\
 \frac{\partial\left(\left(1-z\right)\rho_{2}\right)}{\partial t}+\frac{\partial\left(\left(1-z\right)\rho_{2}v_{k}\right)}{\partial x_{k}} & =0\label{eq:SecondContinuityEquationMultiphase}\\
-\frac{\partial\left(z\rho\right)}{\partial t}+\frac{\partial\left(z\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:ColorEquationMultiphase}
+\frac{\partial\left(z\rho\right)}{\partial t}+\frac{\partial\left(z\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:ColorEquationMultiphase}\\
+\frac{\partial\left(\left(1-z\right)\rho_{2}\lambda\right)}{\partial t}+\frac{\partial\left(\left(1-z\right)\rho_{2}\lambda v_{k}\right)}{\partial x_{k}} & =\left(1-z\right)\rho_{2}K\label{eq:ReactionEquation}
 \end{align}
 
 \end_inset
@@ -1611,35 +1608,59 @@ end{subequations}
 \end_layout
 
 \begin_layout Subsection
-Validation of Multiphase Model
+Mixture Rules
+\end_layout
+
+\begin_layout Subsection
+Reaction Rate Laws
 \end_layout
 
 \begin_layout Section
-Extension to Reactive Materials
+Numerical Results
 \end_layout
 
 \begin_layout Subsection
-Reactive Models
+1D Tests
 \end_layout
 
-\begin_layout Standard
-The following equation is added to the multiphase system given above to
- simulate reactive materials:
+\begin_layout Subsubsection
+Copper-Detonation Products Shock Tube
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{\partial\left(\left(1-z\right)\rho_{2}\lambda\right)}{\partial t}+\frac{\partial\left(\left(1-z\right)\rho_{2}\lambda v_{k}\right)}{\partial x_{k}}=\left(1-z\right)\rho_{2}K
-\end{equation}
+\begin_layout Subsubsection
+Shock Initiation of LX-17
+\end_layout
 
-\end_inset
+\begin_layout Subsubsection
+Nitromethane Ignition Pop-Plot
+\end_layout
 
+\begin_layout Subsubsection
+Nitromethane Steady ZND Detonation
+\end_layout
 
+\begin_layout Subsubsection
+Three-Component Inert Shock Wave
+\end_layout
+
+\begin_layout Subsubsection
+Three-Component Rate Stick
 \end_layout
 
 \begin_layout Subsection
-Validation of Reactive Models
+2D Tests
+\end_layout
+
+\begin_layout Subsubsection
+Confined Ideal-Gas Rate Stick
+\end_layout
+
+\begin_layout Subsubsection
+Confined JWL Rate Stick
+\end_layout
+
+\begin_layout Subsubsection
+Shock-Induced Void Collapse in Nitromethane
 \end_layout
 
 \begin_layout Standard

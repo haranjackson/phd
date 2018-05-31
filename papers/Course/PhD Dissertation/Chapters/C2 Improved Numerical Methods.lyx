@@ -100,753 +100,14 @@ Objective 2: Improved Numerical Methods
 \end_layout
 
 \begin_layout Section
-Convergence Properties of the Standard ADER-WENO Method
+Extending the Montecinos-Balsara ADER Method
 \end_layout
 
 \begin_layout Standard
 The material in this section is published in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Jackson2017"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Extending the Galerkin method described in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:The Galerkin Predictor"
-
-\end_inset
-
- to three dimensions, the following system must be solved for 
-\begin_inset Formula $\boldsymbol{q}$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-U_{\alpha\beta}\boldsymbol{q_{\beta}} & =\boldsymbol{W_{\alpha}}-V_{\alpha\beta}^{1}\boldsymbol{F_{\beta}}-V_{\alpha\beta}^{2}\boldsymbol{G_{\beta}}-V_{\alpha\beta}^{3}\boldsymbol{H_{\beta}}\label{eq:DGIteration}\\
- & +Z_{\alpha\beta}\left(\boldsymbol{S_{\beta}}-\boldsymbol{B_{\beta}}\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where now we have the 3 scaled spatial variables 
-\begin_inset Formula $\chi_{1},\chi_{2},\chi_{3}$
-\end_inset
-
- and 
-\begin_inset Formula $\boldsymbol{G,H}$
-\end_inset
-
- are the flux components in the second and third spatial directions, respectivel
-y.
- In the case of the continuous Galerkin method, it is assumed that 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:DGIteration"
-
-\end_inset
-
- is to be solved for only the non-fixed degrees of freedom in 
-\begin_inset Formula $\boldsymbol{q}$
-\end_inset
-
-.
- The matrices 
-\begin_inset Formula $V_{\alpha\beta}^{i}$
-\end_inset
-
- are defined thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-V_{\alpha\beta}^{i}=\left\langle \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi_{i}}\right\rangle 
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For the discontinuous Galerkin method, 
-\begin_inset Formula $\boldsymbol{W_{\alpha}}$
-\end_inset
-
- now takes the form:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{W_{\alpha}}=\left[\theta_{\alpha},\Psi_{\gamma}\right]^{0}\boldsymbol{w_{\gamma}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $\Psi_{\gamma}\left(\chi_{1},\chi_{2},\chi_{3}\right)$
-\end_inset
-
- is an element of the following set, enumerated by 
-\begin_inset Formula $\gamma$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left\{ \psi_{i}\left(\chi_{1}\right)\psi_{j}\left(\chi_{2}\right)\psi_{c}\left(\chi_{3}\right):0\leq i,j,k\leq N\right\} 
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For the continuous Galerkin method, 
-\begin_inset Formula $\boldsymbol{W_{\alpha}}$
-\end_inset
-
- now takes the form:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\boldsymbol{W_{\alpha}} & =\left\{ \theta_{\alpha},\theta_{\beta}\right\} ^{10}\left(\boldsymbol{S_{β}}-\boldsymbol{B_{β}}\right)^{0}\\
- & -\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{1}}\right\} ^{10}\boldsymbol{F_{\beta}^{0}}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{2}}\right\} ^{10}\boldsymbol{G_{\beta}^{0}}-\left\{ \theta_{\alpha},\frac{\partial\theta_{\beta}}{\partial\chi^{2}}\right\} ^{10}\boldsymbol{H_{\beta}^{0}}\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2008"
-
-\end_inset
-
- remark that for the continuous Galerkin case, the eigenvalues of 
-\begin_inset Formula $U^{-1}V^{i}$
-\end_inset
-
- are all 0 for 
-\begin_inset Formula $0\leq N\leq5$
-\end_inset
-
-, for 
-\begin_inset Formula $i=1,2,3$
-\end_inset
-
-.
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2009a"
-
-\end_inset
-
- state the same result for the discontinuous Galerkin case.
- This implies that in the conservative, homogeneous case (
-\begin_inset Formula $\boldsymbol{B}=\boldsymbol{S}=\boldsymbol{0}$
-\end_inset
-
-), owing to the Banach Fixed Point Theorem, existence and uniqueness of
- a solution are established, and convergence to this solution is guaranteed.
- As noted in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2009a"
-
-\end_inset
-
-, in the linear case it is implied that the iterative procedure converges
- after at most 
-\begin_inset Formula $N+1$
-\end_inset
-
- iterations.
-\end_layout
-
-\begin_layout Standard
-In 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2008"
-
-\end_inset
-
- it is conjectured that the result concerning the eigenvalues of 
-\begin_inset Formula $U^{-1}V^{i}$
-\end_inset
-
- holds for any 
-\begin_inset Formula $N$
-\end_inset
-
-, and any number of spatial dimensions.
- A solution to this conjecture is provided here.
- For the theory in linear algebra required for this section, please consult
- a standard textbook on the subject, such as 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Nering1970"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsection
-The Discontinuous Galerkin Case
-\end_layout
-
-\begin_layout Standard
-First, given the basis polynomials 
-\begin_inset Formula $\left\{ \psi_{0},\ldots,\psi_{N}\right\} $
-\end_inset
-
-, define the following matrices:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\aleph_{ij} & =\left\langle \psi_{i},\psi_{j}\right\rangle \\
-\beth_{ij} & =\left\langle \psi_{i},\psi_{j}^{'}\right\rangle 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that 
-\begin_inset Formula $\aleph$
-\end_inset
-
- is the Gram matrix, which by linear independence of 
-\begin_inset Formula $\left\{ \psi_{0},...,\psi_{N}\right\} $
-\end_inset
-
- is invertible.
- Note also that if 
-\begin_inset Formula $p\in P_{N}$
-\end_inset
-
- then 
-\begin_inset Formula $p=a_{j}\psi_{j}$
-\end_inset
-
- for some unique coefficient vector 
-\begin_inset Formula $\boldsymbol{a}$
-\end_inset
-
-.
- Thus, taking inner products with 
-\begin_inset Formula $\psi_{i}$
-\end_inset
-
-, we have 
-\begin_inset Formula $\left\langle \psi_{i},\psi_{j}\right\rangle a_{j}=\left\langle \psi_{i},p\right\rangle $
-\end_inset
-
- for 
-\begin_inset Formula $i=0,...,N$
-\end_inset
-
-.
- This produces the following result:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-p=a_{j}\psi_{j}\Leftrightarrow\boldsymbol{a}=\aleph^{-1}\boldsymbol{x},\;x_{i}=\left\langle \psi_{i},p\right\rangle \label{eq:gramCoeffs}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Without loss of generality, take the ordering:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\alpha=\alpha_{t}\left(N+1\right)^{3}+\alpha_{x}\left(N+1\right)^{2}+\alpha_{y}\left(N+1\right)+\alpha_{z}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $0\leq\alpha_{t},\alpha_{x},\alpha_{y},\alpha_{z}\leq N$
-\end_inset
-
-.
- Using the same ordering for 
-\begin_inset Formula $\beta$
-\end_inset
-
-, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-U_{\alpha\beta} & =\left(\psi_{\alpha_{t}}\left(1\right)\psi_{\beta_{t}}\left(1\right)-\beth_{\beta_{t}\alpha_{t}}\right)\cdot\aleph_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}\\
-V_{\alpha\beta}^{1} & =\aleph_{\alpha_{t}\beta_{t}}\cdot\beth_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-U & =C\otimes\aleph\otimes\aleph\otimes\aleph\\
-V^{1} & =\aleph\otimes\beth\otimes\aleph\otimes\aleph
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $C_{ij}=\psi_{i}\left(1\right)\psi_{j}\left(1\right)-\beth_{ji}$
-\end_inset
-
-.
- Thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-U^{-1}V^{1}=\left(C^{-1}\aleph\right)\otimes\left(\aleph^{-1}\beth\right)\otimes I\otimes I
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Therefore:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(U^{-1}V^{1}\right)^{k}=\left(C^{-1}\aleph\right)^{k}\otimes\left(\aleph^{-1}\beth\right)^{k}\otimes I\otimes I
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-A matrix 
-\begin_inset Formula $X$
-\end_inset
-
- is nilpotent (
-\begin_inset Formula $X^{k}=0$
-\end_inset
-
- for some 
-\begin_inset Formula $k\in\mathbb{N}$
-\end_inset
-
-) if and only if all its eigenvalues are 0.
- The conjecture will be proved if it is shown that 
-\begin_inset Formula $\left(\aleph^{-1}\beth\right)^{k}=0$
-\end_inset
-
- for some 
-\begin_inset Formula $k\in\mathbb{N}$
-\end_inset
-
-, as this would imply that 
-\begin_inset Formula $\left(U^{-1}V^{1}\right)^{k}=0$
-\end_inset
-
-, and thus all eigenvalues of 
-\begin_inset Formula $U^{-1}V^{1}$
-\end_inset
-
- are 0.
-\end_layout
-
-\begin_layout Standard
-Taking 
-\begin_inset Formula $\boldsymbol{a}\in\mathbb{R}^{N+1}$
-\end_inset
-
-, define:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-p=a_{0}\psi_{0}+\ldots+a_{N}\psi_{N}\in P_{N}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(\beth\boldsymbol{a}\right)_{i}=\left\langle \psi_{i},\psi_{0}^{'}\right\rangle a_{0}+\ldots+\left\langle \psi_{i},\psi_{N}^{'}\right\rangle a_{N}=\left\langle \psi_{i},p^{'}\right\rangle 
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, by 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:gramCoeffs"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(\aleph^{-1}\beth\boldsymbol{a}\right)_{i}\psi_{i}=p'
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-By induction:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(\left(\aleph^{-1}\beth\right)^{k}\boldsymbol{a}\right)_{i}\psi_{i}=p^{\left(k\right)}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-for any 
-\begin_inset Formula $k\in\mathbb{N}$
-\end_inset
-
-.
- As 
-\begin_inset Formula $p\in P_{N}$
-\end_inset
-
-, 
-\begin_inset Formula $\left(\aleph^{-1}\beth\right)^{N+1}\boldsymbol{a}=\boldsymbol{0}$
-\end_inset
-
-.
- As 
-\begin_inset Formula $\boldsymbol{a}$
-\end_inset
-
- was chosen arbitrarily, 
-\begin_inset Formula $\left(\aleph^{-1}\beth\right)^{N+1}=0$
-\end_inset
-
-.
- Thus, the conjecture is solved.
-\end_layout
-
-\begin_layout Standard
-This proof is easily adapted to show that 
-\begin_inset Formula $U^{-1}V^{2}$
-\end_inset
-
- and 
-\begin_inset Formula $U^{-1}V^{3}$
-\end_inset
-
- are nilpotent, and clearly extends to any number of spatial dimensions.
- No specific choice has been made for 
-\begin_inset Formula $N\in\mathbb{N}$
-\end_inset
-
- and thus the result holds in general.
-\end_layout
-
-\begin_layout Subsection
-The Continuous Galerkin Case
-\end_layout
-
-\begin_layout Standard
-In addition to 
-\begin_inset Formula $\aleph,\beth$
-\end_inset
-
-, we now define 
-\begin_inset Formula $\aleph',\beth'$
-\end_inset
-
- where each new matrix is equal to the original, with its first row and
- column removed (the row and column corresponding to the constant-term polynomia
-l 
-\begin_inset Formula $\psi_{0}$
-\end_inset
-
-).
- Take the following ordering:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\alpha=\alpha_{t}\left(N+1\right)^{3}+\alpha_{x}\left(N+1\right)^{2}+\alpha_{y}\left(N+1\right)+\alpha_{z}
-\end{equation}
-
-\end_inset
-
-where now 
-\begin_inset Formula $0\leq\alpha_{x},\alpha_{y},\alpha_{z}\leq N$
-\end_inset
-
- and 
-\begin_inset Formula $0\leq\alpha_{t}\leq N-1$
-\end_inset
-
-.
- Using the same ordering for 
-\begin_inset Formula $\beta$
-\end_inset
-
-, we now have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-U_{\alpha\beta} & =\beth'_{\alpha_{t}\beta_{t}}\cdot\aleph_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}\\
-V_{\alpha\beta}^{1} & =\aleph'_{\alpha_{t}\beta_{t}}\cdot\beth_{\alpha_{x}\beta_{x}}\cdot\aleph_{\alpha_{y}\beta_{y}}\cdot\aleph_{\alpha_{z}\beta_{z}}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The proof for the continuous case follows in the same manner as the proof
- for the discontinuous case, with:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-U^{-1}V^{1}=\left(\left(\beth'\right)^{-1}\aleph'\right)\otimes\left(\aleph^{-1}\beth\right)\otimes I\otimes I
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Extension of the Montecinos-Balsara ADER-WENO Method
-\end_layout
-
-\begin_layout Standard
-The material in this section is published in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Jackson2017b"
+key "Jackson2017,Jackson2017b"
 
 \end_inset
 
@@ -2457,7 +1718,7 @@ reference "eq:CGit"
 \end_layout
 
 \begin_layout Section
-Operator Splitting for Newtonian Fluids and Elastic Solids
+Operator Splitting Methods
 \end_layout
 
 \begin_layout Standard
@@ -2640,6 +1901,118 @@ In the scheme proposed here, the homogeneous subsystem will be solved using
 the Split-WENO method
 \shape default
 .
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $\frac{d\rho}{dt}=0$
+\end_inset
+
+ over the ODE time step, the operator 
+\begin_inset Formula $S$
+\end_inset
+
+ entails solving the following systems:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
+\frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These systems can be solved concurrently with a stiff ODE solver.
+ The Jacobians of these two systems to be used in an ODE solver are given
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Jacobian-of-Distortion-ODEs"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Jacobian-of-Thermal-Impulse-ODEs"
+
+\end_inset
+
+.
+ However, these systems can also be solved separately, using the analytical
+ results presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:GPR-Specific-Performance-Improvements"
+
+\end_inset
+
+, under specific assumptions.
+ The second-order Strang splitting is then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{\Delta t}}=D^{\frac{\Delta t}{2}}T^{\frac{\Delta t}{2}}H^{\Delta t}T^{\frac{\Delta t}{2}}D^{\frac{\Delta t}{2}}\boldsymbol{Q_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $D^{\delta t},T^{\delta t}$
+\end_inset
+
+ are the operators solving the distortion and thermal impulse ODEs respectively,
+ over time step 
+\begin_inset Formula $\delta t$
+\end_inset
+
+.
+ This allows us to bypass the relatively computationally costly process
+ of solving these systems numerically.
 \end_layout
 
 \begin_layout Subsection
@@ -3021,133 +2394,6 @@ It was found that the Osher-Solomon flux would often produce slightly less
 \end_layout
 
 \begin_layout Subsection
-The Temporal ODEs
-\end_layout
-
-\begin_layout Standard
-Noting that 
-\begin_inset Formula $\frac{d\rho}{dt}=0$
-\end_inset
-
- over the ODE time step, the operator 
-\begin_inset Formula $S$
-\end_inset
-
- entails solving the following systems:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
-\frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-These systems can be solved concurrently with a stiff ODE solver.
- The Jacobians of these two systems to be used in an ODE solver are given
- in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Jacobian-of-Distortion-ODEs"
-
-\end_inset
-
- and 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Jacobian-of-Thermal-Impulse-ODEs"
-
-\end_inset
-
-.
- However, these systems can also be solved separately, using the analytical
- results presented in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:GPR-Specific-Performance-Improvements"
-
-\end_inset
-
-, under specific assumptions.
- The second-order Strang splitting is then:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{Q_{\Delta t}}=D^{\frac{\Delta t}{2}}T^{\frac{\Delta t}{2}}H^{\Delta t}T^{\frac{\Delta t}{2}}D^{\frac{\Delta t}{2}}\boldsymbol{Q_{0}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $D^{\delta t},T^{\delta t}$
-\end_inset
-
- are the operators solving the distortion and thermal impulse ODEs respectively,
- over time step 
-\begin_inset Formula $\delta t$
-\end_inset
-
-.
- This allows us to bypass the relatively computationally costly process
- of solving these systems numerically.
-\end_layout
-
-\begin_layout Subsection
-GPR-Specific Performance Improvements
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:GPR-Specific-Performance-Improvements"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
 The Thermal Impulse ODEs
 \begin_inset CommandInset label
 LatexCommand label
@@ -3356,7 +2602,7 @@ Note that this is a generalized Lotka-Volterra system in
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 The Distortion ODEs
 \begin_inset CommandInset label
 LatexCommand label
@@ -3365,10 +2611,6 @@ name "subsec:The-Distortion-ODEs"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Paragraph
-Reduced Distortion ODEs
 \end_layout
 
 \begin_layout Standard
@@ -3714,8 +2956,8 @@ reference "eq:2odes"
 .
 \end_layout
 
-\begin_layout Paragraph
-Bounds on Reduced Distortion ODEs
+\begin_layout Subsubsection
+Bounds on the Solutions
 \end_layout
 
 \begin_layout Standard
@@ -4118,8 +3360,8 @@ If the fluid is very inviscid, resulting in a stiff ODE, the critical time
 
 \end_layout
 
-\begin_layout Paragraph
-Analytical Approximation
+\begin_layout Subsubsection
+Newontian Fluids
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Analytical-Approximation"
@@ -4545,8 +3787,846 @@ At this point it is not clear which values of
  Thus, the stiff ODE solver has been obviated by a few arithmetic operations.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
+Power Law Materials
+\end_layout
+
+\begin_layout Standard
+Take the singular value decomposition 
+\begin_inset Formula $A=U\Sigma V^{T}$
+\end_inset
+
+ as in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Distortion-ODEs"
+
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma=-\rho c_{s}^{2}A^{T}A\dev\left(A^{T}A\right)=-\rho c_{s}^{2}V\Sigma^{2}\dev\left(\Sigma^{2}\right)V^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \dev\left(\sigma\right)\right\Vert _{F}^{n}=\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this result, for elastoplastic materials governed by the power law
+ described in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:tau1"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\frac{\left(\frac{3}{2}\right)^{\frac{n}{2}}\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}}{\sigma_{0}^{n}}\Sigma\dev\left(\Sigma^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
+\end_inset
+
+ then 
+\begin_inset Formula $\Sigma^{2}=\det\left(A\right)^{\frac{2}{3}}X$
+\end_inset
+
+ where 
+\begin_inset Formula $X=\diag\left(x_{1},x_{2},x_{3}\right)$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{d\tilde{t}}=-3\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{n}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{t}=\frac{2}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\sqrt{\frac{3}{2}}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{27}{2}\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2} & =3\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\\
+ & -3\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
+ & -2\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber \\
+ & +4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the following quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2}=\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This leads to the following coupled system of ODEs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tilde{t}} & =-18\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tilde{t}} & =-\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tau} & =-18\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tau} & =-u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the approximate solution from before:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m\left(\tau\right) & =1+\frac{e^{-9\tau}}{3}\left(\left(9m_{0}-u_{0}-9\right)e^{3\tau}-\left(6m_{0}-u_{0}-6\right)\right)\label{eq:m(τ)}\\
+u\left(\tau\right) & =e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left(18m_{0}-3u_{0}-18\right)\right)\label{eq:u(τ)}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting 
+\begin_inset Formula $a=9m_{0}-u_{0}-9$
+\end_inset
+
+, 
+\begin_inset Formula $b=6m_{0}-u_{0}-6$
+\end_inset
+
+, it is straightforward to verify that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{n}{2}}}\left(\begin{array}{c}
+108ae^{-6\tau}-324be^{-9\tau}+108a^{2}e^{-12\tau}\\
+-396abe^{-15\tau}+297b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
++\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
+-24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
+\end{array}\right)^{\frac{n}{2}}\equiv\frac{f\left(\tau\right)^{\frac{n}{2}}}{54^{\frac{n}{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f\left(\tau\right)$
+\end_inset
+
+ is approximated by 
+\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\lambda\tau}$
+\end_inset
+
+, where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Formula 
+\begin{align}
+c & =108a-324b+108a^{2}-396ab+297b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
+\lambda & =\frac{c}{18a-36b+9a^{2}-\frac{132ab}{5}+\frac{33b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $f\left(0\right)=g\left(0\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{\infty}\left(f\left(\tau\right)-g\left(\tau\right)\right)d\tau=0$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{n}{2}}e^{-\frac{n\lambda}{2}\tau}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau & \approx\frac{2}{n\lambda}\log\left(\frac{n\lambda}{2}\left(\frac{c}{54}\right)^{\frac{n}{2}}\tilde{t}+1\right)\\
+ & =\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t+1\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the value of 
+\begin_inset Formula $A$
+\end_inset
+
+ at time 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ is found by substituting 
+\begin_inset Formula $\tau=\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)$
+\end_inset
+
+ into 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:m(τ)"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:u(τ)"
+
+\end_inset
+
+, and in turn substituting the values obtained into 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:xi"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:xj"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:xk"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Bingham Plastics
+\end_layout
+
+\begin_layout Standard
+For a Bingham plastic:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}=\begin{cases}
+0 & \sigma\leq\sigma_{0}\\
+\frac{1}{\mu_{\infty}}\left(\sigma-\sigma_{0}\right) & \sigma\geq\sigma_{0}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}\phi}\\
+\phi & =\begin{cases}
+0 & \sigma\leq\sigma_{0}\\
+1-\frac{\sigma_{0}}{\left|\sigma\right|} & \sigma\geq\sigma_{0}
+\end{cases}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{G}=-\left(G\nabla v+\nabla v^{T}G\right)+\frac{2}{\rho\theta_{1}}\sigma
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the asymptotic expansion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+G=G_{0}+\tau_{1}G_{1}+\tau_{1}^{2}G_{2}+\cdots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\therefore\sigma & =-\rho c_{s}^{2}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\left(\dev G_{0}+\tau_{1}\dev G_{1}+\right)\\
+ & =-\rho c_{s}^{2}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{D}{Dt}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)= & -\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\nabla v-\nabla v^{T}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\\
+ & -\frac{6\phi}{\tau_{1}}\left|G_{0}+\tau_{1}G_{1}+\cdots\right|^{\frac{5}{6}}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be approximated using some analytical function 
+\begin_inset Formula $f$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}=\frac{\sigma-f\left(\sigma\right)}{\mu_{\infty}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $f\left(\sigma\right)\sim\sigma$
+\end_inset
+
+ for 
+\begin_inset Formula $\sigma<\sigma_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $f\left(\sigma\right)\sim\sigma_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $\sigma>\sigma_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f$
+\end_inset
+
+ will take the form of the generalized logistic function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+g
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\infty\right)=a+g=\sigma_{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+\sigma_{0}-a
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We also require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(0\right)=\frac{a}{\left(1+b\right)^{d}}+\sigma_{0}-a=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f^{'}\left(0\right)=abcd\left(1+b\right)^{-\left(d+1\right)}=\frac{\left(a-\sigma_{0}\right)bcd}{1+b}=1
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f^{'}\left(\sigma\right)=abcd\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq1
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq\frac{1}{abcd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{d}{d\sigma}\left(\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\right) & =bc\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-\left(d+2\right)}e^{-2c\sigma}-c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\\
+ & =c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\left(b\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-1}e^{-c\sigma}-1\right)\\
+ & =0\\
+ & \Rightarrow b\left(d+1\right)e^{-c\sigma}=1+be^{-c\sigma}\\
+ & \Rightarrow e^{-c\sigma}=\frac{1}{bd}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the maximum of 
+\begin_inset Formula $\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+\frac{1}{d}\right)^{-\left(d+1\right)}\frac{1}{bd}=\frac{1}{abcd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+\frac{1}{d}\right)^{d+1}=ac
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\frac{a}{\left(1+b\right)^{d}}=a-\sigma_{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(a-\sigma_{0}\right)bcd=1+b
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Numerical Results
+\end_layout
+
+\begin_layout Subsection
+Newtonian Fluids & Elastic Solids
 \end_layout
 
 \begin_layout Subsubsection
@@ -6867,6 +6947,10 @@ Time steps taken for various tests (all with 200 cells) under the ADER-WENO
 \end_layout
 
 \begin_layout Subsubsection
+Purely Elastic Riemann Problems
+\end_layout
+
+\begin_layout Subsubsection
 Convergence
 \begin_inset CommandInset label
 LatexCommand label
@@ -8394,966 +8478,7 @@ Convergence rates for the ADER-DG PNPM method (
 \end_layout
 
 \begin_layout Subsection
-Conclusions
-\end_layout
-
-\begin_layout Standard
-In summary, a new numerical method based on an operator splitting, and including
- some analytical results, has been proposed for the GPR model of continuum
- mechanics.
- It has been demonstrated that this method is able to match current ADER-WENO
- methods in terms of accuracy on a range of test cases.
- It is significantly faster than the other currently available methods,
- and it is easier to implement.
- The author would recommend that if very high order-of-accuracy is required,
- and computational cost is not important, then ADER-WENO methods may present
- a better option, as by design the new method cannot achieve better than
- second-order accuracy.
- This new method clearly has applications in which it will prove useful,
- however.
-\end_layout
-
-\begin_layout Standard
-In a similar manner to the operator splitting method presented in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Leveque1990"
-
-\end_inset
-
-, the Split-WENO method is second-order accurate and stable even for very
- stiff problems (in particular, the reader is referred to the results of
- the 
-\begin_inset Formula $\mu=10^{-4}$
-\end_inset
-
- variation of Stokes' First Problem in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Stokes'-First-Problem"
-
-\end_inset
-
- and the convergence study in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Convergence"
-
-\end_inset
-
-).
- However, it will inevitably suffer from the incorrect speed of propagation
- of discontinuities on regular, structured grids.
- This is due to a lack of spatial resolution in evaluating the source terms,
- as detailed in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Leveque1990"
-
-\end_inset
-
-.
- This issue can be rectified by the use of some form of shock tracking or
- mesh refinement, as noted in the cited paper.
- It is noted in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2008a"
-
-\end_inset
-
- that operator splitting-based methods can result in schemes that are neither
- well-balanced nor asymptotically consistent.
- The extent to which these two conditions are violated by the Split-WENO
- method - and the severity in practice of any potential violation - is a
- topic of further research.
-\end_layout
-
-\begin_layout Standard
-It should be noted that the assumption 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:Assumption"
-
-\end_inset
-
- used to derive the approximate analytical solver may break down for situations
- where the flow is compressed heavily in one direction but not the others.
- The reason for this is that one of the singular values of the distortion
- tensor will be much larger than the others, and the mean of the squares
- of the singular values will not be close to its geometric mean, meaning
- that the subsequent linearization of the ODE governing the mean of the
- singular values fails.
- It should be noted that none of the situations covered in this study presented
- problems for the approximate analytical solver, and situations which may
- be problematic are in some sense unusual.
- In any case, a stiff ODE solver can be used to solve the system 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:2odes"
-
-\end_inset
-
- if necessary, utilizing the Jacobians derived in the appendix, and so the
- Split-WENO method is still very much usable in these situations, albeit
- slightly slower.
-\end_layout
-
-\begin_layout Standard
-It should be noted that both the ADER-WENO and Split-WENO methods, as described
- in this study, are trivially parallelizable on a cell-wise basis.
- Thus, given a large number of computational cores, deficiencies in the
- Split-WENO method in terms of its order of accuracy may be overcome by
- utilizing a larger number of computational cells and cores.
- The computational cost of each time step is significantly smaller than
- with the ADER-WENO method, and the number of grid cells that can be used
- scales roughly linearly with number of cores, at constant time per iteration.
-\end_layout
-
-\begin_layout Section
-Operator Splitting for Plastic Materials
-\end_layout
-
-\begin_layout Standard
-The material in this section is published in [REF].
-\end_layout
-
-\begin_layout Subsection
-Elastoplastic Power Law Materials
-\end_layout
-
-\begin_layout Standard
-Take the singular value decomposition 
-\begin_inset Formula $A=U\Sigma V^{T}$
-\end_inset
-
- as in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:The-Distortion-ODEs"
-
-\end_inset
-
-.
- Note that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\sigma=-\rho c_{s}^{2}A^{T}A\dev\left(A^{T}A\right)=-\rho c_{s}^{2}V\Sigma^{2}\dev\left(\Sigma^{2}\right)V^{T}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left\Vert \dev\left(\sigma\right)\right\Vert _{F}^{n}=\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using this result, for elastoplastic materials governed by the power law
- described in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:tau1"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\frac{\left(\frac{3}{2}\right)^{\frac{n}{2}}\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}}{\sigma_{0}^{n}}\Sigma\dev\left(\Sigma^{2}\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Letting 
-\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
-\end_inset
-
- then 
-\begin_inset Formula $\Sigma^{2}=\det\left(A\right)^{\frac{2}{3}}X$
-\end_inset
-
- where 
-\begin_inset Formula $X=\diag\left(x_{1},x_{2},x_{3}\right)$
-\end_inset
-
-.
- Thus, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{dx_{i}}{d\tilde{t}}=-3\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{n}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem-2}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\tilde{t}=\frac{2}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\sqrt{\frac{3}{2}}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\frac{27}{2}\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2} & =3\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\\
- & -3\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
- & -2\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber \\
- & +4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Define the following quantities:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
-u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Then we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2}=\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This leads to the following coupled system of ODEs:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\frac{du}{d\tilde{t}} & =-18\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
-\frac{dm}{d\tilde{t}} & =-\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}u
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Define the the variable 
-\begin_inset Formula $\tau$
-\end_inset
-
- by:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Then we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\frac{du}{d\tau} & =-18\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
-\frac{dm}{d\tau} & =-u
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using the approximate solution from before:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-m\left(\tau\right) & =1+\frac{e^{-9\tau}}{3}\left(\left(9m_{0}-u_{0}-9\right)e^{3\tau}-\left(6m_{0}-u_{0}-6\right)\right)\label{eq:m(τ)}\\
-u\left(\tau\right) & =e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left(18m_{0}-3u_{0}-18\right)\right)\label{eq:u(τ)}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Denoting 
-\begin_inset Formula $a=9m_{0}-u_{0}-9$
-\end_inset
-
-, 
-\begin_inset Formula $b=6m_{0}-u_{0}-6$
-\end_inset
-
-, it is straightforward to verify that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{n}{2}}}\left(\begin{array}{c}
-108ae^{-6\tau}-324be^{-9\tau}+108a^{2}e^{-12\tau}\\
--396abe^{-15\tau}+297b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
-+\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
--24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
-\end{array}\right)^{\frac{n}{2}}\equiv\frac{f\left(\tau\right)^{\frac{n}{2}}}{54^{\frac{n}{2}}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $f\left(\tau\right)$
-\end_inset
-
- is approximated by 
-\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\lambda\tau}$
-\end_inset
-
-, where:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\size footnotesize
-\begin_inset Formula 
-\begin{align}
-c & =108a-324b+108a^{2}-396ab+297b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
-\lambda & =\frac{c}{18a-36b+9a^{2}-\frac{132ab}{5}+\frac{33b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that 
-\begin_inset Formula $f\left(0\right)=g\left(0\right)$
-\end_inset
-
- and 
-\begin_inset Formula $\int_{0}^{\infty}\left(f\left(\tau\right)-g\left(\tau\right)\right)d\tau=0$
-\end_inset
-
-.
- Thus, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{n}{2}}e^{-\frac{n\lambda}{2}\tau}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Therefore:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\tau & \approx\frac{2}{n\lambda}\log\left(\frac{n\lambda}{2}\left(\frac{c}{54}\right)^{\frac{n}{2}}\tilde{t}+1\right)\\
- & =\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t+1\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, the value of 
-\begin_inset Formula $A$
-\end_inset
-
- at time 
-\begin_inset Formula $\Delta t$
-\end_inset
-
- is found by substituting 
-\begin_inset Formula $\tau=\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)$
-\end_inset
-
- into 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:m(τ)"
-
-\end_inset
-
-,
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:u(τ)"
-
-\end_inset
-
-, and in turn substituting the values obtained into 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:xi"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:xj"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:xk"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsection
-Bingham Plastics
-\end_layout
-
-\begin_layout Standard
-For a Bingham plastic:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\dot{\gamma}=\begin{cases}
-0 & \sigma\leq\sigma_{0}\\
-\frac{1}{\mu_{\infty}}\left(\sigma-\sigma_{0}\right) & \sigma\geq\sigma_{0}
-\end{cases}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Define:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}\phi}\\
-\phi & =\begin{cases}
-0 & \sigma\leq\sigma_{0}\\
-1-\frac{\sigma_{0}}{\left|\sigma\right|} & \sigma\geq\sigma_{0}
-\end{cases}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\dot{G}=-\left(G\nabla v+\nabla v^{T}G\right)+\frac{2}{\rho\theta_{1}}\sigma
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Take the asymptotic expansion:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-G=G_{0}+\tau_{1}G_{1}+\tau_{1}^{2}G_{2}+\cdots
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\therefore\sigma & =-\rho c_{s}^{2}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\left(\dev G_{0}+\tau_{1}\dev G_{1}+\right)\\
- & =-\rho c_{s}^{2}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Then:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\frac{D}{Dt}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)= & -\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\nabla v-\nabla v^{T}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\\
- & -\frac{6\phi}{\tau_{1}}\left|G_{0}+\tau_{1}G_{1}+\cdots\right|^{\frac{5}{6}}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This can be approximated using some analytical function 
-\begin_inset Formula $f$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\dot{\gamma}=\frac{\sigma-f\left(\sigma\right)}{\mu_{\infty}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $f\left(\sigma\right)\sim\sigma$
-\end_inset
-
- for 
-\begin_inset Formula $\sigma<\sigma_{0}$
-\end_inset
-
-, 
-\begin_inset Formula $f\left(\sigma\right)\sim\sigma_{0}$
-\end_inset
-
- for 
-\begin_inset Formula $\sigma>\sigma_{0}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $f$
-\end_inset
-
- will take the form of the generalized logistic function:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+g
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We require:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-f\left(\infty\right)=a+g=\sigma_{0}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+\sigma_{0}-a
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We also require:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-f\left(0\right)=\frac{a}{\left(1+b\right)^{d}}+\sigma_{0}-a=0
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-f^{'}\left(0\right)=abcd\left(1+b\right)^{-\left(d+1\right)}=\frac{\left(a-\sigma_{0}\right)bcd}{1+b}=1
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-f^{'}\left(\sigma\right)=abcd\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq1
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq\frac{1}{abcd}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\frac{d}{d\sigma}\left(\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\right) & =bc\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-\left(d+2\right)}e^{-2c\sigma}-c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\\
- & =c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\left(b\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-1}e^{-c\sigma}-1\right)\\
- & =0\\
- & \Rightarrow b\left(d+1\right)e^{-c\sigma}=1+be^{-c\sigma}\\
- & \Rightarrow e^{-c\sigma}=\frac{1}{bd}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, the maximum of 
-\begin_inset Formula $\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}$
-\end_inset
-
- is:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(1+\frac{1}{d}\right)^{-\left(d+1\right)}\frac{1}{bd}=\frac{1}{abcd}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(1+\frac{1}{d}\right)^{d+1}=ac
-\end{equation}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{equation}
-\frac{a}{\left(1+b\right)^{d}}=a-\sigma_{0}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left(a-\sigma_{0}\right)bcd=1+b
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Numerical Results
+Non-Newtonian Fluids & Elastoplastic Solids
 \end_layout
 
 \begin_layout Subsubsection
@@ -9560,6 +8685,14 @@ The total energy during the Strain Relaxation Test
 \end_layout
 
 \begin_layout Subsubsection
+Prandtl Boundary Layer
+\end_layout
+
+\begin_layout Subsubsection
+Poiseuille Flow
+\end_layout
+
+\begin_layout Subsubsection
 Elastoplastic Piston Test
 \end_layout
 
@@ -9648,15 +8781,128 @@ Density and velocity in the elastoplastic piston test
 \end_layout
 
 \begin_layout Subsubsection
-Dilatant Test
+2D Elastoplastic Test
 \end_layout
 
 \begin_layout Subsubsection
-Pseudoplastic Test
+Convergence
 \end_layout
 
 \begin_layout Section
-Eigendecomposition Formulation for GPR-type Continuum Models
+Conclusions
+\end_layout
+
+\begin_layout Standard
+In summary, a new numerical method based on an operator splitting, and including
+ some analytical results, has been proposed for the GPR model of continuum
+ mechanics.
+ It has been demonstrated that this method is able to match current ADER-WENO
+ methods in terms of accuracy on a range of test cases.
+ It is significantly faster than the other currently available methods,
+ and it is easier to implement.
+ The author would recommend that if very high order-of-accuracy is required,
+ and computational cost is not important, then ADER-WENO methods may present
+ a better option, as by design the new method cannot achieve better than
+ second-order accuracy.
+ This new method clearly has applications in which it will prove useful,
+ however.
+\end_layout
+
+\begin_layout Standard
+In a similar manner to the operator splitting method presented in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Leveque1990"
+
+\end_inset
+
+, the Split-WENO method is second-order accurate and stable even for very
+ stiff problems (in particular, the reader is referred to the results of
+ the 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+ variation of Stokes' First Problem in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Stokes'-First-Problem"
+
+\end_inset
+
+ and the convergence study in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Convergence"
+
+\end_inset
+
+).
+ However, it will inevitably suffer from the incorrect speed of propagation
+ of discontinuities on regular, structured grids.
+ This is due to a lack of spatial resolution in evaluating the source terms,
+ as detailed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Leveque1990"
+
+\end_inset
+
+.
+ This issue can be rectified by the use of some form of shock tracking or
+ mesh refinement, as noted in the cited paper.
+ It is noted in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2008a"
+
+\end_inset
+
+ that operator splitting-based methods can result in schemes that are neither
+ well-balanced nor asymptotically consistent.
+ The extent to which these two conditions are violated by the Split-WENO
+ method - and the severity in practice of any potential violation - is a
+ topic of further research.
+\end_layout
+
+\begin_layout Standard
+It should be noted that the assumption 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Assumption"
+
+\end_inset
+
+ used to derive the approximate analytical solver may break down for situations
+ where the flow is compressed heavily in one direction but not the others.
+ The reason for this is that one of the singular values of the distortion
+ tensor will be much larger than the others, and the mean of the squares
+ of the singular values will not be close to its geometric mean, meaning
+ that the subsequent linearization of the ODE governing the mean of the
+ singular values fails.
+ It should be noted that none of the situations covered in this study presented
+ problems for the approximate analytical solver, and situations which may
+ be problematic are in some sense unusual.
+ In any case, a stiff ODE solver can be used to solve the system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:2odes"
+
+\end_inset
+
+ if necessary, utilizing the Jacobians derived in the appendix, and so the
+ Split-WENO method is still very much usable in these situations, albeit
+ slightly slower.
+\end_layout
+
+\begin_layout Standard
+It should be noted that both the ADER-WENO and Split-WENO methods, as described
+ in this study, are trivially parallelizable on a cell-wise basis.
+ Thus, given a large number of computational cores, deficiencies in the
+ Split-WENO method in terms of its order of accuracy may be overcome by
+ utilizing a larger number of computational cells and cores.
+ The computational cost of each time step is significantly smaller than
+ with the ADER-WENO method, and the number of grid cells that can be used
+ scales roughly linearly with number of cores, at constant time per iteration.
 \end_layout
 
 \begin_layout Standard
