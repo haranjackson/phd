@@ -70,6 +70,11 @@
 
 \begin_body
 
+\begin_layout Title
+Analytical Solution for the Thermal Impulse Relaxation with Time-Varying
+ Strain Energy
+\end_layout
+
 \begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\dev}{\operatorname{dev}}

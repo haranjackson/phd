@@ -70,6 +70,10 @@
 
 \begin_body
 
+\begin_layout Title
+GPR Model with the Godunov-Romenski EOS
+\end_layout
+
 \begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\dev}{\operatorname{dev}}

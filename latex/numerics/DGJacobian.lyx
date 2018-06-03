@@ -71,6 +71,10 @@
 
 \begin_body
 
+\begin_layout Title
+Jacobian for the Discontinuous Galerkin Predictor
+\end_layout
+
 \begin_layout Standard
 Take a non-homogeneous, non-conservative (and for simplicity, one-dimensional)
  hyperbolic system of the form:
