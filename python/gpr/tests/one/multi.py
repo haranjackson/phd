@@ -7,7 +7,7 @@ from gpr.opts import NV
 from gpr.tests.params import Air_SG_SI, He_SG_SI, H20_SG_SI, Cu_SMG_SI, \
     Cu_HYP_SI, Al_HYP_CGS, Al_GR_CGS, VAC
 from gpr.tests.one.common import riemann_IC, primitive_IC
-from gpr.tests.one.fluids import heat_conduction_IC
+from gpr.tests.one.newtonian import heat_conduction_IC
 
 
 def water_air_IC():

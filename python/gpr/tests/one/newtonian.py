@@ -1,12 +1,11 @@
-from numpy import array, eye, arange, concatenate, exp, flip, linspace, sqrt, zeros
+from numpy import array, eye, arange, exp, linspace, sqrt, zeros
 from scipy.optimize import brentq
 from scipy.special import erf
 
 from gpr.misc.objects import material_params
-from gpr.misc.structures import Cvec, State
+from gpr.misc.structures import Cvec
 from gpr.opts import NV
 from gpr.vars.wavespeeds import c_0
-from gpr.tests.boundaries import wall_BC
 from gpr.tests.one.common import primitive_IC
 
 
@@ -142,77 +141,3 @@ def viscous_shock_IC(center=0):
 
     return u, [MP], tf, dX
 
-
-def hagen_poiseuille_IC():
-
-    tf = 3
-    Lx = 0.25
-    nx = 100
-    dp = 0.48
-
-    γ = 1.4
-    cs = 8
-    ρ = 1
-    p = 100 / γ
-    v = zeros(3)
-    A = eye(3)
-    J = zeros(3)
-    δp = array([0, dp, 0])
-
-    K = 1e-2; n = 0.9; τ1 = 6 * K**(1/n) / ρ / cs**2
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=cs,
-                         σY=1, τ1=τ1, n=(1-n)/n, PLASTIC=True, δp=δp)
-
-    Q = Cvec(ρ, p, v, A, J, MP)
-    u = array([Q] * nx)
-
-    return u, [MP], tf, [Lx / nx]
-
-
-def hagen_poiseuille_BC(u, N, *args):
-    dp = 0.48
-
-    γ = 1.4
-    cs = 8
-    ρ = 1
-    p = 100 / γ
-    δp = array([0, dp, 0])
-
-    K = 1e-2; n = 0.9; τ1 = 6 * K**(1/n) / ρ / cs**2
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=cs,
-                         σY=1, τ1=τ1, n=(1-n)/n, PLASTIC=True, δp=δp)
-
-    return wall_BC(u, N, 1, [1], MP)
-
-
-def hagen_poiseuille_modifier(u):
-
-    nx = u.shape[0]
-
-    γ = 1.4
-    cs = 8
-    ρ = 1
-    p = 100 / γ
-
-    K = 1e-2; n = 0.9; τ1 = 6 * K**(1/n) / ρ / cs**2
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=cs,
-                         σY=1, τ1=τ1, n=(1-n)/n, PLASTIC=True)
-
-    for i in range(nx):
-        Q = u[i]
-        P = State(Q, MP)
-        u[i] = Cvec(P.ρ, p, P.v, P.A, P.J, MP)
-
-
-def hagen_poiseuille_exact(nx=100):
-
-    Lx = 0.25
-    dp = 0.48
-    ρ = 1
-    μ = 1e-2
-    n = 0.9
-
-    k = (n + 1) / n
-    x = linspace(0, Lx, nx+2)[int(nx/2+1):-1]
-    y = ρ / k * (dp / μ)**(1 / n) * ((Lx / 2)**k - (x - Lx / 2)**k)
-    return concatenate([flip(y, axis=0), y])

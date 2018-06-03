@@ -1,7 +1,7 @@
 from numpy import array, zeros
 
 from gpr.tests.params import Air_SG_ND
-from gpr.tests.one.fluids import primitive_IC
+from gpr.tests.one.common import primitive_IC
 
 
 def toro1_IC():
