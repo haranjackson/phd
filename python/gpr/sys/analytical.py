@@ -121,6 +121,8 @@ def ode_solver_cons(Q, dt, MP):
     ρ = Q[0]
     A = Q[5:14].reshape([3, 3])
 
+    Q[2:5] += MP.δp * dt
+
     if VISCOUS:
         A1 = solver_distortion_analytic(A, dt, MP)
         Q[5:14] = A1.ravel()

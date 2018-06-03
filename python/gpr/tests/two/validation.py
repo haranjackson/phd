@@ -3,9 +3,9 @@ from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.objects import material_params
-from gpr.misc.structures import State
+from gpr.misc.structures import State, Cvec
 
-from gpr.tests.boundaries import destress
+from gpr.tests.boundaries import wall_BC
 
 
 def vortex(x, y, x0, y0, ε, γ, ρ):
@@ -130,8 +130,8 @@ def hagen_poiseuille_IC():
     Ly = 0.5
     nx = 10
     ny = 50
-    dp = 0.48
-    FIX_DOMAIN_P = 0
+    dp = 0.48 * Lx
+    FIX_DOMAIN_P = True
 
     γ = 1.4
     ρ = 1
@@ -139,10 +139,10 @@ def hagen_poiseuille_IC():
     v = zeros(3)
     A = eye(3)
     J = zeros(3)
-    δp = array([dp, 0, 0])
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p,
-                             γ=γ, b0=8, μ=1e-2, δp=δp)
+    # δp = array([dp, 0, 0])
+    δp = zeros(3)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2, δp=δp)
 
     ddp = dp / (nx + 1)
     u = zeros([nx, ny, 14])
@@ -156,13 +156,11 @@ def hagen_poiseuille_IC():
     return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
-def hagen_poiseuille_BC(u):
+def hagen_poiseuille_BC(u, N, *args):
 
-    dp = 0.48
-    DESTRESS = 0
-    FIX_DOMAIN_P = 0
-    FIX_INLET_V = 1
-    FIX_OUTLET_P = 0
+    Lx = 1
+    dp = 0.48 * Lx
+    FIX_OUTLET_P = True
 
     γ = 1.4
     ρ = 1
@@ -171,26 +169,13 @@ def hagen_poiseuille_BC(u):
 
     nx, ny = u.shape[:2]
     ddp = dp / (nx + 1)
-    ret = u.copy()
 
-    for i in range(nx):
-
-        if DESTRESS:
-            destress(ret[i, 0], MP)
-            destress(ret[i, -1], MP)
-
-        if FIX_DOMAIN_P:
-            pi = p - (i + 1) * ddp
-            for j in range(ny):
-                Q = ret[i, j]
-                P = State(Q, MP)
-                ret[i, j] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
-
-    ret = standard_BC(u, [0, 1])
+    ret = wall_BC(u, N, 2, [0,1], MP)
 
     if FIX_OUTLET_P:
-        ny = ret.shape[1]
-        for j in range(N, ny - N):
+
+        nx, ny = ret.shape[:2]
+        for j in range(ny):
             QL = ret[0, j]
             QR = ret[-1, j]
             ρL = QL[0]
@@ -201,11 +186,31 @@ def hagen_poiseuille_BC(u):
             AR = QR[5:14].reshape([3, 3])
             J = zeros(3)
             for i in range(N):
-                #ret[N - 1 - i, j] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
-                ret[nx + N + i, j] = Cvec(ρR, p - dp - i * ddp, vR, AR, J,
-                                          MP)
+                ret[N - 1 - i, j] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
+                ret[nx - N + i, j] = Cvec(ρR, p - dp - i * ddp, vR, AR, J, MP)
 
     return ret
+
+
+def hagen_poiseuille_modifier(u):
+
+    Lx = 1
+    dp = 0.48 * Lx
+
+    nx, ny = u.shape[:2]
+    ddp = dp / (nx + 1)
+
+    γ = 1.4
+    ρ = 1
+    p = 100 / γ
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
+
+    for i in range(nx):
+        pi = p - (i + 1) * ddp
+        for j in range(ny):
+            Q = u[i, j]
+            P = State(Q, MP)
+            u[i, j] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
 
 
 def lid_driven_cavity_IC():

@@ -8,6 +8,10 @@
 
 double pos(double x) { return std::max(0., x); }
 
+void analyticSolver_body_forces(VecVr Q, double dt, Par &MP) {
+  Q.segment<3>(2) += MP.δp * dt;
+}
+
 double nondimensionalized_time(double ρ, double detA3, double m0, double u0,
                                double dt, Par &MP) {
 
@@ -117,6 +121,8 @@ void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
 void ode_stepper_analytic(VecVr Q, double dt, Par &MP) {
   // Solves the ODE analytically by linearising the distortion equations and
   // providing an analytic approximation to the thermal impulse evolution
+
+  analyticSolver_body_forces(Q, dt, MP);
 
   if (VISCOUS)
     analyticSolver_distortion(Q, dt, MP);

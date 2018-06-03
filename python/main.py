@@ -1,7 +1,10 @@
+from copy import deepcopy
+
 from numpy import array, save
 
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
+from gpr.tests.boundaries import renormalize_A
 from gpr.tests.one import fluids, solids, multi as multi1, toro
 from gpr.tests.two import validation, impact, multi as multi2
 from gpr.misc.plot import *
@@ -16,14 +19,22 @@ from solver.gfm import MultiSolver
 # u0, MPs, tf, dX = multi1.pbx_copper_IC()
 # u0, MPs, tf, dX = multi1.aluminium_vacuum_IC()
 # u0, MPs, tf, dX = solids.piston_IC()
-u0, MPs, tf, dX = impact.aluminium_plates_IC()
+# u0, MPs, tf, dX = impact.aluminium_plates_IC()
+# u0, MPs, tf, dX = validation.hagen_poiseuille_IC()
+u0, MPs, tf, dX = fluids.hagen_poiseuille_IC()
 
-bcs = 'transitive'
+# bcs = 'transitive'
 # bcs = solids.piston_BC
+# bcs = validation.hagen_poiseuille_BC
+bcs = fluids.hagen_poiseuille_BC
+
+modifier = None
+# modifier = validation.hagen_poiseuille_modifier
+modifier = fluids.hagen_poiseuille_modifier
 
 
-cpp_level = 2
-N = 2
+cpp_level = 1
+N = 3
 cfl = 0.3
 SPLIT = True
 SOLVER = 'roe'
@@ -47,9 +58,16 @@ uList = []
 gridList = []
 maskList = []
 def callback(u, grids, masks):
+
+    renormalize_A(u, MPs[0])
+
+    if modifier is not None:
+        modifier(u)
+
     uList.append(u.copy())
     gridList.append(deepcopy(grids))
     maskList.append(deepcopy(masks))
+
 
 solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      model_params=MPs, M=M_cons, max_eig=max_eig, order=N,
