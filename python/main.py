@@ -4,7 +4,6 @@ from numpy import array, save
 
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
-from gpr.tests.boundaries import renormalize_A
 from gpr.tests.one import newtonian, non_newtonian, solids, multi as multi1
 from gpr.tests.two import validation, impact, multi as multi2
 from gpr.misc.plot import *
@@ -29,16 +28,12 @@ bcs = 'stick'
 # bcs = validation.hagen_poiseuille_BC
 # bcs = non_newtonian.hagen_poiseuille_BC
 
-modifier = None
-# modifier = validation.hagen_poiseuille_modifier
-# modifier = non_newtonian.hagen_poiseuille_modifier
-
 
 cpp_level = 2
 N = 2
 cfl = 0.4
 SPLIT = True
-SOLVER = 'osher'
+SOLVER = 'roe'
 
 
 if cpp_level > 0:
@@ -59,12 +54,7 @@ uList = []
 gridList = []
 maskList = []
 def callback(u, grids, masks):
-
-    renormalize_A(u, MPs[0])
-
-    if modifier is not None:
-        modifier(u)
-
+    # TODO: add distortion resetting
     uList.append(u.copy())
     gridList.append(deepcopy(grids))
     maskList.append(deepcopy(masks))

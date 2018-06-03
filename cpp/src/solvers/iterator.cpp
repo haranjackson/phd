@@ -42,6 +42,19 @@ void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
   }
 }
 
+void reset_distortion(Vecr u, std::vector<Par> &MPs) {
+  int ncell = u.size() / V;
+  for (int i = 0; i < ncell; i++) {
+    int mi = get_material_index(u.segment<V>(i * V));
+    double ρ = u(i * V);
+    double c = cbrt(ρ / MPs[mi].ρ0);
+    u.segment<9>(i * V + 5).setZero();
+    u(i * V + 5) = c;
+    u(i * V + 9) = c;
+    u(i * V + 13) = c;
+  }
+}
+
 double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
                 double CFL, double t, double tf, int count,
                 std::vector<Par> &MPs, int nmat) {
@@ -75,8 +88,8 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
 
 std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
                           iVecr boundaryTypes, bool SPLIT, bool HALF_STEP,
-                          bool STIFF, int FLUX, std::vector<Par> &MPs,
-                          int nOut) {
+                          bool STIFF, int FLUX, std::vector<Par> &MPs, int nOut,
+                          int nReset) {
 
   std::vector<Vec> ret(nOut);
   int nmat = MPs.size();
@@ -94,6 +107,7 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
   double t = 0.;
   long count = 0;
   int pushCount = 0;
+  int resetCount = 0;
 
   double dt = 0.;
 
@@ -101,6 +115,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     if (LSET > 0)
       fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
+    else
+      grids[0] = u;
 
     dt = timestep(grids, masks, dX, CFL, t, tf, count, MPs, nmat);
 
@@ -125,6 +141,11 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     t += dt;
     count += 1;
+
+    if (t >= double(resetCount + 1) / double(nReset) * tf) {
+      reset_distortion(u, MPs);
+      resetCount += 1;
+    }
 
     if (t >= double(pushCount + 1) / double(nOut) * tf) {
       ret[pushCount] = u;

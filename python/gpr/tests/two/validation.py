@@ -3,7 +3,7 @@ from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.objects import material_params
-from gpr.misc.structures import State, Cvec
+from gpr.misc.structures import Cvec
 
 from gpr.tests.boundaries import wall_BC
 
@@ -190,27 +190,6 @@ def hagen_poiseuille_BC(u, N, *args):
                 ret[nx - N + i, j] = Cvec(ρR, p - dp - i * ddp, vR, AR, J, MP)
 
     return ret
-
-
-def hagen_poiseuille_modifier(u):
-
-    Lx = 1
-    dp = 0.48 * Lx
-
-    nx, ny = u.shape[:2]
-    ddp = dp / (nx + 1)
-
-    γ = 1.4
-    ρ = 1
-    p = 100 / γ
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
-
-    for i in range(nx):
-        pi = p - (i + 1) * ddp
-        for j in range(ny):
-            Q = u[i, j]
-            P = State(Q, MP)
-            u[i, j] = Cvec(P.ρ, pi, P.v, P.A, P.J, MP)
 
 
 def lid_driven_cavity_IC():
