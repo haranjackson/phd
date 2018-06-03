@@ -74,8 +74,9 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
 }
 
 std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
-                          bool PERIODIC, bool SPLIT, bool HALF_STEP, bool STIFF,
-                          int FLUX, std::vector<Par> &MPs, int nOut) {
+                          iVecr boundaryTypes, bool SPLIT, bool HALF_STEP,
+                          bool STIFF, int FLUX, std::vector<Par> &MPs,
+                          int nOut) {
 
   std::vector<Vec> ret(nOut);
   int nmat = MPs.size();
@@ -106,7 +107,7 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
     for (int mat = 0; mat < nmat; mat++) {
       if (MPs[mat].EOS > -1) {
 
-        boundaries(grids[mat], ub, nX, PERIODIC);
+        boundaries(grids[mat], ub, nX, boundaryTypes);
         extend_mask(masks[mat], maskb, nX);
 
         if (SPLIT)

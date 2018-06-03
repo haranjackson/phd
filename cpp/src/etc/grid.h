@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void boundaries(Vecr u, Vecr ub, iVecr nX, bool PERIODIC);
+void boundaries(Vecr u, Vecr ub, iVecr nX, iVecr boundaryTypes);
 
 int extended_dimensions(iVecr nX, int ext);
 

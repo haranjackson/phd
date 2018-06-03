@@ -140,7 +140,7 @@ class SolverPlus(Solver):
         self.cpp_level = cpp_level
 
         if cpp_level == 2:
-            self.u = solve_full_cpp(self, u0, tf, dX, cfl)
+            self.u = solve_full_cpp(self, u0, tf, dX, cfl, bcs)
             return self.u
 
         else:

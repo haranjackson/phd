@@ -175,7 +175,7 @@ class MultiSolver():
               callback=None, cpp_level=0, nOut=50):
 
         if cpp_level == 2:
-            self.u = solve_full_cpp(self, u0, tf, dX, cfl, nOut, callback)
+            self.u = solve_full_cpp(self, u0, tf, dX, cfl, nOut, callback, bcs)
             return self.u
 
         else:

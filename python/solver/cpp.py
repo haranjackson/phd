@@ -37,12 +37,22 @@ def cpp_ader_stepper(obj, mat, matBC, dt, dX, maskBC):
     mat = matr.reshape(mat.shape)
 
 
-def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback):
+def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs):
+
+    ndim = initial_grid.ndim - 1
+    if bcs == 'transitive':
+        bcs = array([0] * ndim, dtype=int32)
+    elif bcs == 'periodic':
+        bcs = array([1] * ndim, dtype=int32)
+    elif bcs == 'slip':
+        bcs = array([2] * ndim, dtype=int32)
+    elif bcs == 'stick':
+        bcs = array([3] * ndim, dtype=int32)
 
     nX = get_dimensions(initial_grid)
     u = initial_grid.ravel()
 
-    uOut = GPRpy.solvers.iterator(u, final_time, nX, array(dX), cfl, False,
+    uOut = GPRpy.solvers.iterator(u, final_time, nX, array(dX), cfl, bcs,
                                   obj.split, obj.half_step, obj.stiff_dg,
                                   obj.flux_type, obj.pars, nOut)
 
