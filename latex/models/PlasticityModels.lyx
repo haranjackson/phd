@@ -71,7 +71,11 @@
 \begin_body
 
 \begin_layout Title
-Bingham Plastics under the GPR Model
+Plasticity Models under the GPR Model
+\end_layout
+
+\begin_layout Section
+Bingham Plastics
 \end_layout
 
 \begin_layout Standard
@@ -367,6 +371,23 @@ So we have:
 \left(a-\sigma_{0}\right)bcd=1+b
 \end{equation}
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Yield Suface Mapping
+\end_layout
+
+\begin_layout Standard
+Favrie & Gavrilyuk (
+\shape italic
+Dynamics of shock waves in elastic-plastic solids
+\shape default
+) suggest using the following relaxation parameter for the strain relaxation:
+ 
+\begin_inset Formula $\tau_{0}\left(\frac{\mu^{2}}{S^{2}-\frac{2}{3}Y^{2}}\right)^{2}$
 \end_inset
 
 
