@@ -1,0 +1,376 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Bingham Plastics
+\end_layout
+
+\begin_layout Standard
+For a Bingham plastic:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}=\begin{cases}
+0 & \sigma\leq\sigma_{0}\\
+\frac{1}{\mu_{\infty}}\left(\sigma-\sigma_{0}\right) & \sigma\geq\sigma_{0}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}\phi}\\
+\phi & =\begin{cases}
+0 & \sigma\leq\sigma_{0}\\
+1-\frac{\sigma_{0}}{\left|\sigma\right|} & \sigma\geq\sigma_{0}
+\end{cases}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{G}=-\left(G\nabla v+\nabla v^{T}G\right)+\frac{2}{\rho\theta_{1}}\sigma
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the asymptotic expansion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+G=G_{0}+\tau_{1}G_{1}+\tau_{1}^{2}G_{2}+\cdots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\therefore\sigma & =-\rho c_{s}^{2}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\left(\dev G_{0}+\tau_{1}\dev G_{1}+\right)\\
+ & =-\rho c_{s}^{2}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{D}{Dt}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)= & -\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\nabla v-\nabla v^{T}\left(G_{0}+\tau_{1}G_{1}+\cdots\right)\\
+ & -\frac{6\phi}{\tau_{1}}\left|G_{0}+\tau_{1}G_{1}+\cdots\right|^{\frac{5}{6}}\left(G_{0}\dev G_{0}+\tau_{1}\left(G_{1}\dev G_{0}+G_{0}\dev G_{1}\right)+\cdots\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be approximated using some analytical function 
+\begin_inset Formula $f$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{\gamma}=\frac{\sigma-f\left(\sigma\right)}{\mu_{\infty}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $f\left(\sigma\right)\sim\sigma$
+\end_inset
+
+ for 
+\begin_inset Formula $\sigma<\sigma_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $f\left(\sigma\right)\sim\sigma_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $\sigma>\sigma_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f$
+\end_inset
+
+ will take the form of the generalized logistic function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+g
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\infty\right)=a+g=\sigma_{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(\sigma\right)=\frac{a}{\left(1+be^{-c\sigma}\right)^{d}}+\sigma_{0}-a
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We also require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f\left(0\right)=\frac{a}{\left(1+b\right)^{d}}+\sigma_{0}-a=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f^{'}\left(0\right)=abcd\left(1+b\right)^{-\left(d+1\right)}=\frac{\left(a-\sigma_{0}\right)bcd}{1+b}=1
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f^{'}\left(\sigma\right)=abcd\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq1
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\leq\frac{1}{abcd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{d}{d\sigma}\left(\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\right) & =bc\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-\left(d+2\right)}e^{-2c\sigma}-c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\\
+ & =c\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}\left(b\left(d+1\right)\left(1+be^{-c\sigma}\right)^{-1}e^{-c\sigma}-1\right)\\
+ & =0\\
+ & \Rightarrow b\left(d+1\right)e^{-c\sigma}=1+be^{-c\sigma}\\
+ & \Rightarrow e^{-c\sigma}=\frac{1}{bd}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the maximum of 
+\begin_inset Formula $\left(1+be^{-c\sigma}\right)^{-\left(d+1\right)}e^{-c\sigma}$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+\frac{1}{d}\right)^{-\left(d+1\right)}\frac{1}{bd}=\frac{1}{abcd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(1+\frac{1}{d}\right)^{d+1}=ac
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\frac{a}{\left(1+b\right)^{d}}=a-\sigma_{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(a-\sigma_{0}\right)bcd=1+b
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
