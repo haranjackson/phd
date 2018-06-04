@@ -42,6 +42,17 @@ void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
   }
 }
 
+void renorm_distortion(Vecr u, std::vector<Par> &MPs) {
+  int ncell = u.size() / V;
+  for (int i = 0; i < ncell; i++) {
+    int mi = get_material_index(u.segment<V>(i * V));
+    double ρ = u(i * V);
+    Mat3_3 A = get_A(u.segment<V>(i * V));
+    double c = cbrt(ρ / (MPs[mi].ρ0 * A.determinant()));
+    u.segment<9>(i * V + 5) *= c;
+  }
+}
+
 void reset_distortion(Vecr u, std::vector<Par> &MPs) {
   int ncell = u.size() / V;
   for (int i = 0; i < ncell; i++) {
@@ -141,6 +152,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     t += dt;
     count += 1;
+
+    renorm_distortion(u, MPs);
 
     if (t >= double(resetCount + 1) / double(nReset) * tf) {
       reset_distortion(u, MPs);
