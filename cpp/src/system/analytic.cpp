@@ -6,6 +6,8 @@
 #include "variables/shear.h"
 #include <cmath>
 
+const bool DEV_NORM = false;
+
 double pos(double x) { return std::max(0., x); }
 
 void analyticSolver_body_forces(VecVr Q, double dt, Par &MP) {
@@ -16,24 +18,42 @@ double nondimensionalized_time(double ρ, double detA3, double m0, double u0,
                                double dt, Par &MP) {
 
   double τ1 = MP.τ1;
-  if (MP.n != 0) {
+  if (MP.n != 0.) {
     double n = MP.n;
     double σY = MP.σY;
     double cs2 = c_s2(ρ, MP);
     double a = 9. * m0 - u0 - 9.;
     double b = 6. * m0 - u0 - 6.;
-    double c = (108. * a - 324. * b + 108. * a * a - 396. * a * b +
-                297. * b * b - 24. * (a * a * b - 2. * a * b * b + b * b * b) -
-                4. * std::pow(a - b, 4.));
+
+    double c;
+    if (DEV_NORM)
+      c = (108. * a - 324. * b + 108. * a * a - 396. * a * b + 297. * b * b -
+           24. * (a * a * b - 2. * a * b * b + b * b * b) -
+           4. * std::pow(a - b, 4.));
+    else
+      c = (108. * a - 324. * b + 180. * a * a - 612. * a * b + 459. * b * b -
+           24. * (a * a * b - 2. * a * b * b + b * b * b) -
+           4. * std::pow(a - b, 4.));
+
     if (c <= 0.)
       return 0.;
 
-    double λ = c / (18. * a - 36. * b + 9. * a * a - 132. / 5. * a * b +
-                    33. / 2. * b * b - 8. / 7. * a * a * b + 2. * a * b * b -
-                    8. / 9. * b * b * b - std::pow(a, 4.) / 6. +
-                    16. / 27. * a * a * a * b - 4. / 5. * a * a * b * b +
-                    16. / 33. * a * b * b * b - std::pow(b, 4.) / 9.);
-    double tmp = std::pow(sqrt(c) * ρ * cs2 / (6. * σY), n);
+    double λ, tmp;
+    if (DEV_NORM) {
+      λ = c / (18. * a - 36. * b + 9. * a * a - 132. / 5. * a * b +
+               33. / 2. * b * b - 8. / 7. * a * a * b + 2. * a * b * b -
+               8. / 9. * b * b * b - std::pow(a, 4.) / 6. +
+               16. / 27. * a * a * a * b - 4. / 5. * a * a * b * b +
+               16. / 33. * a * b * b * b - std::pow(b, 4.) / 9.);
+      tmp = std::pow(sqrt(c) * ρ * cs2 / (6. * σY), n);
+    } else {
+      λ = c / (18. * a - 36. * b + 15. * a * a - 204. / 5. * a * b +
+               51. / 2. * b * b - 8. / 7. * a * a * b + 2. * a * b * b -
+               8. / 9. * b * b * b - std::pow(a, 4.) / 6. +
+               16. / 27. * a * a * a * b - 4. / 5. * a * a * b * b +
+               16. / 33. * a * b * b * b - std::pow(b, 4.) / 9.);
+      tmp = std::pow(sqrt(c) * ρ * cs2 / (3 * sqrt(6.)), n);
+    }
     return 2. / (n * λ) *
            log(n * λ / τ1 * std::pow(detA3, 4. * n + 7.) * tmp * dt + 1.);
   } else

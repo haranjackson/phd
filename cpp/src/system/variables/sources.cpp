@@ -5,6 +5,8 @@
 #include "../variables/state.h"
 #include <cmath>
 
+const bool DEV_NORM = false;
+
 double theta1inv(VecVr Q, Par &MP) {
   // Returns the relaxation parameter for the distortion tensor
   double ρ = Q(0);
@@ -18,7 +20,13 @@ double theta1inv(VecVr Q, Par &MP) {
     double σY = MP.σY;
     double n = MP.n;
     Mat3_3 σ = sigma(Q, MP);
-    double sn = sigma_norm(σ);
+
+    double sn;
+    if (DEV_NORM)
+      sn = sigma_norm(σ);
+    else
+      sn = σ.norm();
+
     sn = std::min(sn, 1e8); // Hacky fix
     return 3 * A53 / (cs2 * τ1) * pow((sn / σY), n);
   } else

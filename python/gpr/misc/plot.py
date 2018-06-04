@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 from numpy import nanmax, nanmin, arange, isnan, linspace, mgrid, prod, zeros
+from numpy.linalg import norm
 from matplotlib.pyplot import colorbar, contour, contourf, figure, get_cmap, \
     imshow, plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
 
@@ -77,7 +78,7 @@ def plot_simple(u, style, x, lab, col, title, sci, ind, divρ, plotType='colorma
 
 
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
-                  vmin, vmax, i=None, j=None):
+                  vmin, vmax, i=None, j=None, takeNorm=False):
 
     shape = u.shape[:-1]
     n = prod(shape)
@@ -100,6 +101,9 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
                     var = getattr(P, attr)()[i]
             else:
                 var = getattr(P, attr)()[i, j]
+
+            if takeNorm:
+                var = norm(var)
 
             if isnan(var):
                 print('Warning: nan in cell', ii)
@@ -179,13 +183,24 @@ def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
 
 
 def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
-               fig=None, square=0, plotType='colormap', vmin=None, vmax=None):
-    if fig is None:
-        fig = 21 + i * 3 + j
-    figure(fig, figsize=fig_size(square))
-    plot_compound(u, MPs, style, x, lab, col,
-                  'Viscous Stress Component %d,%d' % (i + 1, j + 1),
-                  sci, 'σ', plotType, vmin, vmax, i=i, j=j)
+               fig=None, square=0, plotType='colormap', vmin=None, vmax=None
+               , takeNorm=False):
+
+    if takeNorm:
+        if fig is None:
+            fig = 21
+        figure(fig, figsize=fig_size(square))
+        plot_compound(u, MPs, style, x, lab, col,
+                      'Viscous Stress Norm',
+                      sci, 'σ', plotType, vmin, vmax, takeNorm=True)
+    else:
+        if fig is None:
+            fig = 21 + i * 3 + j
+        figure(fig, figsize=fig_size(square))
+        plot_compound(u, MPs, style, x, lab, col,
+                      'Viscous Stress Component %d,%d' % (i + 1, j + 1),
+                      sci, 'σ', plotType, vmin, vmax, i=i, j=j)
+
 
 
 def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,

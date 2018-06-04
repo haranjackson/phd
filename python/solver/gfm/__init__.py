@@ -172,7 +172,7 @@ class MultiSolver():
         self.nlset = self.nmat - 1
 
     def solve(self, u0, tf, dX, cfl=0.9, bcs='transitive', verbose=False,
-              callback=None, cpp_level=0, nOut=50):
+              callback=None, cpp_level=0, nOut=100):
 
         if cpp_level == 2:
             self.u = solve_full_cpp(self, u0, tf, dX, cfl, nOut, callback, bcs)

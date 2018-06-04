@@ -70,6 +70,10 @@
 
 \begin_body
 
+\begin_layout Title
+Power Law Fluids
+\end_layout
+
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
@@ -114,8 +118,421 @@
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\tau_{1}=\frac{6\left|\boldsymbol{\sigma}\right|^{\frac{n-1}{n}}K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
+\tau_{1}=\frac{6\left|\boldsymbol{\sigma}\right|^{\frac{n-1}{n}}K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}=\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
 \end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Solver
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dA}{dt}=\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the singular value decomposition 
+\begin_inset Formula $A=U\Sigma V^{T}$
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma=-\rho c_{s}^{2}A^{T}A\dev\left(A^{T}A\right)=-\rho c_{s}^{2}V\Sigma^{2}\dev\left(\Sigma^{2}\right)V^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert \sigma\right\Vert _{F}^{n}=\rho^{n}c_{s}^{2n}\left\Vert \Sigma^{2}\dev\left(\Sigma^{2}\right)\right\Vert _{F}^{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\rho^{n}c_{s}^{2n}\left\Vert \Sigma^{2}\dev\left(\Sigma^{2}\right)\right\Vert _{F}^{n}\Sigma\dev\left(\Sigma^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
+\end_inset
+
+ then 
+\begin_inset Formula $\Sigma^{2}=\det\left(A\right)^{\frac{2}{3}}X$
+\end_inset
+
+ where 
+\begin_inset Formula $X=\diag\left(x_{1},x_{2},x_{3}\right)$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{d\tilde{t}}=-3\left\Vert X\dev\left(X\right)\right\Vert _{F}^{n}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{t}=\frac{2}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\rho c_{s}^{2}\right)^{n}t
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+9\left\Vert X\dev\left(X\right)\right\Vert _{F}^{2} & =4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\\
+ & +2\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\nonumber \\
+ & -2\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
+ & -4\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the following quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert X\dev\left(X\right)\right\Vert _{F}^{2}=4m^{2}u-6m^{4}+\frac{1}{2}u^{2}+6m
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This leads to the following coupled system of ODEs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tilde{t}} & =-18\left(4m^{2}u-6m^{4}+\frac{1}{2}u^{2}+6m\right)^{\frac{n}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tilde{t}} & =-\left(4m^{2}u-6m^{4}+\frac{1}{2}u^{2}+6m\right)^{\frac{n}{2}}u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m\left(\tau\right) & =1+\frac{e^{-9\tau}}{3}\left(ae^{3\tau}-b\right)\label{eq:m(τ)}\\
+u\left(\tau\right) & =e^{-9\tau}\left(2ae^{3\tau}-3b\right)\label{eq:u(τ)}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is straightforward to verify that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{n}{2}}}\left(\begin{array}{c}
+108ae^{-6\tau}-324be^{-9\tau}+180a^{2}e^{-12\tau}\\
+-612abe^{-15\tau}+459b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
++\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
+-24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
+\end{array}\right)^{\frac{n}{2}}\equiv\frac{f\left(\tau\right)^{\frac{n}{2}}}{54^{\frac{n}{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f\left(\tau\right)$
+\end_inset
+
+ is approximated by 
+\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\lambda\tau}$
+\end_inset
+
+, where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Formula 
+\begin{align}
+c & =108a-324b+180a^{2}-612ab+459b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
+\lambda & =\frac{c}{18a-36b+15a^{2}-\frac{204ab}{5}+\frac{51b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $f\left(0\right)=g\left(0\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{\infty}\left(f\left(\tau\right)-g\left(\tau\right)\right)d\tau=0$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{n}{2}}e^{-\frac{n\lambda}{2}\tau}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau & \approx\frac{2}{n\lambda}\log\left(\frac{n\lambda}{2}\left(\frac{c}{54}\right)^{\frac{n}{2}}\tilde{t}+1\right)\\
+ & =\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}\rho c_{s}^{2}}{3\sqrt{6}}\right)^{n}t+1\right)\nonumber 
+\end{align}
 
 \end_inset
 

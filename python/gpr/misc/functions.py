@@ -50,6 +50,7 @@ def L2_2D(X):
 @jit
 def sigma_norm(σ):
     """ Returns the norm defined in Boscheri et al
+        Equal to sqrt(3/2) * |dev(σ)|
     """
     tmp1 = (σ[0, 0] - σ[1, 1])**2 + (σ[1, 1] -
                                      σ[2, 2])**2 + (σ[2, 2] - σ[0, 0])**2

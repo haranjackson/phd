@@ -37,7 +37,8 @@ def cpp_ader_stepper(obj, mat, matBC, dt, dX, maskBC):
     mat = matr.reshape(mat.shape)
 
 
-def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs, nReset=20):
+def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs,
+                   nReset=0):
 
     ndim = initial_grid.ndim - 1
     if bcs == 'transitive':
