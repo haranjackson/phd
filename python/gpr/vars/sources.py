@@ -1,4 +1,5 @@
 from numpy import exp, inf
+from numpy.linalg import norm
 
 from gpr.misc.functions import det3, sigma_norm
 
@@ -16,13 +17,20 @@ def theta1inv(ρ, A, MP):
 
     cs2 = c_s2(ρ, MP)
 
-    if MP.PLASTIC:
-        σY = MP.σY
+    if MP.POWER_LAW:
         n = MP.n
         σ = sigma(ρ, A, MP)
-        sn = sigma_norm(σ)
-        sn = min(sn, 1e8)   # Hacky fix
-        return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * (sn / σY) ** n
+
+        if MP.YIELD:  # elastoplastic solid
+            σY = MP.σY
+            sn = sigma_norm(σ)
+            sn = min(sn, 1e8)   # Hacky fix
+            return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * (sn / σY) ** n
+
+        else:  # power law fluid
+            sn = norm(σ)
+            sn = min(sn, 1e8)   # Hacky fix
+            return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * sn**((1-n)/n)
     else:
         return 3 * det3(A)**(5 / 3) / (cs2 * τ1)
 

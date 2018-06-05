@@ -58,7 +58,7 @@ def params(MP, Rc, EOS,
            α, β, γ, pINF,
            c0, Γ0, s,
            A, B, R1, R2,
-           b0, τ1, μ, σY, n, PLASTIC,
+           b0, τ1, μ, σY, n, POWER_LAW, YIELD,
            cα, τ2,
            REACTION, Qc,
            Kc, Ti,
@@ -103,10 +103,12 @@ def params(MP, Rc, EOS,
         MP.B0 = b0**2
         MP.β = β
         MP.τ1 = τ1
-        MP.PLASTIC = PLASTIC
-        if PLASTIC:
-            MP.σY = σY
+        MP.POWER_LAW = POWER_LAW
+        MP.YIELD = YIELD
+        if POWER_LAW:
             MP.n = n
+        if YIELD:
+            MP.σY = σY
 
     if cα is not None:
         MP.cα2 = cα**2
@@ -152,8 +154,7 @@ def material_params(EOS, ρ0, p0,
                     α=None, β=None, γ=None, pINF=None,
                     c0=None, Γ0=None, s=None,
                     A=None, B=None, R1=None, R2=None,
-                    b0=None, μ=None, τ1=None,
-                    σY=None, n=None, PLASTIC=False,
+                    b0=None, μ=None, τ1=None, σY=None, n=None,
                     cα=None, κ=None, Pr=None,
                     REACTION=None, Qc=None,
                     Kc=None, Ti=None,
@@ -188,12 +189,26 @@ def material_params(EOS, ρ0, p0,
             T0 = None
 
         if b0 is not None:
-            if (not PLASTIC) and (τ1 is None):
-                τ1 = 6 * μ / (ρ0 * b0**2)
+
+            if n is None:
+                POWER_LAW = False
+                YIELD = False
+                if τ1 is None:
+                    τ1 = 6 * μ / (ρ0 * b0**2)
+            else:
+                POWER_LAW = True
+                if σY is None:
+                    YIELD = False
+                    τ1 = 6 * μ**(1/n) / (ρ0 * b0**2)
+                else:
+                    YIELD = True
+
             if β is None:
                 β = 0
         else:
             τ1 = None
+            POWER_LAW = False
+            YIELD = False
 
         if cα is not None:
             if Pr is not None:
@@ -207,7 +222,7 @@ def material_params(EOS, ρ0, p0,
                α, β, γ, pINF,
                c0, Γ0, s,
                A, B, R1, R2,
-               b0, τ1, μ, σY, n, PLASTIC,
+               b0, τ1, μ, σY, n, POWER_LAW, YIELD,
                cα, τ2,
                REACTION, Qc,
                Kc, Ti,

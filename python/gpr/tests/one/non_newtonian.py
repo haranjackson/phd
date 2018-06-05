@@ -5,18 +5,17 @@ from gpr.misc.structures import Cvec
 from gpr.tests.boundaries import wall_BC
 
 
-HP_n = 1.3
+HP_n = 1.1
 
 
 def hagen_poiseuille_IC():
 
-    tf = 10
+    tf = 3
     Lx = 0.25
-    nx = 100
+    nx = 400
     dp = 0.48
 
     γ = 1.4
-    cs = 8
     ρ = 1
     p = 100 / γ
     v = zeros(3)
@@ -24,11 +23,8 @@ def hagen_poiseuille_IC():
     J = zeros(3)
     δp = array([0, dp, 0])
 
-    K = 1e-2
-    n = HP_n
-    τ1 = 6 * K**(1/n) / ρ / cs**2
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=cs,
-                         σY=1, τ1=τ1, n=(1-n)/n, PLASTIC=True, δp=δp)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ,
+                         b0=1, μ=1e-2, n=HP_n, δp=δp)
 
     Q = Cvec(ρ, p, v, A, J, MP)
     u = array([Q] * nx)
@@ -38,23 +34,14 @@ def hagen_poiseuille_IC():
 
 def hagen_poiseuille_BC(u, N, *args):
     dp = 0.48
-
     γ = 1.4
-    cs = 8
-    ρ = 1
-    p = 100 / γ
     δp = array([0, dp, 0])
-
-    K = 1e-2
-    n = HP_n
-    τ1 = 6 * K**(1/n) / ρ / cs**2
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=cs,
-                         σY=1, τ1=τ1, n=(1-n)/n, PLASTIC=True, δp=δp)
-
+    MP = material_params(EOS='sg', ρ0=1, cv=1, p0=100/γ, γ=γ,
+                         b0=1, μ=1e-2, n=HP_n, δp=δp)
     return wall_BC(u, N, 1, [1], MP)
 
 
-def hagen_poiseuille_exact(n, nx=100):
+def hagen_poiseuille_exact(n, nx=400):
 
     Lx = 0.25
     dp = 0.48

@@ -46,7 +46,8 @@ struct Par {
 
   double B0;
   double τ1;
-  bool PLASTIC;
+  bool POWER_LAW;
+  bool YIELD;
   double σY;
   double n;
 

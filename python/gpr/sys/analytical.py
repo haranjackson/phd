@@ -23,23 +23,40 @@ def pos(x):
 def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
 
     τ1 = MP.τ1
-    if hasattr(MP,'n') and MP.n != 0:
+    if MP.POWER_LAW:
         n = MP.n
-        σY = MP.σY
         cs2 = c_s2(ρ, MP)
         a = 9 * m0 - u0 - 9
         b = 6 * m0 - u0 - 6
-        c = (108 * a - 324 * b + 108 * a**2 - 396 * a * b + 297 * b**2
-             - 24 * (a**2 * b - 2 * a * b**2 + b**3) - 4 * (a - b)**4)
-        if c <= 0:
-            return 0
 
-        λ = c / (18 * a - 36 * b + 9 * a**2 - 132 / 5 * a * b + 33 / 2 * b**2
-                 - 8 / 7 * a**2 * b + 2 * a * b ** 2 - 8 / 9 * b**3 - a**4 / 6
-                 + 16 / 27 * a**3 * b - 4 / 5 * a**2 * b**2 + 16 / 33 * a * b**3
-                 - b**4 / 9)
-        tmp = (sqrt(c) * ρ * cs2 / (6 * σY))**n
-        return 2 / (n * λ) * log(n * λ / τ1 * detA3**(4 * n + 7) * tmp * dt + 1)
+        if MP.YIELD:
+            σY = MP.σY
+            c = (108 * a - 324 * b + 108 * a**2 - 396 * a * b + 297 * b**2
+                 - 24 * (a**2 * b - 2 * a * b**2 + b**3) - 4 * (a - b)**4)
+            if c <= 0:
+                return 0
+
+            λ = c / (18 * a - 36 * b + 9 * a**2 - 132 / 5 * a * b
+                     + 33 / 2 * b**2 - 8 / 7 * a**2 * b + 2 * a * b ** 2
+                     - 8 / 9 * b**3 - a**4 / 6 + 16 / 27 * a**3 * b
+                     - 4 / 5 * a**2 * b**2 + 16 / 33 * a * b**3 - b**4 / 9)
+            tmp = (sqrt(c) * ρ * cs2 / (6 * σY))**n
+            return 2 / (n * λ) * log(n * λ / τ1 * detA3**(4 * n + 7) * tmp * dt + 1)
+
+        else:
+            k = (1-n) / n
+            c = (108 * a - 324 * b + 180 * a**2 - 612 * a * b + 459 * b**2
+                 - 24 * (a**2 * b - 2 * a * b**2 + b**3) - 4 * (a - b)**4)
+            if c <= 0:
+                return 0
+
+            λ = c / (18 * a - 36 * b + 15 * a**2 - 204 / 5 * a * b
+                     + 51 / 2 * b**2 - 8 / 7 * a**2 * b + 2 * a * b ** 2
+                     - 8 / 9 * b**3 - a**4 / 6 + 16 / 27 * a**3 * b
+                     - 4 / 5 * a**2 * b**2 + 16 / 33 * a * b**3 - b**4 / 9)
+            tmp = (sqrt(c) * ρ * cs2 / (6 * sqrt(3)))**k
+            return 2 / (k * λ) * log(k * λ / τ1 * detA3**(4 * k + 7) * tmp * dt + 1)
+
     else:
         return 2 * detA3**7 / τ1 * dt
 
