@@ -31,7 +31,7 @@ bcs = 'stick'
 
 cpp_level = 2
 N = 2
-cfl = 0.4
+cfl = 0.9
 SPLIT = True
 SOLVER = 'roe'
 

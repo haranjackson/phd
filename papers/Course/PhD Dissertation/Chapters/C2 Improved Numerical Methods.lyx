@@ -3788,19 +3788,202 @@ At this point it is not clear which values of
 \end_layout
 
 \begin_layout Subsubsection
-Power Law Materials
+Power Law Fluids
+\end_layout
+
+\begin_layout Standard
+The stress-strain relationships for various kinds of fluids are shown in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:rheology"
+
+\end_inset
+
+.
+ Dilatants and pseudoplastics may be modelled using the following power
+ law, with 
+\begin_inset Formula $n>1$
+\end_inset
+
+ and 
+\begin_inset Formula $0<n<1$
+\end_inset
+
+, respectively:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\sigma} & =K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}\boldsymbol{\dot{\gamma}}\\
+\boldsymbol{\dot{\gamma}} & =\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}-\frac{2\tr\left(\nabla\boldsymbol{v}\right)}{3}I
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K>0$
+\end_inset
+
+ is known as the 
+\shape italic
+consistency
+\shape default
+, and 
+\begin_inset Formula $K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}$
+\end_inset
+
+ is the 
+\shape italic
+apparent viscosity
+\shape default
+.
+ The norm is taken to be:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|X\right|=\sqrt{\frac{1}{2}X_{ij}X_{ij}}=\frac{\left\Vert X\right\Vert _{F}}{\sqrt{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename /home/hari/Git/private/phd/papers/Course/PhD Dissertation/Figures/C2/rheology.png
+	lyxscale 30
+	height 30pheight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:rheology"
+
+\end_inset
+
+The stress-strain relationships for different kinds of fluids (source [REF])
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2015"
+
+\end_inset
+
+ it was noted that when expressing the state variables as an asymptotic
+ expansion in the relaxation parameter 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+, to first order we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\sigma}=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\left(\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}-\frac{2}{3}\tr\left(\nabla\boldsymbol{v}\right)\boldsymbol{I}\right)\label{eq:AsymptoticRelationship}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, for a power law fluid, we require that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}=K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking moduli of both sides of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:AsymptoticRelationship"
+
+\end_inset
+
+, we also have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|\boldsymbol{\sigma}\right|=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\left|\boldsymbol{\dot{\gamma}}\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining these two relationships, we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Take the singular value decomposition 
 \begin_inset Formula $A=U\Sigma V^{T}$
-\end_inset
-
- as in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:The-Distortion-ODEs"
-
 \end_inset
 
 .
@@ -3825,7 +4008,7 @@ Thus:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\left\Vert \dev\left(\sigma\right)\right\Vert _{F}^{n}=\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}
+\left\Vert \sigma\right\Vert _{F}^{k}=\rho^{k}c_{s}^{2k}\left\Vert \Sigma^{2}\dev\left(\Sigma^{2}\right)\right\Vert _{F}^{k}
 \end{equation}
 
 \end_inset
@@ -3834,12 +4017,8 @@ Thus:
 \end_layout
 
 \begin_layout Standard
-Using this result, for elastoplastic materials governed by the power law
- described in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:tau1"
-
+Letting 
+\begin_inset Formula $k=\frac{1-n}{n}$
 \end_inset
 
 :
@@ -3848,7 +4027,7 @@ reference "eq:tau1"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\frac{\left(\frac{3}{2}\right)^{\frac{n}{2}}\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}}{\sigma_{0}^{n}}\Sigma\dev\left(\Sigma^{2}\right)
+\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\frac{\rho^{k}c_{s}^{2k}}{2^{\frac{k}{2}}}\left\Vert \Sigma^{2}\dev\left(\Sigma^{2}\right)\right\Vert _{F}^{k}\Sigma\dev\left(\Sigma^{2}\right)
 \end{equation}
 
 \end_inset
@@ -3871,6 +4050,327 @@ Letting
 
 .
  Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{d\tilde{t}}=-3\left\Vert X\dev\left(X\right)\right\Vert _{F}^{k}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem-2-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{t}=\frac{2}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4k+7}{3}}\left(\frac{\rho c_{s}^{2}}{\sqrt{2}}\right)^{k}t
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+9\left\Vert X\dev\left(X\right)\right\Vert _{F}^{2} & =4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\\
+ & +2\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\nonumber \\
+ & -2\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
+ & -4\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Defining 
+\begin_inset Formula $m,u$
+\end_inset
+
+ as before, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\Vert X\dev\left(X\right)\right\Vert _{F}^{2}=\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This leads to the following coupled system of ODEs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{du}{d\tilde{t}} & =-18\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{k}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tilde{t}} & =-\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{k}{2}}u
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define the the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+ by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m\left(\tau\right) & =1+\frac{e^{-9\tau}}{3}\left(ae^{3\tau}-b\right)\label{eq:m(τ)-1}\\
+u\left(\tau\right) & =e^{-9\tau}\left(2ae^{3\tau}-3b\right)\label{eq:u(τ)-1}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is straightforward to verify that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{k}{2}}}\left(\begin{array}{c}
+108ae^{-6\tau}-324be^{-9\tau}+180a^{2}e^{-12\tau}\\
+-612abe^{-15\tau}+459b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
++\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
+-24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
+\end{array}\right)^{\frac{k}{2}}\equiv\frac{f\left(\tau\right)^{\frac{k}{2}}}{54^{\frac{k}{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f\left(\tau\right)$
+\end_inset
+
+ is approximated by 
+\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\lambda\tau}$
+\end_inset
+
+, where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+\begin_inset Formula 
+\begin{align}
+c & =108a-324b+180a^{2}-612ab+459b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
+\lambda & =\frac{c}{18a-36b+15a^{2}-\frac{204ab}{5}+\frac{51b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $f\left(0\right)=g\left(0\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{\infty}\left(f\left(\tau\right)-g\left(\tau\right)\right)d\tau=0$
+\end_inset
+
+.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{k}{2}}e^{-\frac{k\lambda}{2}\tau}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau & \approx\frac{2}{k\lambda}\log\left(\frac{k\lambda}{2}\left(\frac{c}{54}\right)^{\frac{k}{2}}\tilde{t}+1\right)\\
+ & =\frac{2}{k\lambda}\log\left(\frac{k\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4k+7}{3}}\left(\frac{\sqrt{c}\rho c_{s}^{2}}{6\sqrt{3}}\right)^{k}t+1\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Elastoplastic Solids
+\end_layout
+
+\begin_layout Standard
+For elastoplastic materials governed by the power law described in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:tau1"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\Sigma}{dt}=-\frac{3}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}\frac{\left(\frac{3}{2}\right)^{\frac{n}{2}}\rho^{n}c_{s}^{2n}\left\Vert \dev\left(\Sigma^{2}\dev\left(\Sigma^{2}\right)\right)\right\Vert _{F}^{n}}{\sigma_{0}^{n}}\Sigma\dev\left(\Sigma^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
 \end_layout
 
 \begin_layout Standard
@@ -3918,55 +4418,7 @@ Note that:
 \end_layout
 
 \begin_layout Standard
-Define the following quantities:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
-u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Then we have:
+Thus we have:
 \end_layout
 
 \begin_layout Standard
@@ -8383,11 +8835,11 @@ The total energy during the Strain Relaxation Test
 \end_layout
 
 \begin_layout Subsubsection
-Couette Flow
+Poiseuille Flow
 \end_layout
 
 \begin_layout Subsubsection
-Poiseuille Flow
+Lid-Driven Cavity
 \end_layout
 
 \begin_layout Subsubsection

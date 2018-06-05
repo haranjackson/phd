@@ -1928,18 +1928,19 @@ By inversion of block matrices:
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\left(\begin{array}{ccccc}
+\begin{align}
+ & \left(\begin{array}{ccccc}
 \vdots & \vdots & \ddots & \vdots & \iddots\\
 -\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
 \vdots & \vdots & \iddots & \vdots & \ddots\\
 \vdots & \iddots & \ddots & \vdots & \iddots\\
 \left(I-BA^{-1}C\right)^{-1} & \cdots & \cdots & -\left(I-BA^{-1}C\right)^{-1}BA^{-1} & \cdots
-\end{array}\right)^{-1}=\left(\begin{array}{cc}
--BA^{-1}\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1} & \left(I+BA^{-1}\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
--\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1} & \left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
-\end{array}\right)
-\end{equation}
+\end{array}\right)^{-1}\\
+ & =\left(\begin{array}{cc}
+-BA^{-1}Z & \left(I+BA^{-1}Z\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
+-Z & Z\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
+\end{array}\right)\nonumber 
+\end{align}
 
 \end_inset
 
@@ -1969,6 +1970,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
+Z & =\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}\\
 \tilde{B} & =\left(\begin{array}{ccc}
 \cdots & -\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \cdots\\
 \cdots & \boldsymbol{e_{1}} & \cdots
