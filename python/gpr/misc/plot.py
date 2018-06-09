@@ -209,7 +209,7 @@ def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
-                  'Viscous Stress Component %d,%d' % (i + 1, j + 1), sci, 'Σ',
+                  'Total Stress Component %d,%d' % (i + 1, j + 1), sci, 'Σ',
                   plotType, vmin, vmax, i=i, j=j)
 
 

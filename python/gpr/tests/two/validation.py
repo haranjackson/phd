@@ -1,11 +1,7 @@
 from numpy import array, cos, exp, eye, pi, sin, sqrt, tanh, zeros
 
-from ader.etc.boundaries import standard_BC
-
 from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec
-
-from gpr.tests.boundaries import wall_BC
 
 
 def vortex(x, y, x0, y0, ε, γ, ρ):
@@ -121,126 +117,6 @@ def laminar_boundary_layer_IC():
 
     print("LAMINAR BOUNDARY LAYER")
     return u, [MP], tf, [Lx / nx, Ly / ny]
-
-
-def hagen_poiseuille_IC():
-
-    tf = 10
-    Lx = 1
-    Ly = 0.5
-    nx = 10
-    ny = 50
-    dp = 0.48 * Lx
-    FIX_DOMAIN_P = True
-
-    γ = 1.4
-    ρ = 1
-    p = 100 / γ
-    v = zeros(3)
-    A = eye(3)
-    J = zeros(3)
-
-    # δp = array([dp, 0, 0])
-    δp = zeros(3)
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2, δp=δp)
-
-    ddp = dp / (nx + 1)
-    u = zeros([nx, ny, 14])
-    for i in range(nx):
-        pi = p - (i + 1) * ddp if FIX_DOMAIN_P else p
-        Q = Cvec(ρ, pi, v, A, J, MP)
-        for j in range(ny):
-            u[i, j] = Q
-
-    print("HAGEN-POISEUILLE DUCT")
-    return u, [MP], tf, [Lx / nx, Ly / ny]
-
-
-def hagen_poiseuille_BC(u, N, *args):
-
-    Lx = 1
-    dp = 0.48 * Lx
-    FIX_OUTLET_P = True
-
-    γ = 1.4
-    ρ = 1
-    p = 100 / γ
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
-
-    nx, ny = u.shape[:2]
-    ddp = dp / (nx + 1)
-
-    ret = wall_BC(u, N, 2, [0,1], MP)
-
-    if FIX_OUTLET_P:
-
-        nx, ny = ret.shape[:2]
-        for j in range(ny):
-            QL = ret[0, j]
-            QR = ret[-1, j]
-            ρL = QL[0]
-            ρR = QR[0]
-            vL = QL[2:5] / ρL
-            vR = QR[2:5] / ρR
-            AL = QL[5:14].reshape([3, 3])
-            AR = QR[5:14].reshape([3, 3])
-            J = zeros(3)
-            for i in range(N):
-                ret[N - 1 - i, j] = Cvec(ρL, p + i * ddp, vL, AL, J, MP)
-                ret[nx - N + i, j] = Cvec(ρR, p - dp - i * ddp, vR, AR, J, MP)
-
-    return ret
-
-
-def lid_driven_cavity_IC():
-
-    tf = 10
-    Lx = 1
-    Ly = 1
-    nx = 100
-    ny = 100
-
-    γ = 1.4
-
-    ρ = 1
-    p = 100 / γ
-    v = zeros(3)
-    A = eye(3)
-    J = zeros(3)
-
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
-
-    u = zeros([nx, ny, 14])
-    Q = Cvec(ρ, p, v, A, J, MP)
-    for i in range(nx):
-        for j in range(ny):
-            u[i, j] = Q
-
-    print("LID-DRIVEN CAVITY")
-    return u, [MP], tf, [Lx / nx, Ly / ny]
-
-
-def lid_driven_cavity_BC(u):
-
-    ret = standard_BC(u, [1, 1])
-    nx, ny = ret.shape[:2]
-
-    for i in range(nx):
-        v = 2 - ret[i, 1, 2] / ret[i, 1, 0]
-        ret[i, 0, 2] = ret[i, 0, 0] * v
-        ret[i, 0, 3] *= -1
-        ret[i, -1, 2:5] *= -1
-
-    for j in range(ny):
-        ret[0, j, 2:5] *= -1
-        ret[-1, j, 2:5] *= -1
-
-    ret[0, 0, 2:5] *= 0
-    ret[0, -1, 2:5] *= 0
-    ret[-1, 0, 2:5] *= 0
-    ret[-1, -1, 2:5] *= 0
-
-    return ret
 
 
 def double_shear_layer_IC():

@@ -5,12 +5,12 @@ from gpr.misc.structures import Cvec
 from gpr.tests.boundaries import wall_BC
 
 
-HP_n = 1.1
+HP_n = 0.8
 
 
 def hagen_poiseuille_IC():
 
-    tf = 3
+    tf = 10
     Lx = 0.25
     nx = 400
     dp = 0.48

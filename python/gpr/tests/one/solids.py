@@ -3,7 +3,8 @@ from numpy import array, eye, zeros
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
-from gpr.tests.params import Cu_HYP_CGS, Cu_GR_CGS, Cu_SMGP_SI
+from gpr.tests.params.alt import Cu_HYP_CGS
+from gpr.tests.params.solids import Cu_GR_CGS, Cu_SMGP_SI
 from gpr.tests.one.common import hyperelastic_IC
 
 
@@ -87,8 +88,13 @@ def elastic_IC(test):
 
 
 def piston_IC():
-    """ 10.1016/j.compfluid.2016.05.004
-        5.6 Elastic-plastic piston problem
+    """ http://arxiv.org/abs/1806.00706
+        6.1 Elasto-plastic piston
+
+        N = 3
+        cfl = 0.5
+        SPLIT = True
+        SOLVER = 'roe'
     """
     tf = 1.5e-4
     nx = 400
@@ -130,15 +136,15 @@ def piston_exact(nx, var):
         u = 8930
     elif var == 'velocity':
         e = 4.72
-        p = 2
+        p = 20
         u = 0
     elif var == 'pressure':
-        e = 139.03
-        p = 681.59
+        e = 139.03e6
+        p = 681.59e6
         u = 0
     elif var == 'stress':
-        e = -199.03
-        p = -741.59
+        e = 199.03e6
+        p = 741.59e6
         u = 0
 
     ei = int(eWaveSpeed * tf *nx)

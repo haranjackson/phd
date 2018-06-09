@@ -4,10 +4,11 @@ from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
 from gpr.opts import NV
 
-from gpr.tests.params import Air_SG_SI, He_SG_SI, H20_SG_SI, Cu_SMG_SI, \
-    Cu_HYP_SI, Al_HYP_CGS, Al_GR_CGS, VAC
 from gpr.tests.one.common import riemann_IC, primitive_IC
 from gpr.tests.one.newtonian import heat_conduction_IC
+from gpr.tests.params.alt import VAC, Cu_HYP_SI, Al_HYP_CGS
+from gpr.tests.params.fluids import Air_SG_SI, He_SG_SI, H20_SG_SI, PBX_SG_SI
+from gpr.tests.params.solids import Cu_GR_SI, Al_GR_CGS
 
 
 def water_air_IC():
