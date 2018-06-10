@@ -1,3 +1,5 @@
+from types import MethodType
+
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
@@ -77,10 +79,10 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
         if MP.EOS > -1:  # not a vacuum
             P = State(Q, MP)
 
-            if isinstance(getattr(P, attr), float):
-                var = getattr(P, attr)
-            else:
+            if isinstance(getattr(P, attr), MethodType):
                 var = getattr(P, attr)()
+            else:
+                var = getattr(P, attr)
 
             if i is not None:
                 if j is None:

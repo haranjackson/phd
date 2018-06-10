@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from numpy import array, save
+from numpy import array
 
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
@@ -56,5 +56,3 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
 
 solver.solve(u0, tf, dX, cfl=cfl, bcs=bcs, verbose=verbose, callback=callback,
              cpp_level=cpp_level)
-
-save('results', array(uList))

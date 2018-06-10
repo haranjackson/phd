@@ -229,17 +229,6 @@ def temperature(ρ, p, MP):
     return Tref + (p - pr) / (ρ * Γ * cv)
 
 
-def temperature2(ρ, e, MP):
-    """ Returns the Mie-Gruneisen temperature, given the density and
-        internal energy
-    """
-    cv = MP.cv
-    Tref = MP.Tref
-    Γ = Γ_MG(ρ, MP)
-    er = e_ref(ρ, MP)
-    return Tref + (e - er) / cv
-
-
 def dedρ(ρ, p, MP):
     """ Returns the derivative of the Mie-Gruneisen internal energy
         with respect to ρ

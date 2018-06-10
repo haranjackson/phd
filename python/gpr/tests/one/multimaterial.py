@@ -19,6 +19,7 @@ def water_air_IC():
         cfl = 0.5
         SPLIT = True
         SOLVER = 'rusanov'
+        RELAXATION = true
     """
     tf = 2.3744e-4
     nx = 200
@@ -99,30 +100,33 @@ def helium_bubble_IC():
 
 def pbx_copper_IC(test):
     """ 10.1016/j.jcp.2011.07.008
-        6.1 Initial value problems Initial
+        6.1 Initial value problems
+
+        N = 3
+        cfl = 0.5
+        SPLIT = True
+        SOLVER = 'rusanov'
     """
-    tf = 0.5e-6
     nx = 500
     Lx = 1
-    MPs = [PBX_SG_SI, Cu_GR_SI]
 
     dX = [Lx / nx]
 
     if test == 1:
 
         pL = 18.9e9
-
         vR = zeros(3)
         FR = eye(3)
+        tf = 5e-5
 
     elif test == 2:
 
         pL = 1e5
-
         vR = array([2, 0, 0.1])
         FR = array([[1, 0, 0],
                     [-0.01, 0.95, 0.02],
                     [-0.015, 0, 0.9]])
+        tf = 9e-5
 
     vL = zeros(3)
     ρL = 1840
@@ -131,8 +135,15 @@ def pbx_copper_IC(test):
 
     SR = 0
 
-    QL = Cvec(ρL, pL, vL, AL, JL, PBX_SG_SI)
-    QR = Cvec_hyp(FR, SR, vR, Cu_HYP_SI)
+    if test == 1:
+        QL = Cvec(ρL, pL, vL, AL, JL, PBX_SG_SI)
+        QR = Cvec_hyp(FR, SR, vR, Cu_HYP_SI)
+        MPs = [PBX_SG_SI, Cu_GR_SI]
+
+    elif test == 2:
+        QL = Cvec_hyp(FR, SR, vR, Cu_HYP_SI)
+        QR = Cvec(ρL, pL, vL, AL, JL, PBX_SG_SI)
+        MPs = [Cu_GR_SI, PBX_SG_SI]
 
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)
     return u, MPs, tf, dX
