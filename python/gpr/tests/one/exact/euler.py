@@ -184,6 +184,8 @@ def exact_euler(n, t, x0, QL, QR, MPL, MPR):
                     v_ = array([u_, 0, 0])
                     ret[i] = Cvec(r_, p_, v_, A_, J_, MPL)
 
+            ret[i, -1] = -1
+
         else:
 
             if (p_ < pR):		# Right fan
@@ -206,6 +208,8 @@ def exact_euler(n, t, x0, QL, QR, MPL, MPR):
                     r_ = r_star_shock(p_, PR, MPR)
                     v_ = array([u_, 0, 0])
                     ret[i] = Cvec(r_, p_, v_, A_, J_, MPR)
+
+            ret[i, -1] = 1
 
     return ret
 

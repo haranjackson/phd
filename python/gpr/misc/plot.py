@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from numpy import nanmax, nanmin, arange, isnan, linspace, mgrid, prod, zeros
+from numpy import nan, nanmax, nanmin, arange, isnan, linspace, mgrid, prod, zeros
 from numpy.linalg import norm
 from matplotlib.pyplot import colorbar, contour, contourf, figure, get_cmap, \
     imshow, plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
@@ -61,22 +61,6 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
         streamplot(X, Y, x.T, y.T)
 
 
-def plot_simple(u, style, x, lab, col, title, sci, ind, divρ, plotType='colormap'):
-
-    NDIM = u.ndim - 1
-
-    if NDIM == 1:
-        y = u[:, ind]
-        if divρ:
-            y /= u[:, 0]
-        plot1d(y, style, x, lab, col, title, sci=sci)
-    else:
-        y = u[:, :, ind]
-        if divρ:
-            y /= u[:, :, 0]
-        plot2d(y, plotType)
-
-
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
                   vmin, vmax, i=None, j=None, takeNorm=False):
 
@@ -92,15 +76,17 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
 
         if MP.EOS > -1:  # not a vacuum
             P = State(Q, MP)
-            var = getattr(P, attr)()
 
-            if j is None:
-                if i is None:
-                    var = getattr(P, attr)()
-                else:
-                    var = getattr(P, attr)()[i]
+            if isinstance(getattr(P, attr), float):
+                var = getattr(P, attr)
             else:
-                var = getattr(P, attr)()[i, j]
+                var = getattr(P, attr)()
+
+            if i is not None:
+                if j is None:
+                    var = var[i]
+                else:
+                    var = var[i,j]
 
             if takeNorm:
                 var = norm(var)
@@ -110,6 +96,9 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
             else:
                 y[ii] = var
 
+        else:
+            y[ii] = nan
+
     if u.ndim - 1 == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
     else:
@@ -117,55 +106,53 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
                lsets=[u[:, :, -(i+1)] for i in range(nmat-1)])
 
 
-def plot_density(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
+def plot_density(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
+                 square=0, plotType='colormap', vmin=None, vmax=None):
 
     figure(0, figsize=fig_size(square))
-    plot_simple(u, style, x, lab, col, 'Density', sci, 0, False)
+    plot_compound(u, MPs, style, x, lab, col, 'Density', sci, 'ρ', plotType,
+                  vmin, vmax)
 
 
-def plot_energy(u, style='-', x=None, lab=None, col=None, sci=0, square=0):
+def plot_energy(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0,
+                plotType='colormap', vmin=None, vmax=None):
 
     figure(1, figsize=fig_size(square))
-    plot_simple(u, style, x, lab, col, 'Total Energy', sci, 1, True)
+    plot_compound(u, MPs, style, x, lab, col, 'Total Energy',
+                  sci, 'v', plotType, vmin, vmax)
 
 
-def plot_velocity(u, i=0, style='-', x=None, lab=None, col=None, sci=0,
-                  square=0, plotType='streams'):
+def plot_velocity(u, MPs, i=0, style='-', x=None, lab=None, col=None, sci=0,
+                  square=0, plotType='streams', vmin=None, vmax=None):
     figure(2 + i, figsize=fig_size(square))
-    NDIM = len(u.shape) - 1
-
-    if NDIM == 1:
-        y = u[:, 2 + i] / u[:, 0]
-        plot1d(y, style, x, lab, col, 'Velocity Component %d' % (i + 1),
-               sci=sci)
-    else:
-        x = u[:, :, 2] / u[:, :, 0]
-        y = u[:, :, 3] / u[:, :, 0]
-        plot2d(x, plotType, y)
+    plot_compound(u, MPs, style, x, lab, col, 'Velocity Component %d' % (i + 1),
+                  sci, 'v', plotType, vmin, vmax, i=i)
 
 
-def plot_distortion(u, i, j, style='-', x=None, lab=None, col=None, sci=0,
-                    fig=None, square=0):
+def plot_distortion(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
+                    fig=None, square=0, plotType='colormap', vmin=None, vmax=None):
     ind = 5 + i * 3 + j
     if fig is None:
         fig = ind
     figure(fig, figsize=fig_size(square))
+    plot_compound(u, MPs, style, x, lab, col,
+                  'Distortion Component %d,%d' % (i + 1, j + 1), sci, 'A',
+                  plotType, vmin, vmax, i=i, j=j)
 
-    plot_simple(u, style, x, lab, col,
-                'Distortion Component %d,%d' % (i + 1, j + 1), sci, ind, False)
 
-
-def plot_thermal_impulse(u, i, style='-', x=None, lab=None, col=None, sci=0,
-                         square=0):
+def plot_thermal_impulse(u, MPs, i, style='-', x=None, lab=None, col=None, sci=0,
+                         square=0, plotType='colormap', vmin=None, vmax=None):
     figure(14 + i, figsize=fig_size(square))
-    plot_simple(u, style, x, lab, col,
-                'Thermal Impulse Component %d' % (i + 1), sci, 14 + i, True)
+    plot_compound(u, MPs, style, x, lab, col,
+                  'Thermal Impulse Component %d' % (i + 1), sci, 'J',
+                  plotType, vmin, vmax)
 
 
 def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0,
                        square=0):
     figure(18, figsize=fig_size(square))
-    plot_simple(u, style, x, lab, col, 'Concentration', sci, 17, True)
+    plot_compound(u, MPs, style, x, lab, col, 'Concentration', sci, 'λ',
+                  plotType, vmin, vmax)
 
 
 def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
@@ -182,9 +169,8 @@ def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
                   plotType, vmin, vmax)
 
 
-def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
-               fig=None, square=0, plotType='colormap', vmin=None, vmax=None
-               , takeNorm=False):
+def plot_sigma(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
+               fig=None, square=0, plotType='colormap', vmin=None, vmax=None, takeNorm=False):
 
     if takeNorm:
         if fig is None:
@@ -202,8 +188,7 @@ def plot_sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
                       sci, 'σ', plotType, vmin, vmax, i=i, j=j)
 
 
-
-def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
+def plot_Sigma(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
                fig=None, square=0, plotType='colormap', vmin=None, vmax=None):
     if fig is None:
         fig = 21 + i * 3 + j
@@ -213,7 +198,7 @@ def plot_Sigma(u, i, j, MPs, style='-', x=None, lab=None, col=None, sci=0,
                   plotType, vmin, vmax, i=i, j=j)
 
 
-def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0,
+def plot_heat_flux(u, MPs, i, style='-', x=None, lab=None, col=None, sci=0,
                    square=0, plotType='colormap', vmin=None, vmax=None):
     figure(30 + i, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
@@ -224,7 +209,14 @@ def plot_heat_flux(u, i, MPs, style='-', x=None, lab=None, col=None, sci=0,
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,
                   square=0):
     figure(34, figsize=fig_size(square))
-    plot_simple(u, style, x, lab, col, 'Variable %d' % (var), sci, var, False)
+
+    NDIM = u.ndim - 1
+    if NDIM == 1:
+        plot1d(u[:, var], style, x, lab, col, 'Variable %d' %
+               (var), xlab='x', sci=sci)
+
+    elif NDIM == 2:
+        plot2d(u[:, :, var])
 
 
 def plot_primitives(u, MPs, style='-', x=None):
