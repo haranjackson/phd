@@ -14,10 +14,10 @@ from gpr.vars.wavespeeds import c_0
 
 
 RELAXATION = True
-STAR_TOL = 1e-8
+STAR_TOL = 1e-6
 
 
-n1, n2, n3, n4, n5 = get_indexes()
+n1, n2, n3, n4, n5, n6 = get_indexes()
 
 
 def q_dims(MP):
@@ -158,11 +158,11 @@ def riemann_constraints(P, sgn, MP, left=False):
     return Lhat, Rhat
 
 
-def star_stepper(QL, QR, MPL, MPR, interfaceType):
+def star_stepper(QL_, QR_, MPL, MPR, interfaceType):
     """ Iterates to the next approximation of the star states.
         NOTE: the material on the right may be a vacuum.
     """
-    PL = State(QL, MPL)
+    PL = State(QL_, MPL)
     _, RL = riemann_constraints(PL, 1, MPL)
 
     if THERMAL:
@@ -170,11 +170,11 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
     else:
         xL = PL.Σ()[0]
 
-    cL = zeros(n5)
+    cL = zeros(n6)
 
     if MPR.EOS > -1:  # not a vacuum
 
-        PR = State(QR, MPR)
+        PR = State(QR_, MPR)
         _, RR = riemann_constraints(PR, -1, MPR)
 
         if THERMAL:
@@ -182,7 +182,7 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
         else:
             xR = PR.Σ()[0]
 
-        cR = zeros(n5)
+        cR = zeros(n6)
 
         if interfaceType == 'stick':
             x_ = stick_bcs(RL, RR, PL, PR, xL, xR)
@@ -199,7 +199,10 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
 
     else:
         cL[:n1] = - xL
-        QR_ = zeros(n5)
+        if THERMAL:
+            YL = RL[14, :4]
+            cL[3] = (dot(YL[:3], PL.Σ()[0]) - PL.J[0]) / YL[3]
+        QR_ = zeros(n6)
 
     PLvec = Pvec(PL)
     PL_vec = dot(RL, cL) + PLvec
@@ -210,8 +213,8 @@ def star_stepper(QL, QR, MPL, MPR, interfaceType):
 
 def star_states(QL, QR, MPL, MPR, dt, n, interfaceType='slip'):
 
-    QL_ = QL[:n5].copy()
-    QR_ = QR[:n5].copy()
+    QL_ = QL[:n6].copy()
+    QR_ = QR[:n6].copy()
 
     R = rotation_matrix(n)
     rotate_tensors(QL_, R)
@@ -221,7 +224,8 @@ def star_states(QL, QR, MPL, MPR, dt, n, interfaceType='slip'):
 
         if RELAXATION:
             ode_solver_cons(QL_, dt / 2, MPL)
-            ode_solver_cons(QR_, dt / 2, MPR)
+            if MPR.EOS > -1:
+                ode_solver_cons(QR_, dt / 2, MPR)
 
         QL_, QR_ = star_stepper(QL_, QR_, MPL, MPR, interfaceType)
 
@@ -230,7 +234,7 @@ def star_states(QL, QR, MPL, MPR, dt, n, interfaceType='slip'):
 
     retL = QL.copy()
     retR = QR.copy()
-    retL[:n5] = QL_
-    retR[:n5] = QR_
+    retL[:n6] = QL_
+    retR[:n6] = QR_
 
     return retL, retR

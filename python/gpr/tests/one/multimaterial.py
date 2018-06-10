@@ -12,7 +12,14 @@ from gpr.tests.params.solids import Cu_GR_SI, Al_GR_CGS
 
 
 def water_air_IC():
+    """ 10.1016/j.jcp.2003.11.015
+        7.1. Water–air shock tube
 
+        N = 3
+        cfl = 0.5
+        SPLIT = True
+        SOLVER = 'rusanov'
+    """
     tf = 2.3744e-4
     nx = 200
     Lx = 1
@@ -33,7 +40,15 @@ def water_air_IC():
 
 
 def helium_bubble_IC():
+    """ 10.1016/j.jcp.2003.10.010
+        5. Numerical experiments - Test B
 
+        N = 3
+        cfl = 0.5
+        SPLIT = True
+        SOLVER = 'rusanov'
+    """
+    #tf = 7e-4
     tf = 14e-4
     nx = 200
     Lx = 1
@@ -126,6 +141,12 @@ def pbx_copper_IC(test):
 def aluminium_vacuum_IC():
     """ 10.1016/j.jcp.2010.04.012
         5.3 Solid/vacuum problem
+
+        N = 3
+        cfl = 0.5
+        SPLIT = False
+        SOLVER = 'rusanov'
+        RELAXATION = false
     """
     tf = 0.06
     nx = 500

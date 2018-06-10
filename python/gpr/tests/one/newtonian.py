@@ -14,8 +14,8 @@ def heat_conduction_IC(isMulti=False):
     tf = 1
     nx = 200
     Lx = 1
-    MPs = [material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4, pINF=0, b0=1,
-                           cα=2, μ=1e-2, κ=1e-2)]
+    MPs = [material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
+                           b0=1, cα=2, μ=1e-2, κ=1e-2)]
 
     if isMulti:
         MPs = 2 * MPs
@@ -49,8 +49,8 @@ def first_stokes_problem_IC(isMulti=False):
     γ = 1.4
     μ = 1e-2  # 1e-3 # 1e-4
 
-    MPs = [material_params(EOS='sg', ρ0=1, cv=1, p0=1 / γ, γ=γ, b0=1, cα=1e-16,
-                           μ=μ, Pr=0.75)]
+    MPs = [material_params(EOS='sg', ρ0=1, cv=1, p0=1/γ, γ=γ,
+                           b0=1, cα=1e-16, μ=μ, Pr=0.75)]
 
     if isMulti:
         MPs = 2 * MPs
@@ -115,12 +115,10 @@ def viscous_shock_IC(center=0):
 
     Ms = 2
     γ = 1.4
-    ρ0 = 1
-    p0 = 1 / γ
     μ = 2e-2
 
-    MP = material_params(EOS='sg', ρ0=ρ0, cv=2.5, p0=p0, γ=γ, pINF=0, b0=5,
-                         cα=5, μ=2e-2, Pr=0.75)
+    MP = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1/γ, γ=γ,
+                         b0=5, cα=5, μ=μ, Pr=0.75)
 
     dX = [Lx / nx]
 

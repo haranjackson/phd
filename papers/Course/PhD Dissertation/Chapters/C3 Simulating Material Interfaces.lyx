@@ -863,12 +863,12 @@ key "Barton2011a,Barton2010"
 
 .
  Owing to the similarity of the structure of the non-linear elasticity equations
- to those of the GPR model (differing only in the presence of source terms
- and the form of the shear stress tensor, and possibly the EOS), their method
+ to those of the GPR model (differing only in the presence of source terms,
+ the form of the shear stress tensor, and possibly the EOS), their method
  is built upon here.
- The resulting method is named 
+ The resulting method is named the 
 \shape italic
-the GPR-RGFM
+GPR-RGFM
 \shape default
 .
 \end_layout
@@ -888,13 +888,16 @@ reference "fig:GPR_RP"
  as a heat wave) and the other three correspond to the distortion components
  in the axis in which the Riemann Problem is considered (manifesting as
  two shear waves and one longitudinal pressure wave).
- In the following the effect of the source terms on the solution to the
- RP is neglected.
- This is thought to be a reasonable assumption for the problem at hand,
- as only the star states are required, and the time step over which the
- RP is taken is very small.
- The method is presented here along the first spatial axis.
- It can easily be adapted along any axis.
+ It is important to note that - owing to the source terms - the star states
+ are not constant in the spacetime region in which they reside, so the method
+ presented here produces only an approximation to them.
+\end_layout
+
+\begin_layout Standard
+The method is presented here along the first spatial axis.
+ It can easily be adapted along any axis by taking the components of all
+ relevant vector quantities (velocity, distortion, and thermal impulse)
+ in the direction normal to the interface.
 \end_layout
 
 \begin_layout Standard
@@ -1012,8 +1015,64 @@ Take the hyperbolic system
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-L\cdot d\boldsymbol{P}=dt\cdot L\cdot\boldsymbol{S}\label{eq:L.dP=0}
+L\cdot d\boldsymbol{P}=dt\cdot L\cdot\boldsymbol{S}\label{eq:L.dP=dt.L.S}
 \end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In what follows, we enact an operator splitting of the two processes present
+ in the system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=dt.L.S"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+L\cdot d\boldsymbol{P} & =\boldsymbol{0}\label{eq:L.dP=0}\\
+\frac{d\boldsymbol{P}}{dt} & =\boldsymbol{S}\label{eq:dP/dt=S}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
 
 \end_inset
 
@@ -1023,7 +1082,7 @@ L\cdot d\boldsymbol{P}=dt\cdot L\cdot\boldsymbol{S}\label{eq:L.dP=0}
 \begin_layout Standard
 
 \series bold
-\begin_inset Formula $\boldsymbol{P_{K}^{*}}$
+\begin_inset Formula $\boldsymbol{P^{*K}}$
 \end_inset
 
 
@@ -1043,7 +1102,7 @@ L\cdot d\boldsymbol{P}=dt\cdot L\cdot\boldsymbol{S}\label{eq:L.dP=0}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-d\boldsymbol{P}\approx\boldsymbol{P_{K}^{*}}-\boldsymbol{P_{K}}
+d\boldsymbol{P^{K}}\approx\boldsymbol{P^{*K}}-\boldsymbol{P^{K}}
 \end{equation}
 
 \end_inset
@@ -1133,7 +1192,7 @@ reference "fig:HPR_RP2"
 
 .
  Four more relations must be derived to solve the system for 
-\begin_inset Formula $\boldsymbol{P_{K}^{*}}$
+\begin_inset Formula $\boldsymbol{P^{*K}}$
 \end_inset
 
 .
@@ -1211,7 +1270,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\Sigma^{*}-\Sigma & \approx-\left(\rho^{*}-\rho\right)\frac{\partial\sigma}{\partial\rho}+\left(p^{*}-p\right)I-\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\sigma}{\partial A_{mn}}\\
+\Sigma^{*}-\Sigma & \approx\left(p^{*}-p\right)I-\left(\rho^{*}-\rho\right)\frac{\partial\sigma}{\partial\rho}-\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\sigma}{\partial A_{mn}}\\
 T^{*}-T & \approx\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}
 \end{align}
 
@@ -1238,18 +1297,13 @@ end{subequations}
 
 \begin_layout Standard
 These are the extra required relations.
- Let 
-\begin_inset Formula $\boldsymbol{n}$
-\end_inset
-
- be the normal to the boundary.
- Then we have:
+ Thus we have:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\hat{L}_{K}\cdot\left(\boldsymbol{P_{K}^{*}}-\boldsymbol{P_{K}}\right)=\boldsymbol{c_{K}}\label{eq:L(P*-P)=c}
+\hat{L}^{K}\cdot\left(\boldsymbol{P^{*K}}-\boldsymbol{P^{K}}\right)=\boldsymbol{c^{K}}\label{eq:L(P*-P)=c}
 \end{equation}
 
 \end_inset
@@ -1259,7 +1313,7 @@ These are the extra required relations.
 
 \begin_layout Standard
 where 
-\begin_inset Formula $\hat{L}_{K}$
+\begin_inset Formula $\hat{L}^{K}$
 \end_inset
 
  takes the form found in 
@@ -1291,10 +1345,10 @@ reference "eq:Left-Conditions"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\boldsymbol{c_{K}}=\left(\begin{array}{c}
-\left(\Sigma_{K}^{*}-\Sigma_{K}\right)\cdot\boldsymbol{n}\\
-T_{K}^{*}-T_{K}\\
-dt\cdot\left(L_{K}\cdot\boldsymbol{S_{K}}\right)_{5:17}
+\boldsymbol{c^{K}}=\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{*K}}-\boldsymbol{\Sigma_{1}^{K}}\\
+T^{*K}-T^{K}\\
+\boldsymbol{0}
 \end{array}\right)
 \end{equation}
 
@@ -1305,7 +1359,7 @@ dt\cdot\left(L_{K}\cdot\boldsymbol{S_{K}}\right)_{5:17}
 
 \begin_layout Standard
 The inverse of 
-\begin_inset Formula $\hat{L}_{K}$
+\begin_inset Formula $\hat{L}^{K}$
 \end_inset
 
  takes the form found in 
@@ -1319,16 +1373,16 @@ reference "eq:Right-Conditions"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\hat{L}_{K},\hat{L}_{K}^{-1}$
+\begin_inset Formula $\hat{L}^{K},\hat{L}^{K}{}^{-1}$
 \end_inset
 
  are evaluated at 
-\begin_inset Formula $\boldsymbol{P_{K}}$
+\begin_inset Formula $\boldsymbol{P^{K}}$
 \end_inset
 
 .
  It remains to find expressions for 
-\begin_inset Formula $\Sigma^{*}\cdot\boldsymbol{n}$
+\begin_inset Formula $\Sigma^{*}$
 \end_inset
 
  and 
@@ -1336,11 +1390,20 @@ reference "eq:Right-Conditions"
 \end_inset
 
  in terms of 
-\begin_inset Formula $\boldsymbol{P_{L}},\boldsymbol{P_{R}}$
+\begin_inset Formula $\boldsymbol{P^{L}},\boldsymbol{P^{R}}$
 \end_inset
 
  to close the system.
- The following boundary conditions are used:
+ The obtained values depend on the boundary conditions chosen, as explained
+ below.
+\end_layout
+
+\begin_layout Subsubsection
+Stick Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+The following boundary conditions are used:
 \end_layout
 
 \begin_layout Standard
@@ -1362,10 +1425,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\Sigma_{L}^{*}\cdot\boldsymbol{n} & =\Sigma_{R}^{*}\cdot\boldsymbol{n}\\
-T_{L}^{*} & =T_{R}^{*}\\
-\boldsymbol{v_{L}^{*}} & =\boldsymbol{v_{R}^{*}}\\
-\alpha^{2}\boldsymbol{J}_{L}^{*}\cdot\boldsymbol{n} & =\alpha^{2}\boldsymbol{J}_{R}^{*}\cdot\boldsymbol{n}
+\boldsymbol{\Sigma_{1}^{*L}} & =\boldsymbol{\Sigma_{1}^{*R}}\\
+T^{*L} & =T^{*R}\\
+\boldsymbol{v^{*L}} & =\boldsymbol{v^{*R}}\\
+q_{1}^{*L} & =q_{1}^{*R}
 \end{align}
 
 \end_inset
@@ -1391,7 +1454,7 @@ end{subequations}
 
 \begin_layout Standard
 Taking the relevant rows of 
-\begin_inset Formula $\boldsymbol{P_{K}^{*}}=\boldsymbol{P_{K}}+\hat{L}_{K}^{-1}\boldsymbol{c_{K}}$
+\begin_inset Formula $\boldsymbol{P^{*K}}=\boldsymbol{P^{K}}+\hat{L}^{K}{}^{-1}\boldsymbol{c^{K}}$
 \end_inset
 
 :
@@ -1399,22 +1462,21 @@ Taking the relevant rows of
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align}
+\begin{equation}
 \left(\begin{array}{c}
 \boldsymbol{v^{*}}\\
-\boldsymbol{J}^{*}\cdot\boldsymbol{n}
-\end{array}\right) & =\left(\begin{array}{c}
-\boldsymbol{v_{K}}\\
-\boldsymbol{J}_{K}\cdot\boldsymbol{n}
-\end{array}\right)+Y_{K}\left(\left(\begin{array}{c}
-\Sigma^{*}\cdot\boldsymbol{n}\\
+J_{1}^{*}
+\end{array}\right)=\left(\begin{array}{c}
+\boldsymbol{v^{K}}\\
+J_{1}^{K}
+\end{array}\right)+Y^{K}\left(\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{*}}\\
 T^{*}
 \end{array}\right)-\left(\begin{array}{c}
-\Sigma_{K}\cdot\boldsymbol{n}\\
-T_{K}
-\end{array}\right)\right)\\
- & +dt\cdot\xi_{K}\cdot Q_{K}^{-1}\left(L_{K}\cdot\boldsymbol{S_{K}}\right)_{5:8}\nonumber 
-\end{align}
+\boldsymbol{\Sigma_{1}^{K}}\\
+T^{K}
+\end{array}\right)\right)
+\end{equation}
 
 \end_inset
 
@@ -1422,7 +1484,7 @@ T_{K}
 \end_layout
 
 \begin_layout Standard
-Thus, using the boundary conditions:
+Thus:
 \end_layout
 
 \begin_layout Standard
@@ -1431,24 +1493,130 @@ Thus, using the boundary conditions:
 \begin_inset Formula 
 \begin{equation}
 \left(\begin{array}{c}
-\Sigma^{*}\cdot\boldsymbol{n}\\
+\boldsymbol{\Sigma_{1}^{*}}\\
 T^{*}
-\end{array}\right)=\left(Y_{L}-Y_{R}\right)^{-1}\left(\begin{array}{c}
+\end{array}\right)=\left(Y^{L}-Y^{R}\right)^{-1}\left(\begin{array}{c}
 \left(\begin{array}{c}
-\boldsymbol{v_{R}}\\
-\boldsymbol{J}_{R}\cdot\boldsymbol{n}
+\boldsymbol{v^{R}}\\
+J_{1}^{R}
 \end{array}\right)-\left(\begin{array}{c}
-\boldsymbol{v_{L}}\\
-\boldsymbol{J}_{L}\cdot\boldsymbol{n}
-\end{array}\right)\\
-+dt\left(Q_{R}^{-1}\left(L_{R}\cdot\boldsymbol{S_{R}}\right)_{5:8}+Q_{L}^{-1}\left(L_{L}\cdot\boldsymbol{S_{L}}\right)_{5:8}\right)\\
-+Y_{L}\left(\begin{array}{c}
-\Sigma_{L}\cdot\boldsymbol{n}\\
-T_{L}
-\end{array}\right)-Y_{R}\left(\begin{array}{c}
-\Sigma_{R}\cdot\boldsymbol{n}\\
-T_{R}
-\end{array}\right)
+\boldsymbol{v^{L}}\\
+J_{1}^{L}
+\end{array}\right)+Y^{L}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{L}}\\
+T^{L}
+\end{array}\right)-Y^{R}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{R}}\\
+T^{R}
+\end{array}\right)\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Slip Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+The following boundary conditions are used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma_{11}^{*L} & =\Sigma_{11}^{*R}\\
+\Sigma_{12}^{*L},\Sigma_{12}^{*R} & =0\\
+\Sigma_{13}^{*L},\Sigma_{13}^{*R} & =0\\
+T^{*L} & =T^{*R}\\
+v_{1}^{*L} & =v_{1}^{*R}\\
+q_{1}^{*L} & =q_{1}^{*R}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the relevant rows of 
+\begin_inset Formula $\boldsymbol{P^{*K}}=\boldsymbol{P^{K}}+\hat{L}^{K}{}^{-1}\boldsymbol{c^{K}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+v_{1}^{*}\\
+J_{1}^{*}
+\end{array}\right)=\left(\begin{array}{c}
+v_{1}^{K}\\
+J_{1}^{K}
+\end{array}\right)+\tilde{Y}^{K}\left(\left(\begin{array}{c}
+\Sigma_{11}^{*}\\
+0\\
+0\\
+T^{*}
+\end{array}\right)-\left(\begin{array}{c}
+\Sigma_{11}^{K}\\
+\Sigma_{12}^{K}\\
+\Sigma_{13}^{K}\\
+T^{K}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{Y}^{K}=\left(\begin{array}{c}
+\boldsymbol{Y_{1}^{K}}\\
+\boldsymbol{Y_{4}^{K}}
 \end{array}\right)
 \end{equation}
 
@@ -1458,30 +1626,260 @@ T_{R}
 \end_layout
 
 \begin_layout Standard
-Thus, 
-\begin_inset Formula $\boldsymbol{P_{L}^{*}},\boldsymbol{P_{R}^{*}}$
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\Sigma_{11}^{*}\\
+T^{*}
+\end{array}\right)=\left(\hat{Y}^{L}-\hat{Y}^{R}\right)^{-1}\left(\begin{array}{c}
+\left(\begin{array}{c}
+v_{1}^{R}\\
+J_{1}^{R}
+\end{array}\right)-\left(\begin{array}{c}
+v_{1}^{K}\\
+J_{1}^{L}
+\end{array}\right)+Y^{L}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{L}}\\
+T^{L}
+\end{array}\right)-Y^{R}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{R}}\\
+T^{R}
+\end{array}\right)\end{array}\right)
+\end{equation}
+
 \end_inset
 
- are obtained with 
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{Y}^{K}=\left(\begin{array}{cc}
+Y_{11}^{K} & Y_{14}^{K}\\
+Y_{41}^{K} & Y_{44}^{K}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Vacuum Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+The following boundary conditions are used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\Sigma_{1}^{*}} & =\boldsymbol{0}\\
+q_{1}^{*} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the relevant row of 
+\begin_inset Formula $\boldsymbol{P^{*K}}=\boldsymbol{P^{K}}+\hat{L}^{K}{}^{-1}\boldsymbol{c^{K}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J_{1}^{*}=J_{1}^{K}+\boldsymbol{Y_{4}^{K}}\cdot\left(\left(\begin{array}{c}
+\boldsymbol{0}\\
+T^{*}
+\end{array}\right)-\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{K}}\\
+T^{K}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $q_{1}^{*}=0$
+\end_inset
+
+ implies that 
+\begin_inset Formula $J_{1}^{*}=0$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T^{*}=\frac{1}{Y_{44}^{K}}\left(\boldsymbol{Y_{4}^{K}}\cdot\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{K}}\\
+T^{K}
+\end{array}\right)-J_{1}^{K}\right)=T^{K}+\frac{\boldsymbol{Y_{4,:3}^{K}}\cdot\boldsymbol{\Sigma_{1}^{K}}-J_{1}^{K}}{Y_{44}^{K}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Iteration
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:L(P*-P)=c"
 
 \end_inset
 
- and used in the RGFM, as described in 
+ is solved for 
+\begin_inset Formula $\boldsymbol{P^{*K}}$
+\end_inset
+
+, which is taken to be the star state if the following conditions are satisfied:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\left|\boldsymbol{\Sigma_{1}^{*L}}-\boldsymbol{\Sigma_{1}^{*R}}\right|}{\min\left(\rho_{0}^{L},\rho_{0}^{R}\right)\times\min\left(c_{s}^{L},c_{s}^{R}\right)^{2}} & <TOL\\
+\frac{\left|v_{1}^{L}-v_{1}^{R}\right|}{\min\left(c_{s}^{L},c_{s}^{R}\right)} & <TOL\\
+\frac{\left|q_{1}^{L}-q_{1}^{R}\right|}{\min\left(\tilde{q}^{L},\tilde{q}^{R}\right)} & <TOL\\
+\frac{\left|T^{L}-T^{R}\right|}{\min\left(T_{0}^{L},T_{0}^{R}\right)} & <TOL
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{q}=\frac{\alpha^{2}}{\rho_{0}}\sqrt{\frac{T_{0}^{3}}{c_{V}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These convergence criteria are chosen so that the variables required to
+ be less than 
+\begin_inset Formula $TOL$
+\end_inset
+
+ are dimensionless.
+ At every iteration, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dP/dt=S"
+
+\end_inset
+
+ is solved using the ODE solvers described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Ghost-Fluid-Methods"
+reference "subsec:The-Distortion-ODEs"
 
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Standard
-It may be necessary to iterate this process a few times to ensure convergence
- to star states for which the boundary conditions hold.
 \end_layout
 
 \begin_layout Subsection
@@ -1502,7 +1900,7 @@ reference "eq:Left-Eigenvectors"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\hat{L}_{K}=\left\{ \begin{array}{c}
+\hat{L}^{K}=\left\{ \begin{array}{c}
 \left(\begin{array}{cccccc}
 -\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & -\Pi_{1} & -\Pi_{2} & -\Pi_{3} & 0_{3,6}\\
 \frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0_{1,3} & 0_{1,3} & 0_{1,3} & 0_{1,6}
@@ -1528,7 +1926,7 @@ Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & \
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\hat{L}_{K}^{-1}=\left\{ \left(\begin{array}{c}
+\hat{L}^{K}{}^{-1}=\left\{ \left(\begin{array}{c}
 X\\
 0_{6,4}\\
 Y\\
@@ -1742,7 +2140,7 @@ reference "eq:Left-Eigenvectors-Non-Thermal"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\hat{L}_{K}=\left\{ \begin{array}{c}
+\hat{L}^{K}=\left\{ \begin{array}{c}
 \left(\begin{array}{ccccc}
 -\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & -\Pi_{1} & -\Pi_{2} & -\Pi_{3}\end{array}\right)\\
 \left(\begin{array}{cccc}
@@ -1764,7 +2162,7 @@ I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\hat{L}_{K}^{-1}=\left\{ \left(\begin{array}{c}
+\hat{L}^{K}{}^{-1}=\left\{ \left(\begin{array}{c}
 X\\
 0_{6,3}\\
 Y
@@ -1866,19 +2264,21 @@ By inversion of block matrices:
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align}
- & \left(\begin{array}{ccccc}
+\begin{equation}
+\begin{array}{c}
+\left(\begin{array}{ccccc}
 \vdots & \vdots & \ddots & \vdots & \iddots\\
 -\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
 \vdots & \vdots & \iddots & \vdots & \ddots\\
 \vdots & \iddots & \ddots & \vdots & \iddots\\
 \left(I-BA^{-1}C\right)^{-1} & \cdots & \cdots & -\left(I-BA^{-1}C\right)^{-1}BA^{-1} & \cdots
 \end{array}\right)^{-1}\\
- & =\left(\begin{array}{cc}
+=\left(\begin{array}{cc}
 -BA^{-1}Z & \left(I+BA^{-1}Z\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
 -Z & Z\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
-\end{array}\right)\nonumber 
-\end{align}
+\end{array}\right)
+\end{array}
+\end{equation}
 
 \end_inset
 
@@ -2524,7 +2924,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/helium_bubble/r_early.png
+	filename ../Figures/C3/helium_bubble/7e-4/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -2532,27 +2932,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/helium_bubble/r.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/helium_bubble/p_early.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/helium_bubble/p.png
+	filename ../Figures/C3/helium_bubble/14e-4/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -2564,7 +2944,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/helium_bubble/v_early.png
+	filename ../Figures/C3/helium_bubble/7e-4/p.png
 	lyxscale 30
 	width 50text%
 
@@ -2572,7 +2952,27 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/helium_bubble/v.png
+	filename ../Figures/C3/helium_bubble/14e-4/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/helium_bubble/7e-4/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C3/helium_bubble/14e-4/v.png
 	lyxscale 30
 	width 50text%
 
@@ -2907,12 +3307,176 @@ Initial conditions for the water-air shock tube test
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/water_air/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C3/water_air/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/water_air/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C3/water_air/e.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Water-Air"
+
+\end_inset
+
+Density, pressure, velocity, and internal energy for the water-air shock
+ tube test with GPR-RGFM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Copper-PBX Impact
 \end_layout
 
 \begin_layout Subsection
 Aluminium in Vacuum
+\end_layout
+
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2010"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/v1.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/v2.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/Σ11.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/Σ13.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Aluminium-in-Vacuum"
+
+\end_inset
+
+Density, velocity, and total stress for the aluminium-vacuum test with GPR-RGFM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -3337,7 +3901,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/passive/air_air/T.png
+	filename ../Figures/C3/heat_conduction/passive/air_air/T.png
 	lyxscale 30
 	width 50text%
 
@@ -3350,7 +3914,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/passive/air_air/q.png
+	filename ../Figures/C3/heat_conduction/passive/air_air/q.png
 	lyxscale 30
 	width 50text%
 
@@ -3363,7 +3927,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/passive/air_air/r.png
+	filename ../Figures/C3/heat_conduction/passive/air_air/r.png
 	lyxscale 30
 	width 50text%
 
@@ -4083,7 +4647,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air/W=1/T.png
+	filename ../Figures/C3/heat_conduction/driven/air/W=1/T.png
 	lyxscale 30
 	width 50text%
 
@@ -4091,27 +4655,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air/W=1/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air_air/W=1/T.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air_air/W=1/p.png
+	filename ../Figures/C3/heat_conduction/driven/air/W=1/p.png
 	lyxscale 30
 	width 50text%
 
@@ -4123,7 +4667,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air_helium/W=1/T.png
+	filename ../Figures/C3/heat_conduction/driven/air_air/W=1/T.png
 	lyxscale 30
 	width 50text%
 
@@ -4131,7 +4675,27 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air_helium/W=1/p.png
+	filename ../Figures/C3/heat_conduction/driven/air_air/W=1/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/heat_conduction/driven/air_helium/W=1/T.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C3/heat_conduction/driven/air_helium/W=1/p.png
 	lyxscale 30
 	width 50text%
 
@@ -4183,7 +4747,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air/W=1/q.png
+	filename ../Figures/C3/heat_conduction/driven/air/W=1/q.png
 	lyxscale 30
 	width 50text%
 
@@ -4195,7 +4759,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air_air/W=1/q.png
+	filename ../Figures/C3/heat_conduction/driven/air_air/W=1/q.png
 	lyxscale 30
 	width 50text%
 
@@ -4207,7 +4771,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/results/heat_conduction/driven/air_helium/W=1/q.png
+	filename ../Figures/C3/heat_conduction/driven/air_helium/W=1/q.png
 	lyxscale 30
 	width 50text%
 

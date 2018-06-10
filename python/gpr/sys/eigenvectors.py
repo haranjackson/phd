@@ -15,8 +15,9 @@ def get_indexes():
     n3 = 8 + int(THERMAL)
     n4 = 11 + int(THERMAL)
     n5 = 14 + int(THERMAL)
+    n6 = 14 + 3 * int(THERMAL)
 
-    return n1, n2, n3, n4, n5
+    return n1, n2, n3, n4, n5, n6
 
 
 def decompose_Ξ(Ξ1, Ξ2):
@@ -93,7 +94,7 @@ def right_eigenvectors(P, d, MP, typical_order):
     Ξ2 = Xi2(P, d, MP)
     Q, Q_1, D, D_1 = decompose_Ξ(Ξ1, Ξ2)
 
-    n1, n2, n3, n4, n5 = get_indexes()
+    n1, n2, n3, n4, n5, n6 = get_indexes()
 
     e0 = array([1, 0, 0])
 
@@ -159,7 +160,7 @@ def left_eigenvectors(P, d, MP, typical_order):
     Ξ2 = Xi2(P, d, MP)
     Q, Q_1, D, D_1 = decompose_Ξ(Ξ1, Ξ2)
 
-    n1, n2, n3, n4, n5 = get_indexes()
+    n1, n2, n3, n4, n5, n6 = get_indexes()
 
     e0 = array([1, 0, 0])
 
@@ -227,7 +228,7 @@ def eigenvalues(P, d, MP):
 
     v = P.v
     vd = v[d]
-    n1, n2, n3, n4, n5 = get_indexes()
+    n1, n2, n3, n4, n5, n6 = get_indexes()
 
     Ξ1 = Xi1(P, d, MP)
     Ξ2 = Xi2(P, d, MP)

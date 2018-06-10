@@ -24,7 +24,8 @@ W_SMG_SI = material_params(EOS='smg', ρ0=17600, p0=0, cv=134,
 """ CGS Units """
 
 Al_GR_CGS = material_params(EOS='gr', ρ0=2.71, p0=0, cv=9e-4, Tref=300,
-                            c0=5.037, α=1, β=3.577, γ=2.088, b0=3.16, τ1=inf)
+                            c0=5.037, α=1, β=3.577, γ=2.088, b0=3.16, τ1=inf,
+                            cα=0.2, κ=0.204)
 
 Cu_GR_CGS = material_params(EOS='gr', ρ0=8.93, p0=0, cv=3.94e-4, Tref=300,
                             c0=3.909, α=1, β=3, γ=2, b0=2.1, τ1=inf)
