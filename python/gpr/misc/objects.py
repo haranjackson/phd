@@ -190,7 +190,7 @@ def material_params(EOS, ρ0, p0,
 
         if b0 is not None:
 
-            if n is None:
+            if n is None or n==1:
                 POWER_LAW = False
                 YIELD = False
                 if τ1 is None:

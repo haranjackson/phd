@@ -4,36 +4,25 @@ from numpy import array, save
 
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
-from gpr.tests.one import newtonian, non_newtonian, solids, multi as multi1
-from gpr.tests.two import validation, impact, multi as multi2
+from gpr.tests.one import newtonian, elastic, plastic, multimaterial, \
+    non_newtonian as non_newtonian1
+from gpr.tests.two import impact, non_newtonian as non_newtonian2
 from gpr.misc.plot import *
 
 from solver.gfm import MultiSolver
 
 
-# u0, MPs, tf, dX = newtonian.first_stokes_problem_IC()
-# u0, MPs, tf, dX = multi1.heat_conduction_multi_IC()
-# u0, MPs, tf, dX = multi1.water_air_IC()
-# u0, MPs, tf, dX = multi1.helium_bubble_IC()
-# u0, MPs, tf, dX = multi1.pbx_copper_IC()
-# u0, MPs, tf, dX = multi1.aluminium_vacuum_IC()
-# u0, MPs, tf, dX = solids.piston_IC()
-# u0, MPs, tf, dX = impact.aluminium_plates_IC()
-# u0, MPs, tf, dX = validation.hagen_poiseuille_IC()
-u0, MPs, tf, dX = non_newtonian.hagen_poiseuille_IC()
+u0, MPs, tf, dX = non_newtonian1.poiseuille_IC()
 
-# bcs = 'transitive'
+#bcs = 'transitive'
 bcs = 'stick'
-# bcs = solids.piston_BC
-# bcs = validation.hagen_poiseuille_BC
-# bcs = non_newtonian.hagen_poiseuille_BC
 
 
 cpp_level = 2
-N = 2
-cfl = 0.9
+N = 3
+cfl = 0.5
 SPLIT = True
-SOLVER = 'roe'
+SOLVER = 'rusanov'
 
 
 if cpp_level > 0:
