@@ -1677,85 +1677,23 @@ where
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
+\begin{cases}
 B=\left(\begin{array}{cc}
 \vdots & \vdots\\
 -\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}}\\
 \vdots & \vdots
-\end{array}\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-C=\left(\begin{array}{ccc}
+\end{array}\right) & C=\left(\begin{array}{ccc}
 0 & 0 & 0\\
 \cdots & \boldsymbol{e_{d}^{T}}A^{-1} & \cdots
-\end{array}\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
+\end{array}\right)\\
 D=\left(\begin{array}{cc}
 \frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p}\\
 -\frac{1}{\rho} & 0
-\end{array}\right)
+\end{array}\right) & Z=\Pi_{1}+\frac{\rho}{T_{p}}\left(T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\right)\boldsymbol{e_{d}^{T}}A^{-1}
+\end{cases}
 \end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-Z=\Pi_{1}+\frac{\rho}{T_{p}}\left(T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\right)\boldsymbol{e_{d}^{T}}A^{-1}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
 
 \end_inset
 

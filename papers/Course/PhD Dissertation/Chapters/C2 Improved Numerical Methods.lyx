@@ -3973,7 +3973,7 @@ Combining these two relationships, we obtain:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
+\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\coloneqq\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
 \end{equation}
 
 \end_inset
@@ -6498,6 +6498,93 @@ Results of solving the problem of Heat Conduction in Gas with both an ADER-WENO
 \end_layout
 
 \begin_layout Subsubsection
+Elastic Riemann Problems
+\end_layout
+
+\begin_layout Standard
+These tests are taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boscheri2016"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Elastic/ρ1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Elastic/v1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Elastic/ρ2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Elastic/v2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Elastic"
+
+\end_inset
+
+Results for the 3-wave and 5-wave purely elastic Riemann problems
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Speed
 \end_layout
 
@@ -7094,10 +7181,6 @@ Time steps taken for various tests (all with 200 cells) under the ADER-WENO
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsubsection
-Purely Elastic Riemann Problems
 \end_layout
 
 \begin_layout Subsubsection
@@ -8839,24 +8922,31 @@ Poiseuille Flow
 \end_layout
 
 \begin_layout Subsubsection
-Lid-Driven Cavity
-\end_layout
-
-\begin_layout Subsubsection
 Elastoplastic Piston Test
 \end_layout
 
 \begin_layout Standard
-In this test, a piston with speed 0.002 is driven into copper initially at
- rest.
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2018"
+
+\end_inset
+
+.
+ In this test, a piston with speed 
+\begin_inset Formula $20ms^{-1}$
+\end_inset
+
+ is driven into copper initially at rest.
  An elastic shock wave develops, followed by a plastic shock wave.
  The following parameters were used: 
-\begin_inset Formula $\rho_{0}=8.93,c_{s}=0.219,n=10,\sigma_{0}=9\times10^{-4},\tau_{0}=0.1$
+\begin_inset Formula $\rho_{0}=8930,c_{s}=2244,n=10,\sigma_{0}=9\times10^{7},\tau_{0}=1$
 \end_inset
 
 .
  The shock Mie-Gruneisen EOS is used for the internal energy, with 
-\begin_inset Formula $p_{0}=0,c_{0}=0.394,\Gamma_{0}=2,s=1.48$
+\begin_inset Formula $p_{0}=0,c_{0}=3940,\Gamma_{0}=2,s=1.48$
 \end_inset
 
 .
@@ -8867,16 +8957,26 @@ reference "fig:piston"
 
 \end_inset
 
- demonstrates the results using the split solver, compared with the ADER-WENO
- solution.
-\end_layout
-
-\begin_layout Standard
-[RESULTS AS 
-\begin_inset Formula $n\rightarrow\infty$
+ demonstrates the results using the split solver, compared with the exact
+ solution, for various values of 
+\begin_inset Formula $n$
 \end_inset
 
-]
+.
+ The nature of the split solver enables large values of 
+\begin_inset Formula $n$
+\end_inset
+
+ to be used, producing more accurate results than those found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2018"
+
+\end_inset
+
+.
+ 400 grid cells were used, with a third order WENO method.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -8890,7 +8990,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../Figures/C2/Elastoplastic Piston/ρ.png
+	filename ../Figures/C2/Elasto-Plastic Piston/ρ.png
 	lyxscale 25
 	width 50text%
 
@@ -8898,7 +8998,28 @@ status open
 
 
 \begin_inset Graphics
-	filename ../Figures/C2/Elastoplastic Piston/v.png
+	filename ../Figures/C2/Elasto-Plastic Piston/v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Elasto-Plastic Piston/p.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Elasto-Plastic Piston/Σ.png
 	lyxscale 25
 	width 50text%
 
@@ -8917,7 +9038,8 @@ name "fig:piston"
 
 \end_inset
 
-Density and velocity in the elastoplastic piston test
+Density, velocity, pressure, and total stress in the elastoplastic piston
+ test
 \end_layout
 
 \end_inset
@@ -8934,8 +9056,30 @@ Density and velocity in the elastoplastic piston test
 2D Elastoplastic Test
 \end_layout
 
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2011"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsubsection
 Convergence
+\end_layout
+
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Miller2001"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
