@@ -5,16 +5,15 @@ from gpr.misc.structures import Cvec
 from gpr.tests.boundaries import wall_BC
 
 
-HP_n = 1.3
+HP_n = 1.5
+μ = 1e-2
+dp = 0.48
+Lx = 0.25
 
 
 def poiseuille_exact(n, nx=400):
 
-    Lx = 0.25
-    dp = 0.48
     ρ = 1
-    μ = 1e-2
-
     d = Lx / (2 * nx)
     x = linspace(d, Lx-d, nx)[int(nx/2):]
 
@@ -28,14 +27,14 @@ def poiseuille_max(n):
 
 
 def poiseuille_average(n):
-
-    Lx = 0.25
-    dp = 0.48
     ρ = 1
-    μ = 1e-2
     k = (n + 1) / n
-
     return ρ / k * (dp / μ)**(1 / n) * 2**(-k) * k * Lx**k / (k+1)
+
+
+def reynolds_number(n):
+    ρ = 1
+    return Lx * poiseuille_average(n) * ρ / μ
 
 
 def poiseuille_IC():
@@ -44,16 +43,14 @@ def poiseuille_IC():
         SPLIT = True
         SOLVER = 'rusanov'
     """
-    tf = 3
-    Lx = 0.25
+    tf = 20
     nx = 400
-    dp = 0.48
 
     γ = 1.4
     ρ = 1
     p = 100 / γ
-    vy = poiseuille_max(HP_n)
-    v = array([0, vy, 0])
+    #vy = poiseuille_max(HP_n)
+    v = array([0, 0, 0])
     A = eye(3)
     J = zeros(3)
     δp = array([0, dp, 0])
@@ -68,7 +65,6 @@ def poiseuille_IC():
 
 
 def poiseuille_BC(u, N, *args):
-    dp = 0.48
     γ = 1.4
     δp = array([0, dp, 0])
     MP = material_params(EOS='sg', ρ0=1, cv=1, p0=100/γ, γ=γ,
