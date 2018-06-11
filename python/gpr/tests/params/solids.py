@@ -14,7 +14,7 @@ Cu_SMGP_SI = material_params(EOS='smg', ρ0=8930, p0=0, cv=390,
                              b0=2244, σY=9e7, τ1=1, n=1000)
 
 Cu_GR_SI = material_params(EOS='gr', ρ0=8930, p0=0, cv=390, Tref=300,
-                           c0=3909, α=1, β=3, γ=2, b0=2100, τ1=inf)
+                           c0=3939, α=1, β=3, γ=2, b0=2141, τ1=inf)
 
 # TODO: find b0
 W_SMG_SI = material_params(EOS='smg', ρ0=17600, p0=0, cv=134,
