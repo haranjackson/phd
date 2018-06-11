@@ -2,10 +2,10 @@
 #define OPTIONS_H
 
 const bool VISCOUS = true;
-const bool THERMAL = false;
+const bool THERMAL = true;
 const bool MULTI = false;
 const bool REACTIVE = false;
-const int LSET = 0;
+const int LSET = 1;
 
 const int N = 3; // Order of accuracy
 

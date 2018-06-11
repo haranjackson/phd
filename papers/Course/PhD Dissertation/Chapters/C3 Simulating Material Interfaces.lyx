@@ -2469,7 +2469,7 @@ reference "fig:Helium-Bubble"
 
 \end_inset
 
-.
+, with reference solutions computed with 2000 cells.
  In the former, the shock is about to hit the helium bubble (corresponding
  to the region of low density).
  In the latter, the shock has traveled through the helium bubble, compressing

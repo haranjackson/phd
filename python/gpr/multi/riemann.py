@@ -13,7 +13,7 @@ from gpr.sys.eigenvectors import eigen, decompose_Ξ, get_indexes
 from gpr.vars.wavespeeds import c_0
 
 
-RELAXATION = True
+RELAXATION = False
 STAR_TOL = 1e-6
 
 

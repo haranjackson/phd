@@ -12,16 +12,16 @@ from gpr.misc.plot import *
 from solver.gfm import MultiSolver
 
 
-u0, MPs, tf, dX = non_newtonian1.poiseuille_IC()
+u0, MPs, tf, dX = multimaterial.aluminium_vacuum_IC()
 
-#bcs = 'transitive'
-bcs = 'stick'
+bcs = 'transitive'
+#bcs = 'stick'
 
 
 cpp_level = 2
 N = 3
 cfl = 0.5
-SPLIT = True
+SPLIT = False
 SOLVER = 'rusanov'
 
 
