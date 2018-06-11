@@ -28,7 +28,7 @@ def theta1inv(ρ, A, MP):
             return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * (sn / σY) ** n
 
         else:  # power law fluid
-            sn = norm(σ)
+            sn = norm(σ) / sqrt(2.)
             sn = min(sn, 1e8)   # Hacky fix
             return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * sn**((1-n)/n)
     else:

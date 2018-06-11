@@ -25,7 +25,7 @@ double theta1inv(VecVr Q, Par &MP) {
       double σY = MP.σY;
       return 3 * A53 / (cs2 * τ1) * pow((sn / σY), n);
     } else {
-      sn = σ.norm();
+      sn = σ.norm() / sqrt(2.);
       return 3 * A53 / (cs2 * τ1) * pow(sn, (1 - n) / n);
     }
   } else
