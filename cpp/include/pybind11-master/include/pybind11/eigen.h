@@ -33,8 +33,8 @@
 #  pragma warning(disable: 4996) // warning C4996: std::unary_negate is deprecated in C++17
 #endif
 
-#include <Eigen/Core>
-#include <Eigen/SparseCore>
+#include "eigen3/Core"
+#include "eigen3/SparseCore"
 
 // Eigen prior to 3.2.7 doesn't have proper move constructors--but worse, some classes get implicit
 // move constructors that break things.  We could detect this an explicitly copy, but an extra copy

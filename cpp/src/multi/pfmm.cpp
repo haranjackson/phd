@@ -1,4 +1,4 @@
-#include "../../include/skfmm/distance_marcher.h"
+#include "skfmm/distance_marcher.h"
 #include "../etc/types.h"
 
 Vec distance(Vecr phi, aVecr dX, iVecr nX) {

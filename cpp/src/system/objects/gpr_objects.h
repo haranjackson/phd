@@ -1,7 +1,7 @@
 #ifndef GPR_OBJECTS_H
 #define GPR_OBJECTS_H
 
-#include "../../../include/eigen3/Eigen"
+#include "eigen3/Eigen"
 
 #include "../../etc/types.h"
 

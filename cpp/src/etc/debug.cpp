@@ -1,7 +1,7 @@
 #include <sstream>
 #include <string>
 
-#include "../include/pybind11/pybind11.h"
+#include "pybind11/pybind11.h"
 
 #include "types.h"
 

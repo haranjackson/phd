@@ -1,5 +1,5 @@
 #include "../../etc/globals.h"
-#include "../../include/eigen3/Eigenvalues"
+#include "eigen3/Eigenvalues"
 #include "../../system/eig.h"
 #include "../../system/equations.h"
 #include <cmath>

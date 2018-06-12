@@ -12,8 +12,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-#include "../../include/eigen3/Eigen"
-#include "../../include/eigen3/StdVector"
+#include "eigen3/Eigen"
+#include "eigen3/StdVector"
 #include "../options.h"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
