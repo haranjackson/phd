@@ -16,7 +16,7 @@ class hyperelastic_params():
         self.cv = cv
         self.T0 = T0
         self.K0 = c0**2 - 4 / 3 * b0**2
-        self.B0 = b0**2
+        self.b02 = b0**2
 
 
 class EOS_params():
@@ -100,7 +100,7 @@ def params(MP, Rc, EOS,
         MP.R2 = R2
 
     if b0 is not None:
-        MP.B0 = b0**2
+        MP.b02 = b0**2
         MP.β = β
         MP.τ1 = τ1
         MP.POWER_LAW = POWER_LAW

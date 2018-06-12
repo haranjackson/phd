@@ -38,15 +38,15 @@ def check_star_convergence(QL_, QR_, MPL, MPR):
         PR_ = State(QR_, MPR)
 
         ρ0 = min(MPL.ρ0, MPR.ρ0)
-        B0 = min(MPL.B0, MPR.B0)
+        b02 = min(MPL.b02, MPR.b02)
 
-        cond = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) / (B0 * ρ0) < STAR_TOL
-        cond &= abs(PL_.v[0] - PR_.v[0]) / sqrt(B0) < STAR_TOL
+        cond = amax(abs(PL_.Σ()[0] - PR_.Σ()[0])) / (b02 * ρ0) < STAR_TOL
+        cond &= abs(PL_.v[0] - PR_.v[0]) / sqrt(b02) < STAR_TOL
     else:
         ρ0 = MPL.ρ0
-        B0 = MPL.B0
+        b02 = MPL.b02
 
-        cond = amax(abs(PL_.Σ()[0])) / (B0 * ρ0) < STAR_TOL
+        cond = amax(abs(PL_.Σ()[0])) / (b02 * ρ0) < STAR_TOL
 
     if THERMAL:
         if MPR.EOS > -1:

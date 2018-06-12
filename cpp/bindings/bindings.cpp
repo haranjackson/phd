@@ -4,8 +4,8 @@
 #include "../include/pybind11/stl.h"
 #include "../include/pybind11/stl_bind.h"
 
-PYBIND11_MAKE_OPAQUE(std::vector<Vec>);
-PYBIND11_MAKE_OPAQUE(std::vector<bVec>);
+PYBIND11_MAKE_OPAQUE(std::vector<Vec>)
+PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 
 #include "../include/pybind11/eigen.h"
 #include "../include/pybind11/functional.h"
@@ -106,7 +106,7 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("B", &Par::B)
       .def_readwrite("R1", &Par::R1)
       .def_readwrite("R2", &Par::R2)
-      .def_readwrite("B0", &Par::B0)
+      .def_readwrite("b02", &Par::b02)
       .def_readwrite("τ1", &Par::τ1)
       .def_readwrite("POWER_LAW", &Par::POWER_LAW)
       .def_readwrite("YIELD", &Par::YIELD)

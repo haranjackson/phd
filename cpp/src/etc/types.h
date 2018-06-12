@@ -8,7 +8,9 @@
 
 #define EIGEN_NO_MALLOC
 
+#ifndef M_PI
 #define M_PI 3.14159265358979323846
+#endif
 
 #include "../../include/eigen3/Eigen"
 #include "../../include/eigen3/StdVector"

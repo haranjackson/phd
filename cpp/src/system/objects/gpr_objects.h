@@ -44,7 +44,7 @@ struct Par {
   double R1;
   double R2;
 
-  double B0;
+  double b02;
   double τ1;
   bool POWER_LAW;
   bool YIELD;

@@ -31,9 +31,9 @@ def W(I1, I2, I3, HYP):
     """ Returns the internal energy due to shear deformations,
         given the invariants of G
     """
-    B0 = HYP.B0
+    b02 = HYP.b02
     β = HYP.β
-    return B0 / 2 * I3**(β / 2) * (I1**2 / 3 - I2)
+    return b02 / 2 * I3**(β / 2) * (I1**2 / 3 - I2)
 
 
 def GdU_1dG(I3, HYP):
@@ -56,9 +56,9 @@ def GdU_2dG(I3, S, HYP):
 def GdWdG(G, I1, I2, I3, HYP):
     """ Returns G * dW/dG
     """
-    B0 = HYP.B0
+    b02 = HYP.b02
     β = HYP.β
-    const = B0 / 2 * I3**(β / 2)
+    const = b02 / 2 * I3**(β / 2)
     return const * ((β / 2) * (I1**2 / 3 - I2) * I - I1 / 3 * G + dot(G, G))
 
 
@@ -83,9 +83,9 @@ def pressure_hyp(ρ, A, S, HYP):
     cv = HYP.cv
     T0 = HYP.T0
     γ = HYP.γ
-    B0 = HYP.B0
+    b02 = HYP.b02
     β = HYP.β
-    const = B0 / 2 * I3**(β / 2)
+    const = b02 / 2 * I3**(β / 2)
 
     ret = K0 / (2 * α) * (I3**α - I3**(α / 2))
     ret += cv * T0 * γ / 2 * (exp(S / cv) - 1) * I3**(γ / 2)

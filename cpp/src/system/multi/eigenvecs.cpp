@@ -20,13 +20,13 @@ MatV_V eigen(VecVr Q, int d, Par &MP) {
   Mat3_3Map A = get_A(Q);
   Mat3_3 G = A.transpose() * A;
   Mat3_3 A_devG = AdevG(A);
-  double B0 = MP.B0;
+  double b02 = MP.b02;
 
   for (int i = 0; i < 3; i++)
     for (int j = 0; j < 3; j++) {
-      Π1(i, j) = dsigmadA(ρ, B0, A, G, A_devG, d, i, j, 0);
-      Π2(i, j) = dsigmadA(ρ, B0, A, G, A_devG, d, i, j, 1);
-      Π3(i, j) = dsigmadA(ρ, B0, A, G, A_devG, d, i, j, 2);
+      Π1(i, j) = dsigmadA(ρ, b02, A, G, A_devG, d, i, j, 0);
+      Π2(i, j) = dsigmadA(ρ, b02, A, G, A_devG, d, i, j, 1);
+      Π3(i, j) = dsigmadA(ρ, b02, A, G, A_devG, d, i, j, 2);
     }
   Mat Ξ1 = Xi1(ρ, p, Q, MP, d);
   Mat Ξ2 = Xi2(ρ, p, Q, MP, d);

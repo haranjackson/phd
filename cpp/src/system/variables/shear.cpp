@@ -5,10 +5,10 @@
 double c_s2(double ρ, Par &MP) {
   // Returns the square of the characteristic velocity of propagation of
   // transverse perturbations
-  double B0 = MP.B0;
+  double b02 = MP.b02;
   double ρ0 = MP.ρ0;
   double β = MP.β;
-  return B0 * pow(ρ / ρ0, β);
+  return b02 * pow(ρ / ρ0, β);
 }
 
 double dc_s2dρ(double ρ, Par &MP) {

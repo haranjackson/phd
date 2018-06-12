@@ -5,10 +5,10 @@ def c_s2(ρ, MP):
     """ Returns the square of the characteristic velocity of propagation of
         transverse perturbations
     """
-    B0 = MP.B0
+    b02 = MP.b02
     ρ0 = MP.ρ0
     β = MP.β
-    return B0 * (ρ / ρ0)**β
+    return b02 * (ρ / ρ0)**β
 
 
 def dc_s2dρ(ρ, MP):

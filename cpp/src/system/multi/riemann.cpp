@@ -35,20 +35,20 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
   if (MPR.EOS > -1) {
     double ρ0 = std::min(MPL.ρ0, MPR.ρ0);
-    double B0 = std::min(MPL.B0, MPR.B0);
+    double b02 = std::min(MPL.b02, MPR.b02);
 
     Vec3 ΣR_ = Sigma(QR_, MPR, 0);
     double vL_0 = QL_(2) / QL_(0);
     double vR_0 = QR_(2) / QR_(0);
 
-    cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (B0 * ρ0) < STAR_TOL;
-    cond &= std::abs(vL_0 - vR_0) / sqrt(B0) < STAR_TOL;
+    cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (b02 * ρ0) < STAR_TOL;
+    cond &= std::abs(vL_0 - vR_0) / sqrt(b02) < STAR_TOL;
 
   } else {
     double ρ0 = MPL.ρ0;
-    double B0 = MPL.B0;
+    double b02 = MPL.b02;
 
-    cond = ΣL_.cwiseAbs().maxCoeff() / (B0 * ρ0) < STAR_TOL;
+    cond = ΣL_.cwiseAbs().maxCoeff() / (b02 * ρ0) < STAR_TOL;
   }
 
   if (THERMAL) {
