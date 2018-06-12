@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -22,6 +22,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -51,6 +53,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \branch ChildOnly
 \selected 1
 \filename_suffix 0
@@ -64,7 +67,10 @@
 \tocdepth 3
 \paragraph_separation skip
 \defskip bigskip
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle fancy
@@ -162,6 +168,7 @@ Given the local velocity field
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Osher2002"
+literal "true"
 
 \end_inset
 
@@ -243,6 +250,7 @@ The Original Ghost Fluid Method of Fedkiw et al.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Fedkiw1999"
+literal "true"
 
 \end_inset
 
@@ -251,6 +259,7 @@ key "Fedkiw1999"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Glimm1981"
+literal "true"
 
 \end_inset
 
@@ -651,6 +660,7 @@ This problem is denoted by
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Toro2009"
+literal "true"
 
 \end_inset
 
@@ -658,6 +668,7 @@ key "Toro2009"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Barton2009"
+literal "true"
 
 \end_inset
 
@@ -665,6 +676,7 @@ key "Barton2009"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Alcrudo2001"
+literal "true"
 
 \end_inset
 
@@ -673,6 +685,7 @@ key "Alcrudo2001"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Miller2004,Liu1975"
+literal "true"
 
 \end_inset
 
@@ -680,6 +693,7 @@ key "Miller2004,Liu1975"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2016"
+literal "true"
 
 \end_inset
 
@@ -723,6 +737,7 @@ Liu et al.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Liu2003"
+literal "true"
 
 \end_inset
 
@@ -737,6 +752,7 @@ key "Liu2003"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Sambasivan2009a,Sambasivan2009b"
+literal "true"
 
 \end_inset
 
@@ -858,6 +874,7 @@ Barton et al.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Barton2011a,Barton2010"
+literal "true"
 
 \end_inset
 
@@ -2374,6 +2391,7 @@ The interface between two different gases is now modeled.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Wang2004"
+literal "true"
 
 \end_inset
 
@@ -2479,6 +2497,7 @@ reference "fig:Helium-Bubble"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Wang2004"
+literal "true"
 
 \end_inset
 
@@ -3387,6 +3406,7 @@ This test is taken from
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Barton2011a"
+literal "true"
 
 \end_inset
 
@@ -3468,6 +3488,7 @@ This test is taken from
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Barton2010"
+literal "true"
 
 \end_inset
 
@@ -3484,7 +3505,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../Figures/C3/aluminium_vacuum/ρ.png
+	filename ../Figures/C3/aluminium_vacuum/non-thermal/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -3496,7 +3517,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../Figures/C3/aluminium_vacuum/v1.png
+	filename ../Figures/C3/aluminium_vacuum/non-thermal/v1.png
 	lyxscale 30
 	width 50text%
 
@@ -3504,7 +3525,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../Figures/C3/aluminium_vacuum/v2.png
+	filename ../Figures/C3/aluminium_vacuum/non-thermal/v2.png
 	lyxscale 30
 	width 50text%
 
@@ -3516,7 +3537,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../Figures/C3/aluminium_vacuum/Σ11.png
+	filename ../Figures/C3/aluminium_vacuum/non-thermal/Σ11.png
 	lyxscale 30
 	width 50text%
 
@@ -3524,7 +3545,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../Figures/C3/aluminium_vacuum/Σ13.png
+	filename ../Figures/C3/aluminium_vacuum/non-thermal/Σ13.png
 	lyxscale 30
 	width 50text%
 
@@ -3554,6 +3575,70 @@ Density, velocity, and total stress for the aluminium-vacuum test with GPR-RGFM
 \end_inset
 
 
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/thermal/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/thermal/v1.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C3/aluminium_vacuum/thermal/Σ11.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Aluminium-in-Vacuum-Thermal"
+
+\end_inset
+
+Density, velocity, and total stress for the aluminium-vacuum test with GPR-RGFM,
+ including thermal conduction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -3573,6 +3658,7 @@ This test is based on the Heat Conduction in a Gas Test of Dumbser et al.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -3927,6 +4013,7 @@ reference "fig:Thermal Equilibration"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2016b"
+literal "true"
 
 \end_inset
 
@@ -4892,6 +4979,7 @@ Heat flux for the intermaterial heating-induced acoustic wave test with:
 
 \begin_layout Standard
 \begin_inset Branch ChildOnly
+inverted 0
 status open
 
 \begin_layout Standard
