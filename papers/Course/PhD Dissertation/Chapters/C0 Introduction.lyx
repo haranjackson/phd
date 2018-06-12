@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -22,6 +22,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -51,6 +53,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \branch ChildOnly
 \selected 1
 \filename_suffix 0
@@ -64,7 +67,10 @@
 \tocdepth 3
 \paragraph_separation skip
 \defskip bigskip
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle fancy
@@ -123,6 +129,7 @@ The GPR model, first introduced in Peshkov and Romenski
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Peshkov2016"
+literal "true"
 
 \end_inset
 
@@ -131,6 +138,7 @@ key "Peshkov2016"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -190,6 +198,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "$\\rho$"
 description "Density"
+literal "true"
 
 \end_inset
 
@@ -199,6 +208,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$\\boldsymbol{v}$"
 description "Velocity"
+literal "true"
 
 \end_inset
 
@@ -208,6 +218,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$p$"
 description "Pressure"
+literal "true"
 
 \end_inset
 
@@ -217,6 +228,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "$\\delta$"
 description "Kronecker delta"
+literal "true"
 
 \end_inset
 
@@ -226,6 +238,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "$\\sigma$"
 description "Viscous shear stress tensor"
+literal "true"
 
 \end_inset
 
@@ -235,6 +248,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$A$"
 description "Distortion tensor"
+literal "true"
 
 \end_inset
 
@@ -244,6 +258,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$\\boldsymbol{J}$"
 description "Thermal impulse vector"
+literal "true"
 
 \end_inset
 
@@ -253,6 +268,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$T$"
 description "Temperature"
+literal "true"
 
 \end_inset
 
@@ -262,6 +278,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$s$"
 description "Entropy"
+literal "true"
 
 \end_inset
 
@@ -271,6 +288,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "${\\tau}_{1}$"
 description "Strain dissipation time"
+literal "true"
 
 \end_inset
 
@@ -280,6 +298,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "${\\tau}_{2}$"
 description "Thermal impulse dissipation time"
+literal "true"
 
 \end_inset
 
@@ -289,6 +308,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$E$"
 description "Total specific energy"
+literal "true"
 
 \end_inset
 
@@ -298,6 +318,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$\\boldsymbol{q}$"
 description "Heat flux vector"
+literal "true"
 
 \end_inset
 
@@ -307,6 +328,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$x$"
 description "Space variable"
+literal "true"
 
 \end_inset
 
@@ -316,6 +338,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$t$"
 description "Time variable"
+literal "true"
 
 \end_inset
 
@@ -508,6 +531,7 @@ LatexCommand nomenclature
 prefix "z"
 symbol "EOS"
 description "Equation of State"
+literal "true"
 
 \end_inset
 
@@ -570,6 +594,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$c_s$"
 description "Characteristic velocity of transverse perturbations"
+literal "true"
 
 \end_inset
 
@@ -579,6 +604,7 @@ LatexCommand nomenclature
 prefix "x"
 symbol "$\\left\\Vert \\cdot\\right\\Vert $"
 description "Euclidean vector norm"
+literal "true"
 
 \end_inset
 
@@ -588,6 +614,7 @@ LatexCommand nomenclature
 prefix "x"
 symbol "${\\left\\Vert \\cdot\\right\\Vert}_F $"
 description "Frobenius matrix norm"
+literal "true"
 
 \end_inset
 
@@ -597,6 +624,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "$\\alpha$"
 description "Constant related to characteristic velocity of heat waves"
+literal "true"
 
 \end_inset
 
@@ -649,6 +677,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$c_h$"
 description "Characteristic velocity of heat waves"
+literal "true"
 
 \end_inset
 
@@ -812,6 +841,7 @@ The justification of these choices is that classical Navier–Stokes–Fourier
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -820,6 +850,7 @@ key "Dumbser2016a"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Barton2011"
+literal "true"
 
 \end_inset
 
@@ -881,6 +912,7 @@ The following constraint also holds (see
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Peshkov2016"
+literal "true"
 
 \end_inset
 
@@ -925,6 +957,7 @@ particle settled life time
 \begin_inset CommandInset citation
 LatexCommand cite
 key "jacovfrenkel1947"
+literal "true"
 
 \end_inset
 
@@ -960,6 +993,7 @@ The evolution equation for
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Malyshev1984,Romenski1988"
+literal "true"
 
 \end_inset
 
@@ -967,6 +1001,7 @@ key "Malyshev1984,Romenski1988"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Romenski2007,Romenski2010"
+literal "true"
 
 \end_inset
 
@@ -1024,6 +1059,7 @@ LatexCommand nomenclature
 prefix "z"
 symbol "WENO"
 description "Weighted Essentially Non-Oscillatory"
+literal "true"
 
 \end_inset
 
@@ -1033,6 +1069,7 @@ LatexCommand nomenclature
 prefix "z"
 symbol "DG"
 description "Discontinuous Galerkin"
+literal "true"
 
 \end_inset
 
@@ -1042,6 +1079,7 @@ LatexCommand nomenclature
 prefix "z"
 symbol "FV"
 description "Finite Volume"
+literal "true"
 
 \end_inset
 
@@ -1065,6 +1103,7 @@ First introduced by Liu et al.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Liu1994"
+literal "true"
 
 \end_inset
 
@@ -1072,6 +1111,7 @@ key "Liu1994"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Jiang1996"
+literal "true"
 
 \end_inset
 
@@ -1082,6 +1122,7 @@ key "Jiang1996"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2013"
+literal "true"
 
 \end_inset
 
@@ -1414,6 +1455,7 @@ In this study,
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2014"
+literal "true"
 
 \end_inset
 
@@ -1550,6 +1592,7 @@ Take the grid for the previous section, and time steps
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2009,Dumbser2014"
+literal "true"
 
 \end_inset
 
@@ -2187,6 +2230,7 @@ Following the formulation of
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2014"
+literal "true"
 
 \end_inset
 
@@ -2355,6 +2399,7 @@ Using these definitions, the interface terms arising in the FV formula have
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Toro2009"
+literal "true"
 
 \end_inset
 
@@ -2377,6 +2422,7 @@ or a Roe flux
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2011b"
+literal "true"
 
 \end_inset
 
@@ -2396,6 +2442,7 @@ or a simplified Osher–Solomon flux
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2011a"
+literal "true"
 
 \end_inset
 
@@ -2508,12 +2555,14 @@ Transmissive boundary conditions (allowing material and heat to pass through)
 
 \begin_layout Standard
 \begin_inset Branch ChildOnly
+inverted 0
 status open
 
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs/phd_refs"
+btprint "btPrintCited"
+bibfiles "refs"
 options "plain"
 
 \end_inset

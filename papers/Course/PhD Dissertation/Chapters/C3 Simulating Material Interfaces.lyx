@@ -4985,7 +4985,8 @@ status open
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs/phd_refs,../../../refs/mphil_refs"
+btprint "btPrintCited"
+bibfiles "refs"
 options "plain"
 
 \end_inset

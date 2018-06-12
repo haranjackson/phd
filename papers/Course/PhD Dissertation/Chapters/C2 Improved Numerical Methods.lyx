@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -22,6 +22,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -51,6 +53,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \branch ChildOnly
 \selected 1
 \filename_suffix 0
@@ -64,7 +67,10 @@
 \tocdepth 3
 \paragraph_separation skip
 \defskip bigskip
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle fancy
@@ -108,6 +114,7 @@ The material in this section is published in
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Jackson2017,Jackson2017b"
+literal "true"
 
 \end_inset
 
@@ -118,6 +125,7 @@ key "Jackson2017,Jackson2017b"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Montecinos2017"
+literal "true"
 
 \end_inset
 
@@ -319,6 +327,7 @@ A basis
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2008"
+literal "true"
 
 \end_inset
 
@@ -327,6 +336,7 @@ key "Dumbser2008"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Balsara2009"
+literal "true"
 
 \end_inset
 
@@ -337,6 +347,7 @@ key "Balsara2009"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Montecinos2017"
+literal "true"
 
 \end_inset
 
@@ -441,6 +452,7 @@ The WENO method (as used in
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2013"
+literal "true"
 
 \end_inset
 
@@ -1228,6 +1240,7 @@ reference "eq:q system"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Montecinos2017"
+literal "true"
 
 \end_inset
 
@@ -1432,6 +1445,7 @@ In
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Jackson2017"
+literal "true"
 
 \end_inset
 
@@ -1459,6 +1473,7 @@ key "Jackson2017"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2009a"
+literal "true"
 
 \end_inset
 
@@ -1475,6 +1490,7 @@ key "Dumbser2009a"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Nering1970"
+literal "true"
 
 \end_inset
 
@@ -1726,6 +1742,7 @@ The material in this section is published in
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Jackson2017a"
+literal "true"
 
 \end_inset
 
@@ -1787,6 +1804,7 @@ As described in
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Toro2009"
+literal "true"
 
 \end_inset
 
@@ -2107,6 +2125,7 @@ where
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Toro2009"
+literal "true"
 
 \end_inset
 
@@ -2296,6 +2315,7 @@ where
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Toro2009"
+literal "true"
 
 \end_inset
 
@@ -2318,6 +2338,7 @@ or a simplified Osher–Solomon flux (see
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2011a,Dumbser2011b"
+literal "true"
 
 \end_inset
 
@@ -2674,6 +2695,7 @@ It is a common result (see
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Giles2008"
+literal "true"
 
 \end_inset
 
@@ -2715,6 +2737,7 @@ Using a fast
 \begin_inset CommandInset citation
 LatexCommand cite
 key "McAdams2011"
+literal "true"
 
 \end_inset
 
@@ -3866,7 +3889,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename /home/hari/Git/private/phd/papers/Course/PhD Dissertation/Figures/C2/rheology.png
+	filename ../Figures/C2/rheology.png
 	lyxscale 30
 	height 30pheight%
 
@@ -3907,6 +3930,7 @@ In
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dumbser2015"
+literal "true"
 
 \end_inset
 
@@ -4797,6 +4821,7 @@ reference "subsec:Analytical-Approximation"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Barton2010"
+literal "true"
 
 \end_inset
 
@@ -4860,6 +4885,7 @@ reference "fig:Distortion-ODEs_σ"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Jones"
+literal "true"
 
 \end_inset
 
@@ -5608,6 +5634,7 @@ This test is designed to demonstrate that the numerical methods used are
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Beker1929"
+literal "true"
 
 \end_inset
 
@@ -5619,6 +5646,7 @@ key "Beker1929"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Johnson2013"
+literal "true"
 
 \end_inset
 
@@ -5627,6 +5655,7 @@ key "Johnson2013"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -5715,6 +5744,7 @@ end{subequations}
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Morduchow"
+literal "true"
 
 \end_inset
 
@@ -6434,6 +6464,7 @@ reference "fig:Heat-Conduction"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -6506,6 +6537,7 @@ These tests are taken from
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Boscheri2016"
+literal "true"
 
 \end_inset
 
@@ -6643,6 +6675,7 @@ Note that, unlike with the ADER-WENO scheme, the wall time for the Split-WENO
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Hidalgo2011"
+literal "true"
 
 \end_inset
 
@@ -7200,6 +7233,7 @@ To assess the rate of convergence of the Split-WENO method, the convected
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -7374,6 +7408,7 @@ reference "tab:ConvergenceN=3"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2016a"
+literal "true"
 
 \end_inset
 
@@ -8930,6 +8965,7 @@ This test is taken from
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Peshkov2018"
+literal "true"
 
 \end_inset
 
@@ -8971,6 +9007,7 @@ reference "fig:piston"
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Peshkov2018"
+literal "true"
 
 \end_inset
 
@@ -9061,6 +9098,7 @@ This test is taken from
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Barton2011"
+literal "true"
 
 \end_inset
 
@@ -9076,6 +9114,7 @@ This test is taken from
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Miller2001"
+literal "true"
 
 \end_inset
 
@@ -9107,6 +9146,7 @@ In a similar manner to the operator splitting method presented in
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Leveque1990"
+literal "true"
 
 \end_inset
 
@@ -9138,6 +9178,7 @@ reference "subsec:Convergence"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Leveque1990"
+literal "true"
 
 \end_inset
 
@@ -9148,6 +9189,7 @@ key "Leveque1990"
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2008a"
+literal "true"
 
 \end_inset
 
@@ -9201,12 +9243,14 @@ It should be noted that both the ADER-WENO and Split-WENO methods, as described
 
 \begin_layout Standard
 \begin_inset Branch ChildOnly
+inverted 0
 status open
 
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs/my_publications,../../../refs/phd_refs"
+btprint "btPrintCited"
+bibfiles "refs"
 options "plain"
 
 \end_inset

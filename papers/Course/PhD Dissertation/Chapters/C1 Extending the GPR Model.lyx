@@ -1,5 +1,5 @@
-#LyX 2.2 created this file. For more info see http://www.lyx.org/
-\lyxformat 508
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -22,6 +22,8 @@
 \font_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -51,6 +53,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \branch ChildOnly
 \selected 1
 \filename_suffix 0
@@ -64,7 +67,10 @@
 \tocdepth 3
 \paragraph_separation skip
 \defskip bigskip
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle fancy
@@ -87,6 +93,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$c_0$"
 description "Adiabatic speed of sound"
+literal "true"
 
 \end_inset
 
@@ -96,6 +103,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$c_p$"
 description "Specific heat capacity at constant pressure"
+literal "true"
 
 \end_inset
 
@@ -105,6 +113,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$c_v$"
 description "Specific heat capacity at constant volume"
+literal "true"
 
 \end_inset
 
@@ -114,6 +123,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "$\\gamma$"
 description "Ratio of specific heat capacities, equal to $\\frac{c_p}{c_v}$"
+literal "true"
 
 \end_inset
 
@@ -123,6 +133,7 @@ LatexCommand nomenclature
 prefix "a"
 symbol "$p_\\infty$"
 description "Pressure constant in stiffened gas equation of state"
+literal "true"
 
 \end_inset
 
@@ -132,6 +143,7 @@ LatexCommand nomenclature
 prefix "g"
 symbol "$\\rho_0$"
 description "Reference density"
+literal "true"
 
 \end_inset
 
@@ -1665,12 +1677,14 @@ Shock-Induced Void Collapse in Nitromethane
 
 \begin_layout Standard
 \begin_inset Branch ChildOnly
+inverted 0
 status open
 
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "../../../refs/phd_refs"
+btprint "btPrintCited"
+bibfiles "refs"
 options "plain"
 
 \end_inset
