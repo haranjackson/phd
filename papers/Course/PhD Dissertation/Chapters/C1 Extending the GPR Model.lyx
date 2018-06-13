@@ -1522,7 +1522,19 @@ Extended Model
 \end_layout
 
 \begin_layout Standard
-The GPR model is extended to account for multiphase materials thus:
+We now wish to simulate the mixture of two immiscible materials, labelled
+ 1 and 2, of which material 2 is composed of a miscible combination of reactants
+ and products.
+ Labelling the masses of materials 1 and 2 by 
+\begin_inset Formula $\rho_{1},\rho_{2}$
+\end_inset
+
+, and letting 
+\begin_inset Formula $z,\lambda$
+\end_inset
+
+ be the mass fractions of material 1 and the reactant component of material
+ 2, the GPR model can be expanded thus:
 \end_layout
 
 \begin_layout Standard
@@ -1576,6 +1588,15 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
+where 
+\begin_inset Formula $K$
+\end_inset
+
+ is the reaction rate, as discussed below.
+ Note that we have:
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
@@ -1595,7 +1616,8 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \rho & =z\rho_{1}+\left(1-z\right)\rho_{2}\\
-e_{i} & =e_{i}^{0}+\frac{p-p_{i}^{0}}{\rho_{i}\Gamma_{i}}
+\frac{1}{\rho_{2}} & =\frac{\lambda}{\rho_{\alpha}}+\frac{1-\lambda}{\rho_{\beta}}\\
+\rho e & =z\rho_{1}e_{1}+\left(1-z\right)\rho_{2}\left(\lambda e_{\alpha}+\left(1-\lambda\right)e_{\beta}\right)
 \end{align}
 
 \end_inset
@@ -1623,6 +1645,57 @@ end{subequations}
 Mixture Rules
 \end_layout
 
+\begin_layout Standard
+Pressure equilibrium is assumed between all components of the mixture, and
+ temperature equilibrium is assumed between the products and reactants comprisin
+g material 2.
+ Assuming that all materials obey EOSs of the Mie-Gruneisen form, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\rho e=\begin{array}{c}
+p\left(\frac{z}{\Gamma_{1}}+\frac{\left(1-z\right)\lambda\rho_{2}}{\rho_{\alpha}\Gamma_{\alpha}}+\frac{\left(1-z\right)\left(1-\lambda\right)\rho_{2}}{\rho_{\beta}\Gamma_{\beta}}\right)\\
++z_{1}\rho_{1}\chi_{1}+\left(1-z\right)\lambda\rho_{2}\chi_{\alpha}+\left(1-z\right)\left(1-\lambda\right)\rho_{2}\chi_{\beta}
+\end{array}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\chi_{i}=\frac{-p_{ref,i}}{\rho_{i}\Gamma_{i}}+e_{ref,i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\frac{\rho e-\left(z_{1}\rho_{1}\chi_{1}+\left(1-z\right)\lambda\rho_{2}\chi_{\alpha}+\left(1-z\right)\left(1-\lambda\right)\rho_{2}\chi_{\beta}\right)}{\frac{z}{\Gamma_{1}}+\frac{\left(1-z\right)\lambda\rho_{2}}{\rho_{\alpha}\Gamma_{\alpha}}+\frac{\left(1-z\right)\left(1-\lambda\right)\rho_{2}}{\rho_{\beta}\Gamma_{\beta}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Reaction Rate Laws
 \end_layout
@@ -1632,47 +1705,216 @@ Numerical Results
 \end_layout
 
 \begin_layout Subsection
-1D Tests
+Seven-Wave Elastic Riemann Problem
 \end_layout
 
-\begin_layout Subsubsection
-Copper-Detonation Products Shock Tube
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-Shock Initiation of LX-17
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/ρ.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/v1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
-Nitromethane Ignition Pop-Plot
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/v2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/v3.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
-Nitromethane Steady ZND Detonation
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:seven-wave-1"
+
+\end_inset
+
+Density and velocity for the 7-wave elastic Riemann problem
 \end_layout
 
-\begin_layout Subsubsection
-Three-Component Inert Shock Wave
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
-Three-Component Rate Stick
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/Σ11.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/Σ12.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/Σ13.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/Σ22.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/Σ23.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Seven Wave/Σ33.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:seven-wave-2"
+
+\end_inset
+
+Total stress for the 7-wave elastic Riemann problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
-2D Tests
+Lamb's Problem
 \end_layout
 
-\begin_layout Subsubsection
-Confined Ideal-Gas Rate Stick
+\begin_layout Subsection
+Steady ZND Detonation
 \end_layout
 
-\begin_layout Subsubsection
-Confined JWL Rate Stick
+\begin_layout Standard
+[MiNi16]
 \end_layout
 
-\begin_layout Subsubsection
-Shock-Induced Void Collapse in Nitromethane
+\begin_layout Subsection
+Shock-Induced Detonation
+\end_layout
+
+\begin_layout Standard
+[MiNi16]
+\end_layout
+
+\begin_layout Subsection
+Heating-Induced Deflagration
+\end_layout
+
+\begin_layout Standard
+[MiNi16, Jackson]
+\end_layout
+
+\begin_layout Subsection
+2D Deflagration-to-Detonation (Cochran-Chan)
 \end_layout
 
 \begin_layout Standard
