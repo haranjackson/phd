@@ -26,7 +26,7 @@ def riemann_IC(nx, dX, QL, QR, x0, isMulti):
     return u
 
 
-def primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5):
+def primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5, λL=None, λR=None):
 
     isMulti = len(MPs) > 1
     MPL = MPs[0]
@@ -34,11 +34,11 @@ def primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5):
 
     AL = (ρL / MPL.ρ0)**(1 / 3) * eye(3)
     JL = zeros(3)
-    QL = Cvec(ρL, pL, vL, AL, JL, MPL)
+    QL = Cvec(ρL, pL, vL, MPL, AL, JL, λL)
 
     AR = (ρR / MPR.ρ0)**(1 / 3) * eye(3)
     JR = zeros(3)
-    QR = Cvec(ρR, pR, vR, AR, JR, MPR)
+    QR = Cvec(ρR, pR, vR, MPR, AR, JR, λR)
 
     return riemann_IC(nx, dX, QL, QR, x0, isMulti)
 

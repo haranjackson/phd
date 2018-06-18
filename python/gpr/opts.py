@@ -1,8 +1,7 @@
 VISCOUS = True
-THERMAL = True
-REACTIVE = False
+THERMAL = False
 MULTI = False
-LSET = 1
+REACTIVE = False
+LSET = 0
 
-NV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(REACTIVE) + \
-    int(MULTI) * 2 + LSET
+NV = 5 + int(VISCOUS) * 9 + int(THERMAL) * 3 + int(MULTI) + LSET

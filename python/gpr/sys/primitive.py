@@ -2,7 +2,7 @@ from numpy import eye, zeros
 
 from gpr.misc.functions import L2_1D, L2_2D
 from gpr.misc.structures import State
-from gpr.opts import VISCOUS, THERMAL, NV
+from gpr.opts import VISCOUS, THERMAL, REACTIVE, NV
 from gpr.vars.shear import c_s2, dc_s2dρ
 from gpr.vars.wavespeeds import c_0, c_h
 
@@ -76,5 +76,9 @@ def S_prim(SYS, Q, MP):
         θ2_1 = P.θ2_1()
         ret[1] += 1 / dEdp * L2_1D(H) * θ2_1
         ret[14:17] = -H * θ2_1
+
+    if REACTIVE:
+        K = P.K()
+        ret[17] = - K
 
     return ret

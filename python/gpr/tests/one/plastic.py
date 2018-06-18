@@ -26,9 +26,8 @@ def piston_IC():
     p = MP.p0
     v = zeros(3)
     A = eye(3)
-    J = zeros(3)
 
-    Q = Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, MP, A)
 
     u = zeros([nx, 14])
 

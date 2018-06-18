@@ -1,7 +1,7 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
 from gpr.misc.functions import L2_1D
-from gpr.opts import VISCOUS, THERMAL, REACTIVE, NV
+from gpr.opts import VISCOUS, THERMAL, MULTI, REACTIVE, NV
 
 
 def dQdP(P, MP):
@@ -36,11 +36,12 @@ def dQdP(P, MP):
         for i in range(14, 17):
             ret[i, i] = ρ
 
-    if REACTIVE:
-        Qc = MP.Qc
-        ret[1, 17] = Qc * ρ
+    if MULTI:
         ret[17, 0] = P.λ
         ret[17, 17] *= ρ
+        if REACTIVE:
+            Qc = MP.Qc
+            ret[1, 17] = Qc * ρ
 
     return ret
 
@@ -85,13 +86,14 @@ def dPdQ(P, MP):
         for i in range(14, 17):
             ret[i, i] = 1 / ρ
 
-    if REACTIVE:
+    if MULTI:
         λ = P.λ
-        Qc = MP.Qc
         ret[17, 0] = -λ / ρ
         ret[17, 17] /= ρ
-        ret[1, 0] += Γ * Qc * λ
-        ret[1, 17] -= Γ * Qc
+        if REACTIVE:
+            Qc = MP.Qc
+            ret[1, 0] += Γ * Qc * λ
+            ret[1, 17] -= Γ * Qc
 
     return ret
 
@@ -175,13 +177,14 @@ def dFdP(P, d, MP):
         for i in range(14, 17):
             ret[i, i] = ρvd
 
-    if REACTIVE:
+    if MULTI:
         λ = P.λ
-        Qc = MP.Qc
         ret[17, 0] = v[d] * λ
         ret[17, 2 + d] = ρ * λ
         ret[17, 17] = ρvd
-        ret[1, 17] += Qc * ρvd
+        if REACTIVE:
+            Qc = MP.Qc
+            ret[1, 17] += Qc * ρvd
 
     return ret
 
@@ -219,5 +222,7 @@ def dSdQ_cons(Q, MP):
 
     if THERMAL:
         ret[14:17, 14:17] = -MP.α2 * P.θ2_1() * eye(3)
+
+    # TODO: add reactive terms
 
     return ret

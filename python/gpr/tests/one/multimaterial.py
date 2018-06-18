@@ -72,12 +72,10 @@ def helium_bubble_IC():
     vR = zeros(3)
     AR = ρR**(1 / 3) * eye(3)
 
-    J = zeros(3)
-
     u = zeros([nx, NV])
-    Q1 = Cvec(ρL, pL, vL, AL, J, Air_SG_SI)
-    Q2 = Cvec(ρM, pM, vM, AM, J, Air_SG_SI)
-    Q3 = Cvec(ρR, pR, vR, AR, J, He_SG_SI)
+    Q1 = Cvec(ρL, pL, vL, Air_SG_SI, AL)
+    Q2 = Cvec(ρM, pM, vM, Air_SG_SI, AM)
+    Q3 = Cvec(ρR, pR, vR, He_SG_SI, AR)
 
     for i in range(nx):
 
@@ -131,18 +129,17 @@ def pbx_copper_IC(test):
     vL = zeros(3)
     ρL = 1840
     AL = eye(3)
-    JL = zeros(3)
 
     SR = 0
 
     if test == 1:
-        QL = Cvec(ρL, pL, vL, AL, JL, PBX_SG_SI)
+        QL = Cvec(ρL, pL, vL, PBX_SG_SI, AL)
         QR = Cvec_hyp(FR, SR, vR, Cu_HYP_SI)
         MPs = [PBX_SG_SI, Cu_GR_SI]
 
     elif test == 2:
         QL = Cvec_hyp(FR, SR, vR, Cu_HYP_SI)
-        QR = Cvec(ρL, pL, vL, AL, JL, PBX_SG_SI)
+        QR = Cvec(ρL, pL, vL, PBX_SG_SI, AL)
         MPs = [Cu_GR_SI, PBX_SG_SI]
 
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)

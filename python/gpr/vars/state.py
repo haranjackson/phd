@@ -8,7 +8,7 @@ from gpr.vars.eos import E_2A, E_2J, E_3, E_R
 from gpr.vars.shear import c_s2, dc_s2dρ
 
 
-def pressure(ρ, E, v, A, J, MP, λ=None):
+def pressure(ρ, E, v, A, J, λ, MP):
 
     E1 = E - E_3(v)
 

@@ -42,6 +42,9 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
     ret.segment<3>(14) += vd * ρJ;
     ret(14 + d) += T;
   }
+  if (MULTI) {
+    ret(17) = Q(17) * vd;
+  }
 }
 
 void source(VecVr ret, VecVr Q, Par &MP) {
@@ -57,6 +60,9 @@ void source(VecVr ret, VecVr Q, Par &MP) {
   if (THERMAL) {
     double ρ = Q(0);
     ret.segment<3>(14) = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
+  }
+  if (REACTIVE) {
+    // reactive source terms
   }
 }
 

@@ -20,12 +20,11 @@ def lid_driven_cavity_IC():
     p = 100 / γ
     v = zeros(3)
     A = eye(3)
-    J = zeros(3)
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
 
     u = zeros([nx, ny, 14])
-    Q = Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, MP, A)
     for i in range(nx):
         for j in range(ny):
             u[i, j] = Q

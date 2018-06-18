@@ -1522,19 +1522,19 @@ Extended Model
 \end_layout
 
 \begin_layout Standard
-We now wish to simulate the mixture of two immiscible materials, labelled
- 1 and 2, of which material 2 is composed of a miscible combination of reactants
- and products.
- Labelling the masses of materials 1 and 2 by 
-\begin_inset Formula $\rho_{1},\rho_{2}$
+We now wish to simulate the mixture of two miscible materials, labelled
+ 1 and 2.
+ Let 
+\begin_inset Formula $\lambda$
 \end_inset
 
-, and letting 
-\begin_inset Formula $z,\lambda$
+ be the mass fraction of material 1.
+ Let material 1 undergo a chemical reaction at rate 
+\begin_inset Formula $K$
 \end_inset
 
- be the mass fractions of material 1 and the reactant component of material
- 2, the GPR model can be expanded thus:
+ to form material 2.
+ The GPR model can be extended to incorporate these factors thus:
 \end_layout
 
 \begin_layout Standard
@@ -1556,14 +1556,12 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{\partial\left(z\rho_{1}\right)}{\partial t}+\frac{\partial\left(z\rho_{1}v_{k}\right)}{\partial x_{k}} & =0\label{eq:FirstContinuityEquationMultiphase}\\
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:FirstContinuityEquationMultiphase}\\
 \frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquationMultiphase}\\
 \frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquationMultiphase}\\
 \frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquationMultiphase}\\
 \frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquationMultiphase}\\
-\frac{\partial\left(\left(1-z\right)\rho_{2}\right)}{\partial t}+\frac{\partial\left(\left(1-z\right)\rho_{2}v_{k}\right)}{\partial x_{k}} & =0\label{eq:SecondContinuityEquationMultiphase}\\
-\frac{\partial\left(z\rho\right)}{\partial t}+\frac{\partial\left(z\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:ColorEquationMultiphase}\\
-\frac{\partial\left(\left(1-z\right)\rho_{2}\lambda\right)}{\partial t}+\frac{\partial\left(\left(1-z\right)\rho_{2}\lambda v_{k}\right)}{\partial x_{k}} & =\left(1-z\right)\rho_{2}K\label{eq:ReactionEquation}
+\frac{\partial\left(\rho\lambda\right)}{\partial t}+\frac{\partial\left(\rho\lambda v_{k}\right)}{\partial x_{k}} & =-\rho K\label{eq:ReactionEquation}
 \end{align}
 
 \end_inset

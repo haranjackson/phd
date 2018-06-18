@@ -43,7 +43,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
             x = (i + 0.5) * dX[0]
             y = (j + 0.5) * dX[1]
             dv, dT, dρ, dp, A = vortex(x, y, Lx / 2 + t, Ly / 2 + t, ε, γ, ρ)
-            u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, A, J, MP)
+            u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, MP, A, J)
 
     print("CONVECTED ISENTROPIC VORTEX")
     return u, [MP], tf, dX
@@ -69,12 +69,12 @@ def circular_explosion_IC():
     ρi = 1
     pi = 1
     Ai = eye(3)
-    Qi = Cvec(ρi, pi, v, Ai, J, MP)
+    Qi = Cvec(ρi, pi, v, MP, Ai, J)
 
     ρo = 0.125
     po = 0.1
     Ao = 0.5 * eye(3)
-    Qo = Cvec(ρo, po, v, Ao, J, MP)
+    Qo = Cvec(ρo, po, v, MP, Ao, J)
 
     u = zeros([nx, ny, 17])
     for i in range(nx):
@@ -105,12 +105,11 @@ def laminar_boundary_layer_IC():
     p = 100 / γ
     v = array([1, 0, 0])
     A = eye(3)
-    J = zeros(3)
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-3)
 
     u = zeros([nx, ny, 14])
-    Q = Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, MP, A)
     for i in range(nx):
         for j in range(ny):
             u[i, j] = Q
@@ -132,7 +131,6 @@ def double_shear_layer_IC():
     ρ = 1
     p = 100 / γ
     A = eye(3)
-    J = zeros(3)
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=2e-4)
     dX = [Lx / nx, Ly / ny]
@@ -151,7 +149,7 @@ def double_shear_layer_IC():
                 v1 = tanh(ρ_ * (y - 0.25))
             v2 = δ * sin(2 * pi * x)
             v = array([v1, v2, 0])
-            u[i, j] = Cvec(ρ, p, v, A, J, MP)
+            u[i, j] = Cvec(ρ, p, v, MP, A)
 
     print("DOUBLE SHEAR LAYER")
     return u, [MP], tf, dX
@@ -174,7 +172,6 @@ def taylor_green_vortex_IC():
     ρ = 1
     p = 100 / γ
     A = eye(3)
-    J = zeros(3)
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=10, μ=1e-2)
     dX = [Lx / nx, Ly / ny]
@@ -187,7 +184,7 @@ def taylor_green_vortex_IC():
             y = (j + 0.5) * dX[1]
             v = array([sin(x) * cos(y), -cos(x) * sin(y)])
             pi = p + (cos(2 * x) + cos(2 * y)) / 4
-            u[i, j] = Cvec(ρ, pi, v, A, J, MP)
+            u[i, j] = Cvec(ρ, pi, v, MP, A)
 
     print("TAYLOR-GREEN VORTEX")
     return u, [MP], tf, dX

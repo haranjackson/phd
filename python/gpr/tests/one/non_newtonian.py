@@ -52,13 +52,12 @@ def poiseuille_IC():
     #vy = poiseuille_max(HP_n)
     v = array([0, 0, 0])
     A = eye(3)
-    J = zeros(3)
     δp = array([0, dp, 0])
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ,
                          b0=1, μ=1e-2, n=HP_n, δp=δp)
 
-    Q = Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, MP, A)
     u = array([Q] * nx)
 
     return u, [MP], tf, [Lx / nx]

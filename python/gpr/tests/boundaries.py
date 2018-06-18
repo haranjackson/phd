@@ -26,9 +26,8 @@ def free_traction_ghost_state(Q, MP):
     # A_ = destress(Ai)
     # Ag = 2 * A_ - Ai
     Ag = Ai
-    Jg = zeros(3)
 
-    return Cvec(ρg, pg, vg, Ag, Jg, MP)
+    return Cvec(ρg, pg, vg, MP, Ag)
 
 
 def wall_BC(u, N, NDIM, wall, MP):

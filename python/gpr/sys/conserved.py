@@ -19,12 +19,7 @@ def F_cons(Q, d, MP):
     vd = v[d]
     ρvd = ρ * vd
 
-    if MULTI:
-        ρ1 = P.ρ1
-        z = P.z
-        ret[0] = z * ρ1 * vd
-    else:
-        ret[0] = ρvd
+    ret[0] = ρvd
 
     ret[1] = ρvd * E + p * vd
     ret[2:5] = ρvd * v
@@ -55,18 +50,8 @@ def F_cons(Q, d, MP):
         ret[14 + d] += T
 
     if MULTI:
-
         λ = P.λ
-        ρ2 = P.ρ2
-
-        ret[17] = (1 - z) * ρ2 * vd
-        ret[18] = ρvd * z
-
-        if REACTIVE:
-            ret[19] = (1 - z) * ρ2 * vd * λ
-
-    elif REACTIVE:
-        ret[17] = ρ * vd * λ
+        ret[17] = ρvd * λ
 
     return ret
 
@@ -92,13 +77,8 @@ def S_cons(Q, MP):
         ret[14:17] = - ρ * H * θ2_1
 
     if REACTIVE:
-        K = - P.K()
-        if MULTI:
-            z = P.z
-            ρ2 = P.ρ2
-            ret[19] = (1 - z) * ρ2 * K
-        else:
-            ret[17] = ρ * K
+        K = P.K()
+        ret[17] = - ρ * K
 
     return ret
 

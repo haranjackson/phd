@@ -4,10 +4,6 @@ from gpr.misc.structures import Cvec, State
 from gpr.vars.wavespeeds import c_0
 
 
-A_ = zeros([3, 3])
-J_ = zeros(3)
-
-
 def A0(r, y):
     return 2 / (r * (y+1))
 
@@ -102,7 +98,7 @@ def Wfan(S, P, MP, a):
     vf = array([2 * (a + (y-1)*u/2 + S) / (y+1), 0, 0])
     pf = (p+pINF) * pow(temp, 2*y/(y-1)) - pINF
 
-    return Cvec(rf, pf, vf, A_, J_, MP)
+    return Cvec(rf, pf, vf, MP)
 
 
 def r_star_shock(p_, P, MP):
@@ -173,7 +169,7 @@ def exact_euler(n, t, x0, QL, QR, MPL, MPR):
                     else:
                         r_ = r_star_fan(p_, PL, MPL)
                         v_ = array([u_, 0, 0])
-                        ret[i] = Cvec(r_, p_, v_, A_, J_, MPL)
+                        ret[i] = Cvec(r_, p_, v_, MPL)
 
             else:				# Left shock
                 SL = uL - Q(p_, PL, MPL) / ρL
@@ -182,7 +178,7 @@ def exact_euler(n, t, x0, QL, QR, MPL, MPR):
                 else:
                     r_ = r_star_shock(p_, PL, MPL)
                     v_ = array([u_, 0, 0])
-                    ret[i] = Cvec(r_, p_, v_, A_, J_, MPL)
+                    ret[i] = Cvec(r_, p_, v_, MPL)
 
             ret[i, -1] = -1
 
@@ -198,7 +194,7 @@ def exact_euler(n, t, x0, QL, QR, MPL, MPR):
                     else:
                         r_ = r_star_fan(p_, PR, MPR)
                         v_ = array([u_, 0, 0])
-                        ret[i] = Cvec(ρ1, p, v, A, J, MPR)
+                        ret[i] = Cvec(r_, p_, v_, MPR)
 
             else:				# Right shock
                 SR = uR + Q(p_, PR, MPR) / ρR
@@ -207,7 +203,7 @@ def exact_euler(n, t, x0, QL, QR, MPL, MPR):
                 else:
                     r_ = r_star_shock(p_, PR, MPR)
                     v_ = array([u_, 0, 0])
-                    ret[i] = Cvec(r_, p_, v_, A_, J_, MPR)
+                    ret[i] = Cvec(r_, p_, v_, MPR)
 
             ret[i, -1] = 1
 
