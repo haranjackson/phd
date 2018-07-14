@@ -1585,117 +1585,26 @@ end{subequations}
 
 \end_layout
 
-\begin_layout Standard
-where 
-\begin_inset Formula $K$
-\end_inset
-
- is the reaction rate, as discussed below.
- Note that we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\rho & =z\rho_{1}+\left(1-z\right)\rho_{2}\\
-\frac{1}{\rho_{2}} & =\frac{\lambda}{\rho_{\alpha}}+\frac{1-\lambda}{\rho_{\beta}}\\
-\rho e & =z\rho_{1}e_{1}+\left(1-z\right)\rho_{2}\left(\lambda e_{\alpha}+\left(1-\lambda\right)e_{\beta}\right)
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsection
 Mixture Rules
 \end_layout
 
 \begin_layout Standard
-Pressure equilibrium is assumed between all components of the mixture, and
- temperature equilibrium is assumed between the products and reactants comprisin
-g material 2.
- Assuming that all materials obey EOSs of the Mie-Gruneisen form, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\rho e=\begin{array}{c}
-p\left(\frac{z}{\Gamma_{1}}+\frac{\left(1-z\right)\lambda\rho_{2}}{\rho_{\alpha}\Gamma_{\alpha}}+\frac{\left(1-z\right)\left(1-\lambda\right)\rho_{2}}{\rho_{\beta}\Gamma_{\beta}}\right)\\
-+z_{1}\rho_{1}\chi_{1}+\left(1-z\right)\lambda\rho_{2}\chi_{\alpha}+\left(1-z\right)\left(1-\lambda\right)\rho_{2}\chi_{\beta}
-\end{array}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\chi_{i}=\frac{-p_{ref,i}}{\rho_{i}\Gamma_{i}}+e_{ref,i}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-p=\frac{\rho e-\left(z_{1}\rho_{1}\chi_{1}+\left(1-z\right)\lambda\rho_{2}\chi_{\alpha}+\left(1-z\right)\left(1-\lambda\right)\rho_{2}\chi_{\beta}\right)}{\frac{z}{\Gamma_{1}}+\frac{\left(1-z\right)\lambda\rho_{2}}{\rho_{\alpha}\Gamma_{\alpha}}+\frac{\left(1-z\right)\left(1-\lambda\right)\rho_{2}}{\rho_{\beta}\Gamma_{\beta}}}
-\end{equation}
-
-\end_inset
-
-
+Pressure and thermal equilibrium are assumed between the two materials.
+ As, under the GPR model, the viscosity and thermal conductivity of a fluid
+ govern the stiffness of the source terms, it is required to use a mixture
+ model to calculate these quantities under the multiphase GPR model.
+ Many mixture models have been proposed [REFS - Wilke, Grunberg-Nissan,
+ Herning & Zipperer].
+ The models 
 \end_layout
 
 \begin_layout Subsection
 Reaction Rate Laws
+\end_layout
+
+\begin_layout Standard
+[ignition & growth, discrete ignition temperature, Arrhenius]
 \end_layout
 
 \begin_layout Section
@@ -1892,6 +1801,10 @@ Steady ZND Detonation
 \end_layout
 
 \begin_layout Standard
+[JWL, ignition & growth]
+\end_layout
+
+\begin_layout Standard
 [MiNi16]
 \end_layout
 
@@ -1900,7 +1813,11 @@ Shock-Induced Detonation
 \end_layout
 
 \begin_layout Standard
-[MiNi16]
+[dicrete ignition temperature]
+\end_layout
+
+\begin_layout Standard
+[Jackson]
 \end_layout
 
 \begin_layout Subsection
@@ -1908,7 +1825,11 @@ Heating-Induced Deflagration
 \end_layout
 
 \begin_layout Standard
-[MiNi16, Jackson]
+[arrhenius]
+\end_layout
+
+\begin_layout Standard
+[Jackson]
 \end_layout
 
 \begin_layout Subsection
