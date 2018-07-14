@@ -4,14 +4,14 @@ from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
 from gpr.opts import NV
 
-from gpr.tests.one.common import riemann_IC, primitive_IC
-from gpr.tests.one.newtonian import heat_conduction_IC
-from gpr.tests.params.alt import VAC, Cu_HYP_SI, Al_HYP_CGS
-from gpr.tests.params.fluids import Air_SG_SI, He_SG_SI, H20_SG_SI, PBX_SG_SI
-from gpr.tests.params.solids import Cu_GR_SI, Al_GR_CGS
+from test.common import riemann_IC, primitive_IC
+from test.fluid.newtonian1 import heat_conduction
+from test.params.alt import VAC, Cu_HYP_SI, Al_HYP_CGS
+from test.params.fluids import Air_SG_SI, He_SG_SI, H20_SG_SI, PBX_SG_SI
+from test.params.solids import Cu_GR_SI, Al_GR_CGS
 
 
-def water_air_IC():
+def water_air():
     """ 10.1016/j.jcp.2003.11.015
         7.1. Water–air shock tube
 
@@ -40,7 +40,7 @@ def water_air_IC():
     return u, MPs, tf, dX
 
 
-def helium_bubble_IC():
+def helium_bubble():
     """ 10.1016/j.jcp.2003.10.010
         5. Numerical experiments - Test B
 
@@ -96,7 +96,7 @@ def helium_bubble_IC():
     return u, [Air_SG_SI, He_SG_SI], tf, dX
 
 
-def pbx_copper_IC(test):
+def pbx_copper(test):
     """ 10.1016/j.jcp.2011.07.008
         6.1 Initial value problems
 
@@ -146,7 +146,7 @@ def pbx_copper_IC(test):
     return u, MPs, tf, dX
 
 
-def aluminium_vacuum_IC():
+def aluminium_vacuum():
     """ 10.1016/j.jcp.2010.04.012
         5.3 Solid/vacuum problem
 
@@ -177,5 +177,5 @@ def aluminium_vacuum_IC():
     return u, MPs, tf, dX
 
 
-def heat_conduction_multi_IC():
-    return heat_conduction_IC(isMulti=True)
+def heat_conduction_multi():
+    return heat_conduction(isMulti=True)

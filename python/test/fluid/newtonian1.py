@@ -6,11 +6,14 @@ from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec
 from gpr.opts import NV
 from gpr.vars.wavespeeds import c_0
-from gpr.tests.one.common import primitive_IC
+
+from test.common import primitive_IC
 
 
-def heat_conduction_IC(isMulti=False):
-
+def heat_conduction(isMulti=False):
+    """ 10.1016/j.jcp.2016.02.015
+        4.12 Heat conduction in a gas
+    """
     tf = 1
     nx = 200
     Lx = 1
@@ -34,14 +37,16 @@ def heat_conduction_IC(isMulti=False):
     return u, MPs, tf, dX
 
 
-def first_stokes_problem_exact(μ, n=100, v0=0.1, t=1):
+def stokes_exact(μ, n=100, v0=0.1, t=1):
     dx = 1 / n
     x = linspace(-0.5 + dx / 2, 0.5 - dx / 2, num=n)
     return v0 * erf(x / (2 * sqrt(μ * t)))
 
 
-def first_stokes_problem_IC(isMulti=False):
-
+def stokes(isMulti=False):
+    """ 10.1016/j.jcp.2016.02.015
+        4.3 The first problem of Stokes
+    """
     tf = 1
     nx = 200
     Lx = 1
@@ -107,8 +112,10 @@ def viscous_shock_exact_x(n, M=2, t=0.2):
     return arange(M * t - 0.25, M * t + 0.75, 1 / n)
 
 
-def viscous_shock_IC(center=0):
-
+def viscous_shock(center=0):
+    """ 10.1016/j.jcp.2016.02.015
+        4.13 Viscous shock profile
+    """
     tf = 0.2
     nx = 100
     Lx = 1
@@ -138,4 +145,3 @@ def viscous_shock_IC(center=0):
         u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), MP, A, J)
 
     return u, [MP], tf, dX
-

@@ -1,11 +1,11 @@
 from numpy import array, zeros
 
-from gpr.tests.params.alt import Cu_HYP_CGS
-from gpr.tests.params.solids import Cu_GR_CGS
-from gpr.tests.one.common import hyperelastic_IC
+from test.params.alt import Cu_HYP_CGS
+from test.params.solids import Cu_GR_CGS
+from test.common import hyperelastic_IC
 
 
-def barton_IC(test):
+def barton(test):
     """ 10.1016/j.jcp.2009.06.014
         5.1 Testcase 1, 5.2 Testcase 2
 
@@ -54,7 +54,7 @@ def barton_IC(test):
     return u, MPs, tf, dX
 
 
-def elastic_IC(test):
+def pure_elastic(test):
     """ 10.1016/j.compfluid.2016.05.004
         5.5 Purely elastic Riemann problems
 

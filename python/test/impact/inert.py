@@ -2,11 +2,12 @@ from numpy import array, eye, zeros
 
 from gpr.misc.structures import Cvec
 from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET, NV
-from gpr.tests.params.alt import VAC
-from gpr.tests.params.solids import Al_GRP_SI, W_SMGP_SI
+
+from test.params.alt import VAC
+from test.params.solids import Al_GRP_SI, W_SMGP_SI
 
 
-def aluminium_plates_IC():
+def aluminium_plates():
 
     assert(VISCOUS)
     assert(not THERMAL)
@@ -61,7 +62,7 @@ def aluminium_plates_IC():
     return u, MPs, tf, dX
 
 
-def rod_penetration_IC():
+def rod_penetration():
 
     D = 0.029
     # D = 0.0495

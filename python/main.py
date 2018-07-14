@@ -4,15 +4,21 @@ from numpy import array
 
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
-from gpr.tests.one import newtonian, elastic, plastic, multimaterial, \
-    non_newtonian as non_newtonian1
-from gpr.tests.two import impact, non_newtonian as non_newtonian2
+
+from test.fluid.newtonian1 import heat_conduction, stokes, viscous_shock
+from test.fluid.non_newtonian import poiseuille, poiseuille_bc, lid_driven_cavity, lid_driven_cavity_bc
+from test.fluid.reactive import steady_znd, shock_detonation, heating_deflagration
+from test.impact.inert import aluminium_plates, rod_penetration
+from test.multi.material import water_air, helium_bubble, pbx_copper, aluminium_vacuum, heat_conduction_multi
+from test.solid.elastic import barton, pure_elastic
+from test.solid.plastic import piston, piston_bc
+
 from gpr.misc.plot import *
 
 from solver.gfm import MultiSolver
 
 
-u0, MPs, tf, dX = multimaterial.aluminium_vacuum_IC()
+u0, MPs, tf, dX = barton(1)
 
 bcs = 'transitive'
 #bcs = 'stick'
