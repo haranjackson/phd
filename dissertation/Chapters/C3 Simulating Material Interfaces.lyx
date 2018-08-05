@@ -208,7 +208,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/GFM.png
+	filename ../Figures/C3/diagrams/GFM.png
 	lyxscale 50
 	height 25theight%
 
@@ -487,7 +487,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/GFM2.png
+	filename ../Figures/C3/diagrams/GFM2.png
 	lyxscale 50
 	height 25theight%
 
@@ -575,7 +575,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/RP.png
+	filename ../Figures/C3/diagrams/RP.png
 	lyxscale 50
 	height 25theight%
 
@@ -817,7 +817,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/RGFM.png
+	filename ../Figures/C3/diagrams/RGFM.png
 	lyxscale 50
 	height 25theight%
 
@@ -927,7 +927,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/HPR_RP.png
+	filename ../Figures/C3/diagrams/HPR_RP.png
 	lyxscale 50
 	height 25theight%
 
@@ -1137,7 +1137,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../Working/A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics/figs/HPR_RP2.png
+	filename ../Figures/C3/diagrams/HPR_RP2.png
 	lyxscale 50
 	height 25theight%
 
