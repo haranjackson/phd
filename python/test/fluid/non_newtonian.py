@@ -58,7 +58,7 @@ def poiseuille():
     δp = array([0, dp, 0])
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ,
-                         b0=1, μ=1e-2, n=HP_n, δp=δp)
+                         b0=1, μ=μ, n=HP_n, δp=δp)
 
     Q = Cvec(ρ, p, v, MP, A)
     u = array([Q] * nx)
@@ -70,7 +70,7 @@ def poiseuille_bc(u, N, *args):
     γ = 1.4
     δp = array([0, dp, 0])
     MP = material_params(EOS='sg', ρ0=1, cv=1, p0=100/γ, γ=γ,
-                         b0=1, μ=1e-2, n=HP_n, δp=δp)
+                         b0=1, μ=μ, n=HP_n, δp=δp)
     return wall_BC(u, N, 1, [1], MP)
 
 
@@ -101,24 +101,15 @@ def lid_driven_cavity():
     return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
-def lid_driven_cavity_bc(u):
+def lid_driven_cavity_bc(u, N, NDIM):
 
-    ret = standard_BC(u, [1, 1])
+    ret = standard_BC(u, N, NDIM, wall=[True, True], reflectVars=[2, 3, 4])
     nx, ny = ret.shape[:2]
 
     for i in range(nx):
-        v = 2 - ret[i, 1, 2] / ret[i, 1, 0]
-        ret[i, 0, 2] = ret[i, 0, 0] * v
-        ret[i, 0, 3] *= -1
-        ret[i, -1, 2:5] *= -1
-
-    for j in range(ny):
-        ret[0, j, 2:5] *= -1
-        ret[-1, j, 2:5] *= -1
-
-    ret[0, 0, 2:5] *= 0
-    ret[0, -1, 2:5] *= 0
-    ret[-1, 0, 2:5] *= 0
-    ret[-1, -1, 2:5] *= 0
+        for j in range(N):
+            jj = 2 * N - 1 - j
+            v = 2 - ret[i, jj, 2] / ret[i, jj, 0]
+            ret[i, j, 2] = ret[i, j, 0] * v
 
     return ret

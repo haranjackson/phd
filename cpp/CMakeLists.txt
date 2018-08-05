@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
+set(CMAKE_CXX_STANDARD 17)
 project(GPRcpp)
 
 SET(PYTHON_DIR "~/miniconda3/include/python3.6m")

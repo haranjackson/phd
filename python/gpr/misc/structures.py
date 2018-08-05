@@ -15,7 +15,7 @@ class State():
 
     def __init__(self, Q, MP):
 
-        state.ρ = Q[0]
+        self.ρ = Q[0]
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
         self.A = Q[5:14].reshape([3, 3]) if VISCOUS else None
@@ -100,6 +100,7 @@ def Cvec(ρ, p, v, MP, A=None, J=None, λ=None):
     """
     Q = zeros(NV)
 
+    Q[0] = ρ
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, MP)
     Q[2:5] = ρ * v
 

@@ -1,3 +1,6 @@
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+
 from copy import deepcopy
 
 from numpy import array
