@@ -4,8 +4,9 @@ const int TRANSMISSIVE = 0;
 const int PERIODIC = 1;
 const int SLIP = 2;
 const int STICK = 3;
+const int MOVING = 4;
 
-void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes) {
+void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
 
   switch (boundaryTypes(0)) {
 
@@ -22,7 +23,7 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes) {
   case SLIP:
     for (int i = 0; i < N; i++) {
       ub.row(i) = u.row(N - 1 - i);
-      ub(i, 2) *= -1.;
+      ub(i, 2 + d) *= -1.;
     }
     break;
 
@@ -33,6 +34,16 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes) {
       ub(i, 3) *= -1.;
       ub(i, 4) *= -1.;
     }
+    break;
+
+  case MOVING:
+    for (int i = 0; i < N; i++) {
+      ub.row(i) = u.row(N - 1 - i);
+      ub(i, 2) = 2. - ub(i, 2);
+      ub(i, 3) *= -1.;
+      ub(i, 4) *= -1.;
+    }
+    break;
   }
 
   switch (boundaryTypes(1)) {
@@ -50,7 +61,7 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes) {
   case SLIP:
     for (int i = 0; i < N; i++) {
       ub.row(i + nx + N) = u.row(nx - 1 - i);
-      ub(i + nx + N, 2) *= -1.;
+      ub(i + nx + N, 2 + d) *= -1.;
     }
     break;
 
@@ -61,6 +72,16 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes) {
       ub(i + nx + N, 3) *= -1.;
       ub(i + nx + N, 4) *= -1.;
     }
+    break;
+
+  case MOVING:
+    for (int i = 0; i < N; i++) {
+      ub.row(i + nx + N) = u.row(nx - 1 - i);
+      ub(i + nx + N, 2) = 2. - ub(i + nx + N, 2);
+      ub(i + nx + N, 3) *= -1.;
+      ub(i + nx + N, 4) *= -1.;
+    }
+    break;
   }
 }
 
@@ -73,14 +94,14 @@ void boundaries2(Vecr u, Vecr ub, int nx, int ny, iVecr boundaryTypes) {
     MatMap u0(u.data() + (j * V), nx, V, OuterStride(ny * V));
     MatMap ub0(ub.data() + ((j + N) * V), nx + 2 * N, V,
                OuterStride((ny + 2 * N) * V));
-    boundaries1(u0, ub0, nx, boundaryTypes.head<2>());
+    boundaries1(u0, ub0, nx, boundaryTypes.head<2>(), 0);
   }
 
   for (int i = 0; i < nx + 2 * N; i++) {
     MatMap u0(ub.data() + ((i * (ny + 2 * N) + N) * V), ny, V, OuterStride(V));
     MatMap ub0(ub.data() + ((i * (ny + 2 * N)) * V), ny + 2 * N, V,
                OuterStride(V));
-    boundaries1(u0, ub0, ny, boundaryTypes.tail<2>());
+    boundaries1(u0, ub0, ny, boundaryTypes.tail<2>(), 1);
   }
 }
 
@@ -96,7 +117,7 @@ void boundaries(Vecr u, Vecr ub, iVecr nX, iVecr boundaryTypes) {
     ub.segment(N * V, nx * V) = u;
     MatMap u0(u.data(), nx, V, OuterStride(V));
     MatMap ub0(ub.data(), nx + 2 * N, V, OuterStride(V));
-    boundaries1(u0, ub0, nx, boundaryTypes);
+    boundaries1(u0, ub0, nx, boundaryTypes, 0);
   } break;
 
   case 2:

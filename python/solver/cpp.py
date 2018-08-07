@@ -49,6 +49,10 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs,
         bcs = array([2] * 2 * ndim, dtype=int32)
     elif bcs == 'stick':
         bcs = array([3] * 2 * ndim, dtype=int32)
+    elif bcs == 'lid_driven':
+        bcs = array([3, 3, 3, 4], dtype=int32)
+    else:
+        print('bcs not recognized')
 
     nX = get_dimensions(initial_grid)
     u = initial_grid.ravel()
@@ -60,6 +64,9 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs,
     if callback is not None:
         shape = initial_grid.shape
         for out, count in zip(uOut, range(nOut)):
-            callback(out.reshape(shape), (count+1) / nOut * final_time, count)
+            try:
+                callback(out.reshape(shape), (count+1) / nOut * final_time, count)
+            except:
+                pass
 
     return u.reshape(initial_grid.shape)
