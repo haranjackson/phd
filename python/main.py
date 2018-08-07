@@ -2,8 +2,9 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 from copy import deepcopy
+from time import time
 
-from numpy import array
+from numpy import array, save
 
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
@@ -42,6 +43,7 @@ if cpp_level > 0:
         assert(GPRpy.N() == N)
 
 
+u0, MPs, tf, dX = ics()
 nvar = u0.shape[-1]
 ndim = u0.ndim - 1
 dX = array(dX)
@@ -65,3 +67,5 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
 
 solver.solve(u0, tf, dX, cfl=cfl, bcs=bcs, verbose=verbose, callback=callback,
              cpp_level=cpp_level)
+
+save('results/' + ics.__name__ + str(int(time())), uList[-1])
