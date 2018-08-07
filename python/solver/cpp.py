@@ -42,13 +42,13 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs,
 
     ndim = initial_grid.ndim - 1
     if bcs == 'transitive':
-        bcs = array([0] * ndim, dtype=int32)
+        bcs = array([0] * 2 * ndim, dtype=int32)
     elif bcs == 'periodic':
-        bcs = array([1] * ndim, dtype=int32)
+        bcs = array([1] * 2 * ndim, dtype=int32)
     elif bcs == 'slip':
-        bcs = array([2] * ndim, dtype=int32)
+        bcs = array([2] * 2 * ndim, dtype=int32)
     elif bcs == 'stick':
-        bcs = array([3] * ndim, dtype=int32)
+        bcs = array([3] * 2 * ndim, dtype=int32)
 
     nX = get_dimensions(initial_grid)
     u = initial_grid.ravel()

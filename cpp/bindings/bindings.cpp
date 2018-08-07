@@ -61,6 +61,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m.def("REACTIVE", []() { return REACTIVE; });
   m.def("MULTI", []() { return MULTI; });
   m.def("LSET", []() { return LSET; });
+  m.def("boundaries", &boundaries);
 
   pybind11::module m_classes =
       m.def_submodule("classes", "Classes used by GPRpy");
@@ -72,17 +73,23 @@ PYBIND11_MODULE(GPRpy, m) {
 
   pybind11::module m_system =
       m.def_submodule("system", "System vectors and matrices");
+
   pybind11::module m_system_multi =
       m_system.def_submodule("multi", "Functions related to multimaterial GPR");
 
   pybind11::module m_solvers = m.def_submodule("solvers", "Solver functions");
+
   pybind11::module m_solvers_common =
       m_solvers.def_submodule("common", "Functions common to all solvers");
+
   pybind11::module m_solvers_weno =
       m_solvers.def_submodule("weno", "WENO functions");
+
   pybind11::module m_solvers_dg = m_solvers.def_submodule("dg", "DG functions");
+
   pybind11::module m_solvers_split =
       m_solvers.def_submodule("split", "Operator splitting functions");
+
   pybind11::module m_solvers_fv = m_solvers.def_submodule("fv", "FV functions");
 
   pybind11::class_<Par>(m_classes, "Par")

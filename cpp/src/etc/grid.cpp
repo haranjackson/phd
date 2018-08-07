@@ -5,142 +5,106 @@ const int PERIODIC = 1;
 const int SLIP = 2;
 const int STICK = 3;
 
-int uind(int i, int j, int ny) {
-  // Returns the starting index of cell (i,j)
-  return (i * ny + j) * V;
-}
+void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes) {
 
-int uind(int i, int j, int k, int ny, int nz) {
-  // Returns the starting index of cell (i,j,k)
-  return ((i * ny + j) * nz + k) * V;
-}
-
-void boundaries1(Vecr u, Vecr ub, int nx, int boundaryType) {
-  ub.segment(N * V, nx * V) = u;
-
-  switch (boundaryType) {
+  switch (boundaryTypes(0)) {
 
   case TRANSMISSIVE:
-    for (int i = 0; i < N; i++) {
-      ub.segment<V>(i * V) = u.head<V>();
-      ub.segment<V>((i + nx + N) * V) = u.tail<V>();
-    }
+    for (int i = 0; i < N; i++)
+      ub.row(i) = u.row(0);
     break;
 
   case PERIODIC:
-    ub.head<N * V>() = u.tail<N * V>();
-    ub.tail<N * V>() = u.head<N * V>();
+    for (int i = 0; i < N; i++)
+      ub.row(i) = u.row(nx - N + i);
     break;
 
-  case (SLIP):
+  case SLIP:
     for (int i = 0; i < N; i++) {
-      ub.segment<V>(i * V) = u.head<V>();
-      ub.segment<V>((i + nx + N) * V) = u.tail<V>();
-      ub(i * V + 2) *= -1.;
-      ub((i + nx + N) * V + 2) *= -1.;
+      ub.row(i) = u.row(N - 1 - i);
+      ub(i, 2) *= -1.;
     }
+    break;
 
-  case (STICK):
+  case STICK:
     for (int i = 0; i < N; i++) {
-      ub.segment<V>(i * V) = u.head<V>();
-      ub.segment<V>((i + nx + N) * V) = u.tail<V>();
-      ub.segment<3>(i * V + 2) *= -1.;
-      ub.segment<3>((i + nx + N) * V + 2) *= -1.;
+      ub.row(i) = u.row(N - 1 - i);
+      ub(i, 2) *= -1.;
+      ub(i, 3) *= -1.;
+      ub(i, 4) *= -1.;
+    }
+  }
+
+  switch (boundaryTypes(1)) {
+
+  case TRANSMISSIVE:
+    for (int i = 0; i < N; i++)
+      ub.row(i + nx + N) = u.row(nx - 1);
+    break;
+
+  case PERIODIC:
+    for (int i = 0; i < N; i++)
+      ub.row(i + nx + N) = u.row(i);
+    break;
+
+  case SLIP:
+    for (int i = 0; i < N; i++) {
+      ub.row(i + nx + N) = u.row(nx - 1 - i);
+      ub(i + nx + N, 2) *= -1.;
+    }
+    break;
+
+  case STICK:
+    for (int i = 0; i < N; i++) {
+      ub.row(i + nx + N) = u.row(nx - 1 - i);
+      ub(i + nx + N, 2) *= -1.;
+      ub(i + nx + N, 3) *= -1.;
+      ub(i + nx + N, 4) *= -1.;
     }
   }
 }
 
-void boundaries2(Vecr u, Vecr ub, int nx, int ny, int boundaryType) {
+void boundaries2(Vecr u, Vecr ub, int nx, int ny, iVecr boundaryTypes) {
 
-  for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny; j++)
-      ub.segment<V>(uind(i + N, j + N, ny + 2 * N)) =
-          u.segment<V>(uind(i, j, ny));
+  // (i * ny + j) * V;
+  // (i * (ny + 2 * N) + j) * V;
 
-  switch (boundaryType) {
+  for (int j = 0; j < ny; j++) {
+    MatMap u0(u.data() + (j * V), nx, V, OuterStride(ny * V));
+    MatMap ub0(ub.data() + ((j + N) * V), nx + 2 * N, V,
+               OuterStride((ny + 2 * N) * V));
+    boundaries1(u0, ub0, nx, boundaryTypes.head<2>());
+  }
 
-  case PERIODIC:
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < N; j++) {
-        ub.segment<V>(uind(i, j, ny + 2 * N)) =
-            u.segment<V>(uind(nx - N + i, ny - N + j, ny));
-        ub.segment<V>(uind(nx + N + i, j, ny + 2 * N)) =
-            u.segment<V>(uind(i, ny - N + j, ny));
-        ub.segment<V>(uind(i, ny + N + j, ny + 2 * N)) =
-            u.segment<V>(uind(nx - N + i, j, ny));
-        ub.segment<V>(uind(nx + N + i, ny + N + j, ny + 2 * N)) =
-            u.segment<V>(uind(i, j, ny));
-      }
-    for (int i = 0; i < nx; i++)
-      for (int j = 0; j < N; j++) {
-        ub.segment<V>(uind(i + N, j, ny + 2 * N)) =
-            u.segment<V>(uind(i, ny - N + j, ny));
-        ub.segment<V>(uind(i + N, ny + N + j, ny + 2 * N)) =
-            u.segment<V>(uind(i, j, ny));
-      }
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < ny; j++) {
-        ub.segment<V>(uind(i, N + j, ny + 2 * N)) =
-            u.segment<V>(uind(nx - N + i, j, ny));
-        ub.segment<V>(uind(nx + N + i, j + N, ny + 2 * N)) =
-            u.segment<V>(uind(i, j, ny));
-      }
-    break;
-
-  case TRANSMISSIVE:
-    for (int i = 0; i < nx; i++)
-      for (int j = 0; j < N; j++) {
-        ub.segment<V>(uind(i + N, j, ny + 2 * N)) =
-            u.segment<V>(uind(i, 0, ny));
-        ub.segment<V>(uind(i + N, ny + N + j, ny + 2 * N)) =
-            u.segment<V>(uind(i, ny - 1, ny));
-      }
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < ny; j++) {
-        ub.segment<V>(uind(i, j + N, ny + 2 * N)) =
-            u.segment<V>(uind(0, j, ny));
-        ub.segment<V>(uind(nx + N + i, j + N, ny + 2 * N)) =
-            u.segment<V>(uind(nx - 1, j, ny));
-      }
-
-    // Make corners averages of cells either side
-    VecV BL = (ub.segment<V>(uind(N - 1, N, ny + 2 * N)) +
-               ub.segment<V>(uind(N, N - 1, ny + 2 * N))) /
-              2;
-    VecV BR = (ub.segment<V>(uind(nx + N - 1, N - 1, ny + 2 * N)) +
-               ub.segment<V>(uind(nx + N, N, ny + 2 * N))) /
-              2;
-    VecV TL = (ub.segment<V>(uind(N - 1, ny + N - 1, ny + 2 * N)) +
-               ub.segment<V>(uind(N, ny + N, ny + 2 * N))) /
-              2;
-    VecV TR = (ub.segment<V>(uind(nx + N - 1, ny + N, ny + 2 * N)) +
-               ub.segment<V>(uind(nx + N, ny + N - 1, ny + 2 * N))) /
-              2;
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < N; j++) {
-        ub.segment<V>(uind(i, N - 1, ny + 2 * N)) = BL;
-        ub.segment<V>(uind(N - 1, j, ny + 2 * N)) = BL;
-        ub.segment<V>(uind(nx + N + i, N - 1, ny + 2 * N)) = BR;
-        ub.segment<V>(uind(nx + N, j, ny + 2 * N)) = BR;
-        ub.segment<V>(uind(i, ny + N, ny + 2 * N)) = TL;
-        ub.segment<V>(uind(N - 1, ny + N + j, ny + 2 * N)) = TL;
-        ub.segment<V>(uind(nx + N + i, ny + N, ny + 2 * N)) = TR;
-        ub.segment<V>(uind(nx + N, ny + N + j, ny + 2 * N)) = TR;
-      }
-    break;
+  for (int i = 0; i < nx + 2 * N; i++) {
+    MatMap u0(ub.data() + ((i * (ny + 2 * N) + N) * V), ny, V, OuterStride(V));
+    MatMap ub0(ub.data() + ((i * (ny + 2 * N)) * V), ny + 2 * N, V,
+               OuterStride(V));
+    boundaries1(u0, ub0, ny, boundaryTypes.tail<2>());
   }
 }
 
 void boundaries(Vecr u, Vecr ub, iVecr nX, iVecr boundaryTypes) {
   // If periodic is true, applies periodic boundary conditions,
   // else applies transmissive boundary conditions
-  int ndim = nX.size();
+  long ndim = nX.size();
+  int nx = nX(0);
+
   switch (ndim) {
-  case 1:
-    boundaries1(u, ub, nX(0), boundaryTypes(0));
-    break;
+
+  case 1: {
+    ub.segment(N * V, nx * V) = u;
+    MatMap u0(u.data(), nx, V, OuterStride(V));
+    MatMap ub0(ub.data(), nx + 2 * N, V, OuterStride(V));
+    boundaries1(u0, ub0, nx, boundaryTypes);
+  } break;
+
   case 2:
-    boundaries2(u, ub, nX(0), nX(1), boundaryTypes(0));
+    int ny = nX(1);
+    for (int i = 0; i < nx; i++)
+      ub.segment(((i + N) * (ny + 2 * N) + N) * V, ny * V) =
+          u.segment(i * ny * V, ny * V);
+    boundaries2(u, ub, nx, ny, boundaryTypes);
     break;
   }
 }
@@ -154,7 +118,7 @@ void extend_mask(bVecr mask, bVecr maskb, iVecr nX) {
   // this function returns a mask of the cells for which the DG predictor
   // must be calculated (i.e. the masked cells and their neighbors)
 
-  int ndim = nX.size();
+  long ndim = nX.size();
   int nx = nX(0);
   switch (ndim) {
 
