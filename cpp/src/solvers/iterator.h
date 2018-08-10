@@ -10,6 +10,6 @@ void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
 std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
                           iVecr boundaryTypes, bool SPLIT, bool HALF_STEP,
                           bool STIFF, int FLUX, std::vector<Par> &MPs, int nOut,
-                          int nReset);
+                          int nReset, bool steadyState);
 
 #endif // ITERATOR_H

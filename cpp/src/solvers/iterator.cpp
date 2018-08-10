@@ -11,6 +11,8 @@
 #include "steppers.h"
 #include <iostream>
 
+double STEADY_TOL = 1e-8;
+
 void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
             std::vector<Par> &MPs) {
   // Builds u across the domain, from the different material grids
@@ -100,8 +102,9 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
 std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
                           iVecr boundaryTypes, bool SPLIT, bool HALF_STEP,
                           bool STIFF, int FLUX, std::vector<Par> &MPs, int nOut,
-                          int nReset) {
+                          int nReset, bool steadyState) {
 
+  Vec uprev(u.size());
   std::vector<Vec> ret(nOut);
   int nmat = MPs.size();
   Vec ub(extended_dimensions(nX, N) * V);
@@ -123,6 +126,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
   double dt = 0.;
 
   while (t < tf) {
+
+    uprev = u;
 
     if (LSET > 0)
       fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
@@ -170,7 +175,11 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 #else
     std::cout << "\n" << int(t / tf * 100.);
 #endif
+
+    if (steadyState && (u - uprev).lpNorm<Eigen::Infinity>() < STEADY_TOL)
+      break;
   }
 
+  ret[nOut - 1] = u;
   return ret;
 }
