@@ -119,16 +119,13 @@ def lid_driven_cavity_bc(u, N, NDIM):
     return ret
 
 
-def strain_relaxation():
+def strain_relaxation(n=4, tf = 0.00001):
 
     def f(Q, t, MP):
         return S_cons(Q, MP)
 
-    MP = material_params('sg', 1, 1, 1, γ=1.4, b0=0.219, n=4, σY=9e-4, τ1=0.1)
+    MP = material_params('sg', 1, 1, 1, γ=1.4, b0=0.219, n=n, σY=9e-4, τ1=0.1)
     MPs = [MP]
-
-    n = 100
-    tf = 0.00001
 
     A = inv(array([[1, 0, 0],
                    [-0.01, 0.95, 0.02],
@@ -139,11 +136,12 @@ def strain_relaxation():
     v = zeros(3)
     Q = Cvec(ρ, p, v, MP, A)
 
-    t = linspace(0, tf, n)
-    ua = array([Q for i in range(n)])
-    un = zeros([n, 14])
+    N = 100
+    t = linspace(0, tf, N)
+    ua = array([Q for i in range(N)])
+    un = zeros([N, 14])
 
-    for i in range(n):
+    for i in range(N):
         dt = t[i]
         ode_solver_cons(ua[i], dt, MP)
         un[i] = odeint(f, Q.copy(), array([0, dt]), args=(MP,))[1]
