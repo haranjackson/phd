@@ -78,7 +78,7 @@ def poiseuille_bc(u, N, *args):
     return wall_BC(u, N, 1, [1], MP)
 
 
-def lid_driven_cavity():
+def lid_driven_cavity(n=0.5):
 
     tf = 2
     Lx = 1
@@ -87,13 +87,14 @@ def lid_driven_cavity():
     ny = 100
 
     γ = 1.4
+    μ = 2**((n - 1) / 2) * 1e-2
 
     ρ = 1
     p = 100 / γ
     v = zeros(3)
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2, n=0.5)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=μ, n=n)
 
     u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, MP, A)
@@ -105,21 +106,7 @@ def lid_driven_cavity():
     return u, [MP], tf, [Lx / nx, Ly / ny]
 
 
-def lid_driven_cavity_bc(u, N, NDIM):
-
-    ret = standard_BC(u, N, NDIM, wall=[True, True], reflectVars=[2, 3, 4])
-    nx, ny = ret.shape[:2]
-
-    for i in range(nx):
-        for j in range(N):
-            jj = 2 * N - 1 - j
-            v = 2 - ret[i, jj, 2] / ret[i, jj, 0]
-            ret[i, j, 2] = ret[i, j, 0] * v
-
-    return ret
-
-
-def strain_relaxation(n=4, tf = 0.00001):
+def strain_relaxation(n=4, tf=0.00001):
 
     def f(Q, t, MP):
         return S_cons(Q, MP)
