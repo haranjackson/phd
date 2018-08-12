@@ -121,7 +121,7 @@ def plot_energy(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0,
 
     figure(1, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Total Energy',
-                  sci, 'v', plotType, vmin, vmax)
+                  sci, 'E', plotType, vmin, vmax)
 
 
 def plot_velocity(u, MPs, i=0, style='-', x=None, lab=None, col=None, sci=0,

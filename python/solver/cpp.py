@@ -59,7 +59,7 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs,
 
     uOut = GPRpy.solvers.iterator(u, final_time, nX, array(dX), cfl, bcs,
                                   obj.split, obj.half_step, obj.stiff_dg,
-                                  obj.flux_type, obj.pars, nOut, nReset)
+                                  obj.flux_type, obj.pars, nOut, nReset, False)
 
     if callback is not None:
         shape = initial_grid.shape
