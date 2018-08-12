@@ -1,9 +1,13 @@
 from numpy import amax, array, concatenate, eye, flip, linspace, zeros
+from scipy.integrate import odeint
 
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.objects import material_params
+from gpr.misc.plot import colors, plot_energy, plot_distortion, plot_sigma
 from gpr.misc.structures import Cvec
+from gpr.sys.analytical import ode_solver_cons
+from gpr.sys.conserved import S_cons
 
 from test.boundaries import wall_BC
 
@@ -76,7 +80,7 @@ def poiseuille_bc(u, N, *args):
 
 def lid_driven_cavity():
 
-    tf = 10
+    tf = 2
     Lx = 1
     Ly = 1
     nx = 100
@@ -89,7 +93,7 @@ def lid_driven_cavity():
     v = zeros(3)
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-2, n=0.5)
 
     u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, MP, A)
@@ -113,3 +117,53 @@ def lid_driven_cavity_bc(u, N, NDIM):
             ret[i, j, 2] = ret[i, j, 0] * v
 
     return ret
+
+
+def strain_relaxation():
+
+    def f(Q, t, MP):
+        return S_cons(Q, MP)
+
+    MP = material_params('sg', 1, 1, 1, γ=1.4, b0=0.219, n=4, σY=9e-4, τ1=0.1)
+    MPs = [MP]
+
+    n = 100
+    tf = 0.00001
+
+    A = inv(array([[1, 0, 0],
+                   [-0.01, 0.95, 0.02],
+                   [-0.015, 0, 0.9]]))
+
+    ρ = det(A) * MP.ρ0
+    p = 1
+    v = zeros(3)
+    Q = Cvec(ρ, p, v, MP, A)
+
+    t = linspace(0, tf, n)
+    ua = array([Q for i in range(n)])
+    un = zeros([n, 14])
+
+    for i in range(n):
+        dt = t[i]
+        ode_solver_cons(ua[i], dt, MP)
+        un[i] = odeint(f, Q.copy(), array([0, dt]), args=(MP,))[1]
+
+    cm = colors(3)
+
+    plot_energy(un, MPs, x=t, col=cm[0])
+    plot_energy(ua, MPs, x=t, col=cm[1], style='x')
+
+    for i in range(3):
+        plot_distortion(un, MPs, i, i, x=t, col=cm[0], fig=10)
+        plot_distortion(ua, MPs, i, i, x=t, col=cm[1], style='x', fig=10)
+        plot_sigma(un, MPs, i, i, x=t, col=cm[0], fig=11)
+        plot_sigma(ua, MPs, i, i, x=t, col=cm[1], style='x', fig=11)
+        j = (i+1) // 3
+        plot_distortion(un, MPs, i, j, x=t, col=cm[0], fig=12)
+        plot_distortion(ua, MPs, i, j, x=t, col=cm[1], style='x', fig=12)
+        plot_distortion(un, MPs, j, i, x=t, col=cm[0], fig=12)
+        plot_distortion(ua, MPs, j, i, x=t, col=cm[1], style='x', fig=12)
+        plot_sigma(un, MPs, i, j, x=t, col=cm[0], fig=13)
+        plot_sigma(ua, MPs, i, j, x=t, col=cm[1], style='x', fig=13)
+
+    return ua, un
