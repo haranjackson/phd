@@ -51,7 +51,11 @@ def barton(test):
         SR = 0
 
     u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
-    return u, MPs, tf, dX
+
+    def f():
+        return u, MPs, tf, dX
+
+    return f
 
 
 def pure_elastic(test):
@@ -91,4 +95,8 @@ def pure_elastic(test):
     SR = 0
 
     u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
-    return u, MPs, tf, dX
+
+    def f():
+        return u, MPs, tf, dX
+
+    return f
