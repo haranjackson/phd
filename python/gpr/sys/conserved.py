@@ -96,9 +96,9 @@ def B_cons(Q, d, MP):
 
         for i in range(5, 14):
             ret[i, i] = vd
-        ret[5 + d, 5 + d:8 + d] -= v
-        ret[8 + d, 8 + d:11 + d] -= v
-        ret[11 + d, 11 + d:14 + d] -= v
+        ret[5 + d, 5:8] -= v
+        ret[8 + d, 8:11] -= v
+        ret[11 + d, 11:14] -= v
 
     for i in range(1, LSET + 1):
         ret[-i, -i] = vd

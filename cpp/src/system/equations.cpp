@@ -77,9 +77,9 @@ void block(MatV_Vr ret, VecVr Q, int d) {
       ret(i, i) = vd;
     for (int i = 0; i < 3; i++) {
       double vi = ρv(i) / ρ;
-      ret(5 + d, 5 + d + i) -= vi;
-      ret(8 + d, 8 + d + i) -= vi;
-      ret(11 + d, 11 + d + i) -= vi;
+      ret(5 + d, 5 + i) -= vi;
+      ret(8 + d, 8 + i) -= vi;
+      ret(11 + d, 11 + i) -= vi;
     }
   }
   for (int i = 1; i < LSET + 1; i++)
