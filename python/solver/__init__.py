@@ -3,9 +3,9 @@ from time import time
 
 from numpy import expand_dims, ones
 
-from ader.solver import Solver
+from ader import Solver
 from ader.etc.boundaries import extend_mask
-from ader.fv.fv import FVSolver
+from ader.fv import FVSolver
 
 from solver.cpp import solve_full_cpp, cpp_split_stepper, cpp_ader_stepper
 from solver.split import SplitSolver

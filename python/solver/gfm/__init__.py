@@ -1,9 +1,7 @@
-import GPRpy
-
 from concurrent.futures import ProcessPoolExecutor
 from time import time
 
-from numpy import array, int32, ones, prod, zeros
+from numpy import ones, prod, zeros
 
 from ader.etc.boundaries import standard_BC, periodic_BC
 
