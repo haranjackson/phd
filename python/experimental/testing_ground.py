@@ -29,7 +29,7 @@ def generate_vecs(MP):
     v = rand(3)
     J = rand(3)
 
-    Q = Cvec(ρ, p, v, A, J, MP)
+    Q = Cvec(ρ, p, v, MP, A, J)
     P = State(Q, MP)
     return Q, P
 

@@ -218,7 +218,7 @@ def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,
                (var), xlab='x', sci=sci)
 
     elif NDIM == 2:
-        plot2d(u[:, :, var])
+        plot2d(u[:, :, var], 'colormap')
 
 
 def plot_primitives(u, MPs, style='-', x=None):

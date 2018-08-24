@@ -1,4 +1,4 @@
-from numpy import exp, inf
+from numpy import exp, inf, sqrt
 from numpy.linalg import norm
 
 from gpr.misc.functions import det3, sigma_norm

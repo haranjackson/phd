@@ -43,7 +43,9 @@ def convert_to_conservative(P, R, L, MP):
     """
     Eρ = P.dEdρ()
     EA = P.dEdA().ravel(order='F')
-    H = P.H()
+
+    if THERMAL:
+        H = P.H()
 
     Γ = mg.Γ_MG(P.ρ, MP)
 
@@ -54,31 +56,42 @@ def convert_to_conservative(P, R, L, MP):
         b[1] = 1 / Γ
         b[2:11] = P.ρ * EA
         b[11:14] = P.ρ * P.v
-        b[14:17] = P.ρ * H
+
+        if THERMAL:
+            b[14:17] = P.ρ * H
 
         R[1] = dot(b, R)
         for i in range(3):
             R[11 + i] = P.v[i] * R[0] + P.ρ * R[11 + i]
-        for i in range(3):
-            R[14 + i] = P.J[i] * R[0] + P.ρ * R[14 + i]
+
+        if THERMAL:
+            for i in range(3):
+                R[14 + i] = P.J[i] * R[0] + P.ρ * R[14 + i]
 
     if L is not None:
 
         tmp = norm(P.v)**2 - (P.E + P.ρ * Eρ)
+
         if THERMAL:
             cα2 = MP.cα2
             tmp += cα2 * norm(P.J)**2
+
         Υ = Γ * tmp
 
-        L[:, 0] += Υ * L[:, 1] - 1 / P.ρ * \
-            (dot(L[:, 11:14], P.v) + dot(L[:, 14:17], P.J))
+        L[:, 0] += Υ * L[:, 1] - dot(L[:, 11:14], P.v) / P.ρ
+
+        if THERMAL:
+            L[:, 0] -= dot(L[:, 14:17], P.J) / P.ρ
+
         L[:, 1] *= Γ
         for i in range(9):
             L[:, 2 + i] -= P.ρ * EA[i] * L[:, 1]
         for i in range(3):
             L[:, 11 + i] = 1 / P.ρ * L[:, 11 + i] - P.v[i] * L[:, 1]
-        for i in range(3):
-            L[:, 14 + i] = 1 / P.ρ * L[:, 14 + i] - H[i] * L[:, 1]
+
+        if THERMAL:
+            for i in range(3):
+                L[:, 14 + i] = 1 / P.ρ * L[:, 14 + i] - H[i] * L[:, 1]
 
 
 def right_eigenvectors(P, d, MP, typical_order):
