@@ -39,9 +39,11 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
   case MOVING:
     for (int i = 0; i < N; i++) {
       ub.row(i) = u.row(N - 1 - i);
-      ub(i, 2) = 2. - ub(i, 2);
+      ub(i, 2) = ub(i, 0) * 2. - ub(i, 2);
       ub(i, 3) *= -1.;
       ub(i, 4) *= -1.;
+      ub(i, 1) += 1 / (2 * ub(i, 0)) *
+                  (ub(i, 2) * ub(i, 2) - u(N - 1 - i, 2) * u(N - 1 - i, 2));
     }
     break;
   }
@@ -76,10 +78,14 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
 
   case MOVING:
     for (int i = 0; i < N; i++) {
-      ub.row(i + nx + N) = u.row(nx - 1 - i);
-      ub(i + nx + N, 2) = 2. - ub(i + nx + N, 2);
-      ub(i + nx + N, 3) *= -1.;
-      ub(i + nx + N, 4) *= -1.;
+      int ind = i + nx + N;
+      ub.row(ind) = u.row(nx - 1 - i);
+      ub(ind, 2) = ub(ind, 0) * 2. - ub(ind, 2);
+      ub(ind, 3) *= -1.;
+      ub(ind, 4) *= -1.;
+      ub(ind, 1) +=
+          1 / (2 * ub(ind, 0)) *
+          (ub(ind, 2) * ub(ind, 2) - u(nx - 1 - i, 2) * u(nx - 1 - i, 2));
     }
     break;
   }
