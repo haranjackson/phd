@@ -60,7 +60,9 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
     elif plotType == 'streams':
         nx, ny = x.shape[:2]
         Y, X = mgrid[0:ny, 0:nx]
-        streamplot(X, Y, x.T, y.T)
+        v0 = x[:, :, 2] / x[:, :, 0]
+        v1 = x[:, :, 3] / x[:, :, 0]
+        streamplot(X, Y, v0.T, v1.T)
 
 
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
@@ -127,7 +129,11 @@ def plot_energy(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0,
 def plot_velocity(u, MPs, i=0, style='-', x=None, lab=None, col=None, sci=0,
                   square=0, plotType='streams', vmin=None, vmax=None):
     figure(2 + i, figsize=fig_size(square))
-    plot_compound(u, MPs, style, x, lab, col, 'Velocity Component %d' % (i + 1),
+
+    if plotType == 'streams' and u.ndim > 2:
+        plot2d(u, plotType)
+    else:
+        plot_compound(u, MPs, style, x, lab, col, 'Velocity Component %d' % (i + 1),
                   sci, 'v', plotType, vmin, vmax, i=i)
 
 
