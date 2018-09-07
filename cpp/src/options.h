@@ -1,6 +1,8 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+const bool NO_CORNERS = true;
+
 const bool VISCOUS = true;
 const bool THERMAL = true;
 const bool MULTI = false;

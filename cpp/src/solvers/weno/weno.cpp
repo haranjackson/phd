@@ -13,10 +13,10 @@ void weight(VecVr ret, MatN_Vr w, double LAM) {
   }
 }
 
-void coeffs(MatN_Vr ret, Mat2N_Vr data) {
+void coeffs(MatN_Vr ret, Mat2N_Vr data, int nx, int gap, int ind) {
   // Calculate coefficients of basis polynomials and weights
 
-  VecV oL, oR, oCL, oCR, oSum;
+  VecV oL, oR, oCL, oCR;
   MatN_V wL, wR, wCL, wCR;
 
   if (N <= 4) {
@@ -29,7 +29,6 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
 
   weight(oL, wL, LAMS);
   weight(oR, wR, LAMS);
-  oSum = oL + oR;
 
   if (N > 2) {
     if (N <= 4)
@@ -37,105 +36,107 @@ void coeffs(MatN_Vr ret, Mat2N_Vr data) {
     else
       wCL = MCL.solve(data.block<N, V>(FN2, 0));
     weight(oCL, wCL, LAMC);
-    oSum += oCL;
 
-    if ((N - 1) % 2) // Two central stencils (N>3)
+    if (N % 2 == 0) // Two central stencils (N>3)
     {
       if (N <= 4)
         wCR.noalias() = mCRinv * data.block<N, V>(CN2, 0);
       else
         wCR = MCR.solve(data.block<N, V>(CN2, 0));
       weight(oCR, wCR, LAMC);
-      oSum += oCR;
     }
   }
 
-  for (int i = 0; i < N; i++)
-    for (int j = 0; j < V; j++) {
-      if (N == 2)
-        ret(i, j) = (oL(j) * wL(i, j) + oR(j) * wR(i, j)) / oSum(j);
-      else if ((N - 1) % 2 == 0)
-        ret(i, j) = (oL(j) * wL(i, j) + oR(j) * wR(i, j) + oCL(j) * wCL(i, j)) /
-                    oSum(j);
-      else
-        ret(i, j) = (oL(j) * wL(i, j) + oR(j) * wR(i, j) + oCL(j) * wCL(i, j) +
-                     oCR(j) * wCR(i, j)) /
-                    oSum(j);
+  MatN_V num = MatN_V::Zero();
+  VecV den = VecV::Zero();
+
+  if (ind >= gap) {
+    num.array() += wL.array().rowwise() * oL.transpose().array();
+    den += oL;
+  }
+  if (ind <= nx - gap - 1) {
+    num.array() += wR.array().rowwise() * oR.transpose().array();
+    den += oR;
+  }
+  if (N > 2) {
+    if (ind + FN2 >= gap) {
+      num.array() += wCL.array().rowwise() * oCL.transpose().array();
+      den += oCL;
     }
+    if ((N % 2 == 0) && (ind - FN2 <= nx - gap - 1)) {
+      num.array() += wCR.array().rowwise() * oCR.transpose().array();
+      den += oCR;
+    }
+  }
+  ret.array() = num.array().rowwise() / den.transpose().array();
 }
 
-void weno1(Vecr wh, Vecr ub, int nx, int ny, int nz) {
+void weno1(Matr wh, Matr ub, int nx, int gap) {
   // Returns the WENO reconstruction of u using polynomials in x
-  // Size of wh: nx*ny*nz*N*V
-  // Size of ub: (nx+2(N-1))*ny*nz*V
-
-  for (int ind = 0; ind < nx * ny * nz; ind++) {
-    MatN_VMap wh_ref(wh.data() + (ind * N * V), OuterStride(V));
-    Mat2N_VMap ub_ref(ub.data() + (ind * V), OuterStride(ny * nz * V));
-    coeffs(wh_ref, ub_ref);
-  }
+  // Shape of ub: (nx + 2(N-1), V)
+  // Shapw of wh: (nx * N, V)
+  for (int i = 0; i < nx; i++)
+    coeffs(wh.block<N, V>(i * N, 0), ub.block<2 * N, V>(i, 0), nx, gap, i);
 }
 
-void weno2(Vecr wh, Vecr ub, int nx, int ny, int nz) {
+void weno2(Matr wh, Matr ub, int nx, int ny) {
   // Returns the WENO reconstruction of u using polynomials in y
-  // Size of wh: nx*ny*nz*N*N*V
-  // Size of ub: (nx+2(N-1))*(ny+2(N-1))*nz*V
-  Vec ux(nx * (ny + 2 * (N - 1)) * nz * N * V);
-  weno1(ux, ub, nx, ny + 2 * (N - 1), nz);
+  // Size of ub: (nx + 2(N-1)) * (ny + 2(N-1)) * V
+  // Size of wh: nx * ny * N * N * V
 
-  for (int i = 0; i < nx; i++) {
-    int indi = i * ny * nz * N;
-    int indii = i * (ny + 2 * (N - 1)) * nz * N;
+  Vec ux(nx * (ny + 2 * (N - 1)) * N * V);
 
-    for (int s = 0; s < ny * nz * N; s++) {
-      int indr = (indi + s) * N * V;
-      int indt = (indii + s) * V;
-      MatN_VMap wh_ref(wh.data() + indr, OuterStride(V));
-      Mat2N_VMap ux_ref(ux.data() + indt, OuterStride(nz * N * V));
-      coeffs(wh_ref, ux_ref);
-    }
+  Mat tmp0(nx * N, V);
+  MatMap tmp0Map(tmp0.data(), nx, N * V, OuterStride(N * V));
+
+  for (int j = 0; j < ny + 2 * (N - 1); j++) {
+    MatMap ubMap(ub.data() + j * V, nx + 2 * (N - 1), V,
+                 OuterStride((ny + 2 * (N - 1)) * V));
+    MatMap uxMap(ux.data() + j * N * V, nx, N * V,
+                 OuterStride((ny + 2 * (N - 1)) * N * V));
+
+    if (NO_CORNERS && (j < N || j >= ny + 2 * (N - 1) - N))
+      weno1(tmp0, ubMap, nx, N);
+    else
+      weno1(tmp0, ubMap, nx, 0);
+    uxMap = tmp0Map;
   }
-}
 
-void weno3(Vecr wh, Vecr ub, int nx, int ny, int nz) {
-  // Returns the WENO reconstruction of u using polynomials in z
-  // Size of wh: nx*ny*nz*N*N*N*V
-  // Size of ub: (nx+2(N-1))*(ny+2(N-1))*(nz+2(N-1))*V
-  Vec uy(nx * ny * (nz + 2 * (N - 1)) * N * N * V);
-  weno2(uy, ub, nx, ny, nz + 2 * (N - 1));
+  Mat tmp1(ny * N, V);
+  MatMap tmp1Map(tmp1.data(), ny, N * V, OuterStride(N * V));
 
   for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny; j++) {
-      int indi = (i * ny + j) * nz * N * N;
-      int indii = (i * ny + j) * (nz + 2 * (N - 1)) * N * N;
+    for (int ii = 0; ii < N; ii++) {
+      MatMap uxMap(ux.data() + (i * (ny + 2 * (N - 1)) * N + ii) * V,
+                   (ny + 2 * (N - 1)), V, OuterStride(N * V));
+      MatMap whMap(wh.data() + (i * ny * N + ii) * N * V, ny, N * V,
+                   OuterStride(N * N * V));
 
-      for (int s = 0; s < nz * N * N; s++) {
-        int indr = (indi + s) * N * V;
-        int indt = (indii + s) * V;
-        MatN_VMap wh_ref(wh.data() + indr, OuterStride(V));
-        Mat2N_VMap uy_ref(uy.data() + indt, OuterStride(N * N * V));
-        coeffs(wh_ref, uy_ref);
-      }
+      if (NO_CORNERS && (i == 0 || i == nx - 1))
+        weno1(tmp1, uxMap, ny, 1);
+      else
+        weno1(tmp1, uxMap, ny, 0);
+      whMap = tmp1Map;
     }
+  // TODO: make this n-dimensional by turning these two sets of for loops into
+  // n sets of for loops, contained within a large loop over the dimensions
 }
 
 void weno_launcher(Vecr wh, Vecr ub, iVecr nX) {
   // NOTE: boundary conditions extend u by two cells in each dimension
 
   int ndim = nX.size();
+  MatMap whMap(wh.data(), wh.size() / V, V, OuterStride(V));
+  MatMap ubMap(ub.data(), ub.size() / V, V, OuterStride(V));
 
   switch (ndim) {
 
   case 1:
-    weno1(wh, ub, nX(0) + 2, 1, 1);
+    weno1(whMap, ubMap, nX(0) + 2, 0);
     break;
 
   case 2:
-    weno2(wh, ub, nX(0) + 2, nX(1) + 2, 1);
-    break;
-
-  case 3:
-    weno3(wh, ub, nX(0) + 2, nX(1) + 2, nX(2) + 2);
+    weno2(whMap, ubMap, nX(0) + 2, nX(1) + 2);
     break;
   }
 }
