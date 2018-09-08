@@ -60,7 +60,7 @@ VecV Pvec_to_Cvec(VecV P, Par &MP) {
   Vec3 v = P.segment<3>(11);
 
   P.segment<3>(2) = ρ * v;
-  P.segment<9>(5) = VecMap(A.data(), 9);
+  P.segment<9>(5) = Vec9Map(A.data());
 
   if (THERMAL) {
     Vec3 J = P.segment<3>(14);

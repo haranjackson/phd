@@ -1,5 +1,7 @@
 #include "../../etc/types.h"
 #include "../objects/gpr_objects.h"
+#include "eigen3/SVD"
+#include <cmath>
 
 Mat3_3 AdevG(Mat3_3r A) {
   Mat3_3 G = A.transpose() * A;
@@ -34,4 +36,14 @@ double sigma_norm(Mat3_3r σ) {
   double tmp1 = σ0011 * σ0011 + σ1122 * σ1122 + σ2200 * σ2200;
   double tmp2 = σ01 * σ01 + σ12 * σ12 + σ20 * σ20;
   return sqrt(0.5 * tmp1 + 3 * tmp2);
+}
+
+void destress(VecVr Q) {
+  // NOTE: Avec comes from a map, so must be passed by value
+  Mat3_3Map A(Q.data() + 5);
+  double detA = A.determinant();
+  Eigen::JacobiSVD<Mat3_3> svd(A, Eigen::ComputeFullV | Eigen::ComputeFullU);
+  Mat3_3 Ag =
+      2 * pow(detA, 1. / 3.) * svd.matrixU() * svd.matrixV().transpose() - A;
+  Q.segment<9>(5) = Vec9Map(Ag.data());
 }

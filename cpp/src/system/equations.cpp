@@ -55,7 +55,7 @@ void source(VecVr ret, VecVr Q, Par &MP) {
 
   if (VISCOUS) {
     Mat3_3 Asource = -dEdA_s(Q, MP) * theta1inv(Q, MP);
-    ret.segment<9>(5) = VecMap(Asource.data(), 9);
+    ret.segment<9>(5) = Vec9Map(Asource.data());
   }
   if (THERMAL) {
     double ρ = Q(0);

@@ -1,4 +1,4 @@
-from numpy import dot, prod, zeros
+from numpy import dot, prod
 from scipy.linalg import det, svd
 
 from ader.etc.boundaries import extend_grid

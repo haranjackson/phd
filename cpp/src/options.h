@@ -2,6 +2,7 @@
 #define OPTIONS_H
 
 const bool NO_CORNERS = true;
+const bool DESTRESS = true;
 
 const bool VISCOUS = true;
 const bool THERMAL = true;

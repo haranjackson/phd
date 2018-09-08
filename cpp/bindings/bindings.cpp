@@ -44,8 +44,6 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/system/multi/eigenvecs.h"
 #include "../src/system/multi/riemann.h"
 
-#include "../src/system/variables/derivatives.h"
-
 namespace py = pybind11;
 
 PYBIND11_MODULE(GPRpy, m) {
