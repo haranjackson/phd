@@ -9009,6 +9009,113 @@ Velocity profiles for different dilatants (left) and pseudoplastics (right),
 \end_layout
 
 \begin_layout Subsubsection
+Lid-Driven Cavity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Lid-Driven Cavity/n1.5_v1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Lid-Driven Cavity/n1.5_v2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:lid-driven-cavity-n=1.5"
+
+\end_inset
+
+Velocity profiles for the Lid-Driven Cavity Test, for a dilatant with n=1.5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Lid-Driven Cavity/n0.5_v1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Lid-Driven Cavity/n0.5_v2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:lid-driven-cavity-n=0.5"
+
+\end_inset
+
+Velocity profiles for the Lid-Driven Cavity Test, for a pseudoplastic with
+ n=0.5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Elastoplastic Piston Test
 \end_layout
 
