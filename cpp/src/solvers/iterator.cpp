@@ -2,13 +2,12 @@
 #include "../etc/debug.h"
 #endif
 
-#include "../etc/globals.h"
 #include "../etc/grid.h"
 #include "../multi/fill.h"
-#include "../options.h"
 #include "../system/eig.h"
 #include "../system/functions/vectors.h"
 #include "steppers.h"
+#include "utils.h"
 #include <iostream>
 
 double STEADY_TOL = 1e-8;
@@ -41,30 +40,6 @@ void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
       u.segment<V - LSET>(i * V) = grids[mi].segment<V - LSET>(i * V);
     else
       u.segment<V - LSET>(i * V).setZero();
-  }
-}
-
-void renorm_distortion(Vecr u, std::vector<Par> &MPs) {
-  int ncell = u.size() / V;
-  for (int i = 0; i < ncell; i++) {
-    int mi = get_material_index(u.segment<V>(i * V));
-    double ρ = u(i * V);
-    Mat3_3 A = get_A(u.segment<V>(i * V));
-    double c = cbrt(ρ / (MPs[mi].ρ0 * A.determinant()));
-    u.segment<9>(i * V + 5) *= c;
-  }
-}
-
-void reset_distortion(Vecr u, std::vector<Par> &MPs) {
-  int ncell = u.size() / V;
-  for (int i = 0; i < ncell; i++) {
-    int mi = get_material_index(u.segment<V>(i * V));
-    double ρ = u(i * V);
-    double c = cbrt(ρ / MPs[mi].ρ0);
-    u.segment<9>(i * V + 5).setZero();
-    u(i * V + 5) = c;
-    u(i * V + 9) = c;
-    u(i * V + 13) = c;
   }
 }
 
@@ -102,7 +77,7 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
 std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
                           iVecr boundaryTypes, bool SPLIT, bool HALF_STEP,
                           bool STIFF, int FLUX, std::vector<Par> &MPs, int nOut,
-                          int nReset, bool steadyState) {
+                          bool steadyState) {
 
   Vec uprev(u.size());
   std::vector<Vec> ret(nOut);
@@ -121,7 +96,6 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
   double t = 0.;
   long count = 0;
   int pushCount = 0;
-  int resetCount = 0;
 
   double dt = 0.;
 
@@ -160,10 +134,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     renorm_distortion(u, MPs);
 
-    if (t >= double(resetCount + 1) / double(nReset) * tf) {
+    if (contorted(u))
       reset_distortion(u, MPs);
-      resetCount += 1;
-    }
 
     if (t >= double(pushCount + 1) / double(nOut) * tf) {
       ret[pushCount] = u;
