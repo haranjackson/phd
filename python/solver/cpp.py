@@ -50,6 +50,8 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs):
         bcs = array([3] * 2 * ndim, dtype=int32)
     elif bcs == 'lid_driven':
         bcs = array([3, 3, 3, 4], dtype=int32)
+    elif bcs == 'symmetric':
+        bcs = array([5, 5, 5, 5], dtype=int32)
     else:
         print('bcs not recognized')
 

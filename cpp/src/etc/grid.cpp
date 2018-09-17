@@ -6,6 +6,7 @@ const int PERIODIC = 1;
 const int SLIP = 2;
 const int STICK = 3;
 const int MOVING = 4;
+const int SYMMETRIC = 5;
 
 void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
 
@@ -49,6 +50,11 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
       if (DESTRESS)
         destress(ub.row(i));
     }
+    break;
+
+  case SYMMETRIC:
+    for (int i = 0; i < N; i++)
+      ub.row(i) = u.row(N - 1 - i);
     break;
   }
 
@@ -96,6 +102,11 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
       if (DESTRESS)
         destress(ub.row(ind));
     }
+    break;
+
+  case SYMMETRIC:
+    for (int i = 0; i < N; i++)
+      ub.row(i + nx + N) = u.row(nx - 1 - i);
     break;
   }
 }
