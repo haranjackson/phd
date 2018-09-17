@@ -34,6 +34,7 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/solvers/evaluations.cpp
          src/solvers/iterator.cpp
          src/solvers/steppers.cpp
+         src/solvers/utils.cpp
 
          src/solvers/weno/weno.cpp
          src/solvers/weno/weno_matrices.cpp
