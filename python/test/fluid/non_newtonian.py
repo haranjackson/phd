@@ -80,21 +80,23 @@ def poiseuille_bc(u, N, *args):
 
 def lid_driven_cavity(n=0.5):
 
-    tf = 2
+    tf = 10
     Lx = 1
     Ly = 1
     nx = 100
     ny = 100
 
     γ = 1.4
-    μ = 2**((n - 1) / 2) * 1e-2
+    μ = 1e-2
 
     ρ = 1
-    p = 100 / γ
+#    p = 100 / γ
+    p = 1
     v = zeros(3)
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=μ, n=n)
+#    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=μ, n=n)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ, b0=1, μ=μ, n=n)
 
     u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, MP, A)
