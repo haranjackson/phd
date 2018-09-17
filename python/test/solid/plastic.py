@@ -1,10 +1,10 @@
-from numpy import array, eye, zeros
+from numpy import array, eye, sqrt, zeros
 
 from ader.etc.boundaries import standard_BC
 
 from gpr.misc.structures import Cvec
 
-from test.params.solids import Cu_SMGP_SI
+from test.params.solids import Cu_SMGP_SI, Cu_GRP_SI
 
 
 def piston_exact(nx, var):
@@ -74,3 +74,51 @@ def piston_bc(u, N, NDIM):
     ret = standard_BC(u, N, NDIM)
     ret[:N, 2:5] = ret[N, 0] * array([20, 0, 0])
     return ret
+
+
+def cylindrical_shock():
+    """ 10.1002/nme.2695
+        6.2. Two-dimensional test case
+
+        N = 3
+        cfl = 0.8
+        SPLIT = True
+        SOLVER = 'roe'
+    """
+    tf = 10e-6
+    nx = 500
+    ny = 500
+    Lx = 0.2
+    Ly = 0.2
+
+    dX = [Lx / nx, Ly / ny]
+
+    MP = Cu_GRP_SI
+
+    ρi = MP.ρ0
+    pi = MP.p0
+    Ai = eye(3)
+
+    ρo = 9375
+    po = 10e9
+    Ao = (ρo / MP.ρ0)**(1/3) * eye(3)
+
+    v = zeros(3)
+
+    Qi = Cvec(ρi, pi, v, MP, Ai)
+    Qo = Cvec(ρo, po, v, MP, Ao)
+
+    u = zeros([nx, ny, 14])
+
+    for i in range(nx):
+        for j in range(ny):
+            x = (i+0.5) * dX[0]
+            y = (j+0.5) * dX[1]
+            r = sqrt((x - Lx / 2)**2 + (y - Ly / 2)**2)
+
+            if r > 0.02:
+                u[i, j] = Qo
+            else:
+                u[i, j] = Qi
+
+    return u, [MP], tf, dX
