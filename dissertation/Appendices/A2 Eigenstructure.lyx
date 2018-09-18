@@ -10,7 +10,7 @@
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding auto
+\inputencoding utf8
 \fontencoding global
 \font_roman "default" "default"
 \font_sans "default" "default"
@@ -46,7 +46,7 @@
 \use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
-\biblio_style plainnat
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait

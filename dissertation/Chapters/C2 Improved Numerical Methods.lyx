@@ -10,7 +10,7 @@
 \maintain_unincluded_children false
 \language english
 \language_package default
-\inputencoding auto
+\inputencoding utf8
 \fontencoding global
 \font_roman "default" "default"
 \font_sans "default" "default"
@@ -9139,6 +9139,14 @@ This test is taken from
 LatexCommand cite
 key "peshkov_theoretical_2018"
 literal "true"
+
+\end_inset
+
+, with exact solutions found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "maire_nominally_2013"
+literal "false"
 
 \end_inset
 
