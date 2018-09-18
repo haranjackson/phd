@@ -9116,7 +9116,7 @@ Velocity profiles for the Lid-Driven Cavity Test, for a pseudoplastic with
 \end_layout
 
 \begin_layout Subsubsection
-Elastoplastic Piston Test
+Elastoplastic Piston
 \end_layout
 
 \begin_layout Standard
@@ -9249,7 +9249,7 @@ Density, velocity, pressure, and total stress in the elastoplastic piston
 \end_layout
 
 \begin_layout Subsubsection
-2D Elastoplastic Test
+Cylindrical Shock
 \end_layout
 
 \begin_layout Standard
@@ -9262,6 +9262,79 @@ literal "true"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Cylindrical Shock/ρ_gpr.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Cylindrical Shock/ρ_barton.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Cylindrical Shock/u_gpr.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Cylindrical Shock/u_barton.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cylindrical-shock"
+
+\end_inset
+
+Density, velocity, pressure, and total stress in the elastoplastic piston
+ test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
