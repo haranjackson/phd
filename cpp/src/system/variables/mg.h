@@ -13,6 +13,8 @@ const int GODUNOV_ROMENSKI = 4;
 double Γ_MG(double ρ, Par &MP);
 double p_ref(double ρ, Par &MP);
 double e_ref(double ρ, Par &MP);
+double φ(double ρ, Par &MP);
+
 double dΓ_MG(double ρ, Par &MP);
 double dp_ref(double ρ, Par &MP);
 double de_ref(double ρ, Par &MP);

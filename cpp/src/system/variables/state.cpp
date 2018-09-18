@@ -95,11 +95,11 @@ double dsigmadA(double ρ, double cs2, Mat3_3r A, Mat3_3r G, Mat3_3r AdevG,
 }
 
 double temperature(double ρ, double p, Par &MP) {
-  // Returns the temperature for an stiffened gas
+  // Returns the temperature for a Mie-Gruneisen material
   double cv = MP.cv;
   double Γ = Γ_MG(ρ, MP);
   double pr = p_ref(ρ, MP);
-  return (p - pr) / (ρ * Γ * cv);
+  return φ(ρ, MP) * MP.Tref + (p - pr) / (ρ * Γ * cv);
 }
 
 double temperature(VecVr Q, Par &MP) {

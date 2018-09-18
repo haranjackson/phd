@@ -122,6 +122,32 @@ double e_ref(double ρ, Par &MP) {
   }
 }
 
+double φ(double ρ, Par &MP) {
+  // Returns the integrating factor
+  double ρ0 = MP.ρ0;
+
+  switch (MP.EOS) {
+
+  case STIFFENED_GAS:
+    return pow(ρ / ρ0, MP.γ - 1);
+
+  case SHOCK_MG:
+    return exp(MP.Γ0 * (1 - ρ0 / ρ));
+
+  case GODUNOV_ROMENSKI:
+    return pow(ρ / ρ0, MP.γ);
+
+  case JWL:
+    return pow(ρ / ρ0, MP.Γ0);
+
+  case COCHRAN_CHAN:
+    return pow(ρ / ρ0, MP.Γ0);
+
+  default:
+    throw "EOS not recognized";
+  }
+}
+
 double dΓ_MG(double ρ, Par &MP) {
   // Returns the derivative of the MG parameter
 

@@ -183,7 +183,15 @@ reference "eq:EnergyDefinition"
 \end_inset
 
  are put into the same framework by expressing them in the following Mie-Gruneis
-en form:
+en form
+\begin_inset CommandInset citation
+LatexCommand cite
+key "menikoff_complete_2016"
+literal "false"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -206,7 +214,8 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e_{ref}\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
-T & =T_{ref}+\frac{e-e_{ref}}{c_{v}}=T_{ref}+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}
+T & =T_{ref}\phi\left(\rho\right)+\frac{e-e_{ref}}{c_{v}}=T_{ref}\phi\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
+\phi\left(\rho\right) & =\exp\left(\int_{\rho_{0}}^{\rho}\frac{\Gamma\left(\rho^{'}\right)}{\rho^{'}}d\rho^{'}\right)
 \end{align}
 
 \end_inset

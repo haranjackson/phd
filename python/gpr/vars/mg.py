@@ -219,6 +219,27 @@ def pressure(ρ, e, MP):
     return (e - er) * ρ * Γ + pr
 
 
+def φ(ρ, MP):
+    """ Returns the integrating factor
+    """
+    EOS = MP.EOS
+    ρ0 = MP.ρ0
+
+    if EOS == STIFFENED_GAS:
+        γ = MP.γ
+        return (ρ / ρ0) ** (γ - 1)
+
+    elif EOS == SHOCK_MG:
+        Γ0 = MP.Γ0
+        return exp(Γ0 * (1 - ρ0 / ρ))
+
+    elif EOS == GODUNOV_ROMENSKI:
+        return (ρ / ρ0) ** MP.γ
+
+    elif EOS in [JWL, COCHRAN_CHAN]:
+        return (ρ / ρ0) ** MP.Γ0
+
+
 def temperature(ρ, p, MP):
     """ Returns the Mie-Gruneisen temperature, given the density and pressure
     """
@@ -226,7 +247,7 @@ def temperature(ρ, p, MP):
     Tref = MP.Tref
     Γ = Γ_MG(ρ, MP)
     pr = p_ref(ρ, MP)
-    return Tref + (p - pr) / (ρ * Γ * cv)
+    return φ(ρ, MP) * Tref + (p - pr) / (ρ * Γ * cv)
 
 
 def dedρ(ρ, p, MP):
