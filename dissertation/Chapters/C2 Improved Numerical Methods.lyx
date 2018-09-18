@@ -113,7 +113,7 @@ Extending the Montecinos-Balsara ADER Method
 The material in this section is published in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Jackson2017,Jackson2017b"
+key "jackson_eigenvalues_2017,jackson_montecinos-balsara_2017"
 literal "true"
 
 \end_inset
@@ -123,8 +123,8 @@ literal "true"
 
 \begin_layout Standard
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Montecinos2017"
+LatexCommand cite
+key "montecinos_cell-centered_2017"
 literal "true"
 
 \end_inset
@@ -325,8 +325,8 @@ A basis
  are a set of nodes, e.g.
  the Gauss-Legendre abscissae - see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2008"
+LatexCommand cite
+key "dumbser_finite_2008"
 literal "true"
 
 \end_inset
@@ -334,8 +334,8 @@ literal "true"
 ), or modal (e.g.
  the Legendre polynomials - see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Balsara2009"
+LatexCommand cite
+key "balsara_efficient_2009"
 literal "true"
 
 \end_inset
@@ -345,8 +345,8 @@ literal "true"
 
 \begin_layout Standard
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Montecinos2017"
+LatexCommand cite
+key "montecinos_cell-centered_2017"
 literal "true"
 
 \end_inset
@@ -451,7 +451,7 @@ end{subequations}
 The WENO method (as used in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2013"
+key "dumbser_high-order_2013"
 literal "true"
 
 \end_inset
@@ -1238,8 +1238,8 @@ reference "eq:q system"
 
 , as adapted from 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Montecinos2017"
+LatexCommand cite
+key "montecinos_cell-centered_2017"
 literal "true"
 
 \end_inset
@@ -1443,8 +1443,8 @@ Convergence Properties
 \begin_layout Standard
 In 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Jackson2017"
+LatexCommand cite
+key "jackson_eigenvalues_2017"
 literal "true"
 
 \end_inset
@@ -1472,7 +1472,7 @@ literal "true"
  As noted in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2009a"
+key "dumbser_very_2009"
 literal "true"
 
 \end_inset
@@ -1489,7 +1489,7 @@ literal "true"
  a standard textbook on the subject, such as 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Nering1970"
+key "nering_linear_1970"
 literal "true"
 
 \end_inset
@@ -1741,7 +1741,7 @@ Operator Splitting Methods
 The material in this section is published in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Jackson2017a"
+key "jackson_fast_2017"
 literal "true"
 
 \end_inset
@@ -1802,8 +1802,8 @@ reference "eq:EnergyEquation"
 \begin_layout Standard
 As described in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Toro2009"
+LatexCommand cite
+key "toro_reimann_2009"
 literal "true"
 
 \end_inset
@@ -1999,7 +1999,20 @@ reference "subsec:Jacobian-of-Thermal-Impulse-ODEs"
  results presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:GPR-Specific-Performance-Improvements"
+reference "subsec:The-Thermal-Impulse-ODEs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Distortion-ODEs"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -2123,8 +2136,8 @@ where
  This evolution to the middle of the time step is similar to that used in
  the second-order MUSCL and SLIC schemes (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Toro2009"
+LatexCommand cite
+key "toro_reimann_2009"
 literal "true"
 
 \end_inset
@@ -2313,8 +2326,8 @@ where
 
  is chosen to either correspond to a Rusanov/Lax-Friedrichs flux (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Toro2009"
+LatexCommand cite
+key "toro_reimann_2009"
 literal "true"
 
 \end_inset
@@ -2336,8 +2349,8 @@ literal "true"
 \begin_layout Standard
 or a simplified Osher–Solomon flux (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2011a,Dumbser2011b"
+LatexCommand cite
+key "dumbser_simple_2011,dumbser_universal_2011"
 literal "true"
 
 \end_inset
@@ -2693,8 +2706,8 @@ Therefore:
 \begin_layout Standard
 It is a common result (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Giles2008"
+LatexCommand cite
+key "giles_extended_2008"
 literal "true"
 
 \end_inset
@@ -2736,7 +2749,7 @@ Using a fast
  SVD algorithm (such as in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "McAdams2011"
+key "mcadams_computing_2011"
 literal "true"
 
 \end_inset
@@ -3929,7 +3942,7 @@ The stress-strain relationships for different kinds of fluids (source [REF])
 In 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2015"
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -4819,8 +4832,8 @@ reference "subsec:Analytical-Approximation"
 , is compared with a numerical ODE solver.
  Initial data was taken from 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Barton2010"
+LatexCommand cite
+key "barton_eulerian_2010"
 literal "true"
 
 \end_inset
@@ -4883,8 +4896,8 @@ reference "fig:Distortion-ODEs_σ"
  The numerical ODE solver was the odeint solver from SciPy 0.18.1, based on
  the LSODA solver from the FORTRAN library ODEPACK (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Jones"
+LatexCommand cite
+key "oliphant_python_2007"
 literal "true"
 
 \end_inset
@@ -5633,7 +5646,7 @@ This test is designed to demonstrate that the numerical methods used are
  First demonstrated by Becker 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Beker1929"
+key "becker_impact_1929"
 literal "true"
 
 \end_inset
@@ -5645,16 +5658,17 @@ literal "true"
  (see Johnson 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Johnson2013"
+key "johnson_analytical_2013"
 literal "true"
 
 \end_inset
 
  for a full analysis).
- As noted by Dumbser 
+ As noted by Dumbser et al.
+ 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2016a"
+LatexCommand cite
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -5743,7 +5757,7 @@ end{subequations}
  Following the analysis of Morduchow and Libby 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Morduchow"
+key "morduchow_complete_1949"
 literal "true"
 
 \end_inset
@@ -6462,8 +6476,8 @@ reference "fig:Heat-Conduction"
  the temperature and heat flux profiles.
  As demonstrated in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2016a"
+LatexCommand cite
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -6536,7 +6550,7 @@ Elastic Riemann Problems
 These tests are taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Boscheri2016"
+key "boscheri_cell_2016"
 literal "true"
 
 \end_inset
@@ -6673,8 +6687,8 @@ Note that, unlike with the ADER-WENO scheme, the wall time for the Split-WENO
  be employed for the initial guess to the root of the nonlinear system produced
  by the Discontinuous Galerkin method (as described in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Hidalgo2011"
+LatexCommand cite
+key "hidalgo_ader_2011"
 literal "true"
 
 \end_inset
@@ -7231,8 +7245,8 @@ name "subsec:Convergence"
 To assess the rate of convergence of the Split-WENO method, the convected
  isentropic vortex convergence study from 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2016a"
+LatexCommand cite
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -7406,8 +7420,8 @@ reference "tab:ConvergenceN=3"
  As expected, both sets of tests attain roughly second order convergence.
  For comparison, the corresponding results for this test from 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2016a"
+LatexCommand cite
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -9123,7 +9137,7 @@ Elastoplastic Piston
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2018"
+key "peshkov_theoretical_2018"
 literal "true"
 
 \end_inset
@@ -9165,7 +9179,7 @@ reference "fig:piston"
  to be used, producing more accurate results than those found in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2018"
+key "peshkov_theoretical_2018"
 literal "true"
 
 \end_inset
@@ -9256,7 +9270,7 @@ Cylindrical Shock
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2011"
+key "barton_eulerian_2011"
 literal "true"
 
 \end_inset
@@ -9345,7 +9359,7 @@ Convergence
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Miller2001"
+key "miller_high-order_2001"
 literal "true"
 
 \end_inset
@@ -9376,8 +9390,8 @@ In summary, a new numerical method based on an operator splitting, and including
 \begin_layout Standard
 In a similar manner to the operator splitting method presented in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Leveque1990"
+LatexCommand cite
+key "leveque_study_1990"
 literal "true"
 
 \end_inset
@@ -9408,8 +9422,8 @@ reference "subsec:Convergence"
  This is due to a lack of spatial resolution in evaluating the source terms,
  as detailed in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Leveque1990"
+LatexCommand cite
+key "leveque_study_1990"
 literal "true"
 
 \end_inset
@@ -9419,8 +9433,8 @@ literal "true"
  mesh refinement, as noted in the cited paper.
  It is noted in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2008a"
+LatexCommand cite
+key "dumbser_finite_2008"
 literal "true"
 
 \end_inset

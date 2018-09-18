@@ -167,7 +167,7 @@ Given the local velocity field
  are advected according to the level set equation 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Osher2002"
+key "osher_level_2003"
 literal "true"
 
 \end_inset
@@ -249,7 +249,7 @@ The Original Ghost Fluid Method of Fedkiw et al.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Fedkiw1999"
+key "fedkiw_ghost_1998"
 literal "true"
 
 \end_inset
@@ -258,7 +258,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Glimm1981"
+key "glimm_numerical_1981"
 literal "true"
 
 \end_inset
@@ -659,7 +659,7 @@ This problem is denoted by
  equations, such as the Euler equations 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Toro2009"
+key "toro_reimann_2009"
 literal "true"
 
 \end_inset
@@ -667,7 +667,7 @@ literal "true"
 , the equations of non-linear elasticity 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2009"
+key "barton_exact_2009"
 literal "true"
 
 \end_inset
@@ -675,7 +675,7 @@ literal "true"
 , or the shallow water equations 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Alcrudo2001"
+key "alcrudo_exact_2001"
 literal "true"
 
 \end_inset
@@ -684,7 +684,7 @@ literal "true"
  There also exist approximate solvers for general conservative 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Miller2004,Liu1975"
+key "miller_iterative_2004,liu_riemann_1975"
 literal "true"
 
 \end_inset
@@ -692,7 +692,7 @@ literal "true"
  or non-conservative 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016"
+key "dumbser_new_2016"
 literal "true"
 
 \end_inset
@@ -736,7 +736,7 @@ Liu et al.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Liu2003"
+key "liu_ghost_2003"
 literal "true"
 
 \end_inset
@@ -751,7 +751,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Sambasivan2009a,Sambasivan2009b"
+key "sambasivan_ghost_2009,sambasivan_ghost_2009-1"
 literal "true"
 
 \end_inset
@@ -873,7 +873,7 @@ Barton et al.
  have presented an RGFM for the equations of non-linear elasticity 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2011a,Barton2010"
+key "barton_conservative_2011,barton_eulerian_2010"
 literal "true"
 
 \end_inset
@@ -2390,7 +2390,7 @@ The interface between two different gases is now modeled.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Wang2004"
+key "wang_thermodynamically_2004"
 literal "true"
 
 \end_inset
@@ -2496,7 +2496,7 @@ reference "fig:Helium-Bubble"
  There is good correspondence with the results in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Wang2004"
+key "wang_thermodynamically_2004"
 literal "true"
 
 \end_inset
@@ -3405,7 +3405,7 @@ Copper-PBX Impact
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2011a"
+key "barton_conservative_2011"
 literal "true"
 
 \end_inset
@@ -3487,7 +3487,7 @@ Aluminium in Vacuum
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2010"
+key "barton_eulerian_2010"
 literal "true"
 
 \end_inset
@@ -3657,7 +3657,7 @@ This test is based on the Heat Conduction in a Gas Test of Dumbser et al.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016a"
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -4012,7 +4012,7 @@ reference "fig:Thermal Equilibration"
 , using the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016b"
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset

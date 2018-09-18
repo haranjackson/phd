@@ -128,21 +128,30 @@ name "sec:Mathematical-Models"
 The GPR model, first introduced in Peshkov and Romenski 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2016"
+key "peshkov_hyperbolic_2016"
 literal "true"
 
 \end_inset
 
- and expanded upon in Dumbser et al.
+ - and expanded upon by Dumbser et al.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016a"
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
 
-, takes the following form:
+ and Boscheri et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+ - takes the following form:
 \end_layout
 
 \begin_layout Standard
@@ -839,8 +848,8 @@ The justification of these choices is that classical Navier–Stokes–Fourier
 
  (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2016a"
+LatexCommand cite
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -849,7 +858,7 @@ literal "true"
  The power law for elastoplastic solids is based on the work 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2011"
+key "barton_eulerian_2011"
 literal "true"
 
 \end_inset
@@ -911,7 +920,7 @@ end{subequations}
 The following constraint also holds (see 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2016"
+key "peshkov_hyperbolic_2016"
 literal "true"
 
 \end_inset
@@ -956,7 +965,7 @@ particle settled life time
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "jacovfrenkel1947"
+key "frenkel_kinetic_1947"
 literal "true"
 
 \end_inset
@@ -992,7 +1001,7 @@ The evolution equation for
  model of hyperbolic heat transfer, originally proposed in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Malyshev1984,Romenski1988"
+key "malyshev_hyperbolic_1986,romenski_hyperbolic_1989"
 literal "true"
 
 \end_inset
@@ -1000,7 +1009,7 @@ literal "true"
 , and implemented in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Romenski2007,Romenski2010"
+key "romenski_conservative_2007,romenski_conservative_2010"
 literal "true"
 
 \end_inset
@@ -1102,7 +1111,7 @@ First introduced by Liu et al.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Liu1994"
+key "liu_weighted_1994"
 literal "true"
 
 \end_inset
@@ -1110,7 +1119,7 @@ literal "true"
  and developed by Jiang and Shu 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Jiang1996"
+key "jiang_efficient_1996"
 literal "true"
 
 \end_inset
@@ -1121,7 +1130,7 @@ literal "true"
  In this study, the method of 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2013"
+key "dumbser_ader-weno_2013"
 literal "true"
 
 \end_inset
@@ -1454,7 +1463,7 @@ In this study,
  is a side stencil, as in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2014"
+key "dumbser_high_2014"
 literal "true"
 
 \end_inset
@@ -1591,7 +1600,7 @@ Take the grid for the previous section, and time steps
  Combining the techniques presented in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2009,Dumbser2014"
+key "dumbser_ader_2009,dumbser_high_2014"
 literal "true"
 
 \end_inset
@@ -2229,7 +2238,7 @@ The Finite Volume Scheme
 Following the formulation of 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2014"
+key "dumbser_high_2014"
 literal "true"
 
 \end_inset
@@ -2398,7 +2407,7 @@ Using these definitions, the interface terms arising in the FV formula have
  is chosen to either correspond to a Rusanov/Lax-Friedrichs flux 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Toro2009"
+key "toro_reimann_2009"
 literal "true"
 
 \end_inset
@@ -2421,7 +2430,7 @@ literal "true"
 or a Roe flux 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2011b"
+key "dumbser_simple_2011"
 literal "true"
 
 \end_inset
@@ -2441,7 +2450,7 @@ literal "true"
 or a simplified Osher–Solomon flux 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2011a"
+key "dumbser_universal_2011"
 literal "true"
 
 \end_inset
