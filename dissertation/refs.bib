@@ -233,21 +233,11 @@
 	doi = {10.1016/j.jnnfm.2012.03.004},
 	abstract = {This work presents analytical solutions for both Newtonian and inelastic non-Newtonian fluids with slip boundary conditions in Couette and Poiseuille flows using the Navier linear and non-linear slip laws and the empirical asymptotic and Hatzikiriakos slip laws. The non-Newtonian constitutive equation used is the generalized Newtonian fluid model with the viscosity described by the power law, Bingham, Herschel-Bulkley, Sisko and Robertson-Stiff models. While for the linear slip model it was always possible to obtain closed form analytical solutions, for the remaining non-linear models it is always necessary to obtain the numerical solution of a transcendent equation. Solutions are included with different slip laws or different slip coefficients at different walls. © 2012 Elsevier B.V.},
 	journal = {Journal of Non-Newtonian Fluid Mechanics},
-	author = {Ferrás, L. L. and Nóbrega, J. M. and Pinho, F. T.},
+	author = {Ferras, L. L. and Nobrega, J. M. and Pinho, F. T.},
 	year = {2012},
 	keywords = {Analytical solutions, Couette and Poiseulle flows, Generalized Newtonian fluid, Slip boundary condition},
 	pages = {76--88},
 	file = {Ferrás, Nóbrega, Pinho - 2012 - Analytical solutions for Newtonian and inelastic non-Newtonian flows with wall slip:/Users/hari/Zotero/storage/XB76VW4L/Ferrás, Nóbrega, Pinho - 2012 - Analytical solutions for Newtonian and inelastic non-Newtonian flows with wall slip.pdf:application/pdf}
-}
-
-@article{sverdrup_time-dependent_2018,
-	title = {Time-dependent viscoplastic fluid flow simulations in two and three dimensions},
-	url = {http://arxiv.org/abs/1803.00417},
-	abstract = {We present the extension of an efficient and highly parallelisable framework for incompressible fluid flow simulations to viscoplastic fluids. The system is governed by the incompressible Navier-Stokes equations and a generalised Newtonian constitutive equation. In order to simulate a wide range of viscoplastic fluids, we employ the Herschel-Bulkley model for yield-stress fluids with nonlinear stress-strain dependency above the yield limit. We utilise Papanastasiou regularisation in our algorithm to deal with the singularity in apparent viscosity. The resulting system of partial differential equations is solved using the IAMR code (Incompressible Adaptive Mesh Refinement), which uses second-order Godunov methodology for the advective terms and semi-implicit diffusion in the context of an approximate projection method. By augmenting the IAMR code with the ability to simulate regularised Herschel-Bulkley fluids, we obtain efficient numerical software for viscoplastic flow which can be used to investigate systems previously considered too expensive computationally. We validate results from simulations using this new capability against previously published data for Bingham plastics and power-law fluids in the two-dimensional lid-driven cavity. In doing so, we expand the range of Bingham and Reynolds numbers which have been considered in the benchmark tests. Moreover, extensions to time-dependent flow of Herschel- Bulkley fluids and three spatial dimensions offer new insights into the flow of viscoplastic fluids in this test case.},
-	author = {Sverdrup, Knut and Nikiforakis, Nikolaos and Almgren, Ann},
-	year = {2018},
-	keywords = {herschel-bulkley fluids, high performance, lid-driven cavity, papanastasiou regularisation, viscoplasticity},
-	file = {Sverdrup, Nikiforakis, Almgren - 2018 - Time-dependent viscoplastic fluid flow simulations in two and three dimensions:/Users/hari/Zotero/storage/NG2QDTXF/Sverdrup, Nikiforakis, Almgren - 2018 - Time-dependent viscoplastic fluid flow simulations in two and three dimensions.pdf:application/pdf}
 }
 
 @article{benlahsen_generalized_2008,
@@ -2392,4 +2382,55 @@
 	author = {Oliphant, Travis E.},
 	year = {2007},
 	pages = {10--20}
+}
+
+@article{bell_p-version_1994,
+	title = {p-version least squares finite element formulation for two-dimensional, incompressible, non-{Newtonian} isothermal and non-isothermal fluid flow},
+	volume = {18},
+	copyright = {Copyright © 1994 John Wiley \& Sons, Ltd},
+	issn = {1097-0363},
+	url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/fld.1650180202},
+	doi = {10.1002/fld.1650180202},
+	abstract = {This paper presents a p- version least squares finite element formulation (LSFEF) for two-dimensional, incompressible, non-Newtonian fluid flow under isothermal and non-isothermal conditions. The dimensionless forms of the diffential equations describing the fluid motion and heat transfer are cast into a set of first-order differential equations using non-Newtonian stresses and heat fluxes as auxiliary variables. The velocities, pressure and temperature as well as the stresses and heat fluxes are interpolated using equal-order, C0-continuous, p-version hierarchical approximation functions. The application of least squares minimization to the set of coupled first-order non-linear partial differential equations results in finding a solution vector δ which makes the partial derivatives of the error functional with respect to δ a null vector. This is accomplished by using Newton's method with a line search. The paper presents the implementation of a power-law model for the non-Newtonian Viscosity. For the non-isothermal case the fluid properties are considered to be a function of temperature. Three numerical examples (fully developed flow between parallel plates, symmetric sudden expansion and lid-driven cavity) are presented for isothermal power-law fluid flow. The Couette shear flow problem and the 4:1 symmetric sudden expansion are used to present numerical results for non-isothermal power-law fluid flow. The numerical examples demonstrate the convergence characteristics and accuracy of the formulation.},
+	language = {en},
+	number = {2},
+	urldate = {2018-09-18},
+	journal = {International Journal for Numerical Methods in Fluids},
+	author = {Bell, Brent C. and Surana, Karan S.},
+	month = jan,
+	year = {1994},
+	keywords = {Degrees of freedom, Error functional, Finite element, Hierarchial, Least squares, Line search, Newton's method, Non-isothermal, p-convergence, p-version, Power-law-fluid},
+	pages = {127--162},
+	file = {Bell and Surana - 1994 - p-version least squares finite element formulation.pdf:/Users/hari/Zotero/storage/A7PK458I/Bell and Surana - 1994 - p-version least squares finite element formulation.pdf:application/pdf}
+}
+
+@article{neofytou_3rd_2005,
+	title = {A 3rd order upwind finite volume method for generalised {Newtonian} fluid flows},
+	volume = {36},
+	url = {https://dl.acm.org/citation.cfm?id=1276040.1276043},
+	doi = {10.1016/j.advengsoft.2005.03.011},
+	urldate = {2018-09-18},
+	journal = {Advances in Engineering Software},
+	author = {Neofytou, Panagiotis},
+	month = may,
+	year = {2005},
+	pages = {664--680},
+	file = {A 3rd order upwind finite volume method for genera.pdf:/Users/hari/Zotero/storage/3PERIK6N/A 3rd order upwind finite volume method for genera.pdf:application/pdf}
+}
+
+@article{sverdrup_highly_2018,
+	title = {Highly parallelisable simulations of time-dependent viscoplastic fluid flow with structured adaptive mesh refinement},
+	volume = {30},
+	issn = {1070-6631},
+	url = {https://aip.scitation.org/doi/10.1063/1.5049202},
+	doi = {10.1063/1.5049202},
+	abstract = {We present the extension of an efficient and highly parallelisable framework for incompressible fluid flow simulations to viscoplastic fluids. The system is governed by incompressible conservation of mass, the Cauchy momentum equation, and a generalised Newtonian constitutive law. In order to simulate a wide range of viscoplastic fluids, we employ the Herschel-Bulkley model for yield-stress fluids with nonlinear stress-strain dependency above the yield limit. We utilise Papanastasiou regularisation in our algorithm to deal with the singularity in apparent viscosity. The resulting system of partial differential equations is solved using the IAMR (Incompressible Adaptive Mesh Refinement) code, which uses second-order Godunov methodology for the advective terms and semi-implicit diffusion in the context of an approximate projection method to solve adaptively refined meshes. By augmenting the IAMR code with the ability to simulate regularised Herschel-Bulkley fluids, we obtain efficient numerical software for time-dependent viscoplastic flow in three dimensions, which can be used to investigate systems not considered previously due to computational expense. We validate results from simulations using this new capability against previously published data for Bingham plastics and power-law fluids in the two-dimensional lid-driven cavity. In doing so, we expand the range of Bingham and Reynolds numbers which have been considered in the benchmark tests. Moreover, extensions to time-dependent flow of Herschel-Bulkley fluids and three spatial dimensions offer new insights into the flow of viscoplastic fluids in this test case, and we provide missing benchmark results for these extensions.},
+	number = {9},
+	urldate = {2018-09-18},
+	journal = {Physics of Fluids},
+	author = {Sverdrup, Knut and Nikiforakis, Nikolaos and Almgren, Ann},
+	month = sep,
+	year = {2018},
+	pages = {093102},
+	file = {Highly parallelisable simulations of time-dependent viscoplastic fluid flow with structured adaptive mesh refinement:/Users/hari/Zotero/storage/X4S5TXBA/Highly parallelisable simulations of time-dependent viscoplastic fluid flow with structured adaptive mesh refinement.pdf:application/pdf}
 }

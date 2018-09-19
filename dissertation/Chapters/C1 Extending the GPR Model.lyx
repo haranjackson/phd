@@ -183,7 +183,7 @@ reference "eq:EnergyDefinition"
 \end_inset
 
  are put into the same framework by expressing them in the following Mie-Gruneis
-en form
+en form 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "menikoff_complete_2016"
@@ -259,9 +259,10 @@ reference "tab:MG EOSs"
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-E\left(\rho,S,A\right)=\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)+\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}
-\end{equation}
+\begin{align}
+E\left(\rho,S,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)\\
+ & +\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\nonumber 
+\end{align}
 
 \end_inset
 
@@ -453,7 +454,7 @@ Ideal Gas
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma_{0}\left(=\gamma-1\right)$
+\begin_inset Formula $\gamma-1$
 \end_inset
 
 
@@ -512,7 +513,7 @@ Stiffened Gas
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma_{0}\left(=\gamma-1\right)$
+\begin_inset Formula $\gamma-1$
 \end_inset
 
 
@@ -748,7 +749,7 @@ Godunov-Romenski
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma_{0}\left(=\gamma\right)$
+\begin_inset Formula $\gamma$
 \end_inset
 
 
@@ -780,7 +781,7 @@ Godunov-Romenski
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-\begin_inset Formula $e_{ref},p_{ref},\Gamma$
+\begin_inset Formula $e_{ref},p_{ref},\Gamma,T_{ref}$
 \end_inset
 
  for different kinds of Mie-Gruneisen equations of state

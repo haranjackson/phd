@@ -2502,7 +2502,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 c_{1} & =\frac{E-E_{2}^{\left(A\right)}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)}{c_{v}}\\
-c_{2} & =\frac{\alpha^{2}}{2c_{v}}
+c_{2} & =\frac{c_{t}^{2}}{2c_{v}}
 \end{align}
 
 \end_inset
@@ -2592,7 +2592,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 a & =\frac{2\rho_{0}}{\tau_{2}T_{0}\rho c_{v}}\left(E-E_{2}^{\left(A\right)}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)\right)\\
-b & =\frac{\rho_{0}\alpha^{2}}{\tau_{2}T_{0}\rho c_{v}}
+b & =\frac{\rho_{0}c_{t}^{2}}{\tau_{2}T_{0}\rho c_{v}}
 \end{align}
 
 \end_inset
@@ -4766,11 +4766,7 @@ Thus, the value of
 \begin_inset Formula $\Delta t$
 \end_inset
 
- is found by substituting 
-\begin_inset Formula $\tau=\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)$
-\end_inset
-
- into 
+ is found by substituting the following into 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:m(τ)"
@@ -4784,7 +4780,22 @@ reference "eq:u(τ)"
 
 \end_inset
 
-, and in turn substituting the values obtained into 
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau=\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results are in turn substituted into 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:xi"
@@ -5899,7 +5910,7 @@ These functions are used as initial conditions, along with
 \end_inset
 
 , 
-\begin_inset Formula $\alpha=5$
+\begin_inset Formula $c_{t}=5$
 \end_inset
 
 , 
@@ -6436,7 +6447,7 @@ The material parameters are taken to be:
 \end_inset
 
 , 
-\begin_inset Formula $\alpha=2$
+\begin_inset Formula $c_{t}=2$
 \end_inset
 
 , 
@@ -7358,7 +7369,7 @@ The 2D domain is taken to be
 \end_inset
 
 , 
-\begin_inset Formula $\alpha=1$
+\begin_inset Formula $c_{t}=1$
 \end_inset
 
 , 
@@ -8971,6 +8982,147 @@ Poiseuille Flow
 \end_layout
 
 \begin_layout Standard
+This test consists of a fluid traveling down a channel of constant width
+ 
+\begin_inset Formula $L$
+\end_inset
+
+, with a constant pressure gradient 
+\begin_inset Formula $\Delta p$
+\end_inset
+
+ along the length of the channel.
+ No-slip boundary conditions are imposed on the channel walls.
+ For a non-Newtonian fluid obeying a power law, the steady-state velocity
+ profile across the channel is given by 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ferras_analytical_2012"
+literal "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+v & =\frac{\rho}{k}\left(\frac{\Delta p}{K}\right)^{1/n}\left(\left(\frac{L}{2}\right)^{k}-\left(x-\frac{L}{2}\right)^{k}\right)\\
+k & =\frac{n+1}{n}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $x\in\left[0,L\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In this case, 
+\begin_inset Formula $L=0.25$
+\end_inset
+
+, 
+\begin_inset Formula $\Delta p=0.48$
+\end_inset
+
+, 
+\begin_inset Formula $K=10^{-2}$
+\end_inset
+
+.
+ The fluid is initially at rest, with 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $A=I$
+\end_inset
+
+, 
+\begin_inset Formula $p=100/\gamma$
+\end_inset
+
+.
+ It follows an ideal gas EOS with 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+.
+ The pressure gradient is imposed by means of a body force, implemented
+ as a constant source term to the momentum equation.
+ The final time was taken to be 
+\begin_inset Formula $20$
+\end_inset
+
+, with 400 cells taken across the width of the channel.
+\end_layout
+
+\begin_layout Standard
+Results for various values of 
+\begin_inset Formula $n$
+\end_inset
+
+ are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:poiseuille"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The exact solutions are shown as dotted lines, with the numerical solutions
+ in solid colors.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement p
 wide false
@@ -9024,6 +9176,120 @@ Velocity profiles for different dilatants (left) and pseudoplastics (right),
 
 \begin_layout Subsubsection
 Lid-Driven Cavity
+\end_layout
+
+\begin_layout Standard
+As detailed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sverdrup_highly_2018"
+literal "false"
+
+\end_inset
+
+, this test consists of a square grid, with one side at a constant velocity
+ of 
+\begin_inset Formula $1$
+\end_inset
+
+, and the other three stationary, with no-slip boundary conditions imposed.
+ Here, the grid is chosen to have size 
+\begin_inset Formula $100\times100$
+\end_inset
+
+.
+ The fluid obeys an ideal gas EOS with 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, and a viscosity power law with 
+\begin_inset Formula $K=10^{-2}$
+\end_inset
+
+, for various 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ We have 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+.
+ It is initially at rest, with 
+\begin_inset Formula $\rho=1$
+\end_inset
+
+, 
+\begin_inset Formula $p=1$
+\end_inset
+
+, 
+\begin_inset Formula $A=I$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:lid-driven-cavity-n=1.5"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:lid-driven-cavity-n=0.5"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ show the results of running the system to 
+\begin_inset Formula $t=10$
+\end_inset
+
+, whereupon steady state is achieved, for 
+\begin_inset Formula $n=1.5$
+\end_inset
+
+ and 
+\begin_inset Formula $n=0.5$
+\end_inset
+
+, respectively.
+ The results are compared with those of Bell 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bell_p-version_1994"
+literal "false"
+
+\end_inset
+
+ and Neofytou 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "neofytou_3rd_2005"
+literal "false"
+
+\end_inset
+
+.
+ As can be seen, there is very good agreement for the case 
+\begin_inset Formula $n=1.5$
+\end_inset
+
+, with the split solver performing less well for the case 
+\begin_inset Formula $n=0.5$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -9284,6 +9550,75 @@ literal "true"
 \end_inset
 
 .
+ It consists of a slab of copper, occupying the domain 
+\begin_inset Formula $\left[0,20\right]^{2}$
+\end_inset
+
+, initially at rest.
+ The region 
+\begin_inset Formula $r\leq2$
+\end_inset
+
+ is at ambient conditions, with zero pressure.
+ The region 
+\begin_inset Formula $r>2$
+\end_inset
+
+ is at raised pressure 
+\begin_inset Formula $10^{10}$
+\end_inset
+
+ and temperature 
+\begin_inset Formula $600$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The simulation is run to 
+\begin_inset Formula $t=10^{-5}$
+\end_inset
+
+ on a grid of shape 
+\begin_inset Formula $500\times500$
+\end_inset
+
+.
+ A third order WENO scheme is used, with a CFL number of 0.8.
+ The resulting radial density and velocity profiles are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:cylindrical-shock"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The results are compared with those of the 1D radially-symmetric scheme
+ found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "true"
+
+\end_inset
+
+, which are in turn compared with the 2D results from the same publication.
+ As can be seen, the 2D results computed using the new split solver for
+ the GPR model more closely match the 1D radially-symmetric results than
+ the 2D results from the aforementioned publication, with the spikes in
+ both variables around 
+\begin_inset Formula $r=2$
+\end_inset
+
+ and the wave around 
+\begin_inset Formula $r=6$
+\end_inset
+
+ being more accurately resolved.
 \end_layout
 
 \begin_layout Standard
@@ -9345,8 +9680,7 @@ name "fig:cylindrical-shock"
 
 \end_inset
 
-Density, velocity, pressure, and total stress in the elastoplastic piston
- test
+Density and velocity for the Cylindrical Shock Test
 \end_layout
 
 \end_inset

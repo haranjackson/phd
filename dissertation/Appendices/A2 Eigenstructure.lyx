@@ -255,7 +255,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \begin{equation}
-\frac{\alpha^{2}T}{\rho E_{p}}=\frac{\alpha^{2}T}{\rho c_{v}T_{p}}=\frac{\rho c_{h}^{2}}{T_{p}}
+\frac{c_{t}^{2}T}{\rho E_{p}}=\frac{c_{t}^{2}T}{\rho c_{v}T_{p}}=\frac{\rho c_{h}^{2}}{T_{p}}
 \end{equation}
 
 \end_inset
@@ -317,7 +317,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \frac{p-\rho^{2}E_{\rho}}{\rho E_{p}} & =\rho c_{0}^{2}\\
-\frac{\alpha^{2}T}{\rho E_{p}} & =\frac{\rho c_{h}^{2}}{T_{p}}\\
+\frac{c_{t}^{2}T}{\rho E_{p}} & =\frac{\rho c_{h}^{2}}{T_{p}}\\
 \left.\frac{\partial E}{\partial A}\right|_{\rho,p} & =\left(1-2\rho^{2}E_{p}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\psi\\
 -\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,p} & =\sigma+\rho^{2}E_{p}\left(\frac{\sigma}{\rho}-\frac{\partial\sigma}{\partial\rho}\right)
 \end{align}
@@ -708,7 +708,7 @@ where
 
  in terms of the eigenvalues of its submatrices.
  Note, however, that if 
-\begin_inset Formula $\alpha=0$
+\begin_inset Formula $c_{t}=0$
 \end_inset
 
  then one of the eigenvalues is 

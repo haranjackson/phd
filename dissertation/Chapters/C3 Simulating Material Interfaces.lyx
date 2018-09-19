@@ -1867,7 +1867,7 @@ where
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\tilde{q}=\frac{\alpha^{2}}{\rho_{0}}\sqrt{\frac{T_{0}^{3}}{c_{V}}}
+\tilde{q}=\frac{c_{t}^{2}}{\rho_{0}}\sqrt{\frac{T_{0}^{3}}{c_{V}}}
 \end{equation}
 
 \end_inset
@@ -2464,7 +2464,7 @@ reference "tab:HeliumBubble"
 \end_inset
 
 , and 
-\begin_inset Formula $\alpha=500$
+\begin_inset Formula $c_{t}=500$
 \end_inset
 
 .
@@ -3980,7 +3980,7 @@ The material parameters are taken to be:
 \end_inset
 
 , 
-\begin_inset Formula $\alpha=2$
+\begin_inset Formula $c_{t}$
 \end_inset
 
 , 

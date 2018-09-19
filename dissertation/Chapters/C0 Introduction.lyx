@@ -589,7 +589,7 @@ reference "sec:Equations-of-State"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha\left(\rho,s\right)^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{c_{t}\left(\rho,s\right)^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
 \end{equation}
 
 \end_inset
@@ -631,8 +631,8 @@ literal "true"
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
 prefix "g"
-symbol "$\\alpha$"
-description "Constant related to characteristic velocity of heat waves"
+symbol "$c_{t}$"
+description "Coefficient in the thermal impulse contribution to the energy (elsewhere denoted by $\\alpha$)"
 literal "true"
 
 \end_inset
@@ -663,7 +663,7 @@ reference "sec:Equations-of-State"
 
 .
  
-\begin_inset Formula $\alpha$
+\begin_inset Formula $c_{t}$
 \end_inset
 
  is related to the characteristic velocity of propagation of heat waves:
@@ -672,7 +672,7 @@ reference "sec:Equations-of-State"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-c_{h}=\frac{\alpha}{\rho}\sqrt{\frac{T}{c_{v}}}
+c_{h}=\frac{c_{t}}{\rho}\sqrt{\frac{T}{c_{v}}}
 \end{equation}
 
 \end_inset
@@ -695,10 +695,24 @@ literal "true"
 
 \begin_layout Standard
 In previous studies, 
-\begin_inset Formula $\alpha$
+\begin_inset Formula $c_{t}$
 \end_inset
 
  has been taken to be constant, as it will in this study.
+ Note that Dumbser 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ denotes this variable by 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, which is avoided here due to a clash with a parameter of one of the equations
+ of state used.
 \end_layout
 
 \begin_layout Standard
@@ -769,7 +783,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
-\theta_{2} & =\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T}
+\theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}
 \end{align}
 
 \end_inset
@@ -816,7 +830,7 @@ begin{subequations}
 \frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
 \tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
 \end{cases}\label{eq:tau1}\\
-\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
+\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
 \end{align}
 
 \end_inset
@@ -890,7 +904,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
-\boldsymbol{q} & =\alpha^{2}T\boldsymbol{J}\\
+\boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}\\
 -\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
 -\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
 \end{align}
@@ -917,7 +931,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-The following constraint also holds (see 
+The following constraint also holds 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_hyperbolic_2016"
@@ -925,7 +939,7 @@ literal "true"
 
 \end_inset
 
-):
+:
 \end_layout
 
 \begin_layout Standard
