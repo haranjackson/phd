@@ -14,10 +14,6 @@
 #include "riemann.h"
 #include "rotations.h"
 
-bool STICK = true;
-bool RELAXATION = false;
-double STAR_TOL = 1e-6;
-
 double q_dims(Par &MP) {
   // Returns characteristic dimensions of heat flux
   double α2 = MP.cα2;
@@ -176,7 +172,7 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
 
     Vec x_(n1);
 
-    if (STICK)
+    if (RIEMANN_STICK)
       stick_bcs(x_, RL, RR, QL, QR, xL, xR);
     else
       slip_bcs(x_, RL, RR, QL, QR, xL, xR);
@@ -210,7 +206,7 @@ VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
 
   while (!check_star_convergence(QL_, QR_, MPL, MPR)) {
 
-    if (RELAXATION) {
+    if (RIEMANN_RELAXATION) {
       ode_stepper_analytic(QL_, dt / 2, MPL);
       if (MPR.EOS > -1)
         ode_stepper_analytic(QR_, dt / 2, MPR);

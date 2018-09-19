@@ -16,6 +16,11 @@ const bool DESTRESS = true;
 const int N = 2;
 const double CONTORTED_TOL = 0.03;
 
+// Riemann Solver Options //
+const bool RIEMANN_STICK = false;
+const bool RIEMANN_RELAXATION = true;
+const double STAR_TOL = 1e-8;
+
 // WENO Constants //
 const double LAMS = 1.;   // WENO side stencil weighting
 const double LAMC = 1e3;  // WENO central stencil weighting
