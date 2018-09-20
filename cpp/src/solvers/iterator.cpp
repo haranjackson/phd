@@ -76,11 +76,11 @@ double timestep(std::vector<Vec> &grids, std::vector<bVec> &masks, aVecr dX,
 
 std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
                           iVecr boundaryTypes, bool SPLIT, bool HALF_STEP,
-                          bool STIFF, int FLUX, std::vector<Par> &MPs, int nOut,
-                          bool steadyState) {
+                          bool STIFF, int FLUX, std::vector<Par> &MPs,
+                          double contorted_tol) {
 
   Vec uprev(u.size());
-  std::vector<Vec> ret(nOut);
+  std::vector<Vec> ret(100);
   int nmat = MPs.size();
   Vec ub(extended_dimensions(nX, N) * V);
   bVec maskb(extended_dimensions(nX, 1));
@@ -134,10 +134,10 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     renorm_distortion(u, MPs);
 
-    if (contorted(u))
+    if (contorted(u, contorted_tol))
       reset_distortion(u, MPs);
 
-    if (t >= double(pushCount + 1) / double(nOut) * tf) {
+    if (t >= double(pushCount + 1) / 100. * tf) {
       ret[pushCount] = u;
       pushCount += 1;
     }
@@ -148,11 +148,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 #else
     std::cout << "\n" << int(t / tf * 100.);
 #endif
-
-    if (steadyState && (u - uprev).lpNorm<Eigen::Infinity>() < STEADY_TOL)
-      break;
   }
 
-  ret[nOut - 1] = u;
+  ret[99] = u;
   return ret;
 }

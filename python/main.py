@@ -10,29 +10,33 @@ from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
 
 from test.fluid.newtonian1 import heat_conduction, stokes, viscous_shock
-from test.fluid.non_newtonian import poiseuille, poiseuille_bc, lid_driven_cavity, lid_driven_cavity_bc
-from test.fluid.reactive import steady_znd, shock_detonation, heating_deflagration
+from test.fluid.non_newtonian import poiseuille, poiseuille_bc, \
+    lid_driven_cavity
+from test.fluid.reactive import steady_znd, shock_detonation, \
+    heating_deflagration
 from test.impact.inert import aluminium_plates, rod_penetration
-from test.multi.material import water_air, helium_bubble, pbx_copper, aluminium_vacuum, heat_conduction_multi
+from test.multi.material import water_air, helium_bubble, pbx_copper, \
+    aluminium_vacuum, heat_conduction_multi
 from test.solid.elastic import barton, pure_elastic
-from test.solid.plastic import piston, piston_bc
+from test.solid.plastic import piston, piston_bc, cylindrical_shock
 
 from gpr.misc.plot import *
 
 from solver.gfm import MultiSolver
 
 
-u0, MPs, tf, dX = barton(1)
-
-bcs = 'transitive'
+ics = lid_driven_cavity
+bcs = 'lid_driven'
+#bcs = 'transitive'
 #bcs = 'stick'
-
+#bcs = 'symmetric'
 
 cpp_level = 2
 N = 3
 cfl = 0.5
-SPLIT = False
+SPLIT = True
 SOLVER = 'rusanov'
+contorted_tol = 1
 
 
 if cpp_level > 0:
@@ -54,7 +58,6 @@ uList = []
 gridList = []
 maskList = []
 def callback(u, grids, masks):
-    # TODO: add distortion resetting
     uList.append(u.copy())
     gridList.append(deepcopy(grids))
     maskList.append(deepcopy(masks))
@@ -65,7 +68,7 @@ solver = MultiSolver(nvar, ndim, F=F_cons, B=B_cons, S=S_cons,
                      ncore=1, split=SPLIT, ode_solver=None,
                      riemann_solver=SOLVER)
 
-solver.solve(u0, tf, dX, cfl=cfl, bcs=bcs, verbose=verbose, callback=callback,
-             cpp_level=cpp_level)
+solver.solve(u0, tf, dX, contorted_tol, cfl=cfl, bcs=bcs, verbose=verbose,
+             callback=callback, cpp_level=cpp_level)
 
 save('results/' + ics.__name__ + str(int(time())), uList[-1])

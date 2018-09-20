@@ -37,7 +37,8 @@ def cpp_ader_stepper(obj, mat, matBC, dt, dX, maskBC):
     mat = matr.reshape(mat.shape)
 
 
-def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs):
+def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, callback, bcs,
+                   contorted_tol):
 
     ndim = initial_grid.ndim - 1
     if bcs == 'transitive':
@@ -60,13 +61,14 @@ def solve_full_cpp(obj, initial_grid, final_time, dX, cfl, nOut, callback, bcs):
 
     uOut = GPRpy.solvers.iterator(u, final_time, nX, array(dX), cfl, bcs,
                                   obj.split, obj.half_step, obj.stiff_dg,
-                                  obj.flux_type, obj.pars, nOut, False)
+                                  obj.flux_type, obj.pars, contorted_tol)
 
     if callback is not None:
         shape = initial_grid.shape
-        for out, count in zip(uOut, range(nOut)):
+        for out, count in zip(uOut, range(100)):
             try:
-                callback(out.reshape(shape), (count+1) / nOut * final_time, count)
+                callback(out.reshape(shape), (count+1) / 100 * final_time,
+                         count)
             except:
                 pass
 

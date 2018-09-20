@@ -78,7 +78,19 @@ def poiseuille_bc(u, N, *args):
     return wall_BC(u, N, 1, [1], MP)
 
 
-def lid_driven_cavity(n=0.5):
+def lid_driven_cavity():
+    """ n = 0.5 / 1.5
+
+        N = 3
+        cfl = 0.5
+        SPLIT = True
+        SOLVER = 'rusanov'
+        contorted_tol = 0.03 / 1
+
+        NO_CORNERS = true
+        DESTRESS = true / false
+    """
+    n = 1.5
 
     tf = 10
     Lx = 1

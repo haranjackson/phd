@@ -10,11 +10,10 @@ const int LSET = 0;
 
 // Boundary Options //
 const bool NO_CORNERS = true;
-const bool DESTRESS = true;
+const bool DESTRESS = false;
 
 // Solver Options //
-const int N = 2;
-const double CONTORTED_TOL = 0.03;
+const int N = 3;
 
 // Riemann Solver Options //
 const bool RIEMANN_STICK = false;
@@ -23,7 +22,7 @@ const double STAR_TOL = 1e-8;
 
 // WENO Constants //
 const double LAMS = 1.;   // WENO side stencil weighting
-const double LAMC = 1e3;  // WENO central stencil weighting
+const double LAMC = 1e5;  // WENO central stencil weighting
 const double EPS = 1e-14; // WENO epsilon parameter
 
 // DG Constants //

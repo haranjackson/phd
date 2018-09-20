@@ -32,7 +32,7 @@ void reset_distortion(Vecr u, std::vector<Par> &MPs) {
   }
 }
 
-bool contorted(Vecr u) {
+bool contorted(Vecr u, double contorted_tol) {
   int ncell = u.size() / V;
   for (int i = 0; i < ncell; i++) {
 
@@ -48,7 +48,7 @@ bool contorted(Vecr u) {
     double s2 = s(2) * s(2) / detA2_3;
 
     double m0 = (s0 + s1 + s2) / 3.;
-    if (m0 - 1 > CONTORTED_TOL)
+    if (m0 - 1 > contorted_tol)
       return true;
   }
   return false;
