@@ -19,7 +19,7 @@
 %\usepackage[printwatermark]{xwatermark}
 %\newwatermark[allpages,color=gray!20,angle=45,scale=4,xpos=0,ypos=0]{DRAFT}
 \end_preamble
-\options 5p
+\options 3p
 \use_default_options false
 \begin_modules
 theorems-std
