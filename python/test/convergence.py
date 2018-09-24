@@ -1,4 +1,4 @@
-from numpy import amax, inf, log, prod, sqrt, sum, take
+from numpy import amax, inf, log, mean, prod, sqrt, sum, take
 
 
 def convergence_rate(NDIM, exact1, exact2, results1, results2, L=2, var=0):
@@ -21,4 +21,11 @@ def convergence_rate(NDIM, exact1, exact2, results1, results2, L=2, var=0):
 
     print(ε1)
     print(ε2)
-    return log((ε2) / (ε1)) / log(n1 / n2)  # check
+    return log((ε2) / (ε1)) / log(n1 / n2)
+
+
+def reduce(u, n):
+    """ averages cell values of u to produce array of length n
+    """
+    N = int(len(u) / n)
+    return mean(u.reshape([n, N, -1]), axis=1)
