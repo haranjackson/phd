@@ -3594,7 +3594,7 @@ Thus, we have the linearized ODE:
 \frac{d^{2}\eta}{d\tau^{2}}+15\frac{d\eta}{d\tau}+54\eta=0\\
 \eta\left(0\right)=m_{0}-1\\
 \eta^{'}\left(0\right)=-u_{0}
-\end{array}\right.
+\end{array}\right.\label{eq:Linearized}
 \end{equation}
 
 \end_inset
@@ -4817,6 +4817,92 @@ reference "eq:xk"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Subsection
+Distortion Correction in Fluids
+\end_layout
+
+\begin_layout Standard
+Owing to the linearization step in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Linearized"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the method presented will perform poorly if the mean of the normalized
+ singular values of the distortion tensor, 
+\begin_inset Formula $m$
+\end_inset
+
+, deviates significantly from 
+\begin_inset Formula $1$
+\end_inset
+
+.
+ To avert this, the following resetting procedure was applied globally for
+ fluid flow problems when 
+\begin_inset Formula $m>1.03$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+E & \mapsto E-\frac{c_{S}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}\\
+A & \mapsto\left(\frac{\rho}{\rho_{0}}\right)^{1/3}I
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is justified by the fact that the distortion tensor is not a macroscopicall
+y-measurable quantity.
+ This transformation leaves the density, pressure, and velocity of the fluid
+ unchanged, and was found to improve the stability of the numerical scheme,
+ while at the same time producing correct results, as demonstrated in the
+ following section.
 \end_layout
 
 \begin_layout Section
@@ -9285,7 +9371,7 @@ literal "false"
 \begin_inset Formula $n=1.5$
 \end_inset
 
-, with the split solver performing less well for the case 
+, with the split solver performing slightly less well for the case 
 \begin_inset Formula $n=0.5$
 \end_inset
 
@@ -9424,7 +9510,7 @@ literal "false"
  is driven into copper initially at rest.
  An elastic shock wave develops, followed by a plastic shock wave.
  The following parameters were used: 
-\begin_inset Formula $\rho_{0}=8930,c_{s}=2244,n=10,\sigma_{0}=9\times10^{7},\tau_{0}=1$
+\begin_inset Formula $\rho_{0}=8930,c_{s}=2244,\sigma_{0}=9\times10^{7},\tau_{0}=1$
 \end_inset
 
 .
@@ -9440,12 +9526,17 @@ reference "fig:piston"
 
 \end_inset
 
- demonstrates the results using the split solver, compared with the exact
- solution, for various values of 
+ demonstrates the results using the split solver for various values of 
 \begin_inset Formula $n$
 \end_inset
 
 .
+ These results are compared with the exact solution to the problem under
+ perfect plasticity (to which the former results should converge as 
+\begin_inset Formula $n\rightarrow\infty$
+\end_inset
+
+).
  The nature of the split solver enables large values of 
 \begin_inset Formula $n$
 \end_inset
@@ -9691,22 +9782,6 @@ Density and velocity for the Cylindrical Shock Test
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsubsection
-Convergence
-\end_layout
-
-\begin_layout Standard
-This test is taken from 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "miller_high-order_2001"
-literal "true"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Section
