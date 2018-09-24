@@ -12,13 +12,7 @@ from gpr.sys.conserved import S_cons
 from test.boundaries import wall_BC
 
 
-HP_n = 1.5
-μ = 1e-2
-dp = 0.48
-Lx = 0.25
-
-
-def poiseuille_exact(n, nx=400):
+def poiseuille_exact(n, nx=400, Lx=0.25, μ=1e-2, dp=0.48):
 
     ρ = 1
     d = Lx / (2 * nx)
@@ -45,24 +39,34 @@ def reynolds_number(n):
 
 
 def poiseuille():
-    """ N = 3
+    """ n = 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3
+
+        N = 3
         cfl = 0.5
         SPLIT = True
         SOLVER = 'rusanov'
+        contorted_tol = 1
+
+        DESTRESS = false
     """
-    tf = 20
-    nx = 400
+    n = 1.3
+
+    tf = 5
+    Lx = 0.25
+    nx = 50
 
     γ = 1.4
+    μ = 1e-2
+    dp = 0.48
+
     ρ = 1
     p = 100 / γ
-    #vy = poiseuille_max(HP_n)
-    v = array([0, 0, 0])
+    v = zeros(3)
     A = eye(3)
     δp = array([0, dp, 0])
 
     MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ,
-                         b0=1, μ=μ, n=HP_n, δp=δp)
+                         b0=1, μ=μ, n=n, δp=δp)
 
     Q = Cvec(ρ, p, v, MP, A)
     u = array([Q] * nx)
@@ -70,25 +74,17 @@ def poiseuille():
     return u, [MP], tf, [Lx / nx]
 
 
-def poiseuille_bc(u, N, *args):
-    γ = 1.4
-    δp = array([0, dp, 0])
-    MP = material_params(EOS='sg', ρ0=1, cv=1, p0=100/γ, γ=γ,
-                         b0=1, μ=μ, n=HP_n, δp=δp)
-    return wall_BC(u, N, 1, [1], MP)
-
-
 def lid_driven_cavity():
     """ n = 0.5 / 1.5
 
         N = 3
-        cfl = 0.5
+        cfl = 0.5 / 0.2
         SPLIT = True
         SOLVER = 'rusanov'
-        contorted_tol = 0.03 / 1
+        contorted_tol = 0.03
 
         NO_CORNERS = true
-        DESTRESS = true / false
+        DESTRESS = true
     """
     n = 1.5
 
@@ -102,16 +98,14 @@ def lid_driven_cavity():
     μ = 1e-2
 
     ρ = 1
-#    p = 100 / γ
     p = 1
     v = zeros(3)
     A = eye(3)
 
-#    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=μ, n=n)
     MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ, b0=1, μ=μ, n=n)
 
-    u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, MP, A)
+    u = zeros([nx, ny, 14])
     for i in range(nx):
         for j in range(ny):
             u[i, j] = Q

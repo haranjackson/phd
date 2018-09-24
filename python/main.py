@@ -10,8 +10,7 @@ from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
 
 from test.fluid.newtonian1 import heat_conduction, stokes, viscous_shock
-from test.fluid.non_newtonian import poiseuille, poiseuille_bc, \
-    lid_driven_cavity
+from test.fluid.non_newtonian import poiseuille, lid_driven_cavity
 from test.fluid.reactive import steady_znd, shock_detonation, \
     heating_deflagration
 from test.impact.inert import aluminium_plates, rod_penetration

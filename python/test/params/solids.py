@@ -10,7 +10,7 @@ Al_GRP_SI = material_params(EOS='gr', ρ0=2710, p0=0, cv=900, Tref=300,
                             σY=0.4e9, τ1=1, n=100)
 
 Cu_SMGP_SI = material_params(EOS='smg', ρ0=8930, p0=0, cv=390,
-                             c0=3940, Γ0=2, s=1.49, b0=2244,
+                             c0=3939, Γ0=2, s=1.5, b0=2244,
                              σY=9e7, τ1=1, n=100)
 
 Cu_GR_SI = material_params(EOS='gr', ρ0=8930, p0=0, cv=390, Tref=300,
@@ -32,7 +32,7 @@ TNT_JWL_SI = material_params(EOS='jwl', ρ0=1840, p0=0, cv=815,
                              Γ0=0.25, A=854.5, B=20.5, R1=4.6, R2=1.35,
                              b0=2100, τ1=inf)
 
-Steel_SMGP_SI = material_params(EOS='smg', ρ0=19300, p0=0, cv=134,
+Steel_SMGP_SI = material_params(EOS='smg', ρ0=7860, p0=0, cv=134,
                                 c0=4030, Γ0=1.43, s=1.24, b0=2888,
                                 σY=15e7, τ1=1, n=100)
 
