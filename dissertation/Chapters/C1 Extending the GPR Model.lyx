@@ -1820,14 +1820,602 @@ Steady ZND Detonation
 
 \begin_layout Subsection
 Shock-Induced Detonation
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Shock-Induced-Detonation"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-[dicrete ignition temperature]
+The GPR model is now combined with discrete ignition temperature reaction
+ kinetics to model a ZND detonation wave
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Zel'dovich 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "zeldovich_theory_1940"
+literal "true"
+
+\end_inset
+
+, von Neumann 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "von_neumann_theory_1942"
+literal "true"
+
+\end_inset
+
+, and Doring 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "doring_detonation_1943"
+literal "true"
+
+\end_inset
+
+ independently proposed this detonation model, whereby reactive gas is compresse
+d to high pressure by an infinitely thin shock wave into a 
+\shape italic
+von Neumann spike
+\shape default
+, initiating the reaction.
+ The reaction zone is located behind the spike.
+ In the reference frame of the shock, the gas moves supersonically ahead
+ of the shock, subsonically in the reaction zone, and sonically in the region
+ behind the reaction zone (which is described by the Chapman-Jouget state
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "chapman_rate_1899,jouget_propagation_1905"
+literal "true"
+
+\end_inset
+
+.
+ The energy released in the reaction is transported acoustically to the
+ shock to support it.
+\end_layout
+
+\end_inset
+
+ in a viscous, reactive, ideal gas.
+ The test consists of a CJ wave with speed 1, traveling into a region of
+ totally unburnt gas.
+ The initial conditions are taken from Helzel et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "helzel_modified_2000"
+literal "true"
+
+\end_inset
+
+ and are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:DiscreteIgnitionTemperatureKinetics"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-[Jackson]
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "ZND"
+description "Zel'dovich-Neumann-Doring"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "CJ"
+description "Chapman-Jouguet"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0.25$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{1.4}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\geq0.25$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.887565$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.191709$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\text{−}0.577350,0,0\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{0.887565}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:DiscreteIgnitionTemperatureKinetics"
+
+\end_inset
+
+Initial conditions for the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $p_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{t}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.75$
+\end_inset
+
+, 
+\begin_inset Formula $Q_{c}=1$
+\end_inset
+
+, 
+\begin_inset Formula $K_{0}=250$
+\end_inset
+
+, 
+\begin_inset Formula $T_{i}=0.25$
+\end_inset
+
+.
+ The results for grids of 400 and 1600 cells at time 
+\begin_inset Formula $t=0.5$
+\end_inset
+
+ are found in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+.
+ They are to be compared with those by Hidalgo and Dumbser 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hidalgo_ader_2011"
+literal "true"
+
+\end_inset
+
+.
+ The simulation with 400 cells corresponds well with that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hidalgo_ader_2011"
+literal "true"
+
+\end_inset
+
+, and the simulation with 1600 cells is very close to Hidalgo's total variation
+ diminishing reference solution calculated with 10,000 cells.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is well resolved, with the thin reaction zone behind
+ it (corresponding to the region in which the concentration decreases from
+ 1 to 0).
+ The CJ state is maintained correctly behind the reaction zone.
+ The spurious wave in the density is explained in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hidalgo_ader_2011"
+literal "true"
+
+\end_inset
+
+ as being due to initialisation errors occurring as a result of using exact
+ algebraic conditions for an ideal (infinitely thin) CJ detonation wave,
+ which are solved with a viscous model with finite reaction rate.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Shock-Induced Detonation/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Shock-Induced Detonation/r.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Shock-Induced Detonation/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Shock-Induced Detonation/v.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+Pressure, density, concentration of reactant, and velocity (in the reference
+ frame of the shock) in the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1835,11 +2423,455 @@ Heating-Induced Deflagration
 \end_layout
 
 \begin_layout Standard
-[arrhenius]
+As a step towards modeling the slow cooking off problem, the HPR model is
+ now applied to the situation presented by Clarke, Kassoy and Riley 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_shocks_1984,clarke_direct_1986,clarke_evolution_1990"
+literal "true"
+
+\end_inset
+
+.
+ Here, the domain 
+\begin_inset Formula $x\in\left[0,8.5\times10^{-6}\right]$
+\end_inset
+
+ is occupied by an ideal gas with initial conditions 
+\begin_inset Formula $\rho=\rho_{0}=1.176$
+\end_inset
+
+, 
+\begin_inset Formula $p=p_{0}=101325$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+ and material parameters 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=55$
+\end_inset
+
+, 
+\begin_inset Formula $c_{t}=500$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.98\times10^{-5}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.72$
+\end_inset
+
+.
+ These values are chosen to be similar to air at room temperature.
 \end_layout
 
 \begin_layout Standard
-[Jackson]
+Thermal energy is added at the left boundary at a high power of 
+\begin_inset Formula $\frac{\gamma p_{0}c_{0}}{P_{r}\left(\gamma-1\right)}$
+\end_inset
+
+ (around 
+\begin_inset Formula $1.7\times10^{8}Wm^{-2}$
+\end_inset
+
+).
+ The test is performed with both a combustible and an inert gas.
+ In the former case, the initial concentration is set to 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+.
+ Arrhenius reaction kinetics are used, with 
+\begin_inset Formula $Q_{c}=6\gamma c_{v}T_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{c}=7\times10^{10}$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon=\frac{1}{20}$
+\end_inset
+
+.
+ The subsequent evolutions of the systems for 400 cells are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:CKR"
+
+\end_inset
+
+.
+ Nondimensionalised time and length variables 
+\begin_inset Formula $t^{*},x^{*}$
+\end_inset
+
+ are used, as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_direct_1986"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+t & =\frac{\mu}{p_{0}\gamma}t^{*}\\
+x & =\frac{\mu c_{0}}{p_{0}\gamma}x^{*}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are no analogues for 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ in the models used by Clarke et al.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is given the experimentally-derived value for 
+\begin_inset Formula $CH_{3}Cl$
+\end_inset
+
+ at 30°C given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is chosen by trial and error so that the HPR results corresponded with
+ those in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_direct_1986"
+literal "true"
+
+\end_inset
+
+.
+ The results presented here are thus close, but not identical to those of
+ Clarke et al.
+\end_layout
+
+\begin_layout Standard
+Note that heating the inert gas produces an acoustic wave of constant pressure,
+ propagating ahead of the temperature curve.
+ This pressure wave is also present in the heating of the combustible gas,
+ where it proceeds in front of the combustion wave.
+ The temperature increase accompanying this acoustic wave is not enough
+ to ignite the reactive gas, and the thin reaction zone lags behind the
+ acoustic wavefront.
+ Although the combustion wave is referred to as a detonation wave in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_direct_1986"
+literal "true"
+
+\end_inset
+
+, it would now commonly be called a deflagration wave, as it travels subsonicall
+y and is not coincident with the shock wave.
+ This phenomenon of a second, faster shock overtaking the combustion wave
+ demonstrated experimentally by Kapila et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kapila_mechanisms_2002"
+literal "true"
+
+\end_inset
+
+, with a full mathematical analysis provided by Short 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "short_critical_1997"
+literal "true"
+
+\end_inset
+
+, where it is shown to result from the steep temperature gradient at the
+ time of ignition.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Deflagration/inert/T.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Deflagration/reactive/T.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Deflagration/inert/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Deflagration/reactive/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Deflagration/inert/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Deflagration/reactive/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:CKR"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ deflagration test with inert gas (left) / reactive gas (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Heating-Induced Detonation
+\end_layout
+
+\begin_layout Standard
+It is now demonstrated that the heating-induced deflagration test can result
+ in detonation if the temperature gradient upon ignition is less steep.
+ This test is identical to the previous test, with one exception: 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is given the higher value of 
+\begin_inset Formula $\frac{1}{15}$
+\end_inset
+
+.
+ Thus, the activation energy is effectively lower, or equivalently, the
+ whole gas volume is relatively closer to the ignition temperature when
+ the gas at the left boundary ignites.
+ The results of this test are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is present and well resolved, with a thin reaction
+ zone appearing behind it in the concentration plot.
+ Unlike in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Shock-Induced-Detonation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the system does not relax to the CJ state behind the detonation wave,
+ as thermal energy is continually added to the reflective left boundary.
+ The region behind the reaction zone is thus complex.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Detonation/T.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Detonation/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C1/Heating-Induced Detonation/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
