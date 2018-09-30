@@ -9185,7 +9185,7 @@ In this case,
 \begin_inset Formula $20$
 \end_inset
 
-, with 400 cells taken across the width of the channel.
+, with 100 cells taken across the width of the channel.
 \end_layout
 
 \begin_layout Standard
@@ -9469,6 +9469,58 @@ name "fig:lid-driven-cavity-n=0.5"
 
 Velocity profiles for the Lid-Driven Cavity Test, for a pseudoplastic with
  n=0.5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Lid-Driven Cavity/n0.5_v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Lid-Driven Cavity/n1.5_v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:lid-driven-cavity-2d"
+
+\end_inset
+
+Streamplots for the Lid-Driven Cavity Test, for a pseudoplastic with n=0.5
+ (left) and a dilatant with n=1.5 (right) 
 \end_layout
 
 \end_inset
@@ -9771,7 +9823,67 @@ name "fig:cylindrical-shock"
 
 \end_inset
 
-Density and velocity for the Cylindrical Shock Test
+Density and velocity for the Cylindrical Shock Test, comparing the GPR model
+ (left) with the model from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "false"
+
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C2/Cylindrical Shock/ρ_2d.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C2/Cylindrical Shock/u_2d.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cylindrical-shock-2"
+
+\end_inset
+
+2D plots of density and speed for the Cylindrical Shock Test
 \end_layout
 
 \end_inset
