@@ -1806,12 +1806,32 @@ Total stress for the 7-wave elastic Riemann problem
 Lamb's Problem
 \end_layout
 
+\begin_layout Standard
+[GR]
+\end_layout
+
+\begin_layout Standard
+[Dumbser2015]
+\end_layout
+
 \begin_layout Subsection
 Steady ZND Detonation
 \end_layout
 
 \begin_layout Standard
 [JWL, ignition & growth]
+\end_layout
+
+\begin_layout Standard
+[MiNi16]
+\end_layout
+
+\begin_layout Subsection
+Copper-Detonation Products Shock Tube
+\end_layout
+
+\begin_layout Standard
+[JWL, Cochran-Chan]
 \end_layout
 
 \begin_layout Standard
@@ -2875,7 +2895,11 @@ Temperature, pressure, and concentration of reactant in the heating-induced
 \end_layout
 
 \begin_layout Subsection
-2D Deflagration-to-Detonation (Cochran-Chan)
+2D Ignition
+\end_layout
+
+\begin_layout Standard
+[Nikiforakis, Clarke]
 \end_layout
 
 \begin_layout Standard
