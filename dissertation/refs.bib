@@ -80,19 +80,6 @@
 	doi = {10.1007/978-3-540-35846-6}
 }
 
-@article{jackson_montecinos-balsara_2017,
-	title = {The {Montecinos}-{Balsara} {ADER}-{FV} {Polynomial} {Basis}: {Convergence} {Properties} \& {Extension} to {Non}-{Conservative} {Multidimensional} {Systems}},
-	volume = {163},
-	url = {http://arxiv.org/abs/1710.07603},
-	doi = {10.1016/j.compfluid.2017.12.018},
-	abstract = {Hyperbolic systems of PDEs can be solved to arbitrary orders of accuracy by using the ADER Finite Volume method. These PDE systems may be non-conservative and non-homogeneous, and contain stiff source terms. ADER-FV requires a spatio-temporal polynomial reconstruction of the data in each spacetime cell, at each time step. This reconstruction is obtained as the root of a nonlinear system, resulting from the use of a Galerkin method. It was proved in Jackson [7] that for traditional choices of basis polynomials, the eigenvalues of certain matrices appearing in these nonlinear systems are always 0, regardless of the number of spatial dimensions of the PDEs or the chosen order of accuracy of the ADER-FV method. This guarantees fast convergence to the Galerkin root for certain classes of PDEs. In Montecinos and Balsara [9] a new, more efficient class of basis polynomials for the one-dimensional ADER-FV method was presented. This new class of basis polynomials, originally presented for conservative systems, is extended to multidimensional, non-conservative systems here, and the corresponding property regarding the eigenvalues of the Galerkin matrices is proved.},
-	journal = {Computers and Fluids},
-	author = {Jackson, Haran},
-	year = {2017},
-	keywords = {ADER, Convergenc, Eigenvalues, Finite Volume, Galerkin},
-	pages = {50--53}
-}
-
 @techreport{menikoff_complete_2016,
 	title = {Complete {Mie}-{Gruneisen} {Equation} of {State}},
 	abstract = {The Mie-Gr¨ uneisen equation of state (EOS) is frequently used in hy- dro simulations to model solids at high pressure (up to a few Mb). It is an incomplete EOS characterized by a Gr¨ uneisen coefficient, Γ = −V (∂eP)V , that is a function of only V . Expressions are de- rived for isentropes and isotherms. This enables the extension to a complete EOS. Thermodynamic consistency requires that the specific heat is a function of a single scaled-temperature. A complete exten- sion is uniquely determined by the temperature dependence of the specific heat at a fixed reference density. In addition we show that if the domain of the EOS extends to T = 0 and the specific heat van- ishes on the zero isotherm then Γ a function of only V is equivalent to a specific heat with a single temperature scale. If the EOS domain does not include the zero isotherm, then a specific heat with a single temperature scale leads to a generalization of the Mie-Gruneisen EOS in which the pressure is linear in both the specific energy and the tem- perature. This corresponds to the limiting case of two temperature scales with one of the scales in the high temperature limit. Such an EOS has previously been used to model liquid nitromethane.},
@@ -960,14 +947,6 @@
 @misc{noauthor_top500_nodate,
 	title = {The {TOP}500 {Project}},
 	keywords = {bibtex-import}
-}
-
-@article{schwendeman_effect_2002,
-	title = {Effect of {Thermal} {Nonhomogeneity} on {Explosion} or {Detonation} in an {Annular} {Cookoff}},
-	journal = {12th Symposium (International) on Detonation},
-	author = {Schwendeman, D. W. and Kapila, a. K.},
-	year = {2002},
-	pages = {1--11}
 }
 
 @article{fedkiw_ghost_1998,
@@ -2376,7 +2355,6 @@
 	volume = {18},
 	copyright = {Copyright © 1994 John Wiley \& Sons, Ltd},
 	issn = {1097-0363},
-	url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/fld.1650180202},
 	doi = {10.1002/fld.1650180202},
 	abstract = {This paper presents a p- version least squares finite element formulation (LSFEF) for two-dimensional, incompressible, non-Newtonian fluid flow under isothermal and non-isothermal conditions. The dimensionless forms of the diffential equations describing the fluid motion and heat transfer are cast into a set of first-order differential equations using non-Newtonian stresses and heat fluxes as auxiliary variables. The velocities, pressure and temperature as well as the stresses and heat fluxes are interpolated using equal-order, C0-continuous, p-version hierarchical approximation functions. The application of least squares minimization to the set of coupled first-order non-linear partial differential equations results in finding a solution vector δ which makes the partial derivatives of the error functional with respect to δ a null vector. This is accomplished by using Newton's method with a line search. The paper presents the implementation of a power-law model for the non-Newtonian Viscosity. For the non-isothermal case the fluid properties are considered to be a function of temperature. Three numerical examples (fully developed flow between parallel plates, symmetric sudden expansion and lid-driven cavity) are presented for isothermal power-law fluid flow. The Couette shear flow problem and the 4:1 symmetric sudden expansion are used to present numerical results for non-isothermal power-law fluid flow. The numerical examples demonstrate the convergence characteristics and accuracy of the formulation.},
 	language = {en},
@@ -2409,7 +2387,6 @@
 	title = {Highly parallelisable simulations of time-dependent viscoplastic fluid flow with structured adaptive mesh refinement},
 	volume = {30},
 	issn = {1070-6631},
-	url = {https://aip.scitation.org/doi/10.1063/1.5049202},
 	doi = {10.1063/1.5049202},
 	abstract = {We present the extension of an efficient and highly parallelisable framework for incompressible fluid flow simulations to viscoplastic fluids. The system is governed by incompressible conservation of mass, the Cauchy momentum equation, and a generalised Newtonian constitutive law. In order to simulate a wide range of viscoplastic fluids, we employ the Herschel-Bulkley model for yield-stress fluids with nonlinear stress-strain dependency above the yield limit. We utilise Papanastasiou regularisation in our algorithm to deal with the singularity in apparent viscosity. The resulting system of partial differential equations is solved using the IAMR (Incompressible Adaptive Mesh Refinement) code, which uses second-order Godunov methodology for the advective terms and semi-implicit diffusion in the context of an approximate projection method to solve adaptively refined meshes. By augmenting the IAMR code with the ability to simulate regularised Herschel-Bulkley fluids, we obtain efficient numerical software for time-dependent viscoplastic flow in three dimensions, which can be used to investigate systems not considered previously due to computational expense. We validate results from simulations using this new capability against previously published data for Bingham plastics and power-law fluids in the two-dimensional lid-driven cavity. In doing so, we expand the range of Bingham and Reynolds numbers which have been considered in the benchmark tests. Moreover, extensions to time-dependent flow of Herschel-Bulkley fluids and three spatial dimensions offer new insights into the flow of viscoplastic fluids in this test case, and we provide missing benchmark results for these extensions.},
 	number = {9},
@@ -2534,6 +2511,42 @@ Pr→0Pr→0{\textbackslash}mathit\{Pr\}{\textbackslash}rightarrow 0
 	author = {Johnson, B. M.},
 	month = jul,
 	year = {2013},
-	keywords = {compressible flows, Navier–Stokes equations, shock waves},
+	keywords = {shock waves, compressible flows, Navier–Stokes equations},
 	file = {Full Text PDF:/Users/hari/Zotero/storage/26DHKZML/Johnson - 2013 - Analytical shock solutions at large and small Pran.pdf:application/pdf}
+}
+
+@inproceedings{schwendeman_effect_2002,
+	title = {Effect of {Thermal} {Nonhomogeneity} on {Explosion} or {Detonation} in an {Annular} {Cookoff}},
+	language = {en},
+	author = {Schwendeman, D W and Kapila, A K},
+	year = {2002},
+	pages = {11},
+	file = {Schwendeman and Kapila - EFFECT OF THERMAL NONHOMOGENEITY ON EXPLOSION OR D.pdf:/Users/hari/Zotero/storage/VV3DSYH3/Schwendeman and Kapila - EFFECT OF THERMAL NONHOMOGENEITY ON EXPLOSION OR D.pdf:application/pdf}
+}
+
+@article{jackson_montecinosbalsara_2018,
+	title = {The {Montecinos}–{Balsara} {ADER}-{FV} polynomial basis: {Convergence} properties \& extension to non-conservative multidimensional systems},
+	volume = {163},
+	copyright = {All rights reserved},
+	issn = {0045-7930},
+	shorttitle = {The {Montecinos}–{Balsara} {ADER}-{FV} polynomial basis},
+	url = {http://www.sciencedirect.com/science/article/pii/S0045793017304607},
+	doi = {10.1016/j.compfluid.2017.12.018},
+	abstract = {Hyperbolic systems of PDEs can be solved to arbitrary orders of accuracy by using the ADER Finite Volume method. These PDE systems may be non-conservative and non-homogeneous, and contain stiff source terms. ADER-FV requires a spatio-temporal polynomial reconstruction of the data in each spacetime cell, at each time step. This reconstruction is obtained as the root of a nonlinear system, resulting from the use of a Galerkin method. It was proved in [7] that for traditional choices of basis polynomials, the eigenvalues of certain matrices appearing in these nonlinear systems are always 0, regardless of the number of spatial dimensions of the PDEs or the chosen order of accuracy of the ADER-FV method. This guarantees fast convergence to the Galerkin root for certain classes of PDEs. In Montecinos and Balsara [8] a new, more efficient class of basis polynomials for the one-dimensional ADER-FV method was presented. This new class of basis polynomials, originally presented for conservative systems, is extended to multidimensional, non-conservative systems here, and the corresponding property regarding the eigenvalues of the Galerkin matrices is proved.},
+	urldate = {2018-09-30},
+	journal = {Computers \& Fluids},
+	author = {Jackson, Haran},
+	month = feb,
+	year = {2018},
+	keywords = {ADER, Eigenvalues, Finite Volume, Galerkin, Convergence},
+	pages = {50--53},
+	file = {ScienceDirect Full Text PDF:/Users/hari/Zotero/storage/5A9GJ4QG/Jackson - 2018 - The Montecinos–Balsara ADER-FV polynomial basis C.pdf:application/pdf;ScienceDirect Snapshot:/Users/hari/Zotero/storage/TYRY627S/S0045793017304607.html:text/html}
+}
+
+@misc{peshkov_general_2018,
+	title = {General {Relativistic} formulation of dissipative continuum mechanics},
+	language = {en},
+	author = {Peshkov, Ilya and Romenski, Evgeniy and Dumbser, Michael and Fambri, Francesco},
+	year = {2018},
+	file = {Peshkov and Romenski - 1940 - General Relativistic formulation of dissipative co.pdf:/Users/hari/Zotero/storage/78YKG4DK/Peshkov and Romenski - 1940 - General Relativistic formulation of dissipative co.pdf:application/pdf}
 }

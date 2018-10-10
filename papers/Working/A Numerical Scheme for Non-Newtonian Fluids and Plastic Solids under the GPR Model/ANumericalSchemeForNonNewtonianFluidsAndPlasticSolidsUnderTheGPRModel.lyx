@@ -200,7 +200,22 @@ rvt
 \end_layout
 
 \begin_layout Abstract
-Abstract goes here.
+A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
+ by a power law under the GPR model is presented, along with a new numerical
+ scheme for solving this system.
+ The scheme is also modified to solve the well-known corresponding system
+ for power-law elasto-plastic solids.
+\end_layout
+
+\begin_layout Abstract
+The scheme is based on a temporal operator splitting, with the homogeneous
+ system solved using a finite volume method based on a WENO reconstruction,
+ and the temporal ODEs solved using an analytical approximate solution,
+ presented here.
+ The method is found to perform favorably against problems with known exact
+ solutions, and existing third-party numerical solutions.
+ It is simple to implement, and is currently the only publicly-available
+ method for solving this modified version of the GPR model.
 \end_layout
 
 \begin_layout Keywords
@@ -299,7 +314,66 @@ Motivation
 \end_layout
 
 \begin_layout Standard
-Motivation goes here.
+As presented in the following section, the GPR model of continuum mechanics
+ has been purported to represent an effective method to describe both fluids
+ and solids within the same hyperbolic system of differential equations.
+ From a practical perspective, the potential ramifications of this include:
+ the simplification of software made for the simulation of phenomena involving
+ different states of matter (as commented on in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+); and the use of the vast array of effective numerical solvers designed
+ for first-order hyperbolic systems.
+ From a theoretical perspective: the GPR model cannot produce waves of infinite
+ speed, unlike the parabolic Navier-Stokes equations; and the first-principles
+ derivation of the mechanism by which viscous effects appear under the GPR
+ model has been commented to be more appropriate than the more phenomenological
+ viscous law appearing in the traditional Navier-Stokes formulation 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "peshkov_unified_2017"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Thus far, the GPR model has been solved for a wide array of different fluids
+ (inviscid and viscous non-Newtonian) and solids (elastic and elastoplastic)
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_high_2015,boscheri_cell_2016,peshkov_theoretical_2018,peshkov_unified_2017"
+literal "false"
+
+\end_inset
+
+).
+ It has also been extended to incorporate the effects of electrodynamics
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_high_2016"
+literal "false"
+
+\end_inset
+
+) and a general relativity (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "peshkov_general_2018"
+literal "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Subsection
@@ -314,7 +388,7 @@ name "subsec:The-GPR-Model"
 \end_layout
 
 \begin_layout Standard
-The GPR model, first introduced in Peshkov and Romenski 
+The GPR model, first introduced in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_hyperbolic_2016"
@@ -322,8 +396,7 @@ literal "true"
 
 \end_inset
 
- - and expanded upon by Dumbser et al.
- 
+ - and expanded upon by 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "dumbser_high_2015"
@@ -331,8 +404,7 @@ literal "true"
 
 \end_inset
 
- and Boscheri et al.
- 
+ and 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "boscheri_cell_2016"
@@ -673,8 +745,8 @@ literal "false"
 \begin_inset Formula $E_{1}$
 \end_inset
 
- is taken to be either the ideal gas EOS, the stiffened gas EOS, the shock
- Mie-Gruneisen EOS, or the EOS of nonlinear hyperelasticity 
+ is taken to be either the ideal gas EOS, or the EOS of nonlinear hyperelasticit
+y 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "barton_exact_2009"
@@ -1741,6 +1813,26 @@ literal "true"
 \begin_inset Formula 
 \begin{equation}
 \tilde{M}=\max\left(\max\left|\hat{\Lambda}\left(\boldsymbol{Q^{+}}\right)\right|,\max\left|\hat{\Lambda}\left(\boldsymbol{Q^{-}}\right)\right|\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or a Roe flux 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_simple_2011"
+literal "true"
+
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
 \end{equation}
 
 \end_inset
@@ -3089,7 +3181,7 @@ name "fig:rheology"
 
 \end_inset
 
-The stress-strain relationships for different kinds of fluids (source [REF])
+The stress-strain relationships for different kinds of fluids
 \end_layout
 
 \end_inset
@@ -4378,7 +4470,7 @@ In this case,
 \begin_inset Formula $20$
 \end_inset
 
-, with 400 cells taken across the width of the channel.
+, with 100 cells taken across the width of the channel.
 \end_layout
 
 \begin_layout Standard
@@ -4659,6 +4751,57 @@ name "fig:lid-driven-cavity-n=0.5"
 
 Velocity profiles for the Lid-Driven Cavity Test, for a pseudoplastic with
  n=0.5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n0.5_v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n1.5_v.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:lid-driven-cavity-2d"
+
+\end_inset
+
+Streamplots for the Lid-Driven Cavity Test, for a pseudoplastic with n=0.5
+ (left) and a dilatant with n=1.5 (right) 
 \end_layout
 
 \end_inset
@@ -4959,7 +5102,66 @@ name "fig:cylindrical-shock"
 
 \end_inset
 
-Density and velocity for the Cylindrical Shock Test
+Density and velocity for the Cylindrical Shock Test, comparing the GPR model
+ (left) with the model from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "false"
+
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Cylindrical Shock/ρ_2d.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Cylindrical Shock/u_2d.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cylindrical-shock-2"
+
+\end_inset
+
+2D plots of density and speed for the Cylindrical Shock Test
 \end_layout
 
 \end_inset

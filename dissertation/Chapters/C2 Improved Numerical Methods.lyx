@@ -9302,7 +9302,7 @@ literal "false"
 \end_inset
 
 .
- It is initially at rest, with 
+ The fluid is initially at rest, with 
 \begin_inset Formula $\rho=1$
 \end_inset
 
@@ -9337,11 +9337,7 @@ noprefix "false"
 
 \end_inset
 
- show the results of running the system to 
-\begin_inset Formula $t=10$
-\end_inset
-
-, whereupon steady state is achieved, for 
+ show the results of running the system to steady state, for 
 \begin_inset Formula $n=1.5$
 \end_inset
 
@@ -9367,12 +9363,9 @@ literal "false"
 \end_inset
 
 .
- As can be seen, there is very good agreement for the case 
+ As can be seen, there is good agreement between their results and those
+ of the split solver; especially so for the case 
 \begin_inset Formula $n=1.5$
-\end_inset
-
-, with the split solver performing slightly less well for the case 
-\begin_inset Formula $n=0.5$
 \end_inset
 
 .
