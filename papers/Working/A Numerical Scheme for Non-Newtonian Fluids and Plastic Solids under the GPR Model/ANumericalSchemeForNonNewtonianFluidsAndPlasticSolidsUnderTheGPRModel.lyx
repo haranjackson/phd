@@ -306,17 +306,27 @@ sep
 \end_layout
 
 \begin_layout Section
-Background
+Introduction
 \end_layout
 
 \begin_layout Subsection
-Motivation
+Background
 \end_layout
 
 \begin_layout Standard
-As presented in the following section, the GPR model of continuum mechanics
- has been purported to represent an effective method to describe both fluids
- and solids within the same hyperbolic system of differential equations.
+As presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-GPR-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the GPR model of continuum mechanics has been purported to represent an
+ effective method to describe both fluids and solids within the same hyperbolic
+ system of differential equations.
  From a practical perspective, the potential ramifications of this include:
  the simplification of software made for the simulation of phenomena involving
  different states of matter (as commented on in 
@@ -333,7 +343,8 @@ literal "false"
  speed, unlike the parabolic Navier-Stokes equations; and the first-principles
  derivation of the mechanism by which viscous effects appear under the GPR
  model has been commented to be more appropriate than the more phenomenological
- viscous law appearing in the traditional Navier-Stokes formulation 
+ viscous law appearing in the traditional Navier-Stokes formulation (see
+ 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "peshkov_unified_2017"
@@ -341,12 +352,12 @@ literal "false"
 
 \end_inset
 
-.
+).
 \end_layout
 
 \begin_layout Standard
 Thus far, the GPR model has been solved for a wide array of different fluids
- (inviscid and viscous non-Newtonian) and solids (elastic and elastoplastic)
+ (inviscid and viscous Newtonian) and solids (elastic and elastoplastic)
  (see 
 \begin_inset CommandInset citation
 LatexCommand citet
@@ -374,6 +385,62 @@ literal "false"
 \end_inset
 
 ).
+ It is yet to be formally extended to include non-Newtonian power-law fluids,
+ however.
+ A method for doing so is presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Power-Law-Fluids"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Building upon the work of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ (in which a numerical scheme based upon a split solver was presented for
+ non-Newtonian fluids and elastic solids under the GPR model) a numerical
+ scheme is then presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Scheme"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for solving this new model, and it is adapted slightly to work also for
+ elastoplastic power-law materials.
+ The scheme is validated against several 1D and 2D tests in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, with discussion presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Conclusions"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -655,10 +722,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-p & =\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A}\\
-\sigma & =-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\\
-T & =\left.\frac{\partial E}{\partial s}\right|_{\rho,A}\\
-\boldsymbol{q} & =T\frac{\partial E}{\partial\boldsymbol{J}}
+p & =\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A}\label{eq:p def}\\
+\sigma & =-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\label{eq:sig def}\\
+T & =\left.\frac{\partial E}{\partial s}\right|_{\rho,A}\label{eq:T def}\\
+\boldsymbol{q} & =T\frac{\partial E}{\partial\boldsymbol{J}}\label{eq:q def}
 \end{align}
 
 \end_inset
@@ -733,7 +800,7 @@ E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(
 \end_layout
 
 \begin_layout Standard
-Here, as in previous studies 
+Here, as in previous studies, such as 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "dumbser_high_2015,boscheri_cell_2016"
@@ -745,8 +812,8 @@ literal "false"
 \begin_inset Formula $E_{1}$
 \end_inset
 
- is taken to be either the ideal gas EOS, or the EOS of nonlinear hyperelasticit
-y 
+ is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
+ the EOS of nonlinear hyperelasticity 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "barton_exact_2009"
@@ -827,7 +894,30 @@ literal "true"
 \begin_inset Formula $c_{t}$
 \end_inset
 
- is related to the characteristic velocity of propagation of heat waves:
+ is related to the characteristic velocity of propagation of heat waves
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Note that 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ denotes this variable by 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, which is avoided here due to a clash with a parameter of one of the equations
+ of state used.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -860,20 +950,6 @@ In previous studies,
 \end_inset
 
  has been taken to be constant, as it will in this study.
- Note that Dumbser 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dumbser_high_2015"
-literal "false"
-
-\end_inset
-
- denotes this variable by 
-\begin_inset Formula $\alpha$
-\end_inset
-
-, which is avoided here due to a clash with a parameter of one of the equations
- of state used.
 \end_layout
 
 \begin_layout Standard
@@ -1030,7 +1106,7 @@ literal "true"
 \end_inset
 
 ).
- The power law for elastoplastic solids is based on the work 
+ The power law for elastoplastic solids is based on material from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -1042,7 +1118,47 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-Finally, we have the following relations:
+Finally, it is straightforward to verify that as a consequence of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:p def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sig def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:T def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have the following relations:
 \end_layout
 
 \begin_layout Standard
@@ -1092,7 +1208,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-The following constraint also holds 
+The following constraint also holds (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_hyperbolic_2016"
@@ -1100,7 +1216,7 @@ literal "true"
 
 \end_inset
 
-:
+):
 \end_layout
 
 \begin_layout Standard
@@ -1137,7 +1253,7 @@ particle settled life time
 \begin_inset Quotes erd
 \end_inset
 
- 
+ (detailed in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "frenkel_kinetic_1947"
@@ -1145,7 +1261,7 @@ literal "true"
 
 \end_inset
 
-; the characteristic time taken for a particle to move by a distance of
+); the characteristic time taken for a particle to move by a distance of
  the same order of magnitude as the particle's size.
  Thus, 
 \begin_inset Formula $\tau_{1}$
@@ -1220,7 +1336,212 @@ literal "true"
 \end_layout
 
 \begin_layout Section
+Power-Law Fluids
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Power-Law-Fluids"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/rheology.png
+	lyxscale 30
+	height 20pheight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:rheology"
+
+\end_inset
+
+The stress-strain relationships for different kinds of fluids
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The stress-strain relationships for various kinds of fluids are shown in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:rheology"
+
+\end_inset
+
+.
+ Dilatants and pseudoplastics may be modelled using the following power
+ law, with 
+\begin_inset Formula $n>1$
+\end_inset
+
+ and 
+\begin_inset Formula $0<n<1$
+\end_inset
+
+, respectively:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\sigma} & =K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}\boldsymbol{\dot{\gamma}}\\
+\boldsymbol{\dot{\gamma}} & =\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}-\frac{2\tr\left(\nabla\boldsymbol{v}\right)}{3}I
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K>0$
+\end_inset
+
+ is known as the 
+\shape italic
+consistency
+\shape default
+, and 
+\begin_inset Formula $K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}$
+\end_inset
+
+ is the 
+\shape italic
+apparent viscosity
+\shape default
+.
+ The norm is taken to be:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|X\right|=\sqrt{\frac{1}{2}X_{ij}X_{ij}}=\frac{\left\Vert X\right\Vert _{F}}{\sqrt{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+ it was noted that when expressing the state variables as an asymptotic
+ expansion in the relaxation parameter 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+, to first order we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\sigma}=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\left(\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}-\frac{2}{3}\tr\left(\nabla\boldsymbol{v}\right)\boldsymbol{I}\right)\label{eq:AsymptoticRelationship}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, for a power law fluid, we require that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}=K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking moduli of both sides of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:AsymptoticRelationship"
+
+\end_inset
+
+, we also have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|\boldsymbol{\sigma}\right|=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\left|\boldsymbol{\dot{\gamma}}\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining these two relationships, we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\coloneqq\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\label{eq:τ-power-law}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Numerical Scheme
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Numerical-Scheme"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1821,7 +2142,7 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-or a Roe flux 
+or a Roe flux (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "dumbser_simple_2011"
@@ -1829,7 +2150,7 @@ literal "true"
 
 \end_inset
 
-:
+):
 \begin_inset Formula 
 \begin{equation}
 \hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
@@ -2141,6 +2462,17 @@ name "subsec:The-Distortion-ODEs"
 
 \end_layout
 
+\begin_layout Subsubsection
+Newontian Fluids
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Analytical-Approximation"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 Let 
 \begin_inset Formula $k_{0}=\frac{3}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{5}{3}}>0$
@@ -2401,156 +2733,13 @@ reference "eq:StretchODESystem"
 \end_layout
 
 \begin_layout Standard
-Note that we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\size small
-\begin_inset Formula 
-\begin{align}
-\frac{dx_{i}}{d\tau} & =-x_{i}\left(2x_{i}-x_{j}-x_{k}\right)=-x_{i}\left(2x_{i}-x_{j}-\frac{1}{x_{i}x_{j}}\right)\\
-\frac{dx_{j}}{d\tau} & =-x_{j}\left(2x_{j}-x_{k}-x_{i}\right)=-x_{j}\left(2x_{j}-x_{i}-\frac{1}{x_{i}x_{j}}\right)
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, an ODE solver can be used on these two equations to effectively solve
- the ODEs for all 9 components of 
-\begin_inset Formula $A$
-\end_inset
-
-.
- Note that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{dx_{j}}{dx_{i}}=\frac{x_{j}}{x_{i}}\frac{2x_{j}-x_{i}-\frac{1}{x_{i}x_{j}}}{2x_{i}-x_{j}-\frac{1}{x_{i}x_{j}}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This has solution:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-x_{j}=\frac{c+\sqrt{c^{2}+4\left(1-c\right)x_{i}^{3}}}{2x_{i}^{2}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-c=-\frac{x_{i,0}\left(x_{i,0}x_{j,0}^{2}-1\right)}{x_{i,0}-x_{j,0}}\in\left(-\infty,0\right]
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In the case that 
-\begin_inset Formula $x_{i,0}=x_{j,0}$
-\end_inset
-
-, we have 
-\begin_inset Formula $x_{i}=x_{j}$
-\end_inset
-
- for all time.
- Thus, the ODE system for 
-\begin_inset Formula $A$
-\end_inset
-
- has been reduced to a single ODE, as 
-\begin_inset Formula $x_{j}\left(x_{i}\right)$
-\end_inset
-
- can be inserted into the RHS of the equation for 
-\begin_inset Formula $\frac{dx_{i}}{d\tau}$
-\end_inset
-
-.
- However, it is less computationally expensive to evolve the system presented
- in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:2odes"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Newontian Fluids
-\begin_inset CommandInset label
-LatexCommand label
-name "subsec:Analytical-Approximation"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 We now explore cases when even the reduced ODE system 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:2odes"
+reference "eq:StretchODESystem"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -3088,193 +3277,6 @@ Power Law Fluids
 \end_layout
 
 \begin_layout Standard
-The stress-strain relationships for various kinds of fluids are shown in
- 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:rheology"
-
-\end_inset
-
-.
- Dilatants and pseudoplastics may be modelled using the following power
- law, with 
-\begin_inset Formula $n>1$
-\end_inset
-
- and 
-\begin_inset Formula $0<n<1$
-\end_inset
-
-, respectively:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\boldsymbol{\sigma} & =K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}\boldsymbol{\dot{\gamma}}\\
-\boldsymbol{\dot{\gamma}} & =\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}-\frac{2\tr\left(\nabla\boldsymbol{v}\right)}{3}I
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $K>0$
-\end_inset
-
- is known as the 
-\shape italic
-consistency
-\shape default
-, and 
-\begin_inset Formula $K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}$
-\end_inset
-
- is the 
-\shape italic
-apparent viscosity
-\shape default
-.
- The norm is taken to be:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left|X\right|=\sqrt{\frac{1}{2}X_{ij}X_{ij}}=\frac{\left\Vert X\right\Vert _{F}}{\sqrt{2}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/rheology.png
-	lyxscale 30
-	height 20pheight%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:rheology"
-
-\end_inset
-
-The stress-strain relationships for different kinds of fluids
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dumbser_high_2015"
-literal "true"
-
-\end_inset
-
- it was noted that when expressing the state variables as an asymptotic
- expansion in the relaxation parameter 
-\begin_inset Formula $\tau_{1}$
-\end_inset
-
-, to first order we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{\sigma}=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\left(\nabla\boldsymbol{v}+\nabla\boldsymbol{v}^{T}-\frac{2}{3}\tr\left(\nabla\boldsymbol{v}\right)\boldsymbol{I}\right)\label{eq:AsymptoticRelationship}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, for a power law fluid, we require that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}=K\left|\boldsymbol{\dot{\gamma}}\right|^{n-1}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Taking moduli of both sides of 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:AsymptoticRelationship"
-
-\end_inset
-
-, we also have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\left|\boldsymbol{\sigma}\right|=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\left|\boldsymbol{\dot{\gamma}}\right|
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Combining these two relationships, we obtain:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\coloneqq\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Take the singular value decomposition 
 \begin_inset Formula $A=U\Sigma V^{T}$
 \end_inset
@@ -3310,11 +3312,21 @@ Thus:
 \end_layout
 
 \begin_layout Standard
-Letting 
+Thus, according to 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:τ-power-law"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and letting 
 \begin_inset Formula $k=\frac{1-n}{n}$
 \end_inset
 
-:
+, we have:
 \end_layout
 
 \begin_layout Standard
@@ -4146,6 +4158,13 @@ y-measurable quantity.
 
 \begin_layout Section
 Numerical Results
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Numerical-Results"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -4621,11 +4640,7 @@ noprefix "false"
 
 \end_inset
 
- show the results of running the system to 
-\begin_inset Formula $t=10$
-\end_inset
-
-, whereupon steady state is achieved, for 
+ show the results of running the system to steady state, for 
 \begin_inset Formula $n=1.5$
 \end_inset
 
@@ -4634,7 +4649,7 @@ noprefix "false"
 \end_inset
 
 , respectively.
- The results are compared with those of Bell 
+ The results are compared with those of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bell_p-version_1994"
@@ -4642,7 +4657,7 @@ literal "false"
 
 \end_inset
 
- and Neofytou 
+ and 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "neofytou_3rd_2005"
@@ -4660,6 +4675,17 @@ literal "false"
 \end_inset
 
 .
+ The 2D streamline plots found in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:lid-driven-cavity-2d"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ take the characteristic forms found in the aforementioned literature.
 \end_layout
 
 \begin_layout Standard
@@ -5042,6 +5068,17 @@ literal "true"
 \end_inset
 
  being more accurately resolved.
+ The 2D heatmaps of density and speed are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:cylindrical-shock-2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -5176,6 +5213,110 @@ name "fig:cylindrical-shock-2"
 
 \begin_layout Section
 Conclusions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In summary, a means of modeling power-law dilatants and pseudoplastics under
+ the GPR model has been presented.
+ A new numerical method - based on an operator splitting combined with some
+ analytical results - has also been presented for solving this version of
+ the GPR model, and this numerical method has been applied also to the case
+ of elastoplastic solids under a power-law plasticity model.
+ 
+\end_layout
+
+\begin_layout Standard
+It should be noted that the operator splitting method presented here will
+ inevitably suffer from the incorrect speed of propagation of discontinuities
+ on regular, structured grids.
+ This is due to a lack of spatial resolution in evaluating the source terms,
+ as detailed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "leveque_study_1990"
+literal "false"
+
+\end_inset
+
+.
+ This issue can be rectified by the use of some form of shock tracking or
+ mesh refinement, as noted in the cited paper.
+ It is noted in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_finite_2008"
+literal "false"
+
+\end_inset
+
+ that operator splitting-based methods can result in schemes that are neither
+ well-balanced nor asymptotically consistent.
+ The extent to which these two conditions are violated by this method –
+ and the severity in practice of any potential violation – is a topic of
+ further research.
+ 
+\end_layout
+
+\begin_layout Standard
+It should be noted that the assumption 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Assumption"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ used to derive the approximate analytical solver may break down for situations
+ where the flow is compressed heavily in one direction but not the others.
+ The reason for this is that one of the singular values of the distortion
+ tensor will be much larger than the others, and the mean of the squares
+ of the singular values will not be close to its geometric mean, meaning
+ that the subsequent linearization of the ODE governing the mean of the
+ singular values fails.
+ It should be noted that none of the situations covered in this study presented
+ problems for the approximate analytical solver, and situations which may
+ be problematic are in some sense unusual.
+ In any case, a stiff ODE solver can be used to solve the systems 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ if necessary, and so this method is still very much usable in these situations,
+ albeit slightly slower.
+\end_layout
+
+\begin_layout Standard
+It should be noted that this method, as described in this study, are trivially
+ parallelizable on a cell-wise basis.
+ Thus, given a large number of computational cores, deficiencies in this
+ method in terms of its order of accuracy may be overcome by utilizing a
+ larger number of computational cells and cores.
+ The number of grid cells that can be used scales roughly linearly with
+ number of cores, at constant time per iteration.
 \end_layout
 
 \begin_layout Section
