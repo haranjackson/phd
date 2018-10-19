@@ -8956,7 +8956,9 @@ name "fig:Distortion-ODEs_A-plastic"
 
 \end_inset
 
-The distortion tensor during the Strain Relaxation Test
+Components of the distortion tensor during the Strain Relaxation Test: approxima
+te analytical solution (crosses) is compared with numerical ODE solution
+ (solid line)
 \end_layout
 
 \end_inset
@@ -9007,7 +9009,8 @@ name "fig:Distortion-ODEs_σ-plastic"
 
 \end_inset
 
-The stress tensor during the Strain Relaxation Test
+Stress tensor during the Strain Relaxation Test: approximate analytical
+ solution (crosses) is compared with numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -9050,7 +9053,8 @@ name "fig:Distortion-ODEs_Ε-plastic"
 
 \end_inset
 
-The total energy during the Strain Relaxation Test
+Total energy during the Strain Relaxation Test: approximate analytical solution
+ (crosses) is compared with numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -9373,8 +9377,7 @@ literal "false"
 
 \begin_layout Standard
 \begin_inset Float figure
-placement p
-wide false
+wide true
 sideways false
 status open
 
@@ -9409,7 +9412,26 @@ name "fig:lid-driven-cavity-n=1.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test, for a dilatant with n=1.5
+Velocity profiles for the Lid-Driven Cavity Test under the new formulation
+ (solid line), for a dilatant with n=1.5.
+ Slices are taken through the center of the domain, in both axes, and compared
+ with those of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bell_p-version_1994"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "neofytou_3rd_2005"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -9424,8 +9446,7 @@ Velocity profiles for the Lid-Driven Cavity Test, for a dilatant with n=1.5
 
 \begin_layout Standard
 \begin_inset Float figure
-placement p
-wide false
+wide true
 sideways false
 status open
 
@@ -9460,8 +9481,26 @@ name "fig:lid-driven-cavity-n=0.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test, for a pseudoplastic with
- n=0.5
+Velocity profiles for the Lid-Driven Cavity Test under the new formulation
+ (solid line), for a pseudoplastic with n=0.5.
+ Slices are taken through the center of the domain, in both axes, and compared
+ with those of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bell_p-version_1994"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "neofytou_3rd_2005"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \end_inset

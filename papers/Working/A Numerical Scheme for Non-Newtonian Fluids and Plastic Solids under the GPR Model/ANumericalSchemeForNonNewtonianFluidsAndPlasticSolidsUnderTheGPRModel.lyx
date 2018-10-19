@@ -203,17 +203,16 @@ rvt
 A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
  by a power law under the GPR model is presented, along with a new numerical
  scheme for solving this system.
- The scheme is also modified to solve the well-known corresponding system
- for power-law elasto-plastic solids.
+ The scheme is also modified to solve the corresponding system for power-law
+ elasto-plastic solids.
 \end_layout
 
 \begin_layout Abstract
 The scheme is based on a temporal operator splitting, with the homogeneous
  system solved using a finite volume method based on a WENO reconstruction,
- and the temporal ODEs solved using an analytical approximate solution,
- presented here.
+ and the temporal ODEs solved using an analytical approximate solution.
  The method is found to perform favorably against problems with known exact
- solutions, and existing third-party numerical solutions.
+ solutions, and numerical solutions published in the open literature.
  It is simple to implement, and is currently the only publicly-available
  method for solving this modified version of the GPR model.
 \end_layout
@@ -314,19 +313,17 @@ Background
 \end_layout
 
 \begin_layout Standard
-As presented in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:The-GPR-Model"
-plural "false"
-caps "false"
-noprefix "false"
+The Godunov-Pehskov-Romenski model of continuum mechanics (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_hyperbolic_2016"
+literal "true"
 
 \end_inset
 
-, the GPR model of continuum mechanics has been purported to represent an
- effective method to describe both fluids and solids within the same hyperbolic
- system of differential equations.
+) has been purported to represent an alternative formulation to describe
+ both fluids and solids within the same hyperbolic system of differential
+ equations.
  From a practical perspective, the potential ramifications of this include:
  the simplification of software made for the simulation of phenomena involving
  different states of matter (as commented on in 
@@ -339,12 +336,13 @@ literal "false"
 
 ); and the use of the vast array of effective numerical solvers designed
  for first-order hyperbolic systems.
- From a theoretical perspective: the GPR model cannot produce waves of infinite
- speed, unlike the parabolic Navier-Stokes equations; and the first-principles
- derivation of the mechanism by which viscous effects appear under the GPR
- model has been commented to be more appropriate than the more phenomenological
- viscous law appearing in the traditional Navier-Stokes formulation (see
- 
+ From a theoretical perspective, there are advantages such as the fact that
+ the GPR model cannot produce waves of infinite speed, unlike the parabolic
+ Navier-Stokes equations.
+ Additionally, the first-principles derivation of the mechanism by which
+ viscous effects appear under the GPR model has been commented to be more
+ appropriate than the more phenomenological viscous law appearing in the
+ traditional Navier-Stokes formulation (see 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "peshkov_unified_2017"
@@ -376,7 +374,7 @@ literal "false"
 
 \end_inset
 
-) and a general relativity (see 
+) and general relativity (see 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "peshkov_general_2018"
@@ -385,19 +383,9 @@ literal "false"
 \end_inset
 
 ).
- It is yet to be formally extended to include non-Newtonian power-law fluids,
- however.
- A method for doing so is presented in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:Power-Law-Fluids"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
+ To the best of our knowledge, it is yet to be formally extended to include
+ non-Newtonian power-law fluids, however.
+ A method for doing so is presented in this paper.
  Building upon the work of 
 \begin_inset CommandInset citation
 LatexCommand citet
@@ -411,15 +399,15 @@ literal "false"
  scheme is then presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Numerical-Scheme"
+reference "sec:Numerical-Schemes"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
- for solving this new model, and it is adapted slightly to work also for
- elastoplastic power-law materials.
+ for solving this new model, and it is adapted to work also for elastoplastic
+ power-law materials.
  The scheme is validated against several 1D and 2D tests in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -949,7 +937,7 @@ In previous studies,
 \begin_inset Formula $c_{t}$
 \end_inset
 
- has been taken to be constant, as it will in this study.
+ has been taken to be constant, as it will be in this study.
 \end_layout
 
 \begin_layout Standard
@@ -1245,7 +1233,7 @@ The strain dissipation time
 \begin_inset Formula $\tau_{1}$
 \end_inset
 
- of the HPR model is a continuous analogue of Frenkel's 
+ of the GPR model is a continuous analogue of Frenkel's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1278,7 +1266,7 @@ literal "true"
 \end_inset
 
  for inviscid fluids.
- It is in this way that the HPR model seeks to describe all three major
+ It is in this way that the GPR model seeks to describe all three major
  phases of matter, as long as a continuum description is appropriate for
  the material at hand.
 \end_layout
@@ -1534,10 +1522,10 @@ Combining these two relationships, we obtain:
 \end_layout
 
 \begin_layout Section
-Numerical Scheme
+Numerical Schemes
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Numerical-Scheme"
+name "sec:Numerical-Schemes"
 
 \end_inset
 
@@ -4167,6 +4155,35 @@ name "sec:Numerical-Results"
 
 \end_layout
 
+\begin_layout Standard
+In this section, a variety of test problems are solved, with a dual purpose.
+ Firstly, we demonstrate the ability of the modified GPR formulation presented
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Power-Law-Fluids"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to model power-law fluids.
+ Secondly, we demonstrate the efficacy of the numerical schemes presented
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Schemes"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ in solving this system, and the existing power-law plasticity formulation
+ of the GPR model.
+\end_layout
+
 \begin_layout Subsection
 Strain Relaxation Test
 \end_layout
@@ -4227,7 +4244,8 @@ reference "fig:Distortion-ODEs_Ε-plastic"
 
 \begin_layout Standard
 \begin_inset Float figure
-wide true
+placement p
+wide false
 sideways false
 status open
 
@@ -4262,7 +4280,9 @@ name "fig:Distortion-ODEs_A-plastic"
 
 \end_inset
 
-The distortion tensor during the Strain Relaxation Test
+Components of the distortion tensor during the Strain Relaxation Test: approxima
+te analytical solution (crosses) is compared with numerical ODE solution
+ (solid line)
 \end_layout
 
 \end_inset
@@ -4277,7 +4297,8 @@ The distortion tensor during the Strain Relaxation Test
 
 \begin_layout Standard
 \begin_inset Float figure
-wide true
+placement p
+wide false
 sideways false
 status open
 
@@ -4312,7 +4333,8 @@ name "fig:Distortion-ODEs_σ-plastic"
 
 \end_inset
 
-The stress tensor during the Strain Relaxation Test
+Stress tensor during the Strain Relaxation Test: approximate analytical
+ solution (crosses) is compared with numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -4327,7 +4349,8 @@ The stress tensor during the Strain Relaxation Test
 
 \begin_layout Standard
 \begin_inset Float figure
-wide true
+placement p
+wide false
 sideways false
 status open
 
@@ -4354,7 +4377,8 @@ name "fig:Distortion-ODEs_Ε-plastic"
 
 \end_inset
 
-The total energy during the Strain Relaxation Test
+Total energy during the Strain Relaxation Test: approximate analytical solution
+ (crosses) is compared with numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -4725,7 +4749,26 @@ name "fig:lid-driven-cavity-n=1.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test, for a dilatant with n=1.5
+Velocity profiles for the Lid-Driven Cavity Test under our new formulation
+ (solid line), for a dilatant with n=1.5.
+ Slices are taken through the center of the domain, in both axes, and compared
+ with those of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bell_p-version_1994"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "neofytou_3rd_2005"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -4775,8 +4818,26 @@ name "fig:lid-driven-cavity-n=0.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test, for a pseudoplastic with
- n=0.5
+Velocity profiles for the Lid-Driven Cavity Test under our new formulation
+ (solid line), for a pseudoplastic with n=0.5.
+ Slices are taken through the center of the domain, in both axes, and compared
+ with those of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bell_p-version_1994"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "neofytou_3rd_2005"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \end_inset
