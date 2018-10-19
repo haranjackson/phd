@@ -80,7 +80,7 @@ def cylindrical_shock():
     """ 10.1002/nme.2695
         6.2. Two-dimensional test case
 
-        N = 3
+        N = 4
         cfl = 0.8
         SPLIT = True
         SOLVER = 'roe'
@@ -121,4 +121,4 @@ def cylindrical_shock():
             else:
                 u[i, j] = Qi
 
-    return u, [MP], tf, dX
+    return u[:, 250:], [MP], tf, dX
