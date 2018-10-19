@@ -5034,11 +5034,52 @@ The simulation is run to
 \end_inset
 
 .
- A third order WENO scheme is used, with a CFL number of 0.8.
- The resulting radial density and velocity profiles are given in 
+ A fourth order WENO scheme is used, with a CFL number of 0.8.
+ The resulting radial density, velocity, stress tensor, and temperature
+ profiles are given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "fig:cylindrical-shock"
+reference "fig:cylindrical-shock-ρ"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:cylindrical-shock-v"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:cylindrical-shock-Σ"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:cylindrical-shock-T"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and 2D heatmaps for density and speed are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:cylindrical-shock-2"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5046,7 +5087,10 @@ noprefix "false"
 \end_inset
 
 .
- The results are compared with those of the 1D radially-symmetric scheme
+\end_layout
+
+\begin_layout Standard
+The results are compared with those of the 1D radially-symmetric scheme
  found in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -5068,22 +5112,12 @@ literal "true"
 \end_inset
 
  being more accurately resolved.
- The 2D heatmaps of density and speed are given in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:cylindrical-shock-2"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
-wide true
+placement p
+wide false
 sideways false
 status open
 
@@ -5107,6 +5141,45 @@ status open
 
 
 \end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cylindrical-shock-ρ"
+
+\end_inset
+
+1D density profiles for the 2D Cylindrical Shock Test, comparing the GPR
+ model w/ split solver (left) with the results from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "false"
+
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
 
 \begin_layout Plain Layout
 \noindent
@@ -5135,12 +5208,12 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:cylindrical-shock"
+name "fig:cylindrical-shock-v"
 
 \end_inset
 
-Density and velocity for the Cylindrical Shock Test, comparing the GPR model
- (left) with the model from 
+1D velocity profiles for the 2D Cylindrical Shock Test, comparing the GPR
+ model w/ split solver (left) with the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -5163,7 +5236,128 @@ literal "false"
 
 \begin_layout Standard
 \begin_inset Float figure
-wide true
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Cylindrical Shock/Σ_gpr.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Cylindrical Shock/Σ_barton.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cylindrical-shock-Σ"
+
+\end_inset
+
+1D stress tensor profiles for the 2D Cylindrical Shock Test, comparing the
+ GPR model w/ split solver (left) with the results from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "false"
+
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Cylindrical Shock/T_gpr.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C2/Cylindrical Shock/T_barton.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cylindrical-shock-T"
+
+\end_inset
+
+1D temperature profiles for the 2D Cylindrical Shock Test, comparing the
+ GPR model w/ split solver (left) with the results from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "false"
+
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
 sideways false
 status open
 

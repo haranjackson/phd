@@ -66,7 +66,7 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
 
 
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
-                  vmin, vmax, i=None, j=None, takeNorm=False):
+                  vmin, vmax, i=None, j=None, takeNorm=False, offset=0):
 
     shape = u.shape[:-1]
     n = prod(shape)
@@ -102,6 +102,8 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
 
         else:
             y[ii] = nan
+
+    y += offset
 
     if u.ndim - 1 == 1:
         plot1d(y, style, x, lab, col, title, sci=sci)
@@ -171,10 +173,11 @@ def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
 
 
 def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
-                     square=0, plotType='colormap', vmin=None, vmax=None):
+                     square=0, plotType='colormap', vmin=None, vmax=None,
+                     T0=0):
     figure(20, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Temperature', sci, 'T',
-                  plotType, vmin, vmax)
+                  plotType, vmin, vmax, offset=T0)
 
 
 def plot_sigma(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
