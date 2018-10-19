@@ -4878,29 +4878,43 @@ literal "false"
 \end_inset
 
 .
+ 400 grid cells were used, with a third order WENO method.
  
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:piston"
 
 \end_inset
 
- demonstrates the results using the split solver for various values of 
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:piston-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ demonstrate the results using the split solver for various values of 
 \begin_inset Formula $n$
 \end_inset
 
 .
  These results are compared with the exact solution to the problem under
- perfect plasticity (to which the former results should converge as 
+ ideal plasticity (to which the former results should converge as 
 \begin_inset Formula $n\rightarrow\infty$
 \end_inset
 
 ).
- The nature of the split solver enables large values of 
+ The nature of the split solver enables larger values of 
 \begin_inset Formula $n$
 \end_inset
 
- to be used, producing more accurate results than those found in 
+ to be used than those found in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_theoretical_2018"
@@ -4909,13 +4923,14 @@ literal "true"
 \end_inset
 
 .
- 400 grid cells were used, with a third order WENO method.
- 
+ The results here are correspondingly closer to the ideal plasticity solution
+ that they approximate.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
-wide true
+placement p
+wide false
 sideways false
 status open
 
@@ -4941,10 +4956,45 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:piston"
+
+\end_inset
+
+Density and velocity in the elastoplastic piston test, for various values
+ of power-law parameter 
+\begin_inset Formula $n$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/p.png
+	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/ρ_zoom.png
 	lyxscale 25
 	width 50text%
 
@@ -4952,7 +5002,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/Σ.png
+	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/v_zoom.png
 	lyxscale 25
 	width 50text%
 
@@ -4967,12 +5017,16 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:piston"
+name "fig:piston-1"
 
 \end_inset
 
-Density, velocity, pressure, and total stress in the elastoplastic piston
- test
+Zoom view of density and velocity in the elastoplastic piston test, for
+ various values of power-law parameter 
+\begin_inset Formula $n$
+\end_inset
+
+
 \end_layout
 
 \end_inset
