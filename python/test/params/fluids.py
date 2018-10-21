@@ -11,5 +11,3 @@ He_SG_SI = material_params(EOS='sg', ρ0=0.163, p0=101325, cv=3127,
 
 H20_SG_SI = material_params(EOS='sg', ρ0=997, p0=3.5e8, cv=950,
                             γ=4.4, pINF=6e8, b0=1, cα=1, μ=1e-3, Pr=7)
-
-PBX_SG_SI = material_params(EOS='sg', ρ0=1840, p0=1e5, γ=2.85, b0=1, μ=1e-2)
