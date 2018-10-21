@@ -204,7 +204,7 @@ A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
  by a power law under the GPR model is presented, along with a new numerical
  scheme for solving this system.
  The scheme is also modified to solve the corresponding system for power-law
- elasto-plastic solids.
+ elastoplastic solids.
 \end_layout
 
 \begin_layout Abstract
@@ -213,8 +213,9 @@ The scheme is based on a temporal operator splitting, with the homogeneous
  and the temporal ODEs solved using an analytical approximate solution.
  The method is found to perform favorably against problems with known exact
  solutions, and numerical solutions published in the open literature.
- It is simple to implement, and is currently the only publicly-available
- method for solving this modified version of the GPR model.
+ It is simple to implement, and to the best of the authors' knowledge it
+ is currently the only method for solving this modified version of the GPR
+ model.
 \end_layout
 
 \begin_layout Keywords
@@ -336,9 +337,9 @@ literal "false"
 
 ); and the use of the vast array of effective numerical solvers designed
  for first-order hyperbolic systems.
- From a theoretical perspective, there are advantages such as the fact that
- the GPR model cannot produce waves of infinite speed, unlike the parabolic
- Navier-Stokes equations.
+ From a theoretical perspective, an advantage of the GPR model is that it
+ cannot produce waves of infinite speed, unlike the parabolic Navier-Stokes
+ equations.
  Additionally, the first-principles derivation of the mechanism by which
  viscous effects appear under the GPR model has been commented to be more
  appropriate than the more phenomenological viscous law appearing in the
@@ -395,8 +396,8 @@ literal "false"
 \end_inset
 
  (in which a numerical scheme based upon a split solver was presented for
- non-Newtonian fluids and elastic solids under the GPR model) a numerical
- scheme is then presented in 
+ Newtonian fluids and elastic solids under the GPR model) a numerical scheme
+ is then presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "sec:Numerical-Schemes"
@@ -406,8 +407,8 @@ noprefix "false"
 
 \end_inset
 
- for solving this new model, and it is adapted to work also for elastoplastic
- power-law materials.
+ for solving this new model.
+ This scheme is adapted to work also for elastoplastic power-law materials.
  The scheme is validated against several 1D and 2D tests in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -791,7 +792,15 @@ E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(
 Here, as in previous studies, such as 
 \begin_inset CommandInset citation
 LatexCommand citet
-key "dumbser_high_2015,boscheri_cell_2016"
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "boscheri_cell_2016"
 literal "false"
 
 \end_inset
@@ -801,7 +810,7 @@ literal "false"
 \end_inset
 
  is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
- the EOS of nonlinear hyperelasticity 
+ the EOS of nonlinear hyperelasticity (see 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "barton_exact_2009"
@@ -809,7 +818,7 @@ literal "false"
 
 \end_inset
 
-.
+).
 \end_layout
 
 \begin_layout Standard
@@ -1220,7 +1229,7 @@ literal "true"
 
 \begin_layout Standard
 The GPR model and Godunov and Romenski's 1970s model of elastoplastic deformatio
-n in fact relies upon the same equations.
+n in fact rely upon the same equations.
  The realization of Peshkov and Romenski was that these are the equations
  of motion for an arbitrary continuum - not just a solid - and so the model
  can be applied to fluids too.
@@ -1697,11 +1706,19 @@ reference "eq:ODESubsystem"
 In the scheme proposed here, the homogeneous subsystem will be solved using
  a WENO reconstruction of the data, followed by a finite volume update,
  and the temporal ODEs will be solved with appropriate ODE solvers.
- This new scheme will be referred to here as 
-\shape italic
-the Split-WENO method
-\shape default
-.
+ It should be noted that there are other choices of solvers for the homogeneous
+ system that could have been made (e.g.
+ see MUSCL, SLIC, and WAF, among others in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "true"
+
+\end_inset
+
+).
+ The WENO method was chosen due to the arbitrarily high-order spatial reconstruc
+tions it is able to produce.
 \end_layout
 
 \begin_layout Standard
@@ -2206,12 +2223,6 @@ where
 \end_layout
 
 \begin_layout Standard
-It was found that the Osher-Solomon flux would often produce slightly less
- diffusive results, but that it was more computationally expensive, and
- also had a greater tendency to introduce numerical artefacts.
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula $\boldsymbol{P_{i}^{n+\frac{1}{2}}},\boldsymbol{D_{i}^{n+\frac{1}{2}}}$
 \end_inset
 
@@ -2239,6 +2250,20 @@ name "subsec:The-Thermal-Impulse-ODEs"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The following analytical solution to the thermal impulse ODEs was first
+ presented in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+.
+ It is included here for completeness.
 \end_layout
 
 \begin_layout Standard
@@ -2448,6 +2473,21 @@ name "subsec:The-Distortion-ODEs"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The following analytical solution to the distortion ODEs for Newtonian fluids
+ was first presented in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+.
+ It is included here, as the solutions for non-Newtonian fluids and elastoplasti
+c solids depend on the Newtonian solution.
 \end_layout
 
 \begin_layout Subsubsection
@@ -3859,7 +3899,7 @@ noprefix "false"
 
 \end_inset
 
-
+, 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:u(τ)-1"
@@ -4009,7 +4049,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:u(τ)-1"
@@ -4189,6 +4229,11 @@ Strain Relaxation Test
 \end_layout
 
 \begin_layout Standard
+The aim of this test is to gauge the accuracy of the approximate analytic
+ solver for the distortion equations.
+\end_layout
+
+\begin_layout Standard
 Take initial data used by Barton:
 \end_layout
 
@@ -4213,7 +4258,12 @@ The following parameter values were used:
 \end_inset
 
 .
- As can be seen in 
+\end_layout
+
+\begin_layout Standard
+The evolution of the components of the distortion tensor, according to both
+ the approximate analytical solver and a stiff numerical ODE solver, are
+ given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:Distortion-ODEs_A-plastic"
@@ -4234,8 +4284,9 @@ reference "fig:Distortion-ODEs_Ε-plastic"
 
 \end_inset
 
-, the approximate analytic solver compares well with the exact solution
- for the distortion tensor 
+.
+ As can be seen, the approximate analytic solver compares well with the
+ exact solution for the distortion tensor 
 \begin_inset Formula $A$
 \end_inset
 
@@ -4280,9 +4331,8 @@ name "fig:Distortion-ODEs_A-plastic"
 
 \end_inset
 
-Components of the distortion tensor during the Strain Relaxation Test: approxima
-te analytical solution (crosses) is compared with numerical ODE solution
- (solid line)
+Distortion tensor components during the Strain Relaxation Test: approximate
+ analytical solution (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -4333,8 +4383,8 @@ name "fig:Distortion-ODEs_σ-plastic"
 
 \end_inset
 
-Stress tensor during the Strain Relaxation Test: approximate analytical
- solution (crosses) is compared with numerical ODE solution (solid line)
+Stress tensor components during the Strain Relaxation Test: approximate
+ analytical solution (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -4378,7 +4428,7 @@ name "fig:Distortion-ODEs_Ε-plastic"
 \end_inset
 
 Total energy during the Strain Relaxation Test: approximate analytical solution
- (crosses) is compared with numerical ODE solution (solid line)
+ (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -4393,6 +4443,14 @@ Total energy during the Strain Relaxation Test: approximate analytical solution
 
 \begin_layout Subsection
 Poiseuille Flow
+\end_layout
+
+\begin_layout Standard
+The aim of this test is to gauge both the performance of the modified formulatio
+n of the GPR model in simulating power-law fluids, and the accuracy of the
+ new numerical scheme we have presented to solve it.
+ The problem of poiseuille flow has been chosen due to the availability
+ of an analytical solution against which to compare.
 \end_layout
 
 \begin_layout Standard
@@ -4509,11 +4567,16 @@ In this case,
 .
  The pressure gradient is imposed by means of a body force, implemented
  as a constant source term to the momentum equation.
- The final time was taken to be 
+\end_layout
+
+\begin_layout Standard
+The final time was taken to be 
 \begin_inset Formula $20$
 \end_inset
 
-, with 100 cells taken across the width of the channel.
+, so that in each case the system had reached steady state.
+ 100 cells were taken across the width of the channel.
+ A third order WENO method was used, with a CFL number of 0.6.
 \end_layout
 
 \begin_layout Standard
@@ -4534,6 +4597,12 @@ noprefix "false"
 .
  The exact solutions are shown as dotted lines, with the numerical solutions
  in solid colors.
+ Note that there is good agreement between the numerical solutions and exact
+ solutions for all values of 
+\begin_inset Formula $n$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -4592,7 +4661,10 @@ Lid-Driven Cavity
 \end_layout
 
 \begin_layout Standard
-As detailed in 
+This lid-driven cavity test has been chosen here as a famous multidimensional
+ problem against which the power-law fluid framework we have presented can
+ be benchmarked.
+ See 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sverdrup_highly_2018"
@@ -4600,32 +4672,32 @@ literal "false"
 
 \end_inset
 
-, this test consists of a square grid, with one side at a constant velocity
+ for detailed analysis of this problem, under power-law fluids and other
+ non-Newtonian fluids.
+\end_layout
+
+\begin_layout Standard
+The test consists of a square grid, with one side at a constant velocity
  of 
 \begin_inset Formula $1$
 \end_inset
 
 , and the other three stationary, with no-slip boundary conditions imposed.
- Here, the grid is chosen to have size 
-\begin_inset Formula $100\times100$
-\end_inset
-
-.
  The fluid obeys an ideal gas EOS with 
 \begin_inset Formula $\gamma=1.4$
 \end_inset
 
-, and a viscosity power law with 
+ and 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+.
+ It obeys a viscosity power law with 
 \begin_inset Formula $K=10^{-2}$
 \end_inset
 
 , for various 
 \begin_inset Formula $n$
-\end_inset
-
-.
- We have 
-\begin_inset Formula $c_{s}=1$
 \end_inset
 
 .
@@ -4642,6 +4714,15 @@ literal "false"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+The grid is chosen to have size 
+\begin_inset Formula $100\times100$
+\end_inset
+
+.
+ A third order WENO method is used, with a CFL number of 0.5.
 \end_layout
 
 \begin_layout Standard
@@ -4906,7 +4987,9 @@ Elastoplastic Piston
 \end_layout
 
 \begin_layout Standard
-This test is taken from 
+We now demonstrate the ability of our new numerical scheme to deal with
+ problems involving elastoplastic materials.
+ This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_theoretical_2018"
@@ -4923,7 +5006,10 @@ literal "false"
 \end_inset
 
 .
- In this test, a piston with speed 
+\end_layout
+
+\begin_layout Standard
+In this test, a piston with speed 
 \begin_inset Formula $20ms^{-1}$
 \end_inset
 
@@ -4939,8 +5025,8 @@ literal "false"
 \end_inset
 
 .
- 400 grid cells were used, with a third order WENO method.
- 
+ 400 grid cells were used, with a third order WENO method, and a CFL number
+ of 0.7.
 \end_layout
 
 \begin_layout Standard
@@ -4971,11 +5057,11 @@ noprefix "false"
 \end_inset
 
 ).
- The nature of the split solver enables larger values of 
+ The split solver is able to cope with larger values of 
 \begin_inset Formula $n$
 \end_inset
 
- to be used than those found in 
+ than those that have been presented in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_theoretical_2018"
@@ -4985,7 +5071,7 @@ literal "true"
 
 .
  The results here are correspondingly closer to the ideal plasticity solution
- that they approximate.
+ that they approximate, than those found in the aforementioned paper.
 \end_layout
 
 \begin_layout Standard
@@ -5105,6 +5191,11 @@ Cylindrical Shock
 \end_layout
 
 \begin_layout Standard
+The purpose of this test is to demonstrate the efficacy of the split solver
+ in multidimensional elastoplastic problems.
+\end_layout
+
+\begin_layout Standard
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -5140,11 +5231,11 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-The simulation is run to 
+The simulation is run to time 
 \begin_inset Formula $t=10^{-5}$
 \end_inset
 
- on a grid of shape 
+, on a grid of shape 
 \begin_inset Formula $500\times500$
 \end_inset
 
@@ -5161,7 +5252,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:cylindrical-shock-v"
@@ -5171,7 +5262,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:cylindrical-shock-Σ"
@@ -5181,7 +5272,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:cylindrical-shock-T"
@@ -5227,6 +5318,11 @@ literal "true"
 \end_inset
 
  being more accurately resolved.
+ Additionally, the temperature jump around 
+\begin_inset Formula $r=2$
+\end_inset
+
+ is more sharply resolved.
 \end_layout
 
 \begin_layout Standard
@@ -5268,7 +5364,7 @@ name "fig:cylindrical-shock-ρ"
 \end_inset
 
 1D density profiles for the 2D Cylindrical Shock Test, comparing the GPR
- model w/ split solver (left) with the results from 
+ model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -5328,7 +5424,7 @@ name "fig:cylindrical-shock-v"
 \end_inset
 
 1D velocity profiles for the 2D Cylindrical Shock Test, comparing the GPR
- model w/ split solver (left) with the results from 
+ model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -5388,7 +5484,7 @@ name "fig:cylindrical-shock-Σ"
 \end_inset
 
 1D stress tensor profiles for the 2D Cylindrical Shock Test, comparing the
- GPR model w/ split solver (left) with the results from 
+ GPR model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -5448,7 +5544,7 @@ name "fig:cylindrical-shock-T"
 \end_inset
 
 1D temperature profiles for the 2D Cylindrical Shock Test, comparing the
- GPR model w/ split solver (left) with the results from 
+ GPR model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -5532,49 +5628,23 @@ name "sec:Conclusions"
 \end_layout
 
 \begin_layout Standard
-In summary, a means of modeling power-law dilatants and pseudoplastics under
- the GPR model has been presented.
- A new numerical method - based on an operator splitting combined with some
- analytical results - has also been presented for solving this version of
- the GPR model, and this numerical method has been applied also to the case
- of elastoplastic solids under a power-law plasticity model.
- 
+In summary, a formulation for modeling power-law dilatants and pseudoplastics
+ under the GPR model has been presented.
+ A new numerical method - based on an operator splitting, combined with
+ some analytical results - has also been presented for solving this version
+ of the GPR model, and this numerical method has been applied also to the
+ case of elastoplastic solids under a power-law plasticity model.
+ It has been demonstrated through numerical simulation that the modified
+ GPR formulation is able to accurately describe the evolution of non-Newtonian
+ fluids, and the new numerical scheme has been shown to be an effective
+ method by which to solve this system, and the existing corresponding system
+ for elastoplastic solids.
 \end_layout
 
 \begin_layout Standard
-It should be noted that the operator splitting method presented here will
- inevitably suffer from the incorrect speed of propagation of discontinuities
- on regular, structured grids.
- This is due to a lack of spatial resolution in evaluating the source terms,
- as detailed in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "leveque_study_1990"
-literal "false"
-
-\end_inset
-
-.
- This issue can be rectified by the use of some form of shock tracking or
- mesh refinement, as noted in the cited paper.
- It is noted in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "dumbser_finite_2008"
-literal "false"
-
-\end_inset
-
- that operator splitting-based methods can result in schemes that are neither
- well-balanced nor asymptotically consistent.
- The extent to which these two conditions are violated by this method –
- and the severity in practice of any potential violation – is a topic of
- further research.
- 
-\end_layout
-
-\begin_layout Standard
-It should be noted that the assumption 
+Under circumstances in which the flow is compressed heavily in one direction
+ relative to the other directions, it should be noted that the linearization
+ assumption 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:Assumption"
@@ -5584,13 +5654,20 @@ noprefix "false"
 
 \end_inset
 
- used to derive the approximate analytical solver may break down for situations
- where the flow is compressed heavily in one direction but not the others.
- The reason for this is that one of the singular values of the distortion
+ used to derive the approximate analytical solver may break down.
+ As discussed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+, this is due to the fact that one of the singular values of the distortion
  tensor will be much larger than the others, and the mean of the squares
- of the singular values will not be close to its geometric mean, meaning
- that the subsequent linearization of the ODE governing the mean of the
- singular values fails.
+ of the singular values will be distant to the geometric mean.
+ The subsequent linearization of the ODE governing the mean of the singular
+ values will then fail.
  It should be noted that none of the situations covered in this study presented
  problems for the approximate analytical solver, and situations which may
  be problematic are in some sense unusual.
@@ -5619,8 +5696,40 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-It should be noted that this method, as described in this study, are trivially
- parallelizable on a cell-wise basis.
+As detailed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "leveque_study_1990"
+literal "false"
+
+\end_inset
+
+, solvers based on a temporal splitting suffer from a lack of spatial resolution
+ in evaluating the source terms.
+ Thus, it should be noted that the operator splitting method presented here
+ may suffer from the incorrect speed of propagation of discontinuities on
+ regular, structured grids.
+ This issue can be rectified, however, by the use of some form of shock
+ tracking or mesh refinement, as noted in the cited paper.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_finite_2008"
+literal "false"
+
+\end_inset
+
+ note that operator splitting-based methods can result in schemes that are
+ neither well-balanced, nor asymptotically consistent.
+ The extent to which these two conditions are violated by this method –
+ and the severity in practice of any potential violation – is a topic of
+ further research.
+ 
+\end_layout
+
+\begin_layout Standard
+It should be noted that the new numerical scheme presented in this study
+ is trivially parallelizable on a cell-wise basis.
  Thus, given a large number of computational cores, deficiencies in this
  method in terms of its order of accuracy may be overcome by utilizing a
  larger number of computational cells and cores.
@@ -5649,8 +5758,9 @@ Acknowledgments
 \end_layout
 
 \begin_layout Standard
-I acknowledge financial support from the EPSRC Centre for Doctoral Training
- in Computational Methods for Materials Science under grant EP/L015552/1.
+The authors acknowledge financial support from the EPSRC Centre for Doctoral
+ Training in Computational Methods for Materials Science under grant EP/L015552/
+1.
 \end_layout
 
 \end_body
