@@ -49,11 +49,11 @@ def poiseuille():
 
         DESTRESS = false
     """
-    n = 1.3
+    n = 0.7
 
-    tf = 5
+    tf = 10
     Lx = 0.25
-    nx = 50
+    nx = 100
 
     γ = 1.4
     μ = 1e-2
@@ -86,9 +86,9 @@ def lid_driven_cavity():
         NO_CORNERS = true
         DESTRESS = true
     """
-    n = 1.5
+    n = 0.5
 
-    tf = 10
+    tf = 40
     Lx = 1
     Ly = 1
     nx = 100
