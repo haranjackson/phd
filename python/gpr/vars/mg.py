@@ -113,10 +113,14 @@ def e_ref(ρ, MP):
         v_ = ρ0 / ρ
 
         if EOS == JWL:
-            return A / (ρ0 * R1) * exp(-R1 * v_) + B / (ρ0 * R2) * exp(-R2 * v_)
+            retA = A / (ρ0 * R1) * exp(-R1 * v_)
+            retB = B / (ρ0 * R2) * exp(-R2 * v_)
+            return retA + retB
 
         elif EOS == COCHRAN_CHAN:
-            return -A / (ρ0 * (1 - R1)) * (v_**(1 - R1) - 1) + B / (ρ0 * (1 - R2)) * (v_**(1 - R2) - 1)
+            retA = -A / (ρ0 * (1 - R1)) * (v_**(1 - R1) - 1)
+            retB = B / (ρ0 * (1 - R2)) * (v_**(1 - R2) - 1)
+            return retA + retB
 
 
 def dΓ_MG(ρ, MP):
@@ -134,7 +138,7 @@ def dΓ_MG(ρ, MP):
 
 
 def dp_ref(ρ, MP):
-    """ Returns the derivative of the reference pressure in the Mie-Gruneisen EOS
+    """ Returns the derivative of the ref pressure in the Mie-Gruneisen EOS
     """
     EOS = MP.EOS
 
@@ -173,7 +177,7 @@ def dp_ref(ρ, MP):
 
 
 def de_ref(ρ, MP):
-    """ Returns the derivative of the reference energy for the Mie-Gruneisen EOS
+    """ Returns the derivative of the ref energy for the Mie-Gruneisen EOS
     """
     EOS = MP.EOS
 

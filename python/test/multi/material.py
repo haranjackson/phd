@@ -7,7 +7,8 @@ from gpr.opts import NV
 from test.common import riemann_IC, primitive_IC
 from test.fluid.newtonian1 import heat_conduction
 from test.params.alt import VAC, Cu_HYP_SI, Al_HYP_CGS
-from test.params.fluids import Air_SG_SI, He_SG_SI, H20_SG_SI, PBX_SG_SI
+from test.params.fluids import Air_SG_SI, He_SG_SI, H20_SG_SI
+from test.params.reactive import PBX_SG_SI
 from test.params.solids import Cu_GR_SI, Al_GR_CGS
 
 

@@ -1,3 +1,5 @@
+from numpy import inf
+
 from gpr.misc.objects import material_params
 
 

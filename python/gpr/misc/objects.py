@@ -86,7 +86,7 @@ def params(MP, Rc, EOS,
         MP.c02 = c0**2
         MP.s = s
 
-    if EOS == 'gr':
+    elif EOS == 'gr':
         MP.c02 = c0**2
         MP.α = α
         MP.β = β
