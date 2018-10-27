@@ -3,8 +3,12 @@ from numpy import amax, inf, log, mean, prod, sqrt, sum, take
 
 def convergence_rate(NDIM, exact1, exact2, results1, results2, L=2, var=0):
 
-    diff1 = take(results1 - exact1, var, axis=-1)
-    diff2 = take(results2 - exact2, var, axis=-1)
+    if results1.ndim > NDIM:
+        diff1 = take(results1 - exact1, var, axis=-1)
+        diff2 = take(results2 - exact2, var, axis=-1)
+    else:
+        diff1 = results1 - exact1
+        diff2 = results2 - exact2
 
     n1 = prod(diff1.shape[:NDIM])
     n2 = prod(diff2.shape[:NDIM])
