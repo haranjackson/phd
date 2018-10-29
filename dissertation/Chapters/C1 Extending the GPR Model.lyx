@@ -213,8 +213,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e_{ref}\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
-T & =T_{ref}\phi\left(\rho\right)+\frac{e-e_{ref}}{c_{v}}=T_{ref}\phi\left(\rho\right)+\frac{p-p_{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
+E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e^{ref}\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
+T & =T^{ref}\phi\left(\rho\right)+\frac{e-e^{ref}}{c_{v}}=T_{ref}\phi\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
 \phi\left(\rho\right) & =\exp\left(\int_{\rho_{0}}^{\rho}\frac{\Gamma\left(\rho^{'}\right)}{\rho^{'}}d\rho^{'}\right)
 \end{align}
 
@@ -241,7 +241,7 @@ end{subequations}
 
 \begin_layout Standard
 The forms taken by 
-\begin_inset Formula $e_{ref},p_{ref},\Gamma$
+\begin_inset Formula $e^{ref},p^{ref},\Gamma$
 \end_inset
 
  for various different instances of this class are given in 
@@ -371,7 +371,7 @@ Equation of State
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $p_{ref}\left(\rho\right)$
+\begin_inset Formula $p^{ref}\left(\rho\right)$
 \end_inset
 
 
@@ -383,7 +383,7 @@ Equation of State
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $e_{ref}\left(\rho\right)$
+\begin_inset Formula $e^{ref}\left(\rho\right)$
 \end_inset
 
 
@@ -560,7 +560,7 @@ Shock Mie-Gruneisen
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)$
+\begin_inset Formula $\frac{p^{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)$
 \end_inset
 
 
@@ -781,7 +781,7 @@ Godunov-Romenski
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-\begin_inset Formula $e_{ref},p_{ref},\Gamma,T_{ref}$
+\begin_inset Formula $e^{ref},p^{ref},\Gamma,T_{ref}$
 \end_inset
 
  for different kinds of Mie-Gruneisen equations of state
@@ -832,7 +832,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{\partial T}{\partial\rho} & =\frac{1}{c_{v}}\left(\frac{\partial e}{\partial\rho}-e_{ref}^{'}\left(\rho\right)\right)\\
+\frac{\partial T}{\partial\rho} & =\frac{1}{c_{v}}\left(\frac{\partial e}{\partial\rho}-\frac{de^{ref}}{d\rho}\right)\\
 \frac{\partial T}{\partial p} & =\frac{1}{c_{v}}\frac{\partial e}{\partial p}
 \end{align}
 
@@ -876,7 +876,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{\partial e}{\partial\rho} & =e_{ref}^{'}\left(\rho\right)-\frac{p_{ref}^{'}\left(\rho\right)\rho\Gamma\left(\rho\right)+\left(\Gamma\left(\rho\right)+\rho\Gamma^{'}\left(\rho\right)\right)\left(p-p_{ref}\left(\rho\right)\right)}{\left(\rho\Gamma\left(\rho\right)\right)^{2}}\\
+\frac{\partial e}{\partial\rho} & =\frac{de^{ref}}{d\rho}-\frac{\frac{dp^{ref}}{d\rho}\rho\Gamma\left(\rho\right)+\left(\Gamma\left(\rho\right)+\rho\Gamma^{'}\left(\rho\right)\right)\left(p-p^{ref}\left(\rho\right)\right)}{\left(\rho\Gamma\left(\rho\right)\right)^{2}}\\
 \frac{\partial e}{\partial p} & =\frac{1}{\rho\Gamma\left(\rho\right)}
 \end{align}
 
@@ -941,7 +941,7 @@ Equation of State
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $p_{ref}^{'}\left(\rho\right)$
+\begin_inset Formula $\frac{dp^{ref}}{d\rho}$
 \end_inset
 
 
@@ -953,7 +953,7 @@ Equation of State
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $e_{ref}^{'}\left(\rho\right)$
+\begin_inset Formula $\frac{de^{ref}}{d\rho}$
 \end_inset
 
 
@@ -1094,7 +1094,7 @@ Shock Mie-Gruneisen
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\frac{1}{2}\left(p_{ref}^{'}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p_{ref}}{\rho^{2}}\right)$
+\begin_inset Formula $\frac{1}{2}\left(\frac{dp^{ref}}{d\rho}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p^{ref}}{\rho^{2}}\right)$
 \end_inset
 
 
@@ -1267,7 +1267,7 @@ Godunov-Romenski
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-\begin_inset Formula $e_{ref}^{'},p_{ref}^{'},\Gamma^{'}$
+\begin_inset Formula $\frac{de^{ref}}{d\rho},\frac{dp^{ref}}{d\rho},\Gamma^{'}$
 \end_inset
 
  for different kinds of Mie-Gruneisen equations of state
@@ -1318,7 +1318,7 @@ reference "eq:MG form"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-e_{\rho}-\frac{\Gamma}{\rho}e=\frac{p_{ref}}{\rho^{2}}-\frac{\Gamma}{\rho}e_{ref}
+e_{\rho}-\frac{\Gamma}{\rho}e=\frac{p^{ref}}{\rho^{2}}-\frac{\Gamma}{\rho}e^{ref}
 \end{equation}
 
 \end_inset
@@ -1328,7 +1328,7 @@ e_{\rho}-\frac{\Gamma}{\rho}e=\frac{p_{ref}}{\rho^{2}}-\frac{\Gamma}{\rho}e_{ref
 
 \begin_layout Standard
 The solutions to this equation for different forms of 
-\begin_inset Formula $\Gamma,p_{ref},e_{ref}$
+\begin_inset Formula $\Gamma,p^{ref},e^{ref}$
 \end_inset
 
  take the form below, where 
@@ -1352,11 +1352,11 @@ The solutions to this equation for different forms of
 \end_inset
 
  is a particular solution of the equation (which will be equal to 
-\begin_inset Formula $e_{ref}$
+\begin_inset Formula $e^{ref}$
 \end_inset
 
  if 
-\begin_inset Formula $p_{ref}=\rho^{2}\frac{\partial e_{ref}}{\partial\rho}$
+\begin_inset Formula $p^{ref}=\rho^{2}\frac{\partial e^{ref}}{\partial\rho}$
 \end_inset
 
 ).
@@ -1606,7 +1606,55 @@ Pressure and thermal equilibrium are assumed between the two materials.
  model to calculate these quantities under the multiphase GPR model.
  Many mixture models have been proposed [REFS - Wilke, Grunberg-Nissan,
  Herning & Zipperer].
- The models 
+\end_layout
+
+\begin_layout Standard
+The pressure equilibrium assumption implies that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+p & =p_{1}^{ref}+\rho_{1}\Gamma_{1}\left(e_{1}-e_{1}^{ref}\right)\\
+ & =p_{2}^{ref}+\rho_{2}\Gamma_{2}\left(e_{2}-e_{2}^{ref}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this result, and the fact that the total internal energy is the sum
+ of the internal energies of the two components, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+e & =\lambda e_{1}+\left(1-\lambda\right)e_{2}\\
+ & =\lambda\left(\frac{p-p_{1}^{ref}}{\rho_{1}\Gamma_{1}}+e_{1}^{ref}\right)+\left(1-\lambda\right)\left(\frac{p-p_{2}^{ref}}{\rho_{2}\Gamma_{2}}+e_{2}^{ref}\right)\nonumber \\
+ & =p\left(\frac{\lambda}{\rho_{1}\Gamma_{1}}+\frac{1-\lambda}{\rho_{2}\Gamma_{2}}\right)+\lambda\left(e_{1}^{ref}-\frac{p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)+\left(1-\lambda\right)\left(e_{2}^{ref}-\frac{p_{2}^{ref}}{\rho_{2}\Gamma_{2}}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, upon rearrangement, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\frac{e-\lambda\left(e_{1}^{ref}-\frac{p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)-\left(1-\lambda\right)\left(e_{2}^{ref}-\frac{p_{2}^{ref}}{\rho_{2}\Gamma_{2}}\right)}{\frac{\lambda}{\rho_{1}\Gamma_{1}}+\frac{1-\lambda}{\rho_{2}\Gamma_{2}}}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1800,18 +1848,6 @@ Total stress for the 7-wave elastic Riemann problem
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Lamb's Problem
-\end_layout
-
-\begin_layout Standard
-[GR]
-\end_layout
-
-\begin_layout Standard
-[Dumbser2015]
 \end_layout
 
 \begin_layout Subsection
