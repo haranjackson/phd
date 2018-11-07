@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.5.1)
 set(CMAKE_CXX_STANDARD 17)
 project(GPRcpp)
 
-SET(PYTHON_DIR "~/miniconda3/include/python3.6m")
+SET(PYTHON_DIR "~/miniconda3/include/python3.7m")
 include_directories(include ${PYTHON_DIR})
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Ofast -DNDEBUG -march=native -fopenmp")
-SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fopenmp")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Ofast -DNDEBUG -march=native")
+SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 # -march=native seems slower sometimes
 # -ffast-math causes nans in some tests
 
@@ -73,10 +73,14 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/system/variables/wavespeeds.cpp
    )
 
+find_package(OpenMP REQUIRED)
+
 add_definitions(-DBINDINGS)
 set(SRCS_SO bindings/bindings.cpp src/etc/debug.cpp ${SRCS})
 add_subdirectory(include/pybind11-master)
 pybind11_add_module(GPRpy ${SRCS_SO})
+target_link_libraries(GPRpy PRIVATE OpenMP::OpenMP_CXX)
 
 #set(SRCS_EXEC src/main.cpp src/test/params.cpp src/test/initial_grids.cpp ${SRCS})
 #add_executable(${PROJECT_NAME} ${SRCS_EXEC})
+#target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
