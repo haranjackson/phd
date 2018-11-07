@@ -18,12 +18,15 @@ typedef Eigen::Map<Vec3, 0, Eigen::InnerStride<1>> Vec3Map;
 typedef Eigen::Map<Vec9, 0, Eigen::InnerStride<1>> Vec9Map;
 
 struct Par {
+
   double Rc;
+  bool POWER_LAW;
+  bool SOLID;
+  double ρ0;
+  double T0;
+
   int EOS;
 
-  double ρ0;
-  double p0;
-  double T0;
   double Tref;
   double cv;
 
@@ -31,9 +34,7 @@ struct Par {
 
   double Γ0;
   double c02;
-
   double s;
-  double e0;
 
   double α;
   double β;
@@ -45,14 +46,13 @@ struct Par {
   double R2;
 
   double b02;
-  double τ1;
-  bool POWER_LAW;
-  bool YIELD;
+  double μ;
+  double τ0;
   double σY;
   double n;
 
   double cα2;
-  double τ2;
+  double κ;
 
   double Qc;
 

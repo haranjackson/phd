@@ -69,8 +69,8 @@ def dΧ(xh, dt):
 
 if __name__ == "__main__":
 
-    MP = material_params(EOS='sg', ρ0=1, cv=1, γ=1.4, pINF=0, p0=1,
-                             b0=1, cα=1, μ=1e-2, Pr=0.75)
+    MP = material_params(EOS='sg', ρ0=1, cv=1, γ=1.4,
+                         b0=1, cα=1, μ=1e-2, Pr=0.75)
     """
     ρL = 1
     pL = 1

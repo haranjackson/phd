@@ -1,5 +1,5 @@
-#include "eigen3/SVD"
 #include "../etc/globals.h"
+#include "eigen3/SVD"
 #include "functions/matrices.h"
 #include "functions/vectors.h"
 #include "variables/eos.h"
@@ -15,16 +15,15 @@ void analyticSolver_body_forces(VecVr Q, double dt, Par &MP) {
 double nondimensionalized_time(double ρ, double detA3, double m0, double u0,
                                double dt, Par &MP) {
 
-  double τ1 = MP.τ1;
   if (MP.POWER_LAW) {
     double n = MP.n;
     double cs2 = c_s2(ρ, MP);
     double a = 9. * m0 - u0 - 9.;
     double b = 6. * m0 - u0 - 6.;
 
-    double c, λ, tmp;
+    double c, λ, tmp1, tmp2;
 
-    if (MP.YIELD) {
+    if (MP.SOLID) {
       double σY = MP.σY;
 
       c = (108. * a - 324. * b + 108. * a * a - 396. * a * b + 297. * b * b -
@@ -38,10 +37,10 @@ double nondimensionalized_time(double ρ, double detA3, double m0, double u0,
                8. / 9. * b * b * b - std::pow(a, 4.) / 6. +
                16. / 27. * a * a * a * b - 4. / 5. * a * a * b * b +
                16. / 33. * a * b * b * b - std::pow(b, 4.) / 9.);
-      tmp = std::pow(sqrt(c) * ρ * cs2 / (6. * σY), n);
-      return 2. / (n * λ) *
-             log(n * λ / τ1 * std::pow(detA3, 4. * n + 7.) * tmp * dt + 1.);
 
+      tmp1 = n * λ / MP.τ0 * std::pow(detA3, 4. * n + 7.);
+      tmp2 = std::pow(sqrt(c) * ρ * cs2 / (6. * σY), n);
+      return 2. / (n * λ) * log(tmp1 * tmp2 * dt + 1.);
     } else {
       double k = (1 - n) / n;
       c = (108. * a - 324. * b + 180. * a * a - 612. * a * b + 459. * b * b -
@@ -55,12 +54,14 @@ double nondimensionalized_time(double ρ, double detA3, double m0, double u0,
                8. / 9. * b * b * b - std::pow(a, 4.) / 6. +
                16. / 27. * a * a * a * b - 4. / 5. * a * a * b * b +
                16. / 33. * a * b * b * b - std::pow(b, 4.) / 9.);
-      tmp = std::pow(sqrt(c) * ρ * cs2 / (6. * sqrt(3.)), k);
-      return 2. / (k * λ) *
-             log(k * λ / τ1 * std::pow(detA3, 4. * k + 7.) * tmp * dt + 1.);
+
+      double τ1 = 6 * std::pow(MP.μ, 1. / n) / (MP.ρ0 * MP.b02);
+      tmp1 = k * λ / τ1 * std::pow(detA3, 4. * k + 7.);
+      tmp2 = std::pow(sqrt(c) * ρ * cs2 / (6. * sqrt(3.)), k);
+      return 2. / (k * λ) * log(tmp1 * tmp2 * dt + 1.);
     }
   } else
-    return 2. * std::pow(detA3, 7.) / τ1 * dt;
+    return MP.ρ0 * MP.b02 * std::pow(detA3, 7.) / (3. * MP.μ) * dt;
 }
 
 void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
@@ -123,7 +124,7 @@ void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
 }
 
 void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
-  // Solves the thermal impulse ODE analytically in 3D for the ideal gas EOS
+  // Solves the thermal impulse ODE analytically in 3D
   double ρ = Q(0);
   double E = Q(1) / ρ;
   Vec3 v = get_ρv(Q) / ρ;
@@ -132,7 +133,7 @@ void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
 
   double c1 = E - E_2A(ρ, A, MP) - E_3(v);
   double c2 = MP.cα2 / 2.;
-  double k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv);
+  double k = 2 * MP.cα2 / (MP.κ * ρ * MP.cv);
   c1 *= k;
   c2 *= k;
 

@@ -53,7 +53,7 @@ void ode_stepper_numeric(VecVr Q, double dt, Par & MP)
     Mat3_3 A = get_A(Q);
     Vec3 J = get_J(Q, true);
 
-    Mat3_3 A1 = analyticSolver_distortion(A, dt, MP.τ1);
+    Mat3_3 A1 = analyticSolver_distortion(A, dt, MP.τ0);
     set_A(Q, A1);
 
     Mat3_3 A2 = (A+A1)/2;

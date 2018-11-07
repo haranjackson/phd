@@ -17,7 +17,7 @@ def heat_conduction(isMulti=False):
     tf = 1
     nx = 200
     Lx = 1
-    MPs = [material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
+    MPs = [material_params(EOS='sg', ρ0=1, cv=2.5, γ=1.4,
                            b0=1, cα=2, μ=1e-2, κ=1e-2)]
 
     if isMulti:
@@ -52,9 +52,9 @@ def stokes(isMulti=False):
     Lx = 1
 
     γ = 1.4
-    μ = 1e-2  # 1e-3 # 1e-4
+    μ = 1e-2 # 1e-3 # 1e-4
 
-    MPs = [material_params(EOS='sg', ρ0=1, cv=1, p0=1/γ, γ=γ,
+    MPs = [material_params(EOS='sg', ρ0=1, cv=1, γ=γ,
                            b0=1, cα=1e-16, μ=μ, Pr=0.75)]
 
     if isMulti:
@@ -79,9 +79,9 @@ def viscous_shock_exact(x, Ms, MP, μ, center=0):
         (Mach number Ms) at x
     """
     x -= center
-    ρ0 = MP.ρ0
-    p0 = MP.p0
     γ = MP.γ
+    ρ0 = 1
+    p0 = 1 / γ
 
     if Ms == 2:
         L = 0.3
@@ -124,8 +124,7 @@ def viscous_shock(center=0):
     γ = 1.4
     μ = 2e-2
 
-    MP = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1/γ, γ=γ,
-                         b0=5, cα=5, μ=μ, Pr=0.75)
+    MP = material_params(EOS='sg', ρ0=1, cv=2.5, γ=γ, b0=5, cα=5, μ=μ, Pr=0.75)
 
     dX = [Lx / nx]
 

@@ -1,10 +1,8 @@
 import GPRpy
-from types import SimpleNamespace
 
 from numpy import zeros
 
 from gpr.vars.mg import eos_text_to_code
-from gpr.vars.state import temperature
 
 
 class hyperelastic_params():
@@ -19,47 +17,13 @@ class hyperelastic_params():
         self.b02 = b0**2
 
 
-class EOS_params():
-    def __init__(self, EOS, ρ0, cv, p0, Tref,
-                 α, β, γ, pINF, c0, Γ0, s, A, B, R1, R2):
-
-        self.EOS = eos_text_to_code(EOS)
-
-        self.ρ0 = ρ0
-        self.cv = cv
-        self.p0 = p0
-        self.Tref = Tref
-
-        if EOS == 'sg':
-            self.γ = γ
-            self.pINF = pINF
-
-        elif EOS == 'smg':
-            self.Γ0 = Γ0
-            self.c02 = c0**2
-            self.s = s
-
-        elif EOS == 'gr':
-            self.c02 = c0**2
-            self.α = α
-            self.β = β
-            self.γ = γ
-
-        elif EOS == 'jwl' or EOS == 'cc':
-            self.Γ0 = Γ0
-            self.A = A
-            self.B = B
-            self.R1 = R1
-            self.R2 = R2
-
-
 def params(MP, Rc, EOS,
-           ρ0, p0, Tref, T0, cv,
+           ρ0, Tref, cv,
            α, β, γ, pINF,
            c0, Γ0, s,
            A, B, R1, R2,
-           b0, τ1, μ, σY, n, POWER_LAW, YIELD,
-           cα, τ2,
+           b0, τ0, μ, σY, n, POWER_LAW, SOLID,
+           cα, κ,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,
@@ -70,11 +34,9 @@ def params(MP, Rc, EOS,
     MP.EOS = eos_text_to_code(EOS)
 
     MP.ρ0 = ρ0
-    MP.p0 = p0
 
     if cv is not None:
         MP.cv = cv
-        MP.T0 = T0
         MP.Tref = Tref
 
     if EOS == 'sg':
@@ -102,17 +64,19 @@ def params(MP, Rc, EOS,
     if b0 is not None:
         MP.b02 = b0**2
         MP.β = β
-        MP.τ1 = τ1
         MP.POWER_LAW = POWER_LAW
-        MP.YIELD = YIELD
-        if POWER_LAW:
+        MP.SOLID = SOLID
+        if μ:
+            MP.μ = μ
+        if n:
             MP.n = n
-        if YIELD:
+        if σY:
             MP.σY = σY
+            MP.τ0 = τ0
 
     if cα is not None:
         MP.cα2 = cα**2
-        MP.τ2 = τ2
+        MP.κ = κ
 
     if REACTION is not None:
         MP.REACTION = REACTION
@@ -149,12 +113,12 @@ def params(MP, Rc, EOS,
         MP.δp = δp
 
 
-def material_params(EOS, ρ0, p0,
+def material_params(EOS, ρ0,
                     cv=None, Tref=None,
                     α=None, β=None, γ=None, pINF=None,
                     c0=None, Γ0=None, s=None,
                     A=None, B=None, R1=None, R2=None,
-                    b0=None, μ=None, τ1=None, σY=None, n=None,
+                    b0=None, μ=None, τ0=None, σY=None, n=None,
                     cα=None, κ=None, Pr=None,
                     REACTION=None, Qc=None,
                     Kc=None, Ti=None,
@@ -163,13 +127,11 @@ def material_params(EOS, ρ0, p0,
                     d=None, e=None, g=None, x=None, y=None, z=None,
                     φIG=None, φG1=None, φG2=None,
                     δp=None, Rc=8.31445985):
-    """ An object to hold the material constants
-    """
+
     assert(EOS in ['sg', 'smg', 'jwl', 'cc', 'gr', 'vac'])
     assert(REACTION in ['a', 'd', 'ig', None])
 
     MP = GPRpy.classes.Par()
-    # MP = SimpleNamespace()
 
     if EOS == 'vac':
         MP.EOS = -1
@@ -181,49 +143,27 @@ def material_params(EOS, ρ0, p0,
         if (γ is not None) and (pINF is None):
             pINF = 0
 
-        if cv is not None:
-            P = EOS_params(EOS, ρ0, cv, p0, Tref, α, β, γ,
-                           pINF, c0, Γ0, s, A, B, R1, R2)
-            T0 = temperature(ρ0, p0, P)
-        else:
-            T0 = None
-
-        if b0 is not None:
-
-            if n is None or n==1:
-                POWER_LAW = False
-                YIELD = False
-                if τ1 is None:
-                    τ1 = 6 * μ / (ρ0 * b0**2)
-            else:
-                POWER_LAW = True
-                if σY is None:
-                    YIELD = False
-                    τ1 = 6 * μ**(1/n) / (ρ0 * b0**2)
-                else:
-                    YIELD = True
-
-            if β is None:
-                β = 0
-        else:
-            τ1 = None
+        if n is None:
+            n = 1
             POWER_LAW = False
-            YIELD = False
-
-        if cα is not None:
-            if Pr is not None:
-                κ = μ * γ * cv / Pr
-            τ2 = κ * ρ0 / (T0 * cα**2)
+            SOLID = False if μ else True
         else:
-            τ2 = None
+            POWER_LAW = True
+            SOLID = True if σY else False
+
+        if β is None:
+            β = 0
+
+        if Pr is not None:
+            κ = μ * γ * cv / Pr
 
         params(MP, Rc, EOS,
-               ρ0, p0, Tref, T0, cv,
+               ρ0, Tref, cv,
                α, β, γ, pINF,
                c0, Γ0, s,
                A, B, R1, R2,
-               b0, τ1, μ, σY, n, POWER_LAW, YIELD,
-               cα, τ2,
+               b0, τ0, μ, σY, n, POWER_LAW, SOLID,
+               cα, κ,
                REACTION, Qc,
                Kc, Ti,
                Bc, Ea,
