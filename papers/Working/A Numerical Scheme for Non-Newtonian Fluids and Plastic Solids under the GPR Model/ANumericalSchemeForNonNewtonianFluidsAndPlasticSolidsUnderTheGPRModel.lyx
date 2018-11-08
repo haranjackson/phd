@@ -186,7 +186,7 @@ cor2
 \end_layout
 
 \begin_layout Address
-Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+Cavendish Laboratory, Department of Physics, Cambridge University, UK
 \begin_inset Argument 1
 status open
 
@@ -201,8 +201,8 @@ rvt
 
 \begin_layout Abstract
 A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
- by a power law under the GPR model is presented, along with a new numerical
- scheme for solving this system.
+ by a power law under the Godunov-Peshkov-Romenski model is presented, along
+ with a new numerical scheme for solving this system.
  The scheme is also modified to solve the corresponding system for power-law
  elastoplastic solids.
 \end_layout
@@ -314,7 +314,7 @@ Background
 \end_layout
 
 \begin_layout Standard
-The Godunov-Pehskov-Romenski model of continuum mechanics (see 
+The Godunov-Pehskov-Romenski (GPR) model of continuum mechanics (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_hyperbolic_2016"
