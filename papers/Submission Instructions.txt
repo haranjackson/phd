@@ -1,6 +1,6 @@
 ### Submission Instructions ###
 
-1. In LyX: Document->View [PDF (pdflatex)]
-2. Copy folder from /tmp
-3. Delete all but .png, .tex, and .bbl files
+1. Change temporary folder to downloads (Preferences -> Paths)
+2. Build PDF
+3. Delete all but .png, .tex, and .bbl files in temporary output
 4. Create zip
