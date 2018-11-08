@@ -1595,6 +1595,59 @@ end{subequations}
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\lambda$"
+description "Concentration of reactive species"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K$
+\end_inset
+
+ is the rate of reaction - a function of 
+\begin_inset Formula $T$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, whose form depends on the type of reaction kinetics used.
+ The EOS is modified to include:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{r}\left(\lambda\right)=-Q_{c}\left(1-\lambda\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$Q_c$"
+description "Energy formed per unit mass of reactant"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Mixture Rules
 \end_layout
@@ -1857,7 +1910,150 @@ Reaction Rate Laws
 \end_layout
 
 \begin_layout Standard
-[ignition & growth, discrete ignition temperature, Arrhenius]
+There are many different reaction rate laws that can be used to determine
+ the form of 
+\begin_inset Formula $K$
+\end_inset
+
+ appearing in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ReactionEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In discrete ignition temperature reaction kinetics, no reaction occurs below
+ the ignition temperature, 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+.
+ Above 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+, the reaction proceeds at a constant rate 
+\begin_inset Formula $K_{0}>0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K\left(T\right)=\begin{cases}
+K_{0} & T`\geq T_{i}\\
+0 & T<T_{i}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$T_i$"
+description "Ignition temperature in discrete ignition temperature reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$K_0$"
+description "Reaction rate in discrete ignition temperature reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more sophisticated model of reaction kinetics was devised by Svante Arrhenius
+ in 1889 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "arrhenius_heat_1889,arrhenius_reaction_1889"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K\left(T\right)=B_{c}e^{-\frac{E_{a}}{R_{c}T}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$R_c$"
+description "Universal gas constant"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$B_c$"
+description "Prefactor in Arrhenius reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$E_a$"
+description "Activation energy of a reactive species"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $B_{c}$
+\end_inset
+
+ is some prefactor (with units of frequency), and 
+\begin_inset Formula $E_{a}$
+\end_inset
+
+ is the activation energy of the reactive species.
+\end_layout
+
+\begin_layout Standard
+ignition & growth
 \end_layout
 
 \begin_layout Section
@@ -2050,7 +2246,7 @@ Steady ZND Detonation
 \end_layout
 
 \begin_layout Standard
-[JWL, ignition & growth]
+[JWL, reduced ignition & growth]
 \end_layout
 
 \begin_layout Standard
