@@ -90,6 +90,30 @@ PYBIND11_MODULE(GPRpy, m) {
 
   pybind11::module m_solvers_fv = m_solvers.def_submodule("fv", "FV functions");
 
+  pybind11::class_<Params>(m_classes, "Params")
+      .def(py::init<>())
+      .def_readwrite("EOS", &Par::EOS)
+      .def_readwrite("Tref", &Par::Tref)
+      .def_readwrite("cv", &Par::cv)
+      .def_readwrite("pINF", &Par::pINF)
+      .def_readwrite("Γ0", &Par::Γ0)
+      .def_readwrite("c02", &Par::c02)
+      .def_readwrite("s", &Par::s)
+      .def_readwrite("α", &Par::α)
+      .def_readwrite("β", &Par::β)
+      .def_readwrite("γ", &Par::γ)
+      .def_readwrite("A", &Par::A)
+      .def_readwrite("B", &Par::B)
+      .def_readwrite("R1", &Par::R1)
+      .def_readwrite("R2", &Par::R2)
+      .def_readwrite("b02", &Par::b02)
+      .def_readwrite("μ", &Par::μ)
+      .def_readwrite("τ0", &Par::τ0)
+      .def_readwrite("σY", &Par::σY)
+      .def_readwrite("n", &Par::n)
+      .def_readwrite("cα2", &Par::cα2)
+      .def_readwrite("κ", &Par::κ);
+
   pybind11::class_<Par>(m_classes, "Par")
       .def(py::init<>())
       .def_readwrite("Rc", &Par::Rc)
@@ -119,7 +143,8 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("cα2", &Par::cα2)
       .def_readwrite("κ", &Par::κ)
       .def_readwrite("Qc", &Par::Qc)
-      .def_readwrite("δp", &Par::δp);
+      .def_readwrite("δp", &Par::δp)
+      .def_readwrite("MP2", &Par::MP2);
 
   pybind11::class_<poly>(m_classes, "poly")
       .def(pybind11::init<Vec>())
