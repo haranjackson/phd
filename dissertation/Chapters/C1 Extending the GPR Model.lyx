@@ -163,6 +163,13 @@ name "sec:Equations-of-State"
 
 \begin_layout Subsection
 Mie-Gruneisen Models
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Mie-Gruneisen-Models"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1298,6 +1305,13 @@ Although this is a versatile class of equations of state - and it is fit
 
 \begin_layout Subsection
 Variable Transverse Perturbation Speed
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Variable-Transverse-Perturbation"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2053,7 +2067,35 @@ where
 \end_layout
 
 \begin_layout Standard
-ignition & growth
+Another more sophisticated model is the reduced ignition and growth model,
+ presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_hybrid_2016"
+literal "false"
+
+\end_inset
+
+ (based on the full ignition and growth model of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lee_phenomenological_1980"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=G_{1}\lambda^{c}\left(2-\lambda-\lambda_{0}\right)^{d}p^{y}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2070,6 +2112,29 @@ This test is taken from
 LatexCommand cite
 key "barton_exact_2009"
 literal "false"
+
+\end_inset
+
+.
+ The aim of the test is to validate the Mie-Gruneisen formulation of the
+ Godunov-Romenski EOS presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Mie-Gruneisen-Models"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the formulation of the mesoscale GPR energy for the Godunov-Romenski
+ EOS presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Variable-Transverse-Perturbation"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -2858,7 +2923,7 @@ Heating-Induced Deflagration
 \end_layout
 
 \begin_layout Standard
-As a step towards modeling the slow cooking off problem, the HPR model is
+As a step towards modeling the slow cooking off problem, the GPR model is
  now applied to the situation presented by Clarke, Kassoy and Riley 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -3047,7 +3112,7 @@ literal "true"
 \begin_inset Formula $c_{t}$
 \end_inset
 
- is chosen by trial and error so that the HPR results corresponded with
+ is chosen by trial and error so that the GPR results corresponded with
  those in 
 \begin_inset CommandInset citation
 LatexCommand cite
