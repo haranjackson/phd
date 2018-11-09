@@ -61,7 +61,7 @@ void source(VecVr ret, VecVr Q, Par &MP) {
     double ρ = Q(0);
     ret.segment<3>(14) = -ρ * dEdJ(Q, MP) * theta2inv(Q, MP);
   }
-  if (REACTIVE) {
+  if (MP.REACTION > -1) {
     // reactive source terms
   }
 }

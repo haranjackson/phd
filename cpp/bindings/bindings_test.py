@@ -6,7 +6,7 @@ from ader.dg.dg import DGSolver
 from ader.fv.fv import FVSolver
 from ader.weno.weno import WENOSolver
 
-from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET
+from gpr.opts import VISCOUS, THERMAL, MULTI, LSET
 from gpr.sys.conserved import F_cons, B_cons, S_cons, M_cons
 from gpr.sys.eigenvalues import max_eig
 from gpr.tests.one import fluids, multi
@@ -45,8 +45,7 @@ N = GPRpy.N()
 print('N =', N)
 
 assert(VISCOUS == GPRpy.VISCOUS() and THERMAL == GPRpy.THERMAL() and
-       REACTIVE == GPRpy.REACTIVE() and MULTI == GPRpy.MULTI() and
-       LSET == GPRpy.LSET())
+       MULTI == GPRpy.MULTI() and LSET == GPRpy.LSET())
 
 
 wenoSolver = WENOSolver(N, NV, NDIM)

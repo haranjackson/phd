@@ -56,7 +56,6 @@ PYBIND11_MODULE(GPRpy, m) {
   m.def("NV", []() { return V; });
   m.def("VISCOUS", []() { return VISCOUS; });
   m.def("THERMAL", []() { return THERMAL; });
-  m.def("REACTIVE", []() { return REACTIVE; });
   m.def("MULTI", []() { return MULTI; });
   m.def("LSET", []() { return LSET; });
   m.def("boundaries", &boundaries);
@@ -93,6 +92,7 @@ PYBIND11_MODULE(GPRpy, m) {
   pybind11::class_<Params>(m_classes, "Params")
       .def(py::init<>())
       .def_readwrite("EOS", &Par::EOS)
+      .def_readwrite("ρ0", &Par::ρ0)
       .def_readwrite("Tref", &Par::Tref)
       .def_readwrite("cv", &Par::cv)
       .def_readwrite("pINF", &Par::pINF)

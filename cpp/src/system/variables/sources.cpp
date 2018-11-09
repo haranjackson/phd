@@ -7,6 +7,9 @@
 
 double theta1inv(VecVr Q, Par &MP) {
   // Returns the relaxation parameter for the distortion tensor
+
+  // TODO: implement mixing of μ
+
   double ρ = Q(0);
   Mat3_3Map A = get_A(Q);
 
@@ -42,6 +45,9 @@ double theta1inv(VecVr Q, Par &MP) {
 
 double theta2inv(VecVr Q, Par &MP) {
   // Returns the relaxation parameter for the thermal impulse vector
+
+  // TODO: implement mixing of κ
+
   double ρ = Q(0);
   double p = pressure(Q, MP);
   double T = temperature(ρ, p, MP);

@@ -23,6 +23,7 @@ typedef Eigen::Map<Vec9, 0, Eigen::InnerStride<1>> Vec9Map;
 struct Params {
 
   int EOS;
+  double ρ0;
 
   double Tref;
   double cv;
@@ -58,7 +59,6 @@ struct Par : Params {
   bool POWER_LAW;
   bool MULTI;
 
-  double ρ0;
   double T0;
 
   Vec3 δp;

@@ -2,7 +2,7 @@
 #include "../objects/gpr_objects.h"
 #include <cmath>
 
-double Γ_MG(double ρ, Par &MP) {
+double Γ_MG(double ρ, Params &MP) {
   // Returns the MG parameter
 
   switch (MP.EOS) {
@@ -27,7 +27,7 @@ double Γ_MG(double ρ, Par &MP) {
   }
 }
 
-double p_ref(double ρ, Par &MP) {
+double p_ref(double ρ, Params &MP) {
   // Returns the reference pressure in the MG EOS
 
   switch (MP.EOS) {
@@ -75,7 +75,7 @@ double p_ref(double ρ, Par &MP) {
   }
 }
 
-double e_ref(double ρ, Par &MP) {
+double e_ref(double ρ, Params &MP) {
   // Returns the reference energy for the MG EOS
 
   switch (MP.EOS) {
@@ -122,7 +122,14 @@ double e_ref(double ρ, Par &MP) {
   }
 }
 
-double φ(double ρ, Par &MP) {
+double pressure_mg(double ρ, double e, Params &MP) {
+  double Γ = Γ_MG(ρ, MP);
+  double pr = p_ref(ρ, MP);
+  double er = e_ref(ρ, MP);
+  return (e - er) * ρ * Γ + pr;
+}
+
+double φ(double ρ, Params &MP) {
   // Returns the integrating factor
   double ρ0 = MP.ρ0;
 

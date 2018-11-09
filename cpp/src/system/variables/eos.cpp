@@ -62,3 +62,27 @@ double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, double λ,
   E += E_R(λ, MP);
   return E;
 }
+
+double internal_energy(VecVr Q, Par &MP) {
+  double ρ = Q(0);
+  double E = Q(1) / ρ;
+  Vec3 v = get_ρv(Q) / ρ;
+  double E1 = E - E_3(v);
+
+  if (VISCOUS) {
+    Mat3_3Map A = get_A(Q);
+    E1 -= E_2A(ρ, A, MP);
+  }
+
+  if (THERMAL) {
+    Vec3 J = get_ρJ(Q) / ρ;
+    E1 -= E_2J(J, MP);
+  }
+
+  if (MP.REACTION > -1) {
+    double λ = Q(mV) / ρ;
+    E1 -= E_R(λ, MP);
+  }
+
+  return E1;
+}

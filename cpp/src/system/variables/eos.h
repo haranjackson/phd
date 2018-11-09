@@ -13,5 +13,6 @@ double total_energy(double ρ, double p, Mat3_3r A, Vec3r v, Par &MP);
 double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, Par &MP);
 double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, double λ,
                     Par &MP);
+double internal_energy(VecVr Q, Par &MP);
 
 #endif // EOS_H

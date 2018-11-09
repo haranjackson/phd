@@ -119,6 +119,8 @@ def params(MP, Rc, EOS,
 
     if MULTI:
 
+        MP.MP2.ρ0 = ρ0
+
         if cv_2:
             MP.MP2.cv = cv_2
             MP.MP2.Tref = Tref_2

@@ -15,6 +15,8 @@ void analyticSolver_body_forces(VecVr Q, double dt, Par &MP) {
 double nondimensionalized_time(double ρ, double detA3, double m0, double u0,
                                double dt, Par &MP) {
 
+  // TODO: implement mixing of μ
+
   if (MP.POWER_LAW) {
     double n = MP.n;
     double cs2 = c_s2(ρ, MP);
@@ -125,6 +127,9 @@ void analyticSolver_distortion(VecVr Q, double dt, Par &MP) {
 
 void analyticSolver_thermal(VecVr Q, double dt, Par &MP) {
   // Solves the thermal impulse ODE analytically in 3D
+
+  // TODO: implement mixing of κ
+
   double ρ = Q(0);
   double E = Q(1) / ρ;
   Vec3 v = get_ρv(Q) / ρ;
