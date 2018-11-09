@@ -46,6 +46,7 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/solvers/split/ode.cpp
 
          src/solvers/dg/dg.cpp
+         src/solvers/dg/dg0.cpp
          src/solvers/dg/dg1.cpp
          src/solvers/dg/dg2.cpp
          src/solvers/dg/dg_matrices.cpp

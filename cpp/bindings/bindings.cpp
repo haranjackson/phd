@@ -28,6 +28,7 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/solvers/weno/weno.h"
 #include "../src/solvers/weno/weno_matrices.h"
 
+#include "../src/solvers/dg/dg0.h"
 #include "../src/solvers/dg/dg_matrices.h"
 
 #include "../src/solvers/split/homogeneous.h"
@@ -231,4 +232,6 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_fv.def("interfs1", &interfs1);
   m_solvers_fv.def("interfs2", &interfs2);
   m_solvers_fv.def("fv_launcher", &fv_launcher);
+
+  m_solvers_dg.def("stiff_ode_solve", &stiff_ode_solve);
 }
