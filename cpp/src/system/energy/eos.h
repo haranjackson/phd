@@ -2,7 +2,7 @@
 #define EOS_H
 
 #include "../../etc/globals.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 double E_1(double ρ, double p, Par &MP);
 double E_2A(double ρ, Mat3_3r A, Par &MP);

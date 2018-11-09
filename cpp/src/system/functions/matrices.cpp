@@ -1,7 +1,9 @@
-#include "../../etc/types.h"
-#include "../objects/gpr_objects.h"
-#include "eigen3/SVD"
 #include <cmath>
+
+#include "eigen3/SVD"
+
+#include "../../etc/types.h"
+#include "../objects.h"
 
 Mat3_3 AdevG(Mat3_3r A) {
   Mat3_3 G = A.transpose() * A;

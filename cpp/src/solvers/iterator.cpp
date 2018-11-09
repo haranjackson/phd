@@ -2,13 +2,14 @@
 #include "../etc/debug.h"
 #endif
 
+#include <iostream>
+
 #include "../etc/grid.h"
 #include "../multi/fill.h"
 #include "../system/eig.h"
 #include "../system/functions/vectors.h"
 #include "steppers.h"
 #include "utils.h"
-#include <iostream>
 
 double STEADY_TOL = 1e-8;
 

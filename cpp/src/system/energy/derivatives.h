@@ -2,7 +2,7 @@
 #define DERIVATIVES_H
 
 #include "../../etc/types.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 double dEdρ(double ρ, double p, Mat3_3r A, Par &MP);
 double dEdp(double ρ, Par &MP);

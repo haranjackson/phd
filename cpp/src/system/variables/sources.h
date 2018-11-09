@@ -1,7 +1,7 @@
 #ifndef SOURCES_H
 #define SOURCES_H
 
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 double theta1inv(VecVr Q, Par &MP);
 double theta2inv(VecVr Q, Par &MP);

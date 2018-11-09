@@ -2,7 +2,7 @@
 #define ITERATOR_H
 
 #include "../etc/types.h"
-#include "../system/objects/gpr_objects.h"
+#include "../system/objects.h"
 
 void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
             std::vector<Par> &MPs);

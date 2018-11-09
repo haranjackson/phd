@@ -1,10 +1,11 @@
+#include <cmath>
+
 #include "../../etc/globals.h"
+#include "../energy/mg.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
-#include "mg.h"
-#include "shear.h"
-#include <cmath>
+#include "../objects.h"
+#include "../waves/shear.h"
 
 double E_1(double ρ, double p, Par &MP) {
   // Returns the microscale energy under the MG EOS

@@ -1,4 +1,4 @@
-#include "../etc/globals.h"
+#include "../../etc/globals.h"
 
 void derivs2d(MatN2_Vr ret, MatN2_Vr qh, int d) {
   // ret[s] is the value of the derivative of qh in  direction d at node s

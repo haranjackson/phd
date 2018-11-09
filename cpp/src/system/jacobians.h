@@ -2,7 +2,7 @@
 #define JACOBIANS_H
 
 #include "../etc/types.h"
-#include "objects/gpr_objects.h"
+#include "objects.h"
 
 MatV_V dPdQ(VecVr Q, Par &MP);
 MatV_V dFdP(VecVr Q, int d, Par &MP);

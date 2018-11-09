@@ -3,7 +3,7 @@
 
 #include "eigen3/Eigen"
 
-#include "../../etc/types.h"
+#include "../etc/types.h"
 
 typedef Eigen::Matrix<double, 3, 3, Eigen::RowMajor> Mat3_3;
 typedef Eigen::Matrix<double, 3, 1> Vec3;

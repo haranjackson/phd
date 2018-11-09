@@ -30,32 +30,36 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/scipy/newton_krylov.cpp
          src/scipy/poly.cpp
 
-         src/solvers/basis.cpp
-         src/solvers/evaluations.cpp
          src/solvers/iterator.cpp
          src/solvers/steppers.cpp
          src/solvers/utils.cpp
-
-         src/solvers/weno/weno.cpp
-         src/solvers/weno/weno_matrices.cpp
 
          src/solvers/fv/fluxes.cpp
          src/solvers/fv/fv.cpp
 
          src/solvers/split/homogeneous.cpp
          src/solvers/split/ode.cpp
+         src/solvers/split/numeric.cpp
 
          src/solvers/dg/dg.cpp
-         src/solvers/dg/dg0.cpp
          src/solvers/dg/dg1.cpp
          src/solvers/dg/dg2.cpp
          src/solvers/dg/dg_matrices.cpp
          src/solvers/dg/initial_guess.cpp
 
-         src/system/analytic.cpp
+         src/solvers/poly/basis.cpp
+         src/solvers/poly/evaluations.cpp
+
+         src/solvers/weno/weno.cpp
+         src/solvers/weno/weno_matrices.cpp
+
          src/system/eig.cpp
          src/system/equations.cpp
          src/system/jacobians.cpp
+
+         src/system/energy/derivatives.cpp
+         src/system/energy/eos.cpp
+         src/system/energy/mg.cpp
 
          src/system/functions/matrices.cpp
          src/system/functions/vectors.cpp
@@ -65,13 +69,13 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/system/multi/riemann.cpp
          src/system/multi/rotations.cpp
 
-         src/system/variables/derivatives.cpp
-         src/system/variables/eos.cpp
-         src/system/variables/mg.cpp
-         src/system/variables/shear.cpp
+         src/system/relaxation/analytic.cpp
+
          src/system/variables/sources.cpp
          src/system/variables/state.cpp
-         src/system/variables/wavespeeds.cpp
+
+         src/system/waves/shear.cpp
+         src/system/waves/speeds.cpp
    )
 
 find_package(OpenMP REQUIRED)

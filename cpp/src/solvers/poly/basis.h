@@ -1,9 +1,10 @@
 #ifndef BASIS_H
 #define BASIS_H
 
-#include "../etc/types.h"
-#include "../scipy/poly.h"
 #include <vector>
+
+#include "../../etc/types.h"
+#include "../../scipy/poly.h"
 
 VecN scaled_nodes();
 

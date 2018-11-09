@@ -1,7 +1,7 @@
 #include <cmath>
 
+#include "../energy/mg.h"
 #include "../objects.h"
-#include "mg.h"
 
 double c_s2(double ρ, Par &MP) {
   // Returns the square of the characteristic velocity of propagation of

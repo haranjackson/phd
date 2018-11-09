@@ -1,8 +1,10 @@
-#include "../../etc/globals.h"
+#include <cmath>
+
 #include "eigen3/Eigenvalues"
+
+#include "../../etc/globals.h"
 #include "../../system/eig.h"
 #include "../../system/equations.h"
-#include <cmath>
 
 VecV Bint(VecVr qL, VecVr qR, int d, Par &MP) {
   // Returns the jump matrix for B, in the dth direction.

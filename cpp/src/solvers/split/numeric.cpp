@@ -1,9 +1,6 @@
 #include "../../etc/globals.h"
 #include "../../scipy/newton_krylov.h"
-#include "../../system/equations.h"
-#include "../../system/objects/gpr_objects.h"
-#include "../evaluations.h"
-#include "initial_guess.h"
+#include "../../system/objects.h"
 
 VecN obj0(VecNr x, double x0, double dt, std::function<double(double)> f) {
 

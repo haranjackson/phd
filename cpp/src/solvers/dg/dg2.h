@@ -2,7 +2,7 @@
 #define DG2_H
 
 #include "../../etc/globals.h"
-#include "../../system/objects/gpr_objects.h"
+#include "../../system/objects.h"
 
 MatN3_V rhs2(MatN3_Vr q, MatN3_Vr Ww, double dt, double dx, double dy, Par &MP);
 

@@ -1,7 +1,7 @@
 #include "../../etc/globals.h"
 #include "../../system/equations.h"
 #include "../../system/functions/vectors.h"
-#include "../evaluations.h"
+#include "../poly/evaluations.h"
 #include "fluxes.h"
 
 int ind(int i, int t, int nt) { return i * nt + t; }
@@ -9,18 +9,22 @@ int ind(int i, int t, int nt) { return i * nt + t; }
 int ind(int i, int j, int t, int ny, int nt) { return (i * ny + j) * nt + t; }
 
 void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
-                    double wght_t, bool SOURCES, Par &MP, bVecr mask) {
+                    double wght_t, bool SOURCES, Par &MP, bVecr mask)
+{
   MatN_V dqh_dx;
   VecV dqdxs, qs, S, tmpx;
 
-  for (int i = 0; i < nx; i++) {
-    if (mask(i + 1)) {
+  for (int i = 0; i < nx; i++)
+  {
+    if (mask(i + 1))
+    {
 
       int idx = ind(i + 1, t, nt) * N * V;
       MatN_VMap qh(rec.data() + idx, OuterStride(V));
       dqh_dx.noalias() = DERVALS * qh;
 
-      for (int s = 0; s < N; s++) {
+      for (int s = 0; s < N; s++)
+      {
         qs = qh.row(s);
         dqdxs = dqh_dx.row(s);
 
@@ -40,7 +44,8 @@ void centers1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
 }
 
 void centers1(Vecr u, Vecr rec, int nx, double dt, double dx, bool SOURCES,
-              bool TIME, Par &MP, bVecr mask) {
+              bool TIME, Par &MP, bVecr mask)
+{
   if (TIME)
     for (int t = 0; t < N; t++)
       centers1_inner(u, rec, nx, dx, N, t, dt * WGHTS(t), SOURCES, MP, mask);
@@ -50,13 +55,16 @@ void centers1(Vecr u, Vecr rec, int nx, double dt, double dx, bool SOURCES,
 
 void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
                     int nt, int t, double wght_t, bool SOURCES, Par &MP,
-                    bVecr mask) {
+                    bVecr mask)
+{
   MatN2_V dqh_dx, dqh_dy;
   VecV qs, dqdxs, dqdys, S, tmpx, tmpy;
 
   for (int i = 0; i < nx; i++)
-    for (int j = 0; j < ny; j++) {
-      if (mask(ind(i + 1, j + 1, ny + 2))) {
+    for (int j = 0; j < ny; j++)
+    {
+      if (mask(ind(i + 1, j + 1, ny + 2)))
+      {
         int idx = ind(i + 1, j + 1, t, ny + 2, nt) * N * N * V;
 
         MatN2_VMap qh(rec.data() + idx, OuterStride(V));
@@ -64,7 +72,8 @@ void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
         derivs2d(dqh_dy, qh, 1);
 
         for (int a = 0; a < N; a++)
-          for (int b = 0; b < N; b++) {
+          for (int b = 0; b < N; b++)
+          {
             int s = a * N + b;
             qs = qh.row(s);
             dqdxs = dqh_dx.row(s);
@@ -88,7 +97,8 @@ void centers2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 }
 
 void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool SOURCES, bool TIME, Par &MP, bVecr mask) {
+              bool SOURCES, bool TIME, Par &MP, bVecr mask)
+{
 
   if (TIME)
     for (int t = 0; t < N; t++)
@@ -99,13 +109,16 @@ void centers2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
 }
 
 void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
-                    double wght_t, int FLUX, Par &MP, bVecr mask) {
+                    double wght_t, int FLUX, Par &MP, bVecr mask)
+{
 
   double k = wght_t / (2. * dx);
   VecV ql, qr, f, b;
 
-  for (int i = 0; i < nx + 1; i++) {
-    if (mask(i) && mask(i + 1)) {
+  for (int i = 0; i < nx + 1; i++)
+  {
+    if (mask(i) && mask(i + 1))
+    {
       int indl = ind(i, t, nt) * N * V;
       int indr = ind(i + 1, t, nt) * N * V;
       MatN_VMap qhl(rec.data() + indl, OuterStride(V));
@@ -113,7 +126,8 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
       ql.noalias() = ENDVALS.row(1) * qhl;
       qr.noalias() = ENDVALS.row(0) * qhr;
 
-      switch (FLUX) {
+      switch (FLUX)
+      {
       case OSHER:
         f = D_OSH(ql, qr, 0, MP);
         break;
@@ -135,7 +149,8 @@ void interfs1_inner(Vecr u, Vecr rec, int nx, double dx, int nt, int t,
 }
 
 void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
-              int FLUX, Par &MP, bVecr mask) {
+              int FLUX, Par &MP, bVecr mask)
+{
 
   if (TIME)
     for (int t = 0; t < N; t++)
@@ -146,7 +161,8 @@ void interfs1(Vecr u, Vecr rec, int nx, double dt, double dx, bool TIME,
 
 void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
                     int nt, int t, double wghts_t, int FLUX, Par &MP,
-                    bVecr mask) {
+                    bVecr mask)
+{
 
   MatN_V q0, q1;
   VecV f, b, u0, u1;
@@ -157,15 +173,18 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
   int NNV = N * N * V;
 
   for (int i = 0; i < nx + 1; i++)
-    for (int j = 0; j < ny + 1; j++) {
+    for (int j = 0; j < ny + 1; j++)
+    {
 
-      if (mask(ind(i, j, ny + 2))) {
+      if (mask(ind(i, j, ny + 2)))
+      {
 
         int uind0 = ind(i - 1, j - 1, ny) * V;
         int ind0 = ind(i, j, t, ny + 2, nt) * NNV;
         MatN2_VMap qh0(rec.data() + ind0, OuterStride(V));
 
-        if (mask(ind(i + 1, j, ny + 2)) && j > 0) {
+        if (mask(ind(i + 1, j, ny + 2)) && j > 0)
+        {
 
           int uindx = ind(i, j - 1, ny) * V;
           int indx = ind(i + 1, j, t, ny + 2, nt) * NNV;
@@ -177,9 +196,11 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           u0.setZero(V);
           u1.setZero(V);
 
-          for (int s = 0; s < N; s++) {
+          for (int s = 0; s < N; s++)
+          {
 
-            switch (FLUX) {
+            switch (FLUX)
+            {
             case OSHER:
               f = D_OSH(q0.row(s), q1.row(s), 0, MP);
               break;
@@ -202,7 +223,8 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           if (i < nx)
             u.segment<V>(uindx) -= u1;
         }
-        if (mask(ind(i, j + 1, ny + 2)) && i > 0) {
+        if (mask(ind(i, j + 1, ny + 2)) && i > 0)
+        {
 
           int uindy = ind(i - 1, j, ny) * V;
           int indy = ind(i, j + 1, t, ny + 2, nt) * NNV;
@@ -214,9 +236,11 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
           u0.setZero(V);
           u1.setZero(V);
 
-          for (int s = 0; s < N; s++) {
+          for (int s = 0; s < N; s++)
+          {
 
-            switch (FLUX) {
+            switch (FLUX)
+            {
             case OSHER:
               f = D_OSH(q0.row(s), q1.row(s), 1, MP);
               break;
@@ -244,7 +268,8 @@ void interfs2_inner(Vecr u, Vecr rec, int nx, int ny, double dx, double dy,
 }
 
 void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
-              bool TIME, int FLUX, Par &MP, bVecr mask) {
+              bool TIME, int FLUX, Par &MP, bVecr mask)
+{
   if (TIME)
     for (int t = 0; t < N; t++)
       interfs2_inner(u, rec, nx, ny, dx, dy, N, t, dt * WGHTS(t), FLUX, MP,
@@ -254,10 +279,12 @@ void interfs2(Vecr u, Vecr rec, int nx, int ny, double dt, double dx, double dy,
 }
 
 void fv_launcher(Vecr u, Vecr rec, iVecr nX, double dt, Vecr dX, bool SOURCES,
-                 bool TIME, int FLUX, Par &MP, bVecr mask) {
+                 bool TIME, int FLUX, Par &MP, bVecr mask)
+{
 
   int ndim = nX.size();
-  switch (ndim) {
+  switch (ndim)
+  {
   case 1:
     centers1(u, rec, nX(0), dt, dX(0), SOURCES, TIME, MP, mask);
     interfs1(u, rec, nX(0), dt, dX(0), TIME, FLUX, MP, mask);

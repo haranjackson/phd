@@ -2,7 +2,7 @@
 #define EIGENVALUES_H
 
 #include "../../options.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 const int n1 = 3 + int(THERMAL);
 const int n2 = 6 + 2 * int(THERMAL);

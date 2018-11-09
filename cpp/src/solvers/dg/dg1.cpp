@@ -1,8 +1,8 @@
 #include "../../etc/globals.h"
 #include "../../scipy/newton_krylov.h"
 #include "../../system/equations.h"
-#include "../../system/objects/gpr_objects.h"
-#include "../evaluations.h"
+#include "../../system/objects.h"
+#include "../poly/evaluations.h"
 #include "initial_guess.h"
 
 MatN2_V rhs1(MatN2_Vr q, MatN2_Vr Ww, double dt, double dx, Par &MP) {
@@ -97,14 +97,12 @@ void predictor1(Vecr qh, Vecr wh, double dt, double dx, bool STIFF,
           if ((absDiff > DG_TOL * (1 + q0.array().abs())).any()) {
             q0 = q1;
             continue;
-
           } else if (q1.array().isNaN().any()) {
             stiff_initial_guess(q0, wi, N, dt, MP);
             VecMap q0v(q0.data(), N * N * V);
             qh.segment<N * N * V>(ind * N * N * V) =
                 nonlin_solve(obj_bound, q0v, DG_TOL);
             break;
-
           } else {
             qi = q1;
             break;

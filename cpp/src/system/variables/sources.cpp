@@ -1,9 +1,10 @@
+#include <cmath>
+
 #include "../../etc/globals.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
-#include "../variables/shear.h"
 #include "../variables/state.h"
-#include <cmath>
+#include "../waves/shear.h"
 
 double theta1inv(VecVr Q, Par &MP) {
   // Returns the relaxation parameter for the distortion tensor
@@ -55,3 +56,5 @@ double theta2inv(VecVr Q, Par &MP) {
 }
 
 void f_body(Vec3r x, Par &MP) { x = MP.δp; }
+
+double reaction_rate(VecVr Q, Par &MP) { return 0.; }

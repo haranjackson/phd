@@ -1,8 +1,8 @@
 #ifndef ODE_ANALYTIC_H
 #define ODE_ANALYTIC_H
 
-#include "../etc/globals.h"
-#include "objects/gpr_objects.h"
+#include "../../etc/globals.h"
+#include "../objects.h"
 
 void analyticSolver_distortion(VecVr Q, double dt, Par &MP);
 void analyticSolver_thermal(VecVr Q, double dt, Par &MP);

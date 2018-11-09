@@ -2,7 +2,7 @@
 #define FLUXES_H
 
 #include "../../etc/globals.h"
-#include "../../system/objects/gpr_objects.h"
+#include "../../system/objects.h"
 
 const int RUSANOV = 0;
 const int ROE = 1;

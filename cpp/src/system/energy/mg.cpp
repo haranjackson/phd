@@ -1,6 +1,7 @@
-#include "mg.h"
-#include "../objects/gpr_objects.h"
 #include <cmath>
+
+#include "../objects.h"
+#include "mg.h"
 
 double Γ_MG(double ρ, Params &MP) {
   // Returns the MG parameter

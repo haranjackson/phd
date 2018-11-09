@@ -1,10 +1,12 @@
-#include "../etc/globals.h"
-#include "eigen3/SVD"
-#include "functions/matrices.h"
-#include "functions/vectors.h"
-#include "variables/eos.h"
-#include "variables/shear.h"
 #include <cmath>
+
+#include "eigen3/SVD"
+
+#include "../../etc/globals.h"
+#include "../energy/eos.h"
+#include "../functions/matrices.h"
+#include "../functions/vectors.h"
+#include "../waves/shear.h"
 
 double pos(double x) { return std::max(0., x); }
 

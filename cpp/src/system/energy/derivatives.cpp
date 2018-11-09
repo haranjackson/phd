@@ -1,9 +1,9 @@
 #include "../../etc/types.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
+#include "../waves/shear.h"
 #include "mg.h"
-#include "shear.h"
 
 double dEdρ(double ρ, double p, Mat3_3r A, Par &MP) {
   // Returns the partial derivative of E by ρ (holding p,A constant)

@@ -2,7 +2,7 @@
 #define DG_H
 
 #include "../../etc/types.h"
-#include "../../system/objects/gpr_objects.h"
+#include "../../system/objects.h"
 
 void predictor(Vecr qh, Vecr wh, double dt, Vecr dX, bool STIFF, bool STIFF_IG,
                Par &MP, bVecr mask);

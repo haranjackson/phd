@@ -1,8 +1,8 @@
 #include <cmath>
 
+#include "../energy/derivatives.h"
+#include "../energy/eos.h"
 #include "../objects.h"
-#include "derivatives.h"
-#include "eos.h"
 
 double c_0(double ρ, double p, Mat3_3r A, Par &MP) {
   // Returns the adiabatic sound speed for the MG EOS

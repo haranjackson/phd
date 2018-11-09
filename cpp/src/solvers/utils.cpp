@@ -1,7 +1,7 @@
 #include "../etc/globals.h"
 #include "../options.h"
+#include "../system/energy/eos.h"
 #include "../system/functions/vectors.h"
-#include "../system/variables/eos.h"
 
 void renorm_distortion(Vecr u, std::vector<Par> &MPs) {
   int ncell = u.size() / V;

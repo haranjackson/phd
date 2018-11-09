@@ -1,7 +1,7 @@
 #ifndef MG_H
 #define MG_H
 
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 const int VACUUM = -1;
 const int STIFFENED_GAS = 0;

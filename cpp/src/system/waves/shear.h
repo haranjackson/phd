@@ -1,7 +1,7 @@
 #ifndef SHEAR_H
 #define SHEAR_H
 
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 double c_s2(double ρ, Par &MP);
 double dc_s2dρ(double ρ, Par &MP);

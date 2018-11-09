@@ -1,14 +1,14 @@
 #include <cmath>
 
 #include "../../etc/types.h"
-#include "../analytic.h"
 #include "../eig.h"
+#include "../energy/eos.h"
+#include "../energy/mg.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
-#include "../variables/eos.h"
-#include "../variables/mg.h"
+#include "../objects.h"
+#include "../relaxation/analytic.h"
 #include "../variables/state.h"
-#include "../variables/wavespeeds.h"
+#include "../waves/speeds.h"
 #include "conditions.h"
 #include "eigenvecs.h"
 #include "riemann.h"
@@ -39,7 +39,6 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
     cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (b02 * ρ0) < STAR_TOL;
     cond &= std::abs(vL_0 - vR_0) / sqrt(b02) < STAR_TOL;
-
   } else {
     double ρ0 = MPL.ρ0;
     double b02 = MPL.b02;
@@ -63,7 +62,6 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
 
       cond &= std::abs(qL_(0) - qR_(0)) / q0 < STAR_TOL;
       cond &= std::abs(TL_ - TR_) / T0 < STAR_TOL;
-
     } else {
       double q0 = q_dims(MPL);
 

@@ -1,12 +1,12 @@
 #include "state.h"
 #include "../../scipy/newton_krylov.h"
+#include "../energy/derivatives.h"
+#include "../energy/eos.h"
+#include "../energy/mg.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
-#include "derivatives.h"
-#include "eos.h"
-#include "mg.h"
-#include "shear.h"
+#include "../objects.h"
+#include "../waves/shear.h"
 
 Vec pobj(double ρ, double e, double λ, Vec4r x, Par &MP1, Params &MP2) {
 
