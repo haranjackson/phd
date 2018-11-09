@@ -76,9 +76,9 @@ struct Par : Params {
   double Rc;
 
   double G1;
-  double c;
+  double a;
+  double b;
   double d;
-  double y;
   double λ0;
 };
 

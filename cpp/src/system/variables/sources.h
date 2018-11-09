@@ -8,4 +8,6 @@ double theta2inv(VecVr Q, Par &MP);
 
 void f_body(Vec3r x, Par &MP);
 
+double reaction_rate(VecVr Q, Par &MP);
+
 #endif // SOURCES_H

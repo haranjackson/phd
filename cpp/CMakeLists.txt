@@ -70,6 +70,7 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/system/multi/rotations.cpp
 
          src/system/relaxation/analytic.cpp
+         src/system/relaxation/numerical.cpp
 
          src/system/variables/sources.cpp
          src/system/variables/state.cpp
