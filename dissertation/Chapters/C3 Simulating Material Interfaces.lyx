@@ -1265,6 +1265,19 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\Sigma$"
+description "Total stress tensor"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Thus, we have:
 \end_layout
 

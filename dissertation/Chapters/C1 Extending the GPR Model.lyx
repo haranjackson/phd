@@ -247,6 +247,19 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$T^{ref}$"
+description "Reference temperature appearing in the Mie-Gruneisen EOS"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The forms taken by 
 \begin_inset Formula $e^{ref},p^{ref},\Gamma$
 \end_inset
@@ -270,6 +283,39 @@ reference "tab:MG EOSs"
 E\left(\rho,S,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)\\
  & +\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\nonumber 
 \end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\alpha$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\beta$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\gamma$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
 
 \end_inset
 
@@ -1543,6 +1589,13 @@ Multiphase Reactive Materials
 
 \begin_layout Subsection
 Extended Model
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Extended-Model"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1641,7 +1694,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{r}\left(\lambda\right)=-Q_{c}\left(1-\lambda\right)
+E_{r}\left(\lambda\right)=Q_{c}\left(1-\lambda\right)
 \end{equation}
 
 \end_inset
@@ -1963,7 +2016,7 @@ In discrete ignition temperature reaction kinetics, no reaction occurs below
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-K\left(T\right)=\begin{cases}
+K=\begin{cases}
 K_{0} & T`\geq T_{i}\\
 0 & T<T_{i}
 \end{cases}
@@ -2013,7 +2066,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-K\left(T\right)=B_{c}e^{-\frac{E_{a}}{R_{c}T}}
+K=B_{c}e^{-\frac{E_{a}}{R_{c}T}}
 \end{equation}
 
 \end_inset
@@ -2090,12 +2143,230 @@ literal "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-K=G_{1}\lambda^{c}\left(2-\lambda-\lambda_{0}\right)^{d}p^{y}
+K=G_{1}\lambda^{a}\left(2-\lambda-\lambda_{0}\right)^{b}p^{d}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$G_1$"
+description "Coefficient of the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$a$"
+description "A constant appearing in the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$b$"
+description "A constant appearing in the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$d$"
+description "A constant appearing in the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Numerical Treatment of Source Terms
+\end_layout
+
+\begin_layout Standard
+Whilst the ADER-WENO method presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is capable of solving the extended model of 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Extended-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, special consideration needs to be made when solving the model with other
+ methods based on temporal splitting (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ - see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for more information).
+ The following ODE needs to be solved in the process:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\lambda}{dt}=-K\label{eq:reaction-ode}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following the formulation presented in [REF], we use the following representatio
+ns:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\lambda\left(t\right) & =\lambda_{j}\psi_{j}\left(t\right)\\
+K\left(t\right) & =K_{j}\psi_{j}\left(t\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:reaction-ode"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ by 
+\begin_inset Formula $\psi_{j}$
+\end_inset
+
+ and integrating over the time interval, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\langle \psi_{i},\psi_{j}^{'}\right\rangle \lambda_{j}=-\Delta t\left\langle \psi_{i},\psi_{j}\right\rangle K_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using integration by parts, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\psi_{i}\left(1\right)\psi_{j}\left(1\right)-\left\langle \psi_{i}^{'},\psi_{j}\right\rangle \right)\lambda_{j}=\psi_{i}\left(0\right)\lambda\left(0\right)-\Delta t\left\langle \psi_{i},\psi_{j}\right\rangle K_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Discontinuous-Galerkin"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the nodal basis representation is used, so that 
+\begin_inset Formula $K_{j}$
+\end_inset
+
+ is calculated as 
+\begin_inset Formula $K\left(\lambda_{j}\right)$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
