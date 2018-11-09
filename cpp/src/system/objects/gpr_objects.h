@@ -54,17 +54,32 @@ struct Params {
 
 struct Par : Params {
 
-  double Rc;
-  bool POWER_LAW;
   bool SOLID;
+  bool POWER_LAW;
+  bool MULTI;
+
   double ρ0;
   double T0;
-
-  double Qc;
 
   Vec3 δp;
 
   Params MP2;
+
+  int REACTION;
+  double Qc;
+
+  double K0;
+  double Ti;
+
+  double Bc;
+  double Ea;
+  double Rc;
+
+  double G1;
+  double c;
+  double d;
+  double y;
+  double λ0;
 };
 
 #endif // GPR_OBJECTS_H
