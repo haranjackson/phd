@@ -2,7 +2,6 @@ from numpy import arctan, array, cbrt, cos, dot, exp, log, pi, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
-from gpr.opts import VISCOUS, THERMAL
 from gpr.vars.eos import E_2A, E_3
 from gpr.vars.shear import c_s2
 
@@ -22,14 +21,14 @@ def pos(x):
 
 def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
 
-    τ1 = MP.τ1
     if MP.POWER_LAW:
         n = MP.n
         cs2 = c_s2(ρ, MP)
         a = 9 * m0 - u0 - 9
         b = 6 * m0 - u0 - 6
 
-        if MP.YIELD:
+        if MP.SOLID:
+
             σY = MP.σY
             c = (108 * a - 324 * b + 108 * a**2 - 396 * a * b + 297 * b**2
                  - 24 * (a**2 * b - 2 * a * b**2 + b**3) - 4 * (a - b)**4)
@@ -40,10 +39,13 @@ def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
                      + 33 / 2 * b**2 - 8 / 7 * a**2 * b + 2 * a * b ** 2
                      - 8 / 9 * b**3 - a**4 / 6 + 16 / 27 * a**3 * b
                      - 4 / 5 * a**2 * b**2 + 16 / 33 * a * b**3 - b**4 / 9)
-            tmp = (sqrt(c) * ρ * cs2 / (6 * σY))**n
-            return 2 / (n * λ) * log(n * λ / τ1 * detA3**(4 * n + 7) * tmp * dt + 1)
+
+            tmp1 = n * λ / MP.τ0 * detA3**(4 * n + 7)
+            tmp2 = (sqrt(c) * ρ * cs2 / (6 * σY))**n
+            return 2 / (n * λ) * log(tmp1 * tmp2 * dt + 1)
 
         else:
+
             k = (1-n) / n
             c = (108 * a - 324 * b + 180 * a**2 - 612 * a * b + 459 * b**2
                  - 24 * (a**2 * b - 2 * a * b**2 + b**3) - 4 * (a - b)**4)
@@ -54,11 +56,14 @@ def nondimensionalized_time(ρ, detA3, m0, u0, dt, MP):
                      + 51 / 2 * b**2 - 8 / 7 * a**2 * b + 2 * a * b ** 2
                      - 8 / 9 * b**3 - a**4 / 6 + 16 / 27 * a**3 * b
                      - 4 / 5 * a**2 * b**2 + 16 / 33 * a * b**3 - b**4 / 9)
-            tmp = (sqrt(c) * ρ * cs2 / (6 * sqrt(3)))**k
-            return 2 / (k * λ) * log(k * λ / τ1 * detA3**(4 * k + 7) * tmp * dt + 1)
+
+            τ1 = 6 * MP.μ**(1/n) / (MP.ρ0 * MP.b02)
+            tmp1 = k * λ / τ1 * detA3**(4 * k + 7)
+            tmp2 = (sqrt(c) * ρ * cs2 / (6 * sqrt(3)))**k
+            return 2 / (k * λ) * log(tmp1 * tmp2 * dt + 1)
 
     else:
-        return 2 * detA3**7 / τ1 * dt
+        return MP.ρ0 * MP.b02 * detA3**7 / (3 * MP.μ) * dt
 
 
 def solver_distortion_analytic(A, dt, MP):
@@ -117,7 +122,7 @@ def solver_thermal_analytic(ρ, E, A, J, v, dt, MP):
     """
     c1 = E - E_2A(ρ, A, MP) - E_3(v)
     c2 = MP.cα2 / 2
-    k = 2 * MP.ρ0 / (MP.τ2 * MP.T0 * ρ * MP.cv)
+    k = 2 * MP.cα2 / (MP.κ * ρ * MP.cv)
     a = c1 * k
     b = c2 * k
 

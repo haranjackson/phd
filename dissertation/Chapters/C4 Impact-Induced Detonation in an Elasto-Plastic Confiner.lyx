@@ -88,129 +88,19 @@ Impact-Induced Detonation in an Elasto-Plastic Confiner
 \end_layout
 
 \begin_layout Section
-Impact
-\end_layout
-
-\begin_layout Subsection
-Aluminium Plates
-\end_layout
-
-\begin_layout Standard
-In this test, an aluminium projectile impacts upon an aluminium plate at
- 400m/s.
- The domain is 
-\begin_inset Formula $\left[0,0.03\right]\times\left[0,0.04\right]$
-\end_inset
-
-, with the projectile initially occupying 
-\begin_inset Formula $\left[0.001,0.006\right]\times\left[0.014,0.026\right]$
-\end_inset
-
-, and the plate occupying 
-\begin_inset Formula $\left[0.006,0.028\right]\times\left[0.003,0.037\right]$
-\end_inset
-
-.
- The surroundings are taken to be vacuum.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../Figures/C4/aluminium_plates/t0.5.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../Figures/C4/aluminium_plates/t1.0.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../Figures/C4/aluminium_plates/t3.0.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../Figures/C4/aluminium_plates/t5.0.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-The aluminium plate impact test, at various different times
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Taylor Bar
-\end_layout
-
-\begin_layout Subsection
-Rod Penetration
-\end_layout
-
-\begin_layout Subsection
-Inert Detasheet Confined by Steel
-\end_layout
-
-\begin_layout Section
-Detonation
-\end_layout
-
-\begin_layout Subsection
 Reactive C4 Confined by Steel
 \end_layout
 
-\begin_layout Subsection
-Reactive C4 Confined by Steel with Air Gap
-\end_layout
-
-\begin_layout Subsection
-Rod Impact on Copper Vessel
+\begin_layout Standard
+[JWL, ignition and growth]
 \end_layout
 
 \begin_layout Section
-Conclusions
+Reactive C4 Confined by Steel with Air Gap
+\end_layout
+
+\begin_layout Section
+Rod Impact on Copper Vessel
 \end_layout
 
 \begin_layout Standard

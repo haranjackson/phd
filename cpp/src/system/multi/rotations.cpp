@@ -1,8 +1,9 @@
 #include "../../options.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
-Mat3_3 rotation_matrix(Vecr n) {
+Mat3_3 rotation_matrix(Vecr n)
+{
   // returns the matrix that rotates vector quantities into a coordinate
   // system defined by e1=n, e2,e3 ⟂ n
   Vec3 e1 = Vec3::Zero();
@@ -12,12 +13,15 @@ Mat3_3 rotation_matrix(Vecr n) {
   double den;
   Vec3 e2, e3;
   double Sq = e1.squaredNorm();
-  if (std::abs(e1(1) + e1(2)) <= std::abs(e1(1) - e1(2))) {
+  if (std::abs(e1(1) + e1(2)) <= std::abs(e1(1) - e1(2)))
+  {
     den = sqrt(2 * (1 - e1(0) * e1(1) - e1(1) * e1(2) - e1(2) * e1(0)));
     e2 << e1(1) - e1(2), e1(2) - e1(0), e1(0) - e1(1);
     double Sum = e1.sum();
     e3 = e1.array() * Sum - Sq;
-  } else {
+  }
+  else
+  {
     den = sqrt(2 * (1 + e1(0) * e1(1) + e1(1) * e1(2) - e1(2) * e1(0)));
     e2 << e1(1) + e1(2), e1(2) - e1(0), -e1(0) - e1(1);
     double Sum = e1(0) - e1(1) + e1(2);
@@ -30,7 +34,8 @@ Mat3_3 rotation_matrix(Vecr n) {
   return ret.transpose();
 }
 
-void rotate_tensors(VecVr Q, Mat3_3r R) {
+void rotate_tensors(VecVr Q, Mat3_3r R)
+{
 
   Q.segment<3>(2) = R * Q.segment<3>(2);
 

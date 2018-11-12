@@ -2,7 +2,7 @@
 #define EQUATIONS_H
 
 #include "../etc/globals.h"
-#include "objects/gpr_objects.h"
+#include "objects.h"
 
 void flux(VecVr ret, VecVr Q, int d, Par &MP);
 

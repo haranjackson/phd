@@ -1,11 +1,12 @@
 #include "../../etc/types.h"
 #include "../../options.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 #include "eigenvecs.h"
 
 void stick_bcs(Vecr x_, MatV_Vr RL, MatV_Vr RR, VecVr QL, VecVr QR, Vecr xL,
-               Vecr xR) {
+               Vecr xR)
+{
 
   Mat YL = RL.block<n1, n1>(11, 0);
   Mat YR = RR.block<n1, n1>(11, 0);
@@ -19,7 +20,8 @@ void stick_bcs(Vecr x_, MatV_Vr RL, MatV_Vr RR, VecVr QL, VecVr QR, Vecr xL,
   yL.head<3>() = vL;
   yR.head<3>() = vR;
 
-  if (THERMAL) {
+  if (THERMAL)
+  {
     yL(3) = QL(14) / QL(0);
     yR(3) = QR(14) / QR(0);
   }
@@ -27,9 +29,11 @@ void stick_bcs(Vecr x_, MatV_Vr RL, MatV_Vr RR, VecVr QL, VecVr QR, Vecr xL,
 }
 
 void slip_bcs(Vecr x_, MatV_Vr RL, MatV_Vr RR, VecVr QL, VecVr QR, Vecr xL,
-              Vecr xR) {
+              Vecr xR)
+{
 
-  if (THERMAL) {
+  if (THERMAL)
+  {
     Mat YL(2, n1);
     Mat YR(2, n1);
     YL << RL.block<1, n1>(11, 0), RL.block<1, n1>(14, 0);
@@ -44,8 +48,9 @@ void slip_bcs(Vecr x_, MatV_Vr RL, MatV_Vr RR, VecVr QL, VecVr QR, Vecr xL,
     M << YL.col(0) - YR.col(0), YL.col(n1 - 1) - YR.col(n1 - 1);
     Vec tmp = M.inverse() * (yR - yL + YL * xL - YR * xR);
     x_ << tmp(0), 0., 0., tmp(1);
-
-  } else {
+  }
+  else
+  {
     Vec YL = RL.block<1, n1>(11, 0);
     Vec YR = RR.block<1, n1>(11, 0);
 

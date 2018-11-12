@@ -7,15 +7,14 @@ from numpy import amax, array, column_stack, concatenate, diag, dot, eye, \
 from scipy.linalg import eig, inv, solve
 
 from gpr.misc.structures import State
-from gpr.opts import THERMAL
 from gpr.sys.analytical import ode_solver_cons
 from gpr.sys.eigenvalues import Xi1, Xi2
 from gpr.sys.primitive import M_prim
 from gpr.vars.eos import total_energy
 from gpr.vars.wavespeeds import c_0
-from gpr.opts import NV
 
 
+THERMAL = True
 STICK = True
 RELAXATION = True
 STAR_TOL = 1e-6
@@ -172,7 +171,7 @@ def riemann_constraints(Q, sgn, MP):
     return Lhat
 
 
-def star_stepper(QL, QR, MPL, MPR):
+def star_stepper(QL, QR, MPL, MPR, NV=17):
 
     PL = State(QL, MPL)
     PR = State(QR, MPR)

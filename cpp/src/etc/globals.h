@@ -4,7 +4,7 @@
 #include <limits>
 
 #include "../options.h"
-#include "../solvers/basis.h"
+#include "../solvers/poly/basis.h"
 #include "../solvers/weno/weno_matrices.h"
 #include "types.h"
 

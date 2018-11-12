@@ -1,5 +1,6 @@
-#include "../etc/types.h"
 #include <vector>
+
+#include "../etc/types.h"
 
 Vec legval(Vec x, Vec c) {
   /*  Evaluate a Legendre series at points x.
@@ -94,32 +95,29 @@ Mat legcompanion(Vec c) {
 }
 
 Vec legder(Vec c) { /*
-                    Differentiate a Legendre series.
-                    Returns the Legendre series coefficients `c` differentiated
-                    once.
-                    he argument `c` is an array of coefficients from low to high
-                    degree,
-                    e.g. [1,2,3] represents the series ``1*L_0 + 2*L_1 +
-                    3*L_2``.
+                                      Differentiate a Legendre series.
+                                      Returns the Legendre series coefficients
+                       `c` differentiated once. he argument `c` is an array of
+                       coefficients from low to high degree, e.g. [1,2,3]
+                       represents the series ``1*L_0 + 2*L_1 + 3*L_2``.
 
-                    Input
-                    ----------
-                    c : array
-                        Array of Legendre series coefficients.
+                                      Input
+                                      ----------
+                                      c : array
+                                          Array of Legendre series coefficients.
 
-                    Output
-                    -------
-                    der : array
-                        Legendre series of the derivative.
+                                      Output
+                                      -------
+                                      der : array
+                                          Legendre series of the derivative.
 
-                    Notes
-                    -----
-                    In general, the result of differentiating a Legendre series
-                    does not
-                    resemble the same operation on a power series. Thus the
-                    result of this
-                    function may be "unintuitive," albeit correct.
-                    */
+                                      Notes
+                                      -----
+                                      In general, the result of differentiating
+                       a Legendre series does not resemble the same operation on
+                       a power series. Thus the result of this function may be
+                       "unintuitive," albeit correct.
+                                      */
 
   int n = c.size() - 1;
   Vec der(n);

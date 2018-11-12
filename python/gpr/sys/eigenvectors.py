@@ -2,7 +2,6 @@ from numpy import array, diag, dot, eye, sqrt, zeros
 from scipy.linalg import eig, inv, solve, norm
 
 from gpr.misc.functions import reorder
-from gpr.opts import THERMAL
 from gpr.sys.eigenvalues import Xi1, Xi2
 from gpr.vars import mg
 from gpr.vars.wavespeeds import c_0

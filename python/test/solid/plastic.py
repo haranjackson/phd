@@ -56,7 +56,7 @@ def piston():
 
     MP = Cu_SMGP_SI
     ρ = MP.ρ0
-    p = MP.p0
+    p = 0
     v = zeros(3)
     A = eye(3)
 
@@ -67,7 +67,7 @@ def piston():
     for i in range(nx):
         u[i] = Q
 
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'piston_bc'
 
 
 def piston_bc(u, N, NDIM):
@@ -96,7 +96,7 @@ def cylindrical_shock():
     MP = Cu_GRP_SI
 
     ρi = MP.ρ0
-    pi = MP.p0
+    pi = 0
     Ai = eye(3)
 
     ρo = 9375
@@ -121,4 +121,4 @@ def cylindrical_shock():
             else:
                 u[i, j] = Qi
 
-    return u[:, 250:], [MP], tf, dX
+    return u[:, 250:], [MP], tf, dX, 'slip'

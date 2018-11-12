@@ -1,32 +1,37 @@
 #include "../etc/types.h"
 #include "../system/functions/vectors.h"
 #include "../system/multi/riemann.h"
-#include "../system/objects/gpr_objects.h"
+#include "../system/objects.h"
 #include "functions.h"
 
 int iVec_to_ind(iVecr v) { return v(0) * V; }
 
 int iVec_to_ind(iVecr v, int ny) { return (v(0) * ny + v(1)) * V; }
 
-void update_interface_mask(iVecr intMask, Vecr φ, int indL, int indR) {
+void update_interface_mask(iVecr intMask, Vecr φ, int indL, int indR)
+{
   double φL = φ(indL);
   double φR = φ(indR);
-  if (φL * φR <= 0.) {
+  if (φL * φR <= 0.)
+  {
     intMask(indL) = sign(φL);
     intMask(indR) = sign(φR);
   }
 }
 
-void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX) {
+void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX)
+{
   // Finds the cells lying on interface ind, given that there are nmat materials
   int ndim = nX.size();
   intMask.setZero();
 
   int nx = nX(0);
-  switch (ndim) {
+  switch (ndim)
+  {
 
   case 1:
-    for (int i = 0; i < nx - 1; i++) {
+    for (int i = 0; i < nx - 1; i++)
+    {
       int indL = i;
       int indR = i + 1;
       update_interface_mask(intMask, φ, indL, indR);
@@ -37,34 +42,43 @@ void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX) {
     int ny = nX(1);
     MatMap φMap(φ.data(), nx, ny, OuterStride(ny));
     for (int i = 0; i < nx; i++)
-      for (int j = 0; j < ny; j++) {
+      for (int j = 0; j < ny; j++)
+      {
         int ind0 = i * ny + j;
-        if (φ(ind0) <= 0.) {
+        if (φ(ind0) <= 0.)
+        {
           bool condL = (i > 0) && (φMap(i - 1, j) <= 0.);
           bool condR = (i < nx - 1) && (φMap(i + 1, j) <= 0.);
           bool condD = (j > 0) && (φMap(i, j - 1) <= 0.);
           bool condU = (j < ny - 1) && (φMap(i, j + 1) <= 0.);
 
           // not an isolated point
-          if (condL || condR || condD || condU) {
+          if (condL || condR || condD || condU)
+          {
             int ind1;
-            if (i > 0) {
+            if (i > 0)
+            {
               ind1 = (i - 1) * ny + j;
               update_interface_mask(intMask, φ, ind0, ind1);
             }
-            if (i < nx - 1) {
+            if (i < nx - 1)
+            {
               ind1 = (i + 1) * ny + j;
               update_interface_mask(intMask, φ, ind0, ind1);
             }
-            if (j > 0) {
+            if (j > 0)
+            {
               ind1 = i * ny + (j - 1);
               update_interface_mask(intMask, φ, ind0, ind1);
             }
-            if (j < ny - 1) {
+            if (j < ny - 1)
+            {
               ind1 = i * ny + (j + 1);
               update_interface_mask(intMask, φ, ind0, ind1);
             }
-          } else { // isolated point
+          }
+          else
+          { // isolated point
             intMask(ind0) = -2;
           }
         }
@@ -73,7 +87,8 @@ void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX) {
   }
 }
 
-BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
+BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX)
+{
   // Calculates indexes of the boundary states at position given by inds
 
   aVec xp = (inds.cast<double>().array() + 0.5) * dX;
@@ -90,7 +105,8 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
   iVec xRVec = (xR / dX).cast<int>();
 
   int ndim = nX.size();
-  switch (ndim) {
+  switch (ndim)
+  {
 
   case 1:
     ret.ind = iVec_to_ind(inds);
@@ -113,7 +129,8 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
 
 void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
                          double φi, int mat, std::vector<Par> &MPs, double dt,
-                         Vecr n) {
+                         Vecr n)
+{
   // Attempts to fill the boundary cell at location given by inds.
   // Returns 1 if successful, and -2 if fails to find a suitable
   // left state for the interface.
@@ -131,7 +148,8 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
   else if (get_material_index(u.segment<V>(bInds.L)) == mat)
     QL = u.segment<V>(bInds.L);
 
-  else { // should only happen if ndim>1
+  else
+  { // should only happen if ndim>1
     iVec Linds = inds;
     int Lind;
 
@@ -139,26 +157,35 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
     int n0 = sgn(n(0));
     int n1 = sgn(n(1));
 
-    if (std::abs(n(0)) > std::abs(n(1))) {
+    if (std::abs(n(0)) > std::abs(n(1)))
+    {
       Linds(0) -= n0;
       Lind = iVec_to_ind(Linds, nX(1));
-      if (get_material_index(u.segment<V>(Lind)) == mat) {
+      if (get_material_index(u.segment<V>(Lind)) == mat)
+      {
         n(0) = n0;
         n(1) = 0.;
-      } else {
+      }
+      else
+      {
         Linds(0) += n0;
         Linds(1) -= n1;
         Lind = iVec_to_ind(Linds, nX(1));
         n(0) = 0.;
         n(1) = n1;
       }
-    } else {
+    }
+    else
+    {
       Linds(1) -= n1;
       Lind = iVec_to_ind(Linds, nX(1));
-      if (get_material_index(u.segment<V>(Lind)) == mat) {
+      if (get_material_index(u.segment<V>(Lind)) == mat)
+      {
         n(0) = 0.;
         n(1) = n1;
-      } else {
+      }
+      else
+      {
         Linds(0) -= n0;
         Linds(1) += n1;
         Lind = iVec_to_ind(Linds, nX(1));
@@ -178,16 +205,20 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
 
 void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
                          Matr Δφ, aVecr dX, std::vector<Par> &MPs, double dt,
-                         iVecr nX) {
+                         iVecr nX)
+{
   int ndim = nX.size();
   int nx = nX(0);
   Vec n(ndim);
 
-  switch (ndim) {
+  switch (ndim)
+  {
 
   case 1:
-    for (int ind = 0; ind < nx; ind++) {
-      if (intMask(ind) == 1) {
+    for (int ind = 0; ind < nx; ind++)
+    {
+      if (intMask(ind) == 1)
+      {
         n = normal(Δφ.row(ind));
         iVec inds(1);
         inds << ind;
@@ -199,9 +230,11 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
     int ny = nX(1);
 #pragma omp parallel for collapse(2) private(n)
     for (int i = 0; i < nx; i++)
-      for (int j = 0; j < ny; j++) {
+      for (int j = 0; j < ny; j++)
+      {
         int ind = i * ny + j;
-        if (intMask(ind) == 1) {
+        if (intMask(ind) == 1)
+        {
           n = normal(Δφ.row(ind));
           iVec inds(2);
           inds << i, j;
@@ -212,7 +245,8 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
   }
 }
 
-void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX) {
+void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX)
+{
   // makes the value of cell ind equal to the value of its neighbor in the
   // direction of the interface
   int ndim = nX.size();
@@ -223,7 +257,8 @@ void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX) 
   aVec xn = x - dX * n;
   iVec newInds = (xn / dX).cast<int>();
 
-  switch (ndim) {
+  switch (ndim)
+  {
   case 1:
     ind = iVec_to_ind(inds);
     newInd = iVec_to_ind(newInds);
@@ -238,29 +273,37 @@ void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX) 
 }
 
 void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
-                         iVecr nX) {
+                         iVecr nX)
+{
 
   int ndim = nX.size();
   int nx = nX(0);
 
-  for (int N0 = 1; N0 < N + 1; N0++) {
+  for (int N0 = 1; N0 < N + 1; N0++)
+  {
 
-    if (ndim == 1) {
-      for (int i = 0; i < nx; i++) {
+    if (ndim == 1)
+    {
+      for (int i = 0; i < nx; i++)
+      {
 
-        if (intMask(i) == 0) {
+        if (intMask(i) == 0)
+        {
 
           bool pos = false;
 
-          if (i > 0) {
+          if (i > 0)
+          {
             int ind_ = i - 1;
             pos = pos || intMask(ind_) == N0;
           }
-          if (i < nx - 1) {
+          if (i < nx - 1)
+          {
             int ind_ = i + 1;
             pos = pos || intMask(ind_) == N0;
           }
-          if (pos) {
+          if (pos)
+          {
             intMask(i) = N0 + 1;
             iVec inds(1);
             inds << i;
@@ -268,34 +311,43 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
           }
         }
       }
-    } else if (ndim == 2) {
+    }
+    else if (ndim == 2)
+    {
 
       int ny = nX(1);
       for (int i = 0; i < nx; i++)
-        for (int j = 0; j < ny; j++) {
+        for (int j = 0; j < ny; j++)
+        {
 
           int ind = i * ny + j;
-          if (intMask(ind) == 0 || intMask(ind) == -2) {
+          if (intMask(ind) == 0 || intMask(ind) == -2)
+          {
 
             bool pos = false;
 
-            if (i > 0) {
+            if (i > 0)
+            {
               int ind_ = (i - 1) * ny + j;
               pos = pos || intMask(ind_) == N0;
             }
-            if (i < nx - 1) {
+            if (i < nx - 1)
+            {
               int ind_ = (i + 1) * ny + j;
               pos = pos || intMask(ind_) == N0;
             }
-            if (j > 0) {
+            if (j > 0)
+            {
               int ind_ = i * ny + (j - 1);
               pos = pos || intMask(ind_) == N0;
             }
-            if (j < ny - 1) {
+            if (j < ny - 1)
+            {
               int ind_ = i * ny + (j + 1);
               pos = pos || intMask(ind_) == N0;
             }
-            if (pos) {
+            if (pos)
+            {
               intMask(ind) = N0 + 1;
               iVec inds(2);
               inds << i, j;
@@ -308,7 +360,8 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
 }
 
 void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
-                      iVecr nX, aVecr dX, double dt, std::vector<Par> &MPs) {
+                      iVecr nX, aVecr dX, double dt, std::vector<Par> &MPs)
+{
   // Fills in ghost cells for each fluid
   // NOTE: doesn't work for different cell spacings in each direction
 
@@ -322,9 +375,11 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
   Vec φ(ncell);
   Mat Δφ(ncell, ndim);
 
-  for (int mat = 0; mat < nmat; mat++) {
+  for (int mat = 0; mat < nmat; mat++)
+  {
 
-    if (MPs[mat].EOS > -1) {
+    if (MPs[mat].EOS > -1)
+    {
 
       grids[mat] = u;
 
@@ -344,7 +399,8 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
       MatMap gridMap(grids[mat].data(), ncell, V, OuterStride(V));
       gridMap.block(0, V - LSET, ncell, LSET) =
           uMap.block(0, V - LSET, ncell, LSET);
-    } else
+    }
+    else
       masks[mat].setZero(ncell);
   }
 }

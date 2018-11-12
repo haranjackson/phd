@@ -1,7 +1,8 @@
-#include "../etc/types.h"
-#include "../system/objects/gpr_objects.h"
-#include "pfmm.h"
 #include <cmath>
+
+#include "../etc/types.h"
+#include "../system/objects.h"
+#include "pfmm.h"
 
 int sign(double x) {
   if (x <= 0)

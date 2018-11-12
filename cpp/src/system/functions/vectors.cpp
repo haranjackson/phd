@@ -1,24 +1,28 @@
 #include "../../etc/types.h"
-#include "../objects/gpr_objects.h"
-#include "../variables/eos.h"
+#include "../energy/eos.h"
+#include "../objects.h"
 #include "../variables/state.h"
 
-Vec3Map get_ρv(VecVr Q) {
+Vec3Map get_ρv(VecVr Q)
+{
   // Returns the momentum vector
   return Vec3Map(Q.data() + 2);
 }
 
-Mat3_3Map get_A(VecVr Q) {
+Mat3_3Map get_A(VecVr Q)
+{
   // Returns the distortion matrix.
   return Mat3_3Map(Q.data() + 5);
 }
 
-Vec3Map get_ρJ(VecVr Q) {
+Vec3Map get_ρJ(VecVr Q)
+{
   // Returns the density times the thermal impulse vector
   return Vec3Map(Q.data() + 14);
 }
 
-int get_material_index(VecVr Q) {
+int get_material_index(VecVr Q)
+{
   int ret = 0;
   for (int i = V - LSET; i < V; i++)
     if (Q(i) >= 0.)
@@ -26,7 +30,8 @@ int get_material_index(VecVr Q) {
   return ret;
 }
 
-VecV Cvec_to_Pvec(VecV Q, Par &MP) {
+VecV Cvec_to_Pvec(VecV Q, Par &MP)
+{
   // Returns vector of primitive variables (atypical ordering), given a vector
   // of conserved variables (typical ordering)
   double ρ = Q(0);
@@ -46,7 +51,8 @@ VecV Cvec_to_Pvec(VecV Q, Par &MP) {
   return Q;
 }
 
-VecV Pvec_to_Cvec(VecV P, Par &MP) {
+VecV Pvec_to_Cvec(VecV P, Par &MP)
+{
   // Returns vector of conserved variables (typical ordering), given a vector of
   // primitive variables (atypical ordering)
   double ρ = P(0);
@@ -62,11 +68,13 @@ VecV Pvec_to_Cvec(VecV P, Par &MP) {
   P.segment<3>(2) = ρ * v;
   P.segment<9>(5) = Vec9Map(A.data());
 
-  if (THERMAL) {
+  if (THERMAL)
+  {
     Vec3 J = P.segment<3>(14);
     P(1) = ρ * total_energy(ρ, p, A, J, v, MP);
     P.segment<3>(14) *= ρ;
-  } else
+  }
+  else
     P(1) = ρ * total_energy(ρ, p, A, v, MP);
 
   return P;

@@ -2,7 +2,7 @@
 #define EIG_H
 
 #include "../etc/globals.h"
-#include "objects/gpr_objects.h"
+#include "objects.h"
 
 Mat Xi1(double ρ, double p, VecVr Q, Par &MP, int d);
 

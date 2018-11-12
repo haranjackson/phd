@@ -186,7 +186,7 @@ cor2
 \end_layout
 
 \begin_layout Address
-Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+Cavendish Laboratory, Department of Physics, Cambridge University, UK
 \begin_inset Argument 1
 status open
 
@@ -201,8 +201,8 @@ rvt
 
 \begin_layout Abstract
 A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
- by a power law under the GPR model is presented, along with a new numerical
- scheme for solving this system.
+ by a power law under the Godunov-Peshkov-Romenski model is presented, along
+ with a new numerical scheme for solving this system.
  The scheme is also modified to solve the corresponding system for power-law
  elastoplastic solids.
 \end_layout
@@ -314,7 +314,7 @@ Background
 \end_layout
 
 \begin_layout Standard
-The Godunov-Pehskov-Romenski model of continuum mechanics (see 
+The Godunov-Pehskov-Romenski (GPR) model of continuum mechanics (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_hyperbolic_2016"
@@ -1353,7 +1353,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/rheology.png
+	filename figs/rheology.png
 	lyxscale 30
 	height 20pheight%
 
@@ -4304,7 +4304,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Plastic Distortion ODEs/A1.png
+	filename figs/Plastic Distortion ODEs/A1.png
 	lyxscale 25
 	width 50text%
 
@@ -4312,7 +4312,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Plastic Distortion ODEs/A2.png
+	filename figs/Plastic Distortion ODEs/A2.png
 	lyxscale 25
 	width 50text%
 
@@ -4356,7 +4356,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Plastic Distortion ODEs/σ1.png
+	filename figs/Plastic Distortion ODEs/σ1.png
 	lyxscale 25
 	width 50text%
 
@@ -4364,7 +4364,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Plastic Distortion ODEs/σ2.png
+	filename figs/Plastic Distortion ODEs/σ2.png
 	lyxscale 25
 	width 50text%
 
@@ -4408,7 +4408,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Plastic Distortion ODEs/E.png
+	filename figs/Plastic Distortion ODEs/E.png
 	lyxscale 25
 	width 50text%
 
@@ -4615,7 +4615,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Poiseuille Flow/dilatants.png
+	filename figs/Poiseuille Flow/dilatants.png
 	lyxscale 25
 	width 50text%
 
@@ -4623,7 +4623,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Poiseuille Flow/pseudoplastics.png
+	filename figs/Poiseuille Flow/pseudoplastics.png
 	lyxscale 25
 	width 50text%
 
@@ -4803,7 +4803,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n1.5_v1.png
+	filename figs/Lid-Driven Cavity/n1.5_v1.png
 	lyxscale 25
 	width 50text%
 
@@ -4811,7 +4811,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n1.5_v2.png
+	filename figs/Lid-Driven Cavity/n1.5_v2.png
 	lyxscale 25
 	width 50text%
 
@@ -4872,7 +4872,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n0.5_v1.png
+	filename figs/Lid-Driven Cavity/n0.5_v1.png
 	lyxscale 25
 	width 50text%
 
@@ -4880,7 +4880,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n0.5_v2.png
+	filename figs/Lid-Driven Cavity/n0.5_v2.png
 	lyxscale 25
 	width 50text%
 
@@ -4941,7 +4941,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n0.5_v.png
+	filename figs/Lid-Driven Cavity/n0.5_v.png
 	lyxscale 25
 	width 50text%
 
@@ -4949,7 +4949,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Lid-Driven Cavity/n1.5_v.png
+	filename figs/Lid-Driven Cavity/n1.5_v.png
 	lyxscale 25
 	width 50text%
 
@@ -5085,7 +5085,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/ρ.png
+	filename figs/Elasto-Plastic Piston/ρ.png
 	lyxscale 25
 	width 50text%
 
@@ -5093,7 +5093,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/v.png
+	filename figs/Elasto-Plastic Piston/v.png
 	lyxscale 25
 	width 50text%
 
@@ -5141,7 +5141,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/ρ_zoom.png
+	filename figs/Elasto-Plastic Piston/ρ_zoom.png
 	lyxscale 25
 	width 50text%
 
@@ -5149,7 +5149,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Elasto-Plastic Piston/v_zoom.png
+	filename figs/Elasto-Plastic Piston/v_zoom.png
 	lyxscale 25
 	width 50text%
 
@@ -5336,7 +5336,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/ρ_gpr.png
+	filename figs/Cylindrical Shock/ρ_gpr.png
 	lyxscale 25
 	width 50text%
 
@@ -5344,7 +5344,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/ρ_barton.png
+	filename figs/Cylindrical Shock/ρ_barton.png
 	lyxscale 25
 	width 50text%
 
@@ -5396,7 +5396,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/u_gpr.png
+	filename figs/Cylindrical Shock/u_gpr.png
 	lyxscale 25
 	width 50text%
 
@@ -5404,7 +5404,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/u_barton.png
+	filename figs/Cylindrical Shock/u_barton.png
 	lyxscale 25
 	width 50text%
 
@@ -5456,7 +5456,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/Σ_gpr.png
+	filename figs/Cylindrical Shock/Σ_gpr.png
 	lyxscale 25
 	width 50text%
 
@@ -5464,7 +5464,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/Σ_barton.png
+	filename figs/Cylindrical Shock/Σ_barton.png
 	lyxscale 25
 	width 50text%
 
@@ -5516,7 +5516,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/T_gpr.png
+	filename figs/Cylindrical Shock/T_gpr.png
 	lyxscale 25
 	width 50text%
 
@@ -5524,7 +5524,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/T_barton.png
+	filename figs/Cylindrical Shock/T_barton.png
 	lyxscale 25
 	width 50text%
 
@@ -5576,7 +5576,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/ρ_2d.png
+	filename figs/Cylindrical Shock/ρ_2d.png
 	lyxscale 25
 	width 50text%
 
@@ -5584,7 +5584,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C2/Cylindrical Shock/u_2d.png
+	filename figs/Cylindrical Shock/u_2d.png
 	lyxscale 25
 	width 50text%
 

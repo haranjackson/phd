@@ -16,7 +16,7 @@ def vortex(x, y, x0, y0, ε, γ, ρ):
     return dv, dT, dρ, dp, A
 
 
-def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
+def convected_vortex(μ=1e-6, κ=1e-6, t=0):
 
     tf = 1
     Lx = 10
@@ -34,8 +34,7 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
 
     dX = [Lx / nx, Ly / ny]
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ, b0=0.5, cα=1, μ=μ,
-                         κ=κ)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ, b0=0.5, cα=1, μ=μ, κ=κ)
 
     u = zeros([nx, ny, 17])
     for i in range(nx):
@@ -46,10 +45,10 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
             u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, MP, A, J)
 
     print("CONVECTED ISENTROPIC VORTEX")
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'periodic'
 
 
-def circular_explosion_IC():
+def circular_explosion():
 
     tf = 0.2
     Lx = 2
@@ -58,8 +57,8 @@ def circular_explosion_IC():
     ny = 400
 
     R = 0.25 * Lx
-    MP = material_params(EOS='sg', ρ0=1, cv=2.5, p0=1, γ=1.4,
-                             b0=0.5, cα=0.5, μ=1e-4, κ=1e-4)
+    MP = material_params(EOS='sg', ρ0=1, cv=2.5, γ=1.4,
+                         b0=0.5, cα=0.5, μ=1e-4, κ=1e-4)
 
     dX = [Lx / nx, Ly / ny]
 
@@ -88,10 +87,10 @@ def circular_explosion_IC():
                 u[i, j] = Qo
 
     print("CIRCULAR EXPLOSION")
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'transitive'
 
 
-def laminar_boundary_layer_IC():
+def boundary_layer():
 
     tf = 10
     Lx = 1.5
@@ -106,7 +105,7 @@ def laminar_boundary_layer_IC():
     v = array([1, 0, 0])
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=1e-3)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=8, μ=1e-3)
 
     u = zeros([nx, ny, 14])
     Q = Cvec(ρ, p, v, MP, A)
@@ -115,10 +114,10 @@ def laminar_boundary_layer_IC():
             u[i, j] = Q
 
     print("LAMINAR BOUNDARY LAYER")
-    return u, [MP], tf, [Lx / nx, Ly / ny]
+    return u, [MP], tf, [Lx / nx, Ly / ny], ''
 
 
-def double_shear_layer_IC():
+def double_shear_layer():
 
     tf = 1.8
     Lx = 1
@@ -132,7 +131,7 @@ def double_shear_layer_IC():
     p = 100 / γ
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=8, μ=2e-4)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=8, μ=2e-4)
     dX = [Lx / nx, Ly / ny]
 
     ρ_ = 30
@@ -155,11 +154,11 @@ def double_shear_layer_IC():
     return u, [MP], tf, dX
 
 
-def compressible_mixing_layer_IC():
+def compressible_mixing_layer():
     pass
 
 
-def taylor_green_vortex_IC():
+def taylor_green():
 
     tf = 10
     Lx = 2 * pi
@@ -173,7 +172,7 @@ def taylor_green_vortex_IC():
     p = 100 / γ
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ, b0=10, μ=1e-2)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=10, μ=1e-2)
     dX = [Lx / nx, Ly / ny]
 
     u = zeros([nx, ny, 14])

@@ -632,7 +632,7 @@ literal "true"
 LatexCommand nomenclature
 prefix "g"
 symbol "$c_{t}$"
-description "Coefficient in the thermal impulse contribution to the energy (elsewhere denoted by $\\alpha$)"
+description "Coefficient in the thermal impulse contribution to the energy (denoted elsewhere in the literature by $\\alpha$)"
 literal "true"
 
 \end_inset
@@ -1060,6 +1060,13 @@ literal "true"
 
 \begin_layout Section
 Numerical Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Numerical-Methods"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1934,6 +1941,13 @@ reference "eq:NonDimensionalNonConservativeSystem"
 
 \begin_layout Subsubsection
 The Discontinuous Galerkin Method
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:The-Discontinuous-Galerkin"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2452,7 +2466,7 @@ literal "true"
 :
 \begin_inset Formula 
 \begin{equation}
-\hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
+\hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{q^{-}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
 \end{equation}
 
 \end_inset
@@ -2475,7 +2489,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\hat{M}=\int_{0}^{1}\left|M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)\right|dz
+\hat{M}=\int_{0}^{1}\left|M\left(\boldsymbol{q^{-}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)\right|dz
 \end{equation}
 
 \end_inset

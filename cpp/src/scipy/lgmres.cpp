@@ -1,6 +1,7 @@
-#include "lgmres.h"
-#include "../etc/globals.h"
 #include <cmath>
+
+#include "../etc/globals.h"
+#include "lgmres.h"
 
 Vec lgmres(VecFunc matvec, VecFunc psolve, Vecr b, Vec x,
            std::vector<Vec> &outer_v, const double tol, const int maxiter,

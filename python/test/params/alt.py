@@ -18,4 +18,4 @@ Cu_HYP_CGS = hyperelastic_params(ρ0=8.9, α=1, β=3, γ=2, cv=4e-4,
 
 """ Other """
 
-VAC = material_params(EOS='vac', ρ0=0, cv=0, p0=0)
+VAC = material_params(EOS='vac', ρ0=0)

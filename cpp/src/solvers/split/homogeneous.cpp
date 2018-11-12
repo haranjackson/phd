@@ -1,6 +1,6 @@
 #include "../../etc/globals.h"
+#include "../../solvers/poly/evaluations.h"
 #include "../../system/equations.h"
-#include "../evaluations.h"
 
 void midstepper(Vecr wh, double dt, Vecr dX, Par &MP, bVecr mask) {
   // Steps the WENO reconstruction forwards by dt/2

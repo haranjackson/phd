@@ -2,7 +2,7 @@
 #define VECTORS_H
 
 #include "../../etc/types.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 
 Vec3Map get_ρv(VecVr Q);
 Mat3_3Map get_A(VecVr Q);

@@ -2,7 +2,7 @@
 #define SOLVERS_H
 
 #include "../etc/globals.h"
-#include "../system/objects/gpr_objects.h"
+#include "../system/objects.h"
 
 void ader_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX, bool STIFF,
                   int FLUX, Par &MP, bVecr mask);

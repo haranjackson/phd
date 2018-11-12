@@ -1,11 +1,11 @@
 #include "../etc/types.h"
+#include "energy/derivatives.h"
+#include "energy/mg.h"
 #include "functions/matrices.h"
 #include "functions/vectors.h"
-#include "objects/gpr_objects.h"
-#include "variables/derivatives.h"
-#include "variables/mg.h"
-#include "variables/shear.h"
+#include "objects.h"
 #include "variables/state.h"
+#include "waves/shear.h"
 
 MatV_V dFdP(VecVr Q, int d, Par &MP) {
   // Returns Jacobian of flux vector with respect to the primitive variables

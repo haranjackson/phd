@@ -163,6 +163,13 @@ name "sec:Equations-of-State"
 
 \begin_layout Subsection
 Mie-Gruneisen Models
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Mie-Gruneisen-Models"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -214,7 +221,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e^{ref}\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
-T & =T^{ref}\phi\left(\rho\right)+\frac{e-e^{ref}}{c_{v}}=T_{ref}\phi\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
+T & =T^{ref}\phi\left(\rho\right)+\frac{e-e^{ref}}{c_{v}}=T^{ref}\phi\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
 \phi\left(\rho\right) & =\exp\left(\int_{\rho_{0}}^{\rho}\frac{\Gamma\left(\rho^{'}\right)}{\rho^{'}}d\rho^{'}\right)
 \end{align}
 
@@ -233,6 +240,19 @@ status open
 \backslash
 end{subequations}
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$T^{ref}$"
+description "Reference temperature appearing in the Mie-Gruneisen EOS"
+literal "true"
 
 \end_inset
 
@@ -263,6 +283,39 @@ reference "tab:MG EOSs"
 E\left(\rho,S,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)\\
  & +\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\nonumber 
 \end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\alpha$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\beta$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\gamma$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
 
 \end_inset
 
@@ -407,7 +460,7 @@ Equation of State
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $T_{ref}$
+\begin_inset Formula $T^{ref}$
 \end_inset
 
 
@@ -1298,6 +1351,13 @@ Although this is a versatile class of equations of state - and it is fit
 
 \begin_layout Subsection
 Variable Transverse Perturbation Speed
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Variable-Transverse-Perturbation"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1529,6 +1589,13 @@ Multiphase Reactive Materials
 
 \begin_layout Subsection
 Extended Model
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Extended-Model"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1568,7 +1635,7 @@ begin{subequations}
 \begin{align}
 \frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:FirstContinuityEquationMultiphase}\\
 \frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquationMultiphase}\\
-\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquationMultiphase}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}\left(\tau_{1}\right)}\label{eq:DistortionEquationMultiphase}\\
 \frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquationMultiphase}\\
 \frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquationMultiphase}\\
 \frac{\partial\left(\rho\lambda\right)}{\partial t}+\frac{\partial\left(\rho\lambda v_{k}\right)}{\partial x_{k}} & =-\rho K\label{eq:ReactionEquation}
@@ -1595,27 +1662,98 @@ end{subequations}
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\lambda$"
+description "Concentration of reactive species"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $K$
+\end_inset
+
+ is the rate of reaction - a function of 
+\begin_inset Formula $T$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, whose form depends on the type of reaction kinetics used.
+ The EOS is modified to include:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{r}\left(\lambda\right)=Q_{c}\left(1-\lambda\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$Q_c$"
+description "Energy formed per unit mass of reactant"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Mixture Rules
 \end_layout
 
 \begin_layout Standard
 Pressure and thermal equilibrium are assumed between the two materials.
- As, under the GPR model, the viscosity and thermal conductivity of a fluid
- govern the stiffness of the source terms, it is required to use a mixture
- model to calculate these quantities under the multiphase GPR model.
- Many mixture models have been proposed [REFS - Wilke, Grunberg-Nissan,
- Herning & Zipperer].
+ Note that we have:
 \end_layout
 
 \begin_layout Standard
-The pressure equilibrium assumption implies that:
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\rho}=\frac{\lambda}{\rho_{1}}+\frac{1-\lambda}{\rho_{2}}\label{eq:density-mixture}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=\lambda e_{1}+\left(1-\lambda\right)e_{2}\label{eq:energy-mixture}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The pressure equilibrium assumption gives:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-p & =p_{1}^{ref}+\rho_{1}\Gamma_{1}\left(e_{1}-e_{1}^{ref}\right)\\
+p & =p_{1}^{ref}+\rho_{1}\Gamma_{1}\left(e_{1}-e_{1}^{ref}\right)\label{eq:pressure-mixture}\\
  & =p_{2}^{ref}+\rho_{2}\Gamma_{2}\left(e_{2}-e_{2}^{ref}\right)\nonumber 
 \end{align}
 
@@ -1625,16 +1763,14 @@ p & =p_{1}^{ref}+\rho_{1}\Gamma_{1}\left(e_{1}-e_{1}^{ref}\right)\\
 \end_layout
 
 \begin_layout Standard
-Using this result, and the fact that the total internal energy is the sum
- of the internal energies of the two components, we have:
+The temperature equilibrium assumption gives:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-e & =\lambda e_{1}+\left(1-\lambda\right)e_{2}\\
- & =\lambda\left(\frac{p-p_{1}^{ref}}{\rho_{1}\Gamma_{1}}+e_{1}^{ref}\right)+\left(1-\lambda\right)\left(\frac{p-p_{2}^{ref}}{\rho_{2}\Gamma_{2}}+e_{2}^{ref}\right)\nonumber \\
- & =p\left(\frac{\lambda}{\rho_{1}\Gamma_{1}}+\frac{1-\lambda}{\rho_{2}\Gamma_{2}}\right)+\lambda\left(e_{1}^{ref}-\frac{p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)+\left(1-\lambda\right)\left(e_{2}^{ref}-\frac{p_{2}^{ref}}{\rho_{2}\Gamma_{2}}\right)\nonumber 
+T & =T_{1}^{ref}\phi_{1}+\frac{e_{1}-e_{1}^{ref}}{\left(c_{v}\right)_{1}}\label{eq:temperature-mixture}\\
+ & =T_{2}^{ref}\phi_{2}+\frac{e_{2}-e_{2}^{ref}}{\left(c_{v}\right)_{2}}\nonumber 
 \end{align}
 
 \end_inset
@@ -1643,13 +1779,184 @@ e & =\lambda e_{1}+\left(1-\lambda\right)e_{2}\\
 \end_layout
 
 \begin_layout Standard
-Thus, upon rearrangement, we have:
+Temperature and pressure of the mixture are required by the evolution equations.
+ They are obtained by solving numerically the nonlinear system of algebraic
+ equations given by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:density-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:energy-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pressure-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:temperature-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to first find 
+\begin_inset Formula $\rho_{1},\rho_{2}e_{1},e_{2}$
+\end_inset
+
+, and then substituting them in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pressure-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:temperature-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+As, under the GPR model, the viscosity and thermal conductivity of a fluid
+ govern the stiffness of the source terms, it is required to use a mixture
+ model to calculate these quantities under the multiphase GPR model.
+ Many mixture models have been proposed (e.g.
+ see early simpler examples in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "herning_calculation_1936,grunberg_mixture_1949"
+literal "false"
+
+\end_inset
+
+, or see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gupta_review_1990"
+literal "false"
+
+\end_inset
+
+ for a review of later, more complex models).
+ In this study, we chose the first mixture rule presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alkandry_comparison_2013"
+literal "false"
+
+\end_inset
+
+, which is based on Wilke's mixing rule (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wilke_viscosity_1950"
+literal "false"
+
+\end_inset
+
+), coupled with curve fits from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "blottner_chemically_1971"
+literal "false"
+
+\end_inset
+
+ and Eucken's Law.
+ The model is chosen for its balance between expressiveness and simplicity.
+ The viscosity and thermal conductivity of the mixture are calculated thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mu & =\frac{x\mu_{1}}{\phi_{1}}+\frac{\left(1-x\right)\mu_{2}}{\phi_{2}}\\
+\kappa & =\frac{x\kappa_{1}}{\phi_{1}}+\frac{\left(1-x\right)\kappa_{2}}{\phi_{2}}\\
+\phi_{1} & =x+\left(1-x\right)\frac{\sqrt{1-\lambda}\left(1+\sqrt{\frac{\mu_{1}}{\mu_{2}}}\left(\frac{1-\lambda}{\lambda}\right)^{\frac{1}{4}}\right)^{2}}{\sqrt{8}}\\
+\phi_{2} & =x\frac{\sqrt{\lambda}\left(1+\sqrt{\frac{\mu_{2}}{\mu_{1}}}\left(\frac{\lambda}{1-\lambda}\right)^{\frac{1}{4}}\right)^{2}}{\sqrt{8}}+\left(1-x\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $x$
+\end_inset
+
+ is the molar fraction of material 1:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-p=\frac{e-\lambda\left(e_{1}^{ref}-\frac{p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)-\left(1-\lambda\right)\left(e_{2}^{ref}-\frac{p_{2}^{ref}}{\rho_{2}\Gamma_{2}}\right)}{\frac{\lambda}{\rho_{1}\Gamma_{1}}+\frac{1-\lambda}{\rho_{2}\Gamma_{2}}}
+x=\frac{\frac{\rho_{1}}{M_{1}}}{\frac{\rho_{1}}{M_{1}}+\frac{\rho_{2}}{M_{2}}}
 \end{equation}
 
 \end_inset
@@ -1657,12 +1964,409 @@ p=\frac{e-\lambda\left(e_{1}^{ref}-\frac{p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)
 
 \end_layout
 
+\begin_layout Standard
+where 
+\begin_inset Formula $M_{1},M_{2}$
+\end_inset
+
+ are the molar masses of materials 1 and 2, respectively.
+\end_layout
+
 \begin_layout Subsection
 Reaction Rate Laws
 \end_layout
 
 \begin_layout Standard
-[ignition & growth, discrete ignition temperature, Arrhenius]
+There are many different reaction rate laws that can be used to determine
+ the form of 
+\begin_inset Formula $K$
+\end_inset
+
+ appearing in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ReactionEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In discrete ignition temperature reaction kinetics, no reaction occurs below
+ the ignition temperature, 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+.
+ Above 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+, the reaction proceeds at a constant rate 
+\begin_inset Formula $K_{0}>0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=\begin{cases}
+K_{0} & T`\geq T_{i}\\
+0 & T<T_{i}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$T_i$"
+description "Ignition temperature in discrete ignition temperature reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$K_0$"
+description "Reaction rate in discrete ignition temperature reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more sophisticated model of reaction kinetics was devised by Svante Arrhenius
+ in 1889 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "arrhenius_heat_1889,arrhenius_reaction_1889"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=B_{c}e^{-\frac{E_{a}}{R_{c}T}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$R_c$"
+description "Universal gas constant"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$B_c$"
+description "Prefactor in Arrhenius reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$E_a$"
+description "Activation energy of a reactive species"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $B_{c}$
+\end_inset
+
+ is some prefactor (with units of frequency), and 
+\begin_inset Formula $E_{a}$
+\end_inset
+
+ is the activation energy of the reactive species.
+\end_layout
+
+\begin_layout Standard
+Another more sophisticated model is the reduced ignition and growth model,
+ presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_hybrid_2016"
+literal "false"
+
+\end_inset
+
+ (based on the full ignition and growth model of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lee_phenomenological_1980"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=G_{1}\lambda^{a}\left(2-\lambda-\lambda_{0}\right)^{b}p^{d}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$G_1$"
+description "Coefficient of the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$a$"
+description "A constant appearing in the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$b$"
+description "A constant appearing in the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$d$"
+description "A constant appearing in the reduced ignition and growth model"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Numerical Treatment of Source Terms
+\end_layout
+
+\begin_layout Standard
+Whilst the ADER-WENO method presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is capable of solving the extended model of 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Extended-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, special consideration needs to be made when solving the model with other
+ methods based on temporal splitting (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ - see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for more information).
+ The following ODE needs to be solved in the process:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\lambda}{dt}=-K\label{eq:reaction-ode}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following the formulation presented in [REF], we use the following representatio
+ns:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\lambda\left(t\right) & =\lambda_{j}\psi_{j}\left(t\right)\\
+K\left(t\right) & =K_{j}\psi_{j}\left(t\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:reaction-ode"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ by 
+\begin_inset Formula $\psi_{j}$
+\end_inset
+
+ and integrating over the time interval, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\langle \psi_{i},\psi_{j}^{'}\right\rangle \lambda_{j}=-\Delta t\left\langle \psi_{i},\psi_{j}\right\rangle K_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using integration by parts, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\psi_{i}\left(1\right)\psi_{j}\left(1\right)-\left\langle \psi_{i}^{'},\psi_{j}\right\rangle \right)\lambda_{j}=\psi_{i}\left(0\right)\lambda\left(0\right)-\Delta t\left\langle \psi_{i},\psi_{j}\right\rangle K_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Discontinuous-Galerkin"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the nodal basis representation is used, so that 
+\begin_inset Formula $K_{j}$
+\end_inset
+
+ is calculated as 
+\begin_inset Formula $K\left(\lambda_{j}\right)$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -1679,6 +2383,29 @@ This test is taken from
 LatexCommand cite
 key "barton_exact_2009"
 literal "false"
+
+\end_inset
+
+.
+ The aim of the test is to validate the Mie-Gruneisen formulation of the
+ Godunov-Romenski EOS presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Mie-Gruneisen-Models"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the formulation of the mesoscale GPR energy for the Godunov-Romenski
+ EOS presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Variable-Transverse-Perturbation"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -1855,19 +2582,7 @@ Steady ZND Detonation
 \end_layout
 
 \begin_layout Standard
-[JWL, ignition & growth]
-\end_layout
-
-\begin_layout Standard
-[MiNi16]
-\end_layout
-
-\begin_layout Subsection
-Copper-Detonation Products Shock Tube
-\end_layout
-
-\begin_layout Standard
-[JWL, Cochran-Chan]
+[JWL, reduced ignition & growth]
 \end_layout
 
 \begin_layout Standard
@@ -2479,7 +3194,7 @@ Heating-Induced Deflagration
 \end_layout
 
 \begin_layout Standard
-As a step towards modeling the slow cooking off problem, the HPR model is
+As a step towards modeling the slow cooking off problem, the GPR model is
  now applied to the situation presented by Clarke, Kassoy and Riley 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -2668,7 +3383,7 @@ literal "true"
 \begin_inset Formula $c_{t}$
 \end_inset
 
- is chosen by trial and error so that the HPR results corresponded with
+ is chosen by trial and error so that the GPR results corresponded with
  those in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -2947,7 +3662,7 @@ status open
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
-bibfiles "refs"
+bibfiles "../refs"
 options "plain"
 
 \end_inset

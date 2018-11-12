@@ -1,7 +1,4 @@
-ader
 matplotlib
-numba
 numpy
-scikit-fmm
 scipy
 spyder

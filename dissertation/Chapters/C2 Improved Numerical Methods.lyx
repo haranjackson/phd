@@ -1735,6 +1735,13 @@ reference "eq:CGit"
 
 \begin_layout Section
 Operator Splitting Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Operator-Splitting-Methods"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

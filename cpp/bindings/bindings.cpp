@@ -21,8 +21,8 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/scipy/lgmres.h"
 #include "../src/scipy/poly.h"
 
-#include "../src/solvers/basis.h"
 #include "../src/solvers/iterator.h"
+#include "../src/solvers/poly/basis.h"
 #include "../src/solvers/steppers.h"
 
 #include "../src/solvers/weno/weno.h"
@@ -31,15 +31,16 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/solvers/dg/dg_matrices.h"
 
 #include "../src/solvers/split/homogeneous.h"
+#include "../src/solvers/split/numeric.h"
 #include "../src/solvers/split/ode.h"
 
 #include "../src/solvers/fv/fluxes.h"
 #include "../src/solvers/fv/fv.h"
 
-#include "../src/system/analytic.h"
 #include "../src/system/eig.h"
 #include "../src/system/equations.h"
 #include "../src/system/jacobians.h"
+#include "../src/system/relaxation/analytic.h"
 
 #include "../src/system/multi/eigenvecs.h"
 #include "../src/system/multi/riemann.h"
@@ -47,63 +48,44 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 namespace py = pybind11;
 
 PYBIND11_MODULE(GPRpy, m) {
+
   m.doc() = "Python bindings to the GPRcpp library";
 
   py::bind_vector<std::vector<Vec>>(m, "VectorVec");
   py::bind_vector<std::vector<bVec>>(m, "VectorbVec");
 
-  m.def("N", []() { return N; });
-  m.def("NV", []() { return V; });
-  m.def("VISCOUS", []() { return VISCOUS; });
-  m.def("THERMAL", []() { return THERMAL; });
-  m.def("REACTIVE", []() { return REACTIVE; });
-  m.def("MULTI", []() { return MULTI; });
-  m.def("LSET", []() { return LSET; });
   m.def("boundaries", &boundaries);
 
-  pybind11::module m_classes =
-      m.def_submodule("classes", "Classes used by GPRpy");
+  pybind11::module m_options = m.def_submodule("options", "");
+  pybind11::module m_classes = m.def_submodule("classes", "");
+  pybind11::module m_multi = m.def_submodule("multi", "");
+  pybind11::module m_scipy = m.def_submodule("scipy", "");
+  pybind11::module m_system = m.def_submodule("system", "");
+  pybind11::module m_system_multi = m_system.def_submodule("multi", "");
+  pybind11::module m_solvers = m.def_submodule("solvers", "");
+  pybind11::module m_solvers_common = m_solvers.def_submodule("common", "");
+  pybind11::module m_solvers_weno = m_solvers.def_submodule("weno", "");
+  pybind11::module m_solvers_dg = m_solvers.def_submodule("dg", "");
+  pybind11::module m_solvers_split = m_solvers.def_submodule("split", "");
+  pybind11::module m_solvers_fv = m_solvers.def_submodule("fv", "");
 
-  pybind11::module m_multi =
-      m.def_submodule("multi", "Generic multimaterial functions");
+  m_options.def("N", []() { return N; });
+  m_options.def("NV", []() { return V; });
+  m_options.def("VISCOUS", []() { return VISCOUS; });
+  m_options.def("THERMAL", []() { return THERMAL; });
+  m_options.def("MULTI", []() { return MULTI; });
+  m_options.def("LSET", []() { return LSET; });
 
-  pybind11::module m_scipy = m.def_submodule("scipy", "SciPy functions");
-
-  pybind11::module m_system =
-      m.def_submodule("system", "System vectors and matrices");
-
-  pybind11::module m_system_multi =
-      m_system.def_submodule("multi", "Functions related to multimaterial GPR");
-
-  pybind11::module m_solvers = m.def_submodule("solvers", "Solver functions");
-
-  pybind11::module m_solvers_common =
-      m_solvers.def_submodule("common", "Functions common to all solvers");
-
-  pybind11::module m_solvers_weno =
-      m_solvers.def_submodule("weno", "WENO functions");
-
-  pybind11::module m_solvers_dg = m_solvers.def_submodule("dg", "DG functions");
-
-  pybind11::module m_solvers_split =
-      m_solvers.def_submodule("split", "Operator splitting functions");
-
-  pybind11::module m_solvers_fv = m_solvers.def_submodule("fv", "FV functions");
-
-  pybind11::class_<Par>(m_classes, "Par")
+  pybind11::class_<Params>(m_classes, "Params")
       .def(py::init<>())
-      .def_readwrite("Rc", &Par::Rc)
       .def_readwrite("EOS", &Par::EOS)
       .def_readwrite("ρ0", &Par::ρ0)
-      .def_readwrite("p0", &Par::p0)
-      .def_readwrite("T0", &Par::T0)
       .def_readwrite("Tref", &Par::Tref)
       .def_readwrite("cv", &Par::cv)
       .def_readwrite("pINF", &Par::pINF)
       .def_readwrite("Γ0", &Par::Γ0)
       .def_readwrite("c02", &Par::c02)
       .def_readwrite("s", &Par::s)
-      .def_readwrite("e0", &Par::e0)
       .def_readwrite("α", &Par::α)
       .def_readwrite("β", &Par::β)
       .def_readwrite("γ", &Par::γ)
@@ -112,15 +94,55 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("R1", &Par::R1)
       .def_readwrite("R2", &Par::R2)
       .def_readwrite("b02", &Par::b02)
-      .def_readwrite("τ1", &Par::τ1)
-      .def_readwrite("POWER_LAW", &Par::POWER_LAW)
-      .def_readwrite("YIELD", &Par::YIELD)
+      .def_readwrite("μ", &Par::μ)
+      .def_readwrite("τ0", &Par::τ0)
       .def_readwrite("σY", &Par::σY)
       .def_readwrite("n", &Par::n)
       .def_readwrite("cα2", &Par::cα2)
-      .def_readwrite("τ2", &Par::τ2)
+      .def_readwrite("κ", &Par::κ);
+
+  pybind11::class_<Par>(m_classes, "Par")
+      .def(py::init<>())
+      .def_readwrite("EOS", &Par::EOS)
+      .def_readwrite("SOLID", &Par::SOLID)
+      .def_readwrite("POWER_LAW", &Par::POWER_LAW)
+      .def_readwrite("MULTI", &Par::MULTI)
+      .def_readwrite("ρ0", &Par::ρ0)
+      .def_readwrite("T0", &Par::T0)
+      .def_readwrite("Tref", &Par::Tref)
+      .def_readwrite("cv", &Par::cv)
+      .def_readwrite("pINF", &Par::pINF)
+      .def_readwrite("Γ0", &Par::Γ0)
+      .def_readwrite("c02", &Par::c02)
+      .def_readwrite("s", &Par::s)
+      .def_readwrite("α", &Par::α)
+      .def_readwrite("β", &Par::β)
+      .def_readwrite("γ", &Par::γ)
+      .def_readwrite("A", &Par::A)
+      .def_readwrite("B", &Par::B)
+      .def_readwrite("R1", &Par::R1)
+      .def_readwrite("R2", &Par::R2)
+      .def_readwrite("b02", &Par::b02)
+      .def_readwrite("μ", &Par::μ)
+      .def_readwrite("τ0", &Par::τ0)
+      .def_readwrite("σY", &Par::σY)
+      .def_readwrite("n", &Par::n)
+      .def_readwrite("cα2", &Par::cα2)
+      .def_readwrite("κ", &Par::κ)
+      .def_readwrite("δp", &Par::δp)
+      .def_readwrite("MP2", &Par::MP2)
+      .def_readwrite("REACTION", &Par::REACTION)
       .def_readwrite("Qc", &Par::Qc)
-      .def_readwrite("δp", &Par::δp);
+      .def_readwrite("K0", &Par::K0)
+      .def_readwrite("Ti", &Par::Ti)
+      .def_readwrite("Bc", &Par::Bc)
+      .def_readwrite("Ea", &Par::Ea)
+      .def_readwrite("Rc", &Par::Rc)
+      .def_readwrite("G1", &Par::G1)
+      .def_readwrite("a", &Par::a)
+      .def_readwrite("b", &Par::b)
+      .def_readwrite("d", &Par::d)
+      .def_readwrite("λ0", &Par::λ0);
 
   pybind11::class_<poly>(m_classes, "poly")
       .def(pybind11::init<Vec>())
@@ -196,4 +218,6 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_fv.def("interfs1", &interfs1);
   m_solvers_fv.def("interfs2", &interfs2);
   m_solvers_fv.def("fv_launcher", &fv_launcher);
+
+  m_solvers_dg.def("stiff_ode_solve", &stiff_ode_solve);
 }

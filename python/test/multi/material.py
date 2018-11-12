@@ -2,7 +2,6 @@ from numpy import array, eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
-from gpr.opts import NV
 
 from test.common import riemann_IC, primitive_IC
 from test.fluid.newtonian1 import heat_conduction
@@ -38,7 +37,7 @@ def water_air():
     vR = zeros(3)
 
     u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.7)
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'
 
 
 def helium_bubble():
@@ -73,7 +72,7 @@ def helium_bubble():
     vR = zeros(3)
     AR = ρR**(1 / 3) * eye(3)
 
-    u = zeros([nx, NV])
+    u = zeros([nx, 18])
     Q1 = Cvec(ρL, pL, vL, Air_SG_SI, AL)
     Q2 = Cvec(ρM, pM, vM, Air_SG_SI, AM)
     Q3 = Cvec(ρR, pR, vR, He_SG_SI, AR)
@@ -94,7 +93,7 @@ def helium_bubble():
         else:
             u[i, -1] = 1
 
-    return u, [Air_SG_SI, He_SG_SI], tf, dX
+    return u, [Air_SG_SI, He_SG_SI], tf, dX, 'transitive'
 
 
 def pbx_copper(test):
@@ -144,7 +143,7 @@ def pbx_copper(test):
         MPs = [Cu_GR_SI, PBX_SG_SI]
 
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'
 
 
 def aluminium_vacuum():
@@ -175,7 +174,7 @@ def aluminium_vacuum():
     QR = zeros(NV)
 
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'
 
 
 def heat_conduction_multi():

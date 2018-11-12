@@ -1,11 +1,12 @@
 #include "globals.h"
 #include "../options.h"
-#include "../solvers/basis.h"
 #include "../solvers/dg/dg_matrices.h"
+#include "../solvers/poly/basis.h"
 #include "../solvers/weno/weno_matrices.h"
 #include "../system/functions/matrices.h"
 
-MatN_N minv(Mat m) {
+MatN_N minv(Mat m)
+{
   if (N <= 4)
     return m.inverse();
   else

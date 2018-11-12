@@ -8,17 +8,11 @@ COCHRAN_CHAN = 3
 GODUNOV_ROMENSKI = 4
 
 
-def eos_text_to_code(text):
-    if text == 'sg':
-        return STIFFENED_GAS
-    if text == 'smg':
-        return SHOCK_MG
-    if text == 'jwl':
-        return JWL
-    if text == 'cc':
-        return COCHRAN_CHAN
-    if text == 'gr':
-        return GODUNOV_ROMENSKI
+EOS_CODES = {'sg': STIFFENED_GAS,
+             'smg': SHOCK_MG,
+             'jwl': JWL,
+             'cc': COCHRAN_CHAN,
+             'gr': GODUNOV_ROMENSKI}
 
 
 def Γ_MG(ρ, MP):

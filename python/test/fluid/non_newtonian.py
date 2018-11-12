@@ -1,15 +1,11 @@
 from numpy import amax, array, concatenate, eye, flip, linspace, zeros
 from scipy.integrate import odeint
 
-from ader.etc.boundaries import standard_BC
-
 from gpr.misc.objects import material_params
-from gpr.misc.plot import colors, plot_energy, plot_distortion, plot_sigma
 from gpr.misc.structures import Cvec
 from gpr.sys.analytical import ode_solver_cons
 from gpr.sys.conserved import S_cons
-
-from test.boundaries import wall_BC
+from plot import colors, plot_energy, plot_distortion, plot_sigma
 
 
 def poiseuille_exact(n, nx=400, Lx=0.25, μ=1e-2, dp=0.48):
@@ -49,7 +45,7 @@ def poiseuille():
 
         DESTRESS = false
     """
-    n = 0.7
+    n = 1.3
 
     tf = 10
     Lx = 0.25
@@ -65,13 +61,12 @@ def poiseuille():
     A = eye(3)
     δp = array([0, dp, 0])
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, p0=p, γ=γ,
-                         b0=1, μ=μ, n=n, δp=δp)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=1, μ=μ, n=n, δp=δp)
 
     Q = Cvec(ρ, p, v, MP, A)
     u = array([Q] * nx)
 
-    return u, [MP], tf, [Lx / nx]
+    return u, [MP], tf, [Lx / nx], 'stick'
 
 
 def lid_driven_cavity():
@@ -102,7 +97,7 @@ def lid_driven_cavity():
     v = zeros(3)
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, p0=p, γ=γ, b0=1, μ=μ, n=n)
+    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ, b0=1, μ=μ, n=n)
 
     Q = Cvec(ρ, p, v, MP, A)
     u = zeros([nx, ny, 14])
@@ -111,7 +106,7 @@ def lid_driven_cavity():
             u[i, j] = Q
 
     print("LID-DRIVEN CAVITY")
-    return u, [MP], tf, [Lx / nx, Ly / ny]
+    return u, [MP], tf, [Lx / nx, Ly / ny], 'lid_driven'
 
 
 def strain_relaxation(n=4, tf=0.00001):
@@ -119,7 +114,7 @@ def strain_relaxation(n=4, tf=0.00001):
     def f(Q, t, MP):
         return S_cons(Q, MP)
 
-    MP = material_params('sg', 1, 1, 1, γ=1.4, b0=0.219, n=n, σY=9e-4, τ1=0.1)
+    MP = material_params('sg', 1, 1, 1, γ=1.4, b0=0.219, n=n, σY=9e-4, τ0=0.1)
     MPs = [MP]
 
     A = inv(array([[1, 0, 0],

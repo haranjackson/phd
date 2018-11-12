@@ -1,5 +1,4 @@
 from gpr.misc.functions import dev, gram, L2_1D, L2_2D
-from gpr.opts import VISCOUS, THERMAL, REACTIVE
 from gpr.vars import mg
 from gpr.vars.shear import C_0
 
@@ -44,13 +43,13 @@ def total_energy(ρ, p, v, A, J, λ, MP):
     """
     ret = E_1(ρ, p, MP)
 
-    if VISCOUS:
+    if A is not None:
         ret += E_2A(ρ, A, MP)
 
-    if THERMAL:
+    if J is not None:
         ret += E_2J(J, MP)
 
-    if REACTIVE:
+    if λ is not None:
         ret += E_R(λ, MP)
 
     ret += E_3(v)

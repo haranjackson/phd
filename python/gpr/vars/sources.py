@@ -1,4 +1,4 @@
-from numpy import exp, inf, sqrt
+from numpy import exp, sqrt
 from numpy.linalg import norm
 
 from gpr.misc.functions import det3, sigma_norm
@@ -10,40 +10,48 @@ from gpr.vars.shear import c_s2
 def theta1inv(ρ, A, MP):
     """ Returns 1/θ1
     """
-    τ1 = MP.τ1
+    detA5_3 = det3(A)**(5 / 3)
 
-    if τ1 == inf:
-        return 0
+    if MP.SOLID:
 
-    cs2 = c_s2(ρ, MP)
+        if MP.POWER_LAW:   # plastic solid
 
-    if MP.POWER_LAW:
-        n = MP.n
-        σ = sigma(ρ, A, MP)
-
-        if MP.YIELD:  # elastoplastic solid
+            τ0 = MP.τ0
+            n = MP.n
             σY = MP.σY
+
+            cs2 = c_s2(ρ, MP)
+            σ = sigma(ρ, A, MP)
             sn = sigma_norm(σ)
             sn = min(sn, 1e8)   # Hacky fix
-            return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * (sn / σY) ** n
 
-        else:  # power law fluid
+            return 3 * detA5_3 / (cs2 * τ0) * (sn / σY) ** n
+
+        else:   # elastic solid
+            return 0
+
+    else:
+
+        n = MP.n
+        const = detA5_3 * ρ0 / (2 * μ**(1/n))
+
+        if MP.POWER_LAW:  # power law fluid
+
+            σ = sigma(ρ, A, MP)
             sn = norm(σ) / sqrt(2.)
             sn = min(sn, 1e8)   # Hacky fix
-            return 3 * det3(A)**(5 / 3) / (cs2 * τ1) * sn**((1-n)/n)
-    else:
-        return 3 * det3(A)**(5 / 3) / (cs2 * τ1)
+
+            return const * sn**((1-n)/n)
+
+        else:   # newtonian fluid
+            return const
+
 
 
 def theta2inv(ρ, T, MP):
     """ Returns 1/θ2
     """
-    ρ0 = MP.ρ0
-    T0 = MP.T0
-    cα2 = MP.cα2
-    τ2 = MP.τ2
-
-    return 1 / (cα2 * τ2 * (ρ / ρ0) * (T0 / T))
+    return T / (MP.κ * ρ)
 
 
 def K_arr(ρ, λ, T, MP):

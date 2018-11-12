@@ -2,7 +2,7 @@
 #define INITIAL_GUESS_H
 
 #include "../../etc/types.h"
-#include "../../system/objects/gpr_objects.h"
+#include "../../system/objects.h"
 
 void standard_initial_guess1(Matr q, Matr w);
 

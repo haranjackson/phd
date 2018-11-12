@@ -1,7 +1,8 @@
+#include <vector>
+
 #include "../../etc/globals.h"
 #include "../../etc/types.h"
 #include "../../scipy/poly.h"
-#include <vector>
 
 int ceil(int x, int y) { return x / y + (x % y != 0); }
 

@@ -31,7 +31,7 @@ includeSources = 1
 n = 50
 
 
-PAR = material_params('sg', 1, 1, p0=1, γ=1.4, b0=1, τ1=τ)
+PAR = material_params('sg', 1, γ=1.4, b0=1, τ0=τ)
 
 
 ### Auxiliary Functions ###

@@ -2,7 +2,6 @@ from numpy import dot, sqrt, zeros
 from numpy.linalg import eigvals
 
 from gpr.misc.structures import State
-from gpr.opts import VISCOUS, THERMAL
 from gpr.vars.wavespeeds import c_0, c_h
 
 

@@ -1,13 +1,14 @@
 #include "eigenvecs.h"
 #include "../../etc/types.h"
 #include "../eig.h"
+#include "../energy/mg.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
-#include "../objects/gpr_objects.h"
-#include "../variables/mg.h"
+#include "../objects.h"
 #include "../variables/state.h"
 
-MatV_V eigen(VecVr Q, int d, Par &MP) {
+MatV_V eigen(VecVr Q, int d, Par &MP)
+{
 
   MatV_V R = MatV_V::Zero();
 
@@ -23,7 +24,8 @@ MatV_V eigen(VecVr Q, int d, Par &MP) {
   double b02 = MP.b02;
 
   for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++) {
+    for (int j = 0; j < 3; j++)
+    {
       Π1(i, j) = dsigmadA(ρ, b02, A, G, A_devG, d, i, j, 0);
       Π2(i, j) = dsigmadA(ρ, b02, A, G, A_devG, d, i, j, 1);
       Π3(i, j) = dsigmadA(ρ, b02, A, G, A_devG, d, i, j, 2);
@@ -45,7 +47,8 @@ MatV_V eigen(VecVr Q, int d, Par &MP) {
   R.block<n1, n1>(11, 0) = tmp2;
   R.block<n1, n1>(11, n1) = -tmp2;
 
-  if (THERMAL) {
+  if (THERMAL)
+  {
     double Tρ = dTdρ(ρ, p, MP);
     double Tp = dTdp(ρ, MP);
 
@@ -60,7 +63,9 @@ MatV_V eigen(VecVr Q, int d, Par &MP) {
 
     for (int i = 15; i < V; i++)
       R(i, i) = 1.;
-  } else {
+  }
+  else
+  {
     Mat3_3 Π1_1 = Π1.inverse();
     R(0, 6) = 1.;
     R(1, 7) = 1.;

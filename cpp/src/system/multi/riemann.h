@@ -2,7 +2,7 @@
 #define RIEMANN_H
 
 #include "../../etc/types.h"
-#include "../objects/gpr_objects.h"
+#include "../objects.h"
 #include "eigenvecs.h"
 
 MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP);
