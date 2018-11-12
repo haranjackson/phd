@@ -12,12 +12,15 @@ double func(double λ, VecVr Q, Par &MP) {
 
 void ode_stepper_numerical(VecVr Q, double dt, Par &MP) {
 
-  double ρ = Q(0);
-  double λ = Q(mV) / ρ;
+  if (MP.REACTION > -1) {
 
-  using std::placeholders::_1;
-  std::function<double(double)> f = std::bind(func, _1, Q, MP);
+    double ρ = Q(0);
+    double λ = Q(mV) / ρ;
 
-  λ = stiff_ode_solve(λ, dt, f);
-  Q(mV) = ρ * λ;
+    using std::placeholders::_1;
+    std::function<double(double)> f = std::bind(func, _1, Q, MP);
+
+    λ = stiff_ode_solve(λ, dt, f);
+    Q(mV) = ρ * λ;
+  }
 }
