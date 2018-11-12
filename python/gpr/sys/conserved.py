@@ -1,7 +1,6 @@
 from numpy import dot, zeros
 
 from gpr.misc.structures import State
-from gpr.opts import VISCOUS, THERMAL, MULTI, REACTIVE, LSET, NV
 from gpr.sys.jacobians import dFdP, dPdQ
 
 

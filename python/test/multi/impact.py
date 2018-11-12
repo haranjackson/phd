@@ -1,20 +1,14 @@
 from numpy import array, eye, zeros
 
 from gpr.misc.structures import Cvec
-from gpr.opts import VISCOUS, THERMAL, REACTIVE, MULTI, LSET, NV
 
 from test.params.alt import VAC
 from test.params.solids import Al_GRP_SI, W_SMGP_SI
 
 
 def aluminium_plates():
-
-    assert(VISCOUS)
-    assert(not THERMAL)
-    assert(not MULTI)
-    assert(not REACTIVE)
-    assert(LSET == 2)
-
+    """ LSET = 2
+    """
     MP = Al_GRP_SI
 
     Lx = 0.03
@@ -59,7 +53,7 @@ def aluminium_plates():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'
 
 
 def rod_penetration():
@@ -114,4 +108,4 @@ def rod_penetration():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'

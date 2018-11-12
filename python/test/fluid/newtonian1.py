@@ -4,7 +4,6 @@ from scipy.special import erf
 
 from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec
-from gpr.opts import NV
 from gpr.vars.wavespeeds import c_0
 
 from test.common import primitive_IC
@@ -34,7 +33,7 @@ def heat_conduction(isMulti=False):
     dX = [Lx / nx]
 
     u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'
 
 
 def stokes_exact(μ, n=100, v0=0.1, t=1):
@@ -71,7 +70,7 @@ def stokes(isMulti=False):
     dX = [Lx / nx]
 
     u = primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs)
-    return u, MPs, tf, dX
+    return u, MPs, tf, dX, 'transitive'
 
 
 def viscous_shock_exact(x, Ms, MP, μ, center=0):
@@ -137,10 +136,10 @@ def viscous_shock(center=0):
 
     v -= v[0]           # Velocity in shock 0
 
-    u = zeros([nx, NV])
+    u = zeros([nx, 17])
     for i in range(nx):
         A = (ρ[i])**(1 / 3) * eye(3)
         J = zeros(3)
         u[i] = Cvec(ρ[i], p[i], array([v[i], 0, 0]), MP, A, J)
 
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'transitive'

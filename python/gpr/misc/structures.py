@@ -1,7 +1,6 @@
 from numpy import zeros
 
 from gpr.misc.functions import gram
-from gpr.opts import VISCOUS, THERMAL, MULTI, NV
 from gpr.vars.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
 from gpr.vars.eos import total_energy
 from gpr.vars.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing, f_δp
@@ -18,9 +17,10 @@ class State():
         self.ρ = Q[0]
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
-        self.A = Q[5:14].reshape([3, 3]) if VISCOUS else None
-        self.J = Q[14:17] / self.ρ if THERMAL else None
-        self.λ = Q[18] / Q[0] if MULTI else None
+        self.A = Q[5:14].reshape([3, 3])
+        self.J = Q[14:17] / self.ρ
+        if MP.MULTI:
+            self.λ = Q[18] / Q[0]
         self.MP = MP
 
     def G(self):
@@ -98,19 +98,21 @@ class State():
 def Cvec(ρ, p, v, MP, A=None, J=None, λ=None):
     """ Returns vector of conserved variables, given primitive variables
     """
+
+    NV = 5 + 9 * (A is not None) + 3 * (J is not None) + (λ is not None)
     Q = zeros(NV)
 
     Q[0] = ρ
     Q[1] = ρ * total_energy(ρ, p, v, A, J, λ, MP)
     Q[2:5] = ρ * v
 
-    if VISCOUS:
+    if A is not None:
         Q[5:14] = A.ravel()
 
-    if THERMAL:
+    if J is not None:
         Q[14:17] = ρ * J
 
-    if MULTI:
+    if λ is not None:
         Q[17] = ρ * λ
 
     return Q

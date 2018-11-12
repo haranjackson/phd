@@ -2,7 +2,6 @@ from numpy import arctan, array, cbrt, cos, dot, exp, log, pi, prod, sqrt
 from numpy.linalg import svd
 
 from gpr.misc.functions import L2_1D
-from gpr.opts import VISCOUS, THERMAL
 from gpr.vars.eos import E_2A, E_3
 from gpr.vars.shear import c_s2
 

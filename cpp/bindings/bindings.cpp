@@ -47,192 +47,177 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(GPRpy, m)
-{
-    m.doc() = "Python bindings to the GPRcpp library";
+PYBIND11_MODULE(GPRpy, m) {
 
-    py::bind_vector<std::vector<Vec>>(m, "VectorVec");
-    py::bind_vector<std::vector<bVec>>(m, "VectorbVec");
+  m.doc() = "Python bindings to the GPRcpp library";
 
-    m.def("N", []() { return N; });
-    m.def("NV", []() { return V; });
-    m.def("VISCOUS", []() { return VISCOUS; });
-    m.def("THERMAL", []() { return THERMAL; });
-    m.def("MULTI", []() { return MULTI; });
-    m.def("LSET", []() { return LSET; });
-    m.def("boundaries", &boundaries);
+  py::bind_vector<std::vector<Vec>>(m, "VectorVec");
+  py::bind_vector<std::vector<bVec>>(m, "VectorbVec");
 
-    pybind11::module m_classes =
-        m.def_submodule("classes", "Classes used by GPRpy");
+  m.def("boundaries", &boundaries);
 
-    pybind11::module m_multi =
-        m.def_submodule("multi", "Generic multimaterial functions");
+  pybind11::module m_options = m.def_submodule("options", "");
+  pybind11::module m_classes = m.def_submodule("classes", "");
+  pybind11::module m_multi = m.def_submodule("multi", "");
+  pybind11::module m_scipy = m.def_submodule("scipy", "");
+  pybind11::module m_system = m.def_submodule("system", "");
+  pybind11::module m_system_multi = m_system.def_submodule("multi", "");
+  pybind11::module m_solvers = m.def_submodule("solvers", "");
+  pybind11::module m_solvers_common = m_solvers.def_submodule("common", "");
+  pybind11::module m_solvers_weno = m_solvers.def_submodule("weno", "");
+  pybind11::module m_solvers_dg = m_solvers.def_submodule("dg", "");
+  pybind11::module m_solvers_split = m_solvers.def_submodule("split", "");
+  pybind11::module m_solvers_fv = m_solvers.def_submodule("fv", "");
 
-    pybind11::module m_scipy = m.def_submodule("scipy", "SciPy functions");
+  m_options.def("N", []() { return N; });
+  m_options.def("NV", []() { return V; });
+  m_options.def("VISCOUS", []() { return VISCOUS; });
+  m_options.def("THERMAL", []() { return THERMAL; });
+  m_options.def("MULTI", []() { return MULTI; });
+  m_options.def("LSET", []() { return LSET; });
 
-    pybind11::module m_system =
-        m.def_submodule("system", "System vectors and matrices");
+  pybind11::class_<Params>(m_classes, "Params")
+      .def(py::init<>())
+      .def_readwrite("EOS", &Par::EOS)
+      .def_readwrite("ρ0", &Par::ρ0)
+      .def_readwrite("Tref", &Par::Tref)
+      .def_readwrite("cv", &Par::cv)
+      .def_readwrite("pINF", &Par::pINF)
+      .def_readwrite("Γ0", &Par::Γ0)
+      .def_readwrite("c02", &Par::c02)
+      .def_readwrite("s", &Par::s)
+      .def_readwrite("α", &Par::α)
+      .def_readwrite("β", &Par::β)
+      .def_readwrite("γ", &Par::γ)
+      .def_readwrite("A", &Par::A)
+      .def_readwrite("B", &Par::B)
+      .def_readwrite("R1", &Par::R1)
+      .def_readwrite("R2", &Par::R2)
+      .def_readwrite("b02", &Par::b02)
+      .def_readwrite("μ", &Par::μ)
+      .def_readwrite("τ0", &Par::τ0)
+      .def_readwrite("σY", &Par::σY)
+      .def_readwrite("n", &Par::n)
+      .def_readwrite("cα2", &Par::cα2)
+      .def_readwrite("κ", &Par::κ);
 
-    pybind11::module m_system_multi =
-        m_system.def_submodule("multi", "Functions related to multimaterial GPR");
+  pybind11::class_<Par>(m_classes, "Par")
+      .def(py::init<>())
+      .def_readwrite("EOS", &Par::EOS)
+      .def_readwrite("SOLID", &Par::SOLID)
+      .def_readwrite("POWER_LAW", &Par::POWER_LAW)
+      .def_readwrite("MULTI", &Par::MULTI)
+      .def_readwrite("ρ0", &Par::ρ0)
+      .def_readwrite("T0", &Par::T0)
+      .def_readwrite("Tref", &Par::Tref)
+      .def_readwrite("cv", &Par::cv)
+      .def_readwrite("pINF", &Par::pINF)
+      .def_readwrite("Γ0", &Par::Γ0)
+      .def_readwrite("c02", &Par::c02)
+      .def_readwrite("s", &Par::s)
+      .def_readwrite("α", &Par::α)
+      .def_readwrite("β", &Par::β)
+      .def_readwrite("γ", &Par::γ)
+      .def_readwrite("A", &Par::A)
+      .def_readwrite("B", &Par::B)
+      .def_readwrite("R1", &Par::R1)
+      .def_readwrite("R2", &Par::R2)
+      .def_readwrite("b02", &Par::b02)
+      .def_readwrite("μ", &Par::μ)
+      .def_readwrite("τ0", &Par::τ0)
+      .def_readwrite("σY", &Par::σY)
+      .def_readwrite("n", &Par::n)
+      .def_readwrite("cα2", &Par::cα2)
+      .def_readwrite("κ", &Par::κ)
+      .def_readwrite("δp", &Par::δp)
+      .def_readwrite("MP2", &Par::MP2)
+      .def_readwrite("REACTION", &Par::REACTION)
+      .def_readwrite("Qc", &Par::Qc)
+      .def_readwrite("K0", &Par::K0)
+      .def_readwrite("Ti", &Par::Ti)
+      .def_readwrite("Bc", &Par::Bc)
+      .def_readwrite("Ea", &Par::Ea)
+      .def_readwrite("Rc", &Par::Rc)
+      .def_readwrite("G1", &Par::G1)
+      .def_readwrite("a", &Par::a)
+      .def_readwrite("b", &Par::b)
+      .def_readwrite("d", &Par::d)
+      .def_readwrite("λ0", &Par::λ0);
 
-    pybind11::module m_solvers = m.def_submodule("solvers", "Solver functions");
+  pybind11::class_<poly>(m_classes, "poly")
+      .def(pybind11::init<Vec>())
+      .def_readwrite("coef", &poly::coef)
+      .def("intt", &poly::intt)
+      .def("diff", &poly::diff)
+      .def("eval", &poly::eval);
 
-    pybind11::module m_solvers_common =
-        m_solvers.def_submodule("common", "Functions common to all solvers");
+  m_multi.def("renormalize_levelsets", &renormalize_levelsets);
+  m_multi.def("finite_difference", &finite_difference);
+  m_multi.def("find_interface_cells", &find_interface_cells);
+  m_multi.def("fill_boundary_cells", &fill_boundary_cells);
+  m_multi.def("fill_neighbor_cells", &fill_neighbor_cells);
+  m_multi.def("fill_ghost_cells", &fill_ghost_cells);
 
-    pybind11::module m_solvers_weno =
-        m_solvers.def_submodule("weno", "WENO functions");
+  m_scipy.def("lgmres_wrapper", &lgmres_wrapper, py::arg("A"), py::arg("b"),
+              py::arg("x0") = Vec(0), py::arg("M") = Mat(0, 0),
+              py::arg("tol") = 1e-5, py::arg("maxiter") = 1000,
+              py::arg("inner_m") = 30, py::arg("outer_k") = 3,
+              py::arg("outer_v") = std::vector<Vec>());
+  m_scipy.def("newton_krylov", &nonlin_solve, py::arg("F"), py::arg("x"),
+              py::arg("f_tol") = pow(mEPS, 1. / 3), py::arg("f_rtol") = INF,
+              py::arg("x_tol") = INF, py::arg("x_rtol") = INF);
 
-    pybind11::module m_solvers_dg = m_solvers.def_submodule("dg", "DG functions");
+  m_system.def("flux", &flux);
+  m_system.def("source", &source);
+  m_system.def("block", &block);
+  m_system.def("Bdot", &Bdot);
+  m_system.def("system_matrix", &system_matrix);
 
-    pybind11::module m_solvers_split =
-        m_solvers.def_submodule("split", "Operator splitting functions");
+  m_system.def("max_abs_eigs", &max_abs_eigs);
+  m_system.def("thermo_acoustic_tensor", &thermo_acoustic_tensor);
 
-    pybind11::module m_solvers_fv = m_solvers.def_submodule("fv", "FV functions");
+  m_system.def("dFdP", &dFdP);
+  m_system.def("dPdQ", &dPdQ);
 
-    pybind11::class_<Params>(m_classes, "Params")
-        .def(py::init<>())
-        .def_readwrite("EOS", &Par::EOS)
-        .def_readwrite("ρ0", &Par::ρ0)
-        .def_readwrite("Tref", &Par::Tref)
-        .def_readwrite("cv", &Par::cv)
-        .def_readwrite("pINF", &Par::pINF)
-        .def_readwrite("Γ0", &Par::Γ0)
-        .def_readwrite("c02", &Par::c02)
-        .def_readwrite("s", &Par::s)
-        .def_readwrite("α", &Par::α)
-        .def_readwrite("β", &Par::β)
-        .def_readwrite("γ", &Par::γ)
-        .def_readwrite("A", &Par::A)
-        .def_readwrite("B", &Par::B)
-        .def_readwrite("R1", &Par::R1)
-        .def_readwrite("R2", &Par::R2)
-        .def_readwrite("b02", &Par::b02)
-        .def_readwrite("μ", &Par::μ)
-        .def_readwrite("τ0", &Par::τ0)
-        .def_readwrite("σY", &Par::σY)
-        .def_readwrite("n", &Par::n)
-        .def_readwrite("cα2", &Par::cα2)
-        .def_readwrite("κ", &Par::κ);
+  m_system_multi.def("eigen", &eigen);
+  m_system_multi.def("riemann_constraints", &riemann_constraints);
+  m_system_multi.def("star_stepper", &star_stepper);
+  m_system_multi.def("left_star_state", &left_star_state);
+  m_system_multi.def("distance", &distance);
 
-    pybind11::class_<Par>(m_classes, "Par")
-        .def(py::init<>())
-        .def_readwrite("EOS", &Par::EOS)
-        .def_readwrite("SOLID", &Par::SOLID)
-        .def_readwrite("POWER_LAW", &Par::POWER_LAW)
-        .def_readwrite("MULTI", &Par::MULTI)
-        .def_readwrite("ρ0", &Par::ρ0)
-        .def_readwrite("T0", &Par::T0)
-        .def_readwrite("Tref", &Par::Tref)
-        .def_readwrite("cv", &Par::cv)
-        .def_readwrite("pINF", &Par::pINF)
-        .def_readwrite("Γ0", &Par::Γ0)
-        .def_readwrite("c02", &Par::c02)
-        .def_readwrite("s", &Par::s)
-        .def_readwrite("α", &Par::α)
-        .def_readwrite("β", &Par::β)
-        .def_readwrite("γ", &Par::γ)
-        .def_readwrite("A", &Par::A)
-        .def_readwrite("B", &Par::B)
-        .def_readwrite("R1", &Par::R1)
-        .def_readwrite("R2", &Par::R2)
-        .def_readwrite("b02", &Par::b02)
-        .def_readwrite("μ", &Par::μ)
-        .def_readwrite("τ0", &Par::τ0)
-        .def_readwrite("σY", &Par::σY)
-        .def_readwrite("n", &Par::n)
-        .def_readwrite("cα2", &Par::cα2)
-        .def_readwrite("κ", &Par::κ)
-        .def_readwrite("δp", &Par::δp)
-        .def_readwrite("MP2", &Par::MP2)
-        .def_readwrite("REACTION", &Par::REACTION)
-        .def_readwrite("Qc", &Par::Qc)
-        .def_readwrite("K0", &Par::K0)
-        .def_readwrite("Ti", &Par::Ti)
-        .def_readwrite("Bc", &Par::Bc)
-        .def_readwrite("Ea", &Par::Ea)
-        .def_readwrite("Rc", &Par::Rc)
-        .def_readwrite("G1", &Par::G1)
-        .def_readwrite("a", &Par::a)
-        .def_readwrite("b", &Par::b)
-        .def_readwrite("d", &Par::d)
-        .def_readwrite("λ0", &Par::λ0);
+  m_solvers_common.def("basis_polys", &basis_polys);
+  m_solvers_common.def("scaled_nodes", &scaled_nodes);
+  m_solvers_common.def("scaled_weights", &scaled_weights);
+  m_solvers_common.def("end_values", &end_values);
+  m_solvers_common.def("derivative_values", &derivative_values);
 
-    pybind11::class_<poly>(m_classes, "poly")
-        .def(pybind11::init<Vec>())
-        .def_readwrite("coef", &poly::coef)
-        .def("intt", &poly::intt)
-        .def("diff", &poly::diff)
-        .def("eval", &poly::eval);
+  m_solvers.def("extended_dimensions", &extended_dimensions);
+  m_solvers.def("ader_stepper", &ader_stepper);
+  m_solvers.def("ader_stepper_para", &ader_stepper_para);
+  m_solvers.def("split_stepper", &split_stepper);
+  m_solvers.def("split_stepper_para", &split_stepper_para);
+  m_solvers.def("iterator", &iterator);
+  m_solvers.def("make_u", &make_u);
 
-    m_multi.def("renormalize_levelsets", &renormalize_levelsets);
-    m_multi.def("finite_difference", &finite_difference);
-    m_multi.def("find_interface_cells", &find_interface_cells);
-    m_multi.def("fill_boundary_cells", &fill_boundary_cells);
-    m_multi.def("fill_neighbor_cells", &fill_neighbor_cells);
-    m_multi.def("fill_ghost_cells", &fill_ghost_cells);
+  m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
+  m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);
+  m_solvers_weno.def("weno_launcher", &weno_launcher);
 
-    m_scipy.def("lgmres_wrapper", &lgmres_wrapper, py::arg("A"), py::arg("b"),
-                py::arg("x0") = Vec(0), py::arg("M") = Mat(0, 0),
-                py::arg("tol") = 1e-5, py::arg("maxiter") = 1000,
-                py::arg("inner_m") = 30, py::arg("outer_k") = 3,
-                py::arg("outer_v") = std::vector<Vec>());
-    m_scipy.def("newton_krylov", &nonlin_solve, py::arg("F"), py::arg("x"),
-                py::arg("f_tol") = pow(mEPS, 1. / 3), py::arg("f_rtol") = INF,
-                py::arg("x_tol") = INF, py::arg("x_rtol") = INF);
+  m_solvers_split.def("midstepper", &midstepper);
+  m_solvers_split.def("analyticSolver_distortion", &analyticSolver_distortion);
+  m_solvers_split.def("analyticSolver_thermal", &analyticSolver_thermal);
+  m_solvers_split.def("ode_launcher", &ode_launcher);
 
-    m_system.def("flux", &flux);
-    m_system.def("source", &source);
-    m_system.def("block", &block);
-    m_system.def("Bdot", &Bdot);
-    m_system.def("system_matrix", &system_matrix);
+  m_solvers_fv.def("Bint", &Bint);
+  m_solvers_fv.def("D_RUS", &D_RUS);
+  m_solvers_fv.def("D_ROE", &D_ROE);
+  m_solvers_fv.def("D_OSH", &D_OSH);
 
-    m_system.def("max_abs_eigs", &max_abs_eigs);
-    m_system.def("thermo_acoustic_tensor", &thermo_acoustic_tensor);
+  m_solvers_fv.def("centers1", &centers1);
+  m_solvers_fv.def("centers2", &centers2);
+  m_solvers_fv.def("interfs1", &interfs1);
+  m_solvers_fv.def("interfs2", &interfs2);
+  m_solvers_fv.def("fv_launcher", &fv_launcher);
 
-    m_system.def("dFdP", &dFdP);
-    m_system.def("dPdQ", &dPdQ);
-
-    m_system_multi.def("eigen", &eigen);
-    m_system_multi.def("riemann_constraints", &riemann_constraints);
-    m_system_multi.def("star_stepper", &star_stepper);
-    m_system_multi.def("left_star_state", &left_star_state);
-    m_system_multi.def("distance", &distance);
-
-    m_solvers_common.def("basis_polys", &basis_polys);
-    m_solvers_common.def("scaled_nodes", &scaled_nodes);
-    m_solvers_common.def("scaled_weights", &scaled_weights);
-    m_solvers_common.def("end_values", &end_values);
-    m_solvers_common.def("derivative_values", &derivative_values);
-
-    m_solvers.def("extended_dimensions", &extended_dimensions);
-    m_solvers.def("ader_stepper", &ader_stepper);
-    m_solvers.def("ader_stepper_para", &ader_stepper_para);
-    m_solvers.def("split_stepper", &split_stepper);
-    m_solvers.def("split_stepper_para", &split_stepper_para);
-    m_solvers.def("iterator", &iterator);
-    m_solvers.def("make_u", &make_u);
-
-    m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
-    m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);
-    m_solvers_weno.def("weno_launcher", &weno_launcher);
-
-    m_solvers_split.def("midstepper", &midstepper);
-    m_solvers_split.def("analyticSolver_distortion", &analyticSolver_distortion);
-    m_solvers_split.def("analyticSolver_thermal", &analyticSolver_thermal);
-    m_solvers_split.def("ode_launcher", &ode_launcher);
-
-    m_solvers_fv.def("Bint", &Bint);
-    m_solvers_fv.def("D_RUS", &D_RUS);
-    m_solvers_fv.def("D_ROE", &D_ROE);
-    m_solvers_fv.def("D_OSH", &D_OSH);
-
-    m_solvers_fv.def("centers1", &centers1);
-    m_solvers_fv.def("centers2", &centers2);
-    m_solvers_fv.def("interfs1", &interfs1);
-    m_solvers_fv.def("interfs2", &interfs2);
-    m_solvers_fv.def("fv_launcher", &fv_launcher);
-
-    m_solvers_dg.def("stiff_ode_solve", &stiff_ode_solve);
+  m_solvers_dg.def("stiff_ode_solve", &stiff_ode_solve);
 }

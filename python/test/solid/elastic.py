@@ -53,7 +53,7 @@ def barton(test):
     u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
 
     def f():
-        return u, MPs, tf, dX
+        return u, MPs, tf, dX, 'transitive'
 
     return f
 
@@ -97,6 +97,6 @@ def pure_elastic(test):
     u = hyperelastic_IC(nx, dX, vL, vR, FL, FR, SL, SR, HYPs)
 
     def f():
-        return u, MPs, tf, dX
+        return u, MPs, tf, dX, 'transitive'
 
     return f

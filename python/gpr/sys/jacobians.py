@@ -1,7 +1,6 @@
 from numpy import dot, eye, outer, tensordot, zeros
 
 from gpr.misc.functions import L2_1D
-from gpr.opts import VISCOUS, THERMAL, MULTI, REACTIVE, NV
 
 
 def dQdP(P, MP):

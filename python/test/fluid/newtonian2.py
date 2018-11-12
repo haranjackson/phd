@@ -16,7 +16,7 @@ def vortex(x, y, x0, y0, ε, γ, ρ):
     return dv, dT, dρ, dp, A
 
 
-def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
+def convected_vortex(μ=1e-6, κ=1e-6, t=0):
 
     tf = 1
     Lx = 10
@@ -45,10 +45,10 @@ def convected_isentropic_vortex_IC(μ=1e-6, κ=1e-6, t=0):
             u[i, j] = Cvec(ρ + dρ, p + dp, v + dv, MP, A, J)
 
     print("CONVECTED ISENTROPIC VORTEX")
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'periodic'
 
 
-def circular_explosion_IC():
+def circular_explosion():
 
     tf = 0.2
     Lx = 2
@@ -87,10 +87,10 @@ def circular_explosion_IC():
                 u[i, j] = Qo
 
     print("CIRCULAR EXPLOSION")
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'transitive'
 
 
-def laminar_boundary_layer_IC():
+def boundary_layer():
 
     tf = 10
     Lx = 1.5
@@ -114,10 +114,10 @@ def laminar_boundary_layer_IC():
             u[i, j] = Q
 
     print("LAMINAR BOUNDARY LAYER")
-    return u, [MP], tf, [Lx / nx, Ly / ny]
+    return u, [MP], tf, [Lx / nx, Ly / ny], ''
 
 
-def double_shear_layer_IC():
+def double_shear_layer():
 
     tf = 1.8
     Lx = 1
@@ -154,11 +154,11 @@ def double_shear_layer_IC():
     return u, [MP], tf, dX
 
 
-def compressible_mixing_layer_IC():
+def compressible_mixing_layer():
     pass
 
 
-def taylor_green_vortex_IC():
+def taylor_green():
 
     tf = 10
     Lx = 2 * pi

@@ -1,8 +1,6 @@
 from numpy import array, concatenate, dot
 from scipy.linalg import solve
 
-from gpr.opts import THERMAL
-
 
 def stick_bcs(RL, RR, PL, PR, xL, xR):
 

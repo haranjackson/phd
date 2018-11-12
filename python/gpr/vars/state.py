@@ -1,7 +1,6 @@
 from numpy import dot, eye, outer
 
 from gpr.misc.functions import AdevG, gram
-from gpr.opts import VISCOUS, THERMAL, REACTIVE
 from gpr.vars import mg
 from gpr.vars.derivatives import dEdA_s, dEdJ
 from gpr.vars.eos import E_2A, E_2J, E_3, E_R
@@ -12,13 +11,13 @@ def pressure(ρ, E, v, A, J, λ, MP):
 
     E1 = E - E_3(v)
 
-    if VISCOUS:
+    if A is not None:
         E1 -= E_2A(ρ, A, MP)
 
-    if THERMAL:
+    if J is not None:
         E1 -= E_2J(J, MP)
 
-    if REACTIVE:
+    if λ is not None:
         E1 -= E_R(λ, MP)
 
     p = mg.pressure(ρ, E1, MP)

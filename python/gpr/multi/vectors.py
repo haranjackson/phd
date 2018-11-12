@@ -1,7 +1,6 @@
 from numpy import zeros
 
 from gpr.vars.eos import total_energy
-from gpr.opts import THERMAL
 
 
 def Pvec(P):

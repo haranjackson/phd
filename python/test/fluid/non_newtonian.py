@@ -1,15 +1,11 @@
 from numpy import amax, array, concatenate, eye, flip, linspace, zeros
 from scipy.integrate import odeint
 
-from ader.etc.boundaries import standard_BC
-
 from gpr.misc.objects import material_params
-from gpr.misc.plot import colors, plot_energy, plot_distortion, plot_sigma
 from gpr.misc.structures import Cvec
 from gpr.sys.analytical import ode_solver_cons
 from gpr.sys.conserved import S_cons
-
-from test.boundaries import wall_BC
+from plot import colors, plot_energy, plot_distortion, plot_sigma
 
 
 def poiseuille_exact(n, nx=400, Lx=0.25, μ=1e-2, dp=0.48):
@@ -70,7 +66,7 @@ def poiseuille():
     Q = Cvec(ρ, p, v, MP, A)
     u = array([Q] * nx)
 
-    return u, [MP], tf, [Lx / nx]
+    return u, [MP], tf, [Lx / nx], 'stick'
 
 
 def lid_driven_cavity():
@@ -110,7 +106,7 @@ def lid_driven_cavity():
             u[i, j] = Q
 
     print("LID-DRIVEN CAVITY")
-    return u, [MP], tf, [Lx / nx, Ly / ny]
+    return u, [MP], tf, [Lx / nx, Ly / ny], 'lid_driven'
 
 
 def strain_relaxation(n=4, tf=0.00001):

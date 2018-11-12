@@ -67,7 +67,7 @@ def piston():
     for i in range(nx):
         u[i] = Q
 
-    return u, [MP], tf, dX
+    return u, [MP], tf, dX, 'piston_bc'
 
 
 def piston_bc(u, N, NDIM):
@@ -121,4 +121,4 @@ def cylindrical_shock():
             else:
                 u[i, j] = Qi
 
-    return u[:, 250:], [MP], tf, dX
+    return u[:, 250:], [MP], tf, dX, 'slip'

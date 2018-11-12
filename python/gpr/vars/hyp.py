@@ -2,7 +2,6 @@ from numpy import dot, exp, eye, zeros
 from numpy.linalg import det, inv
 
 from gpr.misc.functions import I_1, I_2, I_3, gram
-from gpr.opts import NV
 
 
 I = eye(3)
@@ -131,7 +130,7 @@ def Cvec_hyp(F, S, v, HYP):
     """ Returns the vector of conserved variables, given the hyperelastic
         variables
     """
-    Q = zeros(NV)
+    Q = zeros(14)
 
     ρ = HYP.ρ0 / det(F)
     A = inv(F)

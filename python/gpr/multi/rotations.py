@@ -1,7 +1,5 @@
 from numpy import array, dot, sqrt, vstack, zeros
 
-from gpr.opts import THERMAL
-
 
 def rotation_matrix(n):
     """ returns the matrix that rotates vector quantities into a coordinate

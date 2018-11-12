@@ -6,9 +6,9 @@ from scipy.optimize import newton_krylov
 
 from gpr.misc.functions import dev
 from gpr.misc.objects import material_params
-from gpr.misc.plot import plot_energy, plot_distortion, plot_sigma, colors
 from gpr.misc.structures import Cvec
 from gpr.vars.eos import E_2A
+from plot import plot_energy, plot_distortion, plot_sigma, colors
 
 
 A = rand(3, 3)

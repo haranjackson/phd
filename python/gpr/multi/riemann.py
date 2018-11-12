@@ -6,7 +6,6 @@ from gpr.misc.structures import State
 from gpr.multi.conditions import slip_bcs, stick_bcs
 from gpr.multi.rotations import rotation_matrix, rotate_tensors
 from gpr.multi.vectors import Pvec, Pvec_to_Cvec
-from gpr.opts import THERMAL
 from gpr.sys.analytical import ode_solver_cons
 from gpr.sys.eigenvalues import Xi1, Xi2
 from gpr.sys.eigenvectors import eigen, decompose_Ξ, get_indexes

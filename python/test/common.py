@@ -1,13 +1,12 @@
 from numpy import eye, zeros
 
 from gpr.misc.structures import Cvec
-from gpr.opts import NV
 from gpr.vars.hyp import Cvec_hyp
 
 
 def riemann_IC(nx, dX, QL, QR, x0, isMulti):
 
-    u = zeros([nx, NV])
+    u = zeros([nx, len(QL)])
 
     for i in range(nx):
 
