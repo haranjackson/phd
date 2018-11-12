@@ -112,7 +112,7 @@ def params(MP, Rc, EOS,
     else:
         MP.REACTION = -1
 
-    if δp:
+    if δp is not None:
         MP.δp = δp
     else:
         MP.δp = zeros(3)
