@@ -8,11 +8,6 @@
 #include "mg.h"
 #include "multi.h"
 
-double dedρ_coeff(double ρ, double ρi, double λi) {
-  double tmp = λi / ((1 - λi) / ρi * ρ - 1);
-  return tmp * tmp;
-}
-
 double dEdρ(VecVr Q, Par &MP) {
   // Returns the partial derivative of E by ρ (holding p,A constant)
 
@@ -65,7 +60,7 @@ double dEdp(VecVr Q, Par &MP) {
     double ρ1 = sol(1);
     double ρ2 = sol(2);
 
-    return λ * dedp(ρ1, MP) + (1 - λ) * dedp(ρ2, MP);
+    return λ * dedp(ρ1, MP) + (1 - λ) * dedp(ρ2, MP.MP2);
   } else {
     return dedp(ρ, MP);
   }
