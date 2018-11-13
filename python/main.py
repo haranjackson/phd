@@ -7,7 +7,7 @@ import test
 from plot import *
 
 
-T = test.barton(1)
+T = test.steady_znd
 
 DEBUG = False
 N = 3

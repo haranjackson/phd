@@ -106,7 +106,7 @@ MatV_V riemann_constraints(VecVr Q, double sgn, Par &MP) {
     tmp(4, 0) = -1. / ρ;
     tmp.block<1, 3>(4, 2) = Ainv.row(0);
   } else {
-    double c0 = c_0(ρ, p, A, MP);
+    double c0 = c_0(Q, MP);
 
     Mat B = Mat::Zero(2, 3);
     B(0, 0) = ρ;

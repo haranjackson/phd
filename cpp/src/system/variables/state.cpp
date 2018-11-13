@@ -1,49 +1,18 @@
 #include "state.h"
-#include "../../scipy/newton_krylov.h"
 #include "../energy/derivatives.h"
 #include "../energy/eos.h"
 #include "../energy/mg.h"
+#include "../energy/multi.h"
 #include "../functions/matrices.h"
 #include "../functions/vectors.h"
 #include "../objects.h"
 #include "../waves/shear.h"
 
-Vec pobj(double ρ, double e, double λ, Vec4r x, Par &MP1, Params &MP2) {
-
-  Vec4 ret;
-
-  double ρ1 = x(0);
-  double ρ2 = x(1);
-  double e1 = x(2);
-  double e2 = x(3);
-
-  double p1 = pressure_mg(ρ1, e1, MP1);
-  double p2 = pressure_mg(ρ2, e2, MP2);
-  double T1 = temperature(ρ1, p1, MP1);
-  double T2 = temperature(ρ2, p2, MP2);
-
-  ret(0) = 1 / ρ - λ / ρ1 - (1 - λ) / ρ2;
-  ret(1) = e - λ * e1 - (1 - λ) * e2;
-  ret(2) = p1 - p2;
-  ret(3) = T1 - T2;
-
-  return ret;
-}
-
 double pressure_double(VecVr Q, double e, Par &MP) {
 
-  double ρ = Q(0);
-  double λ = Q(mV) / ρ;
-
-  using std::placeholders::_1;
-  VecFunc obj_bound = std::bind(pobj, ρ, e, λ, _1, MP, MP.MP2);
-
-  Vec4 x0;
-  x0 << ρ, ρ, e, e;
-  Vec4 ret = nonlin_solve(obj_bound, x0, DG_TOL);
-
-  double ρ1 = ret(0);
-  double e1 = ret(2);
+  Vec4 sol = solve_multi(Q, e, MP);
+  double ρ1 = sol(0);
+  double e1 = sol(2);
   return pressure_mg(ρ1, e1, MP);
 }
 
@@ -125,10 +94,7 @@ double dsigmadA(double ρ, double cs2, Mat3_3r A, Mat3_3r G, Mat3_3r AdevG,
 
 double temperature(double ρ, double p, Params &MP) {
   // Returns the temperature for a Mie-Gruneisen material
-  double cv = MP.cv;
-  double Γ = Γ_MG(ρ, MP);
-  double pr = p_ref(ρ, MP);
-  return φ(ρ, MP) * MP.Tref + (p - pr) / (ρ * Γ * cv);
+  return temperature_mg(ρ, p, MP);
 }
 
 double temperature(VecVr Q, Par &MP) {

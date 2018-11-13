@@ -4,7 +4,7 @@
 // System Options //
 const bool VISCOUS = true;
 const bool THERMAL = false;
-const bool MULTI = false;
+const bool MULTI = true;
 const int LSET = 0;
 
 // Boundary Options //

@@ -1972,6 +1972,71 @@ where
  are the molar masses of materials 1 and 2, respectively.
 \end_layout
 
+\begin_layout Standard
+The speed of sound in the mixture is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{0} & =\sqrt{\left.\frac{\partial p}{\partial\rho}\right|_{s}}\\
+ & =\sqrt{\frac{\frac{p}{\rho^{2}}-\left.\frac{\partial e}{\partial\rho}\right|_{p}}{\left.\frac{\partial e}{\partial p}\right|_{\rho}}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial e}{\partial p} & =\lambda\frac{\partial e_{1}}{\partial p}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial p}\\
+\frac{\partial e}{\partial\rho} & =\lambda\frac{\partial e_{1}}{\partial\rho_{1}}\frac{\partial\rho_{1}}{\partial\rho}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial\rho_{2}}\frac{\partial\rho_{2}}{\partial\rho}\\
+ & =\frac{\partial e_{1}}{\partial\rho_{1}}\left(\frac{\lambda}{\frac{1-\lambda}{\rho_{2}}\rho-1}\right)^{2}+\frac{\partial e_{2}}{\partial\rho_{2}}\left(\frac{1-\lambda}{\frac{\lambda}{\rho_{1}}\rho-1}\right)^{2}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Reaction Rate Laws
 \end_layout

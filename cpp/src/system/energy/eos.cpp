@@ -9,6 +9,9 @@
 
 double E_1(double ρ, double p, Par &MP) {
   // Returns the microscale energy under the MG EOS
+
+  // TODO: update for multi (required for rgfm)
+
   double Γ = Γ_MG(ρ, MP);
   double pr = p_ref(ρ, MP);
   double er = e_ref(ρ, MP);

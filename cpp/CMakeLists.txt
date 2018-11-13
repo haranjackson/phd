@@ -60,6 +60,7 @@ SET(SRCS include/skfmm/base_marcher.cpp
          src/system/energy/derivatives.cpp
          src/system/energy/eos.cpp
          src/system/energy/mg.cpp
+         src/system/energy/multi.cpp
 
          src/system/functions/matrices.cpp
          src/system/functions/vectors.cpp

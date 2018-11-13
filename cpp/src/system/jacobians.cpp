@@ -17,8 +17,8 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
   Vec3 v = get_ρv(Q) / ρ;
   Mat3_3Map A = get_A(Q);
 
-  double Eρ = dEdρ(ρ, p, A, MP);
-  double Ep = dEdp(ρ, MP);
+  double Eρ = dEdρ(Q, MP);
+  double Ep = dEdp(Q, MP);
   double vd = v(d);
   double ρvd = ρ * vd;
   Mat3_3 G = A.transpose() * A;
@@ -101,13 +101,11 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
 
   double ρ = Q(0);
   double E = Q(1) / ρ;
-  double p = pressure(Q, MP);
   Vec3 v = get_ρv(Q) / ρ;
-  Mat3_3Map A = get_A(Q);
   Vec3 J;
 
-  double Eρ = dEdρ(ρ, p, A, MP);
-  double Ep = dEdp(ρ, MP);
+  double Eρ = dEdρ(Q, MP);
+  double Ep = dEdp(Q, MP);
   double Γ_ = 1 / (ρ * Ep);
 
   double tmp = v.squaredNorm() - (E + ρ * Eρ);

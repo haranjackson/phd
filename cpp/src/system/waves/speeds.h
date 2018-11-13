@@ -3,7 +3,7 @@
 
 #include "../objects.h"
 
-double c_0(double ρ, double p, Mat3_3r A, Par &MP);
+double c_0(VecVr Q, Par &MP);
 
 double c_h(double ρ, double T, Par &MP);
 

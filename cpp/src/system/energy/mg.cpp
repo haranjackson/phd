@@ -130,6 +130,14 @@ double pressure_mg(double ρ, double e, Params &MP) {
   return (e - er) * ρ * Γ + pr;
 }
 
+double temperature_mg(double ρ, double p, Params &MP) {
+  // Returns the temperature for a Mie-Gruneisen material
+  double cv = MP.cv;
+  double Γ = Γ_MG(ρ, MP);
+  double pr = p_ref(ρ, MP);
+  return φ(ρ, MP) * MP.Tref + (p - pr) / (ρ * Γ * cv);
+}
+
 double φ(double ρ, Params &MP) {
   // Returns the integrating factor
   double ρ0 = MP.ρ0;
@@ -279,6 +287,9 @@ double dedp(double ρ, Par &MP) {
 
 double dTdρ(double ρ, double p, Par &MP) {
   // Returns the derivative of the MG temperature with respect to ρ
+
+  // TODO: update for multi (required for THERMAL mixtures)
+
   double cv = MP.cv;
   double Γ = Γ_MG(ρ, MP);
   double dΓ = dΓ_MG(ρ, MP);
@@ -289,6 +300,9 @@ double dTdρ(double ρ, double p, Par &MP) {
 
 double dTdp(double ρ, Par &MP) {
   // Returns the derivative of the MG temperature with respect to p
+
+  // TODO: update for multi (required for THERMAL mixtures)
+
   double cv = MP.cv;
   return dedp(ρ, MP) / cv;
 }
