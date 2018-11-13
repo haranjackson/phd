@@ -76,7 +76,7 @@ void weno1(Matr wh, Matr ub, int nx, int gap) {
   // Shape of ub: (nx + 2(N-1), V)
   // Shapw of wh: (nx * N, V)
   for (int i = 0; i < nx; i++)
-    coeffs(wh.block<N, V>(i * N, 0), ub.block<2 * N, V>(i, 0), nx, gap, i);
+    coeffs(wh.block<N, V>(i * N, 0), ub.block<2 * N - 1, V>(i, 0), nx, gap, i);
 }
 
 void weno2(Matr wh, Matr ub, int nx, int ny) {

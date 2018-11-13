@@ -40,7 +40,7 @@ typedef Eigen::Matrix<double, N, V, Eigen::RowMajor> MatN_V;
 typedef Eigen::Matrix<double, N * N, V, Eigen::RowMajor> MatN2_V;
 typedef Eigen::Matrix<double, N * N * N, V, Eigen::RowMajor> MatN3_V;
 typedef Eigen::Matrix<double, N, N, Eigen::RowMajor> MatN_N;
-typedef Eigen::Matrix<double, 2 * N, V, Eigen::RowMajor> Mat2N_V;
+typedef Eigen::Matrix<double, 2 * N - 1, V, Eigen::RowMajor> Mat2N_V;
 
 typedef Eigen::Ref<Mat2_N> Mat2_Nr;
 typedef Eigen::Ref<MatV_V> MatV_Vr;
