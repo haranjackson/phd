@@ -40,7 +40,9 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/system/eig.h"
 #include "../src/system/equations.h"
 #include "../src/system/jacobians.h"
+
 #include "../src/system/relaxation/analytic.h"
+#include "../src/system/variables/state.h"
 
 #include "../src/system/multi/eigenvecs.h"
 #include "../src/system/multi/riemann.h"
@@ -62,6 +64,7 @@ PYBIND11_MODULE(GPRpy, m) {
   pybind11::module m_scipy = m.def_submodule("scipy", "");
   pybind11::module m_system = m.def_submodule("system", "");
   pybind11::module m_system_multi = m_system.def_submodule("multi", "");
+  pybind11::module m_system_variables = m_system.def_submodule("variables", "");
   pybind11::module m_solvers = m.def_submodule("solvers", "");
   pybind11::module m_solvers_common = m_solvers.def_submodule("common", "");
   pybind11::module m_solvers_weno = m_solvers.def_submodule("weno", "");
@@ -220,4 +223,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_fv.def("fv_launcher", &fv_launcher);
 
   m_solvers_dg.def("stiff_ode_solve", &stiff_ode_solve);
+
+  m_system_variables.def("pressure", &pressure);
+  m_system_variables.def("temperature", &temperature);
 }

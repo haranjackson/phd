@@ -1,5 +1,7 @@
 from numpy import zeros
 
+import GPRpy
+
 from gpr.misc.functions import gram
 from gpr.vars.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
 from gpr.vars.eos import total_energy
@@ -14,6 +16,7 @@ class State():
 
     def __init__(self, Q, MP):
 
+        self.Q = Q
         self.ρ = Q[0]
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
@@ -33,20 +36,11 @@ class State():
         return gram(self.A)
 
     def p(self):
-        if hasattr(self, 'p_'):
-            return self.p_
-        else:
-            # TODO: update for multi
-            self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J, self.λ,
-                               self.MP)
-            return self.p_
+        return GPRpy.system.variables.pressure(self.Q, self.MP)
 
     def T(self):
-        if hasattr(self, 'T_'):
-            return self.T_
-        else:
-            self.T_ = temperature(self.ρ, self.p(), self.MP)
-            return self.T_
+        # TODO: update for multi
+        return GPRpy.system.variables.temperature(self.Q, self.MP)
 
     def σ(self):
         return sigma(self.ρ, self.A, self.MP)
