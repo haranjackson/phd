@@ -18,6 +18,7 @@ SET(SRCS include/skfmm/base_marcher.cpp
          include/skfmm/distance_marcher.cpp
          include/skfmm/heap.cpp
 
+         src/etc/debug.cpp
          src/etc/globals.cpp
          src/etc/grid.cpp
 
@@ -78,12 +79,11 @@ SET(SRCS include/skfmm/base_marcher.cpp
 
          src/system/waves/shear.cpp
          src/system/waves/speeds.cpp
+
+         bindings/bindings.cpp
    )
 
 find_package(OpenMP REQUIRED)
-
-add_definitions(-DBINDINGS)
-set(SRCS_SO bindings/bindings.cpp src/etc/debug.cpp ${SRCS})
 add_subdirectory(include/pybind11-master)
-pybind11_add_module(GPRpy ${SRCS_SO})
+pybind11_add_module(GPRpy ${SRCS})
 target_link_libraries(GPRpy PRIVATE OpenMP::OpenMP_CXX)

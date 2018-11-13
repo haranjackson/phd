@@ -1,6 +1,4 @@
-#ifdef BINDINGS
 #include "../etc/debug.h"
-#endif
 
 #include <iostream>
 
@@ -143,12 +141,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
       pushCount += 1;
     }
 
-#ifdef BINDINGS
     print(int(t / tf * 100.));
     print(dt);
-#else
-    std::cout << "\n" << int(t / tf * 100.);
-#endif
   }
 
   ret[99] = u;
