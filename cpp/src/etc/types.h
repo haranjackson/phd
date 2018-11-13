@@ -6,15 +6,15 @@
 //#define EIGEN_USE_MKL_ALL
 //#define EIGEN_MKL_DIRECT_CALL
 
-#define EIGEN_NO_MALLOC
+//#define EIGEN_NO_MALLOC
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
+#include "../options.h"
 #include "eigen3/Eigen"
 #include "eigen3/StdVector"
-#include "../options.h"
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     Mat;
