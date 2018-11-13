@@ -18,9 +18,15 @@ class State():
         self.E = Q[1] / self.ρ
         self.v = Q[2:5] / self.ρ
         self.A = Q[5:14].reshape([3, 3])
-        self.J = Q[14:17] / self.ρ
-        if MP.MULTI:
-            self.λ = Q[18] / Q[0]
+
+        if MP.cα2:
+            self.J = Q[14:17] / self.ρ
+            if MP.MULTI:
+                self.λ = Q[17] / Q[0]
+        else:
+            if MP.MULTI:
+                self.λ = Q[14] / Q[0]
+
         self.MP = MP
 
     def G(self):
@@ -30,6 +36,7 @@ class State():
         if hasattr(self, 'p_'):
             return self.p_
         else:
+            # TODO: update for multi
             self.p_ = pressure(self.ρ, self.E, self.v, self.A, self.J, self.λ,
                                self.MP)
             return self.p_
@@ -111,8 +118,10 @@ def Cvec(ρ, p, v, MP, A=None, J=None, λ=None):
 
     if J is not None:
         Q[14:17] = ρ * J
-
-    if λ is not None:
-        Q[17] = ρ * λ
+        if λ is not None:
+            Q[17] = ρ * λ
+    else:
+        if λ is not None:
+            Q[14] = ρ * λ
 
     return Q

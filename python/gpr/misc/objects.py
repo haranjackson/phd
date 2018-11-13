@@ -32,9 +32,10 @@ def params(MP, Rc, EOS,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,
-           G1, c, d, y, λ0,
+           G1, a, b, d, λ0,
            δp,
-           MULTI,
+           MULTI, EOS_2,
+           Tref_2, cv_2,
            α_2, β_2, γ_2, pINF_2,
            c0_2, Γ0_2, s_2,
            A_2, B_2, R1_2, R2_2,
@@ -104,9 +105,9 @@ def params(MP, Rc, EOS,
 
         elif REACTION == 'i':
             MP.G1 = G1
-            MP.c = c
+            MP.a = a
+            MP.b = b
             MP.d = d
-            MP.y = y
             MP.λ0 = λ0
 
     else:
@@ -119,6 +120,8 @@ def params(MP, Rc, EOS,
 
     if MULTI:
 
+        MP.MULTI = MULTI
+        MP.MP2.EOS = EOS_CODES[EOS_2]
         MP.MP2.ρ0 = ρ0
 
         if cv_2:
@@ -171,10 +174,11 @@ def material_params(EOS, ρ0,
                     REACTION=None, Qc=None,
                     Kc=None, Ti=None,
                     Bc=None, Ea=None, Rc=None,
-                    G1=None, c=None, d=None, y=None, λ0=None,
+                    G1=None, a=None, b=None, d=None, λ0=None,
                     δp=None,
 
-                    MULTI=False,
+                    MULTI=False, EOS_2=None,
+                    Tref_2=None, cv_2=None,
                     α_2=None, β_2=None, γ_2=None, pINF_2=None,
                     c0_2=None, Γ0_2=None, s_2=None,
                     A_2=None, B_2=None, R1_2=None, R2_2=None,
@@ -207,6 +211,12 @@ def material_params(EOS, ρ0,
         if Pr:
             κ = μ * γ * cv / Pr
 
+        if Tref_2 is None:
+            Tref_2 = 0
+
+        if β_2 is None:
+            β_2 = 0
+
         if Pr_2:
             κ_2 = μ_2 * γ_2 * cv_2 / Pr_2
 
@@ -220,9 +230,10 @@ def material_params(EOS, ρ0,
                REACTION, Qc,
                Kc, Ti,
                Bc, Ea,
-               G1, c, d, y, λ0,
+               G1, a, b, d, λ0,
                δp,
-               MULTI,
+               MULTI, EOS_2,
+               Tref_2, cv_2,
                α_2, β_2, γ_2, pINF_2,
                c0_2, Γ0_2, s_2,
                A_2, B_2, R1_2, R2_2,
