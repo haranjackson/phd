@@ -84,7 +84,7 @@ double dsigmadA(double ρ, double cs2, Mat3_3r A, Mat3_3r G, Mat3_3r AdevG,
   return -ρ * cs2 * ret;
 }
 
-double temperature(double ρ, double p, Params &MP) {
+double temperature_prim(double ρ, double p, Params &MP) {
   // Returns the temperature for a Mie-Gruneisen material
   return temperature_mg(ρ, p, MP);
 }
@@ -92,7 +92,7 @@ double temperature(double ρ, double p, Params &MP) {
 double temperature(VecVr Q, Par &MP) {
   double ρ = Q(0);
   double p = pressure(Q, MP);
-  return temperature(ρ, p, MP);
+  return temperature_prim(ρ, p, MP);
 }
 
 Vec3 heat_flux(double T, Vec3r J, Par &MP) {

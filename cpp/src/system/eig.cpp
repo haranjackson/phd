@@ -42,7 +42,7 @@ Mat Xi2(double ρ, double p, VecVr Q, Par &MP, int d) {
     Ξ2.bottomLeftCorner(3, 3) = A;
   }
   if (THERMAL) {
-    double T = temperature(ρ, p, MP);
+    double T = temperature_prim(ρ, p, MP);
     double ch = c_h(ρ, T, MP);
     Ξ2(1, 3) = ρ * ch * ch / dTdp(ρ, MP);
   }

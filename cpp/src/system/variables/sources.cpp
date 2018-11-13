@@ -54,8 +54,7 @@ double theta2inv(VecVr Q, Par &MP) {
   // TODO: implement mixing of κ
 
   double ρ = Q(0);
-  double p = pressure(Q, MP);
-  double T = temperature(ρ, p, MP);
+  double T = temperature(Q, MP);
   return T / (MP.κ * ρ);
 }
 
@@ -63,20 +62,21 @@ void f_body(Vec3r x, Par &MP) { x = MP.δp; }
 
 double reaction_rate(VecVr Q, Par &MP) {
 
+  double λ = Q(mV) / Q(0);
+
   switch (MP.REACTION) {
 
   case DISCRETE: {
     if (temperature(Q, MP) > MP.Ti)
-      return MP.K0;
+      return MP.K0 * λ;
     else
       return 0.;
   }
   case ARRHENIUS: {
     double T = temperature(Q, MP);
-    return MP.Bc * exp(-MP.Ea / (MP.Rc * T));
+    return MP.Bc * exp(-MP.Ea / (MP.Rc * T)) * λ;
   }
   case IGNITION_GROWTH: {
-    double λ = Q(mV) / Q(0);
     double p = pressure(Q, MP);
     double tmp1 = std::pow(λ, MP.a);
     double tmp2 = std::pow(2 - λ - MP.λ0, MP.b);

@@ -67,7 +67,7 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
   if (THERMAL) {
 
     double cα2 = MP.cα2;
-    double T = temperature(ρ, p, MP);
+    double T = temperature_prim(ρ, p, MP);
     double Tρ = dTdρ(ρ, p, MP);
     double Tp = dTdp(ρ, MP);
     Vec3 J = get_ρJ(Q) / ρ;

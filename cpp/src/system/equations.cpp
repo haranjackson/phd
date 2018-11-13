@@ -36,7 +36,7 @@ void flux(VecVr ret, VecVr Q, int d, Par &MP) {
   }
   if (THERMAL) {
     Vec3Map ρJ = get_ρJ(Q);
-    double T = temperature(ρ, p, MP);
+    double T = temperature_prim(ρ, p, MP);
 
     ret(1) += MP.cα2 * T * ρJ(d) / ρ;
     ret.segment<3>(14) += vd * ρJ;
