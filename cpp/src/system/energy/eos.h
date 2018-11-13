@@ -4,7 +4,7 @@
 #include "../../etc/globals.h"
 #include "../objects.h"
 
-double E_1(double ρ, double p, Par &MP);
+double E_1(double ρ, double p, Params &MP);
 double E_2A(double ρ, Mat3_3r A, Par &MP);
 double E_2J(Vec3r J, Par &MP);
 double E_3(Vec3r v);

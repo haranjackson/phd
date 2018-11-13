@@ -17,12 +17,12 @@ double pressure_mg(double ρ, double e, Params &MP);
 double temperature_mg(double ρ, double p, Params &MP);
 double φ(double ρ, Params &MP);
 
-double dΓ_MG(double ρ, Par &MP);
-double dp_ref(double ρ, Par &MP);
-double de_ref(double ρ, Par &MP);
-double dedρ(double ρ, double p, Par &MP);
-double dedp(double ρ, Par &MP);
-double dTdρ(double ρ, double p, Par &MP);
-double dTdp(double ρ, Par &MP);
+double dΓ_MG(double ρ, Params &MP);
+double dp_ref(double ρ, Params &MP);
+double de_ref(double ρ, Params &MP);
+double dedρ(double ρ, double p, Params &MP);
+double dedp(double ρ, Params &MP);
+double dTdρ(double ρ, double p, Params &MP);
+double dTdp(double ρ, Params &MP);
 
 #endif // MG_H

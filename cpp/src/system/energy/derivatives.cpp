@@ -26,16 +26,26 @@ double dEdρ(VecVr Q, Par &MP) {
     double λ = Q(mV) / ρ;
     double e = internal_energy(Q, MP);
 
-    Vec4 sol = solve_multi(Q, e, MP);
-    double ρ1 = sol(0);
-    double ρ2 = sol(1);
-    double e1 = sol(2);
+    Vec3 sol = solve_multi(Q, e, MP);
+    double p = sol(0);
+    double ρ1 = sol(1);
+    double ρ2 = sol(2);
 
-    double p = pressure_mg(ρ1, e1, MP);
-    double tmp1 = dedρ(ρ1, p, MP) * dedρ_coeff(ρ, ρ2, λ);
-    double tmp2 = dedρ(ρ2, p, MP) * dedρ_coeff(ρ, ρ1, 1 - λ);
+    double dT1 = dTdρ(ρ1, p, MP);
+    double dT2 = dTdρ(ρ2, p, MP.MP2);
+
+    double c = λ / (ρ1 * ρ1) * dT2 + (1 - λ) / (ρ2 * ρ2) * dT1;
+
+    double dρ1 = 1 / (ρ * ρ * c) * dT2;
+    double dρ2 = 1 / (ρ * ρ * c) * dT1;
+
+    double tmp1 = λ * dedρ(ρ1, p, MP) * dρ1;
+    double tmp2 = (1 - λ) * dedρ(ρ2, p, MP.MP2) * dρ2;
+
     return tmp1 + tmp2 + tmp;
-  } else {
+  }
+
+  else {
     double p = pressure(Q, MP);
     return dedρ(ρ, p, MP) + tmp;
   }
@@ -51,9 +61,9 @@ double dEdp(VecVr Q, Par &MP) {
     double λ = Q(mV) / ρ;
     double e = internal_energy(Q, MP);
 
-    Vec4 sol = solve_multi(Q, e, MP);
-    double ρ1 = sol(0);
-    double ρ2 = sol(1);
+    Vec3 sol = solve_multi(Q, e, MP);
+    double ρ1 = sol(1);
+    double ρ2 = sol(2);
 
     return λ * dedp(ρ1, MP) + (1 - λ) * dedp(ρ2, MP);
   } else {

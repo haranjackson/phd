@@ -1763,15 +1763,29 @@ p & =p_{1}^{ref}+\rho_{1}\Gamma_{1}\left(e_{1}-e_{1}^{ref}\right)\label{eq:press
 \end_layout
 
 \begin_layout Standard
+Thus, the energy equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=\lambda\left(e_{1}^{ref}+\frac{p-p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)+\left(1-\lambda\right)\left(e_{2}^{ref}+\frac{p-p_{2}^{ref}}{\rho_{2}\Gamma_{2}}\right)\label{eq:energy-mixture-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The temperature equilibrium assumption gives:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align}
-T & =T_{1}^{ref}\phi_{1}+\frac{e_{1}-e_{1}^{ref}}{\left(c_{v}\right)_{1}}\label{eq:temperature-mixture}\\
- & =T_{2}^{ref}\phi_{2}+\frac{e_{2}-e_{2}^{ref}}{\left(c_{v}\right)_{2}}\nonumber 
-\end{align}
+\begin{equation}
+T_{1}^{ref}\phi_{1}+\frac{p-p_{1}^{ref}}{\rho_{1}\Gamma_{1}\left(c_{v}\right)_{1}}=T_{2}^{ref}\phi_{2}+\frac{p-p_{2}^{ref}}{\rho_{2}\Gamma_{2}\left(c_{v}\right)_{2}}\label{eq:temperature-mixture}
+\end{equation}
 
 \end_inset
 
@@ -1794,17 +1808,7 @@ noprefix "false"
 , 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:energy-mixture"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:pressure-mixture"
+reference "eq:energy-mixture-2"
 plural "false"
 caps "false"
 noprefix "false"
@@ -2012,8 +2016,131 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \frac{\partial e}{\partial p} & =\lambda\frac{\partial e_{1}}{\partial p}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial p}\\
-\frac{\partial e}{\partial\rho} & =\lambda\frac{\partial e_{1}}{\partial\rho_{1}}\frac{\partial\rho_{1}}{\partial\rho}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial\rho_{2}}\frac{\partial\rho_{2}}{\partial\rho}\\
- & =\frac{\partial e_{1}}{\partial\rho_{1}}\left(\frac{\lambda}{\frac{1-\lambda}{\rho_{2}}\rho-1}\right)^{2}+\frac{\partial e_{2}}{\partial\rho_{2}}\left(\frac{1-\lambda}{\frac{\lambda}{\rho_{1}}\rho-1}\right)^{2}\nonumber 
+\frac{\partial e}{\partial\rho} & =\lambda\frac{\partial e_{1}}{\partial\rho_{1}}\frac{\partial\rho_{1}}{\partial\rho}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial\rho_{2}}\frac{\partial\rho_{2}}{\partial\rho}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To find 
+\begin_inset Formula $\frac{\partial\rho_{1}}{\partial\rho},\frac{\partial\rho_{2}}{\partial\rho}$
+\end_inset
+
+, we differentiate 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:density-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:temperature-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\rho$
+\end_inset
+
+, to obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\lambda}{\rho_{1}^{2}}\frac{\partial\rho_{1}}{\partial\rho}+\frac{1-\lambda}{\rho_{2}^{2}}\frac{\partial\rho_{2}}{\partial\rho} & =\frac{1}{\rho^{2}}\\
+\frac{\partial T_{1}}{\partial\rho_{1}}\frac{\partial\rho_{1}}{\partial\rho}-\frac{\partial T_{2}}{\partial\rho_{2}}\frac{\partial\rho_{2}}{\partial\rho} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho_{1}}{\partial\rho} & =\frac{1}{\rho^{2}}\cdot\frac{1}{\frac{\lambda}{\rho_{1}^{2}}\frac{\partial T_{2}}{\partial\rho_{2}}+\frac{1-\lambda}{\rho_{2}^{2}}\frac{\partial T_{1}}{\partial\rho_{1}}}\frac{\partial T_{2}}{\partial\rho_{2}}\\
+\frac{\partial\rho_{2}}{\partial\rho} & =\frac{1}{\rho^{2}}\cdot\frac{1}{\frac{\lambda}{\rho_{1}^{2}}\frac{\partial T_{2}}{\partial\rho_{2}}+\frac{1-\lambda}{\rho_{2}^{2}}\frac{\partial T_{1}}{\partial\rho_{1}}}\frac{\partial T_{1}}{\partial\rho_{1}}
 \end{align}
 
 \end_inset

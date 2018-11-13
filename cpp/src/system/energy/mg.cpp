@@ -164,7 +164,7 @@ double φ(double ρ, Params &MP) {
   }
 }
 
-double dΓ_MG(double ρ, Par &MP) {
+double dΓ_MG(double ρ, Params &MP) {
   // Returns the derivative of the MG parameter
 
   switch (MP.EOS) {
@@ -185,7 +185,7 @@ double dΓ_MG(double ρ, Par &MP) {
   }
 }
 
-double dp_ref(double ρ, Par &MP) {
+double dp_ref(double ρ, Params &MP) {
   // Returns the derivative of the reference  pressure in the MG EOS
 
   switch (MP.EOS) {
@@ -234,7 +234,7 @@ double dp_ref(double ρ, Par &MP) {
   }
 }
 
-double de_ref(double ρ, Par &MP) {
+double de_ref(double ρ, Params &MP) {
   // Returns the derivative of the reference  energy for the MG EOS
 
   switch (MP.EOS) {
@@ -269,7 +269,7 @@ double de_ref(double ρ, Par &MP) {
   }
 }
 
-double dedρ(double ρ, double p, Par &MP) {
+double dedρ(double ρ, double p, Params &MP) {
   // Returns the derivative of the MG internal energy with respect to ρ
   double Γ = Γ_MG(ρ, MP);
   double dΓ = dΓ_MG(ρ, MP);
@@ -279,13 +279,13 @@ double dedρ(double ρ, double p, Par &MP) {
   return der - (dpr * ρ * Γ + (Γ + ρ * dΓ) * (p - pr)) / ((ρ * Γ) * (ρ * Γ));
 }
 
-double dedp(double ρ, Par &MP) {
+double dedp(double ρ, Params &MP) {
   // Returns the derivative of the MG internal energy with respect to p
   double Γ = Γ_MG(ρ, MP);
   return 1 / (ρ * Γ);
 }
 
-double dTdρ(double ρ, double p, Par &MP) {
+double dTdρ(double ρ, double p, Params &MP) {
   // Returns the derivative of the MG temperature with respect to ρ
 
   // TODO: update for multi (required for THERMAL mixtures)
@@ -298,7 +298,7 @@ double dTdρ(double ρ, double p, Par &MP) {
   return -(dpr * ρ * Γ + (Γ + ρ * dΓ) * (p - pr)) / ((ρ * Γ) * (ρ * Γ)) / cv;
 }
 
-double dTdp(double ρ, Par &MP) {
+double dTdp(double ρ, Params &MP) {
   // Returns the derivative of the MG temperature with respect to p
 
   // TODO: update for multi (required for THERMAL mixtures)

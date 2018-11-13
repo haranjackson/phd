@@ -8,21 +8,13 @@
 #include "../objects.h"
 #include "../waves/shear.h"
 
-double pressure_double(VecVr Q, double e, Par &MP) {
-
-  Vec4 sol = solve_multi(Q, e, MP);
-  double ρ1 = sol(0);
-  double e1 = sol(2);
-  return pressure_mg(ρ1, e1, MP);
-}
-
 double pressure(VecVr Q, Par &MP) {
   // Returns the pressure under the Mie-Gruneisen EOS
 
   double e = internal_energy(Q, MP);
 
   if (MULTI) {
-    return pressure_double(Q, e, MP);
+    return solve_multi(Q, e, MP)(0);
   } else {
     double ρ = Q(0);
     return pressure_mg(ρ, e, MP);

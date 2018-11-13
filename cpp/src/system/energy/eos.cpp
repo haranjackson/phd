@@ -7,7 +7,7 @@
 #include "../objects.h"
 #include "../waves/shear.h"
 
-double E_1(double ρ, double p, Par &MP) {
+double E_1(double ρ, double p, Params &MP) {
   // Returns the microscale energy under the MG EOS
 
   // TODO: update for multi (required for rgfm)
