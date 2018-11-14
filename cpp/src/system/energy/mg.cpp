@@ -240,7 +240,10 @@ double de_ref(double ρ, Params &MP) {
   switch (MP.EOS) {
 
   case STIFFENED_GAS:
-    return -MP.pINF / (ρ * ρ);
+  case GODUNOV_ROMENSKI:
+  case JWL:
+  case COCHRAN_CHAN:
+    return p_ref(ρ, MP) / (ρ * ρ);
 
   case SHOCK_MG: {
     double c02 = MP.c02;
@@ -253,16 +256,6 @@ double de_ref(double ρ, Params &MP) {
     } else
       return 0.;
   }
-  case GODUNOV_ROMENSKI: {
-    double c02 = MP.c02;
-    double α = MP.α;
-    double ρ0 = MP.ρ0;
-    double tmp = pow(ρ / ρ0, α);
-    return c02 / (ρ * α) * (tmp - 1) * tmp;
-  }
-  case JWL:
-  case COCHRAN_CHAN:
-    return p_ref(ρ, MP) / (ρ * ρ);
 
   default:
     throw "EOS not recognized";
