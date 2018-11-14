@@ -6,10 +6,12 @@
 #include "../etc/types.h"
 
 typedef Eigen::Matrix<double, 3, 3, Eigen::RowMajor> Mat3_3;
+typedef Eigen::Matrix<double, 2, 1> Vec2;
 typedef Eigen::Matrix<double, 3, 1> Vec3;
 typedef Eigen::Matrix<double, 9, 1> Vec9;
 
 typedef Eigen::Ref<Mat3_3> Mat3_3r;
+typedef Eigen::Ref<Vec2> Vec2r;
 typedef Eigen::Ref<Vec3> Vec3r;
 typedef Eigen::Ref<Vec9> Vec9r;
 
