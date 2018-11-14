@@ -154,7 +154,8 @@ begin{subequations}
 \frac{Dv_{i}}{Dt}+\frac{1}{\rho}\frac{\partial\Sigma_{ik}}{\partial x_{k}} & =0\\
 \frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
 \frac{DJ_{i}}{Dt}+\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}} & =-\frac{H_{i}}{\theta_{2}}\\
-\frac{DE}{Dt}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}} & =0
+\frac{DE}{Dt}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}} & =0\\
+\frac{D\lambda}{Dt} & =-K
 \end{align}
 
 \end_inset
@@ -190,8 +191,8 @@ where the total stress tensor
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{DE}{Dt} & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\frac{\partial E}{\partial\rho}\frac{D\rho}{Dt}+v_{i}\frac{Dv_{i}}{Dt}+\frac{\partial E}{\partial A_{ij}}\frac{DA_{ij}}{Dt}+H_{i}\frac{DJ_{i}}{Dt}\\
- & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\rho\frac{\partial E}{\partial\rho}\frac{\partial v_{k}}{\partial x_{k}}-\frac{1}{\rho}v_{i}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\frac{\partial E}{\partial A_{ij}}\left(A_{ik}\frac{\partial v_{k}}{\partial x_{j}}+\frac{\psi_{ij}}{\theta_{1}}\right)-H_{i}\left(\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}}+\frac{H_{i}}{\theta_{2}}\right)\nonumber 
+\frac{DE}{Dt} & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\frac{\partial E}{\partial\rho}\frac{D\rho}{Dt}+v_{i}\frac{Dv_{i}}{Dt}+\frac{\partial E}{\partial A_{ij}}\frac{DA_{ij}}{Dt}+H_{i}\frac{DJ_{i}}{Dt}+\frac{\partial E}{\partial\lambda}\frac{D\lambda}{Dt}\\
+ & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\rho\frac{\partial E}{\partial\rho}\frac{\partial v_{k}}{\partial x_{k}}-\frac{1}{\rho}v_{i}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\frac{\partial E}{\partial A_{ij}}\left(A_{ik}\frac{\partial v_{k}}{\partial x_{j}}+\frac{\psi_{ij}}{\theta_{1}}\right)-H_{i}\left(\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}}+\frac{H_{i}}{\theta_{2}}\right)-\frac{\partial E}{\partial\lambda}K\nonumber 
 \end{align}
 
 \end_inset
@@ -206,7 +207,7 @@ Thus, the energy equation becomes:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\rho\frac{\partial E}{\partial\rho}\frac{\partial v_{k}}{\partial x_{k}}-\frac{1}{\rho}v_{i}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\frac{\partial E}{\partial A_{ij}}A_{ik}\frac{\partial v_{k}}{\partial x_{j}}-\frac{H_{k}}{\rho}\frac{\partial T}{\partial x_{k}}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}}=\frac{\partial E}{\partial A_{ij}}\frac{\psi_{ij}}{\theta_{1}}+\frac{H_{i}H_{i}}{\theta_{2}}
+\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\rho\frac{\partial E}{\partial\rho}\frac{\partial v_{k}}{\partial x_{k}}-\frac{1}{\rho}v_{i}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\frac{\partial E}{\partial A_{ij}}A_{ik}\frac{\partial v_{k}}{\partial x_{j}}-\frac{H_{k}}{\rho}\frac{\partial T}{\partial x_{k}}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}}=\frac{\partial E}{\partial A_{ij}}\frac{\psi_{ij}}{\theta_{1}}+\frac{H_{i}H_{i}}{\theta_{2}}+\frac{\partial E}{\partial\lambda}K
 \end{equation}
 
 \end_inset
@@ -221,7 +222,7 @@ Simplifying:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{Dp}{Dt}+\frac{1}{\rho E_{p}}\left(\Sigma_{ik}-\rho A_{ji}\frac{\partial E}{\partial A_{jk}}-\rho^{2}\frac{\partial E}{\partial\rho}\delta_{ik}\right)\frac{\partial v_{i}}{\partial x_{k}}+\frac{T}{\rho E_{p}}\frac{\partial H_{k}}{\partial x_{k}}=\frac{\partial E}{\partial A_{ij}}\frac{\psi_{ij}}{\theta_{1}E_{p}}+\frac{H_{i}H_{i}}{\theta_{2}E_{p}}
+\frac{Dp}{Dt}+\frac{1}{\rho E_{p}}\left(\Sigma_{ik}-\rho A_{ji}\frac{\partial E}{\partial A_{jk}}-\rho^{2}\frac{\partial E}{\partial\rho}\delta_{ik}\right)\frac{\partial v_{i}}{\partial x_{k}}+\frac{T}{\rho E_{p}}\frac{\partial H_{k}}{\partial x_{k}}=\frac{\partial E}{\partial A_{ij}}\frac{\psi_{ij}}{\theta_{1}E_{p}}+\frac{H_{i}H_{i}}{\theta_{2}E_{p}}+\frac{E_{\lambda}}{E_{p}}K
 \end{equation}
 
 \end_inset
@@ -369,7 +370,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \frac{D\rho}{Dt}+\rho\frac{\partial v_{k}}{\partial x_{k}} & =0\\
-\frac{Dp}{Dt}+\rho c_{0}^{2}\frac{\partial v_{i}}{\partial x_{i}}+\left(\sigma_{ik}-\rho\frac{\partial\sigma_{ik}}{\partial\rho}\right)\frac{\partial v_{i}}{\partial x_{k}}+\frac{\rho c_{h}^{2}}{T_{p}}\frac{\partial J_{k}}{\partial x_{k}} & =\left(1-2\rho^{2}E_{p}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\frac{\left\Vert \psi\right\Vert _{F}^{2}}{\theta_{1}E_{p}}+\frac{\left\Vert H\right\Vert ^{2}}{\theta_{2}E_{p}}\\
+\frac{Dp}{Dt}+\rho c_{0}^{2}\frac{\partial v_{i}}{\partial x_{i}}+\left(\sigma_{ik}-\rho\frac{\partial\sigma_{ik}}{\partial\rho}\right)\frac{\partial v_{i}}{\partial x_{k}}+\frac{\rho c_{h}^{2}}{T_{p}}\frac{\partial J_{k}}{\partial x_{k}} & =\left(1-2\rho^{2}E_{p}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\frac{\left\Vert \psi\right\Vert _{F}^{2}}{\theta_{1}E_{p}}+\frac{\left\Vert H\right\Vert ^{2}}{\theta_{2}E_{p}}+\frac{E_{\lambda}}{E_{p}}K\\
 \frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
 \frac{Dv_{i}}{Dt}-\frac{1}{\rho}\frac{\partial\sigma_{ik}}{\partial\rho}\frac{\partial\rho}{\partial x_{k}}+\frac{1}{\rho}\frac{\partial p}{\partial x_{i}}-\frac{1}{\rho}\frac{\partial\sigma_{ik}}{\partial A_{mn}}\frac{\partial A_{mn}}{\partial x_{k}} & =0\\
 \frac{DJ_{i}}{Dt}+\frac{T_{\rho}}{\rho}\frac{\partial\rho}{\partial x_{i}}+\frac{T_{p}}{\rho}\frac{\partial p}{\partial x_{i}} & =-\frac{H_{i}}{\theta_{2}}
