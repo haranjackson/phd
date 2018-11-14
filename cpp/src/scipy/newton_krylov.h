@@ -7,7 +7,7 @@ class KrylovJacobian {
   VecFunc func;
   int maxiter;
   int inner_m;
-  int outer_k;
+  unsigned int outer_k;
 
   Vec x0;
   Vec f0;
@@ -21,7 +21,7 @@ public:
   KrylovJacobian(Vecr x, Vecr f, VecFunc F);
   Vec matvec(Vecr v);
   Vec psolve(Vecr v);
-  void solve(Vecr rhs, double tol, Vecr dx);
+  Vec solve(Vecr rhs, double tol);
   void update(Vecr x, Vecr f);
 };
 
@@ -34,7 +34,7 @@ class TerminationCondition {
 
 public:
   TerminationCondition(double ftol, double frtol, double xtol, double xrtol);
-  bool check(Vecr f, Vecr x, Vecr dx);
+  int check(Vecr f, Vecr x, Vecr dx);
 };
 
 Vec nonlin_solve(VecFunc F, Vecr x, double f_tol = pow(mEPS, 1. / 3.),
