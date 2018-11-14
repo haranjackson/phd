@@ -227,7 +227,7 @@ double dp_ref(double ρ, Params &MP) {
     double R2 = MP.R2;
     double ρ0 = MP.ρ0;
     double v_ = ρ0 / ρ;
-    return v_ / ρ * (A * R1 * pow(v_, -R1 - 1) - B * R2 * pow(v_, -R2 - 1));
+    return A * R1 / ρ * pow(v_, -R1) - B * R2 / ρ * pow(v_, -R2);
   }
   default:
     throw "EOS not recognized";
@@ -262,7 +262,7 @@ double de_ref(double ρ, Params &MP) {
   }
   case JWL:
   case COCHRAN_CHAN:
-    return e_ref(ρ, MP) / (ρ * ρ);
+    return p_ref(ρ, MP) / (ρ * ρ);
 
   default:
     throw "EOS not recognized";
@@ -289,6 +289,8 @@ double dTdρ(double ρ, double p, Params &MP) {
   // Returns the derivative of the MG temperature with respect to ρ
 
   // TODO: update for multi (required for THERMAL mixtures)
+
+  // TODO: add Tref * dφ
 
   double cv = MP.cv;
   double Γ = Γ_MG(ρ, MP);

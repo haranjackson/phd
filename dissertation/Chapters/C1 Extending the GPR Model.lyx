@@ -1229,7 +1229,7 @@ Cochran-Chan
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $ $
+\begin_inset Formula $\frac{\epsilon_{1}A}{\rho}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}}-\frac{\epsilon_{2}B}{\rho}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}}$
 \end_inset
 
 
@@ -1241,7 +1241,7 @@ Cochran-Chan
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $ $
+\begin_inset Formula $\frac{A}{\rho^{2}}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}}-\frac{B}{\rho^{2}}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}}$
 \end_inset
 
 
@@ -1694,7 +1694,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{r}\left(\lambda\right)=Q_{c}\left(1-\lambda\right)
+E_{r}\left(\lambda\right)=-Q_{c}\left(1-\lambda\right)
 \end{equation}
 
 \end_inset
@@ -2209,7 +2209,7 @@ In discrete ignition temperature reaction kinetics, no reaction occurs below
 \begin_inset Formula 
 \begin{equation}
 K=\begin{cases}
-K_{0} & T`\geq T_{i}\\
+K_{0}\lambda & T`\geq T_{i}\\
 0 & T<T_{i}
 \end{cases}
 \end{equation}
@@ -2258,7 +2258,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-K=B_{c}e^{-\frac{E_{a}}{R_{c}T}}
+K=B_{c}e^{-\frac{E_{a}}{R_{c}T}}\lambda
 \end{equation}
 
 \end_inset
