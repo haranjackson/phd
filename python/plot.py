@@ -158,8 +158,8 @@ def plot_thermal_impulse(u, MPs, i, style='-', x=None, lab=None, col=None, sci=0
                   plotType, vmin, vmax)
 
 
-def plot_concentration(u, style='-', x=None, lab=None, col=None, sci=0,
-                       square=0):
+def plot_concentration(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
+                       square=0, plotType='colormap', vmin=None, vmax=None):
     figure(18, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Concentration', sci, 'λ',
                   plotType, vmin, vmax)
