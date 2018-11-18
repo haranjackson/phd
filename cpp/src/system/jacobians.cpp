@@ -95,6 +95,7 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
 
   return ret;
 }
+
 MatV_V dPdQ(VecVr Q, Par &MP) {
   // Returns Jacobian of primitive vars with respect to conserved vars
   MatV_V ret = MatV_V::Identity();
@@ -139,9 +140,9 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
     double λ = Q(mV) / ρ;
     double Qc = MP.Qc;
     ret(mV, 0) = -λ / ρ;
-    ret(mV, mV) /= ρ;
+    ret(mV, mV) = 1 / ρ;
     ret(1, 0) += Γ_ * Qc * λ;
-    ret(1, mV) -= Γ_ * Qc;
+    ret(1, mV) = -Γ_ * Qc;
   }
   return ret;
 }
