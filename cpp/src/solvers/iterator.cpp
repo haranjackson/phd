@@ -143,6 +143,11 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     print(int(t / tf * 100.));
     print(dt);
+
+    if (u.array().isNaN().any()) {
+      ret[pushCount] = u;
+      return ret;
+    }
   }
 
   ret[99] = u;
