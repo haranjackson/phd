@@ -1,4 +1,4 @@
-from numpy import array, int32
+from numpy import array, int32, isnan
 
 import GPRpy
 
@@ -37,4 +37,14 @@ sol = GPRpy.solvers.iterator(u0.ravel(), tf, nX, array(dX), cfl,
                              BOUNDARIES[bcs], SPLIT, True, False, FLUX, MPs,
                              contorted_tol)
 
-uList = [s.reshape(u0.shape) for s in sol]
+for i in range(100):
+    try:
+        uList = [s.reshape(u0.shape) for s in sol[:100-i]]
+        break
+    except:
+        pass
+
+for i in range(100):
+    if any(isnan(uList[i])):
+        print(i)
+        break

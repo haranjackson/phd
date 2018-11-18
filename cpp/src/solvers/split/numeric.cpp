@@ -20,6 +20,6 @@ double stiff_ode_solve(double x0, double dt, std::function<double(double)> f) {
   VecFunc obj_bound = std::bind(obj0, _1, x0, dt, f);
 
   VecN xin = x0 * VecN::Ones();
-  VecN res = nonlin_solve(obj_bound, xin, 1e-7);
+  VecN res = nonlin_solve(obj_bound, xin);
   return res.dot(ENDVALS.row(1));
 }

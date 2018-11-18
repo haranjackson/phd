@@ -6,16 +6,17 @@ from test.params.reactive import NM_JWL_Scaled
 
 def steady_znd():
 
+    n = 100
     MP = NM_JWL_Scaled
 
     Q = Cvec(1, 0, zeros(3), MP, A=eye(3), λ=1)
     Qs = Cvec(1, 0.52, zeros(3), MP, A=eye(3), λ=1)
-    u = zeros([1000, 15])
-    for i in range(1000):
+    u = zeros([n, 15])
+    for i in range(n):
         u[i] = Q
     u[0] = Qs
 
-    return u, [MP], 1, [1/1000], 'transitive'
+    return u, [MP], 0.1, [1/n], 'transitive'
 
 
 def shock_detonation():
