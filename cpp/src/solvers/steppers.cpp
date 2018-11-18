@@ -14,7 +14,7 @@ void ader_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX, bool STIFF,
   Vec wh(extended_dimensions(nX, 1) * int(pow(N, ndim)) * V);
   Vec qh(extended_dimensions(nX, 1) * int(pow(N, ndim + 1)) * V);
 
-  weno_launcher(wh, ub, nX);
+  weno_launcher(wh, ub, nX, MP);
 
   predictor(qh, wh, dt, dX, STIFF, false, MP, mask);
 
@@ -55,7 +55,7 @@ void split_stepper(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
   ode_launcher(ub, dt / 2, MP);
 
   Vec wh(extended_dimensions(nX, 1) * int(pow(N, ndim)) * V);
-  weno_launcher(wh, ub, nX);
+  weno_launcher(wh, ub, nX, MP);
 
   if (HALF_STEP)
     midstepper(wh, dt, dX, MP, mask);

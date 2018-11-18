@@ -30,6 +30,58 @@ int get_material_index(VecVr Q)
   return ret;
 }
 
+void Pvec(VecVr Q, Par &MP)
+{
+  // Turns conserved vector Q into a primitive vector
+  double ρ = Q(0);
+  double p = pressure(Q, MP);
+  Q(1) = p;
+  Q.segment<3>(2) /= ρ;
+  if (THERMAL)
+    Q.segment<3>(14) /= ρ;
+  if (MULTI)
+    Q(mV) /= ρ;
+}
+
+void Cvec(VecVr P, Par &MP)
+{
+  // Turns primitive vector Q into a conserved vector
+  double ρ = P(0);
+  double p = P(1);
+  Vec3 v = P.segment<3>(2);
+  Mat3_3Map A = get_A(P);
+  if (THERMAL)
+  {
+    Vec3 J = P.segment<3>(14);
+    if (MULTI)
+    {
+      double λ = P(mV);
+      P(1) = ρ * total_energy(ρ, p, A, J, v, λ, MP);
+    }
+    else
+    {
+      P(1) = ρ * total_energy(ρ, p, A, J, v, MP);
+    }
+  }
+  else
+  {
+    if (MULTI)
+    {
+      double λ = P(mV);
+      P(1) = ρ * total_energy(ρ, p, A, v, λ, MP);
+    }
+    else
+    {
+      P(1) = ρ * total_energy(ρ, p, A, v, MP);
+    }
+  }
+  P.segment<3>(2) *= ρ;
+  if (THERMAL)
+    P.segment<3>(14) *= ρ;
+  if (MULTI)
+    P(mV) *= ρ;
+}
+
 VecV Cvec_to_Pvec(VecV Q, Par &MP)
 {
   // Returns vector of primitive variables (atypical ordering), given a vector

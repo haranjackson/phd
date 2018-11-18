@@ -1,4 +1,5 @@
 #include "../../etc/globals.h"
+#include "../../system/functions/vectors.h"
 
 void weight(VecVr ret, MatN_Vr w, double LAM) {
   // Produces the WENO weight for this stencil
@@ -122,12 +123,22 @@ void weno2(Matr wh, Matr ub, int nx, int ny) {
   // n sets of for loops, contained within a large loop over the dimensions
 }
 
-void weno_launcher(Vecr wh, Vecr ub, iVecr nX) {
+void weno_launcher(Vecr wh, Vecr ub, iVecr nX, Par &MP) {
   // NOTE: boundary conditions extend u by two cells in each dimension
 
   int ndim = nX.size();
-  MatMap whMap(wh.data(), wh.size() / V, V, OuterStride(V));
-  MatMap ubMap(ub.data(), ub.size() / V, V, OuterStride(V));
+
+  int nwh = wh.size() / V;
+  int nub = ub.size() / V;
+
+  Vec ub_ = ub;
+
+  if (PRIM_RECONSTRUCT)
+    for (int i = 0; i < nub; i++)
+      Pvec(ub_.segment<V>(i * V), MP);
+
+  MatMap whMap(wh.data(), nwh, V, OuterStride(V));
+  MatMap ubMap(ub_.data(), nub, V, OuterStride(V));
 
   switch (ndim) {
 
@@ -139,4 +150,8 @@ void weno_launcher(Vecr wh, Vecr ub, iVecr nX) {
     weno2(whMap, ubMap, nX(0) + 2, nX(1) + 2);
     break;
   }
+
+  if (PRIM_RECONSTRUCT)
+    for (int i = 0; i < nwh; i++)
+      Cvec(wh.segment<V>(i * V), MP);
 }

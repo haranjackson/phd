@@ -40,11 +40,6 @@ double E_R(double λ, Par &MP) {
   return MP.Qc * (λ - 1);
 }
 
-double total_energy(double ρ, double p, Vec3r v, Par &MP) {
-  double E = E_1(ρ, p, MP) + E_3(v);
-  return E;
-}
-
 double total_energy(double ρ, double p, Mat3_3r A, Vec3r v, Par &MP) {
   double E = E_1(ρ, p, MP) + E_3(v);
   E += E_2A(ρ, A, MP);
@@ -55,6 +50,13 @@ double total_energy(double ρ, double p, Mat3_3r A, Vec3r J, Vec3r v, Par &MP) {
   double E = E_1(ρ, p, MP) + E_3(v);
   E += E_2A(ρ, A, MP);
   E += E_2J(J, MP);
+  return E;
+}
+
+double total_energy(double ρ, double p, Mat3_3r A, Vec3r v, double λ, Par &MP) {
+  double E = E_1(ρ, p, MP) + E_3(v);
+  E += E_2A(ρ, A, MP);
+  E += E_R(λ, MP);
   return E;
 }
 

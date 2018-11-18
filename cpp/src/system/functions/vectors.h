@@ -10,6 +10,8 @@ Vec3Map get_ρJ(VecVr Q);
 
 int get_material_index(VecVr Q);
 
+void Pvec(VecVr Q, Par &MP);
+void Cvec(VecVr P, Par &MP);
 VecV Cvec_to_Pvec(VecV Q, Par &MP);
 VecV Pvec_to_Cvec(VecV P, Par &MP);
 

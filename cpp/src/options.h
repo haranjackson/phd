@@ -1,30 +1,31 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-// System Options //
+// System //
 const bool VISCOUS = true;
 const bool THERMAL = false;
 const bool MULTI = true;
 const int LSET = 0;
 
-// Boundary Options //
+// Boundaries //
 const bool NO_CORNERS = true;
 const bool DESTRESS = false;
 
-// Solver Options //
+// Solver //
 const int N = 3;
 
-// Riemann Solver Options //
+// RGFM //
 const bool RIEMANN_STICK = false;
 const bool RIEMANN_RELAXATION = true;
 const double STAR_TOL = 1e-8;
 
-// WENO Constants //
-const double LAMS = 1.;   // WENO side stencil weighting
-const double LAMC = 1e5;  // WENO central stencil weighting
-const double EPS = 1e-14; // WENO epsilon parameter
+// WENO //
+const double LAMS = 1.;             // WENO side stencil weighting
+const double LAMC = 1e5;            // WENO central stencil weighting
+const double EPS = 1e-14;           // WENO epsilon parameter
+const bool PRIM_RECONSTRUCT = true; // Whether to reconstruct with prim vars
 
-// DG Constants //
+// DG //
 const int DG_IT = 50;       // No. of iterations of non-Newton solver attempted
 const double DG_TOL = 1e-8; // Convergence tolerance
 
