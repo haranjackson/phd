@@ -1,4 +1,5 @@
 #include "../../solvers/split/numeric.h"
+#include "../../solvers/split/rk.h"
 #include "../objects.h"
 #include "../variables/sources.h"
 
@@ -20,7 +21,8 @@ void ode_stepper_numerical(VecVr Q, double dt, Par &MP) {
     using std::placeholders::_1;
     std::function<double(double)> f = std::bind(func, _1, Q, MP);
 
-    λ = stiff_ode_solve(λ, dt, f);
+    // λ = stiff_ode_solve(λ, dt, f);
+    λ = runge_kutta(f, dt, λ, 4);
     Q(mV) = ρ * λ;
   }
 }

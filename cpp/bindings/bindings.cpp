@@ -33,6 +33,7 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/solvers/split/homogeneous.h"
 #include "../src/solvers/split/numeric.h"
 #include "../src/solvers/split/ode.h"
+#include "../src/solvers/split/rk.h"
 
 #include "../src/solvers/fv/fluxes.h"
 #include "../src/solvers/fv/fv.h"
@@ -41,7 +42,9 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/system/equations.h"
 #include "../src/system/jacobians.h"
 
+#include "../src/system/energy/derivatives.h"
 #include "../src/system/relaxation/analytic.h"
+#include "../src/system/variables/sources.h"
 #include "../src/system/variables/state.h"
 
 #include "../src/system/multi/eigenvecs.h"
@@ -222,8 +225,11 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_fv.def("interfs2", &interfs2);
   m_solvers_fv.def("fv_launcher", &fv_launcher);
 
-  m_solvers_dg.def("stiff_ode_solve", &stiff_ode_solve);
+  m_solvers_split.def("stiff_ode_solve", &stiff_ode_solve);
+  m_solvers_split.def("runge_kutta", &runge_kutta);
 
   m_system_variables.def("pressure", &pressure);
   m_system_variables.def("temperature", &temperature);
+  m_system_variables.def("dEdρ", &dEdρ);
+  m_system_variables.def("reaction_rate", &reaction_rate);
 }
