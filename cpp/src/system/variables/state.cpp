@@ -11,12 +11,11 @@
 double pressure(VecVr Q, Par &MP) {
   // Returns the pressure under the Mie-Gruneisen EOS
 
-  double e = internal_energy(Q, MP);
-
   if (MULTI) {
-    return solve_multi(Q, e, MP)(0);
+    return solve_multi(Q, MP)(0);
   } else {
     double ρ = Q(0);
+    double e = internal_energy(Q, MP);
     return pressure_mg(ρ, e, MP);
   }
 }

@@ -19,9 +19,8 @@ double dEdρ(VecVr Q, Par &MP) {
   if (MULTI) {
 
     double λ = Q(mV) / ρ;
-    double e = internal_energy(Q, MP);
 
-    Vec3 sol = solve_multi(Q, e, MP);
+    Vec3 sol = solve_multi(Q, MP);
     double p = sol(0);
     double ρ1 = sol(1);
     double ρ2 = sol(2);
@@ -54,9 +53,8 @@ double dEdp(VecVr Q, Par &MP) {
   if (MULTI) {
 
     double λ = Q(mV) / ρ;
-    double e = internal_energy(Q, MP);
 
-    Vec3 sol = solve_multi(Q, e, MP);
+    Vec3 sol = solve_multi(Q, MP);
     double ρ1 = sol(1);
     double ρ2 = sol(2);
 

@@ -3,6 +3,6 @@
 
 #include "../objects.h"
 
-Vec3 solve_multi(VecVr Q, double e, Par &MP);
+Vec3 solve_multi(VecVr Q, Par &MP);
 
 #endif // MULTI_H
