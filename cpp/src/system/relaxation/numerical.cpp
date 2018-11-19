@@ -7,7 +7,7 @@ double func(double λ, VecVr Q, Par &MP) {
   double ρ = Q(0);
   VecV Q0 = Q;
   Q0(mV) = ρ * λ;
-  return -ρ * reaction_rate(Q0, MP);
+  return -reaction_rate(Q0, MP);
 }
 
 void ode_stepper_numerical(VecVr Q, double dt, Par &MP) {
