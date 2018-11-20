@@ -83,10 +83,12 @@ void split_stepper_para(Vecr u, Vecr ub, iVecr nX, double dt, Vecr dX,
     iVec nX0 = nX;
     nX0(0) = finish - start;
 
+    Vec ub_ =
+        ub.segment(start * ubRowSize, (finish + 2 * N - start) * ubRowSize);
+
     split_stepper(
-        u.segment(start * uRowSize, (finish - start) * uRowSize),
-        ub.segment(start * ubRowSize, (finish + 2 * N - start) * ubRowSize),
-        nX0, dt, dX, STIFF, FLUX, MP,
+        u.segment(start * uRowSize, (finish - start) * uRowSize), ub_, nX0, dt,
+        dX, STIFF, FLUX, MP,
         mask.segment(start * maskRowSize, (finish + 2 - start) * maskRowSize));
   }
 }
