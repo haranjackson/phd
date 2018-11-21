@@ -63,6 +63,7 @@ void f_body(Vec3r x, Par &MP) { x = MP.δp; }
 double reaction_rate(VecVr Q, Par &MP) {
 
   double λ = Q(mV) / Q(0);
+  λ = std::max(0., λ);
 
   switch (MP.REACTION) {
 

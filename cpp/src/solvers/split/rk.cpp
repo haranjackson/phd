@@ -1,6 +1,8 @@
 #include <cmath>
 #include <functional>
 
+#include "../../etc/debug.h"
+
 auto rk4(std::function<double(double)> f)
 {
     return [f](double y, double dt) -> double {
@@ -29,4 +31,22 @@ double runge_kutta(std::function<double(double)> f, double tf, double y,
         y += dy(y, dt);
 
     return y;
+}
+
+double runge_kutta_launcher(std::function<double(double)> f, double tf,
+                            double y, int N_STEP)
+{
+
+    double y0 = runge_kutta(f, tf, y, N_STEP);
+
+    while (isnan(y0))
+    {
+
+        N_STEP *= 2;
+        y0 = runge_kutta(f, tf, y, N_STEP);
+
+        if (N_STEP > 64)
+            break;
+    }
+    return y0;
 }

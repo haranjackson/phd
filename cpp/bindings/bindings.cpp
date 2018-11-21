@@ -43,7 +43,9 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/system/jacobians.h"
 
 #include "../src/system/energy/derivatives.h"
+#include "../src/system/energy/multi.h"
 #include "../src/system/relaxation/analytic.h"
+#include "../src/system/relaxation/numerical.h"
 #include "../src/system/variables/sources.h"
 #include "../src/system/variables/state.h"
 
@@ -226,10 +228,12 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers_fv.def("fv_launcher", &fv_launcher);
 
   m_solvers_split.def("stiff_ode_solve", &stiff_ode_solve);
-  m_solvers_split.def("runge_kutta", &runge_kutta);
+  m_solvers_split.def("runge_kutta_launcher", &runge_kutta_launcher);
+  m_solvers_split.def("ode_stepper_numerical", &ode_stepper_numerical);
 
   m_system_variables.def("pressure", &pressure);
   m_system_variables.def("temperature", &temperature);
   m_system_variables.def("dEdρ", &dEdρ);
   m_system_variables.def("reaction_rate", &reaction_rate);
+  m_system_variables.def("solve_multi", &solve_multi);
 }
