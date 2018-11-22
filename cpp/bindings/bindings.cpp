@@ -43,6 +43,7 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/system/jacobians.h"
 
 #include "../src/system/energy/derivatives.h"
+#include "../src/system/energy/mg.h"
 #include "../src/system/energy/multi.h"
 #include "../src/system/relaxation/analytic.h"
 #include "../src/system/relaxation/numerical.h"
@@ -141,7 +142,7 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("MP2", &Par::MP2)
       .def_readwrite("REACTION", &Par::REACTION)
       .def_readwrite("Qc", &Par::Qc)
-      .def_readwrite("K0", &Par::K0)
+      .def_readwrite("Kc", &Par::Kc)
       .def_readwrite("Ti", &Par::Ti)
       .def_readwrite("Bc", &Par::Bc)
       .def_readwrite("Ea", &Par::Ea)
@@ -236,4 +237,5 @@ PYBIND11_MODULE(GPRpy, m) {
   m_system_variables.def("dEdρ", &dEdρ);
   m_system_variables.def("reaction_rate", &reaction_rate);
   m_system_variables.def("solve_multi", &solve_multi);
+  m_system_variables.def("temperature_mg", &temperature_mg);
 }

@@ -11,7 +11,7 @@
 double pressure(VecVr Q, Par &MP) {
   // Returns the pressure under the Mie-Gruneisen EOS
 
-  if (MULTI) {
+  if (MP.MULTI) {
     return solve_multi(Q, MP)(0);
   } else {
     double ρ = Q(0);

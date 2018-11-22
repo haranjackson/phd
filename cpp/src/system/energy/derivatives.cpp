@@ -16,7 +16,7 @@ double dEdρ(VecVr Q, Par &MP) {
   double dC0dρ = dC_0dρ(ρ, MP);
   double tmp = dC0dρ / 4 * devGsq(A);
 
-  if (MULTI) {
+  if (MP.MULTI) {
 
     double λ = Q(mV) / ρ;
 
@@ -50,7 +50,7 @@ double dEdp(VecVr Q, Par &MP) {
 
   double ρ = Q(0);
 
-  if (MULTI) {
+  if (MP.MULTI) {
 
     double λ = Q(mV) / ρ;
 

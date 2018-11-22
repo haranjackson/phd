@@ -69,7 +69,7 @@ double reaction_rate(VecVr Q, Par &MP) {
 
   case DISCRETE: {
     if (temperature(Q, MP) > MP.Ti)
-      return MP.K0 * λ;
+      return MP.Kc * λ;
     else
       return 0.;
   }

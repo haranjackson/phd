@@ -67,7 +67,7 @@ struct Par : Params {
   int REACTION;
   double Qc;
 
-  double K0;
+  double Kc;
   double Ti;
 
   double Bc;
