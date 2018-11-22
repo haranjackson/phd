@@ -1,0 +1,708 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Multiphase GPR
+\end_layout
+
+\begin_layout Section
+Mixture Rules
+\end_layout
+
+\begin_layout Standard
+Pressure and thermal equilibrium are assumed between the two materials.
+ Note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\rho}=\frac{\lambda}{\rho_{1}}+\frac{1-\lambda}{\rho_{2}}\label{eq:density-mixture}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=\lambda e_{1}+\left(1-\lambda\right)e_{2}\label{eq:energy-mixture}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The pressure equilibrium assumption gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+p & =p_{1}^{ref}+\rho_{1}\Gamma_{1}\left(e_{1}-e_{1}^{ref}\right)\label{eq:pressure-mixture}\\
+ & =p_{2}^{ref}+\rho_{2}\Gamma_{2}\left(e_{2}-e_{2}^{ref}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the energy equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=\lambda\left(e_{1}^{ref}+\frac{p-p_{1}^{ref}}{\rho_{1}\Gamma_{1}}\right)+\left(1-\lambda\right)\left(e_{2}^{ref}+\frac{p-p_{2}^{ref}}{\rho_{2}\Gamma_{2}}\right)\label{eq:energy-mixture-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The temperature equilibrium assumption gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T_{1}^{ref}\phi_{1}+\frac{p-p_{1}^{ref}}{\rho_{1}\Gamma_{1}\left(c_{v}\right)_{1}}=T_{2}^{ref}\phi_{2}+\frac{p-p_{2}^{ref}}{\rho_{2}\Gamma_{2}\left(c_{v}\right)_{2}}\label{eq:temperature-mixture}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Temperature and pressure of the mixture are required by the evolution equations.
+ They are obtained by solving numerically the nonlinear system of algebraic
+ equations given by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:density-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:energy-mixture-2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:temperature-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to first find 
+\begin_inset Formula $\rho_{1},\rho_{2}e_{1},e_{2}$
+\end_inset
+
+, and then substituting them in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:pressure-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:temperature-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+As, under the GPR model, the viscosity and thermal conductivity of a fluid
+ govern the stiffness of the source terms, it is required to use a mixture
+ model to calculate these quantities under the multiphase GPR model.
+ Many mixture models have been proposed (e.g.
+ see early simpler examples in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "herning_calculation_1936,grunberg_mixture_1949"
+literal "false"
+
+\end_inset
+
+, or see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gupta_review_1990"
+literal "false"
+
+\end_inset
+
+ for a review of later, more complex models).
+ In this study, we chose the first mixture rule presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alkandry_comparison_2013"
+literal "false"
+
+\end_inset
+
+, which is based on Wilke's mixing rule (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wilke_viscosity_1950"
+literal "false"
+
+\end_inset
+
+), coupled with curve fits from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "blottner_chemically_1971"
+literal "false"
+
+\end_inset
+
+ and Eucken's Law.
+ The model is chosen for its balance between expressiveness and simplicity.
+ The viscosity and thermal conductivity of the mixture are calculated thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mu & =\frac{x\mu_{1}}{\phi_{1}}+\frac{\left(1-x\right)\mu_{2}}{\phi_{2}}\\
+\kappa & =\frac{x\kappa_{1}}{\phi_{1}}+\frac{\left(1-x\right)\kappa_{2}}{\phi_{2}}\\
+\phi_{1} & =x+\left(1-x\right)\frac{\sqrt{1-\lambda}\left(1+\sqrt{\frac{\mu_{1}}{\mu_{2}}}\left(\frac{1-\lambda}{\lambda}\right)^{\frac{1}{4}}\right)^{2}}{\sqrt{8}}\\
+\phi_{2} & =x\frac{\sqrt{\lambda}\left(1+\sqrt{\frac{\mu_{2}}{\mu_{1}}}\left(\frac{\lambda}{1-\lambda}\right)^{\frac{1}{4}}\right)^{2}}{\sqrt{8}}+\left(1-x\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $x$
+\end_inset
+
+ is the molar fraction of material 1:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x=\frac{\frac{\rho_{1}}{M_{1}}}{\frac{\rho_{1}}{M_{1}}+\frac{\rho_{2}}{M_{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $M_{1},M_{2}$
+\end_inset
+
+ are the molar masses of materials 1 and 2, respectively.
+\end_layout
+
+\begin_layout Standard
+The speed of sound in the mixture is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c_{0} & =\sqrt{\left.\frac{\partial p}{\partial\rho}\right|_{s}}\\
+ & =\sqrt{\frac{\frac{p}{\rho^{2}}-\left.\frac{\partial e}{\partial\rho}\right|_{p}}{\left.\frac{\partial e}{\partial p}\right|_{\rho}}}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial e}{\partial p} & =\lambda\frac{\partial e_{1}}{\partial p}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial p}\\
+\frac{\partial e}{\partial\rho} & =\lambda\frac{\partial e_{1}}{\partial\rho_{1}}\frac{\partial\rho_{1}}{\partial\rho}+\left(1-\lambda\right)\frac{\partial e_{2}}{\partial\rho_{2}}\frac{\partial\rho_{2}}{\partial\rho}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To find 
+\begin_inset Formula $\frac{\partial\rho_{1}}{\partial\rho},\frac{\partial\rho_{2}}{\partial\rho}$
+\end_inset
+
+, we differentiate 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:density-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:temperature-mixture"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\rho$
+\end_inset
+
+, to obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\lambda}{\rho_{1}^{2}}\frac{\partial\rho_{1}}{\partial\rho}+\frac{1-\lambda}{\rho_{2}^{2}}\frac{\partial\rho_{2}}{\partial\rho} & =\frac{1}{\rho^{2}}\\
+\frac{\partial T_{1}}{\partial\rho_{1}}\frac{\partial\rho_{1}}{\partial\rho}-\frac{\partial T_{2}}{\partial\rho_{2}}\frac{\partial\rho_{2}}{\partial\rho} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho_{1}}{\partial\rho} & =\frac{1}{\rho^{2}}\cdot\frac{1}{\frac{\lambda}{\rho_{1}^{2}}\frac{\partial T_{2}}{\partial\rho_{2}}+\frac{1-\lambda}{\rho_{2}^{2}}\frac{\partial T_{1}}{\partial\rho_{1}}}\frac{\partial T_{2}}{\partial\rho_{2}}\\
+\frac{\partial\rho_{2}}{\partial\rho} & =\frac{1}{\rho^{2}}\cdot\frac{1}{\frac{\lambda}{\rho_{1}^{2}}\frac{\partial T_{2}}{\partial\rho_{2}}+\frac{1-\lambda}{\rho_{2}^{2}}\frac{\partial T_{1}}{\partial\rho_{1}}}\frac{\partial T_{1}}{\partial\rho_{1}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Numerical Treatment of Source Terms
+\end_layout
+
+\begin_layout Standard
+Whilst the ADER-WENO method presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is capable of solving the extended model of 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Extended-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, special consideration needs to be made when solving the model with other
+ methods based on temporal splitting (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ - see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for more information).
+ The following ODE needs to be solved in the process:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\lambda}{dt}=-K\label{eq:reaction-ode}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following the formulation presented in [REF], we use the following representatio
+ns:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\lambda\left(t\right) & =\lambda_{j}\psi_{j}\left(t\right)\\
+K\left(t\right) & =K_{j}\psi_{j}\left(t\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, multiplying 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:reaction-ode"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ by 
+\begin_inset Formula $\psi_{j}$
+\end_inset
+
+ and integrating over the time interval, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\langle \psi_{i},\psi_{j}^{'}\right\rangle \lambda_{j}=-\Delta t\left\langle \psi_{i},\psi_{j}\right\rangle K_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using integration by parts, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\psi_{i}\left(1\right)\psi_{j}\left(1\right)-\left\langle \psi_{i}^{'},\psi_{j}\right\rangle \right)\lambda_{j}=\psi_{i}\left(0\right)\lambda\left(0\right)-\Delta t\left\langle \psi_{i},\psi_{j}\right\rangle K_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Discontinuous-Galerkin"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the nodal basis representation is used, so that 
+\begin_inset Formula $K_{j}$
+\end_inset
+
+ is calculated as 
+\begin_inset Formula $K\left(\lambda_{j}\right)$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document
