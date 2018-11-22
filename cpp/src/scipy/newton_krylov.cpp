@@ -159,8 +159,6 @@ Vec nonlin_solve(VecFunc F, Vecr x, double f_tol, double f_rtol, double x_tol,
 
   for (int n = 0; n < maxiter; n++) {
 
-    std::cout << n << "\n";
-
     if (condition.check(Fx, x, dx))
       break;
 

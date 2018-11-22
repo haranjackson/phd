@@ -15,6 +15,7 @@ cfl = 0.5
 SPLIT = True
 FLUX = 0
 contorted_tol = 1.
+HALF_STEP = True
 
 
 assert(GPRpy.options.N() == N)
@@ -34,8 +35,8 @@ BOUNDARIES = {'transitive': array([0] * 2 * ndim, dtype=int32),
 
 
 sol = GPRpy.solvers.iterator(u0.ravel(), tf, nX, array(dX), cfl,
-                             BOUNDARIES[bcs], SPLIT, True, False, FLUX, MPs,
-                             contorted_tol)
+                             BOUNDARIES[bcs], SPLIT, HALF_STEP, False, FLUX,
+                             MPs, contorted_tol)
 
 for i in range(100):
     try:
