@@ -1,5 +1,6 @@
-from numpy import eye, zeros
+from numpy import array, eye, zeros
 
+from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec
 from test.params.reactive import NM_JWL_SI
 
@@ -25,38 +26,37 @@ def steady_znd():
 
 
 def shock_detonation():
-    """ tf = 0.5
-        L = 1
-        reactionType = 'd'
-    """
-    MP = material_parameters('sg', ρ0=1, y=1.4, cv=2.5,
-                             b0=1e-8, cα=1e-8, μ=1e-4, Pr=0.75,
-                             Qc=1, Kc=250, Ti=0.25)
 
-    rL = 1.4
+    tf = 0.5
+    L = 1
+    nx = 400
+
+    MP = material_params('sg', ρ0=1, γ=1.4, cv=2.5, b0=1e-8, μ=1e-4,
+                         Qc=1, Kc=250, Ti=0.25, REACTION='d')
+    ρL = 1.4
     pL = 1
     vL = zeros(3)
-    AL = rL**(1/3) * eye(3)
-    cL = 0
+    AL = ρL**(1/3) * eye(3)
+    λL = 0
 
-    rR = 0.887565
+    ρR = 0.887565
     pR = 0.191709
     vR = array([-0.57735, 0, 0])
-    AR = rR**(1/3) * eye(3)
-    cR = 1
+    AR = ρR**(1/3) * eye(3)
+    λR = 1
 
-    J = zeros(3)
+    QL = Cvec(ρL, pL, vL, MP, A=AL, λ=λL)
+    QR = Cvec(ρR, pR, vR, MP, A=AR, λ=λR)
 
-    QL = conserved(rL, pL, vL, AL, J, cL, params, 1, 1, 1)
-    QR = conserved(rR, pR, vR, AR, J, cR, params, 1, 1, 1)
-    u = zeros([nx, ny, nz, 18])
+    u = zeros([nx, 15])
+
     for i in range(nx):
-        if i*dx < L/4:
-            u[i, 0, 0] = QL
+        if i < nx / 4:
+            u[i] = QL
         else:
-            u[i, 0, 0] = QR
+            u[i] = QR
 
-    return u, [MP], []
+    return u, [MP], tf, [L / nx], 'transitive'
 
 
 def heating_deflagration():
