@@ -2311,81 +2311,6 @@ where
  is the activation energy of the reactive species.
 \end_layout
 
-\begin_layout Standard
-Another more sophisticated model is the reduced ignition and growth model,
- presented in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "michael_hybrid_2016"
-literal "false"
-
-\end_inset
-
- (based on the full ignition and growth model of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lee_phenomenological_1980"
-literal "false"
-
-\end_inset
-
-):
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-K=G_{1}\lambda^{a}\left(2-\lambda-\lambda_{0}\right)^{b}p^{d}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "a"
-symbol "$G_1$"
-description "Coefficient of the reduced ignition and growth model"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "a"
-symbol "$a$"
-description "A constant appearing in the reduced ignition and growth model"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "a"
-symbol "$b$"
-description "A constant appearing in the reduced ignition and growth model"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "a"
-symbol "$d$"
-description "A constant appearing in the reduced ignition and growth model"
-literal "true"
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 Numerical Treatment of Source Terms
 \end_layout
@@ -2767,18 +2692,6 @@ Total stress for the 7-wave elastic Riemann problem
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Steady ZND Detonation
-\end_layout
-
-\begin_layout Standard
-[JWL, reduced ignition & growth]
-\end_layout
-
-\begin_layout Standard
-[MiNi16]
 \end_layout
 
 \begin_layout Subsection
@@ -3835,14 +3748,6 @@ Temperature, pressure, and concentration of reactant in the heating-induced
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-2D Ignition
-\end_layout
-
-\begin_layout Standard
-[Nikiforakis, Clarke]
 \end_layout
 
 \begin_layout Standard
