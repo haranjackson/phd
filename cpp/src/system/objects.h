@@ -48,6 +48,11 @@ struct Params {
   double σY;
   double n;
 
+  double bf2;
+  double bs2;
+  double τf;
+  double τs;
+
   double cα2;
   double κ;
 };
@@ -57,6 +62,7 @@ struct Par : Params {
   bool SOLID;
   bool POWER_LAW;
   bool MULTI;
+  bool BINGHAM;
 
   double T0;
 

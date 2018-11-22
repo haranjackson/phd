@@ -27,7 +27,7 @@ def params(MP, Rc, EOS,
            α, β, γ, pINF,
            c0, Γ0, s,
            A, B, R1, R2,
-           b0, τ0, μ, σY, n, POWER_LAW, SOLID,
+           b0, τ0, μ, σY, n, POWER_LAW, SOLID, BINGHAM, bf, bs,
            cα, κ,
            REACTION, Qc,
            Kc, Ti,
@@ -77,13 +77,20 @@ def params(MP, Rc, EOS,
         MP.β = β
         MP.POWER_LAW = POWER_LAW
         MP.SOLID = SOLID
+        MP.BINGHAM = BINGHAM
         if μ:
             MP.μ = μ
         if n:
             MP.n = n
         if σY:
             MP.σY = σY
+        if τ0:
             MP.τ0 = τ0
+        if BINGHAM:
+            MP.bf2 = bf**2
+            MP.bs2 = bs**2
+            MP.τf = 6 * μ / (ρ0 * bf**2)
+            MP.τs = 999999
 
     if cα:
         MP.cα2 = cα**2
@@ -168,7 +175,7 @@ def material_params(EOS, ρ0,
                     α=None, β=None, γ=None, pINF=None,
                     c0=None, Γ0=None, s=None,
                     A=None, B=None, R1=None, R2=None,
-                    b0=None, μ=None, τ0=None, σY=None, n=None,
+                    b0=None, μ=None, τ0=None, σY=None, n=None, bf=None, bs=None,
                     cα=None, κ=None, Pr=None,
 
                     REACTION=None, Qc=None,
@@ -200,10 +207,12 @@ def material_params(EOS, ρ0,
         if n:
             POWER_LAW = True
             SOLID = True if σY else False
+            BINGHAM = False
         else:
             n = 1
             POWER_LAW = False
             SOLID = False if μ else True
+            BINGHAM = True if bf else False
 
         if β is None:
             β = 0
@@ -225,7 +234,7 @@ def material_params(EOS, ρ0,
                α, β, γ, pINF,
                c0, Γ0, s,
                A, B, R1, R2,
-               b0, τ0, μ, σY, n, POWER_LAW, SOLID,
+               b0, τ0, μ, σY, n, POWER_LAW, SOLID, BINGHAM, bf, bs,
                cα, κ,
                REACTION, Qc,
                Kc, Ti,

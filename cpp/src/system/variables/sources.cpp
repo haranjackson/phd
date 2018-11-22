@@ -35,6 +35,30 @@ double theta1inv(VecVr Q, Par &MP) {
       return 3 * A53 / (cs2 * MP.τ0) * pow((sn / σY), n);
     } else
       return 0.;
+  } else if (MP.BINGHAM) {
+
+    double τf = MP.τf;
+    double τs = MP.τs;
+    double bf2 = MP.bf2;
+    double bs2 = MP.bs2;
+    double ε = 1e-3;
+
+    Mat3_3 σ = sigma(Q, MP);
+    double Γ = sigma_norm(σ) / MP.σY;
+    // double Γ = σ.norm() / sqrt(2.) / MP.σY;
+    double h = 0.5 * (1. + Γ - sqrt(1. + (4. * ε - 2.) * Γ + Γ * Γ));
+
+    double λ;
+    if (Γ < ε)
+      λ = 1.;
+    else
+      λ = h / Γ;
+    if (λ > 1.)
+      λ = 1.;
+
+    double τ = τf * τs / (λ * τf + (1 - λ) * τs);
+    double Cs = λ * sqrt(bf2) + (1 - λ) * sqrt(bs2);
+    return 3. * A53 / (Cs * Cs * τ);
   } else {
     double c = A53 * MP.ρ0 / (2 * std::pow(MP.μ, 1 / n));
 

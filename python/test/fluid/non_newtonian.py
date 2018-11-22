@@ -45,11 +45,12 @@ def poiseuille():
 
         DESTRESS = false
     """
-    n = 1.3
+    n = 0.8
+    BINGHAM = True
 
     tf = 10
     Lx = 0.25
-    nx = 100
+    nx = 200
 
     γ = 1.4
     μ = 1e-2
@@ -61,7 +62,11 @@ def poiseuille():
     A = eye(3)
     δp = array([0, dp, 0])
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=1, μ=μ, n=n, δp=δp)
+    if BINGHAM:
+        MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ,
+                             b0=1, bf=1, bs=1, μ=μ, σY=4e-2, δp=δp)
+    else:
+        MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=1, μ=μ, n=n, δp=δp)
 
     Q = Cvec(ρ, p, v, MP, A)
     u = array([Q] * nx)
