@@ -1,22 +1,27 @@
 from numpy import eye, zeros
 
 from gpr.misc.structures import Cvec
-from test.params.reactive import NM_JWL_Scaled
+from test.params.reactive import NM_JWL_SI
 
 
 def steady_znd():
 
     n = 100
-    MP = NM_JWL_Scaled
+    MP = NM_JWL_SI
 
-    Q = Cvec(1, 0, zeros(3), MP, A=eye(3), λ=1)
-    Qs = Cvec(1, 0.52, zeros(3), MP, A=eye(3), λ=1)
+    L = 0.0062432
+    ρ = 1137
+    p = 23e9
+    tf = 1e-6
+
+    Q = Cvec(ρ, 0, zeros(3), MP, A=eye(3), λ=1)
+    Qs = Cvec(ρ, p, zeros(3), MP, A=eye(3), λ=1)
     u = zeros([n, 15])
     for i in range(n):
         u[i] = Q
     u[0] = Qs
 
-    return u, [MP], 0.1, [1/n], 'transitive'
+    return u, [MP], tf, [L/n], 'transitive'
 
 
 def shock_detonation():
