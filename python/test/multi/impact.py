@@ -1,4 +1,4 @@
-from numpy import array, eye, zeros
+from numpy import array, eye, pad, zeros
 
 from gpr.misc.structures import Cvec
 
@@ -15,7 +15,7 @@ def aluminium_plates():
     Ly = 0.04
     nx = 300  # 6000
     ny = 400  # 8000
-    tf = 5e-6  # 2.919e-06
+    tf = 4.5e-9 # 5e-6  # 2.919e-6
 
     ρ = MP.ρ0
     p = 0
@@ -26,10 +26,10 @@ def aluminium_plates():
     MPs = [VAC, MP, MP]
     dX = [Lx / nx, Ly / ny]
 
-    Q0 = Cvec(ρ, p, v0, MP, A)
-    Q1 = Cvec(ρ, p, v1, MP, A)
+    Q0 = pad(Cvec(ρ, p, v0, MP, A), (0, 2), 'constant')
+    Q1 = pad(Cvec(ρ, p, v1, MP, A), (0, 2), 'constant')
 
-    u = zeros([nx, ny, NV])
+    u = zeros([nx, ny, 16])
 
     for i in range(nx):
         for j in range(ny):

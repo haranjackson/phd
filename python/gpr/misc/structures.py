@@ -24,10 +24,10 @@ class State():
 
         if MP.cα2:
             self.J = Q[14:17] / self.ρ
-            if MP.MULTI:
+            if len(Q) > 17:
                 self.λ = Q[17] / Q[0]
         else:
-            if MP.MULTI:
+            if len(Q) > 14:
                 self.λ = Q[14] / Q[0]
 
         self.MP = MP
