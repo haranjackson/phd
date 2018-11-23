@@ -41,7 +41,7 @@ double theta1inv(VecVr Q, Par &MP) {
     double τs = MP.τs;
     double bf2 = MP.bf2;
     double bs2 = MP.bs2;
-    double ε = 1e-3;
+    double ε = 1e-9;
 
     Mat3_3 σ = sigma(Q, MP);
     double Γ = sigma_norm(σ) / MP.σY;
@@ -53,11 +53,10 @@ double theta1inv(VecVr Q, Par &MP) {
       λ = 1.;
     else
       λ = h / Γ;
-    if (λ > 1.)
-      λ = 1.;
+    λ = std::min(λ, 1.);
 
     double τ = τf * τs / (λ * τf + (1 - λ) * τs);
-    double Cs = λ * sqrt(bf2) + (1 - λ) * sqrt(bs2);
+    double Cs = λ * sqrt(bs2) + (1 - λ) * sqrt(bf2);
     return 3. * A53 / (Cs * Cs * τ);
   } else {
     double c = A53 * MP.ρ0 / (2 * std::pow(MP.μ, 1 / n));

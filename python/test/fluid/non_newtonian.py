@@ -23,7 +23,7 @@ def poiseuille_max(n):
     return amax(poiseuille_exact(n))
 
 
-def poiseuille_average(n):
+def poiseuille_average(n, μ, Lx, dp):
     ρ = 1
     k = (n + 1) / n
     return ρ / k * (dp / μ)**(1 / n) * 2**(-k) * k * Lx**k / (k+1)
@@ -63,8 +63,9 @@ def poiseuille():
     δp = array([0, dp, 0])
 
     if BINGHAM:
+        σY = Bi * μ / Lx * poiseuille_average(1, μ, Lx, dp)
         MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ,
-                             b0=1, bf=1, bs=1, μ=μ, σY=4e-2, δp=δp)
+                             b0=1, bf=1, bs=1, μ=μ, σY=σY, δp=δp)
     else:
         MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=1, μ=μ, n=n, δp=δp)
 
