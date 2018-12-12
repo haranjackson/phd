@@ -86,11 +86,13 @@ def params(MP, Rc, EOS,
             MP.σY = σY
         if τ0:
             MP.τ0 = τ0
+            """
         if BINGHAM:
             MP.bf2 = bf**2
             MP.bs2 = bs**2
             MP.τf = 6 * μ / (ρ0 * bf**2)
             MP.τs = 999999
+            """
 
     if cα:
         MP.cα2 = cα**2
@@ -212,7 +214,7 @@ def material_params(EOS, ρ0,
             n = 1
             POWER_LAW = False
             SOLID = False if μ else True
-            BINGHAM = True if bf else False
+            BINGHAM = True if μ and σY else False
 
         if β is None:
             β = 0
