@@ -19,6 +19,28 @@ def poiseuille_exact(n, nx=400, Lx=0.25, μ=1e-2, dp=0.48):
     return concatenate([flip(y, axis=0), y])
 
 
+def poiseuille_exact_bingham(σY, nx=400, Lx=0.25, μ=1e-2, dp=0.48):
+
+    h = Lx / 2
+    N = 2
+    th = dp * h
+    y0 = h * σY / th
+    x = linspace(0, Lx, nx)
+    ret = zeros(nx)
+
+    w0 = h / (2 * th * μ) * (th - σY)**2
+
+    for i in range(nx):
+        y = abs(x[i] - Lx / 2)
+        if y < y0:
+            ret[i] = w0
+        else:
+            t = y * th / h
+            ret[i] = w0 - h / (2 * th * μ) * (t - σY)**2
+
+    return ret
+
+
 def poiseuille_max(n):
     return amax(poiseuille_exact(n))
 
@@ -40,17 +62,18 @@ def poiseuille():
         N = 3
         cfl = 0.5
         SPLIT = True
-        SOLVER = 'rusanov'
+        FLUX = 0 (power-law) 1 (Bingham)
         contorted_tol = 1
 
         DESTRESS = false
     """
     n = 0.8
     BINGHAM = True
+    Bi = 2
 
     tf = 10
     Lx = 0.25
-    nx = 200
+    nx = 400
 
     γ = 1.4
     μ = 1e-2
@@ -63,9 +86,9 @@ def poiseuille():
     δp = array([0, dp, 0])
 
     if BINGHAM:
-        σY = Bi * μ / Lx * poiseuille_average(1, μ, Lx, dp)
+        σY = 0.02
         MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ,
-                             b0=1, bf=1, bs=1, μ=μ, σY=σY, δp=δp)
+                             b0=1, μ=μ, σY=σY, δp=δp)
     else:
         MP = material_params(EOS='sg', ρ0=ρ, cv=1, γ=γ, b0=1, μ=μ, n=n, δp=δp)
 
