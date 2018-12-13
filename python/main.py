@@ -5,14 +5,14 @@ import GPRpy
 import test
 
 from plot import *
+from store import save_results
 
 
-T = test.steady_znd
+T = test.aluminium_plates
 
-DEBUG = False
-N = 3
+N = 2
 cfl = 0.5
-SPLIT = True
+SPLIT = False
 FLUX = 0
 contorted_tol = 1.
 HALF_STEP = True
@@ -49,3 +49,5 @@ for i in range(100):
     if any(isnan(uList[i])):
         print(i)
         break
+
+save_results(uList, T, N, cfl, SPLIT, FLUX)
