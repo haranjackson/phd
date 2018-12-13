@@ -111,6 +111,7 @@ def lid_driven_cavity():
         DESTRESS = true
     """
     n = 0.5
+    BINGHAM = True
 
     tf = 40
     Lx = 1
@@ -126,7 +127,13 @@ def lid_driven_cavity():
     v = zeros(3)
     A = eye(3)
 
-    MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ, b0=1, μ=μ, n=n)
+    if BINGHAM:
+        Bi = 10
+        σY = Bi * μ / Lx
+        MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ,
+                             b0=1, μ=μ, σY=σY)
+    else:
+        MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ, b0=1, μ=μ, n=n)
 
     Q = Cvec(ρ, p, v, MP, A)
     u = zeros([nx, ny, 14])

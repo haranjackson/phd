@@ -1,3 +1,4 @@
+from matplotlib.pyplot import figure, plot
 from numpy import array, eye, pad, zeros
 
 from gpr.misc.structures import Cvec
@@ -6,16 +7,48 @@ from test.params.alt import VAC
 from test.params.solids import Al_GRP_SI, W_SMGP_SI
 
 
+def gauge_plot(uList, MPs):
+
+    n = len(uList)
+    nx, ny = uList[0].shape[:2]
+
+    ρy = zeros([5, n])
+    py = zeros([5, n])
+
+    j0 = int(ny / 2)
+    for i in range(5):
+        i0 = int((0.0018125 + 0.006 + 0.003625 * i) / 0.03 * nx)
+        for j in range(n):
+            Q = uList[j][i0, j0]
+            P = State(Q, MPs[1])
+            ρy[i, j] = P.ρ
+            py[i, j] = P.p()
+
+    figure(1)
+    for i in range(5):
+        plot(ρy[i])
+
+    figure(2)
+    for i in range(5):
+        plot(py[i])
+
+
 def aluminium_plates():
-    """ LSET = 2
+    """ N = 2
+        cfl = 0.5
+        SPLIT = False
+        FLUX = 0
+        contorted_tol = 1.
+        HALF_STEP = True
+        LSET = 2
     """
     MP = Al_GRP_SI
 
     Lx = 0.03
     Ly = 0.04
-    nx = 300  # 6000
-    ny = 400  # 8000
-    tf = 4.5e-9 # 5e-6  # 2.919e-6
+    nx = 600  # 6000
+    ny = 800  # 8000
+    tf = 5e-6
 
     ρ = MP.ρ0
     p = 0
@@ -59,8 +92,8 @@ def aluminium_plates():
 def rod_penetration():
 
     D = 0.029
-    # D = 0.0495
     V = 1250
+    # D = 0.0495
     # V = 1700
 
     nx = 200
