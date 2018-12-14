@@ -21,13 +21,13 @@ Cu_GRP_SI = material_params(EOS='gr', ρ0=8900, cv=390, Tref=300,
 Cu_CC_SI = material_params(EOS='cc', ρ0=8900, cv=390,
                            Γ0=2, A=145.67, B=12.87, R1=2.99, R2=4.1, b0=2100)
 
-W_SMGP_SI = material_params(EOS='smg', ρ0=19300, cv=134,
+W_SMGP_SI = material_params(EOS='smg', ρ0=17600, cv=134,
                             c0=4030, Γ0=1.43, s=1.24, b0=2888,
-                            σY=15e7, τ0=1, n=100)
+                            σY=1.5e9, τ0=1, n=100)
 
-Steel_SMGP_SI = material_params(EOS='smg', ρ0=7860, cv=134,
-                                c0=4030, Γ0=1.43, s=1.24, b0=2888,
-                                σY=15e7, τ0=1, n=100)
+Steel_SMGP_SI = material_params(EOS='smg', ρ0=7870, cv=134,
+                                c0=4569, Γ0=2.17, s=1.49, b0=2888,
+                                σY=0.53e9, τ0=1, n=100)
 
 
 """ CGS Units """
