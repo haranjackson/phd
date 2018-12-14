@@ -1,4 +1,5 @@
 #include "../system/functions/matrices.h"
+#include "../system/functions/vectors.h"
 #include "types.h"
 
 const int TRANSMISSIVE = 0;
@@ -53,8 +54,14 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
     break;
 
   case SYMMETRIC:
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < N; i++) {
       ub.row(i) = u.row(N - 1 - i);
+      ub(i, 2 + d) *= -1.;
+      Mat3_3Map A = get_A(ub.row(i));
+      A.row(d) *= -1.;
+      A.col(d) *= -1.;
+    }
+
     break;
   }
 
@@ -105,8 +112,14 @@ void boundaries1(Matr u, Matr ub, int nx, iVecr boundaryTypes, int d) {
     break;
 
   case SYMMETRIC:
-    for (int i = 0; i < N; i++)
-      ub.row(i + nx + N) = u.row(nx - 1 - i);
+    for (int i = 0; i < N; i++) {
+      int ind = i + nx + N;
+      ub.row(ind) = u.row(nx - 1 - i);
+      ub(ind, 2 + d) *= -1.;
+      Mat3_3Map A = get_A(ub.row(ind));
+      A.row(d) *= -1.;
+      A.col(d) *= -1.;
+    }
     break;
   }
 }
