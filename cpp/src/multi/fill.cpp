@@ -238,8 +238,8 @@ void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX,
   }
 
   // must fill from a border cell
-  if (intMask(newInd) < 1)
-    newInd = indn;
+  if (intMask(newInd / V) < 1)
+    newInd = indn * V;
   grid.segment<V - LSET>(ind) = grid.segment<V - LSET>(newInd);
 }
 
