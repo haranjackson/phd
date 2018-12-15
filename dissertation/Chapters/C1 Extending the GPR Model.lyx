@@ -1835,6 +1835,114 @@ where
  is the activation energy of the reactive species.
 \end_layout
 
+\begin_layout Standard
+Taking just the temporal evolution of the system, note that by combining
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:FirstContinuityEquationMultiphase"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ReactionEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{d\lambda}{dt}=-K
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ as a function of time, and denote 
+\begin_inset Formula $\lambda\left(0\right)=\lambda_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For discrete ignition temperature reaction kinetics, if 
+\begin_inset Formula $T\left(0\right)\geq T_{i}$
+\end_inset
+
+ then 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ will decrease monotonically over time, raising the temperature as it does
+ so.
+ If 
+\begin_inset Formula $T\left(0\right)<T_{i}$
+\end_inset
+
+ then no reaction will occur.
+ Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\lambda\left(t\right)=\begin{cases}
+\lambda_{0}e^{-K_{0}t} & T\left(0\right)\geq T_{i}\\
+0 & T<T_{i}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For Arrhenius reaction kinetics, note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+T & =T_{ref}\phi\left(\rho\right)+\frac{E-E_{2}\left(\rho,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)+Q_{c}\left(1-\lambda\right)-e_{ref}\left(\rho\right)}{c_{v}}\\
+ & =T_{ref}\phi\left(\rho\right)+\frac{E-E_{2}\left(\rho,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)+Q_{c}-e_{ref}\left(\rho\right)}{c_{v}}-\frac{Q_{c}}{c_{v}}\lambda\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=e^{-\frac{c}{a-b\lambda}}\lambda
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Numerical Results
 \end_layout
