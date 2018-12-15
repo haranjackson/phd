@@ -115,9 +115,6 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
                          double φi, int mat, std::vector<Par> &MPs, double dt,
                          Vecr n) {
   // Attempts to fill the boundary cell at location given by inds.
-  // Returns 1 if successful, and -2 if fails to find a suitable
-  // left state for the interface.
-
   // TODO: handle case when QL is chosen to be an isolated point
 
   BoundaryInds bInds = boundary_inds(inds, φi, n, dX, nX);
@@ -274,6 +271,8 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
       }
     } else if (ndim == 2) {
 
+      std::vector<int> isolates;
+
       int ny = nX(1);
       for (int i = 0; i < nx; i++)
         for (int j = 0; j < ny; j++) {
@@ -296,6 +295,10 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
               indn = i * ny + (j + 1);
 
             if (indn > -1) {
+
+              if (intMask(ind) == -2)
+                isolates.push_back(ind);
+
               intMask(ind) = N0 + 1;
               iVec inds(2);
               inds << i, j;
@@ -304,6 +307,8 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
             }
           }
         }
+      for (int i = 0; i < isolates.size(); i++)
+        intMask(isolates[i]) = -2;
     }
   }
 }
