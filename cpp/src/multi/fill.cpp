@@ -213,7 +213,8 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
   }
 }
 
-void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX) {
+void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX,
+                         iVecr intMask, int indn) {
   // makes the value of cell ind equal to the value of its neighbor in the
   // direction of the interface
   int ndim = nX.size();
@@ -235,6 +236,10 @@ void fill_neighbor_inner(Vecr grid, Vecr Δφi, iVecr inds, aVecr dX, iVecr nX) 
     newInd = iVec_to_ind(newInds, ny);
     break;
   }
+
+  // must fill from a border cell
+  if (intMask(newInd) < 1)
+    newInd = indn;
   grid.segment<V - LSET>(ind) = grid.segment<V - LSET>(newInd);
 }
 
@@ -251,21 +256,19 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
 
         if (intMask(i) == 0) {
 
-          bool pos = false;
+          int indn = -1;
 
-          if (i > 0) {
-            int ind_ = i - 1;
-            pos = pos || intMask(ind_) == N0;
-          }
-          if (i < nx - 1) {
-            int ind_ = i + 1;
-            pos = pos || intMask(ind_) == N0;
-          }
-          if (pos) {
+          if (i > 0 and intMask(i - 1) == N0)
+            indn = i - 1;
+
+          if (i < nx - 1 and intMask(i + 1) == N0)
+            indn = i + 1;
+
+          if (indn > -1) {
             intMask(i) = N0 + 1;
             iVec inds(1);
             inds << i;
-            fill_neighbor_inner(grid, Δφ.row(i), inds, dX, nX);
+            fill_neighbor_inner(grid, Δφ.row(i), inds, dX, nX, intMask, indn);
           }
         }
       }
@@ -278,29 +281,26 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
           int ind = i * ny + j;
           if (intMask(ind) == 0 || intMask(ind) == -2) {
 
-            bool pos = false;
+            int indn = -1;
 
-            if (i > 0) {
-              int ind_ = (i - 1) * ny + j;
-              pos = pos || intMask(ind_) == N0;
-            }
-            if (i < nx - 1) {
-              int ind_ = (i + 1) * ny + j;
-              pos = pos || intMask(ind_) == N0;
-            }
-            if (j > 0) {
-              int ind_ = i * ny + (j - 1);
-              pos = pos || intMask(ind_) == N0;
-            }
-            if (j < ny - 1) {
-              int ind_ = i * ny + (j + 1);
-              pos = pos || intMask(ind_) == N0;
-            }
-            if (pos) {
+            if (i > 0 and intMask((i - 1) * ny + j) == N0)
+              indn = (i - 1) * ny + j;
+
+            if (i < nx - 1 and intMask((i + 1) * ny + j) == N0)
+              indn = (i + 1) * ny + j;
+
+            if (j > 0 and intMask(i * ny + (j - 1)) == N0)
+              indn = i * ny + (j - 1);
+
+            if (j < ny - 1 and intMask(i * ny + (j + 1)) == N0)
+              indn = i * ny + (j + 1);
+
+            if (indn > -1) {
               intMask(ind) = N0 + 1;
               iVec inds(2);
               inds << i, j;
-              fill_neighbor_inner(grid, Δφ.row(ind), inds, dX, nX);
+              fill_neighbor_inner(grid, Δφ.row(ind), inds, dX, nX, intMask,
+                                  indn);
             }
           }
         }
