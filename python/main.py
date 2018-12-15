@@ -1,4 +1,4 @@
-from numpy import array, int32, isnan
+from numpy import array, int32
 
 import GPRpy
 
@@ -31,7 +31,7 @@ BOUNDARIES = {'transitive': array([0] * 2 * ndim, dtype=int32),
               'stick':      array([3] * 2 * ndim, dtype=int32),
               'lid_driven': array([3, 3, 3, 4], dtype=int32),
               'symmetric':  array([5, 5, 5, 5], dtype=int32),
-              'half': array([2, 0, 0, 0], dtype=int32),
+              'half': array([5, 0, 0, 0], dtype=int32),
               }
 
 
@@ -45,10 +45,5 @@ for i in range(100):
         break
     except:
         pass
-
-for i in range(100):
-    if any(isnan(uList[i])):
-        print(i)
-        break
 
 save_results(uList, T, N, cfl, SPLIT, FLUX)

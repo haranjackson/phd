@@ -90,7 +90,11 @@ def aluminium_plates():
 
 
 def rod_penetration():
-
+    """ N = 2
+        cfl = 0.5
+        SPLIT = False
+        FLUX = 1
+    """
     D = 0.029
     V = -1250
     # D = 0.0495
