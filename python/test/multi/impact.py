@@ -4,7 +4,7 @@ from numpy import array, eye, pad, zeros
 from gpr.misc.structures import Cvec
 
 from test.params.alt import VAC
-from test.params.solids import Al_GRP_SI, W_SMGP_SI, Steel_SMGP_SI
+from test.params.solids import Al_GRP_SI, W_SMGP_SI, Steel_SMGP_SI, Al_SMGP_CGS
 
 
 def gauge_plot(uList, MPs):
@@ -148,6 +148,51 @@ def rod_penetration():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    u = u[int(nx/2):]
+    #u = u[int(nx/2):]
 
-    return u, MPs, tf, dX, 'half'
+    return u, MPs, tf, dX, 'transitive'
+
+
+def taylor_bar():
+    """ N = 3
+        cfl = 0.5
+        SPLIT = True
+        FLUX = 1
+
+        LSET = 1
+    """
+    Lx = 200
+    Ly = 550
+    tf = 5e3
+    nx = 200
+    ny = 550
+    dX = [Lx / nx, Ly / ny]
+
+    p = 0
+    v = array([0, -0.015, 0])
+    A = eye(3)
+
+    MP = Al_SMGP_CGS
+    MPs = [VAC, MP]
+
+    Q = pad(Cvec(MP.ρ0, p, v, MP, A), (0, 1), 'constant')
+
+    u = zeros([nx, ny, 15])
+
+    for i in range(nx):
+        for j in range(ny):
+            x = (i+0.5) * dX[0]
+            y = (j+0.5) * dX[1]
+
+            # projectile
+            if Lx / 4 <= x <= 3 * Lx / 4 and y <= 5.5 * Ly / 6:
+                u[i, j] = Q
+                u[i, j, -1] = 1
+
+            # vacuum
+            else:
+                u[i, j, -1] = -1
+
+    #u = u[int(nx/2):]
+
+    return u, MPs, tf, dX, 'slip'
