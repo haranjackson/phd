@@ -198,9 +198,13 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
 VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
                      Vecr n) {
 
+  VecV QL0 = QL_;
+
   Mat3_3 R = rotation_matrix(n);
   rotate_tensors(QL_, R);
   rotate_tensors(QR_, R);
+
+  int count = 0;
 
   while (!check_star_convergence(QL_, QR_, MPL, MPR)) {
 
@@ -210,6 +214,10 @@ VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
         ode_stepper_analytic(QR_, dt / 2, MPR);
     }
     star_stepper(QL_, QR_, MPL, MPR);
+
+    count += 1;
+    if (count > 50)
+      return QL0;
   }
   Mat3_3 RT = R.transpose();
   rotate_tensors(QL_, RT);
