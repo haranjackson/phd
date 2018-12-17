@@ -78,6 +78,7 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
                           bool STIFF, int FLUX, std::vector<Par> &MPs,
                           double contorted_tol) {
 
+  Vec uprev(u.size());
   std::vector<Vec> ret(100);
   int nmat = MPs.size();
   Vec ub(extended_dimensions(nX, N) * V);
@@ -98,6 +99,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
   double dt = 0.;
 
   while (t < tf) {
+
+    uprev = u;
 
     if (LSET > 0)
       fill_ghost_cells(grids, masks, u, nX, dX, dt, MPs);
@@ -142,7 +145,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
     print(dt);
 
     if (u.array().isNaN().any()) {
-      ret[pushCount] = u;
+      ret[pushCount] = uprev;
+      ret[pushCount + 1] = u;
       return ret;
     }
   }
