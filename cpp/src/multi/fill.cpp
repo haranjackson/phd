@@ -73,6 +73,26 @@ void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX) {
   }
 }
 
+int neighbor_index(iVecr intMask, int i, int j, int nx, int ny, int N0) {
+  // returns the index of one neighbor who intMask value is N0
+
+  int indn = -1;
+
+  if (i > 0 and intMask((i - 1) * ny + j) == N0)
+    indn = (i - 1) * ny + j;
+
+  if (i < nx - 1 and intMask((i + 1) * ny + j) == N0)
+    indn = (i + 1) * ny + j;
+
+  if (j > 0 and intMask(i * ny + (j - 1)) == N0)
+    indn = i * ny + (j - 1);
+
+  if (j < ny - 1 and intMask(i * ny + (j + 1)) == N0)
+    indn = i * ny + (j + 1);
+
+  return indn;
+}
+
 BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
   // Calculates indexes of the boundary states at position given by inds
 
@@ -113,7 +133,7 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
 
 void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
                          double φi, int mat, std::vector<Par> &MPs, double dt,
-                         Vecr n) {
+                         Vecr n, int indn) {
   // Attempts to fill the boundary cell at location given by inds.
   // TODO: handle case when QL is chosen to be an isolated point
 
@@ -164,7 +184,10 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
         n(1) = 0.;
       }
     }
-    QL = u.segment<V>(Lind);
+    if (get_material_index(grid.segment<V>(Lind)) == mat)
+      QL = u.segment<V>(Lind);
+    else
+      QL = u.segment<V>(indn * V);
   }
 
   VecV QL_ = left_star_state(QL, QR, MPs[mat], MPs[miR], dt, n);
@@ -189,7 +212,7 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
         n = normal(Δφ.row(ind));
         iVec inds(1);
         inds << ind;
-        fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n);
+        fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n, -1);
       }
     }
     break;
@@ -200,10 +223,12 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
       for (int j = 0; j < ny; j++) {
         int ind = i * ny + j;
         if (intMask(ind) == 1) {
+          int indn = neighbor_index(intMask, i, j, nx, ny, -1);
           n = normal(Δφ.row(ind));
           iVec inds(2);
           inds << i, j;
-          fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n);
+          fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n,
+                              indn);
         }
       }
     break;
@@ -246,7 +271,8 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
   int ndim = nX.size();
   int nx = nX(0);
 
-  for (int N0 = 1; N0 < N + 1; N0++) {
+  // fill
+  for (int N0 = 1; N0 < 3 * N; N0++) {
 
     if (ndim == 1) {
       for (int i = 0; i < nx; i++) {
@@ -280,19 +306,7 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
           int ind = i * ny + j;
           if (intMask(ind) == 0 || intMask(ind) == -2) {
 
-            int indn = -1;
-
-            if (i > 0 and intMask((i - 1) * ny + j) == N0)
-              indn = (i - 1) * ny + j;
-
-            if (i < nx - 1 and intMask((i + 1) * ny + j) == N0)
-              indn = (i + 1) * ny + j;
-
-            if (j > 0 and intMask(i * ny + (j - 1)) == N0)
-              indn = i * ny + (j - 1);
-
-            if (j < ny - 1 and intMask(i * ny + (j + 1)) == N0)
-              indn = i * ny + (j + 1);
+            int indn = neighbor_index(intMask, i, j, nx, ny, N0);
 
             if (indn > -1) {
 
