@@ -1,7 +1,7 @@
 from matplotlib.pyplot import figure, plot
 from numpy import array, eye, pad, zeros
 
-from gpr.misc.structures import Cvec
+from gpr.misc.structures import Cvec, State
 
 from test.params.alt import VAC
 from test.params.solids import Al_GRP_SI, W_SMGP_SI, Steel_SMGP_SI, Al_SMGP_CGS
