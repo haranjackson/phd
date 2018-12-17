@@ -24,6 +24,7 @@ PYBIND11_MAKE_OPAQUE(std::vector<bVec>)
 #include "../src/solvers/iterator.h"
 #include "../src/solvers/poly/basis.h"
 #include "../src/solvers/steppers.h"
+#include "../src/solvers/utils.h"
 
 #include "../src/solvers/weno/weno.h"
 #include "../src/solvers/weno/weno_matrices.h"
@@ -63,6 +64,7 @@ PYBIND11_MODULE(GPRpy, m) {
   py::bind_vector<std::vector<bVec>>(m, "VectorbVec");
 
   m.def("boundaries", &boundaries);
+  m.def("extend_mask", &extend_mask);
 
   pybind11::module m_options = m.def_submodule("options", "");
   pybind11::module m_classes = m.def_submodule("classes", "");
@@ -171,6 +173,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_multi.def("fill_boundary_cells", &fill_boundary_cells);
   m_multi.def("fill_neighbor_cells", &fill_neighbor_cells);
   m_multi.def("fill_ghost_cells", &fill_ghost_cells);
+  m_multi.def("material_indicator", &material_indicator);
 
   m_scipy.def("lgmres_wrapper", &lgmres_wrapper, py::arg("A"), py::arg("b"),
               py::arg("x0") = Vec(0), py::arg("M") = Mat(0, 0),
@@ -212,6 +215,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers.def("split_stepper_para", &split_stepper_para);
   m_solvers.def("iterator", &iterator);
   m_solvers.def("make_u", &make_u);
+  m_solvers.def("contorted", &contorted);
 
   m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
   m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);
