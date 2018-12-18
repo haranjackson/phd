@@ -4,12 +4,17 @@ from gpr.misc.structures import Cvec
 
 from test.params.alt import VAC
 from test.params.fluids import Air_SG_SI
-from test.params.reactive import NM_JWL_SI
+from test.params.reactive import NM_CC_SI
 from test.params.solids import Steel_SMGP_SI
 
 
 def confined_explosive():
-    """ LSET = 3
+    """ N = 2
+        cfl = 0.8
+        SPLIT = True
+        FLUX = 0
+
+        LSET = 3
     """
     Lx = 0.06271
     Ly = 0.1
@@ -20,7 +25,7 @@ def confined_explosive():
     dX = [Lx / nx, Ly / ny]
 
     MPm = Steel_SMGP_SI
-    MPe = NM_JWL_SI
+    MPe = NM_CC_SI
 
     pm = 0
     pe = 1e5
@@ -31,11 +36,11 @@ def confined_explosive():
     MPs = [VAC, MPe, MPm, MPm]
     dX = [Lx / nx, Ly / ny]
 
-    Qm1 = pad(Cvec(MPm.ρ0, pm, v1, MPm, A), (0, 3), 'constant')
-    Qm2 = pad(Cvec(MPm.ρ0, pm, v, MPm, A), (0, 3), 'constant')
-    Qe = pad(Cvec(MPe.ρ0, pe, v, MPe, A), (0, 3), 'constant')
+    Qm1 = pad(Cvec(MPm.ρ0, pm, v1, MPm, A, λ=0), (0, 3), 'constant')
+    Qm2 = pad(Cvec(MPm.ρ0, pm, v, MPm, A, λ=0), (0, 3), 'constant')
+    Qe = pad(Cvec(MPe.ρ0, pe, v, MPe, A, λ=1), (0, 3), 'constant')
 
-    u = zeros([nx, ny, 17])
+    u = zeros([nx, ny, 18])
 
     for i in range(nx):
         for j in range(ny):
@@ -75,7 +80,12 @@ def confined_explosive():
 
 
 def rod_impact():
-    """ LSET = 3
+    """ N = 2
+        cfl = 0.8
+        SPLIT = True
+        FLUX = 0
+
+        LSET = 3
     """
     Lx = 0.592
     Ly = 0.18
@@ -87,7 +97,7 @@ def rod_impact():
 
     MPa = Air_SG_SI
     MPm = Steel_SMGP_SI
-    MPe = NM_JWL_SI
+    MPe = NM_CC_SI
 
     pm = 0
     pe = 1e5

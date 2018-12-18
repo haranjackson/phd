@@ -14,6 +14,11 @@ PBX_SG_SI = material_params(EOS='sg', ρ0=1840, γ=2.85, b0=1, μ=1e-2)
 
 # TODO: figure out NM_JWL EOSs
 
+NM_CC_SI = material_params(EOS='cc', ρ0=1134, cv=1714,
+                           Γ0=1.19, A=0.819e9, B=1.51e9, R1=4.53, R2=1.42,
+                           b0=1, μ=6.2e-4,
+                           REACTION='a', Qc=4.48e3, Bc=6.9e10, Ea=11350, Rc=1)
+
 NM_JWL_SI = material_params(EOS='jwl', ρ0=1137, cv=1.4272e-3,
                             Γ0=1.237, A=3000, B=1.8003, R1=10, R2=1,
                             b0=1300, μ=6.2e-4,
