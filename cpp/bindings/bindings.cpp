@@ -216,6 +216,7 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers.def("iterator", &iterator);
   m_solvers.def("make_u", &make_u);
   m_solvers.def("contorted", &contorted);
+  m_solvers.def("timestep", &timestep);
 
   m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
   m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);
