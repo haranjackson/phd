@@ -4,13 +4,18 @@
 #include "../system/functions/vectors.h"
 
 void renorm_distortion(Vecr u, std::vector<Par> &MPs) {
+
   int ncell = u.size() / V;
   for (int i = 0; i < ncell; i++) {
+
     int mi = get_material_index(u.segment<V>(i * V));
-    double ρ = u(i * V);
-    Mat3_3 A = get_A(u.segment<V>(i * V));
-    double c = cbrt(ρ / (MPs[mi].ρ0 * A.determinant()));
-    u.segment<9>(i * V + 5) *= c;
+    if (MPs[mi].EOS > -1) {
+
+      double ρ = u(i * V);
+      Mat3_3 A = get_A(u.segment<V>(i * V));
+      double c = cbrt(ρ / (MPs[mi].ρ0 * A.determinant()));
+      u.segment<9>(i * V + 5) *= c;
+    }
   }
 }
 
@@ -19,16 +24,19 @@ void reset_distortion(Vecr u, std::vector<Par> &MPs) {
   for (int i = 0; i < ncell; i++) {
 
     int mi = get_material_index(u.segment<V>(i * V));
-    double ρ = u(i * V);
-    double c = cbrt(ρ / MPs[mi].ρ0);
+    if (MPs[mi].EOS > -1) {
 
-    Mat3_3Map A(u.data() + i * V + 5);
-    u(i * V + 1) -= ρ * E_2A(ρ, A, MPs[mi]);
+      double ρ = u(i * V);
+      double c = cbrt(ρ / MPs[mi].ρ0);
 
-    u.segment<9>(i * V + 5).setZero();
-    u(i * V + 5) = c;
-    u(i * V + 9) = c;
-    u(i * V + 13) = c;
+      Mat3_3Map A(u.data() + i * V + 5);
+      u(i * V + 1) -= ρ * E_2A(ρ, A, MPs[mi]);
+
+      u.segment<9>(i * V + 5).setZero();
+      u(i * V + 5) = c;
+      u(i * V + 9) = c;
+      u(i * V + 13) = c;
+    }
   }
 }
 

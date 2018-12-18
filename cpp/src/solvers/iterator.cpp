@@ -9,8 +9,6 @@
 #include "steppers.h"
 #include "utils.h"
 
-double STEADY_TOL = 1e-8;
-
 void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
             std::vector<Par> &MPs) {
   // Builds u across the domain, from the different material grids
@@ -131,7 +129,7 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
     t += dt;
     count += 1;
 
-    // renorm_distortion(u, MPs);
+    renorm_distortion(u, MPs);
 
     if (contorted(u, contorted_tol))
       reset_distortion(u, MPs);
