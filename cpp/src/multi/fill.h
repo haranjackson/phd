@@ -6,9 +6,8 @@
 
 void find_interface_cells(iVecr intMask, Vecr φ, iVecr nX);
 
-void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
-                         Matr Δφ, aVecr dX, std::vector<Par> &MPs, double dt,
-                         iVecr nX);
+void fill_boundary_cells(Vecr grid, iVecr intMask, int mat, Vecr φ, Matr Δφ,
+                         aVecr dX, std::vector<Par> &MPs, double dt, iVecr nX);
 
 void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX, iVecr nX);
 

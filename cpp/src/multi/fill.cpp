@@ -131,23 +131,23 @@ BoundaryInds boundary_inds(iVec inds, double φi, aVecr n, aVecr dX, iVecr nX) {
   return ret;
 }
 
-void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
-                         double φi, int mat, std::vector<Par> &MPs, double dt,
-                         Vecr n, int indn) {
+void fill_boundary_inner(Vecr grid, iVecr inds, aVecr dX, iVecr nX, double φi,
+                         int mat, std::vector<Par> &MPs, double dt, Vecr n,
+                         int indn) {
   // Attempts to fill the boundary cell at location given by inds.
   // TODO: handle case when QL is chosen to be an isolated point
 
   BoundaryInds bInds = boundary_inds(inds, φi, n, dX, nX);
 
   VecV QL;
-  VecV QR = u.segment<V>(bInds.R);
+  VecV QR = grid.segment<V>(bInds.R);
   int miR = get_material_index(QR);
 
-  if (get_material_index(u.segment<V>(bInds.interf)) == mat)
-    QL = u.segment<V>(bInds.interf);
+  if (get_material_index(grid.segment<V>(bInds.interf)) == mat)
+    QL = grid.segment<V>(bInds.interf);
 
-  else if (get_material_index(u.segment<V>(bInds.L)) == mat)
-    QL = u.segment<V>(bInds.L);
+  else if (get_material_index(grid.segment<V>(bInds.L)) == mat)
+    QL = grid.segment<V>(bInds.L);
 
   else { // should only happen if ndim>1
     iVec Linds = inds;
@@ -160,7 +160,7 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
     if (std::abs(n(0)) > std::abs(n(1))) {
       Linds(0) -= n0;
       Lind = iVec_to_ind(Linds, nX(1));
-      if (get_material_index(u.segment<V>(Lind)) == mat) {
+      if (get_material_index(grid.segment<V>(Lind)) == mat) {
         n(0) = n0;
         n(1) = 0.;
       } else {
@@ -173,7 +173,7 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
     } else {
       Linds(1) -= n1;
       Lind = iVec_to_ind(Linds, nX(1));
-      if (get_material_index(u.segment<V>(Lind)) == mat) {
+      if (get_material_index(grid.segment<V>(Lind)) == mat) {
         n(0) = 0.;
         n(1) = n1;
       } else {
@@ -185,9 +185,9 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
       }
     }
     if (get_material_index(grid.segment<V>(Lind)) == mat)
-      QL = u.segment<V>(Lind);
+      QL = grid.segment<V>(Lind);
     else
-      QL = u.segment<V>(indn * V);
+      QL = grid.segment<V>(indn * V);
   }
 
   VecV QL_ = left_star_state(QL, QR, MPs[mat], MPs[miR], dt, n);
@@ -197,9 +197,8 @@ void fill_boundary_inner(Vecr u, Vecr grid, iVecr inds, aVecr dX, iVecr nX,
     grid.segment<V - LSET>(bInds.interf) = QL_.head<V - LSET>();
 }
 
-void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
-                         Matr Δφ, aVecr dX, std::vector<Par> &MPs, double dt,
-                         iVecr nX) {
+void fill_boundary_cells(Vecr grid, iVecr intMask, int mat, Vecr φ, Matr Δφ,
+                         aVecr dX, std::vector<Par> &MPs, double dt, iVecr nX) {
   int ndim = nX.size();
   int nx = nX(0);
   Vec n(ndim);
@@ -212,7 +211,7 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
         n = normal(Δφ.row(ind));
         iVec inds(1);
         inds << ind;
-        fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n, -1);
+        fill_boundary_inner(grid, inds, dX, nX, φ(ind), mat, MPs, dt, n, -1);
       }
     }
     break;
@@ -227,7 +226,7 @@ void fill_boundary_cells(Vecr u, Vecr grid, iVecr intMask, int mat, Vecr φ,
           n = normal(Δφ.row(ind));
           iVec inds(2);
           inds << i, j;
-          fill_boundary_inner(u, grid, inds, dX, nX, φ(ind), mat, MPs, dt, n,
+          fill_boundary_inner(grid, inds, dX, nX, φ(ind), mat, MPs, dt, n,
                               indn);
         }
       }
@@ -354,7 +353,7 @@ void fill_ghost_cells(std::vector<Vec> &grids, std::vector<bVec> &masks, Vecr u,
 
       find_interface_cells(intMask, φ, nX);
 
-      fill_boundary_cells(u, grids[mat], intMask, mat, φ, Δφ, dX, MPs, dt, nX);
+      fill_boundary_cells(grids[mat], intMask, mat, φ, Δφ, dX, MPs, dt, nX);
 
       fill_neighbor_cells(grids[mat], intMask, Δφ, dX, nX);
 
