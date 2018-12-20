@@ -1,0 +1,13 @@
+The following lines have been changed in pybind11/eigen.h:
+
+```c++
+#include <Eigen/Core>
+#include <Eigen/SparseCore>
+```
+
+to
+
+```c++
+#include "eigen3/Core"
+#include "eigen3/SparseCore"
+```
