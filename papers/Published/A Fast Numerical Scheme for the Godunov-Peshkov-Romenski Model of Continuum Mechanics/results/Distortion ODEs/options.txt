@@ -1,1 +1,0 @@
-PAR = material_parameters(?=1.4, pINF=0, cv=2.5, ?0=1, p0=p0, cs=1, a=2, µ=1e-2, ?=1e-2)

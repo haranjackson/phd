@@ -1,4 +1,0 @@
-The CFL numbers used to calculate timesteps in the final text were 0.8 (ADER-WENO) and 0.7 (Split-WENO).
-After analytical calculation of WENO matrices, WENO takes 0.03125s for 200 cells with N=2.
-Approximate analytical ODE solver also takes 0.03125s x 0.6 (due to fast SVD)
-Run times here were done before these changes were made.
