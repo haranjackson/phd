@@ -5,6 +5,7 @@
 #include "../system/objects.h"
 
 void renorm_distortion(Vecr u, std::vector<Par> &MPs);
+void rotate_distortion(Vecr u, std::vector<Par> &MPs);
 void reset_distortion(Vecr u, std::vector<Par> &MPs);
 bool contorted(Vecr u, double contorted_tol);
 
