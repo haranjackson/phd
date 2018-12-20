@@ -131,6 +131,9 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
 
     renorm_distortion(u, MPs);
 
+    if (count % 10 == 0 and ROTATE_DISTORTION)
+      rotate_distortion(u, MPs);
+
     if (contorted(u, contorted_tol))
       reset_distortion(u, MPs);
 

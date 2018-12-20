@@ -19,6 +19,25 @@ void renorm_distortion(Vecr u, std::vector<Par> &MPs) {
   }
 }
 
+void rotate_distortion(Vecr u, std::vector<Par> &MPs) {
+  int ncell = u.size() / V;
+  for (int i = 0; i < ncell; i++) {
+
+    int mi = get_material_index(u.segment<V>(i * V));
+    if (MPs[mi].EOS > -1) {
+
+      Mat3_3Map A(u.data() + i * V + 5);
+      Eigen::JacobiSVD<Mat3_3> svd(A, Eigen::ComputeFullV);
+
+      Vec3 s = svd.singularValues();
+      A = svd.matrixV().transpose();
+
+      for (int i = 0; i < 3; i++)
+        A.row(i) *= s[i];
+    }
+  }
+}
+
 void reset_distortion(Vecr u, std::vector<Par> &MPs) {
   int ncell = u.size() / V;
   for (int i = 0; i < ncell; i++) {
@@ -45,7 +64,7 @@ bool contorted(Vecr u, double contorted_tol) {
   for (int i = 0; i < ncell; i++) {
 
     Mat3_3Map A(u.data() + i * V + 5);
-    Eigen::JacobiSVD<Mat3_3> svd(A, Eigen::ComputeFullV | Eigen::ComputeFullU);
+    Eigen::JacobiSVD<Mat3_3> svd(A);
 
     Vec3 s = svd.singularValues();
     double detA = s(0) * s(1) * s(2);

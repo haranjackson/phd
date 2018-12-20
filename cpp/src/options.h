@@ -13,6 +13,7 @@ const bool DESTRESS = false;
 
 // Solver //
 const int N = 3;
+const bool ROTATE_DISTORTION = false;
 
 // RGFM //
 const bool RIEMANN_STICK = false;
