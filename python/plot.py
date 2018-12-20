@@ -3,7 +3,8 @@ from types import MethodType
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-from numpy import nan, nanmax, nanmin, arange, isnan, linspace, mgrid, prod, zeros
+from numpy import nan, nanmax, nanmin, arange, isnan, linspace, mgrid, prod, \
+    zeros
 from numpy.linalg import norm
 from matplotlib.pyplot import colorbar, contour, contourf, figure, get_cmap, \
     imshow, plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
@@ -47,10 +48,6 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
         levels = linspace(vmin, vmax, 25)
         im = contour(x, levels=levels)
 
-        if lsets is not None:
-            for lset in lsets:
-                contour(lset, levels=[0], colors='black')
-
         colorbar(im)
 
     elif plotType == 'contourf':
@@ -63,6 +60,10 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None):
         v0 = x[:, :, 2] / x[:, :, 0]
         v1 = x[:, :, 3] / x[:, :, 0]
         streamplot(X, Y, v0.T, v1.T)
+
+    if lsets is not None:
+        for lset in lsets:
+            contour(lset, levels=[0], colors='black')
 
 
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
