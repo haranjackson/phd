@@ -1934,13 +1934,33 @@ T & =T_{ref}\phi\left(\rho\right)+\frac{E-E_{2}\left(\rho,A,\boldsymbol{J}\right
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-K=e^{-\frac{c}{a-b\lambda}}\lambda
-\end{equation}
+\begin{align}
+K & =e^{-\frac{c}{a-b\lambda}}\lambda\\
+ & =e^{-\frac{c/a}{1-b\lambda/a}}\lambda\nonumber \\
+ & =e^{-\frac{c}{a}\left(1+\frac{b\lambda}{a}+\left(\frac{b\lambda}{a}\right)^{2}+\cdots\right)}\lambda\nonumber \\
+ & =e^{-\frac{c}{a}}e^{-\frac{c}{a}\left(\frac{b\lambda}{a}+\left(\frac{b\lambda}{a}\right)^{2}+\cdots\right)}\lambda
+\end{align}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Note that this expression is valid, as 
+\begin_inset Formula $T>0$
+\end_inset
+
+, implying that 
+\begin_inset Formula $a>b\lambda>0$
+\end_inset
+
+ (i.e.
+ 
+\begin_inset Formula $\left|\frac{b\lambda}{a}\right|<1$
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Section
