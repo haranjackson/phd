@@ -12,7 +12,7 @@ T = test.aluminium_plates
 
 N = 2
 cfl = 0.5
-SPLIT = False
+SPLIT = True
 FLUX = 0
 contorted_tol = 1.
 HALF_STEP = True

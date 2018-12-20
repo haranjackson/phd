@@ -36,18 +36,18 @@ def gauge_plot(uList, MPs):
 def aluminium_plates():
     """ N = 2
         cfl = 0.5
-        SPLIT = False
+        SPLIT = True
         FLUX = 0
-        contorted_tol = 1.
-        HALF_STEP = True
+
         LSET = 2
+        RIEMANN_RELAXATION = false
     """
     MP = Al_GRP_SI
 
     Lx = 0.03
     Ly = 0.04
-    nx = 600  # 6000
-    ny = 800  # 8000
+    nx = 600
+    ny = 800
     tf = 5e-6
 
     ρ = MP.ρ0
@@ -92,8 +92,8 @@ def aluminium_plates():
 def rod_penetration():
     """ N = 2
         cfl = 0.5
-        SPLIT = False
-        FLUX = 1
+        SPLIT = True
+        FLUX = 0
     """
     D = 0.029
     V = -1250
@@ -108,7 +108,7 @@ def rod_penetration():
 
     ny = int(nx * Ly / Lx)
     dX = [Lx / nx, Ly / ny]
-    tf = 8e-6 # 80e-6
+    tf = 20e-6 # 80e-6
 
     MP1 = W_SMGP_SI
     MP2 = Steel_SMGP_SI
@@ -154,18 +154,20 @@ def rod_penetration():
 
 
 def taylor_bar():
-    """ N = 3
-        cfl = 0.5
+    """ N = 2
+        cfl = 0.8
         SPLIT = True
-        FLUX = 1
+        FLUX = 0
 
         LSET = 1
+        DESTRESS = false
+        RIEMANN_RELAXATION = true
     """
     Lx = 200
     Ly = 550
     tf = 5e3
     nx = 200
-    ny = 550
+    ny = int(nx * Ly / Lx)
     dX = [Lx / nx, Ly / ny]
 
     p = 0
