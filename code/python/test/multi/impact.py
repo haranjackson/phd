@@ -15,7 +15,8 @@ def gauge_plot(uList, MPs):
     ρy = zeros([5, n])
     py = zeros([5, n])
 
-    j0 = int(ny / 2)
+    # j0 = int(ny / 2)
+    j0 = 0
     for i in range(5):
         i0 = int((0.0018125 + 0.006 + 0.003625 * i) / 0.03 * nx)
         for j in range(n):
@@ -35,19 +36,19 @@ def gauge_plot(uList, MPs):
 
 def aluminium_plates():
     """ N = 2
-        cfl = 0.5
+        cfl = 0.8
         SPLIT = True
         FLUX = 0
 
         LSET = 2
-        RIEMANN_RELAXATION = false
+        RIEMANN_RELAXATION = true
     """
     MP = Al_GRP_SI
 
     Lx = 0.03
     Ly = 0.04
-    nx = 600
-    ny = 800
+    nx = 300
+    ny = 400
     tf = 5e-6
 
     ρ = MP.ρ0
@@ -86,7 +87,9 @@ def aluminium_plates():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    return u, MPs, tf, dX, 'transitive'
+    u = u[:, int(ny/2):]
+
+    return u, MPs, tf, dX, 'halfy'
 
 
 def rod_penetration():
