@@ -269,9 +269,10 @@ void fill_neighbor_cells(Vecr grid, iVecr intMask, Matr Δφ, aVecr dX,
 
   int ndim = nX.size();
   int nx = nX(0);
+  const int EXPANSION_FACTOR = 10;
 
   // fill
-  for (int N0 = 1; N0 < 3 * N; N0++) {
+  for (int N0 = 1; N0 < EXPANSION_FACTOR * N; N0++) {
 
     if (ndim == 1) {
       for (int i = 0; i < nx; i++) {

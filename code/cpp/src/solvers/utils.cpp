@@ -12,9 +12,12 @@ void renorm_distortion(Vecr u, std::vector<Par> &MPs) {
     if (MPs[mi].EOS > -1) {
 
       double ρ = u(i * V);
-      Mat3_3 A = get_A(u.segment<V>(i * V));
-      double c = cbrt(ρ / (MPs[mi].ρ0 * A.determinant()));
-      u.segment<9>(i * V + 5) *= c;
+
+      if (ρ > 0) { // can't be vacuum
+        Mat3_3 A = get_A(u.segment<V>(i * V));
+        double c = cbrt(ρ / (MPs[mi].ρ0 * A.determinant()));
+        u.segment<9>(i * V + 5) *= c;
+      }
     }
   }
 }

@@ -31,7 +31,8 @@ BOUNDARIES = {'transitive': array([0] * 2 * ndim, dtype=int32),
               'stick':      array([3] * 2 * ndim, dtype=int32),
               'lid_driven': array([3, 3, 3, 4], dtype=int32),
               'symmetric':  array([5, 5, 5, 5], dtype=int32),
-              'half': array([5, 0, 0, 0], dtype=int32),
+              'halfx': array([5, 0, 0, 0], dtype=int32),
+              'halfy': array([0, 0, 5, 0], dtype=int32)
               }
 
 
