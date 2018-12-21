@@ -100,6 +100,9 @@ VecV Cvec_to_Pvec(VecV Q, Par &MP)
   if (THERMAL)
     Q.segment<3>(14) /= ρ;
 
+  if (MULTI)
+    Q(mV) /= ρ;
+
   return Q;
 }
 
@@ -120,14 +123,34 @@ VecV Pvec_to_Cvec(VecV P, Par &MP)
   P.segment<3>(2) = ρ * v;
   P.segment<9>(5) = Vec9Map(A.data());
 
-  if (THERMAL)
+  double λ;
+  if (MULTI)
   {
-    Vec3 J = P.segment<3>(14);
-    P(1) = ρ * total_energy(ρ, p, A, J, v, MP);
-    P.segment<3>(14) *= ρ;
+    λ = P(mV);
+    P(mV) *= ρ;
+  }
+
+  if (MP.REACTION > -1)
+  {
+    if (THERMAL)
+    {
+      Vec3 J = P.segment<3>(14);
+      P(1) = ρ * total_energy(ρ, p, A, J, v, λ, MP);
+      P.segment<3>(14) *= ρ;
+    }
+    else
+      P(1) = ρ * total_energy(ρ, p, A, v, λ, MP);
   }
   else
-    P(1) = ρ * total_energy(ρ, p, A, v, MP);
-
+  {
+    if (THERMAL)
+    {
+      Vec3 J = P.segment<3>(14);
+      P(1) = ρ * total_energy(ρ, p, A, J, v, MP);
+      P.segment<3>(14) *= ρ;
+    }
+    else
+      P(1) = ρ * total_energy(ρ, p, A, v, MP);
+  }
   return P;
 }

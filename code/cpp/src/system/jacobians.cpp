@@ -85,14 +85,15 @@ MatV_V dFdP(VecVr Q, int d, Par &MP) {
       ret(i, i) = ρvd;
   }
 
-  if (MP.REACTION > -1) {
+  if (MULTI) {
     double λ = Q(mV) / ρ;
-    ret(1, mV) = MP.Qc * ρvd;
     ret(mV, 0) = v(d) * λ;
     ret(mV, 2 + d) = ρ * λ;
     ret(mV, mV) = ρvd;
-  }
 
+    if (MP.REACTION > -1)
+      ret(1, mV) = MP.Qc * ρvd;
+  }
   return ret;
 }
 
@@ -136,13 +137,16 @@ MatV_V dPdQ(VecVr Q, Par &MP) {
     for (int i = 14; i < 17; i++)
       ret(i, i) = 1 / ρ;
   }
-  if (MP.REACTION > -1) {
+  if (MULTI) {
     double λ = Q(mV) / ρ;
-    double Qc = MP.Qc;
     ret(mV, 0) = -λ / ρ;
     ret(mV, mV) = 1 / ρ;
-    ret(1, 0) += Γ_ * Qc * λ;
-    ret(1, mV) = -Γ_ * Qc;
+
+    if (MP.REACTION > -1) {
+      double Qc = MP.Qc;
+      ret(1, 0) += Γ_ * Qc * λ;
+      ret(1, mV) = -Γ_ * Qc;
+    }
   }
   return ret;
 }
