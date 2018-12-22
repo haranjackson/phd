@@ -4,15 +4,17 @@ from gpr.misc.objects import material_params
 """ SI Units """
 
 TNT_JWL_SI = material_params(EOS='jwl', ρ0=1840, cv=815,
-                             Γ0=0.25, A=854.5, B=20.5, R1=4.6, R2=1.35,
+                             Γ0=0.25, A=854.5e9, B=20.5e9, R1=4.6, R2=1.35,
                              b0=2100)
 
 PBX_SG_SI = material_params(EOS='sg', ρ0=1840, γ=2.85, b0=1, μ=1e-2)
 
-
-""" Scaled Units """
-
-# TODO: figure out NM_JWL EOSs
+# not sure about Qc, Bc
+C4_JWL_SI = material_params(EOS='jwl', ρ0=1601, cv=2.487e6/1601,
+                            Γ0=0.8938, A=7.781e13, B=-5.031e9,
+                            R1=11.3, R2=1.13, b0=1487,
+                            REACTION='a', Qc=5.18e6, Bc=1.16e13*10, Ea=1.438e5,
+                            Rc=8.314)
 
 NM_CC_SI = material_params(EOS='cc', ρ0=1134, cv=1714,
                            Γ0=1.19, A=0.819e9, B=1.51e9, R1=4.53, R2=1.42,
@@ -29,6 +31,11 @@ NM_JWL_SI = material_params(EOS='jwl', ρ0=1137, cv=1.4272e-3,
                             MULTI=True, EOS_2='jwl', cv_2=1e-3,
                             Γ0_2=0.3, A_2=209.2, B_2=-5.689, R1_2=4.4, R2_2=1.2,
                             b0_2=1300, μ_2=6.2e-4)
+
+
+""" Scaled Units """
+
+# TODO: figure out NM_JWL EOSs
 
 NM_JWL_Scaled = material_params(
         EOS='jwl', ρ0=1, cv=0.0096,

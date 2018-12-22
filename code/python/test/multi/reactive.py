@@ -4,7 +4,7 @@ from gpr.misc.structures import Cvec
 
 from test.params.alt import VAC
 from test.params.fluids import Air_SG_SI
-from test.params.reactive import NM_CC_SI
+from test.params.reactive import NM_CC_SI, C4_JWL_SI
 from test.params.solids import Steel_SMGP_SI
 
 
@@ -16,8 +16,10 @@ def confined_explosive():
 
         LSET = 3
     """
+    BACK_PLATE = False
+
     Lx = 0.06271
-    Ly = 0.1
+    Ly = 0.094065
     nx = 200
     tf = 4.9e-6
 
@@ -25,11 +27,11 @@ def confined_explosive():
     dX = [Lx / nx, Ly / ny]
 
     MPm = Steel_SMGP_SI
-    MPe = NM_CC_SI
+    MPe = C4_JWL_SI
 
     pm = 0
     pe = 1e5
-    v1 = array([1800, 0, 0])
+    v1 = array([700, 0, 0])
     v = zeros(3)
     A = eye(3)
 
@@ -38,7 +40,7 @@ def confined_explosive():
 
     Qm1 = pad(Cvec(MPm.ρ0, pm, v1, MPm, A, λ=0), (0, 3), 'constant')
     Qm2 = pad(Cvec(MPm.ρ0, pm, v, MPm, A, λ=0), (0, 3), 'constant')
-    Qe = pad(Cvec(MPe.ρ0, pe, v, MPe, A, λ=1), (0, 3), 'constant')
+    Qe = pad(Cvec(MPe.ρ0, 0, v, MPe, A, λ=1), (0, 3), 'constant')
 
     u = zeros([nx, ny, 18])
 
@@ -48,18 +50,31 @@ def confined_explosive():
             y = (j+0.5) * dX[1]
 
             # projectile
-            if x <= 0.05 and 0.041 <= y <= 0.059:
+            if x <= 0.05 and 0.0380325 <= y <= 0.0560325:
                 u[i, j] = Qm1
                 u[i, j, -3] = 1
                 u[i, j, -2] = 1
                 u[i, j, -1] = 1
 
-            # plates
-            elif 0.05 <= x <= 0.05318 or 0.05953 <= x:
+            # front plate
+            elif 0.05 <= x <= 0.05318:
                 u[i, j] = Qm2
                 u[i, j, -3] = 1
                 u[i, j, -2] = 1
                 u[i, j, -1] = -1
+
+            # back plate
+            elif 0.05953 <= x:
+                if BACK_PLATE:
+                    u[i, j] = Qm2
+                    u[i, j, -3] = 1
+                    u[i, j, -2] = 1
+                    u[i, j, -1] = -1
+                else:
+                    u[i, j] = Qe
+                    u[i, j, -3] = 1
+                    u[i, j, -2] = -1
+                    u[i, j, -1] = -1
 
             # explosive
             elif 0.05318 <= x <= 0.05953:
@@ -74,7 +89,7 @@ def confined_explosive():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    #u = u[int(nx/2):]
+    #u = u[:, int(ny/2):]
 
     return u, MPs, tf, dX, 'transitive'
 
@@ -151,6 +166,6 @@ def rod_impact():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    #u = u[int(nx/2):]
+    u = u[:, int(ny/2):]
 
-    return u, MPs, tf, dX, 'transitive'
+    return u, MPs, tf, dX, 'halfy'

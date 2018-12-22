@@ -41,7 +41,9 @@ def aluminium_plates():
         FLUX = 0
 
         LSET = 2
+        RIEMANN_STICK = false
         RIEMANN_RELAXATION = true
+        STAR_TOL = 1e-8
     """
     MP = Al_GRP_SI
 
@@ -94,9 +96,12 @@ def aluminium_plates():
 
 def rod_penetration():
     """ N = 2
-        cfl = 0.5
+        cfl = 0.8
         SPLIT = True
         FLUX = 0
+
+        LSET = 2
+        RIEMANN_RELAXATION = true
     """
     D = 0.029
     V = -1250
@@ -151,9 +156,9 @@ def rod_penetration():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    #u = u[int(nx/2):]
+    u = u[int(nx/2):]
 
-    return u, MPs, tf, dX, 'transitive'
+    return u, MPs, tf, dX, 'halfx'
 
 
 def taylor_bar():
@@ -164,7 +169,9 @@ def taylor_bar():
 
         LSET = 1
         DESTRESS = false
+        RIEMANN_STICK = false
         RIEMANN_RELAXATION = true
+        STAR_TOL = 1e-8
     """
     Lx = 200
     Ly = 550
@@ -198,6 +205,6 @@ def taylor_bar():
             else:
                 u[i, j, -1] = -1
 
-    #u = u[int(nx/2):]
+    u = u[int(nx/2):]
 
-    return u, MPs, tf, dX, 'slip'
+    return u, MPs, tf, dX, 'halfx'
