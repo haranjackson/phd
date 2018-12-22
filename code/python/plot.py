@@ -78,7 +78,7 @@ def plot2d(x, plotType, y=None, vmin=None, vmax=None, lsets=None, symaxis=-1):
 
 def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
                   vmin, vmax, i=None, j=None, takeNorm=False, offset=0,
-                  symaxis=-1):
+                  symaxis=-1, excludeMats=[]):
 
     shape = u.shape[:-1]
     n = prod(shape)
@@ -90,7 +90,7 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
         ind = get_material_index(Q, nmat)
         MP = MPs[ind]
 
-        if MP.EOS > -1:  # not a vacuum
+        if MP.EOS > -1 and ind not in excludeMats:  # not a vacuum
             P = State(Q, MP)
 
             if isinstance(getattr(P, attr), MethodType):
@@ -126,24 +126,26 @@ def plot_compound(u, MPs, style, x, lab, col, title, sci, attr, plotType,
 
 def plot_density(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
                  square=0, plotType='colormap', vmin=None, vmax=None,
-                 symaxis=-1):
+                 symaxis=-1, excludeMats=[]):
 
     figure(0, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Density', sci, 'ρ', plotType,
-                  vmin, vmax, symaxis=symaxis)
+                  vmin, vmax, symaxis=symaxis, excludeMats=excludeMats)
 
 
 def plot_energy(u, MPs, style='-', x=None, lab=None, col=None, sci=0, square=0,
-                plotType='colormap', vmin=None, vmax=None, symaxis=-1):
+                plotType='colormap', vmin=None, vmax=None, symaxis=-1,
+                excludeMats=[]):
 
     figure(1, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Total Energy',
-                  sci, 'E', plotType, vmin, vmax, symaxis=symaxis)
+                  sci, 'E', plotType, vmin, vmax, symaxis=symaxis,
+                  excludeMats=excludeMats)
 
 
 def plot_velocity(u, MPs, i=0, style='-', x=None, lab=None, col=None, sci=0,
                   square=0, plotType='streams', vmin=None, vmax=None,
-                  symaxis=-1):
+                  symaxis=-1, excludeMats=[]):
 
     figure(2 + i, figsize=fig_size(square))
 
@@ -152,12 +154,13 @@ def plot_velocity(u, MPs, i=0, style='-', x=None, lab=None, col=None, sci=0,
     else:
         plot_compound(u, MPs, style, x, lab, col,
                       'Velocity Component %d' % (i + 1),
-                      sci, 'v', plotType, vmin, vmax, i=i, symaxis=symaxis)
+                      sci, 'v', plotType, vmin, vmax, i=i, symaxis=symaxis,
+                      excludeMats=excludeMats)
 
 
 def plot_distortion(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
                     fig=None, square=0, plotType='colormap', vmin=None,
-                    vmax=None, symaxis=-1):
+                    vmax=None, symaxis=-1, excludeMats=[]):
 
     ind = 5 + i * 3 + j
     if fig is None:
@@ -165,49 +168,53 @@ def plot_distortion(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
                   'Distortion Component %d,%d' % (i + 1, j + 1), sci, 'A',
-                  plotType, vmin, vmax, i=i, j=j, symaxis=symaxis)
+                  plotType, vmin, vmax, i=i, j=j, symaxis=symaxis,
+                  excludeMats=excludeMats)
 
 
 def plot_thermal_impulse(u, MPs, i, style='-', x=None, lab=None, col=None,
                          sci=0, square=0, plotType='colormap', vmin=None,
-                         vmax=None, symaxis=-1):
+                         vmax=None, symaxis=-1, excludeMats=[]):
 
     figure(14 + i, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
                   'Thermal Impulse Component %d' % (i + 1), sci, 'J',
-                  plotType, vmin, vmax, symaxis=symaxis)
+                  plotType, vmin, vmax, symaxis=symaxis,
+                  excludeMats=excludeMats)
 
 
 def plot_concentration(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
                        square=0, plotType='colormap', vmin=None, vmax=None,
-                       symaxis=-1):
+                       symaxis=-1, excludeMats=[]):
 
     figure(18, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Concentration', sci, 'λ',
-                  plotType, vmin, vmax, symaxis=symaxis)
+                  plotType, vmin, vmax, symaxis=symaxis,
+                  excludeMats=excludeMats)
 
 
 def plot_pressure(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
                   square=0, plotType='colormap', vmin=None, vmax=None,
-                  symaxis=-1):
+                  symaxis=-1, excludeMats=[]):
 
     figure(19, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Pressure', sci, 'p', plotType,
-                  vmin, vmax, symaxis=symaxis)
+                  vmin, vmax, symaxis=symaxis, excludeMats=excludeMats)
 
 
 def plot_temperature(u, MPs, style='-', x=None, lab=None, col=None, sci=0,
                      square=0, plotType='colormap', vmin=None, vmax=None, T0=0,
-                     symaxis=-1):
+                     symaxis=-1, excludeMats=[]):
 
     figure(20, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col, 'Temperature', sci, 'T',
-                  plotType, vmin, vmax, offset=T0, symaxis=symaxis)
+                  plotType, vmin, vmax, offset=T0, symaxis=symaxis,
+                  excludeMats=excludeMats)
 
 
 def plot_sigma(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
                fig=None, square=0, plotType='colormap', vmin=None, vmax=None,
-               takeNorm=False, symaxis=-1):
+               takeNorm=False, symaxis=-1, excludeMats=[]):
 
     if takeNorm:
         if fig is None:
@@ -229,28 +236,29 @@ def plot_sigma(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
 
 def plot_Sigma(u, MPs, i, j, style='-', x=None, lab=None, col=None, sci=0,
                fig=None, square=0, plotType='colormap', vmin=None, vmax=None,
-               symaxis=-1):
+               symaxis=-1, excludeMats=[]):
 
     if fig is None:
         fig = 21 + i * 3 + j
     figure(fig, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
                   'Total Stress Component %d,%d' % (i + 1, j + 1), sci, 'Σ',
-                  plotType, vmin, vmax, i=i, j=j, symaxis=symaxis)
+                  plotType, vmin, vmax, i=i, j=j, symaxis=symaxis,
+                  excludeMats=excludeMats)
 
 
 def plot_heat_flux(u, MPs, i, style='-', x=None, lab=None, col=None, sci=0,
                    square=0, plotType='colormap', vmin=None, vmax=None,
-                   symaxis=-1):
+                   symaxis=-1, excludeMats=[]):
 
     figure(30 + i, figsize=fig_size(square))
     plot_compound(u, MPs, style, x, lab, col,
                   'Heat Flux Component %d' % (i + 1), sci, 'q', plotType,
-                  vmin, vmax, i=i, symaxis=symaxis)
+                  vmin, vmax, i=i, symaxis=symaxis, excludeMats=excludeMats)
 
 
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,
-                  square=0, symaxis=-1):
+                  square=0, symaxis=-1, excludeMats=[]):
 
     figure(34, figsize=fig_size(square))
 
@@ -260,13 +268,14 @@ def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,
                (var), xlab='x', sci=sci)
 
     elif NDIM == 2:
-        plot2d(u[:, :, var], 'colormap', symaxis=symaxis)
+        plot2d(u[:, :, var], 'colormap', symaxis=symaxis,
+               excludeMats=excludeMats)
 
 
-def plot_primitives(u, MPs, style='-', x=None, symaxis=-1):
-    plot_density(u, style=style, x=x, symaxis=symaxis)
-    plot_velocity(u, 0, style=style, x=x, symaxis=symaxis)
-    plot_pressure(u, MPs, style=style, x=x, symaxis=symaxis)
+def plot_primitives(u, MPs, style='-', x=None):
+    plot_density(u, style=style, x=x)
+    plot_velocity(u, 0, style=style, x=x)
+    plot_pressure(u, MPs, style=style, x=x)
 
 
 def plot_interfaces(u, figNum=None, loc=None, col=None):
