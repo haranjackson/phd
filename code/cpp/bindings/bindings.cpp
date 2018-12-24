@@ -154,11 +154,21 @@ PYBIND11_MODULE(GPRpy, m) {
       .def_readwrite("Bc", &Par::Bc)
       .def_readwrite("Ea", &Par::Ea)
       .def_readwrite("Rc", &Par::Rc)
+      .def_readwrite("I", &Par::I)
       .def_readwrite("G1", &Par::G1)
+      .def_readwrite("G2", &Par::G2)
       .def_readwrite("a", &Par::a)
       .def_readwrite("b", &Par::b)
+      .def_readwrite("c", &Par::c)
       .def_readwrite("d", &Par::d)
-      .def_readwrite("λ0", &Par::λ0);
+      .def_readwrite("e", &Par::e)
+      .def_readwrite("g", &Par::g)
+      .def_readwrite("x", &Par::x)
+      .def_readwrite("y", &Par::y)
+      .def_readwrite("z", &Par::z)
+      .def_readwrite("φI", &Par::φI)
+      .def_readwrite("φG1", &Par::φG1)
+      .def_readwrite("φG2", &Par::φG2);
 
   pybind11::class_<poly>(m_classes, "poly")
       .def(pybind11::init<Vec>())

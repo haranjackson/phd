@@ -32,7 +32,7 @@ def params(MP, Rc, EOS,
            REACTION, Qc,
            Kc, Ti,
            Bc, Ea,
-           G1, a, b, d, λ0,
+           I, G1, G2, a, b, c, d, e, g, x, y, z, φI, φG1, φG2,
            δp,
            MULTI, EOS_2,
            Tref_2, cv_2,
@@ -113,11 +113,21 @@ def params(MP, Rc, EOS,
             MP.Rc = Rc
 
         elif REACTION == 'i':
+            MP.I = I
             MP.G1 = G1
+            MP.G2 = G2
             MP.a = a
             MP.b = b
+            MP.c = c
             MP.d = d
-            MP.λ0 = λ0
+            MP.e = e
+            MP.g = g
+            MP.x = x
+            MP.y = y
+            MP.z = z
+            MP.φI = φI
+            MP.φG1 = φG1
+            MP.φG2 = φG2
 
     else:
         MP.REACTION = -1
@@ -183,7 +193,9 @@ def material_params(EOS, ρ0,
                     REACTION=None, Qc=None,
                     Kc=None, Ti=None,
                     Bc=None, Ea=None, Rc=None,
-                    G1=None, a=None, b=None, d=None, λ0=None,
+                    I=None, G1=None, G2=None,
+                    a=None, b=None, c=None, d=None, e=None, g=None,
+                    x=None, y=None, z=None, φI=None, φG1=None, φG2=None,
                     δp=None,
 
                     MULTI=False, EOS_2=None,
@@ -198,6 +210,7 @@ def material_params(EOS, ρ0,
 
     if EOS == 'vac':
         MP.EOS = -1
+        MP.REACTION = -1
 
     else:
         if Tref is None:
@@ -241,7 +254,7 @@ def material_params(EOS, ρ0,
                REACTION, Qc,
                Kc, Ti,
                Bc, Ea,
-               G1, a, b, d, λ0,
+               I, G1, G2, a, b, c, d, e, g, x, y, z, φI, φG1, φG2,
                δp,
                MULTI, EOS_2,
                Tref_2, cv_2,

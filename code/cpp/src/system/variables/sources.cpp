@@ -110,11 +110,24 @@ double reaction_rate(VecVr Q, Par &MP) {
     return MP.Bc * exp(-MP.Ea / (MP.Rc * T)) * λ;
   }
   case IGNITION_GROWTH: {
+    double ρ = Q(0);
     double p = pressure(Q, MP);
-    double tmp1 = std::pow(λ, MP.a);
-    double tmp2 = std::pow(2 - λ - MP.λ0, MP.b);
-    double tmp3 = std::pow(p, MP.d);
-    return MP.G1 * tmp1 * tmp2 * tmp3;
+    p = std::max(p, 0.);
+    λ = std::min(λ, 1.);
+    double φ = 1 - λ;
+
+    double ret = 0.;
+
+    if (φ < MP.φI)
+      ret += MP.I * std::pow(λ, MP.b) * std::pow(ρ / MP.ρ0 - 1 - MP.a, MP.x);
+
+    if (φ < MP.φG1)
+      ret += MP.G1 * std::pow(λ, MP.c) * std::pow(φ, MP.d) * std::pow(p, MP.y);
+
+    if (φ > MP.φG2)
+      ret += MP.G2 * std::pow(λ, MP.e) * std::pow(φ, MP.g) * std::pow(p, MP.z);
+
+    return std::max(ret, 0.);
   }
   default:
     throw "Reaction type not recognized";

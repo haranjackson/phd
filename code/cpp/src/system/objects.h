@@ -80,11 +80,21 @@ struct Par : Params {
   double Ea;
   double Rc;
 
+  double I;
   double G1;
+  double G2;
   double a;
   double b;
+  double c;
   double d;
-  double λ0;
+  double e;
+  double g;
+  double x;
+  double y;
+  double z;
+  double φI;
+  double φG1;
+  double φG2;
 };
 
 #endif // GPR_OBJECTS_H
