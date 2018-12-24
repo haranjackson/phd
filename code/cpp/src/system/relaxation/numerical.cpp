@@ -18,12 +18,15 @@ void ode_stepper_numerical(VecVr Q, double dt, Par &MP) {
     double ρ = Q(0);
     double λ = Q(mV) / ρ;
 
-    using std::placeholders::_1;
-    std::function<double(double)> f = std::bind(func, _1, Q, MP);
+    if (λ > 0) {
+      using std::placeholders::_1;
+      std::function<double(double)> f = std::bind(func, _1, Q, MP);
 
-    // λ = stiff_ode_solve(λ, dt, f);
-    λ = runge_kutta_launcher(f, dt, λ, 4);
-    λ = std::max(0., λ);
-    Q(mV) = ρ * λ;
+      // λ = stiff_ode_solve(λ, dt, f);
+      λ = runge_kutta_launcher(f, dt, λ, 4);
+
+      λ = std::max(0., λ);
+      Q(mV) = ρ * λ;
+    }
   }
 }
