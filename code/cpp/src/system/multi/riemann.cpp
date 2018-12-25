@@ -34,11 +34,16 @@ bool check_star_convergence(VecVr QL_, VecVr QR_, Par &MPL, Par &MPR) {
     double b02 = std::min(MPL.b02, MPR.b02);
 
     Vec3 ΣR_ = Sigma(QR_, MPR, 0);
-    double vL_0 = QL_(2) / QL_(0);
-    double vR_0 = QR_(2) / QR_(0);
+    Vec3 vL_ = get_ρv(QL_) / QL_(0);
+    Vec3 vR_ = get_ρv(QR_) / QR_(0);
 
-    cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (b02 * ρ0) < STAR_TOL;
-    cond &= std::abs(vL_0 - vR_0) / sqrt(b02) < STAR_TOL;
+    if (RIEMANN_STICK) {
+      cond = (ΣL_ - ΣR_).cwiseAbs().maxCoeff() / (b02 * ρ0) < STAR_TOL;
+      cond &= (vL_ - vR_).cwiseAbs().maxCoeff() / sqrt(b02) < STAR_TOL;
+    } else {
+      cond = std::abs(ΣL_(0) - ΣR_(0)) / (b02 * ρ0) < STAR_TOL;
+      cond &= std::abs(vL_(0) - vR_(0)) / sqrt(b02) < STAR_TOL;
+    }
   } else {
     double ρ0 = MPL.ρ0;
     double b02 = MPL.b02;
