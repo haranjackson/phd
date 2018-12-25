@@ -18,6 +18,10 @@ Cu_GRP_SI = material_params(EOS='gr', ρ0=8900, cv=390, Tref=300,
                             c0=3939, α=1, β=3, γ=2, b0=2141,
                             σY=4.5e7, τ0=0.92, n=10.1)
 
+Cu_GRP_SI2 = material_params(EOS='gr', ρ0=8930, cv=390, Tref=300,
+                             c0=3909, α=1, β=3, γ=2, b0=2100,
+                             σY=7e7, τ0=1, n=10)
+
 Cu_CC_SI = material_params(EOS='cc', ρ0=8900, cv=390,
                            Γ0=2, A=145.67, B=12.87, R1=2.99, R2=4.1, b0=2100)
 
