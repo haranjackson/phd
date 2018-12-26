@@ -203,6 +203,8 @@ void star_stepper(VecVr QL, VecVr QR, Par &MPL, Par &MPR) {
 VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
                      Vecr n) {
 
+  const int IT_LIM = 10;
+
   VecV QL0 = QL_;
 
   Mat3_3 R = rotation_matrix(n);
@@ -211,7 +213,7 @@ VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
 
   int count = 0;
 
-  while (!check_star_convergence(QL_, QR_, MPL, MPR)) {
+  while (!check_star_convergence(QL_, QR_, MPL, MPR) and count < IT_LIM) {
 
     if (RIEMANN_RELAXATION) {
       ode_stepper_analytic(QL_, dt / 2, MPL);
@@ -221,9 +223,10 @@ VecV left_star_state(VecV QL_, VecV QR_, Par &MPL, Par &MPR, double dt,
     star_stepper(QL_, QR_, MPL, MPR);
 
     count += 1;
-    if (count > 50)
-      return QL0;
   }
+  if (QL_.array().isNaN().any())
+    return QL0;
+
   Mat3_3 RT = R.transpose();
   rotate_tensors(QL_, RT);
   return QL_;
