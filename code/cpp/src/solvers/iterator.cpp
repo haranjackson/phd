@@ -33,10 +33,16 @@ void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
       u.segment<LSET>(i * V + V - LSET) = matSum / matCnt;
 
     int mi = get_material_index(u.segment<V>(i * V));
+
     if (MPs[mi].EOS > -1)
       u.segment<V - LSET>(i * V) = grids[mi].segment<V - LSET>(i * V);
     else
       u.segment<V - LSET>(i * V).setZero();
+
+    if (MULTI) {
+      u(i * V + mV) = std::min(u(i * V + mV), u(i * V));
+      u(i * V + mV) = std::max(u(i * V + mV), 0.);
+    }
   }
 }
 
