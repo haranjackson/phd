@@ -29,14 +29,14 @@ void rotate_distortion(Vecr u, std::vector<Par> &MPs) {
     int mi = get_material_index(u.segment<V>(i * V));
     if (MPs[mi].EOS > -1) {
 
-      Mat3_3Map A(u.data() + i * V + 5);
+      Mat3_3 A = get_A(u.segment<V>(i * V));
       Eigen::JacobiSVD<Mat3_3> svd(A, Eigen::ComputeFullV);
 
       Vec3 s = svd.singularValues();
       A = svd.matrixV().transpose();
 
-      for (int i = 0; i < 3; i++)
-        A.row(i) *= s[i];
+      for (int j = 0; j < 3; j++)
+        A.row(j) *= s[j];
     }
   }
 }

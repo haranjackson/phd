@@ -123,15 +123,13 @@ VecV Pvec_to_Cvec(VecV P, Par &MP)
   P.segment<3>(2) = ρ * v;
   P.segment<9>(5) = Vec9Map(A.data());
 
-  double λ;
   if (MULTI)
-  {
-    λ = P(mV);
     P(mV) *= ρ;
-  }
 
   if (MP.REACTION > -1)
   {
+    double λ = P(mV) / ρ;
+
     if (THERMAL)
     {
       Vec3 J = P.segment<3>(14);
