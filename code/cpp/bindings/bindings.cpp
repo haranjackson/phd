@@ -199,6 +199,8 @@ PYBIND11_MODULE(GPRpy, m) {
   m_system.def("block", &block);
   m_system.def("Bdot", &Bdot);
   m_system.def("system_matrix", &system_matrix);
+  m_system.def("reaction_rate", &reaction_rate);
+  m_system.def("ode_stepper_numerical", &ode_stepper_numerical);
 
   m_system.def("max_abs_eigs", &max_abs_eigs);
   m_system.def("thermo_acoustic_tensor", &thermo_acoustic_tensor);
@@ -227,6 +229,8 @@ PYBIND11_MODULE(GPRpy, m) {
   m_solvers.def("make_u", &make_u);
   m_solvers.def("contorted", &contorted);
   m_solvers.def("timestep", &timestep);
+  m_solvers.def("renorm_distortion", &renorm_distortion);
+  m_solvers.def("rotate_distortion", &rotate_distortion);
 
   m_solvers_weno.def("coefficient_matrices", &coefficient_matrices);
   m_solvers_weno.def("oscillation_indicator", &oscillation_indicator);

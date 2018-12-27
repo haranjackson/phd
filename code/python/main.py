@@ -11,7 +11,7 @@ from store import save_results
 T = test.aluminium_plates
 
 N = 2
-cfl = 0.5
+cfl = 0.8
 SPLIT = True
 FLUX = 0
 contorted_tol = 1.

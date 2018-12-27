@@ -17,7 +17,7 @@ const bool ROTATE_DISTORTION = false;
 
 // RGFM //
 const bool RIEMANN_STICK = false;
-const bool RIEMANN_RELAXATION = false;
+const bool RIEMANN_RELAXATION = true;
 const double STAR_TOL = 1e-8;
 
 // WENO //
