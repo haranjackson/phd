@@ -1836,131 +1836,44 @@ where
 \end_layout
 
 \begin_layout Standard
-Taking just the temporal evolution of the system, note that by combining
- 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:FirstContinuityEquationMultiphase"
-plural "false"
-caps "false"
-noprefix "false"
+A more sophisticated model yet is the ignition and growth model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lee_phenomenological_1980"
+literal "false"
 
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+K & =I\lambda^{b}\left(\frac{\rho}{\rho_{0}}-1-a\right)^{x}H\left(\phi_{I}-\phi\right)\\
+ & +G_{1}\lambda^{c}\phi^{d}p^{y}H\left(\phi_{G1}-\phi\right)\nonumber \\
+ & +G_{2}\lambda^{e}\phi^{g}p^{z}H\left(\phi-\phi_{G2}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\phi=1-\lambda$
 \end_inset
 
 , 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:ReactionEquation"
-plural "false"
-caps "false"
-noprefix "false"
-
+\begin_inset Formula $H$
 \end_inset
 
- we obtain:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{d\lambda}{dt}=-K
-\end{equation}
-
+ is the Heaviside function, and 
+\begin_inset Formula $I,G_{1},G_{2},a,b,c,d,e,g,x,y,z,\phi_{I},\phi_{G1},\phi_{G2}$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Consider 
-\begin_inset Formula $\lambda$
-\end_inset
-
- as a function of time, and denote 
-\begin_inset Formula $\lambda\left(0\right)=\lambda_{0}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-For discrete ignition temperature reaction kinetics, if 
-\begin_inset Formula $T\left(0\right)\geq T_{i}$
-\end_inset
-
- then 
-\begin_inset Formula $\lambda$
-\end_inset
-
- will decrease monotonically over time, raising the temperature as it does
- so.
- If 
-\begin_inset Formula $T\left(0\right)<T_{i}$
-\end_inset
-
- then no reaction will occur.
- Thus, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\lambda\left(t\right)=\begin{cases}
-\lambda_{0}e^{-K_{0}t} & T\left(0\right)\geq T_{i}\\
-0 & T<T_{i}
-\end{cases}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For Arrhenius reaction kinetics, note that we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-T & =T_{ref}\phi\left(\rho\right)+\frac{E-E_{2}\left(\rho,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)+Q_{c}\left(1-\lambda\right)-e_{ref}\left(\rho\right)}{c_{v}}\\
- & =T_{ref}\phi\left(\rho\right)+\frac{E-E_{2}\left(\rho,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)+Q_{c}-e_{ref}\left(\rho\right)}{c_{v}}-\frac{Q_{c}}{c_{v}}\lambda\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-K & =e^{-\frac{c}{a-b\lambda}}\lambda\\
- & =e^{-\frac{c/a}{1-b\lambda/a}}\lambda\nonumber \\
- & =e^{-\frac{c}{a}\left(1+\frac{b\lambda}{a}+\left(\frac{b\lambda}{a}\right)^{2}+\cdots\right)}\lambda\nonumber \\
- & =e^{-\frac{c}{a}}e^{-\frac{c}{a}\left(\frac{b\lambda}{a}+\left(\frac{b\lambda}{a}\right)^{2}+\cdots\right)}\lambda
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that this expression is valid, as 
-\begin_inset Formula $T>0$
-\end_inset
-
-, implying that 
-\begin_inset Formula $a>b\lambda>0$
-\end_inset
-
- (i.e.
- 
-\begin_inset Formula $\left|\frac{b\lambda}{a}\right|<1$
-\end_inset
-
-).
+ are constants depending on the material being modeled.
 \end_layout
 
 \begin_layout Section

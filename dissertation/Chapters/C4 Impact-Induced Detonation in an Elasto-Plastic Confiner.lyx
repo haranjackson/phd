@@ -84,7 +84,7 @@
 \begin_body
 
 \begin_layout Chapter
-Impact-Induced Detonation in an Elasto-Plastic Confiner
+Impact-Induced Detonation in an Elastoplastic Confiner
 \end_layout
 
 \begin_layout Section
@@ -169,7 +169,7 @@ The Taylor bar test, using a slip boundary condition (left) and stick boundary
 \end_layout
 
 \begin_layout Section
-Aluminium Plate Impact
+Aluminum Plate Impact
 \end_layout
 
 \begin_layout Standard
@@ -182,7 +182,7 @@ literal "false"
 \end_inset
 
 .
- An aluminium projectile impacts upon an aluminium plate at 400m/s.
+ An aluminum projectile impacts upon an aluminum plate at 400m/s.
  The domain is 
 \begin_inset Formula $\left[0,0.03\right]\times\left[0,0.04\right]$
 \end_inset
