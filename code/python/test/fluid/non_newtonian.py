@@ -104,7 +104,7 @@ def lid_driven_cavity():
         N = 3
         cfl = 0.5 / 0.2
         SPLIT = True
-        SOLVER = 'rusanov'
+        FLUX = 0
         contorted_tol = 0.03
 
         NO_CORNERS = true
@@ -130,8 +130,7 @@ def lid_driven_cavity():
     if BINGHAM:
         Bi = 10
         σY = Bi * μ / Lx
-        MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ,
-                             b0=1, μ=μ, σY=σY)
+        MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ, b0=1, μ=μ, σY=σY)
     else:
         MP = material_params(EOS='sg', ρ0=ρ, cv=2.5, γ=γ, b0=1, μ=μ, n=n)
 

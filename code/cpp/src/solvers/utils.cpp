@@ -33,10 +33,10 @@ void rotate_distortion(Vecr u, std::vector<Par> &MPs) {
       Eigen::JacobiSVD<Mat3_3> svd(A, Eigen::ComputeFullV);
 
       Vec3 s = svd.singularValues();
-      A = svd.matrixV().transpose();
+      A = svd.matrixV();
 
       for (int j = 0; j < 3; j++)
-        A.row(j) *= s[j];
+        u.segment<3>(i * V + 5 + 3 * j) = s(j) * A.col(j);
     }
   }
 }
