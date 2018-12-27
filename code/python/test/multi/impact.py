@@ -1,5 +1,5 @@
 from matplotlib.pyplot import figure, plot
-from numpy import array, eye, pad, zeros
+from numpy import array, eye, linspace, pad, zeros
 
 from gpr.misc.structures import Cvec, State
 
@@ -9,29 +9,47 @@ from test.params.solids import Al_GRP_SI, W_SMGP_SI, Steel_SMGP_SI, Al_SMGP_CGS
 
 def gauge_plot(uList, MPs):
 
+    dt = 5e-6 / 100
+
+    x = [0.0018125 + 0.006 + 0.003625 * i for i in range(5)]
+
     n = len(uList)
     nx, ny = uList[0].shape[:2]
+    x_ = linspace(0, 5e-6, n)
 
-    ρy = zeros([5, n])
+    vy = zeros([5, n])
     py = zeros([5, n])
+    ρy = zeros([5, n])
+    Σy = zeros([5, n])
 
     # j0 = int(ny / 2)
     j0 = 0
-    for i in range(5):
-        i0 = int((0.0018125 + 0.006 + 0.003625 * i) / 0.03 * nx)
-        for j in range(n):
+    for j in range(n):
+        for i in range(5):
+            i0 = int(x[i] / 0.03 * nx)
             Q = uList[j][i0, j0]
             P = State(Q, MPs[1])
-            ρy[i, j] = P.ρ
+            vy[i, j] = P.v[0]
             py[i, j] = P.p()
+            ρy[i, j] = P.ρ
+            Σy[i, j] = P.Σ()[0, 0]
+            x[i] += P.v[0] * dt
 
     figure(1)
     for i in range(5):
-        plot(ρy[i])
+        plot(x_, vy[i])
 
     figure(2)
     for i in range(5):
-        plot(py[i])
+        plot(x_, py[i])
+
+    figure(3)
+    for i in range(5):
+        plot(x_, ρy[i])
+
+    figure(4)
+    for i in range(5):
+        plot(x_, -Σy[i])
 
 
 def aluminium_plates():
