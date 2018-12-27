@@ -79,8 +79,23 @@
 \begin_body
 
 \begin_layout researchoutput
-During my PhD, I acted as a reviewer for the Journal of Computational Physics.
- The following materials were produced over the course of my programme.
+The working repository for my PhD project is available at 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/phd"
+target "https://github.com/haranjackson/phd"
+literal "false"
+
+\end_inset
+
+.
+ This contains all the code required to produce the tests presented within
+ this dissertation.
+\end_layout
+
+\begin_layout researchoutput
+Over the course of my PhD, in addition to the output listed below, I acted
+ as a reviewer for the Journal of Computational Physics.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -90,17 +105,8 @@ Publications
 \begin_layout Itemize
 H Jackson, N Nikiforakis, 
 \shape italic
-Fast numerical schemes for plastic simulation with the Godunov-Peshkov-Romenski
- model
-\shape default
- (in preparation)
-\end_layout
-
-\begin_layout Itemize
-H Jackson, G Harcombe, N Nikiforakis, 
-\shape italic
-A solver based on eigendecomposition of the Cauchy tensor for Godunov-Romenski-t
-ype continuum models
+A unified framework for simulation impact-induced detonation in an elastoplastic
+ confiner
 \shape default
  (in preparation)
 \end_layout
@@ -108,10 +114,18 @@ ype continuum models
 \begin_layout Itemize
 H Jackson, N Nikiforakis, 
 \shape italic
-A Riemann ghost fluid method for modeling multimaterial interfaces with
- the GPR model
+A Riemann ghost fluid method for the GPR model
 \shape default
  (in preparation)
+\end_layout
+
+\begin_layout Itemize
+H Jackson, N Nikiforakis, 
+\shape italic
+A numerical scheme for non-Newtonian fluids and plastic solids under the
+ GPR model
+\shape default
+ (submitted to Journal of Computational Physics)
 \end_layout
 
 \begin_layout Itemize
@@ -147,30 +161,30 @@ Conference Presentations
 \begin_layout Itemize
 International Conference on Computational Science 2017 (Zürich, CH), 
 \shape italic
-Paper: A Fast Numerical Scheme for the Godunov-Peshkov-Romenski Model of
- Continuum Mechanics
+Paper: A fast numerical scheme for the Godunov-Peshkov-Romenski model of
+ continuum mechanics
 \end_layout
 
 \begin_layout Itemize
 SIAM International Conference on Numerical Combustion 2017 (Orlando, FL),
  
 \shape italic
-Minisymposium: A New Approach for Cook-off Modeling
+Mini-symposium: A new approach for cookoff modeling
 \end_layout
 
 \begin_layout Itemize
 Scientific Computation in the University of Cambridge Seminar Day 2017 (Cambridg
 e, UK), 
 \shape italic
-Poster: A Numerical Method based on Operator Splitting for the GPR Model
- of Continuum Mechanics
+Poster: A numerical method based on operator splitting for the GPR model
+ of continuum mechanics
 \end_layout
 
 \begin_layout Itemize
 Cavendish Graduate Student Conference 2016 (Cambridge, UK), 
 \shape italic
-Poster: A New Framework for Simulating Multimaterial Systems and Gaseous
- Cookoff
+Poster: A new framework for simulating multimaterial systems and gaseous
+ cookoff
 \end_layout
 
 \begin_layout Subsubsection*
@@ -178,39 +192,98 @@ Open-Source Software
 \end_layout
 
 \begin_layout Itemize
-ADER (pypi.org/project/ADER): The ADER method for solving any (potentially
- very stiff) hyperbolic system of PDEs
+ADER (
+\begin_inset CommandInset href
+LatexCommand href
+name "pypi.org/project/ADER"
+target "https://pypi.org/project/ADER"
+literal "false"
+
+\end_inset
+
+): The ADER method for solving any (potentially very stiff) hyperbolic system
+ of PDEs
 \end_layout
 
 \begin_layout Itemize
-Julia-WENO (github.com/haranjackson/Julia-WENO): An optimized Julia implementatio
-n of the WENO reconstruction algorithm, of any order of accuracy
+LGMRES (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/LGMRES"
+target "https://github.com/haranjackson/LGMRES"
+literal "false"
+
+\end_inset
+
+): A C++ implementation of the LGMRES algorithm, with Python bindings
 \end_layout
 
 \begin_layout Itemize
-Euler1D (github.com/haranjackson/Euler1D): A few first- and second-order
- methods for solving the 1D Euler equations, implemented in C++
+Julia-WENO (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/Julia-WENO"
+target "https://github.com/haranjackson/Julia-WENO"
+literal "false"
+
+\end_inset
+
+): An optimized Julia implementation of the WENO reconstruction algorithm,
+ of any order of accuracy
 \end_layout
 
 \begin_layout Itemize
-ProjectionMethod (github.com/haranjackson/ProjectionMethod): A C++ implementation
- of Chorin’s Project Method
+ProjectionMethod (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/ProjectionMethod"
+target "https://github.com/haranjackson/ProjectionMethod"
+literal "false"
+
+\end_inset
+
+): A C++ implementation of Chorin’s Project Method
 \end_layout
 
 \begin_layout Itemize
-NewtonKrylov (github.com/haranjackson/NewtonKrylov): A C++ implementation
- of the Newton-Krylov algorithm, with Python bindings
+NewtonKrylov (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/NewtonKrylov"
+target "https://github.com/haranjackson/NewtonKrylov"
+literal "false"
+
+\end_inset
+
+): A C++ implementation of the Newton-Krylov algorithm, with Python bindings
 \end_layout
 
 \begin_layout Itemize
-LGMRES (github.com/haranjackson/LGMRES): A C++ implementation of the LGMRES
- algorithm, with Python bindings (1star, 1 fork)
+LegendreGauss (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/LegendreGauss"
+target "https://github.com/haranjackson/LegendreGauss"
+literal "false"
+
+\end_inset
+
+): C++ code to compute the Legendre-Gauss nodes and weights on [-1,1], based
+ on NumPy’s leggauss function
 \end_layout
 
 \begin_layout Itemize
-LegendreGauss (github.com/haranjackson/LegendreGauss): C++ code to compute
- the Legendre-Gauss nodes and weights on [-1,1], based on NumPy’s leggauss
- function
+Euler1D (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/Euler1D"
+target "https://github.com/haranjackson/Euler1D"
+literal "false"
+
+\end_inset
+
+): A few first- and second-order methods for solving the 1D Euler equations,
+ implemented in C++
 \end_layout
 
 \end_body
