@@ -2,7 +2,7 @@ from numpy import zeros
 
 import GPRpy
 
-from gpr.misc.functions import gram
+from gpr.misc.functions import gram, sigma_norm
 from gpr.vars.derivatives import dEdρ, dEdp, dEdA, dEdA_s, dEdJ, dTdρ, dTdp
 from gpr.vars.eos import total_energy
 from gpr.vars.sources import theta1inv, theta2inv, K_arr, K_dis, K_ing, f_δp
@@ -94,6 +94,11 @@ class State():
 
     def f_body(self):
         return f_δp(self.MP)
+
+    def plastic_deformation(self):
+        σ = self.σ()
+        sn = sigma_norm(σ)
+        return sn / self.MP.σY
 
 
 def Cvec(ρ, p, v, MP, A=None, J=None, λ=None):

@@ -257,10 +257,20 @@ def plot_heat_flux(u, MPs, i, style='-', x=None, lab=None, col=None, sci=0,
                   vmin, vmax, i=i, symaxis=symaxis, excludeMats=excludeMats)
 
 
+def plot_plastic_deformation(u, MPs, style='-', x=None, lab=None, col=None,
+                             sci=0, square=0, plotType='colormap', vmin=None,
+                             vmax=None, symaxis=-1, excludeMats=[]):
+
+    figure(34, figsize=fig_size(square))
+    plot_compound(u, MPs, style, x, lab, col, '|σ|/σY', sci,
+                  'plastic_deformation', plotType, vmin, vmax, symaxis=symaxis,
+                  excludeMats=excludeMats)
+
+
 def plot_variable(u, var, style='-', x=None, lab=None, col=None, sci=0,
                   square=0, symaxis=-1, excludeMats=[]):
 
-    figure(34, figsize=fig_size(square))
+    figure(35, figsize=fig_size(square))
 
     NDIM = u.ndim - 1
     if NDIM == 1:
