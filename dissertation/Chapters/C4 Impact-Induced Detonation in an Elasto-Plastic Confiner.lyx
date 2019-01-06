@@ -65,8 +65,8 @@
 \end_index
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation indent
-\paragraph_indentation default
+\paragraph_separation skip
+\defskip bigskip
 \is_math_indent 0
 \math_numbering_side default
 \quotes_style english
@@ -95,13 +95,106 @@ Taylor Bar
 This follows a similar form to that found in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "boscheri_cell_2016"
+key "boscheri_cell_2016,maire_nominally_2013"
 literal "false"
 
 \end_inset
 
 .
- 
+ A bar of aluminium of dimensions 
+\begin_inset Formula $100\times500$
+\end_inset
+
+ travels towards a solid wall at speed 
+\begin_inset Formula $0.015$
+\end_inset
+
+.
+ The surrounding environment is a vacuum.
+ The aluminium bar is modelled by the shock Mie-Gruneisen equation of state,
+ with parameters 
+\begin_inset Formula $\rho_{0}=2.785,$
+\end_inset
+
+
+\begin_inset Formula $c_{v}=9\times10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=0.533$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{0}=2$
+\end_inset
+
+, 
+\begin_inset Formula $s=1.338$
+\end_inset
+
+.
+ The aluminium also follows a plasticity law with parameters 
+\begin_inset Formula $b_{0}=0.305$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=0.003$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=20$
+\end_inset
+
+.
+ The domain has dimensions 
+\begin_inset Formula $300\times510$
+\end_inset
+
+, with 
+\begin_inset Formula $\Delta x,\Delta y=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The density and plastic deformation of the bar at times 
+\begin_inset Formula $t=0.0025$
+\end_inset
+
+ and 
+\begin_inset Formula $t=0.005$
+\end_inset
+
+ are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-Taylor-bar"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Unfortunately there are no experimental results for this test, but the
+ reader is asked to note the good agreement here with the results found
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "maire_nominally_2013"
+literal "false"
+
+\end_inset
+
+.
+ In that study, the boundary between the bar and the vacuum is captured
+ using a Lagrangian scheme, and it is reassuring that the same behaviour
+ is captured here with a characteristically different numerical method.
 \end_layout
 
 \begin_layout Standard
@@ -121,7 +214,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../Figures/C4/taylor_bar/stick0.0025.png
+	filename ../Figures/C4/taylor_bar/slip0.005.png
 	lyxscale 30
 	width 50text%
 
@@ -133,7 +226,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../Figures/C4/taylor_bar/slip0.005.png
+	filename ../Figures/C4/taylor_bar/|σ|_slip0.0025.png
 	lyxscale 30
 	width 50text%
 
@@ -141,7 +234,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../Figures/C4/taylor_bar/stick0.005.png
+	filename ../Figures/C4/taylor_bar/|σ|_slip0.005.png
 	lyxscale 30
 	width 50text%
 
@@ -154,8 +247,22 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-The Taylor bar test, using a slip boundary condition (left) and stick boundary
- condition (right), for times 0.0025 (top) and 0.005 (bottom)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-Taylor-bar"
+
+\end_inset
+
+Density (top) and plastic deformation (bottom) for the Taylor bar test,
+ at times 
+\begin_inset Formula $t=0.0025$
+\end_inset
+
+ (left) and 
+\begin_inset Formula $t=0.005$
+\end_inset
+
+ (right)
 \end_layout
 
 \end_inset
@@ -181,8 +288,20 @@ literal "false"
 
 \end_inset
 
+ (based on the original formulation found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "howell_free-lagrange_2002"
+literal "false"
+
+\end_inset
+
+).
+ An aluminum projectile impacts upon an aluminum plate at 
+\begin_inset Formula $400$
+\end_inset
+
 .
- An aluminum projectile impacts upon an aluminum plate at 400m/s.
  The domain is 
 \begin_inset Formula $\left[0,0.03\right]\times\left[0,0.04\right]$
 \end_inset
@@ -196,7 +315,113 @@ literal "false"
 \end_inset
 
 .
- The surroundings are taken to be vacuum.
+ We have 
+\begin_inset Formula $\Delta x,\Delta y=10^{-4}$
+\end_inset
+
+.
+ The surroundings are taken to be a vacuum.
+ The aluminium follows a Godunov-Romenski EOS with parameters 
+\begin_inset Formula $\rho_{0}=2710$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=900$
+\end_inset
+
+, 
+\begin_inset Formula $T_{0}=300$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=5037$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\beta=3.577$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=2.088$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=3160$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=4\times10^{8}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=100$
+\end_inset
+
+.
+ Gauges are placed initially at 
+\begin_inset Formula $x=0.0078125$
+\end_inset
+
+, 
+\begin_inset Formula $0.0114375$
+\end_inset
+
+, 
+\begin_inset Formula $0.0150625$
+\end_inset
+
+, 
+\begin_inset Formula $0.0186875$
+\end_inset
+
+, 
+\begin_inset Formula $0.0223125$
+\end_inset
+
+ to measure the state variables over time, and these gauges are permitted
+ to move with the local velocity of the material.
+ The test is run until time 
+\begin_inset Formula $t=5\times10^{-6}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The pressure contours throughout the aluminium are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-aluminium-plate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and plots over time of the 
+\begin_inset Formula $x$
+\end_inset
+
+-velocity, pressure, density, and total stress - as measured by the gauges
+ - are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-aluminium-plate-2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -249,7 +474,13 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-The aluminium plate impact test, at times 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-aluminium-plate"
+
+\end_inset
+
+Pressure contour plots for the aluminium plate impact test, at times 
 \begin_inset Formula $0.5\mu s$
 \end_inset
 
@@ -328,7 +559,17 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Velocity, pressure, density, and total stress over time, as measured by
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-aluminium-plate-2"
+
+\end_inset
+
+
+\begin_inset Formula $x$
+\end_inset
+
+-velocity, pressure, density, and total stress over time, as measured by
  the various gauges of the aluminium plate impact test
 \end_layout
 
@@ -343,7 +584,167 @@ Velocity, pressure, density, and total stress over time, as measured by
 \end_layout
 
 \begin_layout Section
-Confined Detonation
+Confined C4 Detonation
+\end_layout
+
+\begin_layout Standard
+This test is a variation of that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+.
+ A steel bar of length 0.03 and width 0.018 impacts upon C4 of depth 0.009,
+ which is confined by two steel plates of depth 0.003.
+ The bar is initially traveling with speed 700.
+ The system is surrounded by air.
+\end_layout
+
+\begin_layout Standard
+The steel is modeled using a shock Mie-Gruneisen EOS, with parameters 
+\begin_inset Formula $\rho_{0}=7870$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=134$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=4569$
+\end_inset
+
+, 
+\begin_inset Formula $Γ_{0}=2.17$
+\end_inset
+
+, 
+\begin_inset Formula $s=1.49$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=3235$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=0.53\times10^{9}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=10$
+\end_inset
+
+.
+ The C4 is modeled using a JWL EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1601$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.487\times10^{6}/1601$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{0}=0.8938$
+\end_inset
+
+, 
+\begin_inset Formula $A=7.781\times10^{13}$
+\end_inset
+
+, 
+\begin_inset Formula $B=-5.031\times10^{9}$
+\end_inset
+
+, 
+\begin_inset Formula $R_{1}=11.3$
+\end_inset
+
+, 
+\begin_inset Formula $R_{2}=1.13$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=1487$
+\end_inset
+
+.
+ The air is modeled using an ideal gas EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1.18$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=50$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.85\times10^{-5}$
+\end_inset
+
+.
+ The reaction of the C4 is captured using the ignition and growth model,
+ with parameters 
+\begin_inset Formula $Q=9\times10^{9}/1601$
+\end_inset
+
+, 
+\begin_inset Formula $I=4\times10^{6}$
+\end_inset
+
+, 
+\begin_inset Formula $G_{1}=1.4\times10^{-20}$
+\end_inset
+
+, 
+\begin_inset Formula $G_{2}=0$
+\end_inset
+
+, 
+\begin_inset Formula $a=0.0367$
+\end_inset
+
+, 
+\begin_inset Formula $b=2/3$
+\end_inset
+
+, 
+\begin_inset Formula $c=2/3$
+\end_inset
+
+, 
+\begin_inset Formula $d=1/3$
+\end_inset
+
+, 
+\begin_inset Formula $x=7$
+\end_inset
+
+, 
+\begin_inset Formula $y=2$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{I}=0.022$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{G1}=1$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -396,6 +797,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation"
+
+\end_inset
+
 Pressure (left) and reactant concentration (right) for the confined detonation
  test, at times 
 \begin_inset Formula $2.4\mu s$
@@ -419,7 +826,7 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 \end_layout
 
 \begin_layout Section
-Confined Detonation without Back Plate
+Confined C4 Detonation without Back Plate
 \end_layout
 
 \begin_layout Standard
@@ -472,6 +879,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation-no-backplate"
+
+\end_inset
+
 Pressure (left) and reactant concentration (right) for the confined detonation
  test (without back plate), at times 
 \begin_inset Formula $2.4\mu s$
@@ -495,7 +908,7 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 \end_layout
 
 \begin_layout Section
-Confined Detonation with Air Gap
+Confined C4 Detonation with Air Gap
 \end_layout
 
 \begin_layout Standard
@@ -548,6 +961,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation-airgap"
+
+\end_inset
+
 Pressure (left) and reactant concentration (right) for the confined detonation
  test (with air gap), at times 
 \begin_inset Formula $2.4\mu s$
@@ -568,6 +987,10 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Confined Nitromethane Detonation with Air Gap
 \end_layout
 
 \begin_layout Standard

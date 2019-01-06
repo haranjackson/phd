@@ -22,6 +22,7 @@ def confined_explosive():
     """
     BACK_PLATE = False
     AIR_GAP = False
+    NITRO = False
 
     Lx = 0.051
     Ly = 0.09
@@ -35,8 +36,12 @@ def confined_explosive():
     dX = [Lx / nx, Ly / ny]
 
     MPm = Steel_SMGP_SI
-    MPe = C4_JWL_SI
     MPa = Air_SG_SI
+
+    if NITRO:
+        MPe = NM_CC_SI
+    else:
+        MPe = C4_JWL_SI
 
     pm = 1e5
     pe = 1e5

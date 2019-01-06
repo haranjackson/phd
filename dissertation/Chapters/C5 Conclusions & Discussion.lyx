@@ -94,6 +94,22 @@ name "chap:Conclusions-&-Discussion"
 
 \end_layout
 
+\begin_layout Section
+Improvements
+\end_layout
+
+\begin_layout Itemize
+Ensure conservation in multiple dimensions
+\end_layout
+
+\begin_layout Itemize
+Treat interfaces implicitly
+\end_layout
+
+\begin_layout Itemize
+Incorporate plasmas
+\end_layout
+
 \begin_layout Standard
 \begin_inset Branch ChildOnly
 inverted 0

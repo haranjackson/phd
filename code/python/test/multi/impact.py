@@ -192,7 +192,7 @@ def taylor_bar():
         STAR_TOL = 1e-8
     """
     Lx = 200
-    Ly = 550
+    Ly = 510
     tf = 5e3
     nx = 200
     ny = int(nx * Ly / Lx)
@@ -215,7 +215,7 @@ def taylor_bar():
             y = (j+0.5) * dX[1]
 
             # projectile
-            if Lx / 4 <= x <= 3 * Lx / 4 and y <= 5.5 * Ly / 6:
+            if Lx / 4 <= x <= 3 * Lx / 4 and y <= 5 * Ly / 5.1:
                 u[i, j] = Q
                 u[i, j, -1] = 1
 
