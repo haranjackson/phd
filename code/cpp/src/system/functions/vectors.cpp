@@ -88,8 +88,8 @@ VecV Cvec_to_Pvec(VecV Q, Par &MP)
   // of conserved variables (typical ordering)
   double ρ = Q(0);
   double p = pressure(Q, MP);
-  Vec3Map ρv = get_ρv(Q);
-  Mat3_3Map A = get_A(Q);
+  Vec3 ρv = get_ρv(Q);
+  Mat3_3 A = get_A(Q);
 
   Q(1) = p;
   Q.segment<3>(2) = A.col(0);
