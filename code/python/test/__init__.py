@@ -5,5 +5,6 @@ from test.multi import aluminium_plates, rod_penetration, taylor_bar, \
     water_air, helium_bubble, pbx_copper, aluminium_vacuum, \
     heat_conduction_multi, confined_explosive, rod_impact
 
-from test.solid import barton, pure_elastic, piston, piston_bc, \
-    cylindrical_shock
+from test.reactive import pop_plot
+
+from test.solid import barton, pure_elastic, piston, cylindrical_shock

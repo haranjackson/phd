@@ -1,4 +1,3 @@
-from numba import jit
 from numpy import array, dot, eye, sqrt
 
 
@@ -18,12 +17,10 @@ def lim(x):
 """ MATRIX FUNCTIONS """
 
 
-@jit
 def tr(X):
     return X[0, 0] + X[1, 1] + X[2, 2]
 
 
-@jit
 def det3(X):
     return (X[0][0] * (X[1][1] * X[2][2] - X[2][1] * X[1][2])
             - X[1][0] * (X[0][1] * X[2][2] - X[2][1] * X[0][2])
@@ -33,12 +30,10 @@ def det3(X):
 """ NORMS """
 
 
-@jit
 def L2_1D(x):
     return x[0]**2 + x[1]**2 + x[2]**2
 
 
-@jit
 def L2_2D(X):
     """ Returns sum(Xij^2)
     """
@@ -47,7 +42,6 @@ def L2_2D(X):
             + X[2, 0]**2 + X[2, 1]**2 + X[2, 2]**2)
 
 
-@jit
 def sigma_norm(σ):
     """ Returns the norm defined in Boscheri et al
         Equal to sqrt(3/2) * |dev(σ)|
@@ -82,19 +76,16 @@ def I_3(G):
 """ DEVIATORS """
 
 
-@jit
 def dev(G):
     """ Returns the deviator of G
     """
     return G - tr(G) / 3 * eye(3)
 
 
-@jit
 def GdevG(G):
     return dot(G, dev(G))
 
 
-@jit
 def AdevG(A, G):
     return dot(A, dev(G))
 
@@ -102,14 +93,12 @@ def AdevG(A, G):
 """ MISC """
 
 
-@jit
 def gram(A):
     """ Returns the Gram matrix for A
     """
     return dot(A.T, A)
 
 
-@jit
 def gram_rev(A):
     """ Returns the Gram matrix for A^T
     """

@@ -1,6 +1,4 @@
-from numpy import array, eye, sqrt, zeros
-
-from ader.etc.boundaries import standard_BC
+from numpy import eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
 
@@ -68,12 +66,6 @@ def piston():
         u[i] = Q
 
     return u, [MP], tf, dX, 'piston_bc'
-
-
-def piston_bc(u, N, NDIM):
-    ret = standard_BC(u, N, NDIM)
-    ret[:N, 2:5] = ret[N, 0] * array([20, 0, 0])
-    return ret
 
 
 def cylindrical_shock():

@@ -9,8 +9,6 @@ from numpy.linalg import norm
 from matplotlib.pyplot import colorbar, contour, contourf, figure, get_cmap, \
     imshow, plot, xlim, streamplot, ticklabel_format, xlabel, ylabel
 
-from ader.etc.basis import Basis
-
 from gpr.misc.structures import State
 from gpr.multi import get_material_index
 
@@ -303,47 +301,7 @@ def fig_size(square):
         return (10, 10)
     else:
         return (6.4 / 0.72, 4.8 / 0.72)
-
-
-def plot_weno(wh, var, MPs=None):
-
-    NDIM = int((wh.ndim - 1) / 2)
-    shape = wh.shape[:NDIM]
-    N = wh.shape[-2]
-    NV = wh.shape[-1]
-
-    basis = Basis(N)
-    inds = [N * s for s in shape]
-    x = zeros(inds)
-    u = zeros(inds + [NV])
-
-    for i in range(shape[0]):
-        ind = i * N
-        for j in range(N):
-            x[ind + j] = i + basis.NODES[j]
-            u[ind + j] = wh[i, j]
-
-    if var == 'density':
-        plot_density(u, x=x)
-    if var == 'energy':
-        plot_energy(u, x=x)
-    if var == 'velocity':
-        plot_velocity(u, x=x)
-    if var == 'pressure':
-        plot_pressure(u, MPs, x=x)
-
-
-def plot_dg(qh, var, t, MPs=None):
-    n, _, _, N, _, NV = qh.shape
-    basis = Basis(N)
-    wh = zeros([n, 1, 1, N, NV])
-    for i in range(n):
-        for j in range(N):
-            for k in range(N):
-                wh[i, 0, 0, j] += basis.ψ[k](t) * qh[i, 0, 0, k, j]
-
-    plot_weno(wh, var, MPs)
-
+        
 
 def plot_res_ref(res, ref, x=None, reflab='Reference', reslab='Results'):
     cm = colors(3)
