@@ -38,8 +38,13 @@ void make_u(Vecr u, std::vector<Vec> &grids, std::vector<bVec> &masks,
       u.segment<V - LSET>(i * V) = grids[mi].segment<V - LSET>(i * V);
     else
       u.segment<V - LSET>(i * V).setZero();
+  }
+}
 
-    if (MULTI) {
+void limit_concentration(Vecr u) {
+  if (MULTI) {
+    int ncell = u.size() / V;
+    for (int i = 0; i < ncell; i++) {
       u(i * V + mV) = std::min(u(i * V + mV), u(i * V));
       u(i * V + mV) = std::max(u(i * V + mV), 0.);
     }
@@ -131,6 +136,8 @@ std::vector<Vec> iterator(Vecr u, double tf, iVecr nX, aVecr dX, double CFL,
       make_u(u, grids, masks, MPs);
     else
       u = grids[0];
+
+    limit_concentration(u);
 
     t += dt;
     count += 1;
