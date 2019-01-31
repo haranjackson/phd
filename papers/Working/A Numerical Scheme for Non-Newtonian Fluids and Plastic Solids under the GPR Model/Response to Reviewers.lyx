@@ -5,6 +5,7 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\options 3p
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -43,8 +44,8 @@
 \use_package stackrel 1
 \use_package stmaryrd 1
 \use_package undertilde 1
-\cite_engine basic
-\cite_engine_type default
+\cite_engine natbib
+\cite_engine_type authoryear
 \biblio_style plain
 \use_bibtopic false
 \use_indices false
@@ -89,8 +90,16 @@ Haran Jackson
 Reviewer 1
 \end_layout
 
+\begin_layout Subsection*
+(amendments highlighted in yellow in the manuscript)
+\end_layout
+
 \begin_layout Subsubsection*
 1) The definition of Frobenius norm in (3) should be given.
+\end_layout
+
+\begin_layout Standard
+This has been done.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -99,10 +108,18 @@ Reviewer 1
  18 and 23.
 \end_layout
 
+\begin_layout Standard
+This has been done.
+\end_layout
+
 \begin_layout Subsubsection*
 3) The strain tensor G introduced on p.
  3 is called the Finger tensor and it would be useful to mention it in order
  to make it clear for people from the solid mechanics community.
+\end_layout
+
+\begin_layout Standard
+This has been done.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -110,11 +127,32 @@ Reviewer 1
 an fluids, in which the constitutive relations (12), (13) are presented.
 \end_layout
 
+\begin_layout Standard
+This has been done.
+\end_layout
+
 \begin_layout Subsubsection*
 5) In my understanding formula (44) for differential of the singular value
- decomposition is valid for constant orthogonal matrices V, U.
- Does it mean that ODE solver for distortion is applied for constant V,
- U? Please explain.
+ decomposition is valid for constant orthogonal matrices 
+\begin_inset Formula $V,U$
+\end_inset
+
+.
+ Does it mean that ODE solver for distortion is applied for constant 
+\begin_inset Formula $V,U$
+\end_inset
+
+? Please explain.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $U,V$
+\end_inset
+
+ are not necessarily constant.
+ A derivation of the stated result is given in section 3.2 of the provided
+ reference.
+ This has been made more clear in my paper.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -122,9 +160,20 @@ an fluids, in which the constitutive relations (12), (13) are presented.
  In the sentence "Take initial data used by Barton…" the reference is needed.
 \end_layout
 
+\begin_layout Standard
+This has been done.
+\end_layout
+
 \begin_layout Subsubsection*
 7) Each reference on Figure in the text has a link to the page number.
  Please delete these links because the page numbers are unknown.
+\end_layout
+
+\begin_layout Standard
+These page numbers are automatically added by the LaTeX typesetting system,
+ and thus are always correct.
+ They will only appear in the final version of the manuscript if the JCP
+ typesetting system chooses to add them in.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -148,8 +197,19 @@ an fluids, in which the constitutive relations (12), (13) are presented.
  at least for some numerical test problems.
 \end_layout
 
+\begin_layout Standard
+This constraint is enforced by rescaling the singular values of the distortion
+ all by the same factor at each time step.
+ A clarification of this has been added to the end of the introduction to
+ section 3.
+\end_layout
+
 \begin_layout Section*
 Reviewer 3
+\end_layout
+
+\begin_layout Subsection*
+(amendments highlighted in blue in the manuscript)
 \end_layout
 
 \begin_layout Subsubsection*
@@ -162,6 +222,19 @@ Reviewer 3
  
 \end_layout
 
+\begin_layout Standard
+The benefits of the new formulation have been added to the 
+\begin_inset Quotes eld
+\end_inset
+
+Significance and Novelty
+\begin_inset Quotes erd
+\end_inset
+
+ document.
+ They are also included in the background section of the paper.
+\end_layout
+
 \begin_layout Subsubsection*
 2) In the equation (22a), please clarify if 
 \begin_inset Formula $det(A)=|A|$
@@ -169,7 +242,10 @@ Reviewer 3
 
 .
  Is has to be so, to have the equation (43).
- 
+\end_layout
+
+\begin_layout Standard
+This is in deed the case, and it has been clarified in the text.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -181,11 +257,22 @@ Reviewer 3
 "? 
 \end_layout
 
+\begin_layout Standard
+This was a typo, and has been corrected.
+\end_layout
+
 \begin_layout Subsubsection*
 4) If one wants to use a numerical method for solving the ODE's (instead
  of analytical solutions).
  Do you recommend the same strategy described by the equation (23), In such
  a case, Does the solver of (20a) become the most efficient? 
+\end_layout
+
+\begin_layout Standard
+Further discussion on this point as been added to the conclusions section.
+ Whilst I suggest that using the same strategy would be effective, I have
+ discussed the potential existence of more efficient methods than the WENO
+ method used to solve (20a).
 \end_layout
 
 \begin_layout Subsubsection*
@@ -201,6 +288,16 @@ s caused by the numerical diffusion of the solver for the conservation law,
  Should be interesting the investigation about the structure of the ODE
  system and if equilibrium states can be identified.
  
+\end_layout
+
+\begin_layout Standard
+The only equilibrium state of the ODE system is 
+\begin_inset Formula $a_{1},a_{2},a_{3}=\sqrt[3]{\rho/\rho_{0}}$
+\end_inset
+
+.
+ This is the state that the system tends towards, given any initial condition.
+ An explanation of this has been added to section 5 (conclusions).
 \end_layout
 
 \end_body

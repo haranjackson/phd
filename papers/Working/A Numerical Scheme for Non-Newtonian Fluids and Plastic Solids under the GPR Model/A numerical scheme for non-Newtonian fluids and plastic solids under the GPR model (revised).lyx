@@ -883,6 +883,25 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $\left\Vert \cdot\right\Vert _{F}$
+\end_inset
+
+ is the Frobenius norm
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The Frobenius norm is defined by: 
+\begin_inset Formula $\left\Vert X\right\Vert _{F}=\sqrt{\sum_{i,j}\left|X_{ij}\right|^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ 
 \begin_inset Formula $c_{s}$
 \end_inset
 
@@ -953,7 +972,8 @@ In previous studies,
 \begin_inset Formula $G=A^{T}A$
 \end_inset
 
- is the Gramian matrix of the distortion tensor, and 
+ is the Gramian matrix of the distortion (also know as the Finger tensor
+ in the solid mechanics community), and 
 \begin_inset Formula $\dev\left(G\right)$
 \end_inset
 
@@ -1179,7 +1199,7 @@ begin{subequations}
 \begin{align}
 \sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
 \boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}\\
--\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
+-\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\\
 -\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
 \end{align}
 
@@ -1219,7 +1239,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\det\left(A\right)=\frac{\rho}{\rho_{0}}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:detA constraint}
 \end{equation}
 
 \end_inset
@@ -1234,7 +1254,7 @@ n in fact rely upon the same equations.
  of motion for an arbitrary continuum - not just a solid - and so the model
  can be applied to fluids too.
  Unlike in previous continuum models, material elements have not only finite
- size, but also internal structure, encoded in the distortion tensor.
+ size, but also internal structure, encoded in the distortion.
 \end_layout
 
 \begin_layout Standard
@@ -1391,12 +1411,15 @@ The stress-strain relationships for various kinds of fluids are shown in
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:rheology"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
 .
- Dilatants and pseudoplastics may be modelled using the following power
- law, with 
+ Dilatants and pseudoplastics may be modeled using the following power law,
+ with 
 \begin_inset Formula $n>1$
 \end_inset
 
@@ -1404,7 +1427,15 @@ reference "fig:rheology"
 \begin_inset Formula $0<n<1$
 \end_inset
 
-, respectively:
+, respectively (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "sverdrup_highly_2018"
+literal "false"
+
+\end_inset
+
+):
 \end_layout
 
 \begin_layout Standard
@@ -1752,7 +1783,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
+\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
 \frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
 \end{align}
 
@@ -1838,6 +1869,25 @@ where
 .
  This allows us to bypass the relatively computationally costly process
  of solving these systems numerically.
+\end_layout
+
+\begin_layout Standard
+The constraint 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:detA constraint"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is enforced by rescaling the singular values of the distortion all by the
+ same factor at each timestep, to ensure that 
+\begin_inset Formula $\det A=\frac{\rho}{\rho_{0}}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -2112,7 +2162,7 @@ where
 \begin_inset Formula 
 \begin{align}
 \boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}},\boldsymbol{Q^{+}}\right) & =\frac{1}{2}\left(\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{+}}\right)+\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{-}}\right)\right)\\
- & +\frac{1}{2}\left(+\tilde{B}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)+\tilde{M}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)\nonumber 
+ & +\frac{1}{2}\left(\tilde{B}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)+\tilde{M}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)\nonumber 
 \end{align}
 
 \end_inset
@@ -2558,7 +2608,17 @@ Therefore:
 \end_layout
 
 \begin_layout Standard
-It is a common result (see 
+It is a common result that
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+This does not necessitate the 
+\begin_inset Formula $U,V$
+\end_inset
+
+ are constant.
+ See section 3.2 of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "giles_extended_2008"
@@ -2566,7 +2626,12 @@ literal "true"
 
 \end_inset
 
-) that:
+ for a full derivation.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2643,8 +2708,8 @@ Denote the singular values of
 \begin{equation}
 \Sigma\dev\left(\Sigma^{2}\right)=\left(\begin{array}{ccc}
 a_{1}\left(a_{1}^{2}-\alpha\right) & 0 & 0\\
-0 & a_{1}\left(a_{1}^{2}-\alpha\right) & 0\\
-0 & 0 & a_{1}\left(a_{1}^{2}-\alpha\right)
+0 & a_{2}\left(a_{2}^{2}-\alpha\right) & 0\\
+0 & 0 & a_{3}\left(a_{3}^{2}-\alpha\right)
 \end{array}\right)
 \end{equation}
 
@@ -4114,7 +4179,7 @@ noprefix "false"
 \end_inset
 
 , the method presented will perform poorly if the mean of the normalized
- singular values of the distortion tensor, 
+ singular values of the distortion, 
 \begin_inset Formula $m$
 \end_inset
 
@@ -4176,8 +4241,8 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-This is justified by the fact that the distortion tensor is not a macroscopicall
-y-measurable quantity.
+This is justified by the fact that the distortion is not a macroscopically-measu
+rable quantity.
  This transformation leaves the density, pressure, and velocity of the fluid
  unchanged, and was found to improve the stability of the numerical scheme,
  while at the same time producing correct results, as demonstrated in the
@@ -4234,7 +4299,15 @@ The aim of this test is to gauge the accuracy of the approximate analytic
 \end_layout
 
 \begin_layout Standard
-Take initial data used by Barton:
+Take initial data used by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "barton_eulerian_2010"
+literal "false"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -4261,9 +4334,9 @@ The following parameter values were used:
 \end_layout
 
 \begin_layout Standard
-The evolution of the components of the distortion tensor, according to both
- the approximate analytical solver and a stiff numerical ODE solver, are
- given in 
+The evolution of the components of the distortion, according to both the
+ approximate analytical solver and a stiff numerical ODE solver, are given
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:Distortion-ODEs_A-plastic"
@@ -4286,7 +4359,7 @@ reference "fig:Distortion-ODEs_Ε-plastic"
 
 .
  As can be seen, the approximate analytic solver compares well with the
- exact solution for the distortion tensor 
+ exact solution for the distortion, 
 \begin_inset Formula $A$
 \end_inset
 
@@ -4331,8 +4404,8 @@ name "fig:Distortion-ODEs_A-plastic"
 
 \end_inset
 
-Distortion tensor components during the Strain Relaxation Test: approximate
- analytical solution (crosses) and numerical ODE solution (solid line)
+Distortion components during the Strain Relaxation Test: approximate analytical
+ solution (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -5664,8 +5737,8 @@ literal "false"
 \end_inset
 
 , this is due to the fact that one of the singular values of the distortion
- tensor will be much larger than the others, and the mean of the squares
- of the singular values will be distant to the geometric mean.
+ will be much larger than the others, and the mean of the squares of the
+ singular values will be distant to the geometric mean.
  The subsequent linearization of the ODE governing the mean of the singular
  values will then fail.
  It should be noted that none of the situations covered in this study presented
@@ -5696,6 +5769,32 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
+It may be that it is possible to find a more efficient (yet still sufficiently
+ accurate) numerical method to solve 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:HomogeneousSubsystem"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ than the WENO method that was used in this study.
+ This method was chosen due to its well-known performance characteristics
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "balsara_efficient_2009,dumbser_ader-weno_2013,jiang_efficient_1996"
+literal "false"
+
+\end_inset
+
+), but the authors are aware that further performance gains may be possible,
+ and this is an area of further investigation.
+\end_layout
+
+\begin_layout Standard
 As detailed in 
 \begin_inset CommandInset citation
 LatexCommand citet
@@ -5711,7 +5810,104 @@ literal "false"
  regular, structured grids.
  This issue can be rectified, however, by the use of some form of shock
  tracking or mesh refinement, as noted in the cited paper.
- 
+ The effect on the propagation speeds of discontinuities can be more evident
+ if the underlying temporal ODEs have non-zero equilibrium states.
+ Noting that the singular values of the distortion cannot be 
+\begin_inset Formula $0$
+\end_inset
+
+ (as this would imply zero density), we have, by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:StretchODESystem"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, that at equilibrium the scaled squares of the singular values obey the
+ follow relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{1}-\frac{x_{1}+x_{2}+x_{3}}{3} & =0\\
+x_{2}-\frac{x_{1}+x_{2}+x_{3}}{3} & =0\\
+x_{3}-\frac{x_{1}+x_{2}+x_{3}}{3} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The set of solutions to this system is 
+\begin_inset Formula $x_{1}=x_{2}=x_{3}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $x_{1}x_{2}x_{3}=1$
+\end_inset
+
+ for all time (due to the constraint 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:detA constraint"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), we have that the only equilibrium solution of the ODE system is 
+\begin_inset Formula $x_{1},x_{2},x_{3}=1$
+\end_inset
+
+.
+ Given any initial values for 
+\begin_inset Formula $x_{1},x_{2},x_{3}$
+\end_inset
+
+, the system tends towards this state.
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset citation
 LatexCommand citet
 key "dumbser_finite_2008"
