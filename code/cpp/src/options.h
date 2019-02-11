@@ -14,6 +14,7 @@ const bool DESTRESS = false;
 // Solver //
 const int N = 2;
 const bool ROTATE_DISTORTION = false;
+const int RK_STEPS = 4;
 
 // RGFM //
 const bool RIEMANN_STICK = false;
