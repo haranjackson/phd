@@ -207,8 +207,8 @@ The Godunov-Peshkov-Romenski model of continuum mechanics is claimed to
  be capable of describing both solids and fluids (both viscous and inviscid)
  in the same framework 
 \begin_inset CommandInset citation
-LatexCommand cite
-key "Peshkov2016,Dumbser2016a"
+LatexCommand citep
+key "peshkov_hyperbolic_2016,dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -333,7 +333,7 @@ Background
 \end_layout
 
 \begin_layout Subsection
-Multimaterial and Multiphase Models
+Multimaterial Models
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Multiphase-Systems"
@@ -344,98 +344,23 @@ name "subsec:Multiphase-Systems"
 \end_layout
 
 \begin_layout Standard
-The definition of a multiphase system is slightly ambiguous in the literature.
- Here it will be taken to mean a system consisting of either two or more
- different materials (possibly in the same phase of matter), or two or more
- volumes of (possibly the same) material in different phases of matter.
- There are two aspects of multiphase systems that require attention: multiphase
- flow, and multiphase heat transfer.
- The latter becomes important when the phases are at different temperatures.
- In this study, the different phases will be assumed to be immiscible.
+In this study, the different phases will be assumed to be immiscible.
+ 
 \end_layout
 
 \begin_layout Standard
 Without a unified model of continuum mechanics, capable of describing all
  phases in the same framework, different sets of equations may have to be
  used in the different regions occupied by different phases.
- These systems arise, for example, in fluid-structure interaction, or oil-water
+ These systems arise, for example, in fluid-solid interaction, or oil-water
  interfaces.
  An overview of current approaches to multiphase systems will now be given.
  The examples here are illustrative but not exhaustive.
 \end_layout
 
 \begin_layout Standard
-There has been a huge amount of research activity in the field over the
- years, but current approaches can be broadly classified as either monolithic
- or partitioned 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Hou2012"
-literal "true"
-
-\end_inset
-
-.
- In a monolithic scheme, all phases are described by the same set of nonlinear
- equations.
- The evolution of the interfaces is implicit to the equations, unlike in
- partitioned schemes.
- See for example 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Michler2004,Hubner2004"
-literal "true"
-
-\end_inset
-
-.
- The system is solved by a multivariate Newton-type method.
- It is often ill-conditioned, due to the different scales of the state variables
- of the different phases.
- Thus, iterative solvers are required, proving inefficient unless good precondit
-ioners are available.
- Codes tend to be very specialized to the specific problems they solve,
- and it requires expertise to develop and maintain such methods.
-\end_layout
-
-\begin_layout Standard
-In a partitioned scheme, the states of the different phases are calculated
- separately at each time step, possibly using different models.
- See Rossi and Oñate 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Rossi2010"
-literal "true"
-
-\end_inset
-
- for a recent overview of some of the common algorithmic features of these
- schemes.
- The individual systems do not suffer from the scaling-induced conditioning
- problems of monolithic schemes, but attention now needs to be payed to
- the material interfaces.
- Modeling them can be unstable and relatively computationally expensive
- (although typically not as expensive as solving the full monolithic systems).
- One of the great benefits of partitioned schemes is that legacy implementations
- of common models may be used in the domains occupied by materials that
- they describe.
- These implementations are often well-used and relatively bug free, and
- tend to be written efficiently for the kinds of problems that the solve.
- As an example of a software suite taking advantage of this, see the Caltech's
- Virtual Test Facility 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Aivazis2000"
-literal "true"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Under both types of schemes, the models describing the different phases
- may be formulated in either a Lagrangian, an Eulerian, or an ALE framework.
+The models describing the different materials may be formulated in either
+ a Lagrangian, an Eulerian, or an ALE framework.
  Solids models tend to come in Lagrangian form, and often these are combined
  with ALE forms for the fluid phases, so that the fluid meshes may deform
  to match the deformation of the solid (see, for example, Pin et al.
@@ -537,24 +462,20 @@ reference "sec:Ghost Fluid Methods"
 
 ).
  Whilst these techniques do not suffer from the mesh contortion issues inherent
- in Lagrangian formulations of continuum mechanics, and the interface coupling
- tends to be less computationally expensive than the iterative techniques
- demanded by monolithic schemes, a fair amount of theoretical work needs
- to be done to derive analytical relations describing the interactions between
- every pair of models used.
+ in Lagrangian formulations of continuum mechanics, a fair amount of theoretical
+ work needs to be done to derive analytical relations describing the interaction
+s between every pair of models used.
 \end_layout
 
 \begin_layout Standard
 If it were possible to describe all phases with the same Eulerian model,
  this method could be used, with only one type of Riemann solver needed
  to cope with any multiphase problem posed.
- This would effectively be a partitioned scheme with the same system solved
- in each domain.
  The GPR model represents such an opportunity.
  As will be seen, the model also includes terms for heat conduction, which
  do not appear in the basic formulations of many of the common models used
  in multiphase systems (e.g.
- the Euler equations, or the Navier-Stokes equations).
+ the Euler equations, or the Godunov-Romenski equations of solid mechanics).
  Heat conduction is often ignored in multiphase modeling, but such a framework
  based on the GPR model would almost unavoidably include it.
  It should be noted, though, that any unified model of continuum mechanics
@@ -562,15 +483,15 @@ If it were possible to describe all phases with the same Eulerian model,
  as competing models tailored to each individual phase if the utmost model
  fidelity is required.
  Although the results for the GPR model applied to standard test cases have
- been promising, both here and in other preliminary studies 
+ been promising (both here and in other preliminary studies 
 \begin_inset CommandInset citation
-LatexCommand cite
-key "Dumbser2016a,Boscheri2016"
+LatexCommand citep
+key "dumbser_high_2015,boscheri_cell_2016"
 literal "true"
 
 \end_inset
 
-, more work is required to determine how faithfully the GPR model reproduces
+) more work is required to determine how faithfully the GPR model reproduces
  common agreed phenomenological results.
 \end_layout
 
@@ -579,24 +500,31 @@ The Model of Godunov, Peshkov and Romenski
 \end_layout
 
 \begin_layout Standard
-The GPR model, first introduced by Peshkov and Romenski 
+The GPR model takes the following form (see 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2016"
+key "peshkov_hyperbolic_2016"
 literal "true"
 
 \end_inset
 
- and expanded upon by Dumbser et al.
- 
+, 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016a"
+key "dumbser_high_2015"
 literal "true"
 
 \end_inset
 
-, takes the following form:
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+):
 \end_layout
 
 \begin_layout Standard
@@ -620,8 +548,8 @@ begin{subequations}
 \begin{align}
 \frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
 \frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
-\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}(\tau_{1})}\label{eq:DistortionEquation}\\
-\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}}\label{eq:ThermalEquation}\\
 \frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquation}
 \end{align}
 
@@ -664,57 +592,7 @@ where
 \end_inset
 
 .
- Note that 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:DensityEquation"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:MomentumEquation"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:DistortionEquation"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:ThermalEquation"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:EnergyEquation"
-
-\end_inset
-
- can be written in the following form:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}+\boldsymbol{B}\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The following definitions are given:
+ We have:
 \end_layout
 
 \begin_layout Standard
@@ -736,10 +614,10 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-p & =\rho^{2}\frac{\partial E}{\partial\rho}\\
-\sigma & =-\rho A^{T}\frac{\partial E}{\partial A}\\
-T & =\frac{\partial E}{\partial s}\\
-\boldsymbol{q} & =\frac{\partial E}{\partial s}\frac{\partial E}{\partial\boldsymbol{J}}
+p & =\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A}\label{eq:p def}\\
+\sigma & =-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\label{eq:sig def}\\
+T & =\left.\frac{\partial E}{\partial s}\right|_{\rho,A}\label{eq:T def}\\
+\boldsymbol{q} & =T\frac{\partial E}{\partial\boldsymbol{J}}\label{eq:q def}
 \end{align}
 
 \end_inset
@@ -790,9 +668,22 @@ material element
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "EOS"
+description "Equation of State"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E=E_{1}\left(\rho,s\right)+E_{2}\left(A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
 \end{equation}
 
 \end_inset
@@ -801,79 +692,42 @@ E=E_{1}\left(\rho,s\right)+E_{2}\left(A,\boldsymbol{J}\right)+E_{3}\left(\boldsy
 \end_layout
 
 \begin_layout Standard
-In this study, 
-\begin_inset Formula $E_{1}$
-\end_inset
-
- is taken to correspond to an ideal or stiffened gas:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-E_{1}=\frac{p+\gamma p_{\infty}}{\left(\gamma-1\right)\rho}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where 
-\begin_inset Formula $p_{\infty}=0$
-\end_inset
-
- for an ideal gas.
- The temperature is given by:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-T=\frac{p+p_{\infty}}{\left(\gamma-1\right)c_{v}\rho}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-and the speed of sound by:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-c_{0}=\sqrt{\frac{\gamma\left(p+p_{\infty}\right)}{\rho}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-It should be noted that there are many other choices that can be made for
+Here, as in previous studies (e.g.
  
+\begin_inset CommandInset citation
+LatexCommand citep
+key "dumbser_high_2015,boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+) 
 \begin_inset Formula $E_{1}$
 \end_inset
 
-, dependent on the type of material being modelled.
+ is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
+ the EOS of nonlinear hyperelasticity (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula $E_{2}$
 \end_inset
 
- is chosen to have the following quadratic form:
+ has the following quadratic form:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{2}=\frac{c_{s}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{\alpha^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{c_{t}\left(\rho,s\right)^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
 \end{equation}
 
 \end_inset
@@ -882,29 +736,140 @@ E_{2}=\frac{c_{s}^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$c_s$"
+description "Characteristic velocity of transverse perturbations"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "x"
+symbol "$\\left\\Vert \\cdot\\right\\Vert $"
+description "Euclidean vector norm"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "x"
+symbol "${\\left\\Vert \\cdot\\right\\Vert}_F $"
+description "Frobenius matrix norm"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$c_{t}$"
+description "Coefficient in the thermal impulse contribution to the energy (elsewhere denoted by $\\alpha$)"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\Vert \cdot\right\Vert _{F}$
+\end_inset
+
+ is the Frobenius norm
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The Frobenius norm is defined by: 
+\begin_inset Formula $\left\Vert X\right\Vert _{F}=\sqrt{\sum_{i,j}\left|X_{ij}\right|^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is the characteristic velocity of transverse perturbations.
+ 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is related to the characteristic velocity of propagation of heat waves
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Note that 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ denotes this variable by 
 \begin_inset Formula $\alpha$
 \end_inset
 
- is a constant related to the characteristic velocity of propagation of
- heat waves:
+, which is avoided here due to a clash with a parameter of one of the equations
+ of state used.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-c_{h}=\frac{\alpha}{\rho}\sqrt{\frac{T}{c_{v}}}
+c_{h}=\frac{c_{t}}{\rho}\sqrt{\frac{T}{c_{v}}}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$c_h$"
+description "Characteristic velocity of heat waves"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In previous studies, 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ has been taken to be constant, as it will be in this study.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula $G=A^{T}A$
 \end_inset
 
- is the Gramian matrix of the distortion tensor, and 
+ is the Gramian matrix of the distortion (also know as the Finger tensor
+ in the solid mechanics community), and 
 \begin_inset Formula $\dev\left(G\right)$
 \end_inset
 
@@ -945,17 +910,94 @@ E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
 \end_layout
 
 \begin_layout Standard
-The following forms are chosen:
+The following forms are taken:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\begin{cases}
-\theta_{1}\left(\tau_{1}\right)=\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}} & \tau_{1}=\frac{6\mu}{\rho_{0}c_{s}^{2}}\\
-\theta_{2}\left(\tau_{2}\right)=\tau_{2}\alpha^{2}\frac{\rho T_{0}}{\rho_{0}T} & \tau_{2}=\frac{\rho_{0}\kappa}{T_{0}\alpha^{2}}
-\end{cases}
-\end{equation}
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
+\theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tau_{1} & =\begin{cases}
+\frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
+\tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
+\end{cases}\label{eq:tau1}\\
+\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
 
 \end_inset
 
@@ -968,16 +1010,68 @@ The justification of these choices is that classical Navier–Stokes–Fourier
 \begin_inset Formula $\tau_{1},\tau_{2}\rightarrow0$
 \end_inset
 
- 
+ (see 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016a"
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+).
+ The power law for elastoplastic solids is based on material from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
 literal "true"
 
 \end_inset
 
 .
- This results in the following relations:
+\end_layout
+
+\begin_layout Standard
+Finally, it is straightforward to verify that as a consequence of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:p def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sig def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:T def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q def"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have the following relations:
 \end_layout
 
 \begin_layout Standard
@@ -1000,8 +1094,8 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
-\boldsymbol{q} & =\alpha^{2}T\boldsymbol{J}\\
--\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\\
+\boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}\\
+-\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\\
 -\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
 \end{align}
 
@@ -1027,21 +1121,21 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-The following constraint also holds 
+The following constraint holds (see 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2016"
+key "peshkov_hyperbolic_2016"
 literal "true"
 
 \end_inset
 
-:
+):
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:DeterminantConstraint}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:detA constraint}
 \end{equation}
 
 \end_inset
@@ -1050,126 +1144,23 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-The model as presented here is the same in structure as Godunov and Romenski's
- 1970s model of elastoplastic deformation 
+See 
 \begin_inset CommandInset citation
-LatexCommand cite
-key "Godunov1974"
-literal "true"
+LatexCommand citep
+key "jackson_numerical_2018"
+literal "false"
 
 \end_inset
 
-.
- The differences between the two models lie in the in the interpretation
- of the equations in the GPR framework as those governing an arbitrary continuum
- - not just a solid - and the inclusion of thermal conduction by the evolution
- of 
-\begin_inset Formula $\boldsymbol{J}$
+ for an interpretation of the physical meaning of the relaxation times 
+\begin_inset Formula $\tau_{1},\tau_{2}$
 \end_inset
 
-.
- Unlike in previous continuum models, material elements have not only finite
- size, but also internal structure.
-\end_layout
-
-\begin_layout Standard
-The strain dissipation time 
-\begin_inset Formula $\tau_{1}$
-\end_inset
-
- of the GPR model is a continuous analogue of Frenkel's 
-\begin_inset Quotes eld
-\end_inset
-
-particle settled life time
-\begin_inset Quotes erd
-\end_inset
-
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "jacovfrenkel1947"
-literal "true"
-
-\end_inset
-
-; the characteristic time taken for a particle to move by a distance of
- the same order of magnitude as the particle's size.
- Thus, 
-\begin_inset Formula $\tau_{1}$
-\end_inset
-
- characterizes the time taken for a material element to rearrange with its
- neighbors.
- 
-\begin_inset Formula $\tau_{1}=\infty$
-\end_inset
-
- for solids and 
-\begin_inset Formula $\tau_{1}=0$
-\end_inset
-
- for inviscid fluids.
- It is in this way that the GPR model seeks to describe all three major
- phases of matter, as long as a continuum description is appropriate for
- the material at hand.
-\end_layout
-
-\begin_layout Standard
-The evolution equation for 
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
- and its contribution to the energy of the system are derived from Romenski's
- model of hyperbolic heat transfer, originally proposed in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Malyshev1984,Romenski1988"
-literal "true"
-
-\end_inset
-
- and implemented in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Romenski2007,Romenski2010"
-literal "true"
-
-\end_inset
-
-.
- In this model, 
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
- is effectively defined as the variable conjugate to the entropy flux, in
- the sense that the latter is the derivative of the specific internal energy
- with respect to 
+ and thermal impulse vector 
 \begin_inset Formula $\boldsymbol{J}$
 \end_inset
 
 .
- Romenski remarks that it is more convenient to evolve 
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
- and 
-\begin_inset Formula $E$
-\end_inset
-
- than the heat flux or the entropy flux, and thus the equations take the
- form given here.
- 
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
- can intuitively be thought of as a thermal analogue of momentum.
- 
-\begin_inset Formula $\tau_{2}$
-\end_inset
-
- characterizes the speed of relaxation of the thermal impulse due to heat
- exchange between material elements.
 \end_layout
 
 \begin_layout Subsection
@@ -2703,18 +2694,20 @@ and
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
+\begin{align}
 W\left(\begin{array}{ccccc}
 \rho & 0 & 0 & 1 & 0\\
 \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & 0 & 1\\
 A_{11} & A_{12} & A_{13} & \vdots & \vdots\\
 A_{21} & A_{22} & A_{23} & -\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
 A_{31} & A_{32} & A_{33} & \vdots & \vdots
-\end{array}\right)=WM=\left(\begin{array}{ccccc}
+\end{array}\right)\\
+ & =WM\nonumber \\
+ & =\left(\begin{array}{ccccc}
 0 & 0 & 0 & 1 & 0\\
 0 & 0 & 0 & 0 & 1
-\end{array}\right)
-\end{equation}
+\end{array}\right)\nonumber 
+\end{align}
 
 \end_inset
 
@@ -2875,18 +2868,14 @@ I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0
 \end_layout
 
 \begin_layout Subsection
-A GPR Riemann Ghost Fluid Method
+Solving the Riemann Problem
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:An HPR Riemann Ghost Fluid Method"
+name "sec:SolvingTheRiemannProblem"
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Solving the Riemann Problem
 \end_layout
 
 \begin_layout Standard
@@ -2997,7 +2986,10 @@ Denote the vector of primitive variables by
  
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:Left-Eigenvectors"
+reference "eq:Left-Eigenvectors-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -3450,6 +3442,10 @@ reference "eq:Right-Conditions"
 \end_layout
 
 \begin_layout Subsubsection
+Boundary Conditions
+\end_layout
+
+\begin_layout Paragraph
 Stick Boundary Conditions
 \end_layout
 
@@ -3567,7 +3563,7 @@ T^{R}
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Slip Boundary Conditions
 \end_layout
 
@@ -3727,7 +3723,7 @@ Y_{41}^{K} & Y_{44}^{K}
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Vacuum Boundary Conditions
 \end_layout
 
@@ -3830,7 +3826,7 @@ T^{K}
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Iteration
 \end_layout
 
@@ -3923,17 +3919,18 @@ reference "eq:dP/dt=S"
 
 \end_inset
 
- is solved using the ODE solvers described in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:The-Distortion-ODEs"
+ is solved using the ODE solvers presented in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_fast_2017,jackson_numerical_2018"
+literal "false"
 
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Linear Conditions
 \end_layout
 
@@ -3941,7 +3938,10 @@ Linear Conditions
 Replacing the first four lines of 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:Left-Eigenvectors"
+reference "eq:Left-Eigenvectors-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -4149,7 +4149,7 @@ D=\left(\begin{array}{cc}
 
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 The Case without Heat Conduction
 \end_layout
 
@@ -6783,7 +6783,10 @@ The temperature curve generated using the GPR-RGFM matches very well the
  
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "chap:Conclusions-&-Discussion"
+reference "sec:Discussion"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -8213,6 +8216,13 @@ name "fig:The-aluminium-plate-2"
 
 \begin_layout Section
 Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Discussion"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -8236,7 +8246,7 @@ literal "true"
 The Riemann Ghost Fluid Method presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:An HPR Riemann Ghost Fluid Method"
+reference "sec:SolvingTheRiemannProblem"
 
 \end_inset
 
@@ -8326,7 +8336,7 @@ An obvious improvement to the GPR-RGFM method presented would be to use
  
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:An HPR Riemann Ghost Fluid Method"
+reference "sec:SolvingTheRiemannProblem"
 
 \end_inset
 
@@ -8817,20 +8827,31 @@ Thus, the GPR system can be written in the following form:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-placement p
-wide true
-sideways true
-status open
+where the first component of 
+\begin_inset Formula $M$
+\end_inset
 
-\begin_layout Plain Layout
-\paragraph_spacing double
-\noindent
+ is given on 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:M1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for illustrative purposes.
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
 \begin_inset Formula 
 \begin{equation}
 M_{1}=\left(\begin{array}{ccccccccccccccccc}
 v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0\\
-0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & \frac{\rho c_{h}^{2}}{T_{p}} & 0 & 0\\
+0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \Psi_{11}+\rho c_{0}^{2} & \Psi_{21} & \Psi_{31} & \frac{\rho c_{h}^{2}}{T_{p}} & 0 & 0\\
 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & 0\\
 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0\\
@@ -8840,9 +8861,9 @@ v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0\\
--\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial\rho} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{33}} & v_{1} & 0 & 0 & 0 & 0 & 0\\
--\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{33}} & 0 & v_{1} & 0 & 0 & 0 & 0\\
--\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{33}} & 0 & 0 & v_{1} & 0 & 0 & 0\\
+\Phi_{11} & \frac{1}{\rho} & \Upsilon_{11}^{11} & \Upsilon_{21}^{11} & \Upsilon_{31}^{11} & \Upsilon_{12}^{11} & \Upsilon_{22}^{11} & \Upsilon_{32}^{11} & \Upsilon_{13}^{11} & \Upsilon_{23}^{11} & \Upsilon_{33}^{11} & v_{1} & 0 & 0 & 0 & 0 & 0\\
+\Phi_{21} & 0 & \Upsilon_{11}^{21} & \Upsilon_{21}^{21} & \Upsilon_{31}^{21} & \Upsilon_{12}^{21} & \Upsilon_{22}^{21} & \Upsilon_{32}^{21} & \Upsilon_{13}^{21} & \Upsilon_{23}^{21} & \Upsilon_{33}^{21} & 0 & v_{1} & 0 & 0 & 0 & 0\\
+\Phi_{31} & 0 & \Upsilon_{11}^{31} & \Upsilon_{21}^{31} & \Upsilon_{31}^{31} & \Upsilon_{12}^{31} & \Upsilon_{22}^{31} & \Upsilon_{32}^{31} & \Upsilon_{13}^{31} & \Upsilon_{23}^{31} & \Upsilon_{33}^{31} & 0 & 0 & v_{1} & 0 & 0 & 0\\
 \frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1}
@@ -8854,42 +8875,60 @@ v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0\\
 
 \end_layout
 
+\begin_layout Standard
+where we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Psi_{ij} & =\sigma_{ij}-\rho\frac{\partial\sigma_{ij}}{\partial\rho}\\
+\Upsilon_{mn}^{ij} & =-\frac{1}{\rho}\frac{\partial\sigma_{ij}}{\partial A_{mn}}\\
+\Phi_{ij} & =-\frac{1}{\rho}\frac{\partial\sigma_{ij}}{\partial\rho}
+\end{align}
 
-\size scriptsize
-\begin_inset Float figure
-placement p
-wide true
-sideways false
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\boldsymbol{P}=\left(\begin{array}{c}
-\rho\\
-p\\
-A_{11}\\
-A_{21}\\
-A_{31}\\
-A_{12}\\
-A_{22}\\
-A_{32}\\
-A_{13}\\
-A_{23}\\
-A_{33}\\
-v_{1}\\
-v_{2}\\
-v_{3}\\
-J_{1}\\
-J_{2}\\
-J_{3}
-\end{array}\right)\label{eq:Pvec}
+\boldsymbol{P}=\left(\begin{array}{ccccccccccccccccc}
+\rho & p & A_{11} & A_{21} & A_{31} & A_{12} & A_{22} & A_{32} & A_{13} & A_{23} & A_{33} & v_{1} & v_{2} & v_{3} & J_{1} & J_{2} & J_{3}\end{array}\right)^{T}\label{eq:Pvec}
 \end{equation}
 
 \end_inset
@@ -8897,16 +8936,7 @@ J_{3}
 
 \end_layout
 
-\end_inset
-
-
-\begin_inset Float figure
-placement ph
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
+\begin_layout Standard
 \paragraph_spacing double
 \noindent
 \begin_inset Formula 
@@ -8949,11 +8979,6 @@ status open
 -H_{3}
 \end{array}\right)
 \end{equation}
-
-\end_inset
-
-
-\end_layout
 
 \end_inset
 
