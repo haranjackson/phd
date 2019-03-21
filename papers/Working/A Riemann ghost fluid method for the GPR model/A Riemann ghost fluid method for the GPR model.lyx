@@ -68,7 +68,7 @@ theorems-std
 \use_package undertilde 0
 \cite_engine natbib
 \cite_engine_type numerical
-\biblio_style plain
+\biblio_style plainnat
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
@@ -204,8 +204,8 @@ rvt
 
 \begin_layout Abstract
 The Godunov-Peshkov-Romenski model of continuum mechanics is claimed to
- be capable of describing both solids and fluids (both viscous and inviscid)
- in the same framework 
+ be capable of describing both solids and (Newtonian) fluids in the same
+ framework 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "peshkov_hyperbolic_2016,dumbser_high_2015"
@@ -214,8 +214,21 @@ literal "true"
 \end_inset
 
 .
- Different solids and fluids are governed by the same set of partial differentia
-l equations, differing only in their equations of states and strain dissipation
+ It has recently been used to solve problems involving non-Newtonian fluids
+ and elastoplastic solids 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2018"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Abstract
+Different solids and fluids are governed by the same set of partial differential
+ equations, differing only in their equations of states and strain dissipation
  functions.
  This has the potential to streamline development of simulation software
  for scenarios involving multiple materials and phases of matter, by reducing
@@ -246,8 +259,8 @@ literal "true"
  is devised for the GPR model, enabling the simulation of material interfaces.
  This new method is tested on a variety of interface problems.
  It is demonstrated to accurately reproduce analytical results for known
- Riemann problems, and to produce expected results with regards to heat
- conduction across interfaces.
+ Riemann problems, and to produce expected results in other cases, including
+ some featuring heat conduction across interfaces.
 \end_layout
 
 \begin_layout Keywords
@@ -344,24 +357,46 @@ name "subsec:Multiphase-Systems"
 \end_layout
 
 \begin_layout Standard
-In this study, the different phases will be assumed to be immiscible.
+This study concerns problems featuring immiscible materials.
+ There are many approaches available to solve these problems, broadly including
+ (but not limited to): Lagrangian and Arbitrary-Lagrangian-Eulerian) methods
  
+\begin_inset CommandInset citation
+LatexCommand citep
+key "scardovelli_direct_1999,donea_arbitrary_1982"
+literal "false"
+
+\end_inset
+
+, volume of fluid methods 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "rider_reconstructing_1998,nichols_sola-vof:_1980"
+literal "false"
+
+\end_inset
+
+, diffuse interface methods 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "saurel_multiphase_1999"
+literal "false"
+
+\end_inset
+
+, and level-set methods (including the ghost fluid approach 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "osher_level_2001,fedkiw_non-oscillatory_1999"
+literal "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
-Without a unified model of continuum mechanics, capable of describing all
- phases in the same framework, different sets of equations may have to be
- used in the different regions occupied by different phases.
- These systems arise, for example, in fluid-solid interaction, or oil-water
- interfaces.
- An overview of current approaches to multiphase systems will now be given.
- The examples here are illustrative but not exhaustive.
-\end_layout
-
-\begin_layout Standard
-The models describing the different materials may be formulated in either
- a Lagrangian, an Eulerian, or an ALE framework.
- Solids models tend to come in Lagrangian form, and often these are combined
+Solids models tend to come in Lagrangian form, and often these are combined
  with ALE forms for the fluid phases, so that the fluid meshes may deform
  to match the deformation of the solid (see, for example, Pin et al.
  
@@ -478,10 +513,13 @@ If it were possible to describe all phases with the same Eulerian model,
  the Euler equations, or the Godunov-Romenski equations of solid mechanics).
  Heat conduction is often ignored in multiphase modeling, but such a framework
  based on the GPR model would almost unavoidably include it.
- It should be noted, though, that any unified model of continuum mechanics
- purporting to describe all phases of interest must be at least as descriptive
- as competing models tailored to each individual phase if the utmost model
- fidelity is required.
+\end_layout
+
+\begin_layout Standard
+It should be noted that any unified model of continuum mechanics purporting
+ to describe all phases of interest must be at least as descriptive as competing
+ models tailored to each individual phase if the utmost model fidelity is
+ required.
  Although the results for the GPR model applied to standard test cases have
  been promising (both here and in other preliminary studies 
 \begin_inset CommandInset citation
@@ -492,7 +530,7 @@ literal "true"
 \end_inset
 
 ) more work is required to determine how faithfully the GPR model reproduces
- common agreed phenomenological results.
+ commonly agreed upon phenomenological results.
 \end_layout
 
 \begin_layout Subsection
@@ -576,14 +614,6 @@ end{subequations}
 
 \begin_layout Standard
 where 
-\begin_inset Formula $\theta_{1}$
-\end_inset
-
- and 
-\begin_inset Formula $\theta_{2}$
-\end_inset
-
- are positive scalar functions, and 
 \begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
 \end_inset
 
@@ -591,34 +621,26 @@ where
 \begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
 \end_inset
 
-.
- We have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
+, and 
+\begin_inset Formula $\theta_{1}$
 \end_inset
 
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
 
+ are positive functions (given below for the problems at hand).
+ Additionally, we have:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align}
-p & =\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A}\label{eq:p def}\\
-\sigma & =-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\label{eq:sig def}\\
-T & =\left.\frac{\partial E}{\partial s}\right|_{\rho,A}\label{eq:T def}\\
-\boldsymbol{q} & =T\frac{\partial E}{\partial\boldsymbol{J}}\label{eq:q def}
-\end{align}
+\begin{equation}
+\begin{cases}
+p=\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A} & \sigma=-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\\
+T=\left.\frac{\partial E}{\partial s}\right|_{\rho,A} & \boldsymbol{q}=T\frac{\partial E}{\partial\boldsymbol{J}}
+\end{cases}\label{eq:compoundVars}
+\end{equation}
 
 \end_inset
 
@@ -626,58 +648,17 @@ T & =\left.\frac{\partial E}{\partial s}\right|_{\rho,A}\label{eq:T def}\\
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
+where 
+\begin_inset Formula $s$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-To close the system, the EOS must be specified, from which the above quantities
- and the sources can be derived.
+ is the entropy of the system.
  
 \begin_inset Formula $E$
 \end_inset
 
- is the sum of the contributions of the energies at the molecular scale
- (microscale), the material element
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-The concept of a 
-\shape italic
-material element
-\shape default
- corresponds to that of a fluid parcel from fluid dynamics, applied to both
- fluids and solids.
-\end_layout
-
-\end_inset
-
- scale (mesoscale), and the flow scale (macroscale):
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "z"
-symbol "EOS"
-description "Equation of State"
-literal "true"
-
-\end_inset
-
-
+ must be specified to close the system.
+ The energy contains contributions from the micro-, meso-, and macro-scale:
 \end_layout
 
 \begin_layout Standard
@@ -721,7 +702,7 @@ literal "false"
 \begin_inset Formula $E_{2}$
 \end_inset
 
- has the following quadratic form:
+ takes the quadratic form:
 \end_layout
 
 \begin_layout Standard
@@ -736,42 +717,14 @@ E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "a"
-symbol "$c_s$"
-description "Characteristic velocity of transverse perturbations"
-literal "true"
+where 
+\end_layout
 
-\end_inset
-
-
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "x"
-symbol "$\\left\\Vert \\cdot\\right\\Vert $"
-description "Euclidean vector norm"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "x"
-symbol "${\\left\\Vert \\cdot\\right\\Vert}_F $"
-description "Frobenius matrix norm"
-literal "true"
-
-\end_inset
-
-
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "g"
-symbol "$c_{t}$"
-description "Coefficient in the thermal impulse contribution to the energy (elsewhere denoted by $\\alpha$)"
-literal "true"
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
 
 \end_inset
 
@@ -794,6 +747,35 @@ The Frobenius norm is defined by:
 
 \end_layout
 
+\end_inset
+
+ and 
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ is the Gramian matrix of the distortion
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $G$
+\end_inset
+
+ is known as the 
+\shape italic
+Finger tensor
+\shape default
+ in the solid mechanics community
+\end_layout
+
+\end_inset
+
+, and 
+\begin_inset Formula $\dev\left(G\right)$
+\end_inset
+
+ is the deviator (trace-free part) of 
+\begin_inset Formula $G$
 \end_inset
 
 .
@@ -844,51 +826,11 @@ c_{h}=\frac{c_{t}}{\rho}\sqrt{\frac{T}{c_{v}}}
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset nomenclature
-LatexCommand nomenclature
-prefix "a"
-symbol "$c_h$"
-description "Characteristic velocity of heat waves"
-literal "true"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 In previous studies, 
 \begin_inset Formula $c_{t}$
 \end_inset
 
  has been taken to be constant, as it will be in this study.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $G=A^{T}A$
-\end_inset
-
- is the Gramian matrix of the distortion (also know as the Finger tensor
- in the solid mechanics community), and 
-\begin_inset Formula $\dev\left(G\right)$
-\end_inset
-
- is the deviator (trace-free part) of 
-\begin_inset Formula $G$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
-\end{equation}
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -932,55 +874,11 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\\
-\theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\tau_{1} & =\begin{cases}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\qquad\tau_{1}=\begin{cases}
 \frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
 \tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
-\end{cases}\label{eq:tau1}\\
-\tau_{2} & =\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
+\end{cases}\\
+\theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}\qquad\tau_{2}=\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
 \end{align}
 
 \end_inset
@@ -1034,44 +932,14 @@ literal "true"
 Finally, it is straightforward to verify that as a consequence of 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:p def"
+reference "eq:compoundVars"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:sig def"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:T def"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:q def"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, we have the following relations:
+ we have the following relations:
 \end_layout
 
 \begin_layout Standard
@@ -1094,7 +962,53 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 \sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
-\boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}\\
+\boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
 -\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\\
 -\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
 \end{align}
@@ -1121,7 +1035,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-The following constraint holds (see 
+Finally, the following constraint holds (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_hyperbolic_2016"
@@ -1187,12 +1101,12 @@ Level Set Methods
 \end_layout
 
 \begin_layout Standard
-Given a function 
+Given a scalar function 
 \begin_inset Formula $f$
 \end_inset
 
  on 
-\begin_inset Formula $\mathbb{R}$
+\begin_inset Formula $\mathbb{R}^{n}$
 \end_inset
 
 , the level set of 
@@ -1218,8 +1132,8 @@ Given a function
 \end_layout
 
 \begin_layout Standard
-Given velocity field 
-\begin_inset Formula $v:\mathbb{R}\rightarrow\mathbb{R}$
+Given normal direction speed 
+\begin_inset Formula $v$
 \end_inset
 
 , 
@@ -1240,7 +1154,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{\partial f}{\partial t}=v\left|\frac{\partial f}{\partial x}\right|\label{eq:LevelSetEqn}
+\frac{\partial f}{\partial t}=v\left|\nabla f\right|\label{eq:LevelSetEqn}
 \end{equation}
 
 \end_inset
@@ -1254,11 +1168,11 @@ The advection of a point in a fluid with velocity
 \end_inset
 
  can be modeled by taking 
-\begin_inset Formula $f=x-x_{0}$
+\begin_inset Formula $f=\left|\mathbf{x-x_{0}}\right|$
 \end_inset
 
  where 
-\begin_inset Formula $x_{0}$
+\begin_inset Formula $\mathbf{x_{0}}$
 \end_inset
 
  is the position of the point at time 
@@ -1290,9 +1204,8 @@ reference "chap:A Riemann Ghost Fluid Method for the GPR Model"
 \begin_inset Formula $f$
 \end_inset
 
- will usually have to be renormalized to resemble a straight line at every
- time step, to avoid unwanted distortions such as becoming a multivalued
- function.
+ will usually have to be renormalized at every time step, to avoid unwanted
+ distortions such as becoming a multivalued function.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2206,19 +2119,7 @@ where
 \end_layout
 
 \begin_layout Subsubsection
-Eigenvectors
-\end_layout
-
-\begin_layout Standard
-The following results are presented for an unmixed material (
-\begin_inset Formula $z\equiv0$
-\end_inset
-
-).
-\end_layout
-
-\begin_layout Paragraph*
-With Heat Conduction
+Eigenvectors (with Heat Conduction)
 \end_layout
 
 \begin_layout Standard
@@ -2338,20 +2239,60 @@ reference "eq:Right-Eigenvectors-1"
 \end_inset
 
  are columns 5-8.
- By inspection, it can be verified that the remaining 9 eigenvectors (correspond
-ing to eigenvalue 
+ By inspection (using the system matrix 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), it can be verified that the remaining 9 eigenvectors (corresponding to
+ eigenvalue 
 \begin_inset Formula $v_{1}$
 \end_inset
 
 ) are the remaining columns.
-\end_layout
-
-\begin_layout Standard
-A similar analysis yields the left eigenvectors as the rows of 
+ A similar analysis yields the left eigenvectors as the rows of 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:Left-Eigenvectors-1"
 
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Note that the index 
+\begin_inset Formula $d$
+\end_inset
+
+ appearing in these representations should be taken as 
+\begin_inset Formula $1,2,3$
+\end_inset
+
+ for eigenvectors in directions 
+\begin_inset Formula $x,y,z$
+\end_inset
+
+, respectively.
+ 
+\begin_inset Formula $0_{m,n}$
+\end_inset
+
+ is defined to be the 0-matrix of shape 
+\begin_inset Formula $\left(m,n\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{n}$
+\end_inset
+
+ the identity matrix of size 
+\begin_inset Formula $n$
 \end_inset
 
 .
@@ -2410,6 +2351,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
+\left(\Pi_{k}\right)_{ij} & =\frac{\partial\sigma_{id}}{\partial A_{jk}}\\
 \boldsymbol{w} & =T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\\
 c & =\frac{1}{\boldsymbol{e_{d}^{T}}\left(\Pi_{d}A\right)^{-1}\boldsymbol{w}+\frac{T_{p}}{\rho}}
 \end{align}
@@ -2459,8 +2401,8 @@ Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & -
 
 \end_layout
 
-\begin_layout Paragraph*
-Without Heat Conduction
+\begin_layout Subsubsection
+Eigenvectors (without Heat Conduction)
 \end_layout
 
 \begin_layout Standard
