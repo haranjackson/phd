@@ -2509,7 +2509,7 @@ ors must come in the form of the rows of the following matrix:
 \begin_inset Formula 
 \begin{equation}
 \left(\begin{array}{cccc}
-W & X & Y & Z\end{array}\right)
+W & X & Y & Z\end{array}\right)\label{eq:WXYZ}
 \end{equation}
 
 \end_inset
@@ -2582,7 +2582,11 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Thus:
+Solving this system for 
+\begin_inset Formula $X,Y,Z$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2631,25 +2635,38 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-and
+Define:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align}
-W\left(\begin{array}{ccccc}
+\begin{equation}
+M\equiv\left(\begin{array}{ccccc}
 \rho & 0 & 0 & 1 & 0\\
 \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & 0 & 1\\
 A_{11} & A_{12} & A_{13} & \vdots & \vdots\\
 A_{21} & A_{22} & A_{23} & -\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
 A_{31} & A_{32} & A_{33} & \vdots & \vdots
-\end{array}\right)\\
- & =WM\nonumber \\
- & =\left(\begin{array}{ccccc}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By the orthonormality of eigenvectors, we must have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+WM=\left(\begin{array}{ccccc}
 0 & 0 & 0 & 1 & 0\\
 0 & 0 & 0 & 0 & 1
-\end{array}\right)\nonumber 
-\end{align}
+\end{array}\right)
+\end{equation}
 
 \end_inset
 
@@ -2729,7 +2746,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Thus:
+Thus, it is straightforward to be confirm that:
 \end_layout
 
 \begin_layout Standard
@@ -2755,6 +2772,10 @@ begin{subequations}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
 \end_layout
 
 \begin_layout Standard
@@ -2785,6 +2806,20 @@ end{subequations}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Finally, combining the preceding results with 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:WXYZ"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have:
 \end_layout
 
 \begin_layout Standard
@@ -3137,8 +3172,8 @@ reference "eq:L.dP=0"
 
 \end_inset
 
- are taken: four regarding the 4 sets of characteristics traveling into
- the contact discontinuity from side 
+ are taken: 4 regarding the 4 sets of characteristics traveling into the
+ contact discontinuity from side 
 \begin_inset Formula $K$
 \end_inset
 
@@ -3154,7 +3189,7 @@ reference "eq:L.dP=0"
 \begin_inset Formula $K=R$
 \end_inset
 
-, respectively), and nine relating to the contact discontinuity itself.
+, respectively), and 9 relating to the contact discontinuity itself.
  This is demonstrated in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -3163,7 +3198,7 @@ reference "fig:HPR_RP2"
 \end_inset
 
 .
- Four more relations must be derived to solve the system for 
+ 4 more relations must be derived to solve the system for 
 \begin_inset Formula $\boldsymbol{P^{*K}}$
 \end_inset
 
@@ -4342,8 +4377,10 @@ The GPR-RGFM is now assessed.
  The first fives tests in this chapter are Riemann problems that have appeared
  elsewhere in the literature.
  Exact solutions to these problems have been calculated by various methods.
- The last test is new; it assess the ability of the GPR-RGFM to correctly
+ The sixth test is new; it assess the ability of the GPR-RGFM to correctly
  model heat conduction across interfaces.
+ The last two tests are well-known two-dimensional problems, to demonstrate
+ the applicability of the method to multiple dimensions.
  The EOS parameters for three commonly-used fluids are given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -5856,7 +5893,7 @@ literal "true"
 \end_inset
 
 , 
-\begin_inset Formula $b_{0}=1$
+\begin_inset Formula $c_{s}=1$
 \end_inset
 
 , 
@@ -7689,7 +7726,7 @@ literal "false"
 \begin_inset Formula $\rho_{0}=2.785,$
 \end_inset
 
-
+ 
 \begin_inset Formula $c_{v}=9\times10^{-4}$
 \end_inset
 
@@ -7853,7 +7890,7 @@ Aluminum Plate Impact
 \end_layout
 
 \begin_layout Standard
-This test follows the form found in 
+This test follows the form found in Michael & Nikiforakis 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "michael_multi-physics_2018"
@@ -7870,7 +7907,7 @@ literal "false"
 \end_inset
 
 ).
- An aluminum projectile impacts upon an aluminum plate at 
+ An aluminum projectile impacts upon an aluminum plate at speed 
 \begin_inset Formula $400$
 \end_inset
 
@@ -7969,7 +8006,8 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-The pressure contours throughout the aluminium are shown in 
+The pressure contours throughout the aluminium at various times are shown
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:The-aluminium-plate"
@@ -7979,7 +8017,29 @@ noprefix "false"
 
 \end_inset
 
-, and plots over time of the 
+.
+ Despite relying on a slightly different plasticity model to that found
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+, it can be seen that these plots are in very good agreement with those
+ found in the aforementioned publication.
+ One can clearly see the separation between the elastic precursor wave and
+ the trailing plastic wave in the impacted plate, and the subsequent return
+ waves that are generated once these waves reach the end of the plate.
+ This implies that the GPR-RGFM has correctly captured the aluminium-vacuum
+ interface.
+ Similarly, release waves can be seen on the sides of the plate, in agreement
+ with Michael & Nikiforakis.
+\end_layout
+
+\begin_layout Standard
+Plots over time of the 
 \begin_inset Formula $x$
 \end_inset
 
@@ -7995,6 +8055,16 @@ noprefix "false"
 \end_inset
 
 .
+ Note the good agreement between these plots and those found in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "michael_multi-physics_2018,howell_free-lagrange_2002"
+literal "false"
+
+\end_inset
+
+, both in terms of their qualitative shape, and the arrival times of the
+ waves that they represent.
 \end_layout
 
 \begin_layout Standard
@@ -8168,23 +8238,6 @@ name "sec:Discussion"
 \end_layout
 
 \begin_layout Standard
-Throughout this study, the various fluids have been assumed to be immiscible.
- Whilst this is a common assumption in situations where mixing is low or
- practically non-existent, there are many problems which may require it.
- It should be fairly straightforward to implement a mixture model such as
- that proposed by Romenski et al.
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Romenski2007,Romenski2010"
-literal "true"
-
-\end_inset
-
-, which uses the same thermal conduction system as the GPR model.
-\end_layout
-
-\begin_layout Standard
 The Riemann Ghost Fluid Method presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -8193,10 +8246,11 @@ reference "sec:SolvingTheRiemannProblem"
 \end_inset
 
  has been demonstrated to be a viable way of accurately simulating the interface
-s between different materials described by the GPR model.
+s between several different materials (in all three main phases of matter),
+ described by the GPR model.
  Unlike in many existing implementations, heat conduction across the interface
  was simulated accurately.
- This greatly simplifies the conceptual framework required for multiphase
+ This greatly simplifies the conceptual framework required for multimaterial
  interactions, as described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -8213,6 +8267,23 @@ reference "subsec:Multiphase-Systems"
 
 \begin_layout Subsection
 Limitations
+\end_layout
+
+\begin_layout Standard
+Throughout this study, the various fluids have been assumed to be immiscible.
+ Whilst this is a common assumption in situations where mixing is low or
+ practically non-existent, there are many problems which may require it.
+ An area of further research would be the implementation a mixture model
+ such as that proposed by Romenski et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Romenski2007,Romenski2010"
+literal "true"
+
+\end_inset
+
+, which uses the same thermal conduction system as the GPR model.
 \end_layout
 
 \begin_layout Standard
@@ -8304,7 +8375,7 @@ L\cdot\frac{d\boldsymbol{P}}{dt}=L\cdot\boldsymbol{S}\label{eq:along-characteris
 \end_layout
 
 \begin_layout Standard
-It may be that some numerical method is required to integrate 
+Methods to accurately integrate 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:along-characteristics"
@@ -8312,7 +8383,7 @@ reference "eq:along-characteristics"
 \end_inset
 
  from the left and right interface boundary states to their respective star
- states.
+ states warrant further research.
 \end_layout
 
 \begin_layout Standard
