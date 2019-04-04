@@ -13,7 +13,7 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{A Riemann Ghost Fluid Method for the Godunov-Peshkov-Romenski Model of Continuum Mechanics}
+\fancyhead[L]{A unified Eulerian framework for multimaterial continuum mechanics}
 \fancyhead[R]{\thepage}
 
 %\usepackage[printwatermark]{xwatermark}
