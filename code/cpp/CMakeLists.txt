@@ -5,6 +5,12 @@ project(GPRcpp)
 SET(PYTHON_DIR "~/miniconda3/include/python3.7m")
 include_directories(include ${PYTHON_DIR})
 
+SET(OpenMP_C_FLAGS "-Xpreprocessor -fopenmp -I/usr/local/opt/libomp/include")
+SET(OpenMP_C_LIB_NAMES "omp")
+SET(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I/usr/local/opt/libomp/include")
+SET(OpenMP_CXX_LIB_NAMES "omp")
+SET(OpenMP_omp_LIBRARY "/usr/local/opt/libomp/lib/libomp.dylib")
+
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG")
 SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
