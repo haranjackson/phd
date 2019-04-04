@@ -105,7 +105,7 @@ theorems-std
 \end_layout
 
 \begin_layout Title
-A Riemann ghost fluid method for the GPR model of continuum mechanics
+A unified Eulerian framework for multimaterial continuum mechanics
 \end_layout
 
 \begin_layout Author
@@ -203,64 +203,34 @@ rvt
 \end_layout
 
 \begin_layout Abstract
-The Godunov-Peshkov-Romenski model of continuum mechanics is claimed to
- be capable of describing both solids and (Newtonian) fluids in the same
- framework 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "peshkov_hyperbolic_2016,dumbser_high_2015"
-literal "true"
-
-\end_inset
-
-.
- It has recently been used to solve problems involving non-Newtonian fluids
- and elastoplastic solids 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "jackson_numerical_2018"
-literal "false"
-
-\end_inset
-
-.
+A framework for simulating the interactions between multiple different continua
+ is presented.
+ Each constituent material is governed by the same set of equations, differing
+ only in terms of their equations of state and strain dissipation functions.
+ The interfaces between any combination of fluids, solids, and vacuum are
+ handled by a new Riemann Ghost Fluid Method, which is agnostic to the type
+ of material on either side (depending only on the desired boundary conditions).
 \end_layout
 
 \begin_layout Abstract
-Different solids and fluids are governed by the same set of partial differential
- equations, differing only in their equations of states and strain dissipation
- functions.
- This has the potential to streamline development of simulation software
- for scenarios involving multiple materials and phases of matter, by reducing
- the number of different systems of equations that require solvers, and
- cutting down on the amount of theoretical work required.
- 
+The Godunov-Peshkov-Romenski (GPR) model is used for modelling the continua
+ (having recently been used to solve a range of problems involving Newtonian
+ and non-Newtonian fluids, and elastic and elastoplastic solids), and this
+ study represents the first publically-available method to handle multimaterial
+ problems under this model.
 \end_layout
 
 \begin_layout Abstract
-At present, there is no way of dealing with material interfaces in the GPR
- model, however.
- In this study, a modification of Barton's 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Barton2010"
-literal "true"
-
-\end_inset
-
- application of Sambasivan and Udaykumar's Riemann Ghost Fluid Method 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Sambasivan2009,Sambasivan2009a"
-literal "true"
-
-\end_inset
-
- is devised for the GPR model, enabling the simulation of material interfaces.
- This new method is tested on a variety of interface problems.
- It is demonstrated to accurately reproduce analytical results for known
- Riemann problems, and to produce expected results in other cases, including
- some featuring heat conduction across interfaces.
+The resulting framework is simple, yet capable of accurately reproducing
+ a wide range of different physical scenarios.
+ It is demonstrated here to accurately reproduce analytical results for
+ known Riemann problems, and to produce expected results in other cases,
+ including some featuring heat conduction across interfaces.
+ The framework thus has the potential to streamline development of simulation
+ software for scenarios involving multiple materials and phases of matter,
+ by reducing the number of different systems of equations that require solvers,
+ and cutting down on the amount of theoretical work required to deal with
+ the interfaces between materials.
 \end_layout
 
 \begin_layout Keywords
@@ -516,21 +486,41 @@ If it were possible to describe all phases with the same Eulerian model,
 \end_layout
 
 \begin_layout Standard
-It should be noted that any unified model of continuum mechanics purporting
- to describe all phases of interest must be at least as descriptive as competing
- models tailored to each individual phase if the utmost model fidelity is
- required.
- Although the results for the GPR model applied to standard test cases have
- been promising (both here and in other preliminary studies 
+At present, there is no way of dealing with material interfaces in the GPR
+ model, however.
+ In this study, a modification of Barton's 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "dumbser_high_2015,boscheri_cell_2016"
-literal "true"
+key "Barton2010"
+literal "false"
 
 \end_inset
 
-) more work is required to determine how faithfully the GPR model reproduces
- commonly agreed upon phenomenological results.
+ application of Sambasivan and Udaykumar's Riemann Ghost Fluid Method 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sambasivan2009,Sambasivan2009a"
+literal "false"
+
+\end_inset
+
+ is devised for the GPR model, enabling the simulation of material interfaces.
+ This new method is tested on a variety of interface problems.
+\end_layout
+
+\begin_layout Standard
+The following two subsections outline the theory behind the GPR model and
+ ghost fluid methods.
+ In Section 2 we explore the eigenstructure of the GPR model, and use it
+ to derive a Riemann solver for the Riemann problem at the interfaces between
+ different materials, which is able to incorporate the boundary conditions
+ that we wish to use.
+ Section 3 presents results of fluid-fluid, solid-solid, fluid-solid, and
+ solid-vacuum problems, including some multidimensional cases, and some
+ incorporating heat conduction across the interfaces.
+ Conclusions are drawn in section 4, along with discussion of potential
+ limitations to the method presented here, and ideas for further avenues
+ of enquiry.
 \end_layout
 
 \begin_layout Subsection
@@ -8238,27 +8228,20 @@ name "sec:Discussion"
 \end_layout
 
 \begin_layout Standard
-The Riemann Ghost Fluid Method presented in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:SolvingTheRiemannProblem"
-
-\end_inset
-
- has been demonstrated to be a viable way of accurately simulating the interface
-s between several different materials (in all three main phases of matter),
- described by the GPR model.
+The Riemann Ghost Fluid Method presented in this study has been demonstrated
+ to be an effective way of accurately simulating the interfaces between
+ several different materials (in all three main phases of matter), described
+ by the GPR model.
  Unlike in many existing implementations, heat conduction across the interface
- was simulated accurately.
- This greatly simplifies the conceptual framework required for multimaterial
- interactions, as described in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Multiphase-Systems"
+ was simulated accurately, leading to the representation of physical phenomena
+ that are often overlooked, and to the redundancy of numerical techniques
+ that are sometimes used to enforce more empirically-accurate results (such
+ as entropy and temperature fixes).
+\end_layout
 
-\end_inset
-
-.
+\begin_layout Standard
+The framework presented here greatly simplifies the conceptual framework
+ required for multimaterial interactions.
  Implementation should be easier and quicker, and future work can be more
  focused on a single model, rather than several fundamentally different
  frameworks.
