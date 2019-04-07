@@ -213,10 +213,10 @@ A framework for simulating the interactions between multiple different continua
 \end_layout
 
 \begin_layout Abstract
-The Godunov-Peshkov-Romenski (GPR) model is used for modelling the continua
+The Godunov-Peshkov-Romenski (GPR) model is used for modeling the continua
  (having recently been used to solve a range of problems involving Newtonian
  and non-Newtonian fluids, and elastic and elastoplastic solids), and this
- study represents the first publically-available method to handle multimaterial
+ study represents the first publicly-available method to handle multimaterial
  problems under this model.
 \end_layout
 
@@ -8488,6 +8488,16 @@ options "bibtotoc,siam"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+The authors acknowledge financial support from the EPSRC Centre for Doctoral
+ Training in Computational Methods for Materials Science under grant EP/L015552/
+1.
 \end_layout
 
 \begin_layout Section
