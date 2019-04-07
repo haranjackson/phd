@@ -116,15 +116,16 @@ def rod_penetration():
     """ N = 2
         cfl = 0.8
         SPLIT = True
-        FLUX = 0
+        FLUX = 1
 
         LSET = 2
         RIEMANN_RELAXATION = true
+        RIEMANN_STICK = true
     """
-    D = 0.029
-    V = -1250
-    # D = 0.0495
-    # V = -1700
+    #D = 0.029
+    #V = -1250
+    D = 0.0495
+    V = -1700
 
     o = 0.01
     nx = 200
@@ -134,7 +135,7 @@ def rod_penetration():
 
     ny = int(nx * Ly / Lx)
     dX = [Lx / nx, Ly / ny]
-    tf = 20e-6 # 80e-6
+    tf = 80e-6
 
     MP1 = W_SMGP_SI
     MP2 = Steel_SMGP_SI
@@ -174,9 +175,7 @@ def rod_penetration():
                 u[i, j, -2] = -1
                 u[i, j, -1] = -1
 
-    u = u[int(nx/2):]
-
-    return u, MPs, tf, dX, 'halfx'
+    return u, MPs, tf, dX, 'transitive'
 
 
 def taylor_bar():
