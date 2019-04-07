@@ -7890,8 +7890,8 @@ literal "false"
 
  (based on the original formulation found in 
 \begin_inset CommandInset citation
-LatexCommand cite
-key "howell_free-lagrange_2002"
+LatexCommand citep
+key "howell_free_2002"
 literal "false"
 
 \end_inset
@@ -8048,7 +8048,7 @@ noprefix "false"
  Note the good agreement between these plots and those found in 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "michael_multi-physics_2018,howell_free-lagrange_2002"
+key "michael_multi-physics_2018,howell_free_2002"
 literal "false"
 
 \end_inset
