@@ -87,6 +87,18 @@
 Objective 3: Simulating Material Interfaces
 \end_layout
 
+\begin_layout Standard
+The material in this section is published in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jackson_unified_2019"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Ghost Fluid Methods
 \begin_inset CommandInset label

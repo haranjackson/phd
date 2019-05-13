@@ -105,7 +105,7 @@ Publications
 \begin_layout Itemize
 H Jackson, N Nikiforakis, 
 \shape italic
-A unified framework for simulation impact-induced detonation in an elastoplastic
+A unified framework for simulating impact-induced detonation in an elastoplastic
  confiner
 \shape default
  (in preparation)
@@ -114,9 +114,9 @@ A unified framework for simulation impact-induced detonation in an elastoplastic
 \begin_layout Itemize
 H Jackson, N Nikiforakis, 
 \shape italic
-A Riemann ghost fluid method for the GPR model
+A unified Eulerian framework for multimaterial continuum mechanics
 \shape default
- (in preparation)
+ (submitted to Journal of Computational Physics)
 \end_layout
 
 \begin_layout Itemize
@@ -125,7 +125,7 @@ H Jackson, N Nikiforakis,
 A numerical scheme for non-Newtonian fluids and plastic solids under the
  GPR model
 \shape default
- (submitted to Journal of Computational Physics)
+ (Journal of Computational Physics, 2019)
 \end_layout
 
 \begin_layout Itemize
