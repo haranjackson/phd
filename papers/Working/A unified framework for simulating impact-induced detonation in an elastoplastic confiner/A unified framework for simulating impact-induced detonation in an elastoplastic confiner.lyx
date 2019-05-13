@@ -1,0 +1,4286 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+\journal{Journal of Computational Physics}
+%\usepackage{draftwatermark}
+
+% Remove subsection in left header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{A unified framework for simulating impact-induced detonation in an elastoplastic confiner}
+\fancyhead[R]{\thepage}
+
+%\usepackage[printwatermark]{xwatermark}
+\usepackage{xcolor}
+\usepackage{graphicx}
+%\newwatermark[allpages,color=gray!20,angle=45,scale=4,xpos=0,ypos=0]{DRAFT}
+
+% For float barriers
+\usepackage{placeins}
+\end_preamble
+\options 3p, number
+\use_default_options false
+\begin_modules
+theorems-std
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type numerical
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+A unified framework for simulating impact-induced detonation in an elastoplastic
+ confiner
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\begin_inset Flex CorAuthormark
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex CorAuthormark
+status collapsed
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Email
+hj305@cam.ac.uk
+\end_layout
+
+\begin_layout Author
+Nikos Nikiforakis
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Principal corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+[Abstract goes here]
+\end_layout
+
+\begin_layout Keywords
+Godunov-Peshkov-Romenski 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ GPR 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ impact 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ detonation 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ multimaterial
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{\mathrm{tr}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Section
+Mathematical Models
+\end_layout
+
+\begin_layout Subsection
+The Model of Godunov, Peshkov and Romenski
+\end_layout
+
+\begin_layout Standard
+The GPR model takes the following form (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_hyperbolic_2016"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ are positive functions (given below for the problems at hand).
+ Additionally, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+p=\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A} & \sigma=-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\\
+T=\left.\frac{\partial E}{\partial s}\right|_{\rho,A} & \boldsymbol{q}=T\frac{\partial E}{\partial\boldsymbol{J}}
+\end{cases}\label{eq:compoundVars}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $s$
+\end_inset
+
+ is the entropy of the system.
+ 
+\begin_inset Formula $E$
+\end_inset
+
+ must be specified to close the system.
+ The energy contains contributions from the micro-, meso-, and macro-scale:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, as in previous studies (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "dumbser_high_2015,boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+) 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
+ the EOS of nonlinear hyperelasticity (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{2}$
+\end_inset
+
+ takes the quadratic form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{c_{t}\left(\rho,s\right)^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\Vert \cdot\right\Vert _{F}$
+\end_inset
+
+ is the Frobenius norm
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The Frobenius norm is defined by: 
+\begin_inset Formula $\left\Vert X\right\Vert _{F}=\sqrt{\sum_{i,j}\left|X_{ij}\right|^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ is the Gramian matrix of the distortion
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $G$
+\end_inset
+
+ is known as the 
+\shape italic
+Finger tensor
+\shape default
+ in the solid mechanics community
+\end_layout
+
+\end_inset
+
+, and 
+\begin_inset Formula $\dev\left(G\right)$
+\end_inset
+
+ is the deviator (trace-free part) of 
+\begin_inset Formula $G$
+\end_inset
+
+.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is the characteristic velocity of transverse perturbations.
+ 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is related to the characteristic velocity of propagation of heat waves
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Note that 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ denotes this variable by 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, which is avoided here due to a clash with a parameter of one of the equations
+ of state used.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{h}=\frac{c_{t}}{\rho}\sqrt{\frac{T}{c_{v}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In previous studies, 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ has been taken to be constant, as it will be in this study.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{3}$
+\end_inset
+
+ is the usual specific kinetic energy per unit mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following forms are taken:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\qquad\tau_{1}=\begin{cases}
+\frac{6\mu}{\rho_{0}c_{s}^{2}} & viscous\thinspace fluids\\
+\tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
+\end{cases}\\
+\theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}\qquad\tau_{2}=\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The justification of these choices is that classical Navier–Stokes–Fourier
+ theory is recovered in the stiff limit 
+\begin_inset Formula $\tau_{1},\tau_{2}\rightarrow0$
+\end_inset
+
+ (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+).
+ The power law for elastoplastic solids is based on material from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, it is straightforward to verify that as a consequence of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:compoundVars"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we have the following relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
+\boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+-\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\\
+-\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, the following constraint holds (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_hyperbolic_2016"
+literal "true"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:detA constraint}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2018"
+literal "false"
+
+\end_inset
+
+ for an interpretation of the physical meaning of the relaxation times 
+\begin_inset Formula $\tau_{1},\tau_{2}$
+\end_inset
+
+ and thermal impulse vector 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+The Operator-Splitting Scheme of Jackson & Nikiforakis
+\end_layout
+
+\begin_layout Subsection
+The Ghost Fluid Method of Jackson & Nikiforakis
+\end_layout
+
+\begin_layout Section
+Extending the GPR Model
+\end_layout
+
+\begin_layout Subsection
+Equations of State
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Equations-of-State"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Mie-Gruneisen Models
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Mie-Gruneisen-Models"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is required to specify the microscale energy 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ appearing in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyDefinition"
+
+\end_inset
+
+.
+ In this study, several different possible choices for 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ are put into the same framework by expressing them in the following Mie-Gruneis
+en form 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "menikoff_complete_2016"
+literal "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e^{ref}\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
+T & =T^{ref}\phi\left(\rho\right)+\frac{e-e^{ref}}{c_{v}}=T^{ref}\phi\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
+\phi\left(\rho\right) & =\exp\left(\int_{\rho_{0}}^{\rho}\frac{\Gamma\left(\rho^{'}\right)}{\rho^{'}}d\rho^{'}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$T^{ref}$"
+description "Reference temperature appearing in the Mie-Gruneisen EOS"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The forms taken by 
+\begin_inset Formula $e^{ref},p^{ref},\Gamma$
+\end_inset
+
+ for various different instances of this class are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:MG EOSs"
+
+\end_inset
+
+.
+ The first five entries in the table are standard results.
+ The sixth is derived thus.
+ The Godunov-Romenski hyperelastic EOS is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+E\left(\rho,S,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)\\
+ & +\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\alpha$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\beta$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\gamma$"
+description "A constant appearing in the Godunov-Romenski EOS"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the relation 
+\begin_inset Formula $\det\left(A\right)=\frac{\rho}{\rho_{0}}$
+\end_inset
+
+, this can be thought of as taking the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}\left(\rho,s\right)+\frac{c_{s}\left(\rho\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}$
+\end_inset
+
+.
+ Considering only the microscale energy component, note that we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}\frac{\partial E_{1}}{\partial\rho}=\rho\left(\frac{c_{0}^{2}}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}-\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}=\frac{p}{\gamma\rho}-\frac{c_{0}^{2}}{\gamma\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ can be put in Mie-Gruneisen form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p-\frac{c_{0}^{2}\rho}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}}{\gamma\rho}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Equation of State
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p^{ref}\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e^{ref}\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $T^{ref}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ideal Gas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma-1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Stiffened Gas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-p_{\infty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{p_{\infty}}{\rho}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma-1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Shock Mie-Gruneisen
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{p^{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}\frac{\rho_{0}}{\rho}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JWL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Ae^{-\frac{R_{1}\rho_{0}}{\rho}}+Be^{-\frac{R_{2}\rho_{0}}{\rho}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{A}{\rho_{0}R_{1}}e^{-\frac{R_{1}\rho_{0}}{\rho}}+\frac{B}{\rho_{0}R_{2}}e^{-\frac{R_{2}\rho_{0}}{\rho}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cochran-Chan
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}}-B\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{A}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}-1}-1\right)-\frac{B}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}-1}-1\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Godunov-Romenski
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{c_{0}^{2}\rho}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $T_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $e^{ref},p^{ref},\Gamma,T_{ref}$
+\end_inset
+
+ for different kinds of Mie-Gruneisen equations of state
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:MG EOSs"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following quantities are required when computing the eigenstructure
+ of the system:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial T}{\partial\rho} & =\frac{1}{c_{v}}\left(\frac{\partial e}{\partial\rho}-\frac{de^{ref}}{d\rho}\right)\\
+\frac{\partial T}{\partial p} & =\frac{1}{c_{v}}\frac{\partial e}{\partial p}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial e}{\partial\rho} & =\frac{de^{ref}}{d\rho}-\frac{\frac{dp^{ref}}{d\rho}\rho\Gamma\left(\rho\right)+\left(\Gamma\left(\rho\right)+\rho\Gamma^{'}\left(\rho\right)\right)\left(p-p^{ref}\left(\rho\right)\right)}{\left(\rho\Gamma\left(\rho\right)\right)^{2}}\\
+\frac{\partial e}{\partial p} & =\frac{1}{\rho\Gamma\left(\rho\right)}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The relevant functions for each of the EOSs used in this study are given
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:MG EOSs Derivatives"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways true
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Equation of State
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{dp^{ref}}{d\rho}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{de^{ref}}{d\rho}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma^{'}\left(\rho\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ideal Gas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Stiffened Gas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-\frac{p_{\infty}}{\rho^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Shock Mie-Gruneisen
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{c_{0}^{2}\rho_{0}^{2}\left(s\left(\rho_{0}-ρ\right)-\rho\right)}{\left(s\left(\rho-\rho_{0}\right)-\rho\right)^{3}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1}{2}\left(\frac{dp^{ref}}{d\rho}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p^{ref}}{\rho^{2}}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-\Gamma_{0}\frac{\rho_{0}}{\rho^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JWL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{AR_{1}\rho_{0}}{\rho^{2}}e^{-\frac{R_{1}\rho_{0}}{\rho}}+\frac{BR_{2}\rho_{0}}{\rho^{2}}e^{-\frac{R_{2}\rho_{0}}{\rho}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{A}{\rho^{2}}e^{-\frac{R_{1}\rho_{0}}{\rho}}+\frac{B}{\rho^{2}}e^{-\frac{R_{2}\rho_{0}}{\rho}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cochran-Chan
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\epsilon_{1}A}{\rho}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}}-\frac{\epsilon_{2}B}{\rho}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{A}{\rho^{2}}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}}-\frac{B}{\rho^{2}}\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Godunov-Romenski
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{de^{ref}}{d\rho},\frac{dp^{ref}}{d\rho},\Gamma^{'}$
+\end_inset
+
+ for different kinds of Mie-Gruneisen equations of state
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:MG EOSs Derivatives"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although this is a versatile class of equations of state - and it is fit
+ for the purposes that the model is put to here - it should be noted that
+ many other choices are available.
+\end_layout
+
+\begin_layout Subsubsection
+Variable Transverse Perturbation Speed
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Variable-Transverse-Perturbation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MG form"
+
+\end_inset
+
+ and using the fact that 
+\begin_inset Formula $p=\rho^{2}e_{\rho}$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e_{\rho}-\frac{\Gamma}{\rho}e=\frac{p^{ref}}{\rho^{2}}-\frac{\Gamma}{\rho}e^{ref}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The solutions to this equation for different forms of 
+\begin_inset Formula $\Gamma,p^{ref},e^{ref}$
+\end_inset
+
+ take the form below, where 
+\begin_inset Formula $f$
+\end_inset
+
+ is an arbitrary function of 
+\begin_inset Formula $s$
+\end_inset
+
+, 
+\begin_inset Formula $g$
+\end_inset
+
+ depends on the form of 
+\begin_inset Formula $\Gamma$
+\end_inset
+
+, and 
+\begin_inset Formula $\hat{e}$
+\end_inset
+
+ is a particular solution of the equation (which will be equal to 
+\begin_inset Formula $e^{ref}$
+\end_inset
+
+ if 
+\begin_inset Formula $p^{ref}=\rho^{2}\frac{\partial e^{ref}}{\partial\rho}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=f\left(s\right)g\left(\rho\right)+\hat{e}\left(\rho\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}e_{\rho}=\rho^{2}\left(f\left(s\right)g^{'}\left(\rho\right)+\hat{e}^{'}\left(\rho\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)}{g^{'}\left(\rho\right)}=f\left(s\right)=\frac{e-\hat{e}\left(\rho\right)}{g\left(\rho\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}\left(\rho,p\right)=e\left(\rho,p\right)=\hat{e}\left(\rho\right)+\frac{g\left(\rho\right)}{g^{'}\left(\rho\right)}\left(\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now add another term to the energy, giving it the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,p\right)=e\left(\rho,p\right)=f\left(s\right)g\left(\rho\right)+\hat{e}\left(\rho\right)+B\left(\rho\right)h\left(A\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We then have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p=\rho^{2}\left(f\left(s\right)g^{'}\left(\rho\right)+\hat{e}^{'}\left(\rho\right)+B^{'}\left(\rho\right)h\left(A\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)-B^{'}\left(\rho\right)h\left(A\right)}{g^{'}\left(\rho\right)}=f\left(s\right)=\frac{e-\hat{e}\left(\rho\right)-B\left(\rho\right)h\left(A\right)}{g\left(\rho\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+e=\frac{g\left(\rho\right)}{g^{'}\left(\rho\right)}\left(\frac{p}{\rho^{2}}-\hat{e}^{'}\left(\rho\right)-B^{'}\left(\rho\right)h\left(A\right)\right)+\hat{e}\left(\rho\right)+B\left(\rho\right)h\left(A\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $\frac{g\left(\rho\right)}{g^{'}\left(\rho\right)}=\frac{\rho}{\Gamma\left(\rho\right)}$
+\end_inset
+
+, this can be expressed as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E\left(\rho,p\right)=e\left(\rho,p\right)=E_{1}\left(\rho,p\right)+\left(B\left(\rho\right)-\frac{\rho}{\Gamma\left(\rho\right)}B^{'}\left(\rho\right)\right)h\left(A\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the EOS comprises a microscale energy component of Mie-Gruneisen type,
+ and a mesoscale energy component with speed of transverse vibrations dependent
+ upon 
+\begin_inset Formula $\rho$
+\end_inset
+
+, then this provides a method to recover the EOS in terms of 
+\begin_inset Formula $\rho$
+\end_inset
+
+ and 
+\begin_inset Formula $p$
+\end_inset
+
+ (by substituting 
+\begin_inset Formula $B\left(\rho\right)=\frac{c_{s}^{2}\left(\rho\right)}{4}$
+\end_inset
+
+ and 
+\begin_inset Formula $h\left(A\right)=\left\Vert \dev\left(A^{T}A\right)\right\Vert _{F}^{2}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Reactive Materials
+\end_layout
+
+\begin_layout Standard
+We now wish to simulate the mixture of two miscible materials, labelled
+ 1 and 2.
+ Let 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ be the mass fraction of material 1.
+ Let material 1 undergo a chemical reaction at rate 
+\begin_inset Formula $K$
+\end_inset
+
+ to form material 2.
+ The GPR model can be extended to incorporate these factors thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:FirstContinuityEquationMultiphase}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquationMultiphase}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}\left(\tau_{1}\right)}\label{eq:DistortionEquationMultiphase}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}\left(\tau_{2}\right)}\label{eq:ThermalEquationMultiphase}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquationMultiphase}\\
+\frac{\partial\left(\rho\lambda\right)}{\partial t}+\frac{\partial\left(\rho\lambda v_{k}\right)}{\partial x_{k}} & =-\rho K\label{eq:ReactionEquation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\lambda$"
+description "Concentration of reactive species"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The EOS is modified to include:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{r}\left(\lambda\right)=-Q_{c}\left(1-\lambda\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$Q_c$"
+description "Energy formed per unit mass of reactant"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are many different reaction rate laws that can be used to determine
+ the form of 
+\begin_inset Formula $K$
+\end_inset
+
+ appearing in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ReactionEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In discrete ignition temperature reaction kinetics, no reaction occurs below
+ the ignition temperature, 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+.
+ Above 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+, the reaction proceeds at a constant rate 
+\begin_inset Formula $K_{0}>0$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=\begin{cases}
+K_{0}\lambda & T`\geq T_{i}\\
+0 & T<T_{i}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$T_i$"
+description "Ignition temperature in discrete ignition temperature reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$K_0$"
+description "Reaction rate in discrete ignition temperature reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more sophisticated model of reaction kinetics was devised by Svante Arrhenius
+ in 1889 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "arrhenius_heat_1889,arrhenius_reaction_1889"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+K=B_{c}e^{-\frac{E_{a}}{R_{c}T}}\lambda
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$R_c$"
+description "Universal gas constant"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$B_c$"
+description "Prefactor in Arrhenius reaction kinetics"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$E_a$"
+description "Activation energy of a reactive species"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $B_{c}$
+\end_inset
+
+ is some prefactor (with units of frequency), and 
+\begin_inset Formula $E_{a}$
+\end_inset
+
+ is the activation energy of the reactive species.
+\end_layout
+
+\begin_layout Standard
+A more sophisticated model yet is the ignition and growth model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lee_phenomenological_1980"
+literal "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+K & =I\lambda^{b}\left(\frac{\rho}{\rho_{0}}-1-a\right)^{x}H\left(\phi_{I}-\phi\right)\\
+ & +G_{1}\lambda^{c}\phi^{d}p^{y}H\left(\phi_{G1}-\phi\right)\nonumber \\
+ & +G_{2}\lambda^{e}\phi^{g}p^{z}H\left(\phi-\phi_{G2}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\phi=1-\lambda$
+\end_inset
+
+, 
+\begin_inset Formula $H$
+\end_inset
+
+ is the Heaviside function, and 
+\begin_inset Formula $I,G_{1},G_{2},a,b,c,d,e,g,x,y,z,\phi_{I},\phi_{G1},\phi_{G2}$
+\end_inset
+
+ are constants depending on the material being modeled.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Seven-Wave Elastic Riemann Problem
+\end_layout
+
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+.
+ The aim of the test is to validate the Mie-Gruneisen formulation of the
+ Godunov-Romenski EOS presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Mie-Gruneisen-Models"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the formulation of the mesoscale GPR energy for the Godunov-Romenski
+ EOS presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Variable-Transverse-Perturbation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Seven Wave/ρ.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Seven Wave/v1.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Seven Wave/v2.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Seven Wave/v3.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:seven-wave-1"
+
+\end_inset
+
+Density and velocity for the 7-wave elastic Riemann problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Seven Wave/Σ11.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Seven Wave/Σ12.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Seven Wave/Σ13.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Seven Wave/Σ22.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Seven Wave/Σ23.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Seven Wave/Σ33.png
+	lyxscale 25
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:seven-wave-2"
+
+\end_inset
+
+Total stress for the 7-wave elastic Riemann problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Shock-Induced Detonation
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Shock-Induced-Detonation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GPR model is now combined with discrete ignition temperature reaction
+ kinetics to model a ZND detonation wave
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Zel'dovich 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "zeldovich_theory_1940"
+literal "true"
+
+\end_inset
+
+, von Neumann 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "von_neumann_theory_1942"
+literal "true"
+
+\end_inset
+
+, and Doring 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "doring_detonation_1943"
+literal "true"
+
+\end_inset
+
+ independently proposed this detonation model, whereby reactive gas is compresse
+d to high pressure by an infinitely thin shock wave into a 
+\shape italic
+von Neumann spike
+\shape default
+, initiating the reaction.
+ The reaction zone is located behind the spike.
+ In the reference frame of the shock, the gas moves supersonically ahead
+ of the shock, subsonically in the reaction zone, and sonically in the region
+ behind the reaction zone (which is described by the Chapman-Jouget state
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "chapman_rate_1899,jouget_propagation_1905"
+literal "true"
+
+\end_inset
+
+.
+ The energy released in the reaction is transported acoustically to the
+ shock to support it.
+\end_layout
+
+\end_inset
+
+ in a viscous, reactive, ideal gas.
+ The test consists of a CJ wave with speed 1, traveling into a region of
+ totally unburnt gas.
+ The initial conditions are taken from Helzel et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "helzel_modified_2000"
+literal "true"
+
+\end_inset
+
+ and are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:DiscreteIgnitionTemperatureKinetics"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "ZND"
+description "Zel'dovich-Neumann-Doring"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "CJ"
+description "Chapman-Jouguet"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0.25$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{1.4}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\geq0.25$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.887565$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.191709$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\text{−}0.577350,0,0\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{0.887565}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:DiscreteIgnitionTemperatureKinetics"
+
+\end_inset
+
+Initial conditions for the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $p_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{t}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.75$
+\end_inset
+
+, 
+\begin_inset Formula $Q_{c}=1$
+\end_inset
+
+, 
+\begin_inset Formula $K_{0}=250$
+\end_inset
+
+, 
+\begin_inset Formula $T_{i}=0.25$
+\end_inset
+
+.
+ The results for grids of 400 and 1600 cells at time 
+\begin_inset Formula $t=0.5$
+\end_inset
+
+ are found in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+.
+ They are to be compared with those by Hidalgo and Dumbser 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hidalgo_ader_2011"
+literal "true"
+
+\end_inset
+
+.
+ The simulation with 400 cells corresponds well with that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hidalgo_ader_2011"
+literal "true"
+
+\end_inset
+
+, and the simulation with 1600 cells is very close to Hidalgo's total variation
+ diminishing reference solution calculated with 10,000 cells.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is well resolved, with the thin reaction zone behind
+ it (corresponding to the region in which the concentration decreases from
+ 1 to 0).
+ The CJ state is maintained correctly behind the reaction zone.
+ The spurious wave in the density is explained in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hidalgo_ader_2011"
+literal "true"
+
+\end_inset
+
+ as being due to initialisation errors occurring as a result of using exact
+ algebraic conditions for an ideal (infinitely thin) CJ detonation wave,
+ which are solved with a viscous model with finite reaction rate.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Shock-Induced Detonation/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Shock-Induced Detonation/r.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/Shock-Induced Detonation/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Shock-Induced Detonation/v.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HidalgoViscousDetonation"
+
+\end_inset
+
+Pressure, density, concentration of reactant, and velocity (in the reference
+ frame of the shock) in the viscous shock-induced detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Heating-Induced Deflagration
+\end_layout
+
+\begin_layout Standard
+As a step towards modeling the slow cooking off problem, the GPR model is
+ now applied to the situation presented by Clarke, Kassoy and Riley 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_shocks_1984,clarke_direct_1986,clarke_evolution_1990"
+literal "true"
+
+\end_inset
+
+.
+ Here, the domain 
+\begin_inset Formula $x\in\left[0,8.5\times10^{-6}\right]$
+\end_inset
+
+ is occupied by an ideal gas with initial conditions 
+\begin_inset Formula $\rho=\rho_{0}=1.176$
+\end_inset
+
+, 
+\begin_inset Formula $p=p_{0}=101325$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{v}=\boldsymbol{0}$
+\end_inset
+
+, 
+\begin_inset Formula $A=I_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{J}=\boldsymbol{0}$
+\end_inset
+
+ and material parameters 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=55$
+\end_inset
+
+, 
+\begin_inset Formula $c_{t}=500$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.98\times10^{-5}$
+\end_inset
+
+, 
+\begin_inset Formula $P_{r}=0.72$
+\end_inset
+
+.
+ These values are chosen to be similar to air at room temperature.
+\end_layout
+
+\begin_layout Standard
+Thermal energy is added at the left boundary at a high power of 
+\begin_inset Formula $\frac{\gamma p_{0}c_{0}}{P_{r}\left(\gamma-1\right)}$
+\end_inset
+
+ (around 
+\begin_inset Formula $1.7\times10^{8}Wm^{-2}$
+\end_inset
+
+).
+ The test is performed with both a combustible and an inert gas.
+ In the former case, the initial concentration is set to 
+\begin_inset Formula $\lambda=1$
+\end_inset
+
+.
+ Arrhenius reaction kinetics are used, with 
+\begin_inset Formula $Q_{c}=6\gamma c_{v}T_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{c}=7\times10^{10}$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon=\frac{1}{20}$
+\end_inset
+
+.
+ The subsequent evolutions of the systems for 400 cells are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:CKR"
+
+\end_inset
+
+.
+ Nondimensionalised time and length variables 
+\begin_inset Formula $t^{*},x^{*}$
+\end_inset
+
+ are used, as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_direct_1986"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+t & =\frac{\mu}{p_{0}\gamma}t^{*}\\
+x & =\frac{\mu c_{0}}{p_{0}\gamma}x^{*}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are no analogues for 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ in the models used by Clarke et al.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is given the experimentally-derived value for 
+\begin_inset Formula $CH_{3}Cl$
+\end_inset
+
+ at 30°C given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is chosen by trial and error so that the GPR results corresponded with
+ those in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_direct_1986"
+literal "true"
+
+\end_inset
+
+.
+ The results presented here are thus close, but not identical to those of
+ Clarke et al.
+\end_layout
+
+\begin_layout Standard
+Note that heating the inert gas produces an acoustic wave of constant pressure,
+ propagating ahead of the temperature curve.
+ This pressure wave is also present in the heating of the combustible gas,
+ where it proceeds in front of the combustion wave.
+ The temperature increase accompanying this acoustic wave is not enough
+ to ignite the reactive gas, and the thin reaction zone lags behind the
+ acoustic wavefront.
+ Although the combustion wave is referred to as a detonation wave in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "clarke_direct_1986"
+literal "true"
+
+\end_inset
+
+, it would now commonly be called a deflagration wave, as it travels subsonicall
+y and is not coincident with the shock wave.
+ This phenomenon of a second, faster shock overtaking the combustion wave
+ demonstrated experimentally by Kapila et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kapila_mechanisms_2002"
+literal "true"
+
+\end_inset
+
+, with a full mathematical analysis provided by Short 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "short_critical_1997"
+literal "true"
+
+\end_inset
+
+, where it is shown to result from the steep temperature gradient at the
+ time of ignition.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/Heating-Induced Deflagration/inert/T.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Heating-Induced Deflagration/reactive/T.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/Heating-Induced Deflagration/inert/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Heating-Induced Deflagration/reactive/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/Heating-Induced Deflagration/inert/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Heating-Induced Deflagration/reactive/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:CKR"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ deflagration test with inert gas (left) / reactive gas (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Heating-Induced Detonation
+\end_layout
+
+\begin_layout Standard
+It is now demonstrated that the heating-induced deflagration test can result
+ in detonation if the temperature gradient upon ignition is less steep.
+ This test is identical to the previous test, with one exception: 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is given the higher value of 
+\begin_inset Formula $\frac{1}{15}$
+\end_inset
+
+.
+ Thus, the activation energy is effectively lower, or equivalently, the
+ whole gas volume is relatively closer to the ignition temperature when
+ the gas at the left boundary ignites.
+ The results of this test are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The von Neumann spike is present and well resolved, with a thin reaction
+ zone appearing behind it in the concentration plot.
+ Unlike in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Shock-Induced-Detonation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the system does not relax to the CJ state behind the detonation wave,
+ as thermal energy is continually added to the reflective left boundary.
+ The region behind the reaction zone is thus complex.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/Heating-Induced Detonation/T.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/Heating-Induced Detonation/p.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/Heating-Induced Detonation/c.png
+	lyxscale 25
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heating-Induced-Detonation"
+
+\end_inset
+
+Temperature, pressure, and concentration of reactant in the heating-induced
+ detonation test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Confined C4 Detonation
+\end_layout
+
+\begin_layout Standard
+This test is a variation of that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+.
+ A steel bar of length 0.03 and width 0.018 impacts upon C4 of depth 0.009,
+ which is confined by two steel plates of depth 0.003.
+ The bar is initially traveling with speed 700.
+ The system is surrounded by air.
+\end_layout
+
+\begin_layout Standard
+The steel is modeled using a shock Mie-Gruneisen EOS, with parameters 
+\begin_inset Formula $\rho_{0}=7870$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=134$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=4569$
+\end_inset
+
+, 
+\begin_inset Formula $Γ_{0}=2.17$
+\end_inset
+
+, 
+\begin_inset Formula $s=1.49$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=3235$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=0.53\times10^{9}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=10$
+\end_inset
+
+.
+ The C4 is modeled using a JWL EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1601$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.487\times10^{6}/1601$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{0}=0.8938$
+\end_inset
+
+, 
+\begin_inset Formula $A=7.781\times10^{13}$
+\end_inset
+
+, 
+\begin_inset Formula $B=-5.031\times10^{9}$
+\end_inset
+
+, 
+\begin_inset Formula $R_{1}=11.3$
+\end_inset
+
+, 
+\begin_inset Formula $R_{2}=1.13$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=1487$
+\end_inset
+
+.
+ The air is modeled using an ideal gas EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1.18$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=50$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.85\times10^{-5}$
+\end_inset
+
+.
+ The reaction of the C4 is captured using the ignition and growth model,
+ with parameters 
+\begin_inset Formula $Q=9\times10^{9}/1601$
+\end_inset
+
+, 
+\begin_inset Formula $I=4\times10^{6}$
+\end_inset
+
+, 
+\begin_inset Formula $G_{1}=1.4\times10^{-20}$
+\end_inset
+
+, 
+\begin_inset Formula $G_{2}=0$
+\end_inset
+
+, 
+\begin_inset Formula $a=0.0367$
+\end_inset
+
+, 
+\begin_inset Formula $b=2/3$
+\end_inset
+
+, 
+\begin_inset Formula $c=2/3$
+\end_inset
+
+, 
+\begin_inset Formula $d=1/3$
+\end_inset
+
+, 
+\begin_inset Formula $x=7$
+\end_inset
+
+, 
+\begin_inset Formula $y=2$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{I}=0.022$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{G1}=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_backplate/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_backplate/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_backplate/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_backplate/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test, at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Confined C4 Detonation without Back Plate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_open/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_open/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_open/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_open/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation-no-backplate"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test (without back plate), at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Confined C4 Detonation with Air Gap
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_airgap/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_airgap/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_airgap/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_airgap/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation-airgap"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test (with air gap), at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "refs"
+options "bibtotoc,siam"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+The authors acknowledge financial support from the EPSRC Centre for Doctoral
+ Training in Computational Methods for Materials Science under grant EP/L015552/
+1.
+\end_layout
+
+\begin_layout Section
+Appendix
+\end_layout
+
+\end_body
+\end_document
