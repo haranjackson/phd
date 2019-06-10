@@ -204,7 +204,18 @@ rvt
 \end_layout
 
 \begin_layout Abstract
-[Abstract goes here]
+We present a framework for simulating detonation resulting from impact upon
+ a reactive material that is encased by an elastoplastic confiner.
+ The framework is unified in the sense that all phases of matter (solid
+ confiner, solid or fluid reactant, and gaseous surrounding air or vacuum)
+ are modeled with the same system of equations, with the interfaces between
+ different materials being captured using the Ghost Fluid Method presented
+ by Jackson and Nikiforakis previously.
+ Despite the wildly different physical characteristics of the materials
+ involved - and the complexity of their interactions - it is demonstrated
+ through several numerical tests that this framework is able to capture
+ the behavior of the systems at hand both accurately and with conceptual
+ conciseness.
 \end_layout
 
 \begin_layout Keywords
@@ -433,7 +444,7 @@ E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(
 \end_layout
 
 \begin_layout Standard
-Here, as in previous studies (e.g.
+In previous studies (e.g.
  
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -446,8 +457,9 @@ literal "false"
 \begin_inset Formula $E_{1}$
 \end_inset
 
- is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
- the EOS of nonlinear hyperelasticity (see 
+ has been taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS,
+ or the EOS of nonlinear hyperelasticity (e.g.
+ 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "barton_exact_2009"
@@ -821,7 +833,7 @@ literal "true"
 See 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "jackson_numerical_2018"
+key "dumbser_high_2015"
 literal "false"
 
 \end_inset
@@ -841,8 +853,973 @@ literal "false"
 The Operator-Splitting Scheme of Jackson & Nikiforakis
 \end_layout
 
+\begin_layout Standard
+In order to solve the GPR model for the viscous fluids and elastoplastic
+ solids that appear in the problem at hand, we employ the numerical scheme
+ proposed in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ and expanded upon in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2019"
+literal "false"
+
+\end_inset
+
+.
+ It is outlined here for the sake of completeness.
+ The reader is encouraged to see the cited papers for its full derivation.
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DensityEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MomentumEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyEquation"
+
+\end_inset
+
+ can be written in the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}\left(\boldsymbol{Q}\right)+\boldsymbol{B}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}\left(\boldsymbol{Q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "true"
+
+\end_inset
+
+, a viable way to solve inhomogeneous systems of PDEs is to employ an operator
+ splitting.
+ That is, the following subsystems are solved:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}\left(\boldsymbol{Q}\right)+\boldsymbol{B}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q} & =\boldsymbol{0}\label{eq:HomogeneousSubsystem}\\
+\frac{d\boldsymbol{Q}}{dt} & =\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:ODESubsystem}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $H^{\delta t},S^{\delta t}$
+\end_inset
+
+ be the operators that take data 
+\begin_inset Formula $\boldsymbol{Q}\left(x,t\right)$
+\end_inset
+
+ to 
+\begin_inset Formula $\boldsymbol{Q}\left(x,t+\delta t\right)$
+\end_inset
+
+ under systems 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:HomogeneousSubsystem"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ODESubsystem"
+
+\end_inset
+
+ respectively.
+ A second-order scheme (in time) for solving the full set of PDEs over time
+ step 
+\begin_inset Formula $\left[0,\Delta t\right]$
+\end_inset
+
+ is obtained by calculating 
+\begin_inset Formula $\boldsymbol{Q_{\Delta t}}$
+\end_inset
+
+ using a Strang splitting:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{\Delta t}}=S^{\frac{\Delta t}{2}}H^{\Delta t}S^{\frac{\Delta t}{2}}\boldsymbol{Q_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The homogeneous subsystem is solved using a WENO reconstruction of the data,
+ followed by a finite volume update, and the temporal ODEs are solved semi-analy
+tically.
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $\frac{d\rho}{dt}=0$
+\end_inset
+
+ over the ODE time step, the operator 
+\begin_inset Formula $S$
+\end_inset
+
+ entails solving the following systems:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
+\frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ has exact solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{J}\left(t\right) & =\boldsymbol{J}\left(0\right)\sqrt{\frac{1}{e^{at}-\frac{b}{a}\left(e^{at}-1\right)\left\Vert \boldsymbol{J}\left(0\right)\right\Vert ^{2}}}\\
+a & =\frac{2\rho_{0}}{\tau_{2}T_{0}\rho c_{v}}\left(E-E_{2}^{\left(A\right)}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)\right)\\
+b & =\frac{\rho_{0}c_{t}^{2}}{\tau_{2}T_{0}\rho c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Letting 
+\begin_inset Formula $a_{i}$
+\end_inset
+
+ represent the singular values of 
+\begin_inset Formula $A$
+\end_inset
+
+, and defining 
+\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
+\end_inset
+
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ implies that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dx_{i}}{d\tilde{t}}=-3\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{n}x_{i}\left(x_{i}-\bar{x}\right)\label{eq:StretchODESystem}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\bar{x}$
+\end_inset
+
+ is the arithmetic mean of 
+\begin_inset Formula $x_{1},x_{2},x_{3}$
+\end_inset
+
+ and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{t}=\frac{2}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\sqrt{\frac{3}{2}}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $n=0$
+\end_inset
+
+ for a Newtonian fluid, and 
+\begin_inset Formula $n>0$
+\end_inset
+
+ for an elastoplastic solid.
+\end_layout
+
+\begin_layout Standard
+Define the following variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+u & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is shown in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2019"
+literal "false"
+
+\end_inset
+
+ that after timestep 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+, 
+\begin_inset Formula $m,u$
+\end_inset
+
+ take the following values:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m\left(\tau\right) & \approx1+\frac{e^{-9\tau}}{3}\left(ae^{3\tau}-b\right)\label{eq:m(τ)-1}\\
+u\left(\tau\right) & \approx e^{-9\tau}\left(2ae^{3\tau}-3b\right)\label{eq:u(τ)-1}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+a & =9m_{0}-u_{0}-9\\
+b & =6m_{0}-u_{0}-6
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau=\frac{2\lambda}{nc}\log\left(\frac{nc}{\tau_{0}\lambda}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From this, 
+\begin_inset Formula $x_{1},x_{2},x_{3}$
+\end_inset
+
+ can be derived, and thus so can the value of 
+\begin_inset Formula $A$
+\end_inset
+
+ after timestep 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 The Ghost Fluid Method of Jackson & Nikiforakis
+\end_layout
+
+\begin_layout Standard
+We require a numerical method that applies to the GPR model, that is capable
+ of capturing the interactions between different materials at their interfaces.
+ Such a method has recently been provided by Jackson & Nikiforakis 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_unified_2019"
+literal "false"
+
+\end_inset
+
+.
+ The method is outlined here for the sake of completeness.
+ The reader is encouraged to see the cited paper for its full derivation.
+\end_layout
+
+\begin_layout Standard
+The method is a ghost fluid method, similar to that of Sambasivan et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Sambasivan2009"
+literal "true"
+
+\end_inset
+
+.
+ At the interface between two materials, we solve the Riemann problem that
+ is formed by taking the states on either side of the interface.
+ The star state of the Riemann problem corresponding to material 1 is then
+ used to fill in 
+\begin_inset Quotes eld
+\end_inset
+
+ghost cells
+\begin_inset Quotes erd
+\end_inset
+
+ on the side of material 2, and vice-versa.
+\end_layout
+
+\begin_layout Standard
+Denote the vector of primitive variables by 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+, and take the set of left eigenvectors of the GPR system, 
+\begin_inset Formula $L$
+\end_inset
+
+, with eigenvalues 
+\begin_inset Formula $\text{\left\{  \lambda_{i}\right\}  }$
+\end_inset
+
+.
+ We have the standard set of relations along characteristics (curves along
+ which 
+\begin_inset Formula $\frac{dx}{dt}=\lambda_{i}$
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L\cdot d\boldsymbol{P}=dt\cdot L\cdot\boldsymbol{S}\label{eq:L.dP=dt.L.S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We enact an operator splitting of the two processes present in the system
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=dt.L.S"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+L\cdot d\boldsymbol{P} & =\boldsymbol{0}\label{eq:L.dP=0}\\
+\frac{d\boldsymbol{P}}{dt} & =\boldsymbol{S}\label{eq:dP/dt=S}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dP/dt=S"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is solved at each iteration using the semi-analytical solutions presented
+ in the previous section.
+\end_layout
+
+\begin_layout Standard
+We take the 13 rows of the system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=0"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ that correspond to characteristics on the side of the interface that we
+ are considering.
+ 4 more relations of the following form are taken:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma^{*} & \approx\Sigma+\left(\rho^{*}-\rho\right)\frac{\partial\Sigma}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial\Sigma}{\partial p}+\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\Sigma}{\partial A_{mn}}\label{eq:q* Taylor Series}\\
+T^{*} & \approx T+\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}\label{eq:sigma* Taylor Series}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+ is the total stress tensor.
+\end_layout
+
+\begin_layout Standard
+Altogether, we have 17 relations with which to solve 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=0"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ at each iteration, enabling us to derive the values of 
+\begin_inset Formula $\mathbf{P}^{*}$
+\end_inset
+
+.
+ It is required to impose boundary conditions that link the systems on both
+ sides of the interface.
+ Denote the left and right sides of the interface by 
+\begin_inset Formula $L,R$
+\end_inset
+
+ respectively.
+ For a stick boundary condition we impose:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\Sigma_{1}^{*L}} & =\boldsymbol{\Sigma_{1}^{*R}}\\
+T^{*L} & =T^{*R}\\
+\boldsymbol{v^{*L}} & =\boldsymbol{v^{*R}}\\
+q_{1}^{*L} & =q_{1}^{*R}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a slip boundary condition we impose:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma_{11}^{*L} & =\Sigma_{11}^{*R}\\
+\Sigma_{12}^{*L},\Sigma_{12}^{*R} & =0\\
+\Sigma_{13}^{*L},\Sigma_{13}^{*R} & =0\\
+T^{*L} & =T^{*R}\\
+v_{1}^{*L} & =v_{1}^{*R}\\
+q_{1}^{*L} & =q_{1}^{*R}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a vacuum boundary condition we impose:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\Sigma_{1}^{*}} & =\boldsymbol{0}\\
+q_{1}^{*} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These boundary conditions close the systems on each side of the interface,
+ and so 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=0"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ can be solved for both sides.`
 \end_layout
 
 \begin_layout Section
@@ -1097,7 +2074,7 @@ E_{1}=\frac{p-\frac{c_{0}^{2}\rho}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\righ
 \begin_layout Standard
 \begin_inset Float table
 wide false
-sideways true
+sideways false
 status open
 
 \begin_layout Plain Layout
@@ -1430,7 +2407,10 @@ Cochran-Chan
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\frac{A}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}-1}-1\right)-\frac{B}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}-1}-1\right)$
+\begin_inset Formula $\begin{array}{c}
+\frac{A}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{1}-1}-1\right)\\
+-\frac{B}{\rho_{0}\left(\epsilon_{1}-1\right)}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\epsilon_{2}-1}-1\right)
+\end{array}$
 \end_inset
 
 
@@ -1664,7 +2644,7 @@ reference "tab:MG EOSs Derivatives"
 \begin_layout Standard
 \begin_inset Float table
 wide false
-sideways true
+sideways false
 status open
 
 \begin_layout Plain Layout
@@ -3836,7 +4816,7 @@ Temperature, pressure, and concentration of reactant in the heating-induced
 \end_layout
 
 \begin_layout Subsection
-Confined C4 Detonation
+Confined C4 Detonation without Backplate
 \end_layout
 
 \begin_layout Standard
@@ -3849,8 +4829,8 @@ literal "false"
 \end_inset
 
 .
- A steel bar of length 0.03 and width 0.018 impacts upon C4 of depth 0.009,
- which is confined by two steel plates of depth 0.003.
+ A steel bar of length 0.03 and width 0.018 impacts upon a steel plate of
+ depth 0.003, which is covering a region of depth 0.009 composed of C4 .
  The bar is initially traveling with speed 700.
  The system is surrounded by air.
 \end_layout
@@ -4000,85 +4980,46 @@ The steel is modeled using a shock Mie-Gruneisen EOS, with parameters
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename images/confined_backplate/p_2.4μs.png
-	lyxscale 30
-	width 50text%
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation-no-backplate"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
+ displays the resulting pressure and C4 concentration at times 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
 
-\begin_inset Graphics
-	filename images/confined_backplate/λ_2.4μs.png
-	lyxscale 30
-	width 50text%
+ and 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+ As can be seen, the kinetic energy of the bar is correctly transmitted
+ to the steel plate, with the plate deforming in a manner qualitatively
+ identical to that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename images/confined_backplate/p_4.9μs.png
-	lyxscale 30
-	width 50text%
-
+.
+ This energy is in turn transmitted to the C4, leading to an exothermic
+ reaction and a symmetrical wavefront that travels through the material.
+ The C4 concentration is depleted to 0.93 at time 
+\begin_inset Formula $t=2.4\times10^{-6}$
 \end_inset
 
-
-\begin_inset Graphics
-	filename images/confined_backplate/λ_4.9μs.png
-	lyxscale 30
-	width 50text%
-
+ and to 0.915 at time 
+\begin_inset Formula $t=4.9\times10^{-6}$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:confined-detonation"
-
-\end_inset
-
-Pressure (left) and reactant concentration (right) for the confined detonation
- test, at times 
-\begin_inset Formula $2.4\mu s$
-\end_inset
-
- (top) and 
-\begin_inset Formula $4.9\mu s$
-\end_inset
-
- (bottom)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Confined C4 Detonation without Back Plate
+.
 \end_layout
 
 \begin_layout Standard
@@ -4160,7 +5101,166 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 \end_layout
 
 \begin_layout Subsection
+Confined C4 Detonation
+\end_layout
+
+\begin_layout Standard
+This is test is identical to the previous test, except a steel plate of
+ depth 0.003 is now placed behind the C4, so that the explosive is entirely
+ confined.
+ As can be seen from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the kinetic energy of the bar is once again correctly transmitted to the
+ steel plate and C4, with the same deformation occurring in the first steel
+ plate.
+ At time 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ we see the wave in the C4 both partially rebounding off the backplate back
+ into the reactant, and partially traveling on through the backplate.
+ At the earlier time, the reactant concentration has been depleted to 0.88,
+ and at the later time to 0.865.
+ This corroborates the results of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+, in that the presence of the backplate accelerates the reactive processes.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_backplate/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_backplate/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/confined_backplate/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/confined_backplate/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test, at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Confined C4 Detonation with Air Gap
+\end_layout
+
+\begin_layout Standard
+This problem is designed to test the ability of the framework presented
+ in this paper to capture the interaction of widely varying media.
+ It is identical to the previous problem, except an air gap is now placed
+ between the first steel plate and the C4.
+ The air has the same EOS parameters as the surrounding air.
+\end_layout
+
+\begin_layout Standard
+As can be seen in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation-airgap"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the rod displaces the air (with the numerical method coping with contact
+ of the region representing the plate with the region representing the C4).
+ The displacement of the air enables the kinetic energy of the rod to be
+ transmitted through the plate and into the C4, as before.
+ The earlier time of 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ corresponds with the instant after the plate makes contact with the C4.
+ The concentration is depleted to 0.9998 at 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and 0.894 at 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+ The latter value is lower than the corresponding value in the previous
+ test, as the reaction has been delayed by the presence of the air gap.
 \end_layout
 
 \begin_layout Standard
@@ -4276,10 +5376,6 @@ Acknowledgments
 The authors acknowledge financial support from the EPSRC Centre for Doctoral
  Training in Computational Methods for Materials Science under grant EP/L015552/
 1.
-\end_layout
-
-\begin_layout Section
-Appendix
 \end_layout
 
 \end_body
