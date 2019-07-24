@@ -1,0 +1,9146 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass elsarticle
+\begin_preamble
+\journal{Journal of Computational Physics}
+%\usepackage{draftwatermark}
+
+% Remove subsection in left header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{A unified Eulerian framework for multimaterial continuum mechanics}
+\fancyhead[R]{\thepage}
+
+%\usepackage[printwatermark]{xwatermark}
+\usepackage{xcolor}
+\usepackage{graphicx}
+%\newwatermark[allpages,color=gray!20,angle=45,scale=4,xpos=0,ypos=0]{DRAFT}
+
+% For float barriers
+\usepackage{placeins}
+\end_preamble
+\options 3p, number
+\use_default_options false
+\begin_modules
+theorems-std
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type numerical
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout BeginFrontmatter
+
+\end_layout
+
+\begin_layout Title
+A unified Eulerian framework for multimaterial continuum mechanics
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\begin_inset Flex CorAuthormark
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex CorAuthormark
+status collapsed
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Email
+hj305@cam.ac.uk
+\end_layout
+
+\begin_layout Author
+Nikos Nikiforakis
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Corresponding author
+Principal corresponding author
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+cor2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+Cavendish Laboratory, JJ Thomson Ave, Cambridge, UK, CB3 0HE
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+rvt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+A framework for simulating the interactions between multiple different continua
+ is presented.
+ Each constituent material is governed by the same set of equations, differing
+ only in terms of their equations of state and strain dissipation functions.
+ The interfaces between any combination of fluids, solids, and vacuum are
+ handled by a new Riemann Ghost Fluid Method, which is agnostic to the type
+ of material on either side (depending only on the desired boundary conditions).
+\end_layout
+
+\begin_layout Abstract
+The Godunov-Peshkov-Romenski (GPR) model is used for modeling the continua
+ (having recently been used to solve a range of problems involving Newtonian
+ and non-Newtonian fluids, and elastic and elastoplastic solids), and this
+ study represents a novel approach for handling multimaterial problems under
+ this model.
+\end_layout
+
+\begin_layout Abstract
+The resulting framework is simple, yet capable of accurately reproducing
+ a wide range of different physical scenarios.
+ It is demonstrated here to accurately reproduce analytical results for
+ known Riemann problems, and to produce expected results in other cases,
+ including some featuring heat conduction across interfaces.
+ The framework thus has the potential to streamline development of simulation
+ software for scenarios involving multiple materials and phases of matter,
+ by reducing the number of different systems of equations that require solvers,
+ and cutting down on the amount of theoretical work required to deal with
+ the interfaces between materials.
+\end_layout
+
+\begin_layout Keywords
+Godunov-Peshkov-Romenski 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ GPR 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ Ghost Fluid Method 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ RGFM 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sep
+\end_layout
+
+\end_inset
+
+ multimaterial
+\end_layout
+
+\begin_layout EndFrontmatter
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\dev}{\operatorname{dev}}
+{\mathrm{\mathrm{dev}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tr}{\operatorname{tr}}
+{\mathrm{\mathrm{tr}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Multimaterial Models
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Multiphase-Systems"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This study concerns problems featuring immiscible materials.
+ There are many approaches available to solve these problems, broadly including
+ (but not limited to): Lagrangian and Arbitrary-Lagrangian-Eulerian methods
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "scardovelli_direct_1999,donea_arbitrary_1982"
+literal "false"
+
+\end_inset
+
+, volume of fluid methods 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "rider_reconstructing_1998,nichols_sola-vof:_1980"
+literal "false"
+
+\end_inset
+
+, diffuse interface methods 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "saurel_multiphase_1999"
+literal "false"
+
+\end_inset
+
+, and level-set methods (including the ghost fluid approach 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "osher_level_2001,fedkiw_non-oscillatory_1999"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Solids models tend to come in Lagrangian form, and often these are combined
+ with ALE forms for the fluid phases, so that the fluid meshes may deform
+ to match the deformation of the solid (see, for example, Pin et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Pin2007"
+literal "true"
+
+\end_inset
+
+).
+ These schemes tend to be very accurate, but like all Lagrangian schemes,
+ they fail if the meshes become highly contorted.
+ Thus, adaptive remeshing is often necessary.
+ Some authors have coupled a Lagrangian solid scheme with an Eulerian fluid
+ scheme, but extra care must be taken when applying the boundary conditions
+ to the interface, which corresponds to the intersection of the Eulerian
+ and Lagrangian meshes (see Legay et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Legay2006"
+literal "true"
+
+\end_inset
+
+ for an implementation using level sets, or Fedkiw 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Fedkiw2002"
+literal "true"
+
+\end_inset
+
+ for a GFM coupling).
+ Some authors, such as Ryzhakov et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ryzhakov2010"
+literal "true"
+
+\end_inset
+
+, have found success in using the common Lagrangian formulations for the
+ solid, and a reformulated Lagrangian model for the fluid, implementing
+ the necessary adaptive remeshing.
+ Yet another option is to model both the fluid and the solid in an Eulerian
+ framework, although this now necessitates a level set method or volume
+ of fluid method 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hirt1981"
+literal "true"
+
+\end_inset
+
+ to track the interfaces.
+ Also, these methods are more prone to losing small-scale geometric features
+ of the media, unless methods such as AMR are employed to combat this 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hou2012"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In a recently submitted paper, Michael and Nikiforakis 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Michael"
+literal "true"
+
+\end_inset
+
+ (building on the work of Schoch et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schoch2013"
+literal "true"
+
+\end_inset
+
+) couple various Eulerian models of reactive and inert fluids and solids
+ by use of a Riemann Ghost Fluid Method, with the ghost states calculated
+ using specialised mixed-material Riemann solvers for each interaction (see
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Ghost Fluid Methods"
+
+\end_inset
+
+).
+ Whilst these techniques do not suffer from the mesh contortion issues inherent
+ in Lagrangian formulations of continuum mechanics, a fair amount of theoretical
+ work needs to be done to derive analytical relations describing the interaction
+s between every pair of models used.
+\end_layout
+
+\begin_layout Standard
+If it were possible to describe all phases with the same Eulerian model,
+ this method could be used, with only one type of Riemann solver needed
+ to cope with any multiphase problem posed.
+ The GPR model represents such an opportunity.
+ As will be seen, the model also includes terms for heat conduction, which
+ do not appear in the basic formulations of many of the common models used
+ in multiphase systems (e.g.
+ the Euler equations, or the Godunov-Romenski equations of solid mechanics).
+ Heat conduction is often ignored in multiphase modeling, but such a framework
+ based on the GPR model would almost unavoidably include it.
+\end_layout
+
+\begin_layout Standard
+At present, there is no way of dealing with material interfaces in the GPR
+ model, however.
+ In this study, a modification of Barton's 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Barton2010"
+literal "false"
+
+\end_inset
+
+ application of Sambasivan and Udaykumar's Riemann Ghost Fluid Method 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sambasivan2009,Sambasivan2009a"
+literal "false"
+
+\end_inset
+
+ is devised for the GPR model, enabling the simulation of material interfaces.
+ This new method is tested on a variety of interface problems.
+\end_layout
+
+\begin_layout Standard
+It is interesting to note that de Brauer et al 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "de_brauer_cartesian_2016,brauer_cartesian_2017"
+literal "false"
+
+\end_inset
+
+ have presented a method for multimaterial modelling of a similar system
+ (including the distortion tensor of the GPR model, but excluding the heat
+ conduction terms).
+ This method is based on level sets, similar to the method presented in
+ this paper.
+ It should be noted, however, that de Brauer et al do not apply their method
+ to the modelling of viscous flows.
+\end_layout
+
+\begin_layout Standard
+The following two subsections outline the theory behind the GPR model and
+ ghost fluid methods.
+ In Section 2 we explore the eigenstructure of the GPR model, and use it
+ to derive a Riemann solver for the Riemann problem at the interfaces between
+ different materials, which is able to incorporate the boundary conditions
+ that we wish to use.
+ Section 3 presents results of fluid-fluid, solid-solid, fluid-solid, and
+ solid-vacuum problems, including some multidimensional cases, and some
+ incorporating heat conduction across the interfaces.
+ Conclusions are drawn in section 4, along with discussion of potential
+ limitations to the method presented here, and ideas for further avenues
+ of enquiry.
+\end_layout
+
+\begin_layout Subsection
+The Model of Godunov, Peshkov and Romenski
+\end_layout
+
+\begin_layout Standard
+The GPR model takes the following form (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "peshkov_hyperbolic_2016,dumbser_high_2015,boscheri_cell_2016,peshkov_theoretical_2019"
+literal "true"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\rho}{\partial t}+\frac{\partial\left(\rho v_{k}\right)}{\partial x_{k}} & =0\label{eq:DensityEquation}\\
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik})}{\partial x_{k}} & =0\label{eq:MomentumEquation}\\
+\frac{\partial A_{ij}}{\partial t}+\frac{\partial\left(A_{ik}v_{k}\right)}{\partial x_{j}}+v_{k}\left(\frac{\partial A_{ij}}{\partial x_{k}}-\frac{\partial A_{ik}}{\partial x_{j}}\right) & =-\frac{\psi_{ij}}{\theta_{1}}\label{eq:DistortionEquation}\\
+\frac{\partial\left(\rho J_{i}\right)}{\partial t}+\frac{\partial\left(\rho J_{i}v_{k}+T\delta_{ik}\right)}{\partial x_{k}} & =-\frac{\rho H_{i}}{\theta_{2}}\label{eq:ThermalEquation}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}\right)v_{i}+q_{k}\right)}{\partial x_{k}} & =0\label{eq:EnergyEquation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ are positive functions (given below for the problems at hand).
+ Additionally, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+p=\rho^{2}\left.\frac{\partial E}{\partial\rho}\right|_{s,A} & \sigma=-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,s}\\
+T=\left.\frac{\partial E}{\partial s}\right|_{\rho,A} & \boldsymbol{q}=T\frac{\partial E}{\partial\boldsymbol{J}}
+\end{cases}\label{eq:compoundVars}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $s$
+\end_inset
+
+ is the entropy of the system.
+ 
+\begin_inset Formula $E$
+\end_inset
+
+ must be specified to close the system.
+ The energy contains contributions from the micro-, meso-, and macro-scale:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, as in previous studies (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "dumbser_high_2015,boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+) 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
+ the EOS of nonlinear hyperelasticity (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{2}$
+\end_inset
+
+ takes the quadratic form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{2}=\frac{c_{s}\left(\rho,s\right)^{2}}{4}\left\Vert \dev\left(G\right)\right\Vert _{F}^{2}+\frac{c_{t}\left(\rho,s\right)^{2}}{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\Vert \cdot\right\Vert _{F}$
+\end_inset
+
+ is the Frobenius norm
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The Frobenius norm is defined by: 
+\begin_inset Formula $\left\Vert X\right\Vert _{F}=\sqrt{\sum_{i,j}\left|X_{ij}\right|^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Formula $G=A^{T}A$
+\end_inset
+
+ is the Gramian matrix of the distortion
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $G$
+\end_inset
+
+ is known as the 
+\shape italic
+Finger tensor
+\shape default
+ in the solid mechanics community
+\end_layout
+
+\end_inset
+
+, and 
+\begin_inset Formula $\dev\left(G\right)$
+\end_inset
+
+ is the deviator (trace-free part) of 
+\begin_inset Formula $G$
+\end_inset
+
+.
+ 
+\begin_inset Formula $c_{s}$
+\end_inset
+
+ is the characteristic velocity of transverse perturbations.
+ 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is related to the characteristic velocity of propagation of heat waves
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Note that 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ denotes this variable by 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, which is avoided here due to a clash with a parameter of one of the equations
+ of state used.
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{h}=\frac{c_{t}}{\rho}\sqrt{\frac{T}{c_{v}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In previous studies, 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ has been taken to be constant, as it will be in this study.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{3}$
+\end_inset
+
+ is the usual specific kinetic energy per unit mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following forms are taken:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\qquad\tau_{1}=\begin{cases}
+\frac{6\mu}{\rho_{0}c_{s}^{2}} & Newtonian\thinspace fluids\\
+\frac{6\mu^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}} & power\thinspace law\thinspace fluids\\
+\tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
+\end{cases}\\
+\theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}\qquad\tau_{2}=\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The justification of these choices is that classical Navier–Stokes–Fourier
+ theory is recovered in the stiff limit 
+\begin_inset Formula $\tau_{1},\tau_{2}\rightarrow0$
+\end_inset
+
+ (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+).
+ The rules for power-law fluids and elastoplastic solids are based on material
+ from 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2019"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2011"
+literal "true"
+
+\end_inset
+
+, respectively.
+\end_layout
+
+\begin_layout Standard
+Finally, it is straightforward to verify that as a consequence of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:compoundVars"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we have the following relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\sigma & =-\rho c_{s}^{2}G\dev\left(G\right)\\
+\boldsymbol{q} & =c_{t}^{2}T\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+-\frac{\psi}{\theta_{1}(\tau_{1})} & =-\frac{3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\\
+-\frac{\rho\boldsymbol{H}}{\theta_{2}\left(\tau_{2}\right)} & =-\frac{T\rho_{0}}{T_{0}\tau_{2}}\boldsymbol{J}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, the following constraint holds (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_hyperbolic_2016"
+literal "true"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:detA constraint}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2018"
+literal "false"
+
+\end_inset
+
+ for an interpretation of the physical meaning of the relaxation times 
+\begin_inset Formula $\tau_{1},\tau_{2}$
+\end_inset
+
+ and thermal impulse vector 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Ghost Fluid Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Ghost Fluid Methods"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ghost fluid methods, combined with level set methods, are used to model
+ the evolution of interfaces between different materials.
+ They are detailed here, as it is with such a method that this study proposes
+ to model the interfaces between different materials described by the GPR
+ model.
+\end_layout
+
+\begin_layout Subsubsection
+Level Set Methods
+\end_layout
+
+\begin_layout Standard
+Given a scalar function 
+\begin_inset Formula $f$
+\end_inset
+
+ on 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+, the level set of 
+\begin_inset Formula $f$
+\end_inset
+
+ at level 
+\begin_inset Formula $c$
+\end_inset
+
+ is defined as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Gamma_{c}=\left\{ x:f\left(x\right)=c\right\} 
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given normal direction speed 
+\begin_inset Formula $v$
+\end_inset
+
+, 
+\begin_inset Formula $f$
+\end_inset
+
+ is advected according to the level set equation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Osher2002"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial f}{\partial t}=v\left|\nabla f\right|\label{eq:LevelSetEqn}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The advection of a point in a fluid with velocity 
+\begin_inset Formula $v$
+\end_inset
+
+ can be modeled by taking 
+\begin_inset Formula $f=\left|\mathbf{x-x_{0}}\right|$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{x_{0}}$
+\end_inset
+
+ is the position of the point at time 
+\begin_inset Formula $t=0$
+\end_inset
+
+, and tracking 
+\begin_inset Formula $\Gamma_{0}$
+\end_inset
+
+.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:LevelSetEqn"
+
+\end_inset
+
+ is solved by an appropriate numerical method.
+ The numerical methods used in this study are described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:A Riemann Ghost Fluid Method for the GPR Model"
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $f$
+\end_inset
+
+ will usually have to be renormalized at every time step, to avoid unwanted
+ distortions such as becoming a multivalued function.
+\end_layout
+
+\begin_layout Subsubsection
+The Original Ghost Fluid Method
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/GFM.png
+	lyxscale 50
+	height 25theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OriginalGFMNoFix"
+
+\end_inset
+
+The Original Ghost Fluid Method
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Original Ghost Fluid Method of Fedkiw et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Fedkiw1999"
+literal "true"
+
+\end_inset
+
+ (an adaptation of the work of Glimm et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Glimm1981"
+literal "true"
+
+\end_inset
+
+) is a numerical method for the Euler equations for simulating interfaces
+ between multiple materials.
+ The primitive variables for the Euler equations in 1D are given by 
+\begin_inset Formula $\boldsymbol{P}=\left(\begin{array}{ccc}
+\rho & v & p\end{array}\right)^{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Suppose the interface between two fluids is modeled on spatial domain 
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+, divided into 
+\begin_inset Formula $N$
+\end_inset
+
+ cells with width 
+\begin_inset Formula $\Delta x=\frac{1}{N}$
+\end_inset
+
+.
+ Let the time step be 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ and let 
+\begin_inset Formula $\boldsymbol{P_{i}^{n}}$
+\end_inset
+
+ be the set of primitive variables in cell 
+\begin_inset Formula $i$
+\end_inset
+
+ at time 
+\begin_inset Formula $t_{n}=n\Delta t$
+\end_inset
+
+.
+ Let the level set function 
+\begin_inset Formula $f$
+\end_inset
+
+ have root 
+\begin_inset Formula $x_{n}$
+\end_inset
+
+ where 
+\begin_inset Formula $x_{n}\in\left[\text{\left(i+\frac{1}{2}\right)}\Delta x,\text{\left(i+\frac{3}{2}\right)}\Delta x\right]$
+\end_inset
+
+.
+ Thus, at time 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ the interface lies between the cells with primitive variables 
+\begin_inset Formula $\boldsymbol{P_{i}^{n},P_{i+1}^{n}}$
+\end_inset
+
+.
+ Define two sets of primitive variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{P_{j}^{\left(1\right)}}=\begin{cases}
+\boldsymbol{P_{j}^{n}} & j\leq i\\
+\left(\begin{array}{ccc}
+\rho\left(s_{i}^{n},p_{j}^{n},\gamma_{i}^{n}\right) & v_{j}^{n} & p_{j}^{n}\end{array}\right) & j>i
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{P_{j}^{\left(2\right)}}=\begin{cases}
+\boldsymbol{P_{j}^{n}} & j\geq i+1\\
+\left(\begin{array}{ccc}
+\rho\left(s_{i+1}^{n},p_{j}^{n},\gamma_{i+1}^{n}\right) & v_{j}^{n} & p_{j}^{n}\end{array}\right) & j<i+1
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\rho\left(s,p,\gamma\right)=\left(\frac{p}{s}\right)^{\frac{1}{\gamma}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All cells in 
+\begin_inset Formula $\boldsymbol{P^{\left(1\right)}}$
+\end_inset
+
+ to the left of the interface have the same state variables as those of
+ 
+\begin_inset Formula $\boldsymbol{P^{n}}$
+\end_inset
+
+.
+ All cells to the right have the same pressure and velocity as their counterpart
+s in 
+\begin_inset Formula $\boldsymbol{P^{n}}$
+\end_inset
+
+, but the same entropy as 
+\begin_inset Formula $\boldsymbol{P_{i}^{n}}$
+\end_inset
+
+.
+ This affects their density.
+ The situation is analogous for 
+\begin_inset Formula $\boldsymbol{P^{\left(2\right)}}$
+\end_inset
+
+.
+ This is demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:OriginalGFMNoFix"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\boldsymbol{P^{\left(1\right)}},\boldsymbol{P^{\left(2\right)}}$
+\end_inset
+
+ are stepped forward by time step 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ using a standard Eulerian method.
+ 
+\begin_inset Formula $f$
+\end_inset
+
+ is advected using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:LevelSetEqn"
+
+\end_inset
+
+, taking the velocity in each cell to be that of 
+\begin_inset Formula $\boldsymbol{P^{n}}$
+\end_inset
+
+.
+ Now let 
+\begin_inset Formula $f\left(x_{n+1}\right)=0$
+\end_inset
+
+ where 
+\begin_inset Formula $x_{n+1}\in\left[\left(k+\frac{1}{2}\right)\Delta x,\left(k+\frac{3}{2}\right)\Delta x\right]$
+\end_inset
+
+ for some 
+\begin_inset Formula $k$
+\end_inset
+
+.
+ Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{P_{j}^{n+1}}=\begin{cases}
+\boldsymbol{P_{j}^{\left(1\right)}} & j\leq k\\
+\boldsymbol{P_{j}^{\left(2\right)}} & j>k
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The rationale behind the original GFM is that in most applications, pressure
+ and velocity are continuous across the interface, and thus the ghost cells
+ may take the real pressure and velocity values.
+ Entropy is generally discontinuous at a contact discontinuity, resulting
+ in large truncation errors if a standard finite difference scheme is used
+ to solve the system.
+ Thus, entropy is extrapolated as a constant from the interface boundary
+ cell into the ghost region.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/GFM2.png
+	lyxscale 50
+	height 25theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OriginalGFMIsobaricFix"
+
+\end_inset
+
+The Original Ghost Fluid Method, with the isobaric fix
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fedkiw et al.
+ advised to use the 
+\shape italic
+isobaric fix
+\shape default
+ technique.
+ This involves setting the entropy of cell 
+\begin_inset Formula $i$
+\end_inset
+
+, and all cells in the right ghost region, to that of cell 
+\begin_inset Formula $i-1$
+\end_inset
+
+, and setting the entropy of cell 
+\begin_inset Formula $i+1$
+\end_inset
+
+, and all cells in the left ghost region, to that of cell 
+\begin_inset Formula $i+2$
+\end_inset
+
+.
+ This is demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:OriginalGFMIsobaricFix"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Effectively, the ghost regions behave like they are composed of the same
+ fluid as the regions they extend (as they have the same entropy), facilitating
+ calculation of the next time step, but they have the same pressure and
+ velocity profiles as the real fluids they replace, meaning the boundary
+ conditions at the interface are upheld.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/RP.png
+	lyxscale 50
+	height 20theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RiemannProblem"
+
+\end_inset
+
+The qualitative structure of the solution to the Riemann Problem, showing
+ the different possible types of waves
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+The Riemann Ghost Fluid Method
+\end_layout
+
+\begin_layout Standard
+The Riemann Problem in its general form is the solution of the following
+ initial value problem.
+ Given a set of variables 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+ dependent on space and time, and a hyperbolic set of equations which govern
+ their spatio-temporal evolution, 
+\begin_inset Formula $\boldsymbol{P}\left(x,t\right)$
+\end_inset
+
+ is sought for 
+\begin_inset Formula $t>0$
+\end_inset
+
+, given the initial condition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{P}\left(x,0\right)=\begin{cases}
+\boldsymbol{P_{L}} & x<0\\
+\boldsymbol{P_{R}} & x>0
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This problem is denoted by 
+\begin_inset Formula $RP\left(\boldsymbol{P_{L}},\boldsymbol{P_{R}}\right)$
+\end_inset
+
+.
+ Exact solvers exist for the Riemann Problem for various sets of governing
+ equations, such as the Euler equations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+literal "true"
+
+\end_inset
+
+, the equations of non-linear elasticity 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2009"
+literal "true"
+
+\end_inset
+
+, or the shallow water equations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Alcrudo2001"
+literal "true"
+
+\end_inset
+
+, among others.
+ There also exist approximate solvers for general conservative 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Miller2004,Liu1975"
+literal "true"
+
+\end_inset
+
+ or non-conservative 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+literal "true"
+
+\end_inset
+
+ hyperbolic systems of PDEs.
+ The references given here form a very small sample of the work that has
+ been done in this area.
+\end_layout
+
+\begin_layout Standard
+The solution of the Riemann Problem usually takes the form of a set of waves,
+ between which 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+ is constant.
+ The waves can either be a contact discontinuity (across which pressure
+ and velocity are continuous), a shock (across which all variables may be
+ discontinuous), or a rarefaction (along which the variables vary continuously
+ between their values on either side of the wave).
+ The number and form of the waves are determined by the governing equations
+ and the initial conditions.
+ The states of the variables either side of the contact discontinuity in
+ the middle are known as the 
+\shape italic
+star states
+\shape default
+.
+ This qualitative description is depicted in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:RiemannProblem"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Liu et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Liu2003"
+literal "true"
+
+\end_inset
+
+ demonstrated that the original GFM fails to resolve strong shocks at material
+ interfaces.
+ This is because the method effectively solves two separate single-fluid
+ Riemann problems.
+ The waves present in these Riemann problems do not necessarily correspond
+ to those in the real Riemann problem across the interface.
+ The Riemann Ghost Fluid Method of Sambasivan et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Sambasivan2009"
+literal "true"
+
+\end_inset
+
+ aims to rectify this.
+\end_layout
+
+\begin_layout Standard
+Given 
+\begin_inset Formula $\boldsymbol{P^{n}}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{n}\in\left[\left(i+\frac{1}{2}\right)\Delta x,\left(i+\frac{3}{2}\right)\Delta x\right]$
+\end_inset
+
+, the ghost cells for fluid 1 are populated with the left star state of
+ 
+\begin_inset Formula $RP\left(\boldsymbol{P_{i-1}^{n}},\boldsymbol{P_{i+2}^{n}}\right)$
+\end_inset
+
+, and the ghost cells for fluid 2 are populated with the right star state.
+ 
+\begin_inset Formula $RP\left(\boldsymbol{P_{i-1}^{n}},\boldsymbol{P_{i+2}^{n}}\right)$
+\end_inset
+
+ is solved rather than 
+\begin_inset Formula $RP\left(\boldsymbol{P_{i}^{n}},\boldsymbol{P_{i+1}^{n}}\right)$
+\end_inset
+
+, as 
+\begin_inset Formula $\boldsymbol{P_{i}^{n}},\boldsymbol{P_{i+1}^{n}}$
+\end_inset
+
+ often contain errors generated by the fact that they lie on the material
+ interface.
+ 
+\begin_inset Formula $\boldsymbol{P^{n+1}}$
+\end_inset
+
+ is then generated as before from the newly formed 
+\begin_inset Formula $\boldsymbol{P^{\left(1\right)}},\boldsymbol{P^{\left(2\right)}}$
+\end_inset
+
+.
+ This process is demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:RiemannGFM"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figs/RGFM.png
+	lyxscale 50
+	height 25theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:RiemannGFM"
+
+\end_inset
+
+The Riemann Ghost Fluid Method
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+A Riemann Ghost Fluid Method for the GPR Model
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:A Riemann Ghost Fluid Method for the GPR Model"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Eigenstructure of the GPR Model
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Eigenstructure of the HPR Model"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take a hyperbolic system of the following form, noting that the GPR model
+ takes this form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{P}}{\partial t}+M\frac{\partial\boldsymbol{P}}{\partial x}=\boldsymbol{S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\left\{ \boldsymbol{l_{i}}\right\} $
+\end_inset
+
+ be the set of left eigenvectors of the system matrix 
+\begin_inset Formula $M$
+\end_inset
+
+, in other words:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{l_{i}}^{T}M=\lambda_{i}\boldsymbol{l_{i}}^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Along characteristics corresponding to 
+\begin_inset Formula $\lambda_{i}$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{l_{i}^{T}}\left(\frac{\partial\boldsymbol{P}}{\partial t}+M\frac{\partial\boldsymbol{P}}{\partial x}\right) & =\boldsymbol{l_{i}^{T}}\left(\frac{\partial\boldsymbol{P}}{\partial t}+\frac{dx}{dt}\frac{\partial\boldsymbol{P}}{\partial x}\right)\label{eq:characteristics}\\
+ & =\boldsymbol{l_{i}^{T}}\frac{d\boldsymbol{P}}{dt}=\boldsymbol{l_{i}^{T}}\boldsymbol{S}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second line of this equation is crucial to Riemann Ghost Fluid Method
+ presented in this study.
+ As such, we must now investigate the eigenvalues and eigenvectors of 
+\begin_inset Formula $M$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Eigenvalues
+\end_layout
+
+\begin_layout Standard
+Considering the primitive system matrix 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:M1"
+
+\end_inset
+
+, it is clear that the eigenvalues of the GPR system in the first spatial
+ axis consist of 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+ repeated 8 times, along with the roots of:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|\begin{array}{cc}
+\left(v_{1}-\lambda\right)I & \Xi_{2}\\
+\Xi_{1} & \left(v_{1}-\lambda\right)I
+\end{array}\right|=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{1}=-\frac{1}{\rho}\left(\begin{array}{ccccc}
+\frac{\partial\sigma_{11}}{\partial\rho} & -1 & \frac{\partial\sigma_{11}}{\partial A_{11}} & \frac{\partial\sigma_{11}}{\partial A_{21}} & \frac{\partial\sigma_{11}}{\partial A_{31}}\\
+\frac{\partial\sigma_{21}}{\partial\rho} & 0 & \frac{\partial\sigma_{21}}{\partial A_{11}} & \frac{\partial\sigma_{21}}{\partial A_{21}} & \frac{\partial\sigma_{21}}{\partial A_{31}}\\
+\frac{\partial\sigma_{31}}{\partial\rho} & 0 & \frac{\partial\sigma_{31}}{\partial A_{11}} & \frac{\partial\sigma_{31}}{\partial A_{21}} & \frac{\partial\sigma_{31}}{\partial A_{31}}\\
+-T_{\rho} & -T_{p} & 0 & 0 & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{2}=\left(\begin{array}{cccc}
+\rho & 0 & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & \frac{\rho c_{h}^{2}}{T_{p}}\\
+A_{11} & A_{12} & A_{13} & 0\\
+A_{21} & A_{22} & A_{23} & 0\\
+A_{31} & A_{32} & A_{33} & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By the properties of block matrices
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+If 
+\begin_inset Formula $A$
+\end_inset
+
+ is 
+\lang british
+invertible
+\lang english
+, 
+\begin_inset Formula $\det\left(\begin{array}{cc}
+A & B\\
+C & D
+\end{array}\right)=\det\left(A\right)\det\left(D-CA^{-1}B\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+, the remaining eigenvalues are 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+ and the roots of 
+\begin_inset Formula $\left|\left(v_{1}-\lambda\right)^{2}I-\Xi_{1}\Xi_{2}\right|=0$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $\lambda_{i}=v_{1}\pm\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ where the 
+\begin_inset Formula $\tilde{\lambda_{i}}$
+\end_inset
+
+ are the eigenvalues of the following matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi=\Xi_{1}\Xi_{2}=\left(\begin{array}{cccc}
+\Omega_{11}^{1}+\left(c_{0}^{2}+\frac{\sigma_{11}}{\rho}-\frac{\partial\sigma_{11}}{\partial\rho}\right) & \Omega_{12}^{1}+\left(\frac{\sigma_{21}}{\rho}-\frac{\partial\sigma_{21}}{\partial\rho}\right) & \Omega_{13}^{1}+\left(\frac{\sigma_{31}}{\rho}-\frac{\partial\sigma_{31}}{\partial\rho}\right) & \frac{c_{h}^{2}}{T_{p}}\\
+\Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1} & 0\\
+\Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1} & 0\\
+T_{\rho}+T_{p}\left(c_{0}^{2}+\frac{\sigma_{11}}{\rho}-\frac{\partial\sigma_{11}}{\partial\rho}\right) & T_{p}\left(\frac{\sigma_{21}}{\rho}-\frac{\partial\sigma_{21}}{\partial\rho}\right) & T_{p}\left(\frac{\sigma_{31}}{\rho}-\frac{\partial\sigma_{31}}{\partial\rho}\right) & c_{h}^{2}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ is given shortly.
+ Similar results hold for the other two spatial directions.
+ In general it is not possible to express the eigenvalues of 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ in terms of the eigenvalues of its submatrices.
+ Note, however, that if 
+\begin_inset Formula $c_{t}=0$
+\end_inset
+
+ then one of the eigenvalues is 
+\begin_inset Formula $0$
+\end_inset
+
+ and the remaining eigenvalues can be found analytically, using the form
+ given in the appendix of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It is straightforward to verify the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\sigma_{ij}}{\partial A_{mn}}=-c_{s}^{2}\rho\left(\begin{array}{c}
+\delta_{in}\left(A\dev\left(G\right)\right)_{mj}+\delta_{jn}\left(A\dev\left(G\right)\right)_{mi}\\
++A_{mi}G_{jn}+A_{mj}G_{in}-\frac{2}{3}G_{ij}A_{mn}
+\end{array}\right)\label{eq:dsigma/dA}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The quantity 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ is named here the 
+\shape italic
+acoustic tensor
+\shape default
+, due to its similarity to the acoustic tensor described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_exact_2009"
+literal "true"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{align}
+\Omega_{ij}^{d} & =-\frac{1}{\rho}\frac{\partial\sigma_{id}}{\partial A_{kd}}A_{kj}-\frac{\sigma_{id}}{\rho}\delta_{dj}\\
+ & =c_{s}^{2}\left(\begin{array}{c}
+\delta_{id}\left(G\dev\left(G\right)\right)_{dj}+\left(G\dev\left(G\right)\right)_{id}\delta_{dj}\\
++\left(G\dev\left(G\right)\right)_{ij}+G_{ij}G_{dd}+\frac{1}{3}G_{dj}G_{id}
+\end{array}\right)\nonumber \\
+ & =c_{s}^{2}\left(E^{d}G\dev\left(G\right)+G\dev\left(G\right)E^{d}+G\dev\left(G\right)+G_{dd}G+\frac{1}{3}G_{d}G_{d}^{T}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $E_{ij}^{d}=\delta_{id}\delta_{jd}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Eigenvectors (with Heat Conduction)
+\end_layout
+
+\begin_layout Standard
+By hyperbolicity of the system, 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ can be expressed as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi=Q^{-1}D^{2}Q
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $D$
+\end_inset
+
+ is a diagonal matrix with positive diagonal entries.
+ The eigenvectors corresponding to 
+\begin_inset Formula $\lambda_{i}=v_{1}\pm\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ take the form 
+\begin_inset Formula $\left(\begin{array}{cccc}
+\hat{u} & 0_{6} & \tilde{u} & 0_{2}\end{array}\right)^{T}$
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\hat{u}}\in\mathbb{R}^{5},\boldsymbol{\tilde{u}}\in\mathbb{R}^{4}$
+\end_inset
+
+ satisfy:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cc}
+v_{1}I & \Xi_{2}\\
+\Xi_{1} & v_{1}I
+\end{array}\right)\left(\begin{array}{c}
+\boldsymbol{\hat{u}}\\
+\boldsymbol{\tilde{u}}
+\end{array}\right)=\left(v_{1}\pm\sqrt{\tilde{\lambda_{i}}}\right)\left(\begin{array}{c}
+\boldsymbol{\hat{u}}\\
+\boldsymbol{\tilde{u}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, 
+\begin_inset Formula $\Xi_{2}\boldsymbol{\tilde{u}}=\pm\sqrt{\tilde{\lambda_{i}}}\boldsymbol{\hat{u}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Xi_{1}\boldsymbol{\hat{u}}=\pm\sqrt{\tilde{\lambda_{i}}}\boldsymbol{\tilde{u}}$
+\end_inset
+
+.
+ Combining these results, 
+\begin_inset Formula $\Xi\boldsymbol{\tilde{u}}=\tilde{\lambda_{i}}\boldsymbol{\tilde{u}}$
+\end_inset
+
+.
+ Thus, 
+\begin_inset Formula $\boldsymbol{\tilde{u}}$
+\end_inset
+
+ is a right eigenvector of 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ and, taking the form 
+\begin_inset Formula $Q^{-1}\boldsymbol{e_{i}}$
+\end_inset
+
+ for some 
+\begin_inset Formula $i=1\ldots4$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The four eigenvectors corresponding to eigenvalues of the form 
+\begin_inset Formula $v_{1}+\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ are columns 1-4 of matrix 
+\begin_inset Formula $R$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Right-Eigenvectors-1"
+
+\end_inset
+
+.
+ Those corresponding to eigenvalues of the form 
+\begin_inset Formula $v_{1}-\sqrt{\tilde{\lambda_{i}}}$
+\end_inset
+
+ are columns 5-8.
+ By inspection (using the system matrix 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), it can be verified that the remaining 9 eigenvectors (corresponding to
+ eigenvalue 
+\begin_inset Formula $v_{1}$
+\end_inset
+
+) are the remaining columns.
+\end_layout
+
+\begin_layout Standard
+Note that the index 
+\begin_inset Formula $d$
+\end_inset
+
+ appearing in these representations should be taken as 
+\begin_inset Formula $1,2,3$
+\end_inset
+
+ for eigenvectors in directions 
+\begin_inset Formula $x,y,z$
+\end_inset
+
+, respectively.
+ 
+\begin_inset Formula $0_{m,n}$
+\end_inset
+
+ is defined to be the 0-matrix of shape 
+\begin_inset Formula $\left(m,n\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{n}$
+\end_inset
+
+ the identity matrix of size 
+\begin_inset Formula $n$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R=\left\{ \left(\begin{array}{cc}
+\frac{1}{2}\Xi_{2}\left(D^{2}Q\right)^{-1} & \frac{1}{2}\Xi_{2}\left(D^{2}Q\right)^{-1}\\
+0_{6,4} & 0_{6,4}\\
+\frac{1}{2}\left(DQ\right)^{-1} & -\frac{1}{2}\left(DQ\right)^{-1}\\
+0_{2,4} & 0_{2,4}
+\end{array}\right),\left(\begin{array}{c}
+-cT_{p}\\
+cT_{\rho}\\
+c\Pi_{d}^{-1}\boldsymbol{w}\\
+0_{12,1}
+\end{array}\right),\left(\begin{array}{cc}
+0_{2,3} & 0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2} & -\Pi_{1}^{-1}\Pi_{3}\\
+I_{3} & 0_{3,3}\\
+0_{3,3} & I_{3}\\
+0_{6,3} & 0_{6,3}
+\end{array}\right),\left(\begin{array}{c}
+0_{15,2}\\
+I_{2}
+\end{array}\right)\right\} \label{eq:Right-Eigenvectors-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\left(\Pi_{k}\right)_{ij} & =\frac{\partial\sigma_{id}}{\partial A_{jk}}\\
+\boldsymbol{w} & =T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\\
+c & =\frac{1}{\boldsymbol{e_{d}^{T}}\left(\Pi_{d}A\right)^{-1}\boldsymbol{w}+\frac{T_{p}}{\rho}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A similar analysis yields the left eigenvectors as the rows of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L=\left\{ \begin{array}{c}
+\left(\begin{array}{ccccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & DQ & 0_{4,2}\\
+Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & -DQ & 0_{4,2}
+\end{array}\right)\\
+\left(\begin{array}{cccccc}
+-\frac{1}{\rho} & 0 & \boldsymbol{e_{d}^{T}}A^{-1} & \boldsymbol{e_{d}^{T}}A^{-1}\Pi_{1}^{-1}\Pi_{2} & \boldsymbol{e_{d}^{T}}A^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{1,6}\end{array}\right)\\
+\left(\begin{array}{cccc}
+0_{3,5} & I_{3} & 0_{3,3} & 0_{3,6}\\
+0_{3,5} & 0_{3,3} & I_{3} & 0_{3,6}
+\end{array}\right)\\
+\left(\begin{array}{cc}
+0_{2,15} & I_{2}\end{array}\right)
+\end{array}\right\} \label{eq:Left-Eigenvectors-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Eigenvectors (without Heat Conduction)
+\end_layout
+
+\begin_layout Standard
+If the system does not include the heat conduction terms, the eigenstructure
+ of the system matrix changes.
+ 
+\begin_inset Formula $\Xi_{1},\Xi_{2},\Xi$
+\end_inset
+
+ now take the following values:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{1}=-\frac{1}{\rho}\left(\begin{array}{ccccc}
+\frac{\partial\sigma_{11}}{\partial\rho} & -1 & \frac{\partial\sigma_{11}}{\partial A_{11}} & \frac{\partial\sigma_{11}}{\partial A_{21}} & \frac{\partial\sigma_{11}}{\partial A_{31}}\\
+\frac{\partial\sigma_{21}}{\partial\rho} & 0 & \frac{\partial\sigma_{21}}{\partial A_{11}} & \frac{\partial\sigma_{21}}{\partial A_{21}} & \frac{\partial\sigma_{21}}{\partial A_{31}}\\
+\frac{\partial\sigma_{31}}{\partial\rho} & 0 & \frac{\partial\sigma_{31}}{\partial A_{11}} & \frac{\partial\sigma_{31}}{\partial A_{21}} & \frac{\partial\sigma_{31}}{\partial A_{31}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi_{2}=\left(\begin{array}{ccc}
+\rho & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)\\
+A_{11} & A_{12} & A_{13}\\
+A_{21} & A_{22} & A_{23}\\
+A_{31} & A_{32} & A_{33}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Xi=\Xi_{1}\Xi_{2}=\left(\begin{array}{ccc}
+\Omega_{11}^{1}+\left(c_{0}^{2}+\frac{\sigma_{11}}{\rho}-\frac{\partial\sigma_{11}}{\partial\rho}\right) & \Omega_{12}^{1}+\left(\frac{\sigma_{21}}{\rho}-\frac{\partial\sigma_{21}}{\partial\rho}\right) & \Omega_{13}^{1}+\left(\frac{\sigma_{31}}{\rho}-\frac{\partial\sigma_{31}}{\partial\rho}\right)\\
+\Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1}\\
+\Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the eigendecomposition 
+\begin_inset Formula $\Xi=Q^{-1}D^{2}Q$
+\end_inset
+
+ as before, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R=\left\{ \left(\begin{array}{cc}
+\frac{1}{2}\Xi_{2}\left(D^{2}Q\right)^{-1} & \frac{1}{2}\Xi_{2}\left(D^{2}Q\right)^{-1}\\
+0_{6,3} & 0_{6,3}\\
+\frac{1}{2}\left(DQ\right)^{-1} & -\frac{1}{2}\left(DQ\right)^{-1}
+\end{array}\right),\left(\begin{array}{cc}
+1 & 0\\
+0 & 1\\
+-\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
+\boldsymbol{0_{9}} & \boldsymbol{0_{9}}
+\end{array}\right),\left(\begin{array}{cc}
+0_{2,3} & 0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2} & -\Pi_{1}^{-1}\Pi_{3}\\
+I_{3} & 0_{3,3}\\
+0_{3,3} & I_{3}\\
+0_{3,3} & 0_{3,3}
+\end{array}\right)\right\} \label{eq:Right-Eigenvectors-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By considering their products with the first 8 columns of 
+\begin_inset Formula $R$
+\end_inset
+
+, two of the left eigenvectors corresponding the the 7th and 8th right eigenvect
+ors must come in the form of the rows of the following matrix:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cccc}
+W & X & Y & Z\end{array}\right)\label{eq:WXYZ}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $W\in\mathbb{R}^{2,5}$
+\end_inset
+
+ and 
+\begin_inset Formula $X,Y,Z\in\mathbb{R}^{2,3}$
+\end_inset
+
+, and:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+W\Xi_{2}\left(D^{2}Q\right)^{-1}+Z\left(DQ\right)^{-1} & =0\\
+W\Xi_{2}\left(D^{2}Q\right)^{-1}-Z\left(DQ\right)^{-1} & =0\\
+W\left(\begin{array}{c}
+0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2}
+\end{array}\right)+X & =0\\
+W\left(\begin{array}{c}
+0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{3}
+\end{array}\right)+Y & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Solving this system for 
+\begin_inset Formula $X,Y,Z$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+Z & =0\\
+X & =W_{:,3:5}\Pi_{1}^{-1}\Pi_{2}\\
+Y & =W_{:,3:5}\Pi_{1}^{-1}\Pi_{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\aleph & \equiv\left(\begin{array}{ccccc}
+\left(\Xi_{2}\right)_{11} & \left(\Xi_{2}\right)_{12} & \left(\Xi_{2}\right)_{13} & 1 & 0\\
+\left(\Xi_{2}\right)_{21} & \left(\Xi_{2}\right)_{22} & \left(\Xi_{2}\right)_{23} & 0 & 1\\
+\left(\Xi_{2}\right)_{31} & \left(\Xi_{2}\right)_{32} & \left(\Xi_{2}\right)_{33} & C_{11} & C_{12}\\
+\left(\Xi_{2}\right)_{41} & \left(\Xi_{2}\right)_{42} & \left(\Xi_{2}\right)_{43} & C_{21} & C_{22}\\
+\left(\Xi_{2}\right)_{51} & \left(\Xi_{2}\right)_{52} & \left(\Xi_{2}\right)_{53} & C_{31} & C_{32}
+\end{array}\right)\\
+ & =\left(\begin{array}{ccccc}
+B_{11} & B_{12} & B_{13} & 1 & 0\\
+B_{21} & B_{22} & B_{23} & 0 & 1\\
+A_{11} & A_{12} & A_{13} & C_{11} & C_{12}\\
+A_{21} & A_{22} & A_{23} & C_{21} & C_{22}\\
+A_{31} & A_{32} & A_{33} & C_{31} & C_{32}
+\end{array}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+B & =\left(\begin{array}{ccc}
+\rho & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)
+\end{array}\right)\\
+C & =\Pi_{1}^{-1}\left(\begin{array}{cc}
+-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \boldsymbol{e_{1}}\end{array}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By the properties of block matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\aleph^{-1}=\left(\begin{array}{cc}
+-A^{-1}C\left(I-BA^{-1}C\right)^{-1} & A^{-1}\left(I+C\left(I-BA^{-1}C\right)^{-1}BA^{-1}\right)\\
+\left(I-BA^{-1}C\right)^{-1} & -\left(I-BA^{-1}C\right)^{-1}BA^{-1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By the orthonormality of eigenvectors, we must have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W\aleph=\left(\begin{array}{ccccc}
+0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 0 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, it is straightforward to confirm that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W=\left(\begin{array}{cc}
+\left(I-BA^{-1}C\right)^{-1} & -\left(I-BA^{-1}C\right)^{-1}BA^{-1}\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+W & =\left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{cc}
+I_{2} & -BA^{-1}\end{array}\right)\\
+X & =-\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{2}\\
+Y & =-\left(I-BA^{-1}C\right)^{-1}BA^{-1}\Pi_{1}^{-1}\Pi_{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, combining the preceding results with 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:WXYZ"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L=\left\{ \begin{array}{c}
+\left(\begin{array}{cccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & DQ\\
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & -DQ
+\end{array}\right)\\
+\left(I_{2}-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
+I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
+\left(\begin{array}{cccc}
+0_{3,5} & I_{3} & 0_{3,3} & 0_{3,3}\\
+0_{3,5} & 0_{3,3} & I_{3} & 0_{3,3}
+\end{array}\right)
+\end{array}\right\} \label{eq:Left-Eigenvectors-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Solving the Riemann Problem
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:SolvingTheRiemannProblem"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Barton et al.
+ have presented an RGFM for the equations of non-linear elasticity 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_conservative_2011,barton_eulerian_2010"
+literal "true"
+
+\end_inset
+
+.
+ Owing to the similarity of the structure of the non-linear elasticity equations
+ to those of the GPR model (differing only in the presence of source terms,
+ the form of the shear stress tensor, and possibly the EOS), their method
+ is built upon here.
+ The resulting method is named the 
+\shape italic
+GPR-RGFM
+\shape default
+.
+\end_layout
+
+\begin_layout Standard
+The Riemann Problem of the GPR model takes the form demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:GPR_RP"
+
+\end_inset
+
+.
+ Assuming all waves are distinct, there are four waves on either side of
+ the contact discontinuity.
+ On each side, one wave corresponds to the thermal impulse (manifesting
+ as a heat wave) and the other three correspond to the distortion components
+ in the axis in which the Riemann Problem is considered (manifesting as
+ two shear waves and one longitudinal pressure wave).
+ It is important to note that - owing to the source terms - the star states
+ are not constant in the spacetime region in which they reside, so the method
+ presented here produces only an approximation to them.
+\end_layout
+
+\begin_layout Standard
+The method is presented here along the first spatial axis.
+ It can easily be adapted along any axis by taking the components of all
+ relevant vector quantities (velocity, distortion, and thermal impulse)
+ in the direction normal to the interface.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/diagrams/HPR_RP.png
+	lyxscale 50
+	height 25theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GPR_RP"
+
+\end_inset
+
+The Riemann Problem for the GPR model, assuming all waves are distinct
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denote the vector of primitive variables by 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+.
+ Take the set of left eigenvectors 
+\begin_inset Formula $L$
+\end_inset
+
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with eigenvalues 
+\begin_inset Formula $\text{\left\{  \lambda_{i}\right\}  }$
+\end_inset
+
+.
+ From 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:characteristics"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have the standard set of relations along characteristics (curves along
+ which 
+\begin_inset Formula $\frac{dx}{dt}=\lambda_{i}$
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L\cdot d\boldsymbol{P}=dt\cdot L\cdot\boldsymbol{S}\label{eq:L.dP=dt.L.S}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In what follows, we enact an operator splitting of the two processes present
+ in the system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=dt.L.S"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+L\cdot d\boldsymbol{P} & =\boldsymbol{0}\label{eq:L.dP=0}\\
+\frac{d\boldsymbol{P}}{dt} & =\boldsymbol{S}\label{eq:dP/dt=S}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset Formula $\boldsymbol{P^{*K}}$
+\end_inset
+
+
+\series default
+ is now sought, where 
+\begin_inset Formula $K=L$
+\end_inset
+
+ or 
+\begin_inset Formula $K=R$
+\end_inset
+
+, denoting the left or right sides of the interface, respectively.
+ Take the following linearization:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+d\boldsymbol{P^{K}}\approx\boldsymbol{P^{*K}}-\boldsymbol{P^{K}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/diagrams/HPR_RP2.png
+	lyxscale 50
+	height 25theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HPR_RP2"
+
+\end_inset
+
+Different sets of characteristic curves, traveling from their respective
+ initial points to the star region
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+13 relations from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L.dP=0"
+
+\end_inset
+
+ are taken: 4 regarding the 4 sets of characteristics traveling into the
+ contact discontinuity from side 
+\begin_inset Formula $K$
+\end_inset
+
+ (with speeds greater or less than 
+\begin_inset Formula $v$
+\end_inset
+
+ for 
+\begin_inset Formula $K=L$
+\end_inset
+
+ or 
+\begin_inset Formula $K=R$
+\end_inset
+
+, respectively), and 9 relating to the contact discontinuity itself.
+ This is demonstrated in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HPR_RP2"
+
+\end_inset
+
+.
+ 4 more relations must be derived to solve the system for 
+\begin_inset Formula $\boldsymbol{P^{*K}}$
+\end_inset
+
+.
+ Expanding the Taylor series of 
+\begin_inset Formula $\boldsymbol{\Sigma}^{*},T^{*}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma^{*} & =\Sigma+\left(\rho^{*}-\rho\right)\frac{\partial\Sigma}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial\Sigma}{\partial p}+\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\Sigma}{\partial A_{mn}}+O\left(d\boldsymbol{P}^{2}\right)\label{eq:q* Taylor Series}\\
+T^{*} & =T+\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}+O\left(d\boldsymbol{P}^{2}\right)\label{eq:sigma* Taylor Series}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\Sigma$"
+description "Total stress tensor"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma^{*}-\Sigma & \approx\left(p^{*}-p\right)I-\left(\rho^{*}-\rho\right)\frac{\partial\sigma}{\partial\rho}-\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\sigma}{\partial A_{mn}}\label{eq:SigmaCond}\\
+T^{*}-T & \approx\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}\label{eq:TempCond}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These are the extra required relations.
+ Thus we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}^{K}\cdot\left(\boldsymbol{P^{*K}}-\boldsymbol{P^{K}}\right)=\boldsymbol{c^{K}}\label{eq:L(P*-P)=c}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\hat{L}^{K}$
+\end_inset
+
+ takes the form found in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Conditions"
+
+\end_inset
+
+, with 
+\begin_inset Formula $\xi=-1$
+\end_inset
+
+ for 
+\begin_inset Formula $K=R$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi=1$
+\end_inset
+
+ for 
+\begin_inset Formula $K=L$
+\end_inset
+
+, and:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{c^{K}}=\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{*K}}-\boldsymbol{\Sigma_{1}^{K}}\\
+T^{*K}-T^{K}\\
+\boldsymbol{0}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The inverse of 
+\begin_inset Formula $\hat{L}^{K}$
+\end_inset
+
+ takes the form found in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Right-Conditions"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\hat{L}^{K},\hat{L}^{K}{}^{-1}$
+\end_inset
+
+ are evaluated at 
+\begin_inset Formula $\boldsymbol{P^{K}}$
+\end_inset
+
+.
+ It remains to find expressions for 
+\begin_inset Formula $\Sigma^{*}$
+\end_inset
+
+ and 
+\begin_inset Formula $T^{*}$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $\boldsymbol{P^{L}},\boldsymbol{P^{R}}$
+\end_inset
+
+ to close the system.
+ The obtained values depend on the boundary conditions chosen, as explained
+ below.
+\end_layout
+
+\begin_layout Subsubsection
+Boundary Conditions
+\end_layout
+
+\begin_layout Paragraph
+Stick Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+The following boundary conditions are used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\Sigma_{1}^{*L}} & =\boldsymbol{\Sigma_{1}^{*R}}\\
+T^{*L} & =T^{*R}\\
+\boldsymbol{v^{*L}} & =\boldsymbol{v^{*R}}\\
+q_{1}^{*L} & =q_{1}^{*R}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the relevant rows of 
+\begin_inset Formula $\boldsymbol{P^{*K}}=\boldsymbol{P^{K}}+\hat{L}^{K}{}^{-1}\boldsymbol{c^{K}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\boldsymbol{v^{*}}\\
+J_{1}^{*}
+\end{array}\right)=\left(\begin{array}{c}
+\boldsymbol{v^{K}}\\
+J_{1}^{K}
+\end{array}\right)+Y^{K}\left(\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{*}}\\
+T^{*}
+\end{array}\right)-\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{K}}\\
+T^{K}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{*}}\\
+T^{*}
+\end{array}\right)=\left(Y^{L}-Y^{R}\right)^{-1}\left(\begin{array}{c}
+\left(\begin{array}{c}
+\boldsymbol{v^{R}}\\
+J_{1}^{R}
+\end{array}\right)-\left(\begin{array}{c}
+\boldsymbol{v^{L}}\\
+J_{1}^{L}
+\end{array}\right)+Y^{L}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{L}}\\
+T^{L}
+\end{array}\right)-Y^{R}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{R}}\\
+T^{R}
+\end{array}\right)\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Slip Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+The following boundary conditions are used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Sigma_{11}^{*L} & =\Sigma_{11}^{*R}\\
+\Sigma_{12}^{*L},\Sigma_{12}^{*R} & =0\\
+\Sigma_{13}^{*L},\Sigma_{13}^{*R} & =0\\
+T^{*L} & =T^{*R}\\
+v_{1}^{*L} & =v_{1}^{*R}\\
+q_{1}^{*L} & =q_{1}^{*R}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the relevant rows of 
+\begin_inset Formula $\boldsymbol{P^{*K}}=\boldsymbol{P^{K}}+\hat{L}^{K}{}^{-1}\boldsymbol{c^{K}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+v_{1}^{*}\\
+J_{1}^{*}
+\end{array}\right)=\left(\begin{array}{c}
+v_{1}^{K}\\
+J_{1}^{K}
+\end{array}\right)+\tilde{Y}^{K}\left(\left(\begin{array}{c}
+\Sigma_{11}^{*}\\
+0\\
+0\\
+T^{*}
+\end{array}\right)-\left(\begin{array}{c}
+\Sigma_{11}^{K}\\
+\Sigma_{12}^{K}\\
+\Sigma_{13}^{K}\\
+T^{K}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{Y}^{K}=\left(\begin{array}{c}
+\boldsymbol{Y_{1}^{K}}\\
+\boldsymbol{Y_{4}^{K}}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus:
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{c}
+\Sigma_{11}^{*}\\
+T^{*}
+\end{array}\right)=\left(\hat{Y}^{L}-\hat{Y}^{R}\right)^{-1}\left(\begin{array}{c}
+\left(\begin{array}{c}
+v_{1}^{R}\\
+J_{1}^{R}
+\end{array}\right)-\left(\begin{array}{c}
+v_{1}^{K}\\
+J_{1}^{L}
+\end{array}\right)+Y^{L}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{L}}\\
+T^{L}
+\end{array}\right)-Y^{R}\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{R}}\\
+T^{R}
+\end{array}\right)\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{Y}^{K}=\left(\begin{array}{cc}
+Y_{11}^{K} & Y_{14}^{K}\\
+Y_{41}^{K} & Y_{44}^{K}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Vacuum Boundary Conditions
+\end_layout
+
+\begin_layout Standard
+The following boundary conditions are used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\Sigma_{1}^{*}} & =\boldsymbol{0}\\
+q_{1}^{*} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the relevant row of 
+\begin_inset Formula $\boldsymbol{P^{*K}}=\boldsymbol{P^{K}}+\hat{L}^{K}{}^{-1}\boldsymbol{c^{K}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J_{1}^{*}=J_{1}^{K}+\boldsymbol{Y_{4}^{K}}\cdot\left(\left(\begin{array}{c}
+\boldsymbol{0}\\
+T^{*}
+\end{array}\right)-\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{K}}\\
+T^{K}
+\end{array}\right)\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As 
+\begin_inset Formula $q_{1}^{*}=0$
+\end_inset
+
+ implies that 
+\begin_inset Formula $J_{1}^{*}=0$
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T^{*}=\frac{1}{Y_{44}^{K}}\left(\boldsymbol{Y_{4}^{K}}\cdot\left(\begin{array}{c}
+\boldsymbol{\Sigma_{1}^{K}}\\
+T^{K}
+\end{array}\right)-J_{1}^{K}\right)=T^{K}+\frac{\boldsymbol{Y_{4,:3}^{K}}\cdot\boldsymbol{\Sigma_{1}^{K}}-J_{1}^{K}}{Y_{44}^{K}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Iteration
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L(P*-P)=c"
+
+\end_inset
+
+ is solved for 
+\begin_inset Formula $\boldsymbol{P^{*K}}$
+\end_inset
+
+, which is taken to be the star state if the following conditions are satisfied:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\left|\boldsymbol{\Sigma_{1}^{*L}}-\boldsymbol{\Sigma_{1}^{*R}}\right|}{\min\left(\rho_{0}^{L},\rho_{0}^{R}\right)\times\min\left(c_{s}^{L},c_{s}^{R}\right)^{2}} & <TOL\\
+\frac{\left|v_{1}^{L}-v_{1}^{R}\right|}{\min\left(c_{s}^{L},c_{s}^{R}\right)} & <TOL\\
+\frac{\left|q_{1}^{L}-q_{1}^{R}\right|}{\min\left(\tilde{q}^{L},\tilde{q}^{R}\right)} & <TOL\\
+\frac{\left|T^{L}-T^{R}\right|}{\min\left(T_{0}^{L},T_{0}^{R}\right)} & <TOL
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{q}=\frac{c_{t}^{2}}{\rho_{0}}\sqrt{\frac{T_{0}^{3}}{c_{V}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These convergence criteria are chosen so that the variables required to
+ be less than 
+\begin_inset Formula $TOL$
+\end_inset
+
+ are dimensionless.
+ At every iteration, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dP/dt=S"
+
+\end_inset
+
+ is solved using the ODE solvers presented in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_fast_2017,jackson_numerical_2018"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Linear Conditions with Heat Conduction
+\end_layout
+
+\begin_layout Standard
+We now obtain 
+\begin_inset Formula $\hat{L}^{K}$
+\end_inset
+
+ and its inverse in order to solve 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:L(P*-P)=c"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Replacing the first four lines of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with the conditions 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:SigmaCond"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:TempCond"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}^{K}=\left\{ \begin{array}{c}
+\left(\begin{array}{cccccc}
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & -\Pi_{1} & -\Pi_{2} & -\Pi_{3} & 0_{3,6}\\
+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0_{1,3} & 0_{1,3} & 0_{1,3} & 0_{1,6}
+\end{array}\right)\\
+\left(\begin{array}{ccccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & \xi DQ & 0_{4,2}\end{array}\right)\\
+\left(\begin{array}{cccccc}
+-\frac{1}{\rho} & 0 & \boldsymbol{e_{d}^{T}}A^{-1} & \boldsymbol{e_{d}^{T}}A^{-1}\Pi_{1}^{-1}\Pi_{2} & \boldsymbol{e_{d}^{T}}A^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{1,6}\end{array}\right)\\
+\left(\begin{array}{cccc}
+0_{3,5} & I_{3} & 0_{3,3} & 0_{3,6}\\
+0_{3,5} & 0_{3,3} & I_{3} & 0_{3,6}
+\end{array}\right)\\
+\left(\begin{array}{cc}
+0_{2,15} & I_{2}\end{array}\right)
+\end{array}\right\} \label{eq:Left-Conditions}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the inverse of the left-eigenvector matrix becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}^{K}{}^{-1}=\left\{ \left(\begin{array}{c}
+X^{-1}I_{5,4}\\
+0_{6,4}\\
+Y\\
+0_{2,4}
+\end{array}\right),\left(\begin{array}{c}
+0_{11,4}\\
+\xi\left(DQ\right)^{-1}\\
+0_{2,4}
+\end{array}\right),\left(\begin{array}{c}
+-cT_{p}\\
+cT_{\rho}\\
+c\Pi_{d}^{-1}\boldsymbol{w}\\
+0_{12,1}
+\end{array}\right),\left(\begin{array}{cc}
+0_{2,3} & 0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2} & -\Pi_{1}^{-1}\Pi_{3}\\
+I_{3} & 0_{3,3}\\
+0_{3,3} & I_{3}\\
+0_{6,3} & 0_{6,3}
+\end{array}\right),\left(\begin{array}{c}
+0_{15,2}\\
+I_{2}
+\end{array}\right)\right\} \label{eq:Right-Conditions}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X=\left(\begin{array}{ccccc}
+\tilde{B}_{11} & \tilde{B}_{12} & \left(-\Pi_{1}\right)_{11} & \left(-\Pi_{1}\right)_{12} & \left(-\Pi_{1}\right)_{13}\\
+\tilde{B}_{21} & \tilde{B}_{22} & \left(-\Pi_{1}\right)_{21} & \left(-\Pi_{1}\right)_{22} & \left(-\Pi_{1}\right)_{23}\\
+\tilde{B}_{31} & \tilde{B}_{32} & \left(-\Pi_{1}\right)_{31} & \left(-\Pi_{1}\right)_{32} & \left(-\Pi_{1}\right)_{33}\\
+\tilde{D}_{11} & \tilde{D}_{12} & \tilde{C}_{11} & \tilde{C}_{12} & \tilde{C}_{13}\\
+\tilde{D}_{21} & \tilde{D}_{22} & \tilde{C}_{21} & \tilde{C}_{22} & \tilde{C}_{23}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X^{-1}I_{5,4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and also:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{B}=\left(\begin{array}{cc}
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}}\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{C}=\left(\begin{array}{ccc}
+0 & 0 & 0\\
+A_{d1}^{-1} & A_{d2}^{-1} & A_{d3}^{-1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{D}=\left(\begin{array}{cc}
+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p}\\
+-\frac{1}{\rho} & 0
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By inversion of block matrices
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\begin{array}{cc}
+A & B\\
+C & D
+\end{array}\right)^{-1}=\left(\begin{array}{cc}
+\left(A-BD^{-1}C\right)^{-1} & -\left(A-BD^{-1}C\right)^{-1}BD^{-1}\\
+-D^{-1}C\left(A-BD^{-1}C\right)^{-1} & D^{-1}\left(I+C\left(A-BD^{-1}C\right)^{-1}BD^{-1}\right)
+\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X^{-1}=\left(\begin{array}{cc}
+\tilde{D}^{-1}\tilde{C}Z^{-1} & \tilde{D}^{-1}\left(I-\tilde{C}Z^{-1}\tilde{B}\tilde{D}^{-1}\right)\\
+-Z^{-1} & Z^{-1}\tilde{B}\tilde{D}^{-1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Z=\Pi_{1}+\frac{\rho}{T_{p}}\left(T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\right)\boldsymbol{e_{d}^{T}}A^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Linear Conditions without Heat Conduction
+\end_layout
+
+\begin_layout Standard
+If the heat conduction terms are dropped from the GPR model, the eigenstructure
+ of the system changes, along with the solution of the linear conditions.
+ 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ retains the same definition, but is now a 
+\begin_inset Formula $3\times3$
+\end_inset
+
+ matrix (comprising the top-left corner of 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ under heat conduction).
+ Thus, 
+\begin_inset Formula $Q,D$
+\end_inset
+
+ are also 
+\begin_inset Formula $3\times3$
+\end_inset
+
+ matrices.
+ Taking the eigenvectors 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-Non-Thermal"
+
+\end_inset
+
+, the linear conditions become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}^{K}=\left\{ \begin{array}{c}
+\left(\begin{array}{ccccc}
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & -\Pi_{1} & -\Pi_{2} & -\Pi_{3}\end{array}\right)\\
+\left(\begin{array}{cccc}
+Q\Xi_{1} & -\frac{1}{\rho}Q\Pi_{2} & -\frac{1}{\rho}Q\Pi_{3} & \xi DQ\end{array}\right)\\
+\left(I-BA^{-1}C\right)^{-1}\left(\begin{array}{ccccc}
+I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0_{2,3}\end{array}\right)\\
+\left(\begin{array}{cccc}
+0_{3,5} & I_{3} & 0_{3,3} & 0_{3,3}\\
+0_{3,5} & 0_{3,3} & I_{3} & 0_{3,3}
+\end{array}\right)
+\end{array}\right\} \label{eq:Left-Conditions-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{L}^{K}{}^{-1}=\left\{ \left(\begin{array}{c}
+X^{-1}I_{5,4}\\
+0_{6,3}\\
+Y
+\end{array}\right),\left(\begin{array}{c}
+0_{11,3}\\
+\xi\left(DQ\right)^{-1}
+\end{array}\right),\left(\begin{array}{cc}
+1 & 0\\
+0 & 1\\
+-\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
+\boldsymbol{0_{9}} & \boldsymbol{0_{9}}
+\end{array}\right),\left(\begin{array}{cc}
+0_{2,3} & 0_{2,3}\\
+-\Pi_{1}^{-1}\Pi_{2} & -\Pi_{1}^{-1}\Pi_{3}\\
+I_{3} & 0_{3,3}\\
+0_{3,3} & I_{3}\\
+0_{3,3} & 0_{3,3}
+\end{array}\right)\right\} \label{eq:Right-Conditions-Non-Thermal}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X=\left(\begin{array}{ccccc}
+\tilde{B}_{11} & \tilde{B}_{12} & \left(-\Pi_{1}\right)_{11} & \left(-\Pi_{1}\right)_{12} & \left(-\Pi_{1}\right)_{13}\\
+\tilde{B}_{21} & \tilde{B}_{22} & \left(-\Pi_{1}\right)_{21} & \left(-\Pi_{1}\right)_{22} & \left(-\Pi_{1}\right)_{23}\\
+\tilde{B}_{31} & \tilde{B}_{32} & \left(-\Pi_{1}\right)_{31} & \left(-\Pi_{1}\right)_{32} & \left(-\Pi_{1}\right)_{33}\\
+\Delta_{11}^{-1} & \Delta_{12}^{-1} & \left(-\Delta^{-1}BA^{-1}\right)_{11} & \left(-\Delta^{-1}BA^{-1}\right)_{12} & \left(-\Delta^{-1}BA^{-1}\right)_{13}\\
+\Delta_{21}^{-1} & \Delta_{22}^{-1} & \left(-\Delta^{-1}BA^{-1}\right)_{21} & \left(-\Delta^{-1}BA^{-1}\right)_{22} & \left(-\Delta^{-1}BA^{-1}\right)_{23}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X^{-1}I_{5,4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Delta & =I-BA^{-1}C\\
+\tilde{B} & =\left(\begin{array}{cc}
+-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \boldsymbol{e_{1}}\end{array}\right)\\
+B & =\left(\begin{array}{ccc}
+\rho & 0 & 0\\
+\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)
+\end{array}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By inversion of block matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X^{-1}=\left(\begin{array}{cc}
+-BA^{-1}\tilde{Z} & \left(I+BA^{-1}\tilde{Z}\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
+-\tilde{Z} & \tilde{Z}\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{Z}=\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+The GPR-RGFM is now assessed.
+ The first fives tests in this chapter are Riemann problems that have appeared
+ elsewhere in the literature.
+ Exact solutions to these problems have been calculated by various methods.
+ The sixth test is new; it assess the ability of the GPR-RGFM to correctly
+ model heat conduction across interfaces.
+ The last two tests are well-known two-dimensional problems, to demonstrate
+ the applicability of the method to multiple dimensions.
+ The EOS parameters for three commonly-used fluids are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:fluid params"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="9">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $c_{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\gamma$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p_{\infty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $b_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $c_{\alpha}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mu$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $P_{r}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Air
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.18
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+718
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+55
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.85\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.714
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Helium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.163
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3127
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5/3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+55
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.99\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.688
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Water
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+997
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+950
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6\times10^{8}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:fluid params"
+
+\end_inset
+
+EOS parameters for different fluids (using SI units)
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Helium Bubble
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Helium-Bubble"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The interface between two different gases is now modeled.
+ As in Test B of Wang et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wang_thermodynamically_2004"
+literal "true"
+
+\end_inset
+
+, a bubble of helium - surrounded by air - initially occupies the region
+ 
+\begin_inset Formula $x\in\left[0.4,0.6\right]$
+\end_inset
+
+.
+ A shock front in the air, initially at 
+\begin_inset Formula $x=0.05$
+\end_inset
+
+, travels towards the helium bubble.
+ The initial conditions are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:HeliumBubble"
+
+\end_inset
+
+ and the EOS parameters for each material are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:fluid params"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+200 cells are used.
+ Reference solutions are computed using the exact solver for mixed ideal
+ gas Riemann problems under the Euler equations (presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "false"
+
+\end_inset
+
+).
+ The results for times 
+\begin_inset Formula $t=7\times10^{-4}$
+\end_inset
+
+ and 
+\begin_inset Formula $t=14\times10^{-4}$
+\end_inset
+
+ are displayed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Helium-Bubble"
+
+\end_inset
+
+.
+ In the former, the shock is about to hit the helium bubble (corresponding
+ to the region of low density).
+ In the latter, the shock has traveled through the helium bubble, compressing
+ it slightly, and the bubble itself has moved almost 0.1 spatial units to
+ the right.
+ There is good correspondence with the results in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wang_thermodynamically_2004"
+literal "true"
+
+\end_inset
+
+ and the sharp discontinuity in density is maintained.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0.05$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.3333$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.5\times10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\begin{array}{ccc}
+35.35\sqrt{10} & 0 & 0\end{array}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\frac{1.3333}{1.18}\right)^{\frac{1}{3}}I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.05\leq x<0.4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\frac{1}{1.18}\right)^{\frac{1}{3}}I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.4\leq x<0.6$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.1379$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\frac{0.1379}{0.163}\right)^{\frac{1}{3}}I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.6\leq x\leq1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(\frac{1}{1.18}\right)^{\frac{1}{3}}I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:HeliumBubble"
+
+\end_inset
+
+Initial conditions for the helium bubble test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/helium_bubble/7e-4/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/helium_bubble/14e-4/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/helium_bubble/7e-4/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/helium_bubble/14e-4/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/helium_bubble/7e-4/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/helium_bubble/14e-4/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Helium-Bubble"
+
+\end_inset
+
+Density, pressure, and velocity for the helium bubble test with GPR-RGFM
+ at times 
+\begin_inset Formula $t=7\times10^{-4}$
+\end_inset
+
+ (left) and 
+\begin_inset Formula $t=14\times10^{-4}$
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Water-Air Shock Tube
+\end_layout
+
+\begin_layout Standard
+This test comprises an interface between water and air, with initial data
+ taken from Chinnayya et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "chinnayya_modelling_2004"
+literal "false"
+
+\end_inset
+
+ (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:WaterAirShockTube"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ The aim of this test is to evaluate the ability of the GPR-RGFM at capturing
+ interfaces between qualitatively different fluids.
+ The water is initially at high pressure, and the air at atmospheric pressure.
+ Due to the large difference in state variables and qualitative characteristics
+ of the two fluids, this is an example of a test with which the original
+ GFM for the Euler equations does not perform well.
+\end_layout
+
+\begin_layout Standard
+The results using the GPR-RGFM with 200 cells are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Water-Air"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, along with the exact solution to the Euler equations.
+ As can be seen, the material interface is captured well, with the correct
+ intermediate density found by the numerical method.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0\leq x<0.7$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1000$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{9}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.7\leq x\leq1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{50}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:WaterAirShockTube"
+
+\end_inset
+
+Initial conditions for the water-air shock tube test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/water_air/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/water_air/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/water_air/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/water_air/e.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Water-Air"
+
+\end_inset
+
+Density, pressure, velocity, and internal energy for the water-air shock
+ tube test with GPR-RGFM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+PBX9404-Copper Shock Tube
+\end_layout
+
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_conservative_2011"
+literal "true"
+
+\end_inset
+
+, with the aim of testing the ability of the GPR-RGFM to model interfaces
+ between fluids and solids.
+ High pressure, reacted PBX9404 is in contact with copper at position 
+\begin_inset Formula $x=0.5$
+\end_inset
+
+ on domain 
+\begin_inset Formula $x\in\left[0,1\right]$
+\end_inset
+
+, with both materials initially at rest.
+ The pressure of the PBX is initially 
+\begin_inset Formula $18.9GPa$
+\end_inset
+
+, and the entropy of the copper is initially 
+\begin_inset Formula $0$
+\end_inset
+
+.
+ The PBX follows an ideal gas EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1840$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=2.85$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+.
+ The copper follows the Godunov-Romenski EOS, with parameters 
+\begin_inset Formula $\rho_{0}=8930$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=390$
+\end_inset
+
+, 
+\begin_inset Formula $T_{0}=300$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=3939$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\beta=3$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=2$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=2141$
+\end_inset
+
+.
+ The test is run until time 
+\begin_inset Formula $t=0.5\times10^{-6}$
+\end_inset
+
+, using 500 cells.
+\end_layout
+
+\begin_layout Standard
+The exact solution to this test is calculated using the iterative solver
+ described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+.
+ Plots for density, velocity, and total stress are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Copper-PBX"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ As can be seen, the GPR-RGFM is able to reproduce the solution to high
+ fidelity, with a perfectly sharp discontinuity in the density, and a very
+ well resolved discontinuity in the total stress.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/copper_pbx/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/copper_pbx/v1.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/copper_pbx/Σ11.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Copper-PBX"
+
+\end_inset
+
+Density, velocity, and total stress for the Copper-PBX test with GPR-RGFM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Aluminium in Vacuum
+\end_layout
+
+\begin_layout Standard
+This test is taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2010"
+literal "true"
+
+\end_inset
+
+.
+ The initial conditions of the test consist of a slab of aluminium, initially
+ with velocity 
+\begin_inset Formula $\left(\begin{array}{ccc}
+2 & 0 & 0.1\end{array}\right)$
+\end_inset
+
+, meeting a vacuum at point 
+\begin_inset Formula $x=0.5$
+\end_inset
+
+, on the domain 
+\begin_inset Formula $x\in\left[0,1\right]$
+\end_inset
+
+.
+ The distortion of the aluminium is initially given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A=\left(\begin{array}{ccc}
+1 & 0 & 0\\
+-0.01 & 0.95 & 0.02\\
+-0.015 & 0 & 0.9
+\end{array}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The initial density of the aluminium is thus given as 
+\begin_inset Formula $\rho=\rho_{0}\det\left(A\right)$
+\end_inset
+
+.
+ The aluminium is modeled using the Godunov-Romenski EOS, with parameters
+ 
+\begin_inset Formula $\rho_{0}=2.71$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=9\times10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $T_{0}=300$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=5.037$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\beta=3.577$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=2.088$
+\end_inset
+
+, 
+\series bold
+
+\begin_inset Formula $b_{0}=3.16$
+\end_inset
+
+
+\series default
+, 
+\begin_inset Formula $c_{t}=2$
+\end_inset
+
+, 
+\begin_inset Formula $\kappa=204$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The test was run until time 
+\begin_inset Formula $t=0.06$
+\end_inset
+
+, using 500 cells.
+ The results of solving this problem with the GPR-RGFM, not including thermal
+ conduction (as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2010"
+literal "true"
+
+\end_inset
+
+), are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Aluminium-in-Vacuum"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The results of solving the problem, including thermal conduction, are given
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Aluminium-in-Vacuum-Thermal"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ As can be seen, in both cases, the GPR-RGFM is able to accurately capture
+ the longitudinal wave and the two transverse shock waves that propagate
+ to the left side of the initial point of contact.
+ Without thermal conduction, the interface suffers from a 
+\begin_inset Quotes eld
+\end_inset
+
+heating error
+\begin_inset Quotes erd
+\end_inset
+
+ of the same kind discussed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2010"
+literal "true"
+
+\end_inset
+
+, manifesting itself as a slight undershoot in the density of the metal
+ at the interface.
+ Note that by incorporating thermal conduction into the numerical method,
+ this heating error completely disappears, without the use of an entropy
+ fix (as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2010"
+literal "true"
+
+\end_inset
+
+).
+ It must be noted that, in this case, the waves in the state variables now
+ appear to be slightly more diffused than the reference solution.
+ This is the expected effect of incorporating the phenomenon of thermal
+ conduction into this physical problem.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/v1.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/v2.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/Σ11.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/Σ13.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Aluminium-in-Vacuum"
+
+\end_inset
+
+Density, velocity, and total stress for the aluminium-vacuum test with GPR-RGFM,
+ not including thermal conduction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/thermal/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/thermal/v1.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/aluminium_vacuum/thermal/Σ11.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Aluminium-in-Vacuum-Thermal"
+
+\end_inset
+
+Density, velocity, and total stress for the aluminium-vacuum test with GPR-RGFM,
+ including thermal conduction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Heat Conduction in a Gas
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Intermaterial Heat Conduction"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This test is based on the Heat Conduction in a Gas Test of Dumbser et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+.
+ Two ideal gases at different temperatures are initially in contact at position
+ 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+ The initial conditions for this problem are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:HeatConduction-1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x<0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt[3]{2}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\geq0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1}{\sqrt[3]{2}}\cdot I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:HeatConduction-1"
+
+\end_inset
+
+Initial conditions for the heat conduction test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The material parameters are taken to be: 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.5$
+\end_inset
+
+, 
+\begin_inset Formula $\rho_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $p_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+, 
+\begin_inset Formula $c_{t}=1$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=10^{-2}$
+\end_inset
+
+, 
+\begin_inset Formula $\kappa=10^{-2}$
+\end_inset
+
+.
+ An interface is initially placed between the two volumes of air at 
+\begin_inset Formula $x=0.5$
+\end_inset
+
+.
+ The final time is taken to be 
+\begin_inset Formula $t=1$
+\end_inset
+
+, and 200 cells are used.
+ Results are displayed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Thermal Equilibration"
+
+\end_inset
+
+, using the results from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "true"
+
+\end_inset
+
+ as a reference.
+ The material interface is denoted by a dashed vertical line.
+\end_layout
+
+\begin_layout Standard
+The temperature curve generated using the GPR-RGFM matches very well the
+ reference solution.
+ The interface has moved to 
+\begin_inset Formula $x=0.53756$
+\end_inset
+
+, as is to be expected, as the cooler gas on the left expands as it heats
+ up, and the hotter gas on the right contracts as it cools.
+ Initially, the mass of the left volume is 1 and the right volume is 0.25.
+ At 
+\begin_inset Formula $t=1$
+\end_inset
+
+, these masses are 0.9997 and 0.2503, respectively.
+ Thus, mass on either side is conserved to a good approximation.
+ Although the GPR-RGFM results for the heat flux match the reference solution
+ well over most of the domain, there are aberrations in a small region around
+ the interface.
+ Although this doesn't affect the temperature curve, these discrepancies
+ are undesirable, and possible methods to rectify them are discussed in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Discussion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align block
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/passive/air_air/T.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/passive/air_air/q.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/passive/air_air/r.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Thermal Equilibration"
+
+\end_inset
+
+Temperature, heat flux, and density for the intermaterial heat conduction
+ test with GPR-RGFM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Intermaterial Heating-Induced Acoustic Wave
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Intermaterial-Heating-Induced-Acoustic-Wave"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The test assesses the ability of the GPR-RGFM to conduct heat between two
+ different materials.
+ Take the material parameters for air and helium from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Helium-Bubble"
+
+\end_inset
+
+.
+ Take the scaled spatial variable 
+\begin_inset Formula $x^{*}$
+\end_inset
+
+ defined by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x=\frac{\mu^{air}c_{0}^{air}}{p_{0}\gamma^{air}}x^{*}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The domain 
+\begin_inset Formula $x^{*}\in\left[0,90\right]$
+\end_inset
+
+ is used.
+ Thermal energy is added at the left boundary at a high power of 
+\begin_inset Formula $\frac{\gamma^{air}p_{0}c_{0}^{air}}{P_{r}^{air}\left(\gamma^{air}-1\right)}$
+\end_inset
+
+ (around 
+\begin_inset Formula $1.7\times10^{8}Wm^{-2}$
+\end_inset
+
+).
+ Three scenarios are tested:
+\end_layout
+
+\begin_layout Enumerate
+The domain is filled with air.
+\end_layout
+
+\begin_layout Enumerate
+The domain comprises two volumes of air, initially separated at 
+\begin_inset Formula $x^{*}=22.5$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The domain comprises a volume of air (left) and a volume of helium (right),
+ initially separated at 
+\begin_inset Formula $x^{*}=22.5$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The initial conditions for the two gases in all scenarios are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:Intermaterial Heat Conduction"
+
+\end_inset
+
+.
+ The results of the test are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Heat-Conduction-1"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Heat-Conduction-2"
+
+\end_inset
+
+ for various times.
+ The material interface is represented by a dashed vertical line in scenarios
+ 2 and 3.
+ All simulations used 400 cells.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+air
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.18$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $101325$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+helium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.164$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $101325$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\boldsymbol{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Intermaterial Heat Conduction"
+
+\end_inset
+
+Initial conditions for the intermaterial heating-induced acoustic wave test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As the left wall heats up, a temperature gradient develops and the acoustic
+ wave described appears.
+ The results for scenarios 1 and 2 are indistinguishable, as they should
+ be, and there are no aberrations around the material interface in scenario
+ 2.
+ In scenario 3, the acoustic wave hits the interface at around 
+\begin_inset Formula $t=2\times10^{-9}$
+\end_inset
+
+ and then speeds up (as it should, the speed of sound in helium being around
+ three times that of air).
+ The heat flux wave increases in intensity after passing into the helium,
+ owing to the fact that the wave is traveling faster.
+ As expected, all variables displayed are continuous across the interface.
+\end_layout
+
+\begin_layout Standard
+In scenarios 2 and 3 the interface moves to the right as the air heats up
+ and expands.
+ The masses of the air volumes in these two scenarios at various times are
+ given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:Intermaterial Heat Conduction-Mass"
+
+\end_inset
+
+, demonstrating that mass is conserved well as the interface moves.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Time (
+\begin_inset Formula $\times10^{-9}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Mass in Scenario 2 (
+\begin_inset Formula $\times10^{-6}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.254
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.255
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.253
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.252
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.252
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.253
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Mass in Scenario 3 (
+\begin_inset Formula $\times10^{-6}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.254
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.253
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.248
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.254
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.255
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.255
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Intermaterial Heat Conduction-Mass"
+
+\end_inset
+
+Mass of the air volume in scenarios 2 and 3 at various times
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air/W=1/T.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air/W=1/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_air/W=1/T.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_air/W=1/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_helium/W=1/T.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_helium/W=1/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heat-Conduction-1"
+
+\end_inset
+
+Temperature and pressure for the intermaterial heating-induced acoustic
+ wave test with: a single volume of air (top); two volumes of air initially
+ separated at 
+\begin_inset Formula $x^{*}=22.5$
+\end_inset
+
+ (middle); air and helium initially separated at 
+\begin_inset Formula $x^{*}=22.5$
+\end_inset
+
+ (bottom).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air/W=1/q.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_air/W=1/q.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_helium/W=1/q.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Heat-Conduction-2"
+
+\end_inset
+
+Heat flux for the inter-material heating-induced acoustic wave test with:
+ a single volume of air (top); two volumes of air initially separated at
+ 
+\begin_inset Formula $x^{*}=22.5$
+\end_inset
+
+ (middle); air and helium initially separated at 
+\begin_inset Formula $x^{*}=22.5$
+\end_inset
+
+ (bottom).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Taylor Bar
+\end_layout
+
+\begin_layout Standard
+This follows a similar form to that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "boscheri_cell_2016,maire_nominally_2013"
+literal "false"
+
+\end_inset
+
+.
+ A bar of aluminium of dimensions 
+\begin_inset Formula $100\times500$
+\end_inset
+
+ travels towards a solid wall at speed 
+\begin_inset Formula $0.015$
+\end_inset
+
+.
+ The surrounding environment is a vacuum.
+ The aluminium bar is modelled by the shock Mie-Gruneisen equation of state,
+ with parameters 
+\begin_inset Formula $\rho_{0}=2.785,$
+\end_inset
+
+ 
+\begin_inset Formula $c_{v}=9\times10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=0.533$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{0}=2$
+\end_inset
+
+, 
+\begin_inset Formula $s=1.338$
+\end_inset
+
+.
+ The aluminium also follows a plasticity law with parameters 
+\begin_inset Formula $b_{0}=0.305$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=0.003$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=20$
+\end_inset
+
+.
+ The domain has dimensions 
+\begin_inset Formula $300\times510$
+\end_inset
+
+, with 
+\begin_inset Formula $\Delta x,\Delta y=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The density and plastic deformation of the bar at times 
+\begin_inset Formula $t=0.0025$
+\end_inset
+
+ and 
+\begin_inset Formula $t=0.005$
+\end_inset
+
+ are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-Taylor-bar"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Unfortunately there are no experimental results for this test, but the
+ reader is asked to note the good agreement here with the results found
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "maire_nominally_2013"
+literal "false"
+
+\end_inset
+
+.
+ In that study, the boundary between the bar and the vacuum is captured
+ using a Lagrangian scheme, and it is reassuring that the same behaviour
+ is captured here with a characteristically different numerical method.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/taylor_bar/slip0.0025.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/taylor_bar/slip0.005.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/taylor_bar/|σ|_slip0.0025.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/taylor_bar/|σ|_slip0.005.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-Taylor-bar"
+
+\end_inset
+
+Density (top) and plastic deformation (bottom) for the Taylor bar test,
+ at times 
+\begin_inset Formula $t=0.0025$
+\end_inset
+
+ (left) and 
+\begin_inset Formula $t=0.005$
+\end_inset
+
+ (right)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Aluminum Plate Impact
+\end_layout
+
+\begin_layout Standard
+This test follows the form found in Michael & Nikiforakis 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+ (based on the original formulation found in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "howell_free_2002"
+literal "false"
+
+\end_inset
+
+).
+ An aluminum projectile impacts upon an aluminum plate at speed 
+\begin_inset Formula $400$
+\end_inset
+
+.
+ The domain is 
+\begin_inset Formula $\left[0,0.03\right]\times\left[0,0.04\right]$
+\end_inset
+
+, with the projectile initially occupying 
+\begin_inset Formula $\left[0.001,0.006\right]\times\left[0.014,0.026\right]$
+\end_inset
+
+, and the plate occupying 
+\begin_inset Formula $\left[0.006,0.028\right]\times\left[0.003,0.037\right]$
+\end_inset
+
+.
+ We have 
+\begin_inset Formula $\Delta x,\Delta y=10^{-4}$
+\end_inset
+
+.
+ The surroundings are taken to be a vacuum.
+ The aluminium follows a Godunov-Romenski EOS with parameters 
+\begin_inset Formula $\rho_{0}=2710$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=900$
+\end_inset
+
+, 
+\begin_inset Formula $T_{0}=300$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=5037$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\beta=3.577$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=2.088$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=3160$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=4\times10^{8}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=100$
+\end_inset
+
+.
+ Gauges are placed initially at 
+\begin_inset Formula $x=0.0078125$
+\end_inset
+
+, 
+\begin_inset Formula $0.0114375$
+\end_inset
+
+, 
+\begin_inset Formula $0.0150625$
+\end_inset
+
+, 
+\begin_inset Formula $0.0186875$
+\end_inset
+
+, 
+\begin_inset Formula $0.0223125$
+\end_inset
+
+ to measure the state variables over time, and these gauges are permitted
+ to move with the local velocity of the material.
+ The test is run until time 
+\begin_inset Formula $t=5\times10^{-6}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The pressure contours throughout the aluminium at various times are shown
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-aluminium-plate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Despite relying on a slightly different plasticity model to that found
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+, it can be seen that these plots are in very good agreement with those
+ found in the aforementioned publication.
+ One can clearly see the separation between the elastic precursor wave and
+ the trailing plastic wave in the impacted plate, and the subsequent return
+ waves that are generated once these waves reach the end of the plate.
+ This implies that the GPR-RGFM has correctly captured the aluminium-vacuum
+ interface.
+ Similarly, release waves can be seen on the sides of the plate, in agreement
+ with Michael & Nikiforakis.
+\end_layout
+
+\begin_layout Standard
+Plots over time of the 
+\begin_inset Formula $x$
+\end_inset
+
+-velocity, pressure, density, and total stress - as measured by the gauges
+ - are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:The-aluminium-plate-2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Note the good agreement between these plots and those found in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "michael_multi-physics_2018,howell_free_2002"
+literal "false"
+
+\end_inset
+
+, both in terms of their qualitative shape, and the arrival times of the
+ waves that they represent.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/t0.5.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/t1.0.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/t3.0.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/t5.0.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-aluminium-plate"
+
+\end_inset
+
+Pressure contour plots for the aluminium plate impact test, at times 
+\begin_inset Formula $0.5\mu s$
+\end_inset
+
+, 
+\begin_inset Formula $1\mu s$
+\end_inset
+
+, 
+\begin_inset Formula $3\mu s$
+\end_inset
+
+, 
+\begin_inset Formula $5\mu s$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/ρ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../dissertation/Figures/C4/aluminium_plates/Σ.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:The-aluminium-plate-2"
+
+\end_inset
+
+
+\begin_inset Formula $x$
+\end_inset
+
+-velocity, pressure, density, and total stress over time, as measured by
+ the various gauges of the aluminium plate impact test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Discussion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Riemann Ghost Fluid Method presented in this study has been demonstrated
+ to be an effective way of accurately simulating the interfaces between
+ several different materials (in all three main phases of matter), described
+ by the GPR model.
+ Unlike in many existing implementations, heat conduction across the interface
+ was simulated accurately, leading to the representation of physical phenomena
+ that are often overlooked, and to the redundancy of numerical techniques
+ that are sometimes used to enforce more empirically-accurate results (such
+ as entropy and temperature fixes).
+\end_layout
+
+\begin_layout Standard
+The framework presented here greatly simplifies the conceptual framework
+ required for multimaterial interactions.
+ Implementation should be easier and quicker, and future work can be more
+ focused on a single model, rather than several fundamentally different
+ frameworks.
+ 
+\end_layout
+
+\begin_layout Subsection
+Limitations
+\end_layout
+
+\begin_layout Standard
+Throughout this study, the various fluids have been assumed to be immiscible.
+ Whilst this is a common assumption in situations where mixing is low or
+ practically non-existent, there are many problems which may require it.
+ An area of further research would be the implementation of a mixture model
+ such as that proposed by Romenski et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Romenski2007,Romenski2010"
+literal "true"
+
+\end_inset
+
+, which uses the same thermal conduction system as the GPR model.
+\end_layout
+
+\begin_layout Standard
+The truncation of the Taylor series expansions 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q* Taylor Series"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sigma* Taylor Series"
+
+\end_inset
+
+ used to find the star states of the heat flux and the viscous stress tensor
+ implicitly assumes that there are only small differences between the side
+ states and the star states of the variables upon which 
+\begin_inset Formula $q_{1}^{*},\boldsymbol{\sigma_{1}^{*}}$
+\end_inset
+
+ depend (
+\begin_inset Formula $\rho$
+\end_inset
+
+, 
+\begin_inset Formula $p$
+\end_inset
+
+, 
+\begin_inset Formula $J_{1}$
+\end_inset
+
+, and 
+\begin_inset Formula $\boldsymbol{A_{1}}$
+\end_inset
+
+).
+ If this is the case, higher order terms of the expansion can be neglected.
+ If it is not, however, the method may fail.
+ The linearised nature of the GPR-RGFM solver also implicitly assumes that
+ all waves of interest present in the Riemann Problem are shocks.
+ Thus, strong rarefactions may cause the method to fail.
+ 
+\end_layout
+
+\begin_layout Subsection
+Potential Improvements
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Potential-Improvements"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An obvious improvement to the GPR-RGFM method presented would be to use
+ a better Riemann solver than the iterative, linearised solver devised in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SolvingTheRiemannProblem"
+
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $L$
+\end_inset
+
+ be the matrix of left eigenvectors of the primitive system.
+ As noted previously, the solver relies upon the fact that each of the following
+ relations holds along the characteristic to which it corresponds:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L\cdot\frac{d\boldsymbol{P}}{dt}=L\cdot\boldsymbol{S}\label{eq:along-characteristics}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Methods to accurately integrate 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:along-characteristics"
+
+\end_inset
+
+ from the left and right interface boundary states to their respective star
+ states warrant further research.
+\end_layout
+
+\begin_layout Standard
+Alternatively, a completely different approximate Riemann solver could be
+ employed, such as the universal HLLEM solver of Dumbser et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+literal "true"
+
+\end_inset
+
+.
+ This path-conservative formulation of the HLLEM solver works for general
+ non-conservative systems (such as the GPR model) and is simple to implement.
+ It's based upon a new path-conservative HLL method (building on the original
+ method of Harten, Lax, and van Leer 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Harten1983"
+literal "true"
+
+\end_inset
+
+) but is claimed to be able to represent linearly degenerate intermediate
+ waves 
+\begin_inset Quotes eld
+\end_inset
+
+with a minimum of smearing
+\begin_inset Quotes erd
+\end_inset
+
+ by evaluating the eigenvalues and eigenvectors of the intermediate characterist
+ic fields (given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenstructure of the HPR Model"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+There are iterative exact Riemann solvers for the equations of non-linear
+ elasticity (to which the GPR model reduces as 
+\begin_inset Formula $\tau_{1}\rightarrow\infty$
+\end_inset
+
+).
+ Thus, they will work for applications of the GPR model to solids problems
+ (and perhaps to very viscous fluids problems too).
+ Although these solvers are computationally expensive, they are only used
+ once at each material interface point at each time step, and thus the added
+ accuracy that they provide may be desirable.
+ There are two ways to formulate the equations of non-linear elasticity:
+ one in which the deformation tensor (the analogue of the inverse of the
+ GPR model's distortion tensor) is evolved in time, and one in which its
+ inverse (the analogue of 
+\begin_inset Formula $A$
+\end_inset
+
+) is evolved instead.
+ Miller's exact solver 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Miller2004"
+literal "true"
+
+\end_inset
+
+ uses the first formulation and the solver of Barton et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2009"
+literal "true"
+
+\end_inset
+
+ uses the second.
+ The former can be used to evolve 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+, from which 
+\begin_inset Formula $A$
+\end_inset
+
+ can be calculated.
+ Unfortunately, both solvers critically assume that the source terms of
+ the system vanish, and so are unlikely to produce the correct boundary
+ conditions for the GPR-RGFM when modeling relatively inviscid fluids.
+ It should also be noted that they cannot be used for problems involving
+ heat conduction across material interfaces, and they do not take the thermal
+ conduction subsystem of the GPR model into account.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "misc_refs,refs"
+options "bibtotoc,siam"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+The authors acknowledge financial support from the EPSRC Centre for Doctoral
+ Training in Computational Methods for Materials Science under grant EP/L015552/
+1.
+\end_layout
+
+\begin_layout Section
+Appendix
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Appendix"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the ordering 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+ of primitive variables in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Pvec"
+
+\end_inset
+
+, note that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MomentumEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalEquation"
+
+\end_inset
+
+ can be stated as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{D\rho}{Dt}+\rho\frac{\partial v_{k}}{\partial x_{k}} & =0\\
+\frac{Dv_{i}}{Dt}+\frac{1}{\rho}\frac{\partial\Sigma_{ik}}{\partial x_{k}} & =0\\
+\frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
+\frac{DJ_{i}}{Dt}+\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}} & =-\frac{H_{i}}{\theta_{2}}\\
+\frac{DE}{Dt}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the total stress tensor 
+\begin_inset Formula $\Sigma=pI+\rho A^{T}\psi$
+\end_inset
+
+.
+ Note that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{DE}{Dt} & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}+\frac{\partial E}{\partial\rho}\frac{D\rho}{Dt}+v_{i}\frac{Dv_{i}}{Dt}+\frac{\partial E}{\partial A_{ij}}\frac{DA_{ij}}{Dt}+H_{i}\frac{DJ_{i}}{Dt}\\
+ & =\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\rho\frac{\partial E}{\partial\rho}\frac{\partial v_{k}}{\partial x_{k}}-\frac{1}{\rho}v_{i}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\frac{\partial E}{\partial A_{ij}}\left(A_{ik}\frac{\partial v_{k}}{\partial x_{j}}+\frac{\psi_{ij}}{\theta_{1}}\right)-H_{i}\left(\frac{1}{\rho}\frac{\partial T\delta_{ik}}{\partial x_{k}}+\frac{H_{i}}{\theta_{2}}\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the energy equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial E}{\partial p}\frac{Dp}{Dt}-\rho\frac{\partial E}{\partial\rho}\frac{\partial v_{k}}{\partial x_{k}}-\frac{1}{\rho}v_{i}\frac{\partial\Sigma_{ik}}{\partial x_{k}}-\frac{\partial E}{\partial A_{ij}}A_{ik}\frac{\partial v_{k}}{\partial x_{j}}-\frac{H_{k}}{\rho}\frac{\partial T}{\partial x_{k}}+\frac{1}{\rho}\frac{\partial\left(\Sigma_{ik}v_{i}+TH_{k}\right)}{\partial x_{k}}=\frac{\partial E}{\partial A_{ij}}\frac{\psi_{ij}}{\theta_{1}}+\frac{H_{i}H_{i}}{\theta_{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Simplifying:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{Dp}{Dt}+\frac{1}{\rho E_{p}}\left(\Sigma_{ik}-\rho A_{ji}\frac{\partial E}{\partial A_{jk}}-\rho^{2}\frac{\partial E}{\partial\rho}\delta_{ik}\right)\frac{\partial v_{i}}{\partial x_{k}}+\frac{T}{\rho E_{p}}\frac{\partial H_{k}}{\partial x_{k}}=\frac{\partial E}{\partial A_{ij}}\frac{\psi_{ij}}{\theta_{1}E_{p}}+\frac{H_{i}H_{i}}{\theta_{2}E_{p}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{align}
+\frac{p-\rho^{2}E_{\rho}}{\rho E_{p}} & =\frac{\rho^{2}\left.E_{\rho}\right|_{s}-\rho^{2}\left.E_{\rho}\right|_{p}}{\rho\left.E_{p}\right|_{\rho}}=\rho\frac{\left.E_{\rho}\right|_{s}-\left(\left.E_{\rho}\right|_{s}+\left.E_{s}\right|_{\rho}\left.s_{\rho}\right|_{p}\right)}{\left.E_{s}\right|_{\rho}\left.s_{p}\right|_{\rho}}\\
+ & =\rho\frac{-\left.s_{\rho}\right|_{p}}{\left.s_{p}\right|_{\rho}}=\rho\left.\frac{\partial p}{\partial\rho}\right|_{s}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{equation}
+\frac{c_{t}^{2}T}{\rho E_{p}}=\frac{c_{t}^{2}T}{\rho c_{v}T_{p}}=\frac{\rho c_{h}^{2}}{T_{p}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{equation}
+\left.\frac{\partial E}{\partial A}\right|_{\rho,p}=\left(c_{s}^{2}-\frac{\rho}{\Gamma}\frac{\partial c_{s}^{2}}{\partial\rho}\right)\frac{\psi}{c_{s}^{2}}=\left(1-2\frac{\rho^{2}}{\rho\Gamma}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\psi
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\sigma}{\partial\rho} & =\frac{\partial}{\partial\rho}\left(-\rho c_{s}^{2}A^{T}\frac{\psi}{c_{s}^{2}}\right)=-c_{s}^{2}A^{T}\frac{\psi}{c_{s}^{2}}-\rho\frac{\partial c_{s}^{2}}{\partial\rho}A^{T}\frac{\psi}{c_{s}^{2}}\\
+ & =\frac{\sigma}{\rho}+2\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\sigma\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{p-\rho^{2}E_{\rho}}{\rho E_{p}} & =\rho c_{0}^{2}\\
+\frac{c_{t}^{2}T}{\rho E_{p}} & =\frac{\rho c_{h}^{2}}{T_{p}}\\
+\left.\frac{\partial E}{\partial A}\right|_{\rho,p} & =\left(1-2\rho^{2}E_{p}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\psi\\
+-\rho A^{T}\left.\frac{\partial E}{\partial A}\right|_{\rho,p} & =\sigma+\rho^{2}E_{p}\left(\frac{\sigma}{\rho}-\frac{\partial\sigma}{\partial\rho}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The full system then becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{D\rho}{Dt}+\rho\frac{\partial v_{k}}{\partial x_{k}} & =0\\
+\frac{Dp}{Dt}+\rho c_{0}^{2}\frac{\partial v_{i}}{\partial x_{i}}+\left(\sigma_{ik}-\rho\frac{\partial\sigma_{ik}}{\partial\rho}\right)\frac{\partial v_{i}}{\partial x_{k}}+\frac{\rho c_{h}^{2}}{T_{p}}\frac{\partial J_{k}}{\partial x_{k}} & =\left(1-2\rho^{2}E_{p}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\frac{\left\Vert \psi\right\Vert _{F}^{2}}{\theta_{1}E_{p}}+\frac{\left\Vert H\right\Vert ^{2}}{\theta_{2}E_{p}}\\
+\frac{DA_{ij}}{Dt}+A_{ik}\frac{\partial v_{k}}{\partial x_{j}} & =-\frac{\psi_{ij}}{\theta_{1}}\\
+\frac{Dv_{i}}{Dt}-\frac{1}{\rho}\frac{\partial\sigma_{ik}}{\partial\rho}\frac{\partial\rho}{\partial x_{k}}+\frac{1}{\rho}\frac{\partial p}{\partial x_{i}}-\frac{1}{\rho}\frac{\partial\sigma_{ik}}{\partial A_{mn}}\frac{\partial A_{mn}}{\partial x_{k}} & =0\\
+\frac{DJ_{i}}{Dt}+\frac{T_{\rho}}{\rho}\frac{\partial\rho}{\partial x_{i}}+\frac{T_{p}}{\rho}\frac{\partial p}{\partial x_{i}} & =-\frac{H_{i}}{\theta_{2}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the GPR system can be written in the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{P}}{\partial t}+\boldsymbol{M}\cdot\nabla\boldsymbol{P}=\boldsymbol{S_{p}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where the first component of 
+\begin_inset Formula $M$
+\end_inset
+
+ is given on 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:M1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for illustrative purposes.
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
+\begin_inset Formula 
+\begin{equation}
+M_{1}=\left(\begin{array}{ccccccccccccccccc}
+v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0\\
+0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \Psi_{11}+\rho c_{0}^{2} & \Psi_{21} & \Psi_{31} & \frac{\rho c_{h}^{2}}{T_{p}} & 0 & 0\\
+0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & 0\\
+0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0\\
+\Phi_{11} & \frac{1}{\rho} & \Upsilon_{11}^{11} & \Upsilon_{21}^{11} & \Upsilon_{31}^{11} & \Upsilon_{12}^{11} & \Upsilon_{22}^{11} & \Upsilon_{32}^{11} & \Upsilon_{13}^{11} & \Upsilon_{23}^{11} & \Upsilon_{33}^{11} & v_{1} & 0 & 0 & 0 & 0 & 0\\
+\Phi_{21} & 0 & \Upsilon_{11}^{21} & \Upsilon_{21}^{21} & \Upsilon_{31}^{21} & \Upsilon_{12}^{21} & \Upsilon_{22}^{21} & \Upsilon_{32}^{21} & \Upsilon_{13}^{21} & \Upsilon_{23}^{21} & \Upsilon_{33}^{21} & 0 & v_{1} & 0 & 0 & 0 & 0\\
+\Phi_{31} & 0 & \Upsilon_{11}^{31} & \Upsilon_{21}^{31} & \Upsilon_{31}^{31} & \Upsilon_{12}^{31} & \Upsilon_{22}^{31} & \Upsilon_{32}^{31} & \Upsilon_{13}^{31} & \Upsilon_{23}^{31} & \Upsilon_{33}^{31} & 0 & 0 & v_{1} & 0 & 0 & 0\\
+\frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1}
+\end{array}\right)\label{eq:M1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\Psi_{ij} & =\sigma_{ij}-\rho\frac{\partial\sigma_{ij}}{\partial\rho}\\
+\Upsilon_{mn}^{ij} & =-\frac{1}{\rho}\frac{\partial\sigma_{ij}}{\partial A_{mn}}\\
+\Phi_{ij} & =-\frac{1}{\rho}\frac{\partial\sigma_{ij}}{\partial\rho}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{P}=\left(\begin{array}{ccccccccccccccccc}
+\rho & p & A_{11} & A_{21} & A_{31} & A_{12} & A_{22} & A_{32} & A_{13} & A_{23} & A_{33} & v_{1} & v_{2} & v_{3} & J_{1} & J_{2} & J_{3}\end{array}\right)^{T}\label{eq:Pvec}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{S_{p}}=\frac{1}{\theta_{1}}\left(\begin{array}{c}
+0\\
+\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}\\
+-\psi_{11}\\
+-\psi_{21}\\
+-\psi_{31}\\
+-\psi_{12}\\
+-\psi_{22}\\
+-\psi_{32}\\
+-\psi_{13}\\
+-\psi_{23}\\
+-\psi_{33}\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0
+\end{array}\right)+\frac{1}{\theta_{2}}\left(\begin{array}{c}
+0\\
+\frac{1}{E_{p}}\left\Vert \boldsymbol{H}\right\Vert ^{2}\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+0\\
+-H_{1}\\
+-H_{2}\\
+-H_{3}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

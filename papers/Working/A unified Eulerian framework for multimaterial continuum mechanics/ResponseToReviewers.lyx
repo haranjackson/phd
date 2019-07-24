@@ -1,0 +1,368 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Response to Reviewers
+\end_layout
+
+\begin_layout Author
+Haran Jackson
+\end_layout
+
+\begin_layout Subsection*
+Reviewer 1
+\end_layout
+
+\begin_layout Standard
+0) In the abstract: it is better to relax the line "...this study represents
+ the first publicly-available method to handle multimaterial problems under
+ this model" because there are papers at least by Angelo Iollo et al (e.g.
+ see references in the introduction of Peshkov et al, 2019, JCP, "Theoretical
+ and numerical comparison of hyperelastic and hypoelastic formulations for
+ Eulerian non-linear elastoplasticity", https://doi.org/10.1016/j.jcp.2019.02.039))
+ who use a very similar PDE system (for the distortion A but without the
+ heat conduction) and the level set method for multimaterial modeling.
+ However, it seems that they are not aware that these PDEs can be applied
+ to the modeling of viscous flows as well.
+ The authors could also mention the papers by Illo et al, e.g.
+ refs.
+ [25],[26] from the mentioned paper by Peshkov et al.
+ I leave it up to the authors.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+The line has been relaxed to 
+\begin_inset Quotes eld
+\end_inset
+
+this study represents a novel approach for handling multimaterial problems
+ under this model
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The references mentioned here are now discussed in 1.1 Multimaterial Models.
+\end_layout
+
+\begin_layout Standard
+1) The line before eq.
+ (1a), in references "...(see [33], [12], [8])": it is worth to add the mentioned
+ above paper by Peshkov et al in JCP because it contains a review of Eulerian
+ approaches to nonlinear elastoplasticity including the GPR model.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+This additional reference has been added.
+\end_layout
+
+\begin_layout Standard
+2) Even though the non-Newtonian fluids are not considered here, I suggest
+ adding an expression for 
+\backslash
+tau_1 in (8a) for non-Newtonian fluids from authors' recent paper, Ref.[22]
+ (recently accepted in JCP, https://doi.org/10.1016/j.jcp.2019.02.025).
+ This will emphasize even more the multimaterial capabilities of the approach.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+This has been added.
+\end_layout
+
+\begin_layout Standard
+3) I believe, the quasilinear form from the footnote on p.12 should be placed
+ right at the beginning of Sec.2.1.
+ Otherwise, the meaning of M matrix in eq.(38) is not clear.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+This has been done.
+\end_layout
+
+\begin_layout Standard
+4) In eq.(29), say what the matrix L is.
+ Should be the left eigenvectors but still, the authors should explicitly
+ mention this.
+ Later in the text, it is indeed named the left eigenvectors.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+Before (29), it is already stated: 
+\begin_inset Quotes eld
+\end_inset
+
+[...] analysis yields the left eigenvectors as the rows of (29)
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This statement has been made more prominent on the page.
+\end_layout
+
+\begin_layout Standard
+5) Wherever the dots appear in the matrices, like in (37), (40b), an so
+ on, it should be declared what these dots stand for.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+This notation has been removed by defining new temporary variables.
+\end_layout
+
+\begin_layout Standard
+6) Sec.2.2.2.
+ Please give a short explanation for the intention of this section.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+This has been added.
+\end_layout
+
+\begin_layout Standard
+7) A few lines have to be devoted to the scheme which is used outside of
+ the interface, e.g.
+ the order of the scheme, the type, etc.
+\end_layout
+
+\begin_layout Standard
+8) In Sec.3.3, it is not clear to which of the previously mentioned EOS "the
+ Godunov-Romenski EOS" is referenced to.
+\end_layout
+
+\begin_layout Standard
+9) In Sec.3.8, it is better to reference the line "One can clearly see the
+ separation between the elastic precursor wave and the trailing plastic
+ wave..." to Fig.17 but not to Fig.16.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Reviewer 2
+\end_layout
+
+\begin_layout Standard
+1.
+ Background: The authors need to give more informations about the GPR model.
+ A self consistent paper is always easier to read.
+ Moreover, the GPR model is far from being a well established model.
+ The authors should also explain in what extent this model encompasses both
+ fluid and solid modellings.
+ They have also to answer the crucial question of materials characterized
+ by tabulated equations of state.
+ Another question is related to the choice of entropy variable to express
+ the energies E1 and E2.
+ The choice of entropy renders quite difficult the simulation of materials
+ response whose parameters, such as the shear modulus, depend on temperature.
+ The reviewers asks the authors to address these questions.
+ Finally, the reviewer wonders why the authors are not aware of the works
+ of Gavrilyuk and Favrie about the numerical modelling of multimaterial
+ flows.
+ 
+\end_layout
+
+\begin_layout Standard
+2.
+ A Riemann ghost fluid…: The multimaterial treatment in the Eulerian framework
+ proposed by the authors is the ghost fluid method.
+ More precisely, they promote an improvement of this approach based on an
+ approximate Riemann solver of the GPR model.
+ This is the main contribution of the paper which is quite difficult to
+ read and understand.
+ The reviewer believes that the readability of the paper could be dramatically
+ improved by rewriting this part.
+ The authors have first to explain properly what they want to do: i) recalling
+ the system of PDEs to be discretized ; ii) meshing the computational domain
+ ; iii) discretizing the PDEs (space, time explicit/implicit???) ; iv) addressin
+g the multimaterial treatment.
+\end_layout
+
+\begin_layout Standard
+3.
+ Results: The authors should explain how they have computed the analytical
+ solutions.
+ The results displayed for test 3.5 in Figure 12 for the heat flux are not
+ correct.
+ At the material interface, the heat flux has to be continuous, at least
+ its normal component.
+ The authors should check whether or not their numerical method ensures
+ the continuity of the normal heat flux at material interfaces.
+ A majority of 1D test cases is provided and 2 2D planar test cases are
+ given which is not enough.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Reviewer 4
+\end_layout
+
+\begin_layout Standard
+Please give a definitions for all variables used in the GPR model (1a)-(1e).
+ Even though some quantities are standard (like density and velocity), the
+ distortion tensor A is definitely a non-classical object, which is of crucial
+ important in the model description.
+ Therefore, I suggest to properly address all quantities appearing in (1a)-(1e).
+\end_layout
+
+\begin_layout Standard
+Please give also explicit formulae for the equation of state used in Section
+ 3.
+ It is not clear what the parameters contained in Table 1 refer to.
+\end_layout
+
+\begin_layout Standard
+What is tensor 
+\backslash
+Sigma^*? It seems to appear for the first time in equation (47a)
+\end_layout
+
+\begin_layout Standard
+Could you please give an explicit formula of the discretization of the governing
+ equations? I suppose you use a finite volume scheme, so please write the
+ numerical scheme for all equations.
+ How do you compute the time step? Nothing is said about it.
+\end_layout
+
+\begin_layout Standard
+Figure 10, density panel: there is a lowering in the density distribution
+ at the right boundary.
+ Do you have any explanation? How do you impose physical boundary conditions
+ (not interface BCs)? Some comments should be made.
+\end_layout
+
+\begin_layout Standard
+Figures 10-11: these results refer to Section 3.4, where the physical domain
+ is taken to be [0,1].
+ Why do you plot all figures in the range [0,0.65-0.7]? 
+\end_layout
+
+\begin_layout Standard
+Could you provide a convergence study of your scheme? I assume it is first
+ order in space and time, but nothing is said about it.
+\end_layout
+
+\begin_layout Standard
+One bracket is not needed at line 2 of the Introduction "Lagrangian and
+ Arbitrary-Lagrangian-Eulerian)" 
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+Corrected.
+\end_layout
+
+\begin_layout Standard
+Conclusions: "the implementation OF a mixture mode"
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+Corrected.
+\end_layout
+
+\end_body
+\end_document
