@@ -606,6 +606,47 @@ end{subequations}
 
 \begin_layout Standard
 where 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is density, 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+ is velocity, 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the Kronecker delta, 
+\begin_inset Formula $p$
+\end_inset
+
+ is pressure, 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is the sheer stress tensor, 
+\begin_inset Formula $A$
+\end_inset
+
+ is the distortion tensor, 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is the thermal impulse vector, 
+\begin_inset Formula $T$
+\end_inset
+
+ is temperature, 
+\begin_inset Formula $E$
+\end_inset
+
+ is total energy, and 
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+ is heat flux.
+ 
 \begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
 \end_inset
 
@@ -645,7 +686,137 @@ where
 \end_inset
 
  is the entropy of the system.
+\end_layout
+
+\begin_layout Standard
+The GPR model represents the same set of equations as the model of elastoplastic
+ deformation originally proposed by Godunov and Romenski.
+ Peshkov and Romenski first subsequently proposed that these are the equations
+ of motion for an arbitrary continuum - not just a solid.
+ In doing so, they were able to apply the model to fluids too.
+ Note that material elements have not only finite size, but also internal
+ structure (encoded in the distortion), unlike in previous continuum models.
+\end_layout
+
+\begin_layout Standard
+The idea of 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ - the strain dissipation time - has its roots in Frenkel's 
+\begin_inset Quotes eld
+\end_inset
+
+particle settled life time
+\begin_inset Quotes erd
+\end_inset
+
+ (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "frenkel_kinetic_1947"
+literal "true"
+
+\end_inset
+
+).
  
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ represents a continuous analogue of Frenkel's object.
+ It can be thought of as the characteristic time taken for a particle to
+ move by a distance roughly the same as the particle's size.
+ Thus, the typical time taken for a material element to rearrange with its
+ neighbors is characterized by 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+ .
+ As long as a continuum description is appropriate for the material at hand,
+ it is thus that the GPR model seeks to describe all three major phases
+ of matter.
+ For example, we have the following relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau_{1}=\begin{cases}
+\infty & elastic\,solids\\
+0 & inviscid\,fluids
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equation governing 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ - and its contribution to the system's total energy - are derived from
+ Romenski's model of hyperbolic heat transfer, (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "malyshev_hyperbolic_1986,romenski_hyperbolic_1989"
+literal "true"
+
+\end_inset
+
+).
+ These concepts were later implemented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "romenski_conservative_2007,romenski_conservative_2010"
+literal "true"
+
+\end_inset
+
+.
+ The entropy flux is the derivative of the specific internal energy with
+ respect to 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+, and it is in this way that 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is defined (as the variable conjugate to the entropy flux).
+ As remarked by Romenski, it is more convenient to evolve 
+\begin_inset Formula $\boldsymbol{J}$
+\end_inset
+
+ and 
+\begin_inset Formula $E$
+\end_inset
+
+ than 
+\series bold
+
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+
+\series default
+ or the entropy flux, and thus the equations take the form given here.
+ Similarly to 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{2}$
+\end_inset
+
+ is a relaxation time, characterizing the average speed of relaxation of
+ thermal impulse due to heat exchange between neighboring particles.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula $E$
 \end_inset
 
@@ -656,38 +827,12 @@ where
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+E=E_{1}\left(\rho,p\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
 \end{equation}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Here, as in previous studies (e.g.
- 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "dumbser_high_2015,boscheri_cell_2016"
-literal "false"
-
-\end_inset
-
-) 
-\begin_inset Formula $E_{1}$
-\end_inset
-
- is taken to be either the ideal gas EOS, a shock Mie-Gruneisen EOS, or
- the EOS of nonlinear hyperelasticity (see 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "barton_exact_2009"
-literal "false"
-
-\end_inset
-
-).
 \end_layout
 
 \begin_layout Standard
@@ -716,6 +861,109 @@ where
 \begin_inset Formula 
 \begin{equation}
 \dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, as in previous studies (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "dumbser_high_2015,boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+) 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ is taken to be one of the following forms:
+\end_layout
+
+\begin_layout Standard
+1.
+ The stiffened gas EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p+\gamma p_{\infty}}{\rho\left(\gamma-1\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2.
+ The shock Mie-Gruneisen EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p-p_{ref}}{\Gamma_{0}\rho_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p_{ref}=\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3.
+ The (Godunov-Romenski) EOS (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p}{\rho\gamma}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\left(1-\frac{2\alpha}{\gamma}\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+with
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}
 \end{equation}
 
 \end_inset
@@ -869,7 +1117,7 @@ begin{subequations}
 \theta_{1} & =\frac{\tau_{1}c_{s}^{2}}{3\left|A\right|^{\frac{5}{3}}}\qquad\tau_{1}=\begin{cases}
 \frac{6\mu}{\rho_{0}c_{s}^{2}} & Newtonian\thinspace fluids\\
 \frac{6\mu^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}} & power\thinspace law\thinspace fluids\\
-\tau_{0}\left(\frac{\sigma_{0}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
+\tau_{0}\left(\frac{\sigma_{Y}}{\left\Vert \dev\left(\sigma\right)\right\Vert _{F}}\right)^{n} & elastoplastic\thinspace solids
 \end{cases}\\
 \theta_{2} & =\tau_{2}c_{t}^{2}\frac{\rho T_{0}}{\rho_{0}T}\qquad\tau_{2}=\frac{\rho_{0}\kappa}{T_{0}c_{t}^{2}}
 \end{align}
@@ -1863,6 +2111,1106 @@ The Riemann Ghost Fluid Method
 
 
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Finite Volume Scheme
+\end_layout
+
+\begin_layout Standard
+Once the values of the ghost cells have been calculated, we require a numerical
+ method to calculate the value of the grid at the next time step.
+ In this study, the finite volume method presented in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_fast_2017,jackson_numerical_2019"
+literal "false"
+
+\end_inset
+
+ was used.
+ It is outlined here for completeness.
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DensityEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MomentumEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalEquation"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:EnergyEquation"
+
+\end_inset
+
+ can be written in the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}\left(\boldsymbol{Q}\right)+\boldsymbol{B}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}\left(\boldsymbol{Q}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "true"
+
+\end_inset
+
+, a method to solve a system such as this is to solve the following subsystems:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}\left(\boldsymbol{Q}\right)+\boldsymbol{B}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q} & =\boldsymbol{0}\label{eq:HomogeneousSubsystem}\\
+\frac{d\boldsymbol{Q}}{dt} & =\boldsymbol{S}\left(\boldsymbol{Q}\right)\label{eq:ODESubsystem}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $H^{\delta t},S^{\delta t}$
+\end_inset
+
+ be the operators that take data 
+\begin_inset Formula $\boldsymbol{Q}\left(x,t\right)$
+\end_inset
+
+ to 
+\begin_inset Formula $\boldsymbol{Q}\left(x,t+\delta t\right)$
+\end_inset
+
+ under systems 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:HomogeneousSubsystem"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ODESubsystem"
+
+\end_inset
+
+ respectively.
+ A second-order scheme (in time) for solving the full set of PDEs over time
+ step 
+\begin_inset Formula $\left[0,\Delta t\right]$
+\end_inset
+
+ is obtained by calculating 
+\begin_inset Formula $\boldsymbol{Q_{\Delta t}}$
+\end_inset
+
+ using a Strang splitting:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{\Delta t}}=S^{\frac{\Delta t}{2}}H^{\Delta t}S^{\frac{\Delta t}{2}}\boldsymbol{Q_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this study, the homogeneous subsystem is be solved using a WENO reconstructio
+n of the data, followed by a finite volume update, and the temporal ODEs
+ will be solved with appropriate ODE solvers.
+ The WENO method was chosen due to the arbitrarily high-order spatial reconstruc
+tions it is able to produce.
+\end_layout
+
+\begin_layout Standard
+Noting that 
+\begin_inset Formula $\frac{d\rho}{dt}=0$
+\end_inset
+
+ over the ODE time step, the operator 
+\begin_inset Formula $S$
+\end_inset
+
+ entails solving the following systems:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
+\frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These systems are solved separately, and thus he second-order Strang splitting
+ becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{\Delta t}}=D^{\frac{\Delta t}{2}}T^{\frac{\Delta t}{2}}H^{\Delta t}T^{\frac{\Delta t}{2}}D^{\frac{\Delta t}{2}}\boldsymbol{Q_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $D^{\delta t},T^{\delta t}$
+\end_inset
+
+ are the operators solving the distortion and thermal impulse ODEs respectively,
+ over time step 
+\begin_inset Formula $\delta t$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The constraint 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:detA constraint"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is enforced by rescaling the singular values of the distortion all by the
+ same factor at each timestep, to ensure that 
+\begin_inset Formula $\det A=\frac{\rho}{\rho_{0}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+The Homogeneous System
+\end_layout
+
+\begin_layout Standard
+A WENO reconstruction of the cell-averaged data is performed at the start
+ of the time step (as described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_ader-weno_2013"
+literal "true"
+
+\end_inset
+
+).
+ Focusing on a single cell 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ at time 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+, we have 
+\begin_inset Formula $\boldsymbol{w^{n}}\left(\boldsymbol{x}\right)=\boldsymbol{w^{n}}_{p}\Psi_{p}\left(\boldsymbol{\chi}\left(\boldsymbol{x}\right)\right)$
+\end_inset
+
+ in 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ where 
+\begin_inset Formula $\Psi_{p}$
+\end_inset
+
+ is a tensor product of basis functions in each of the spatial dimensions.
+ The flux in 
+\begin_inset Formula $C$
+\end_inset
+
+ is approximated by 
+\begin_inset Formula $\boldsymbol{F}\left(\boldsymbol{x}\right)\approx\boldsymbol{F}\left(\boldsymbol{w}_{p}\right)\Psi_{p}\left(\boldsymbol{\chi}\left(\boldsymbol{x}\right)\right)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\boldsymbol{w}_{p}$
+\end_inset
+
+ are stepped forwards half a time step using the update formula:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\boldsymbol{w_{p}^{n+\frac{1}{2}}}-\boldsymbol{w_{p}^{n}}}{\Delta t/2}= & -\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\\
+ & -\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+i.e.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{w_{p}^{n+\frac{1}{2}}}=\boldsymbol{w_{p}^{n}}-\frac{\Delta t}{2\Delta x}\left(\begin{array}{c}
+\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\\
++\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)
+\end{array}\right)\label{eq:WENO half step}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{\chi_{p}}$
+\end_inset
+
+ is the node corresponding to 
+\begin_inset Formula $\Psi_{p}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Integrating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:HomogeneousSubsystem"
+
+\end_inset
+
+ over 
+\begin_inset Formula $C$
+\end_inset
+
+ gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q_{i}^{n+1}}=\boldsymbol{Q_{i}^{n}}-\Delta t_{n}\left(\boldsymbol{P_{i}^{n+\frac{1}{2}}}+\boldsymbol{D_{i}^{n+\frac{1}{2}}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{Q_{i}^{n}} & =\frac{1}{V}\int_{C}\boldsymbol{Q}\left(\boldsymbol{x},t_{n}\right)d\boldsymbol{x}\\
+\boldsymbol{P_{i}^{n+\frac{1}{2}}} & =\frac{1}{V}\int_{C}\boldsymbol{B}\left(\boldsymbol{Q}\left(\boldsymbol{x},t_{n+\frac{1}{2}}\right)\right)\cdot\nabla\boldsymbol{Q}\left(\boldsymbol{x},t_{n+\frac{1}{2}}\right)d\boldsymbol{x}\\
+\boldsymbol{D_{i}^{n+\frac{1}{2}}} & =\frac{1}{V}\varoint_{\partial C}\boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}}\left(\boldsymbol{s},t_{n+\frac{1}{2}}\right),\boldsymbol{Q^{+}}\left(\boldsymbol{s},t_{n+\frac{1}{2}}\right)\right)d\boldsymbol{s}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $V$
+\end_inset
+
+ is the volume of 
+\begin_inset Formula $C$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{Q^{-},Q^{+}}$
+\end_inset
+
+ are the interior and exterior extrapolated states at the boundary of 
+\begin_inset Formula $C$
+\end_inset
+
+, respectively.
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:HomogeneousSubsystem"
+
+\end_inset
+
+ can be rewritten as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{M}\left(\boldsymbol{Q}\right)\cdot\nabla\boldsymbol{Q}=\boldsymbol{0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\boldsymbol{M}=\frac{\partial\boldsymbol{F}}{\partial\boldsymbol{Q}}+\boldsymbol{B}$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $\boldsymbol{n}$
+\end_inset
+
+ be the normal to the boundary at point 
+\begin_inset Formula $\boldsymbol{s}\in\partial C$
+\end_inset
+
+.
+ For the GPR model, 
+\begin_inset Formula $\hat{M}=\boldsymbol{M}\left(\boldsymbol{Q}\left(\boldsymbol{s}\right)\right)\cdot\boldsymbol{n}$
+\end_inset
+
+ is a diagonalizable matrix with decomposition 
+\begin_inset Formula $\hat{M}=\hat{R}\hat{\Lambda}\hat{R}^{-1}$
+\end_inset
+
+ where the columns of 
+\begin_inset Formula $\hat{R}$
+\end_inset
+
+ are the right eigenvectors and 
+\begin_inset Formula $\hat{\Lambda}$
+\end_inset
+
+ is the diagonal matrix of eigenvalues.
+ Define also 
+\begin_inset Formula $\boldsymbol{\hat{F}}=\boldsymbol{F}\cdot\boldsymbol{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{B}=\boldsymbol{B}\cdot\boldsymbol{n}$
+\end_inset
+
+.
+ Using these definitions, the interface terms arising in the FV formula
+ have the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}},\boldsymbol{Q^{+}}\right) & =\frac{1}{2}\left(\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{+}}\right)+\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{-}}\right)\right)\\
+ & +\frac{1}{2}\left(\tilde{B}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)+\tilde{M}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\tilde{M}$
+\end_inset
+
+ is chosen to either correspond to a Rusanov/Lax-Friedrichs flux (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "true"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{M}=\max\left(\max\left|\hat{\Lambda}\left(\boldsymbol{Q^{+}}\right)\right|,\max\left|\hat{\Lambda}\left(\boldsymbol{Q^{-}}\right)\right|\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or a Roe flux (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_simple_2011"
+literal "true"
+
+\end_inset
+
+):
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or a simplified Osher–Solomon flux (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_simple_2011,dumbser_universal_2011"
+literal "true"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{M}=\int_{0}^{1}\left|\hat{M}\left(\boldsymbol{Q^{-}}+z\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)\right|dz
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left|\hat{M}\right|=\hat{R}\left|\hat{\Lambda}\right|\hat{R}^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\tilde{B}$
+\end_inset
+
+ takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{B}=\int_{0}^{1}\hat{B}\left(\boldsymbol{Q^{-}}+z\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)dz
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\boldsymbol{P_{i}^{n+\frac{1}{2}}},\boldsymbol{D_{i}^{n+\frac{1}{2}}}$
+\end_inset
+
+ are calculated using an 
+\begin_inset Formula $N+1$
+\end_inset
+
+-point Gauss-Legendre quadrature, replacing 
+\begin_inset Formula $\boldsymbol{Q}\left(\boldsymbol{x},t_{n+\frac{1}{2}}\right)$
+\end_inset
+
+ with 
+\begin_inset Formula $\boldsymbol{w^{n+\frac{1}{2}}}\left(\boldsymbol{x}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+The Thermal Impulse ODEs
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:The-Thermal-Impulse-ODEs"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ it was shown that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ has the following analytical solution:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{J}\left(t\right)=\boldsymbol{J}\left(0\right)\sqrt{\frac{1}{e^{at}-\frac{b}{a}\left(e^{at}-1\right)\left\Vert \boldsymbol{J}\left(0\right)\right\Vert ^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+a & =\frac{2\rho_{0}}{\tau_{2}T_{0}\rho c_{v}}\left(E-E_{2}^{\left(A\right)}\left(A\right)-E_{3}\left(\boldsymbol{v}\right)\right)\\
+b & =\frac{\rho_{0}c_{t}^{2}}{\tau_{2}T_{0}\rho c_{v}}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+The Distortion ODEs
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:The-Distortion-ODEs"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the following singular value decomposition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+A=U\Sigma V^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denote the singular values of 
+\begin_inset Formula $A$
+\end_inset
+
+ by 
+\begin_inset Formula $a_{1},a_{2},a_{3}$
+\end_inset
+
+ and define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{i}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define also:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m_{0} & =\frac{x_{1}+x_{2}+x_{3}}{3}\\
+u_{0} & =\frac{\left(x_{1}-x_{2}\right)^{2}+\left(x_{2}-x_{3}\right)^{2}+\left(x_{3}-x_{1}\right)^{2}}{3}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ it was shown that for Newtonian fluids, after timestep 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+, 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{i}=\frac{\sqrt{6u_{\Delta t}}}{3}\cos\left(\frac{\theta}{3}\right)+m_{\Delta t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\theta & =\tan^{-1}\left(\frac{\sqrt{6u_{\Delta t}^{3}-81\Delta^{2}}}{9\Delta}\right)\\
+\Delta & =-2m_{\Delta t}^{3}+m_{\Delta t}u_{\Delta t}+2\\
+m_{\Delta t} & =1+\frac{e^{-9\tau}}{3}\left(ae^{3\tau}-b\right)\\
+u_{\Delta t} & =e^{-9\tau}\left(2ae^{3\tau}-3b\right)\\
+a & =9m_{0}-u_{0}-9\\
+b & =6m_{0}-u_{0}-6\\
+\tau & =\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\Delta t
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These new values for 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ are used to calculate the value of 
+\begin_inset Formula $A$
+\end_inset
+
+ after timestep 
+\begin_inset Formula $\text{\ensuremath{\Delta t}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "jackson_numerical_2019"
+literal "false"
+
+\end_inset
+
+ it was shown that for elastoplastic solids, the same procedure can be undertake
+n, where now:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau=\frac{2\lambda}{nc}\log\left(\frac{nc}{\tau_{0}\lambda}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+c & =108a-324b+108a^{2}-396ab+297b^{2}\\
+ & -24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
+\lambda & =18a-36b+9a^{2}-\frac{132ab}{5}+\frac{33b^{2}}{2}\\
+ & -\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}\\
+ & +\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Time Step
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\Lambda_{i}^{n}$
+\end_inset
+
+ be the set of eigenvalues of the GPR system evaluated at 
+\begin_inset Formula $\boldsymbol{Q_{i}^{n}}$
+\end_inset
+
+ (given explicitly in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenstructure of the HPR Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ 
+\begin_inset Formula $C_{cfl}<1$
+\end_inset
+
+ is a constant (usually taken to be 
+\begin_inset Formula $0.9$
+\end_inset
+
+, unless the problem being simulated is particularly demanding, requiring
+ a lower value).
+ The eigenvalues determine the speed of propagation of information in the
+ solution to the Riemann Problem at the cell interfaces, and the time step
+ is chosen to ensure that the characteristics do not enter into other cells
+ between 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{n+1}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta t_{n}=\frac{C_{cfl}\cdot\Delta x}{\max_{i}\left|\Lambda_{i}^{n}\right|}
+\end{equation}
 
 \end_inset
 
@@ -3256,11 +4604,33 @@ reference "fig:HPR_RP2"
 \end_inset
 
 .
- Expanding the Taylor series of 
-\begin_inset Formula $\boldsymbol{\Sigma}^{*},T^{*}$
+\end_layout
+
+\begin_layout Standard
+Define the total stress tensor as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Sigma\equiv pI-\sigma
+\end{equation}
+
 \end_inset
 
-:
+
+\end_layout
+
+\begin_layout Standard
+The values of 
+\begin_inset Formula $\Sigma,T$
+\end_inset
+
+ under variables 
+\begin_inset Formula $\boldsymbol{P^{*K}}$
+\end_inset
+
+ are obtained by expanding the following Taylor series:
 \end_layout
 
 \begin_layout Standard
@@ -4522,7 +5892,8 @@ The GPR-RGFM is now assessed.
  model heat conduction across interfaces.
  The last two tests are well-known two-dimensional problems, to demonstrate
  the applicability of the method to multiple dimensions.
- The EOS parameters for three commonly-used fluids are given in 
+ The stiffened gas EOS parameters for three commonly-used fluids are given
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:fluid params"
@@ -4625,7 +5996,7 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $b_{0}$
+\begin_inset Formula $c_{s}$
 \end_inset
 
 
@@ -4639,7 +6010,7 @@ status open
 \begin_layout Plain Layout
 
 \series bold
-\begin_inset Formula $c_{\alpha}$
+\begin_inset Formula $c_{t}$
 \end_inset
 
 
@@ -8170,12 +9541,7 @@ literal "false"
 
 , it can be seen that these plots are in very good agreement with those
  found in the aforementioned publication.
- One can clearly see the separation between the elastic precursor wave and
- the trailing plastic wave in the impacted plate, and the subsequent return
- waves that are generated once these waves reach the end of the plate.
- This implies that the GPR-RGFM has correctly captured the aluminium-vacuum
- interface.
- Similarly, release waves can be seen on the sides of the plate, in agreement
+ Note that release waves can be seen on the sides of the plate, in agreement
  with Michael & Nikiforakis.
 \end_layout
 
@@ -8206,6 +9572,12 @@ literal "false"
 
 , both in terms of their qualitative shape, and the arrival times of the
  waves that they represent.
+ One can clearly see the separation between the elastic precursor wave and
+ the trailing plastic wave in the impacted plate, and the subsequent return
+ waves that are generated once these waves reach the end of the plate.
+ This implies that the GPR-RGFM has correctly captured the aluminium-vacuum
+ interface.
+ 
 \end_layout
 
 \begin_layout Standard

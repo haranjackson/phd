@@ -226,8 +226,22 @@ This has been added.
 \end_layout
 
 \begin_layout Standard
+
+\shape italic
+\color blue
+A comprehensive description of the scheme is now given in section 1.4.
+\end_layout
+
+\begin_layout Standard
 8) In Sec.3.3, it is not clear to which of the previously mentioned EOS "the
  Godunov-Romenski EOS" is referenced to.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+All three EOS used in this study are now stated explicitly in section 1.2.
 \end_layout
 
 \begin_layout Standard
@@ -235,6 +249,13 @@ This has been added.
  separation between the elastic precursor wave and the trailing plastic
  wave..." to Fig.17 but not to Fig.16.
  
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+This change has been made.
 \end_layout
 
 \begin_layout Subsection*
@@ -305,9 +326,23 @@ Please give a definitions for all variables used in the GPR model (1a)-(1e).
 \end_layout
 
 \begin_layout Standard
+
+\shape italic
+\color blue
+This has been done.
+\end_layout
+
+\begin_layout Standard
 Please give also explicit formulae for the equation of state used in Section
  3.
  It is not clear what the parameters contained in Table 1 refer to.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+All three EOS used in this study are now stated explicitly in section 1.2.
 \end_layout
 
 \begin_layout Standard
@@ -317,10 +352,24 @@ Sigma^*? It seems to appear for the first time in equation (47a)
 \end_layout
 
 \begin_layout Standard
+
+\shape italic
+\color blue
+This has been clarified.
+\end_layout
+
+\begin_layout Standard
 Could you please give an explicit formula of the discretization of the governing
  equations? I suppose you use a finite volume scheme, so please write the
  numerical scheme for all equations.
  How do you compute the time step? Nothing is said about it.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+A comprehensive description of the scheme is now given in section 1.4.
 \end_layout
 
 \begin_layout Standard
