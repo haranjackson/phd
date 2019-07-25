@@ -1,4 +1,4 @@
-from test.solutions.data.tools import from_csv
+from tests.solutions.data.tools import from_csv
 
 
 def get_data(var, dim):

@@ -2,7 +2,7 @@ from numpy import array, eye, zeros
 
 from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec
-from test.params.reactive import NM_JWL_SI
+from tests.params.reactive import NM_JWL_SI
 
 
 def steady_znd():

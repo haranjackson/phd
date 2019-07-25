@@ -1,2 +1,0 @@
-from test.solid.elastic import barton, pure_elastic
-from test.solid.plastic import piston, cylindrical_shock

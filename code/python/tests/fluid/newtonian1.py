@@ -6,7 +6,7 @@ from gpr.misc.objects import material_params
 from gpr.misc.structures import Cvec
 from gpr.vars.wavespeeds import c_0
 
-from test.common import primitive_IC
+from tests.common import primitive_IC
 
 
 def heat_conduction(isMulti=False):

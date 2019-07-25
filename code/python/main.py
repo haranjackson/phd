@@ -1,19 +1,23 @@
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 from numpy import array, int32
 
 import GPRpy
 
-import test
+import tests
 
 from plot import *
 from store import save_results
 
 
-T = test.aluminium_plates
+T = tests.rod_penetration
 
 N = 2
 cfl = 0.8
 SPLIT = True
-FLUX = 0
+FLUX = 1
 contorted_tol = 1.
 HALF_STEP = True
 

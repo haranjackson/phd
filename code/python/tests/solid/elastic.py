@@ -1,8 +1,8 @@
 from numpy import array, zeros
 
-from test.params.alt import Cu_HYP_CGS
-from test.params.solids import Cu_GR_CGS
-from test.common import hyperelastic_IC
+from tests.params.alt import Cu_HYP_CGS
+from tests.params.solids import Cu_GR_CGS
+from tests.common import hyperelastic_IC
 
 
 def barton(test):

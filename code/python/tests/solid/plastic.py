@@ -2,7 +2,7 @@ from numpy import eye, sqrt, zeros
 
 from gpr.misc.structures import Cvec
 
-from test.params.solids import Cu_SMGP_SI, Cu_GRP_SI
+from tests.params.solids import Cu_SMGP_SI, Cu_GRP_SI
 
 
 def piston_exact(nx, var):

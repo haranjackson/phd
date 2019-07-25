@@ -2,10 +2,10 @@ from numpy import array, eye, pad, zeros
 
 from gpr.misc.structures import Cvec
 
-from test.params.alt import VAC
-from test.params.fluids import Air_SG_SI
-from test.params.reactive import NM_CC_SI, C4_JWL_SI
-from test.params.solids import Steel_SMGP_SI, Cu_GRP_SI2
+from tests.params.alt import VAC
+from tests.params.fluids import Air_SG_SI
+from tests.params.reactive import NM_CC_SI, C4_JWL_SI
+from tests.params.solids import Steel_SMGP_SI, Cu_GRP_SI2
 
 
 def confined_explosive():

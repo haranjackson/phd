@@ -3,8 +3,8 @@ from numpy import array, eye, linspace, pad, zeros
 
 from gpr.misc.structures import Cvec, State
 
-from test.params.alt import VAC
-from test.params.solids import Al_GRP_SI, W_SMGP_SI, Steel_SMGP_SI, Al_SMGP_CGS
+from tests.params.alt import VAC
+from tests.params.solids import Al_GRP_SI, W_SMGP_SI, Steel_SMGP_SI, Al_SMGP_CGS
 
 
 def gauge_plot(uList, MPs):

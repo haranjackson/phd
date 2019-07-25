@@ -1,7 +1,7 @@
 from numpy import eye, zeros
 
 from gpr.misc.structures import Cvec
-from test.params.reactive import NM_CC_SI, C4_JWL_SI
+from tests.params.reactive import NM_CC_SI, C4_JWL_SI
 
 
 def pop_plot():
