@@ -4443,7 +4443,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/diagrams/HPR_RP.png
+	filename figs/HPR_RP.png
 	lyxscale 50
 	height 25theight%
 
@@ -4630,7 +4630,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/diagrams/HPR_RP2.png
+	filename figs/HPR_RP2.png
 	lyxscale 50
 	height 25theight%
 
@@ -6977,7 +6977,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/helium_bubble/7e-4/ρ.png
+	filename results/helium_bubble/7e-4/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -6985,27 +6985,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/helium_bubble/14e-4/ρ.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/helium_bubble/7e-4/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/helium_bubble/14e-4/p.png
+	filename results/helium_bubble/14e-4/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -7017,7 +6997,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/helium_bubble/7e-4/v.png
+	filename results/helium_bubble/7e-4/p.png
 	lyxscale 30
 	width 50text%
 
@@ -7025,7 +7005,27 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/helium_bubble/14e-4/v.png
+	filename results/helium_bubble/14e-4/p.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename results/helium_bubble/7e-4/v.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename results/helium_bubble/14e-4/v.png
 	lyxscale 30
 	width 50text%
 
@@ -7415,7 +7415,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/water_air/ρ.png
+	filename results/water_air/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -7423,7 +7423,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/water_air/p.png
+	filename results/water_air/p.png
 	lyxscale 30
 	width 50text%
 
@@ -7435,7 +7435,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/water_air/v.png
+	filename results/water_air/v.png
 	lyxscale 30
 	width 50text%
 
@@ -7443,7 +7443,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/water_air/e.png
+	filename results/water_air/e.png
 	lyxscale 30
 	width 50text%
 
@@ -7611,7 +7611,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/copper_pbx/ρ.png
+	filename results/copper_pbx/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -7623,7 +7623,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/copper_pbx/v1.png
+	filename results/copper_pbx/v1.png
 	lyxscale 30
 	width 50text%
 
@@ -7635,7 +7635,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/copper_pbx/Σ11.png
+	filename results/copper_pbx/Σ11.png
 	lyxscale 30
 	width 50text%
 
@@ -7885,7 +7885,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/ρ.png
+	filename results/aluminium_vacuum/non-thermal/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -7897,7 +7897,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/v1.png
+	filename results/aluminium_vacuum/non-thermal/v1.png
 	lyxscale 30
 	width 50text%
 
@@ -7905,7 +7905,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/v2.png
+	filename results/aluminium_vacuum/non-thermal/v2.png
 	lyxscale 30
 	width 50text%
 
@@ -7917,7 +7917,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/Σ11.png
+	filename results/aluminium_vacuum/non-thermal/Σ11.png
 	lyxscale 30
 	width 50text%
 
@@ -7925,7 +7925,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/non-thermal/Σ13.png
+	filename results/aluminium_vacuum/non-thermal/Σ13.png
 	lyxscale 30
 	width 50text%
 
@@ -7965,7 +7965,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/thermal/ρ.png
+	filename results/aluminium_vacuum/thermal/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -7977,7 +7977,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/thermal/v1.png
+	filename results/aluminium_vacuum/thermal/v1.png
 	lyxscale 30
 	width 50text%
 
@@ -7989,7 +7989,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/aluminium_vacuum/thermal/Σ11.png
+	filename results/aluminium_vacuum/thermal/Σ11.png
 	lyxscale 30
 	width 50text%
 
@@ -8449,7 +8449,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/passive/air_air/T.png
+	filename results/heat_conduction/passive/air_air/T.png
 	lyxscale 30
 	width 50text%
 
@@ -8462,7 +8462,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/passive/air_air/q.png
+	filename results/heat_conduction/passive/air_air/q.png
 	lyxscale 30
 	width 50text%
 
@@ -8475,7 +8475,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/passive/air_air/r.png
+	filename results/heat_conduction/passive/air_air/r.png
 	lyxscale 30
 	width 50text%
 
@@ -8627,7 +8627,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/taylor_bar/slip0.0025.png
+	filename results/taylor_bar/slip0.0025.png
 	lyxscale 30
 	width 50text%
 
@@ -8635,7 +8635,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/taylor_bar/slip0.005.png
+	filename results/taylor_bar/slip0.005.png
 	lyxscale 30
 	width 50text%
 
@@ -8647,7 +8647,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/taylor_bar/|σ|_slip0.0025.png
+	filename results/taylor_bar/|σ|_slip0.0025.png
 	lyxscale 30
 	width 50text%
 
@@ -8655,7 +8655,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/taylor_bar/|σ|_slip0.005.png
+	filename results/taylor_bar/|σ|_slip0.005.png
 	lyxscale 30
 	width 50text%
 
@@ -8888,7 +8888,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/t0.5.png
+	filename results/aluminium_plates/t0.5.png
 	lyxscale 30
 	width 50text%
 
@@ -8896,7 +8896,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/t1.0.png
+	filename results/aluminium_plates/t1.0.png
 	lyxscale 30
 	width 50text%
 
@@ -8908,7 +8908,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/t3.0.png
+	filename results/aluminium_plates/t3.0.png
 	lyxscale 30
 	width 50text%
 
@@ -8916,7 +8916,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/t5.0.png
+	filename results/aluminium_plates/t5.0.png
 	lyxscale 30
 	width 50text%
 
@@ -8973,7 +8973,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/v.png
+	filename results/aluminium_plates/v.png
 	lyxscale 30
 	width 50text%
 
@@ -8981,7 +8981,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/p.png
+	filename results/aluminium_plates/p.png
 	lyxscale 30
 	width 50text%
 
@@ -8993,7 +8993,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/ρ.png
+	filename results/aluminium_plates/ρ.png
 	lyxscale 30
 	width 50text%
 
@@ -9001,7 +9001,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../../../dissertation/Figures/C4/aluminium_plates/Σ.png
+	filename results/aluminium_plates/Σ.png
 	lyxscale 30
 	width 50text%
 
@@ -9333,7 +9333,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/p_2.4μs.png
+	filename results/confined_open/p_2.4μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9341,7 +9341,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/λ_2.4μs.png
+	filename results/confined_open/λ_2.4μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9353,7 +9353,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/p_4.9μs.png
+	filename results/confined_open/p_4.9μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9361,7 +9361,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/λ_4.9μs.png
+	filename results/confined_open/λ_4.9μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9450,7 +9450,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/p_2.4μs.png
+	filename results/confined_backplate/p_2.4μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9458,7 +9458,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/λ_2.4μs.png
+	filename results/confined_backplate/λ_2.4μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9470,7 +9470,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/p_4.9μs.png
+	filename results/confined_backplate/p_4.9μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9478,7 +9478,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/λ_4.9μs.png
+	filename results/confined_backplate/λ_4.9μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9573,7 +9573,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/p_2.4μs.png
+	filename results/confined_airgap/p_2.4μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9581,7 +9581,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/λ_2.4μs.png
+	filename results/confined_airgap/λ_2.4μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9593,7 +9593,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/p_4.9μs.png
+	filename results/confined_airgap/p_4.9μs.png
 	lyxscale 30
 	width 50text%
 
@@ -9601,7 +9601,7 @@ status open
 
 
 \begin_inset Graphics
-	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/λ_4.9μs.png
+	filename results/confined_airgap/λ_4.9μs.png
 	lyxscale 30
 	width 50text%
 
