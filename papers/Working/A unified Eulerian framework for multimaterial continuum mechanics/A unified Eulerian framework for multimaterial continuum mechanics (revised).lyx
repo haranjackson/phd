@@ -226,7 +226,8 @@ The resulting framework is simple, yet capable of accurately reproducing
  a wide range of different physical scenarios.
  It is demonstrated here to accurately reproduce analytical results for
  known Riemann problems, and to produce expected results in other cases,
- including some featuring heat conduction across interfaces.
+ including some featuring heat conduction across interfaces, and impact-induced
+ deformation and detonation of combustible materials.
  The framework thus has the potential to streamline development of simulation
  software for scenarios involving multiple materials and phases of matter,
  by reducing the number of different systems of equations that require solvers,
@@ -1090,7 +1091,7 @@ p_{ref}=\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\fr
 
 \begin_layout Standard
 3.
- The (Godunov-Romenski) EOS (see 
+ The Godunov-Romenski EOS (see 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "barton_exact_2009"
@@ -1120,6 +1121,22 @@ with
 \begin_inset Formula 
 \begin{equation}
 c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+4.
+ The JWL EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\left(\frac{A}{\rho_{0}R_{1}}e^{-\frac{R_{1}\rho_{0}}{\rho}}+\frac{B}{\rho_{0}R_{2}}e^{-\frac{R_{2}\rho_{0}}{\rho}}\right)+\frac{p-\left(Ae^{-\frac{R_{1}\rho_{0}}{\rho}}+Be^{-\frac{R_{2}\rho_{0}}{\rho}}\right)}{\rho\Gamma_{0}}
 \end{equation}
 
 \end_inset
@@ -8488,860 +8505,7 @@ Temperature, heat flux, and density for the intermaterial heat conduction
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsection
-Intermaterial Heating-Induced Acoustic Wave
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:Intermaterial-Heating-Induced-Acoustic-Wave"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The test assesses the ability of the GPR-RGFM to conduct heat between two
- different materials.
- Take the material parameters for air and helium from 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:Helium-Bubble"
-
-\end_inset
-
-.
- Take the scaled spatial variable 
-\begin_inset Formula $x^{*}$
-\end_inset
-
- defined by:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-x=\frac{\mu^{air}c_{0}^{air}}{p_{0}\gamma^{air}}x^{*}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The domain 
-\begin_inset Formula $x^{*}\in\left[0,90\right]$
-\end_inset
-
- is used.
- Thermal energy is added at the left boundary at a high power of 
-\begin_inset Formula $\frac{\gamma^{air}p_{0}c_{0}^{air}}{P_{r}^{air}\left(\gamma^{air}-1\right)}$
-\end_inset
-
- (around 
-\begin_inset Formula $1.7\times10^{8}Wm^{-2}$
-\end_inset
-
-).
- Three scenarios are tested:
-\end_layout
-
-\begin_layout Enumerate
-The domain is filled with air.
-\end_layout
-
-\begin_layout Enumerate
-The domain comprises two volumes of air, initially separated at 
-\begin_inset Formula $x^{*}=22.5$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Enumerate
-The domain comprises a volume of air (left) and a volume of helium (right),
- initially separated at 
-\begin_inset Formula $x^{*}=22.5$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-The initial conditions for the two gases in all scenarios are given in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "tab:Intermaterial Heat Conduction"
-
-\end_inset
-
-.
- The results of the test are shown in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:Heat-Conduction-1"
-
-\end_inset
-
- and 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "fig:Heat-Conduction-2"
-
-\end_inset
-
- for various times.
- The material interface is represented by a dashed vertical line in scenarios
- 2 and 3.
- All simulations used 400 cells.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\begin_inset Tabular
-<lyxtabular version="3" rows="3" columns="6">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\rho$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-\begin_inset Formula $\boldsymbol{v}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $A$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-\begin_inset Formula $\boldsymbol{J}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-air
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $1.18$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $101325$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $I_{3}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-helium
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $0.164$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $101325$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $I_{3}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\boldsymbol{0}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "tab:Intermaterial Heat Conduction"
-
-\end_inset
-
-Initial conditions for the intermaterial heating-induced acoustic wave test
-\end_layout
-
-\end_inset
-
-
-\begin_inset VSpace medskip
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-As the left wall heats up, a temperature gradient develops and the acoustic
- wave described appears.
- The results for scenarios 1 and 2 are indistinguishable, as they should
- be, and there are no aberrations around the material interface in scenario
- 2.
- In scenario 3, the acoustic wave hits the interface at around 
-\begin_inset Formula $t=2\times10^{-9}$
-\end_inset
-
- and then speeds up (as it should, the speed of sound in helium being around
- three times that of air).
- The heat flux wave increases in intensity after passing into the helium,
- owing to the fact that the wave is traveling faster.
- As expected, all variables displayed are continuous across the interface.
-\end_layout
-
-\begin_layout Standard
-In scenarios 2 and 3 the interface moves to the right as the air heats up
- and expands.
- The masses of the air volumes in these two scenarios at various times are
- given in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "tab:Intermaterial Heat Conduction-Mass"
-
-\end_inset
-
-, demonstrating that mass is conserved well as the interface moves.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-placement h
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\begin_inset Tabular
-<lyxtabular version="3" rows="3" columns="7">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Time (
-\begin_inset Formula $\times10^{-9}$
-\end_inset
-
-)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-2
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-3
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-4
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-5
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Mass in Scenario 2 (
-\begin_inset Formula $\times10^{-6}$
-\end_inset
-
-)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.254
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.255
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.253
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.252
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.252
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.253
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Mass in Scenario 3 (
-\begin_inset Formula $\times10^{-6}$
-\end_inset
-
-)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.254
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.253
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.248
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.254
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.255
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1.255
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "tab:Intermaterial Heat Conduction-Mass"
-
-\end_inset
-
-Mass of the air volume in scenarios 2 and 3 at various times
-\end_layout
-
-\end_inset
-
-
-\begin_inset VSpace medskip
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air/W=1/T.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air/W=1/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_air/W=1/T.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_air/W=1/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_helium/W=1/T.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_helium/W=1/p.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Heat-Conduction-1"
-
-\end_inset
-
-Temperature and pressure for the intermaterial heating-induced acoustic
- wave test with: a single volume of air (top); two volumes of air initially
- separated at 
-\begin_inset Formula $x^{*}=22.5$
-\end_inset
-
- (middle); air and helium initially separated at 
-\begin_inset Formula $x^{*}=22.5$
-\end_inset
-
- (bottom).
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement p
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air/W=1/q.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_air/W=1/q.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename ../../../dissertation/Figures/C3/heat_conduction/driven/air_helium/W=1/q.png
-	lyxscale 30
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Heat-Conduction-2"
-
-\end_inset
-
-Heat flux for the inter-material heating-induced acoustic wave test with:
- a single volume of air (top); two volumes of air initially separated at
- 
-\begin_inset Formula $x^{*}=22.5$
-\end_inset
-
- (middle); air and helium initially separated at 
-\begin_inset Formula $x^{*}=22.5$
-\end_inset
-
- (bottom).
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+s
 \end_layout
 
 \begin_layout Subsection
@@ -9862,6 +9026,610 @@ name "fig:The-aluminium-plate-2"
 
 -velocity, pressure, density, and total stress over time, as measured by
  the various gauges of the aluminium plate impact test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Confined C4 Detonation without Backplate
+\end_layout
+
+\begin_layout Standard
+This test is a variation of that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+.
+ A steel bar of length 0.03 and width 0.018 impacts upon a steel plate of
+ depth 0.003, which is covering a region of depth 0.009 composed of C4 .
+ The bar is initially traveling with speed 700.
+ The system is surrounded by air.
+\end_layout
+
+\begin_layout Standard
+The steel is modeled using a shock Mie-Gruneisen EOS, with parameters 
+\begin_inset Formula $\rho_{0}=7870$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=134$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=4569$
+\end_inset
+
+, 
+\begin_inset Formula $Γ_{0}=2.17$
+\end_inset
+
+, 
+\begin_inset Formula $s=1.49$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=3235$
+\end_inset
+
+, 
+\begin_inset Formula $\sigma_{Y}=0.53\times10^{9}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau_{0}=1$
+\end_inset
+
+, 
+\begin_inset Formula $n=10$
+\end_inset
+
+.
+ The C4 is modeled using a JWL EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1601$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=2.487\times10^{6}/1601$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{0}=0.8938$
+\end_inset
+
+, 
+\begin_inset Formula $A=7.781\times10^{13}$
+\end_inset
+
+, 
+\begin_inset Formula $B=-5.031\times10^{9}$
+\end_inset
+
+, 
+\begin_inset Formula $R_{1}=11.3$
+\end_inset
+
+, 
+\begin_inset Formula $R_{2}=1.13$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=1487$
+\end_inset
+
+.
+ The air is modeled using an ideal gas EOS, with parameters 
+\begin_inset Formula $\rho_{0}=1.18$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=718$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=1.4$
+\end_inset
+
+, 
+\begin_inset Formula $c_{s}=50$
+\end_inset
+
+, 
+\begin_inset Formula $\mu=1.85\times10^{-5}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The reaction of the C4 is captured using the ignition and growth model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lee_phenomenological_1980"
+literal "false"
+
+\end_inset
+
+, where total energy 
+\begin_inset Formula $E$
+\end_inset
+
+ is modified to include the term:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{r}\left(\lambda\right)=-Q\left(1-\lambda\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+with 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ being the volume fraction of unreacted material, governed by the dynamical
+ equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(\rho\lambda\right)}{\partial t}+\frac{\partial\left(\rho\lambda v_{k}\right)}{\partial x_{k}}= & -\rho K\\
+K= & I\lambda^{b}\left(\frac{\rho}{\rho_{0}}-1-a\right)^{x}H\left(\phi_{I}-\phi\right)\\
+ & +G_{1}\lambda^{c}\phi^{d}p^{y}H\left(\phi_{G1}-\phi\right)\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this test, the parameters are taken to be 
+\begin_inset Formula $Q=9\times10^{9}/1601$
+\end_inset
+
+, 
+\begin_inset Formula $I=4\times10^{6}$
+\end_inset
+
+, 
+\begin_inset Formula $G_{1}=1.4\times10^{-20}$
+\end_inset
+
+, 
+\begin_inset Formula $a=0.0367$
+\end_inset
+
+, 
+\begin_inset Formula $b=2/3$
+\end_inset
+
+, 
+\begin_inset Formula $c=2/3$
+\end_inset
+
+, 
+\begin_inset Formula $d=1/3$
+\end_inset
+
+, 
+\begin_inset Formula $x=7$
+\end_inset
+
+, 
+\begin_inset Formula $y=2$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{I}=0.022$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{G1}=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation-no-backplate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ displays the resulting pressure and C4 concentration at times 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+ As can be seen, the kinetic energy of the bar is correctly transmitted
+ to the steel plate, with the plate deforming in a manner qualitatively
+ identical to that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+.
+ This energy is in turn transmitted to the C4, leading to an exothermic
+ reaction and a symmetrical wavefront that travels through the material.
+ The C4 concentration is depleted to 0.93 at time 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and to 0.915 at time 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_open/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation-no-backplate"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test (without back plate), at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Confined C4 Detonation
+\end_layout
+
+\begin_layout Standard
+This test is identical to the previous test, except a steel plate of depth
+ 0.003 is now placed behind the C4, so that the explosive is entirely confined.
+ As can be seen from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the kinetic energy of the bar is once again correctly transmitted to the
+ steel plate and C4, with the same deformation occurring in the first steel
+ plate.
+ At time 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ we see the wave in the C4 both partially rebounding off the backplate back
+ into the reactant, and partially traveling on through the backplate.
+ At the earlier time, the reactant concentration has been depleted to 0.88,
+ and at the later time to 0.865.
+ This corroborates the results of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+, in that the presence of the backplate accelerates the reactive processes.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_backplate/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test, at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Confined C4 Detonation with Air Gap
+\end_layout
+
+\begin_layout Standard
+This problem is designed to test the ability of the framework presented
+ in this paper to capture the interaction of widely varying media.
+ It is identical to the previous problem, except an air gap is now placed
+ between the first steel plate and the C4.
+ The air has the same EOS parameters as the surrounding air.
+\end_layout
+
+\begin_layout Standard
+As can be seen in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation-airgap"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the rod displaces the air (with the numerical method coping with contact
+ of the region representing the plate with the region representing the C4).
+ The displacement of the air enables the kinetic energy of the rod to be
+ transmitted through the plate and into the C4, as before.
+ The earlier time of 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ corresponds with the instant after the plate makes contact with the C4.
+ The concentration is depleted to 0.9998 at 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and 0.894 at 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+ The latter value is lower than the corresponding value in the previous
+ test, as the reaction has been delayed by the presence of the air gap.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/p_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/λ_2.4μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/p_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../A unified framework for simulating impact-induced detonation in an elastoplastic confiner/images/confined_airgap/λ_4.9μs.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:confined-detonation-airgap"
+
+\end_inset
+
+Pressure (left) and reactant concentration (right) for the confined detonation
+ test (with air gap), at times 
+\begin_inset Formula $2.4\mu s$
+\end_inset
+
+ (top) and 
+\begin_inset Formula $4.9\mu s$
+\end_inset
+
+ (bottom)
 \end_layout
 
 \end_inset
