@@ -218,6 +218,7 @@ The Godunov-Peshkov-Romenski (GPR) model is used for modeling the continua
  and non-Newtonian fluids, and elastic and elastoplastic solids), and this
  study represents a novel approach for handling multimaterial problems under
  this model.
+ The materials can following any Gruneisen-type equation of state.
 \end_layout
 
 \begin_layout Abstract
@@ -431,6 +432,41 @@ literal "true"
 LatexCommand cite
 key "Hou2012"
 literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Gavrilyuk, Favrie, et al have presented thermodynamically consistent schemes
+ where solid-fluid interfaces are modeled with the diffuse interface method,
+ with transverse velocities found using a ghost fluid method 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "favrie_solid-fluid_2009"
+literal "false"
+
+\end_inset
+
+.
+ The fluid is governed by the compressible Euler equations, and the solid
+ by a conservative hyperelastic model.
+ This was later extended to encompass solids conforming to the visco-plastic
+ model of Maxwell type materials 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "favrie_diffuse_2012"
+literal "false"
+
+\end_inset
+
+, and later still to an arbitrary number of interacting hyperelastic solids
+ and fluids governed by the compressible Euler equations 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "ndanou_multi-solid_2015"
+literal "false"
 
 \end_inset
 
@@ -827,7 +863,25 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E=E_{1}\left(\rho,p\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+E=E_{1}\left(\rho,s\right)+E_{2}\left(\rho,s,A,\boldsymbol{J}\right)+E_{3}\left(\boldsymbol{v}\right)\label{eq:EnergyDefinition}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $E_{3}$
+\end_inset
+
+ is the usual specific kinetic energy per unit mass:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
 \end{equation}
 
 \end_inset
@@ -861,109 +915,6 @@ where
 \begin_inset Formula 
 \begin{equation}
 \dev\left(G\right)=G-\frac{1}{3}\tr\left(G\right)I
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Here, as in previous studies (e.g.
- 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "dumbser_high_2015,boscheri_cell_2016"
-literal "false"
-
-\end_inset
-
-) 
-\begin_inset Formula $E_{1}$
-\end_inset
-
- is taken to be one of the following forms:
-\end_layout
-
-\begin_layout Standard
-1.
- The stiffened gas EOS:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-E_{1}=\frac{p+\gamma p_{\infty}}{\rho\left(\gamma-1\right)}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-2.
- The shock Mie-Gruneisen EOS:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-E_{1}=\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p-p_{ref}}{\Gamma_{0}\rho_{0}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-p_{ref}=\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-3.
- The (Godunov-Romenski) EOS (see 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "barton_exact_2009"
-literal "false"
-
-\end_inset
-
-):
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-E_{1}=\frac{p}{\rho\gamma}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\left(1-\frac{2\alpha}{\gamma}\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-with
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}
 \end{equation}
 
 \end_inset
@@ -1066,7 +1017,16 @@ c_{h}=\frac{c_{t}}{\rho}\sqrt{\frac{T}{c_{v}}}
 \end_layout
 
 \begin_layout Standard
-In previous studies, 
+In previous studies (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "dumbser_high_2015,boscheri_cell_2016"
+literal "false"
+
+\end_inset
+
+), 
 \begin_inset Formula $c_{t}$
 \end_inset
 
@@ -1074,21 +1034,144 @@ In previous studies,
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $E_{3}$
+In this study, 
+\begin_inset Formula $E_{1}$
 \end_inset
 
- is the usual specific kinetic energy per unit mass:
+ is taken to be one of the following forms:
+\end_layout
+
+\begin_layout Standard
+1.
+ The stiffened gas EOS:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{3}=\frac{1}{2}\left\Vert \boldsymbol{v}\right\Vert ^{2}
+E_{1}=\frac{p+\gamma p_{\infty}}{\rho\left(\gamma-1\right)}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+2.
+ The shock Mie-Gruneisen EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p-p_{ref}}{\Gamma_{0}\rho_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+p_{ref}=\frac{c_{0}^{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)}{\left(\frac{1}{\rho_{0}}-s\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)\right)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3.
+ The (Godunov-Romenski) EOS (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p}{\rho\gamma}+\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\left(1-\frac{2\alpha}{\gamma}\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+with
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c_{s}=b_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\beta}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tabulated equations of state are common-place in the field (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "buyukcizmeci_tabulated_2014,levashov_tabular_2007,peterson_global_2012"
+literal "false"
+
+\end_inset
+
+ for a range of use cases).
+ There is no a priori reason why they cannot be used for 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ under the framework presented in this study, in the same manner as other
+ hydrodynamic systems (e.g.
+ see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "boettger_tabular_2012,hempert_simulation_2017"
+literal "false"
+
+\end_inset
+
+).
+ This is out of scope of this paper, however, and presents an avenue of
+ future research.
+ Note that 
+\begin_inset Formula $E_{1},c_{s},c_{t}$
+\end_inset
+
+ are permitted to depend upon 
+\begin_inset Formula $\rho,p$
+\end_inset
+
+ instead of 
+\begin_inset Formula $\rho,s$
+\end_inset
+
+ (as is the case in this study), or indeed 
+\begin_inset Formula $\rho,T$
+\end_inset
+
+ if the material requires it (such as materials whose shear modulus depend
+ on temperature).
 \end_layout
 
 \begin_layout Standard
@@ -1311,7 +1394,7 @@ literal "true"
 See 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "jackson_numerical_2018"
+key "jackson_numerical_2019"
 literal "false"
 
 \end_inset
@@ -2122,7 +2205,9 @@ Finite Volume Scheme
 \end_layout
 
 \begin_layout Standard
-Once the values of the ghost cells have been calculated, we require a numerical
+The presented system is solved with a finite volume scheme in this study,
+ using a regularized square meshing.
+ Once the values of the ghost cells have been calculated, we require a numerical
  method to calculate the value of the grid at the next time step.
  In this study, the finite volume method presented in 
 \begin_inset CommandInset citation
@@ -5322,7 +5407,7 @@ reference "eq:dP/dt=S"
  is solved using the ODE solvers presented in 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "jackson_fast_2017,jackson_numerical_2018"
+key "jackson_fast_2017,jackson_numerical_2019"
 literal "false"
 
 \end_inset
@@ -5887,7 +5972,8 @@ Results
 The GPR-RGFM is now assessed.
  The first fives tests in this chapter are Riemann problems that have appeared
  elsewhere in the literature.
- Exact solutions to these problems have been calculated by various methods.
+ Reference solutions to these problems have been calculated by various methods,
+ as described for each test individually.
  The sixth test is new; it assess the ability of the GPR-RGFM to correctly
  model heat conduction across interfaces.
  The last two tests are well-known two-dimensional problems, to demonstrate
@@ -7008,7 +7094,17 @@ noprefix "false"
 
 \end_inset
 
-, along with the exact solution to the Euler equations.
+, along with the exact solution to the Euler equations (computed using the
+ extension to the stiffened gas equations of the exact Riemann solver presented
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "false"
+
+\end_inset
+
+).
  As can be seen, the material interface is captured well, with the correct
  intermediate density found by the numerical method.
 \end_layout
@@ -7464,7 +7560,15 @@ literal "false"
 \end_inset
 
 .
- Plots for density, velocity, and total stress are given in 
+ The error in the wavespeeds is calculated from the residual error in the
+ traction and velocities across the central contact, as required by the
+ Rankine–Hugonoit conditions and boundary conditions.
+ The wavespeeds are found by iteratively reducing the residual using the
+ Newton–Raphson method.
+\end_layout
+
+\begin_layout Standard
+Plots for density, velocity, and total stress are given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:Copper-PBX"
@@ -7685,10 +7789,41 @@ noprefix "false"
 \end_inset
 
 .
- As can be seen, in both cases, the GPR-RGFM is able to accurately capture
+ The exact solutions are calculated using the iterative method presented
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+, as described in the previous test.
+\end_layout
+
+\begin_layout Standard
+As can be seen, in both cases, the GPR-RGFM is able to accurately capture
  the longitudinal wave and the two transverse shock waves that propagate
  to the left side of the initial point of contact.
- Without thermal conduction, the interface suffers from a 
+ Note that at 
+\begin_inset Formula $t=0.06$
+\end_inset
+
+, the vacuum occupies the region 
+\begin_inset Formula $\left[\sim0.65,1\right]$
+\end_inset
+
+.
+ As this region is empty, the plots in the aforementioned figures are shown
+ over the interval 
+\begin_inset Formula $\left[0,0.7\right]$
+\end_inset
+
+, to give greater resolution to the region of interest.
+\end_layout
+
+\begin_layout Standard
+Without thermal conduction, the interface suffers from a 
 \begin_inset Quotes eld
 \end_inset
 

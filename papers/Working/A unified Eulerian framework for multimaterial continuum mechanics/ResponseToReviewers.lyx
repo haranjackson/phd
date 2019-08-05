@@ -299,6 +299,17 @@ g the multimaterial treatment.
 \end_layout
 
 \begin_layout Standard
+
+\shape italic
+\color blue
+All of these suggestions have now been incorporated into the text, in section
+ 1.4.
+ The readability of section 2 has been improved by restructuring the text,
+ adding extra explanations of variables and derivations where appropriate,
+ and removing notation that is not entirely standardized.
+\end_layout
+
+\begin_layout Standard
 3.
  Results: The authors should explain how they have computed the analytical
  solutions.
@@ -380,9 +391,40 @@ Figure 10, density panel: there is a lowering in the density distribution
 \end_layout
 
 \begin_layout Standard
+
+\shape italic
+\color blue
+This effect is discussed in the text.
+ The lowering in the density corresponds to the 
+\begin_inset Quotes eld
+\end_inset
+
+heating errors
+\begin_inset Quotes erd
+\end_inset
+
+ discussed in Barton & Drikakis 2010.
+ It is reassuring to see that under the GPR system with heat conduction,
+ this effect disappears, as explained in the text.
+ Artificial physical BCs - such as those used in the aforementioned paper
+ - are unnecessary, as explained.
+ This discussion has been made more prominent in the paper.
+\end_layout
+
+\begin_layout Standard
 Figures 10-11: these results refer to Section 3.4, where the physical domain
  is taken to be [0,1].
  Why do you plot all figures in the range [0,0.65-0.7]? 
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+The region [0.65-1] is empty, as it is occupied by vacuum.
+ The plots are made over [0,0.7] to give greater resolution to the region
+ of interest.
+ This has been clarified in the text.
 \end_layout
 
 \begin_layout Standard
