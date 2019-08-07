@@ -218,7 +218,6 @@ The Godunov-Peshkov-Romenski (GPR) model is used for modeling the continua
  and non-Newtonian fluids, and elastic and elastoplastic solids), and this
  study represents a novel approach for handling multimaterial problems under
  this model.
- The materials can following any Gruneisen-type equation of state.
 \end_layout
 
 \begin_layout Abstract
@@ -9832,7 +9831,7 @@ Error
 \begin_inset Text
 
 \begin_layout Plain Layout
-Convergence Rate
+Rate
 \end_layout
 
 \end_inset
@@ -9850,7 +9849,7 @@ Error
 \begin_inset Text
 
 \begin_layout Plain Layout
-Convergence Rate
+Rate
 \end_layout
 
 \end_inset
@@ -9868,7 +9867,7 @@ Error
 \begin_inset Text
 
 \begin_layout Plain Layout
-Convergence Rate
+Rate
 \end_layout
 
 \end_inset
@@ -10281,7 +10280,8 @@ name "tab:ConvergenceRates"
 
 \end_inset
 
-Convergence Rates for the Water-Air Test and Aluminium-Vacuum Test
+Convergence Rates for the Water-Air Test, PBX-Copper Test, and Aluminium-Vacuum
+ Test
 \end_layout
 
 \end_inset
