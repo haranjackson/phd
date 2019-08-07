@@ -89,6 +89,13 @@ Response to Reviewers
 Haran Jackson
 \end_layout
 
+\begin_layout Standard
+
+\series bold
+NOTE: Additions have been highlighted in blue in the manuscript, with removals
+ given as footnotes.
+\end_layout
+
 \begin_layout Subsection*
 Reviewer 1
 \end_layout
@@ -124,8 +131,9 @@ this study represents a novel approach for handling multimaterial problems
 \begin_inset Quotes erd
 \end_inset
 
-.
- The references mentioned here are now discussed in 1.1 Multimaterial Models.
+ (page 1).
+ The references mentioned here are now discussed in 1.1 Multimaterial Models
+ (page 2).
 \end_layout
 
 \begin_layout Standard
@@ -139,7 +147,7 @@ this study represents a novel approach for handling multimaterial problems
 
 \shape italic
 \color blue
-This additional reference has been added.
+This additional reference has been added (page 2).
 \end_layout
 
 \begin_layout Standard
@@ -156,7 +164,7 @@ tau_1 in (8a) for non-Newtonian fluids from authors' recent paper, Ref.[22]
 
 \shape italic
 \color blue
-This has been added.
+This has been added (page 5).
 \end_layout
 
 \begin_layout Standard
@@ -169,7 +177,7 @@ This has been added.
 
 \shape italic
 \color blue
-This has been done.
+This has been done (page 14).
 \end_layout
 
 \begin_layout Standard
@@ -192,7 +200,7 @@ Before (29), it is already stated:
 \end_inset
 
 .
- This statement has been made more prominent on the page.
+ This statement has been made more prominent on the page (page 16).
 \end_layout
 
 \begin_layout Standard
@@ -204,7 +212,8 @@ Before (29), it is already stated:
 
 \shape italic
 \color blue
-This notation has been removed by defining new temporary variables.
+This notation has been removed by defining new temporary variables (pages
+ 24,25).
 \end_layout
 
 \begin_layout Standard
@@ -216,7 +225,7 @@ This notation has been removed by defining new temporary variables.
 
 \shape italic
 \color blue
-This has been added.
+This has been added (page 23).
 \end_layout
 
 \begin_layout Standard
@@ -229,7 +238,8 @@ This has been added.
 
 \shape italic
 \color blue
-A comprehensive description of the scheme is now given in section 1.4.
+A comprehensive description of the scheme is now given in section 1.4 (pages
+ 9-13).
 \end_layout
 
 \begin_layout Standard
@@ -241,7 +251,8 @@ A comprehensive description of the scheme is now given in section 1.4.
 
 \shape italic
 \color blue
-All three EOS used in this study are now stated explicitly in section 1.2.
+All four EOS used in this study are now stated explicitly in section 1.2
+ (pages 4,5).
 \end_layout
 
 \begin_layout Standard
@@ -255,7 +266,7 @@ All three EOS used in this study are now stated explicitly in section 1.2.
 
 \shape italic
 \color blue
-This change has been made.
+This change has been made (page 36).
 \end_layout
 
 \begin_layout Subsection*
@@ -288,12 +299,12 @@ Reviewer 2
 \color blue
 A more thorough explanation of the GPR model has been given in section 1.2,
  and a description of the way in which it handles both fluid and solid modeling
- has been provided.
+ has been provided (pages 3-5).
  The question of tabulated equations of state has been addressed in this
- section, and the ability to use other variables for E1 and E2 - rather
- than entropy - has been discussed.
+ section (page 5), and the ability to use other variables for E1 and E2
+ - rather than entropy - has been discussed (page 5).
  The work of Gavrilyuk and Favrie is now rightfully noted and discussed
- in section 1.1.
+ in section 1.1 (page 2).
 \end_layout
 
 \begin_layout Standard
@@ -317,10 +328,10 @@ g the multimaterial treatment.
 \shape italic
 \color blue
 All of these suggestions have now been incorporated into the text, in section
- 1.4.
+ 1.4 (pages 9-13).
  The readability of section 2 has been improved by restructuring the text,
  adding extra explanations of variables and derivations where appropriate,
- and removing notation that is not entirely standardized.
+ and removing notation that is not entirely standardized (pages 14-25).
 \end_layout
 
 \begin_layout Standard
@@ -343,13 +354,14 @@ All of these suggestions have now been incorporated into the text, in section
 \shape italic
 \color blue
 An explanation for the derivation of each analytical solution has been added
- (applicable to sections 3.1-3.5).
+ (applicable to sections 3.1-3.5) (pages 26,29).
  The aberrations in the heat flux around the interface present in Figure
- 12 have been noted in section 3.5 and discussed at some length in section
- 4.2.
+ 12 have been noted in section 3.5 (page 33) and discussed at some length
+ in section 4.2 (page 44).
  Three more multidimensional test cases (including more material pairings
- than before, and reactive species) have been provided in 3.8-3.10, and a
- convergence study has been provided in section 3.11.
+ than before, and reactive species) have been provided in 3.8-3.10 (pages
+ 36, 40-43), and a convergence study has been provided in section 3.11 (pages
+ 40,41).
 \end_layout
 
 \begin_layout Subsection*
@@ -368,7 +380,7 @@ Please give a definitions for all variables used in the GPR model (1a)-(1e).
 
 \shape italic
 \color blue
-This has been done.
+This has been done (page 3).
 \end_layout
 
 \begin_layout Standard
@@ -381,7 +393,8 @@ Please give also explicit formulae for the equation of state used in Section
 
 \shape italic
 \color blue
-All three EOS used in this study are now stated explicitly in section 1.2.
+All three EOS used in this study are now stated explicitly in section 1.2
+ (pages 4,5).
 \end_layout
 
 \begin_layout Standard
@@ -394,7 +407,7 @@ Sigma^*? It seems to appear for the first time in equation (47a)
 
 \shape italic
 \color blue
-This has been clarified.
+This has been clarified (page 20).
 \end_layout
 
 \begin_layout Standard
@@ -408,7 +421,8 @@ Could you please give an explicit formula of the discretization of the governing
 
 \shape italic
 \color blue
-A comprehensive description of the scheme is now given in section 1.4.
+A comprehensive description of the scheme is now given in section 1.4 (pages
+ 9-13).
 \end_layout
 
 \begin_layout Standard
@@ -436,7 +450,7 @@ heating errors
  this effect disappears, as explained in the text.
  Artificial physical BCs - such as those used in the aforementioned paper
  - are unnecessary, as explained.
- This discussion has been made more prominent in the paper.
+ This discussion has been made more prominent in the paper (page 29).
 \end_layout
 
 \begin_layout Standard
@@ -452,7 +466,7 @@ Figures 10-11: these results refer to Section 3.4, where the physical domain
 The region [0.65-1] is empty, as it is occupied by vacuum.
  The plots are made over [0,0.7] to give greater resolution to the region
  of interest.
- This has been clarified in the text.
+ This has been clarified in the text (page 29).
 \end_layout
 
 \begin_layout Standard
@@ -464,7 +478,7 @@ Could you provide a convergence study of your scheme? I assume it is first
 
 \shape italic
 \color blue
-A convergence study has been added to section 3.11.
+A convergence study has been added to section 3.11 (pages 40,41).
 \end_layout
 
 \begin_layout Standard
@@ -476,7 +490,7 @@ One bracket is not needed at line 2 of the Introduction "Lagrangian and
 
 \shape italic
 \color blue
-Corrected.
+Corrected (page 1).
 \end_layout
 
 \begin_layout Standard
@@ -487,7 +501,7 @@ Conclusions: "the implementation OF a mixture mode"
 
 \shape italic
 \color blue
-Corrected.
+Corrected (page 44).
 \end_layout
 
 \end_body
