@@ -8047,7 +8047,7 @@ Density, velocity, and total stress for the aluminium-vacuum test with GPR-RGFM,
 Heat Conduction in a Gas
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Intermaterial Heat Conduction"
+name "sec:HeatConductionInAGas"
 
 \end_inset
 
@@ -8407,7 +8407,7 @@ The material parameters are taken to be:
  Results are displayed in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "fig:Thermal Equilibration"
+reference "fig:HeatFluxInAGas"
 
 \end_inset
 
@@ -8511,7 +8511,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:Thermal Equilibration"
+name "fig:HeatFluxInAGas"
 
 \end_inset
 
@@ -10312,8 +10312,8 @@ name "sec:Discussion"
 \begin_layout Standard
 The Riemann Ghost Fluid Method presented in this study has been demonstrated
  to be an effective way of accurately simulating the interfaces between
- several different materials (in all three main phases of matter), described
- by the GPR model.
+ several different materials (in all three main phases of matter, plus vacuum),
+ described by the GPR model.
  Unlike in many existing implementations, heat conduction across the interface
  was simulated accurately, leading to the representation of physical phenomena
  that are often overlooked, and to the redundancy of numerical techniques
@@ -10409,7 +10409,141 @@ name "subsec:Potential-Improvements"
 \end_layout
 
 \begin_layout Standard
-An obvious improvement to the GPR-RGFM method presented would be to use
+As noted in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:HeatConductionInAGas"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the GPR-RGFM method does not necessarily ensure the continuity of the
+ normal component of heat flux across interfaces that feature discontinuous
+ temperature jumps.
+ This is despite the method accurately modeling both the heat conduction
+ across the interface over time, and the corresponding evolution to thermal
+ equilibrium between the two materials.
+ The reason for this is that the star states produced by the linearised
+ solver presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SolvingTheRiemannProblem"
+
+\end_inset
+
+ represent the state of the system at a time slightly beyond the point in
+ time at which they are applied to neighboring ghost cells.
+ With more simple systems of PDEs - such as the Euler equations - this often
+ doesn't matter, as the star states are constant in time, or their time
+ evolution is easily calculated.
+ Owing to the source terms in the GPR equations, however, the star states
+ evolve in a manner for which an analytical solution is not available.
+ Thus, when the star states are applied to the ghost cells, they contain
+ higher heat fluxes and slightly different temperatures to the actual values
+ at the interface at that moment in time, leading to the slight aberration
+ apparent in the heat flux in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:HeatFluxInAGas"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A possible solution to this is as follows: Take materials 
+\begin_inset Formula $L$
+\end_inset
+
+ and 
+\begin_inset Formula $R$
+\end_inset
+
+ either side of an interface.
+ Given the states straddling the interface, 
+\begin_inset Formula $Q_{L},Q_{R}$
+\end_inset
+
+, derive 
+\begin_inset Formula $Q_{L}^{*}$
+\end_inset
+
+ using the procedure outlined in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SolvingTheRiemannProblem"
+
+\end_inset
+
+.
+ Then, by inverting this procedure, derive a state 
+\begin_inset Formula $\tilde{Q_{R}}$
+\end_inset
+
+ such that if 
+\begin_inset Formula $Q_{L},\tilde{Q_{R}}$
+\end_inset
+
+ are both states for material 
+\begin_inset Formula $L$
+\end_inset
+
+ (rather than for materials 
+\begin_inset Formula $L$
+\end_inset
+
+ and 
+\begin_inset Formula $R$
+\end_inset
+
+, respectively), following the procedure in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:SolvingTheRiemannProblem"
+
+\end_inset
+
+ obtains the same star state, 
+\begin_inset Formula $Q_{L}^{*}$
+\end_inset
+
+.
+ The derivation of such an inverse mapping should be feasible, possibly
+ with the addition of some physical constraints.
+ In this way, 
+\begin_inset Formula $\tilde{Q_{R}}$
+\end_inset
+
+ represents a state for the righthand cell at the current time, which -
+ if cell 
+\begin_inset Formula $R$
+\end_inset
+
+ were occupied by material 
+\begin_inset Formula $L$
+\end_inset
+
+ - would result in the same state on the lefthand side of the interface
+ at the end of the current timestep as if the righthand cell were occupied
+ by 
+\begin_inset Formula $Q_{R}$
+\end_inset
+
+ and material 
+\begin_inset Formula $R$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Another clear improvement to the GPR-RGFM method presented would be to use
  a better Riemann solver than the iterative, linearised solver devised in
  
 \begin_inset CommandInset ref

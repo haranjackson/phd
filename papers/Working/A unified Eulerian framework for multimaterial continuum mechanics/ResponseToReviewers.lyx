@@ -283,6 +283,20 @@ Reviewer 2
 \end_layout
 
 \begin_layout Standard
+
+\shape italic
+\color blue
+A more thorough explanation of the GPR model has been given in section 1.2,
+ and a description of the way in which it handles both fluid and solid modeling
+ has been provided.
+ The question of tabulated equations of state has been addressed in this
+ section, and the ability to use other variables for E1 and E2 - rather
+ than entropy - has been discussed.
+ The work of Gavrilyuk and Favrie is now rightfully noted and discussed
+ in section 1.1.
+\end_layout
+
+\begin_layout Standard
 2.
  A Riemann ghost fluid…: The multimaterial treatment in the Eulerian framework
  proposed by the authors is the ghost fluid method.
@@ -322,6 +336,20 @@ All of these suggestions have now been incorporated into the text, in section
  A majority of 1D test cases is provided and 2 2D planar test cases are
  given which is not enough.
  
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+An explanation for the derivation of each analytical solution has been added
+ (applicable to sections 3.1-3.5).
+ The aberrations in the heat flux around the interface present in Figure
+ 12 have been noted in section 3.5 and discussed at some length in section
+ 4.2.
+ Three more multidimensional test cases (including more material pairings
+ than before, and reactive species) have been provided in 3.8-3.10, and a
+ convergence study has been provided in section 3.11.
 \end_layout
 
 \begin_layout Subsection*
@@ -430,6 +458,13 @@ The region [0.65-1] is empty, as it is occupied by vacuum.
 \begin_layout Standard
 Could you provide a convergence study of your scheme? I assume it is first
  order in space and time, but nothing is said about it.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+\color blue
+A convergence study has been added to section 3.11.
 \end_layout
 
 \begin_layout Standard
