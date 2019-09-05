@@ -110,6 +110,14 @@ name "sec:Ghost-Fluid-Methods"
 
 \end_layout
 
+\begin_layout Standard
+Ghost fluid methods, combined with level set methods, are used to model
+ the evolution of interfaces between different materials.
+ They are detailed here, as it is with such a method that this study proposes
+ to model the interfaces between different materials described by the GPR
+ model.
+\end_layout
+
 \begin_layout Subsection
 Level Set Methods
 \end_layout

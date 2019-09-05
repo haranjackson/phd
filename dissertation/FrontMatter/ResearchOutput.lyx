@@ -93,22 +93,20 @@ literal "false"
  this dissertation.
 \end_layout
 
-\begin_layout researchoutput
-Over the course of my PhD, in addition to the output listed below, I acted
- as a reviewer for the Journal of Computational Physics.
+\begin_layout Subsubsection*
+Reviewing
+\end_layout
+
+\begin_layout Itemize
+Journal of Computational Physics
+\end_layout
+
+\begin_layout Itemize
+Czech Science Foundation (GACR) grant application
 \end_layout
 
 \begin_layout Subsubsection*
 Publications
-\end_layout
-
-\begin_layout Itemize
-H Jackson, N Nikiforakis, 
-\shape italic
-A unified framework for simulating impact-induced detonation in an elastoplastic
- confiner
-\shape default
- (in preparation)
 \end_layout
 
 \begin_layout Itemize

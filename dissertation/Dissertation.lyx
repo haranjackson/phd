@@ -417,7 +417,7 @@ filename "Chapters/C5 Conclusions & Discussion.lyx"
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
-bibfiles "refs"
+bibfiles "refs,misc_refs"
 options "siam"
 
 \end_inset

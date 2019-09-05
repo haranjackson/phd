@@ -109,8 +109,266 @@ Introduction
 Background
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
+The Problem at Hand
+\end_layout
+
+\begin_layout Subsection
+Review of Current Solutions
+\end_layout
+
+\begin_layout Standard
+This study concerns problems featuring immiscible materials.
+ There are many approaches available to solve these problems, broadly including
+ (but not limited to): Lagrangian and Arbitrary-Lagrangian-Eulerian methods
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "scardovelli_direct_1999,donea_arbitrary_1982"
+literal "false"
+
+\end_inset
+
+, volume of fluid methods 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "rider_reconstructing_1998,nichols_sola-vof:_1980"
+literal "false"
+
+\end_inset
+
+, diffuse interface methods 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "saurel_multiphase_1999"
+literal "false"
+
+\end_inset
+
+, and level-set methods (including the ghost fluid approach 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "osher_level_2001,fedkiw_non-oscillatory_1999"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Solids models tend to come in Lagrangian form, and often these are combined
+ with ALE forms for the fluid phases, so that the fluid meshes may deform
+ to match the deformation of the solid (see, for example, Pin et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Pin2007"
+literal "true"
+
+\end_inset
+
+).
+ These schemes tend to be very accurate, but like all Lagrangian schemes,
+ they fail if the meshes become highly contorted.
+ Thus, adaptive remeshing is often necessary.
+ Some authors have coupled a Lagrangian solid scheme with an Eulerian fluid
+ scheme, but extra care must be taken when applying the boundary conditions
+ to the interface, which corresponds to the intersection of the Eulerian
+ and Lagrangian meshes (see Legay et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Legay2006"
+literal "true"
+
+\end_inset
+
+ for an implementation using level sets, or Fedkiw 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Fedkiw2002"
+literal "true"
+
+\end_inset
+
+ for a GFM coupling).
+ Some authors, such as Ryzhakov et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ryzhakov2010"
+literal "true"
+
+\end_inset
+
+, have found success in using the common Lagrangian formulations for the
+ solid, and a reformulated Lagrangian model for the fluid, implementing
+ the necessary adaptive remeshing.
+ Yet another option is to model both the fluid and the solid in an Eulerian
+ framework, although this now necessitates a level set method or volume
+ of fluid method 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hirt1981"
+literal "true"
+
+\end_inset
+
+ to track the interfaces.
+ Also, these methods are more prone to losing small-scale geometric features
+ of the media, unless methods such as AMR are employed to combat this 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hou2012"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Gavrilyuk, Favrie, et al have presented thermodynamically consistent schemes
+ where solid-fluid interfaces are modeled with the diffuse interface method,
+ with transverse velocities found using a ghost fluid method 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "favrie_solid-fluid_2009"
+literal "false"
+
+\end_inset
+
+.
+ The fluid is governed by the compressible Euler equations, and the solid
+ by a conservative hyperelastic model.
+ This was later extended to encompass solids conforming to the visco-plastic
+ model of Maxwell type materials 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "favrie_diffuse_2012"
+literal "false"
+
+\end_inset
+
+, and later still to an arbitrary number of interacting hyperelastic solids
+ and fluids governed by the compressible Euler equations 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "ndanou_multi-solid_2015"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In a recently submitted paper, Michael and Nikiforakis 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Michael"
+literal "true"
+
+\end_inset
+
+ (building on the work of Schoch et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Schoch2013"
+literal "true"
+
+\end_inset
+
+) couple various Eulerian models of reactive and inert fluids and solids
+ by use of a Riemann Ghost Fluid Method, with the ghost states calculated
+ using specialised mixed-material Riemann solvers for each interaction (see
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Ghost Fluid Methods"
+
+\end_inset
+
+).
+ Whilst these techniques do not suffer from the mesh contortion issues inherent
+ in Lagrangian formulations of continuum mechanics, a fair amount of theoretical
+ work needs to be done to derive analytical relations describing the interaction
+s between every pair of models used.
+\end_layout
+
+\begin_layout Standard
+If it were possible to describe all phases with the same Eulerian model,
+ this method could be used, with only one type of Riemann solver needed
+ to cope with any multiphase problem posed.
+ The GPR model represents such an opportunity.
+ As will be seen, the model also includes terms for heat conduction, which
+ do not appear in the basic formulations of many of the common models used
+ in multiphase systems (e.g.
+ the Euler equations, or the Godunov-Romenski equations of solid mechanics).
+ Heat conduction is often ignored in multiphase modeling, but such a framework
+ based on the GPR model would almost unavoidably include it.
+\end_layout
+
+\begin_layout Standard
+At present, there is no way of dealing with material interfaces in the GPR
+ model, however.
+ In this study, a modification of Barton's 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Barton2010"
+literal "false"
+
+\end_inset
+
+ application of Sambasivan and Udaykumar's Riemann Ghost Fluid Method 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Sambasivan2009,Sambasivan2009a"
+literal "false"
+
+\end_inset
+
+ is devised for the GPR model, enabling the simulation of material interfaces.
+ This new method is tested on a variety of interface problems.
+\end_layout
+
+\begin_layout Standard
+It is interesting to note that de Brauer et al 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "de_brauer_cartesian_2016,brauer_cartesian_2017"
+literal "false"
+
+\end_inset
+
+ have presented a method for multimaterial modelling of a similar system
+ (including the distortion tensor of the GPR model, but excluding the heat
+ conduction terms).
+ This method is based on level sets, similar to the method presented in
+ this paper.
+ It should be noted, however, that de Brauer et al do not apply their method
+ to the modelling of viscous flows.
+\end_layout
+
+\begin_layout Subsection
 Objectives of this Study
+\end_layout
+
+\begin_layout Standard
+The following two subsections outline the theory behind the GPR model and
+ ghost fluid methods.
+ In Section 2 we explore the eigenstructure of the GPR model, and use it
+ to derive a Riemann solver for the Riemann problem at the interfaces between
+ different materials, which is able to incorporate the boundary conditions
+ that we wish to use.
+ Section 3 presents results of fluid-fluid, solid-solid, fluid-solid, and
+ solid-vacuum problems, including some multidimensional cases, and some
+ incorporating heat conduction across the interfaces.
+ Conclusions are drawn in section 4, along with discussion of potential
+ limitations to the method presented here, and ideas for further avenues
+ of enquiry.
 \end_layout
 
 \begin_layout Section
@@ -122,6 +380,10 @@ name "sec:Mathematical-Models"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Equations of Motion
 \end_layout
 
 \begin_layout Standard
@@ -356,14 +618,47 @@ literal "true"
 
 \begin_layout Standard
 where 
-\begin_inset Formula $\theta_{1}$
+\begin_inset Formula $\rho$
 \end_inset
 
- and 
-\begin_inset Formula $\theta_{2}$
+ is density, 
+\begin_inset Formula $\mathbf{v}$
 \end_inset
 
- are positive scalar functions, and 
+ is velocity, 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the Kronecker delta, 
+\begin_inset Formula $p$
+\end_inset
+
+ is pressure, 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is the sheer stress tensor, 
+\begin_inset Formula $A$
+\end_inset
+
+ is the distortion tensor, 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ is the thermal impulse vector, 
+\begin_inset Formula $T$
+\end_inset
+
+ is temperature, 
+\begin_inset Formula $s$
+\end_inset
+
+ is the entropy, and 
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+ is heat flux.
+ 
 \begin_inset Formula $\psi=\frac{\partial E}{\partial A}$
 \end_inset
 
@@ -371,8 +666,20 @@ where
 \begin_inset Formula $\boldsymbol{H}=\frac{\partial E}{\partial\boldsymbol{J}}$
 \end_inset
 
-.
- Entropy does not decrease during the dissipative time evolution:
+, and 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ are positive functions (given below for the problems at hand).
+ 
+\end_layout
+
+\begin_layout Standard
+Entropy does not decrease during the dissipative time evolution:
 \end_layout
 
 \begin_layout Standard
@@ -409,7 +716,12 @@ reference "eq:EntropyEquation"
 \end_layout
 
 \begin_layout Standard
-Note that 
+where 
+\begin_inset Formula $E$
+\end_inset
+
+ is the total energy.
+ Note that 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:DensityEquation"
@@ -456,6 +768,10 @@ reference "eq:EnergyEquation"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Variable Relations
 \end_layout
 
 \begin_layout Standard
@@ -563,9 +879,59 @@ In previous studies,
 \begin_inset Formula $E_{1}$
 \end_inset
 
- has to been taken to be either the ideal gas EOS, the stiffened gas EOS,
- or the shock Mie-Gruneisen EOS.
- A more general set of choices for 
+ has been taken to be one of the following forms:
+\end_layout
+
+\begin_layout Standard
+1.
+ The ideal gas EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p}{\rho\left(\gamma-1\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+2.
+ The stiffened gas EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p+\gamma p_{\infty}}{\rho\left(\gamma-1\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+3.
+ The shock Mie-Gruneisen EOS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{1}=\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p-p_{ref}}{\Gamma_{0}\rho_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more general set of choices for 
 \begin_inset Formula $E_{1}$
 \end_inset
 
@@ -577,6 +943,53 @@ reference "sec:Equations-of-State"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+Tabulated equations of state are common-place in the field (see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "buyukcizmeci_tabulated_2014,levashov_tabular_2007,peterson_global_2012"
+literal "false"
+
+\end_inset
+
+ for a range of use cases).
+ There is no a priori reason why they cannot be used for 
+\begin_inset Formula $E_{1}$
+\end_inset
+
+ under the framework presented in this study, in the same manner as other
+ hydrodynamic systems (e.g.
+ see 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "boettger_tabular_2012,hempert_simulation_2017"
+literal "false"
+
+\end_inset
+
+).
+ This is out of scope of this paper, however, and presents an avenue of
+ future research.
+ Note that 
+\begin_inset Formula $E_{1},c_{s},c_{t}$
+\end_inset
+
+ are permitted to depend upon 
+\begin_inset Formula $\rho,p$
+\end_inset
+
+ instead of 
+\begin_inset Formula $\rho,s$
+\end_inset
+
+ (as is the case in this study), or indeed 
+\begin_inset Formula $\rho,T$
+\end_inset
+
+ if the material requires it (such as materials whose shear modulus depend
+ on temperature).
 \end_layout
 
 \begin_layout Standard
@@ -953,22 +1366,26 @@ literal "true"
 
 \end_layout
 
-\begin_layout Standard
-The GPR model and Godunov and Romenski's 1970s model of elastoplastic deformatio
-n in fact relies upon the same equations.
- The realization of Peshkov and Romenski was that these are the equations
- of motion for an arbitrary continuum - not just a solid - and so the model
- can be applied to fluids too.
- Unlike in previous continuum models, material elements have not only finite
- size, but also internal structure, encoded in the distortion tensor.
+\begin_layout Subsection
+Physical Intuition
 \end_layout
 
 \begin_layout Standard
-The strain dissipation time 
+The GPR model represents the same set of equations as the model of elastoplastic
+ deformation originally proposed by Godunov and Romenski.
+ Peshkov and Romenski first subsequently proposed that these are the equations
+ of motion for an arbitrary continuum - not just a solid.
+ In doing so, they were able to apply the model to fluids too.
+ Note that material elements have not only finite size, but also internal
+ structure (encoded in the distortion), unlike in previous continuum models.
+\end_layout
+
+\begin_layout Standard
+The idea of 
 \begin_inset Formula $\tau_{1}$
 \end_inset
 
- of the HPR model is a continuous analogue of Frenkel's 
+ - the strain dissipation time - has its roots in Frenkel's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -976,7 +1393,7 @@ particle settled life time
 \begin_inset Quotes erd
 \end_inset
 
- 
+ (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "frenkel_kinetic_1947"
@@ -984,35 +1401,47 @@ literal "true"
 
 \end_inset
 
-; the characteristic time taken for a particle to move by a distance of
- the same order of magnitude as the particle's size.
- Thus, 
+).
+ 
 \begin_inset Formula $\tau_{1}$
 \end_inset
 
- characterizes the time taken for a material element to rearrange with its
- neighbors.
- 
-\begin_inset Formula $\tau_{1}=\infty$
+ represents a continuous analogue of Frenkel's object.
+ It can be thought of as the characteristic time taken for a particle to
+ move by a distance roughly the same as the particle's size.
+ Thus, the typical time taken for a material element to rearrange with its
+ neighbors is characterized by 
+\begin_inset Formula $\tau_{1}$
 \end_inset
 
- for solids and 
-\begin_inset Formula $\tau_{1}=0$
-\end_inset
-
- for inviscid fluids.
- It is in this way that the HPR model seeks to describe all three major
- phases of matter, as long as a continuum description is appropriate for
- the material at hand.
+ .
+ As long as a continuum description is appropriate for the material at hand,
+ it is thus that the GPR model seeks to describe all three major phases
+ of matter.
+ For example, we have the following relations:
 \end_layout
 
 \begin_layout Standard
-The evolution equation for 
+\begin_inset Formula 
+\begin{equation}
+\tau_{1}=\begin{cases}
+\infty & elastic\,solids\\
+0 & inviscid\,fluids
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equation governing 
 \begin_inset Formula $\boldsymbol{J}$
 \end_inset
 
- and its contribution to the energy of the system are derived from Romenski's
- model of hyperbolic heat transfer, originally proposed in 
+ - and its contribution to the system's total energy - are derived from
+ Romenski's model of hyperbolic heat transfer, (see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "malyshev_hyperbolic_1986,romenski_hyperbolic_1989"
@@ -1020,7 +1449,8 @@ literal "true"
 
 \end_inset
 
-, and implemented in 
+).
+ These concepts were later implemented in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "romenski_conservative_2007,romenski_conservative_2010"
@@ -1029,18 +1459,17 @@ literal "true"
 \end_inset
 
 .
- In this model, 
+ The entropy flux is the derivative of the specific internal energy with
+ respect to 
 \begin_inset Formula $\boldsymbol{J}$
 \end_inset
 
- is effectively defined as the variable conjugate to the entropy flux, in
- the sense that the latter is the derivative of the specific internal energy
- with respect to 
-\begin_inset Formula $\boldsymbol{J}$
+, and it is in this way that 
+\begin_inset Formula $\mathbf{J}$
 \end_inset
 
-.
- Romenski remarks that it is more convenient to evolve 
+ is defined (as the variable conjugate to the entropy flux).
+ As remarked by Romenski, it is more convenient to evolve 
 \begin_inset Formula $\boldsymbol{J}$
 \end_inset
 
@@ -1048,14 +1477,25 @@ literal "true"
 \begin_inset Formula $E$
 \end_inset
 
- than the heat flux or the entropy flux, and thus the equations take the
- form given here.
- 
+ than 
+\series bold
+
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+
+\series default
+ or the entropy flux, and thus the equations take the form given here.
+ Similarly to 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+, 
 \begin_inset Formula $\tau_{2}$
 \end_inset
 
- characterizes the speed of relaxation of the thermal impulse due to heat
- exchange between material elements.
+ is a relaxation time, characterizing the average speed of relaxation of
+ thermal impulse due to heat exchange between neighboring particles.
 \end_layout
 
 \begin_layout Section

@@ -102,7 +102,37 @@ The mixed-material GPR model takes the form
 \begin_inset Formula $\boldsymbol{Q},\boldsymbol{F},B,\boldsymbol{S}$
 \end_inset
 
- are given below.
+ are given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Q,F1,F2,F3"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:B1,B2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:B3,S"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -115,7 +145,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
-\[
+\begin{equation}
 \boldsymbol{Q}=\begin{pmatrix}\rho\\
 \rho E\\
 \rho v_{1}\\
@@ -188,8 +218,8 @@ A_{3m}v_{m}\\
 \rho J_{2}v_{3}\\
 \rho J_{3}v_{3}+T\\
 \rho\lambda v_{3}
-\end{pmatrix}
-\]
+\end{pmatrix}\label{eq:Q,F1,F2,F3}
+\end{equation}
 
 \end_inset
 
@@ -213,7 +243,7 @@ status open
 \paragraph_spacing double
 \noindent
 \begin_inset Formula 
-\[
+\begin{equation}
 B_{1}=\left(\begin{array}{cccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -252,8 +282,8 @@ B_{1}=\left(\begin{array}{cccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
-\end{array}\right)
-\]
+\end{array}\right)\label{eq:B1,B2}
+\end{equation}
 
 \end_inset
 
@@ -277,7 +307,7 @@ status open
 \paragraph_spacing double
 \noindent
 \begin_inset Formula 
-\[
+\begin{equation}
 B_{3}=\left(\begin{array}{cccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -297,26 +327,26 @@ B_{3}=\left(\begin{array}{cccccccccccccccccc}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
-\end{array}\right)\qquad\boldsymbol{S}=\frac{1}{\theta_{1}\left(\tau_{1}\right)}\left(\begin{array}{c}
+\end{array}\right)\qquad\boldsymbol{S}=-\left(\frac{1}{\theta_{1}}\left(\begin{array}{c}
 0\\
 0\\
 0\\
 0\\
 0\\
--\psi_{11}\\
--\psi_{21}\\
--\psi_{31}\\
--\psi_{12}\\
--\psi_{22}\\
--\psi_{32}\\
--\psi_{13}\\
--\psi_{23}\\
--\psi_{33}\\
+\psi_{11}\\
+\psi_{21}\\
+\psi_{31}\\
+\psi_{12}\\
+\psi_{22}\\
+\psi_{32}\\
+\psi_{13}\\
+\psi_{23}\\
+\psi_{33}\\
 0\\
 0\\
 0\\
 0
-\end{array}\right)+\frac{1}{\theta_{2}\left(\tau_{2}\right)}\left(\begin{array}{c}
+\end{array}\right)+\frac{1}{\theta_{2}}\left(\begin{array}{c}
 0\\
 0\\
 0\\
@@ -331,9 +361,9 @@ B_{3}=\left(\begin{array}{cccccccccccccccccc}
 0\\
 0\\
 0\\
--\rho H_{1}\\
--\rho H_{2}\\
--\rho H_{3}\\
+\rho H_{1}\\
+\rho H_{2}\\
+\rho H_{3}\\
 0
 \end{array}\right)+\left(\begin{array}{c}
 0\\
@@ -353,9 +383,9 @@ B_{3}=\left(\begin{array}{cccccccccccccccccc}
 0\\
 0\\
 0\\
--K
-\end{array}\right)
-\]
+\rho K
+\end{array}\right)\right)\label{eq:B3,S}
+\end{equation}
 
 \end_inset
 
@@ -398,10 +428,11 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\tilde{\psi} & =\left.\frac{\partial E}{\partial A}\right|_{\rho,p}\\
+\tilde{\psi} & =\rho\left.\frac{\partial E}{\partial A}\right|_{\rho,p}\\
 \Psi_{ij} & =\rho v_{i}v_{j}-\sigma_{ij}\\
 \Phi_{ij} & =v_{i}v_{j}-\frac{\partial\sigma_{ij}}{\partial\rho}\\
-\Omega_{ij}^{k} & =\rho v_{k}\tilde{\psi}_{ij}-v_{m}\frac{\partial\sigma_{mk}}{\partial A_{ij}}\\
+\aleph_{ij}^{mn} & =-\frac{\partial\sigma_{mn}}{\partial A_{ij}}\\
+\Omega_{ij}^{k} & =v_{k}\tilde{\psi}_{ij}+v_{m}\aleph_{ij}^{mk}\\
 \Delta_{i} & =v_{i}\left(E+\rho\left.\frac{\partial E}{\partial\rho}\right|_{p,A}\right)-\frac{\partial\sigma_{im}}{\partial\rho}v_{m}+\frac{\partial T}{\partial\rho}H_{i}\\
 \Pi_{i} & =v_{i}\left(\rho\frac{\partial E}{\partial p}+1\right)+\frac{\partial T}{\partial p}H_{i}\\
 \Upsilon & =\Gamma\left(\left\Vert \boldsymbol{v}\right\Vert ^{2}+c_{t}^{2}\left\Vert \boldsymbol{J}\right\Vert ^{2}+Q\lambda-\left(E+\rho\left.\frac{\partial E}{\partial\rho}\right|_{p,A}\right)\right)
@@ -429,7 +460,57 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-The Jacobians of the GPR system are given on the following pages.
+The Jacobians of the GPR system are given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dQdP"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dPdQ"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dF1dP"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dF2dP"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dF3dP"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -442,10 +523,10 @@ status open
 \paragraph_spacing double
 \noindent
 \begin_inset Formula 
-\[
+\begin{equation}
 \frac{\partial\boldsymbol{Q}}{\partial\boldsymbol{P}}=\left(\begin{array}{cccccccccccccccccc}
 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-\left(E+\rho\frac{\partial E}{\partial\rho}\right) & \frac{1}{\Gamma} & \rho v_{1} & \rho v_{2} & \rho v_{3} & \rho\tilde{\psi}_{11} & \rho\tilde{\psi}_{12} & \rho\tilde{\psi}_{13} & \rho\tilde{\psi}_{21} & \rho\tilde{\psi}_{22} & \rho\tilde{\psi}_{23} & \rho\tilde{\psi}_{31} & \rho\tilde{\psi}_{32} & \rho\tilde{\psi}_{33} & \rho H_{1} & \rho H_{2} & \rho H_{3} & \rho Q\\
+\left(E+\rho\frac{\partial E}{\partial\rho}\right) & \frac{1}{\Gamma} & \rho v_{1} & \rho v_{2} & \rho v_{3} & \tilde{\psi}_{11} & \tilde{\psi}_{12} & \tilde{\psi}_{13} & \tilde{\psi}_{21} & \tilde{\psi}_{22} & \tilde{\psi}_{23} & \tilde{\psi}_{31} & \tilde{\psi}_{32} & \tilde{\psi}_{33} & \rho H_{1} & \rho H_{2} & \rho H_{3} & \rho Q\\
 v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -462,8 +543,8 @@ J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0\\
 J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0\\
 J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0\\
 \lambda & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho
-\end{array}\right)
-\]
+\end{array}\right)\label{eq:dQdP}
+\end{equation}
 
 \end_inset
 
@@ -489,28 +570,28 @@ status open
 
 \size small
 \begin_inset Formula 
-\[
-\frac{\partial\boldsymbol{P}}{\partial\boldsymbol{Q}}=\left(\begin{array}{cccccccccccccccccc}
-1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-\Upsilon & \Gamma & -\Gamma v_{1} & -\Gamma v_{2} & -\Gamma v_{3} & -\Gamma\rho\tilde{\psi}_{11} & -\Gamma\rho\tilde{\psi}_{12} & -\Gamma\rho\tilde{\psi}_{13} & -\Gamma\rho\tilde{\psi}_{21} & -\Gamma\rho\tilde{\psi}_{22} & -\Gamma\rho\tilde{\psi}_{23} & -\Gamma\rho\tilde{\psi}_{31} & -\Gamma\rho\tilde{\psi}_{32} & -\Gamma\rho\tilde{\psi}_{33} & -\Gamma H_{1} & -\Gamma H_{2} & -\Gamma H_{3} & -\Gamma Q\\
--\frac{v_{1}}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
--\frac{v_{2}}{\rho} & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
--\frac{v_{3}}{\rho} & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
--\frac{J_{1}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0 & 0\\
--\frac{J_{2}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0 & 0\\
--\frac{J_{3}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho} & 0\\
--\frac{\lambda}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\rho}
-\end{array}\right)
-\]
+\begin{equation}
+\frac{\partial\boldsymbol{P}}{\partial\boldsymbol{Q}}=-\left(\begin{array}{cccccccccccccccccc}
+-1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+-\Upsilon & -\Gamma & \Gamma v_{1} & \Gamma v_{2} & \Gamma v_{3} & \Gamma\tilde{\psi}_{11} & \Gamma\tilde{\psi}_{12} & \Gamma\tilde{\psi}_{13} & \Gamma\tilde{\psi}_{21} & \Gamma\tilde{\psi}_{22} & \Gamma\tilde{\psi}_{23} & \Gamma\tilde{\psi}_{31} & \Gamma\tilde{\psi}_{32} & \Gamma\tilde{\psi}_{33} & \Gamma H_{1} & \Gamma H_{2} & \Gamma H_{3} & \Gamma Q\\
+\frac{v_{1}}{\rho} & 0 & \frac{-1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\frac{v_{2}}{\rho} & 0 & 0 & \frac{-1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\frac{v_{3}}{\rho} & 0 & 0 & 0 & \frac{-1}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0\\
+\frac{J_{1}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{-1}{\rho} & 0 & 0 & 0\\
+\frac{J_{2}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{-1}{\rho} & 0 & 0\\
+\frac{J_{3}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{-1}{\rho} & 0\\
+\frac{\lambda}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \frac{-1}{\rho}
+\end{array}\right)\label{eq:dPdQ}
+\end{equation}
 
 \end_inset
 
@@ -536,13 +617,13 @@ status open
 
 \size small
 \begin_inset Formula 
-\[
+\begin{equation}
 \frac{\partial\boldsymbol{F_{1}}}{\partial\boldsymbol{P}}=\left(\begin{array}{cccccccccccccccccc}
 v_{1} & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 \Delta_{1} & \Pi_{1} & \left(\Psi_{11}+\rho E+p\right) & \Psi_{12} & \Psi_{13} & \Omega_{11}^{1} & \Omega_{12}^{1} & \Omega_{13}^{1} & \Omega_{21}^{1} & \Omega_{22}^{1} & \Omega_{23}^{1} & \Omega_{31}^{1} & \Omega_{32}^{1} & \Omega_{33}^{1} & \left(\rho v_{1}H_{1}+c_{t}^{2}T\right) & \rho v_{1}H_{2} & \rho v_{1}H_{3} & \rho v_{1}Q\\
-\Phi_{11} & 1 & 2\rho v_{1} & 0 & 0 & -\frac{\sigma_{11}}{A_{11}} & -\frac{\sigma_{11}}{A_{12}} & -\frac{\sigma_{11}}{A_{13}} & -\frac{\sigma_{11}}{A_{21}} & -\frac{\sigma_{11}}{A_{22}} & -\frac{\sigma_{11}}{A_{23}} & -\frac{\sigma_{11}}{A_{31}} & -\frac{\sigma_{11}}{A_{32}} & -\frac{\sigma_{11}}{A_{33}} & 0 & 0 & 0 & 0\\
-\Phi_{12} & 0 & \rho v_{2} & \rho v_{1} & 0 & -\frac{\sigma_{12}}{A_{11}} & -\frac{\sigma_{12}}{A_{12}} & -\frac{\sigma_{12}}{A_{13}} & -\frac{\sigma_{12}}{A_{21}} & -\frac{\sigma_{12}}{A_{22}} & -\frac{\sigma_{12}}{A_{23}} & -\frac{\sigma_{12}}{A_{31}} & -\frac{\sigma_{12}}{A_{32}} & -\frac{\sigma_{12}}{A_{33}} & 0 & 0 & 0 & 0\\
-\Phi_{13} & 0 & \rho v_{3} & 0 & \rho v_{1} & -\frac{\sigma_{13}}{A_{11}} & -\frac{\sigma_{13}}{A_{12}} & -\frac{\sigma_{13}}{A_{13}} & -\frac{\sigma_{13}}{A_{21}} & -\frac{\sigma_{13}}{A_{22}} & -\frac{\sigma_{13}}{A_{23}} & -\frac{\sigma_{13}}{A_{31}} & -\frac{\sigma_{13}}{A_{32}} & -\frac{\sigma_{13}}{A_{33}} & 0 & 0 & 0 & 0\\
+\Phi_{11} & 1 & 2\rho v_{1} & 0 & 0 & \aleph_{11}^{11} & \aleph_{12}^{11} & \aleph_{13}^{11} & \aleph_{21}^{11} & \aleph_{22}^{11} & \aleph_{23}^{11} & \aleph_{31}^{11} & \aleph_{32}^{11} & \aleph_{33}^{11} & 0 & 0 & 0 & 0\\
+\Phi_{12} & 0 & \rho v_{2} & \rho v_{1} & 0 & \aleph_{11}^{12} & \aleph_{12}^{12} & \aleph_{13}^{12} & \aleph_{21}^{12} & \aleph_{22}^{12} & \aleph_{23}^{12} & \aleph_{31}^{12} & \aleph_{32}^{12} & \aleph_{33}^{12} & 0 & 0 & 0 & 0\\
+\Phi_{13} & 0 & \rho v_{3} & 0 & \rho v_{1} & \aleph_{11}^{13} & \aleph_{12}^{13} & \aleph_{13}^{13} & \aleph_{21}^{13} & \aleph_{22}^{13} & \aleph_{23}^{13} & \aleph_{31}^{13} & \aleph_{32}^{13} & \aleph_{33}^{13} & 0 & 0 & 0 & 0\\
 0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -556,8 +637,8 @@ v_{1}J_{1}+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & \rh
 v_{1}J_{2} & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1} & 0 & 0\\
 v_{1}J_{3} & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1} & 0\\
 v_{1}\lambda & 0 & \rho\lambda & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{1}
-\end{array}\right)
-\]
+\end{array}\right)\label{eq:dF1dP}
+\end{equation}
 
 \end_inset
 
@@ -583,13 +664,13 @@ status open
 
 \size small
 \begin_inset Formula 
-\[
+\begin{equation}
 \frac{\partial\boldsymbol{F_{2}}}{\partial\boldsymbol{P}}=\left(\begin{array}{cccccccccccccccccc}
 v_{2} & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 \Delta_{2} & \Pi_{2} & \Psi_{21} & \left(\Psi_{22}+\rho E+p\right) & \Psi_{23} & \Omega_{11}^{2} & \Omega_{12}^{2} & \Omega_{13}^{2} & \Omega_{21}^{2} & \Omega_{22}^{2} & \Omega_{23}^{2} & \Omega_{31}^{2} & \Omega_{32}^{2} & \Omega_{33}^{2} & \rho v_{2}H_{1} & \left(\rho v_{2}H_{2}+c_{t}^{2}T\right) & \rho v_{2}H_{3} & \rho v_{2}Q\\
-\Phi_{21} & 0 & \rho v_{2} & \rho v_{1} & 0 & -\frac{\sigma_{21}}{A_{11}} & -\frac{\sigma_{21}}{A_{12}} & -\frac{\sigma_{21}}{A_{13}} & -\frac{\sigma_{21}}{A_{21}} & -\frac{\sigma_{21}}{A_{22}} & -\frac{\sigma_{21}}{A_{23}} & -\frac{\sigma_{21}}{A_{31}} & -\frac{\sigma_{21}}{A_{32}} & -\frac{\sigma_{21}}{A_{33}} & 0 & 0 & 0 & 0\\
-\Phi_{22} & 1 & 0 & 2\rho v_{2} & 0 & -\frac{\sigma_{22}}{A_{11}} & -\frac{\sigma_{22}}{A_{12}} & -\frac{\sigma_{22}}{A_{13}} & -\frac{\sigma_{22}}{A_{21}} & -\frac{\sigma_{22}}{A_{22}} & -\frac{\sigma_{22}}{A_{23}} & -\frac{\sigma_{22}}{A_{31}} & -\frac{\sigma_{22}}{A_{32}} & -\frac{\sigma_{22}}{A_{33}} & 0 & 0 & 0 & 0\\
-\Phi_{23} & 0 & 0 & \rho v_{3} & \rho v_{2} & -\frac{\sigma_{23}}{A_{11}} & -\frac{\sigma_{23}}{A_{12}} & -\frac{\sigma_{23}}{A_{13}} & -\frac{\sigma_{23}}{A_{21}} & -\frac{\sigma_{23}}{A_{22}} & -\frac{\sigma_{23}}{A_{23}} & -\frac{\sigma_{23}}{A_{31}} & -\frac{\sigma_{23}}{A_{32}} & -\frac{\sigma_{23}}{A_{33}} & 0 & 0 & 0 & 0\\
+\Phi_{21} & 0 & \rho v_{2} & \rho v_{1} & 0 & \aleph_{11}^{21} & \aleph_{12}^{21} & \aleph_{13}^{21} & \aleph_{21}^{21} & \aleph_{22}^{21} & \aleph_{23}^{21} & \aleph_{31}^{21} & \aleph_{32}^{21} & \aleph_{33}^{21} & 0 & 0 & 0 & 0\\
+\Phi_{22} & 1 & 0 & 2\rho v_{2} & 0 & \aleph_{11}^{22} & \aleph_{12}^{22} & \aleph_{13}^{22} & \aleph_{21}^{22} & \aleph_{22}^{22} & \aleph_{23}^{22} & \aleph_{31}^{22} & \aleph_{32}^{22} & \aleph_{33}^{22} & 0 & 0 & 0 & 0\\
+\Phi_{23} & 0 & 0 & \rho v_{3} & \rho v_{2} & \aleph_{11}^{23} & \aleph_{12}^{23} & \aleph_{13}^{23} & \aleph_{21}^{23} & \aleph_{22}^{23} & \aleph_{23}^{23} & \aleph_{31}^{23} & \aleph_{32}^{23} & \aleph_{33}^{23} & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -603,8 +684,8 @@ v_{2}J_{1} & 0 & 0 & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v
 v_{2}J_{2}+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2} & 0 & 0\\
 v_{2}J_{3} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2} & 0\\
 v_{2}\lambda & 0 & 0 & \rho\lambda & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{2}
-\end{array}\right)
-\]
+\end{array}\right)\label{eq:dF2dP}
+\end{equation}
 
 \end_inset
 
@@ -630,13 +711,13 @@ status open
 
 \size small
 \begin_inset Formula 
-\[
+\begin{equation}
 \frac{\partial\boldsymbol{F_{3}}}{\partial\boldsymbol{P}}=\left(\begin{array}{cccccccccccccccccc}
 v_{3} & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 \Delta_{3} & \Pi_{3} & \Psi_{11} & \Psi_{12} & \left(\Psi_{13}+\rho E+p\right) & \Omega_{11}^{3} & \Omega_{12}^{3} & \Omega_{13}^{3} & \Omega_{21}^{3} & \Omega_{22}^{3} & \Omega_{23}^{3} & \Omega_{31}^{3} & \Omega_{32}^{3} & \Omega_{33}^{3} & \rho v_{3}H_{1} & \rho v_{3}H_{2} & \left(\rho v_{3}H_{3}+c_{t}^{2}T\right) & \rho v_{3}Q\\
-\Phi_{31} & 0 & \rho v_{3} & 0 & \rho v_{1} & -\frac{\sigma_{31}}{A_{11}} & -\frac{\sigma_{31}}{A_{12}} & -\frac{\sigma_{31}}{A_{13}} & -\frac{\sigma_{31}}{A_{21}} & -\frac{\sigma_{31}}{A_{22}} & -\frac{\sigma_{31}}{A_{23}} & -\frac{\sigma_{31}}{A_{31}} & -\frac{\sigma_{31}}{A_{32}} & -\frac{\sigma_{31}}{A_{33}} & 0 & 0 & 0 & 0\\
-\Phi_{32} & 0 & 0 & \rho v_{3} & \rho v_{2} & -\frac{\sigma_{32}}{A_{11}} & -\frac{\sigma_{32}}{A_{12}} & -\frac{\sigma_{32}}{A_{13}} & -\frac{\sigma_{32}}{A_{21}} & -\frac{\sigma_{32}}{A_{22}} & -\frac{\sigma_{32}}{A_{23}} & -\frac{\sigma_{32}}{A_{31}} & -\frac{\sigma_{32}}{A_{32}} & -\frac{\sigma_{32}}{A_{33}} & 0 & 0 & 0 & 0\\
-\Phi_{33} & 1 & 0 & 0 & 2\rho v_{3} & -\frac{\sigma_{33}}{A_{11}} & -\frac{\sigma_{33}}{A_{12}} & -\frac{\sigma_{33}}{A_{13}} & -\frac{\sigma_{33}}{A_{21}} & -\frac{\sigma_{33}}{A_{22}} & -\frac{\sigma_{33}}{A_{23}} & -\frac{\sigma_{33}}{A_{31}} & -\frac{\sigma_{33}}{A_{32}} & -\frac{\sigma_{33}}{A_{33}} & 0 & 0 & 0 & 0\\
+\Phi_{31} & 0 & \rho v_{3} & 0 & \rho v_{1} & \aleph_{11}^{31} & \aleph_{12}^{31} & \aleph_{13}^{31} & \aleph_{21}^{31} & \aleph_{22}^{31} & \aleph_{23}^{31} & \aleph_{31}^{31} & \aleph_{32}^{31} & \aleph_{33}^{31} & 0 & 0 & 0 & 0\\
+\Phi_{32} & 0 & 0 & \rho v_{3} & \rho v_{2} & \aleph_{11}^{32} & \aleph_{12}^{32} & \aleph_{13}^{32} & \aleph_{21}^{32} & \aleph_{22}^{32} & \aleph_{23}^{32} & \aleph_{31}^{32} & \aleph_{32}^{32} & \aleph_{33}^{32} & 0 & 0 & 0 & 0\\
+\Phi_{33} & 1 & 0 & 0 & 2\rho v_{3} & \aleph_{11}^{33} & \aleph_{12}^{33} & \aleph_{13}^{33} & \aleph_{21}^{33} & \aleph_{22}^{33} & \aleph_{23}^{33} & \aleph_{31}^{33} & \aleph_{32}^{33} & \aleph_{33}^{33} & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & A_{11} & A_{12} & A_{13} & v_{1} & v_{2} & v_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -650,8 +731,8 @@ v_{3}J_{1} & 0 & 0 & 0 & \rho J_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v
 v_{3}J_{2} & 0 & 0 & 0 & \rho J_{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3} & 0 & 0\\
 v_{3}J_{3}+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0 & 0 & \rho J_{3} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3} & 0\\
 v_{3}\lambda & 0 & 0 & 0 & \rho\lambda & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho v_{3}
-\end{array}\right)
-\]
+\end{array}\right)\label{eq:dF3dP}
+\end{equation}
 
 \end_inset
 
@@ -701,7 +782,10 @@ Thus:
 \begin_inset Formula 
 \begin{align}
 \frac{\partial\left(A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}} & =\frac{\partial A_{it}}{\partial A_{mn}}\dev\left(G\right)_{tj}+A_{it}\frac{\partial\dev\left(G\right)_{tj}}{\partial A_{mn}}\\
- & =\delta_{im}\delta_{tn}\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)+A_{it}\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)\nonumber \\
+ & =\begin{array}{c}
+\delta_{im}\delta_{tn}\left(A_{kt}A_{kj}-\frac{1}{3}A_{kl}A_{kl}\delta_{tj}\right)\\
++A_{it}\left(\delta_{tn}A_{mj}+\delta_{jn}A_{mt}-\frac{2}{3}\delta_{tj}A_{mn}\right)
+\end{array}\nonumber \\
  & =\delta_{im}A_{kn}A_{kj}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}+A_{in}A_{mj}+\delta_{jn}A_{ik}A_{mk}-\frac{2}{3}A_{ij}A_{mn}\nonumber 
 \end{align}
 
@@ -718,8 +802,14 @@ Thus:
 \begin_inset Formula 
 \begin{align}
 J_{A} & \equiv\frac{-3}{\tau_{1}}\frac{\partial\left(\det\left(A\right)^{\frac{5}{3}}A\dev\left(G\right)\right)_{ij}}{\partial A_{mn}}\\
- & =\frac{-3}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\frac{5}{3}\left(A\dev\left(G\right)\right)_{ij}A_{mn}^{-T}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}\right)\nonumber \\
- & =\frac{1}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(-5\left(A\dev\left(G\right)\right)\otimes A^{-T}+2A\otimes A-3\left(A\otimes A\right)^{1,3}+\left\Vert A\right\Vert _{F}^{2}\left(I\otimes I\right)^{2,3}-3\left(G^{'}\otimes I+I\otimes G\right)^{2,3}\right)\nonumber 
+ & =\frac{-3}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\begin{array}{c}
+\frac{5}{3}\left(A\dev\left(G\right)\right)_{ij}A_{mn}^{-T}+A_{in}A_{mj}+\delta_{jn}G_{im}^{'}+\delta_{im}G_{jn}\\
+-\frac{1}{3}\delta_{im}\delta_{jn}A_{kl}A_{kl}-\frac{2}{3}A_{ij}A_{mn}
+\end{array}\right)\nonumber \\
+ & =\frac{-1}{\tau_{1}}\det\left(A\right)^{\frac{5}{3}}\left(\begin{array}{c}
+5\left(A\dev\left(G\right)\right)\otimes A^{-T}-2A\otimes A+3\left(A\otimes A\right)^{1,3}\\
+-\left\Vert A\right\Vert _{F}^{2}\left(I\otimes I\right)^{2,3}+3\left(G^{'}\otimes I+I\otimes G\right)^{2,3}
+\end{array}\right)\nonumber 
 \end{align}
 
 \end_inset
