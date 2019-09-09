@@ -1921,6 +1921,19 @@ reference "eq:ODESubsystem"
 In the scheme proposed here, the homogeneous subsystem will be solved using
  a WENO reconstruction of the data, followed by a finite volume update,
  and the temporal ODEs will be solved with appropriate ODE solvers.
+ It should be noted that there are other choices of solvers for the homogeneous
+ system that could have been made (e.g.
+ see MUSCL, SLIC, and WAF, among others in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "true"
+
+\end_inset
+
+).
+ The WENO method was chosen due to the arbitrarily high-order spatial reconstruc
+tions it is able to produce.
  This new scheme will be referred to here as 
 \shape italic
 the Split-WENO method
@@ -1959,7 +1972,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left|A\right|^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
+\frac{dA}{dt} & =\frac{-3}{\tau_{1}}\left(\det A\right)^{\frac{5}{3}}A\dev\left(G\right)\label{eq:DistortionODE}\\
 \frac{d\boldsymbol{J}}{dt} & =-\frac{1}{\tau_{2}}\frac{T\rho_{0}}{T_{0}\rho}\boldsymbol{J}\label{eq:ThermalODE}
 \end{align}
 
@@ -2053,6 +2066,25 @@ where
  of solving these systems numerically.
 \end_layout
 
+\begin_layout Standard
+The constraint 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:detA constraint"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is enforced by rescaling the singular values of the distortion all by the
+ same factor at each time step, to ensure that 
+\begin_inset Formula $\det A=\frac{\rho}{\rho_{0}}$
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 The Homogeneous System
 \end_layout
@@ -2060,9 +2092,10 @@ The Homogeneous System
 \begin_layout Standard
 A WENO reconstruction of the cell-averaged data is performed at the start
  of the time step (as described in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:The-WENO-Reconstruction"
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_ader-weno_2013"
+literal "true"
 
 \end_inset
 
@@ -2106,9 +2139,10 @@ reference "subsec:The-WENO-Reconstruction"
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\frac{\boldsymbol{w_{p}^{n+\frac{1}{2}}}-\boldsymbol{w_{p}^{n}}}{\Delta t/2}+\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)+\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)=\boldsymbol{0}
-\end{equation}
+\begin{align}
+\frac{\boldsymbol{w_{p}^{n+\frac{1}{2}}}-\boldsymbol{w_{p}^{n}}}{\Delta t/2}= & -\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\\
+ & -\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)\nonumber 
+\end{align}
 
 \end_inset
 
@@ -2122,7 +2156,10 @@ i.e.
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\boldsymbol{w_{p}^{n+\frac{1}{2}}}=\boldsymbol{w_{p}^{n}}-\frac{\Delta t}{2\Delta x}\left(\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)+\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)\right)\label{eq:WENO half step}
+\boldsymbol{w_{p}^{n+\frac{1}{2}}}=\boldsymbol{w_{p}^{n}}-\frac{\Delta t}{2\Delta x}\left(\begin{array}{c}
+\boldsymbol{F}\left(\boldsymbol{w_{k}^{n}}\right)\cdot\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\\
++\boldsymbol{B}\left(\boldsymbol{w_{p}^{n}}\right)\cdot\left(\boldsymbol{w_{k}^{n}}\nabla\Psi_{k}\left(\boldsymbol{\chi_{p}}\right)\right)
+\end{array}\right)\label{eq:WENO half step}
 \end{equation}
 
 \end_inset
@@ -2318,9 +2355,10 @@ where
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}},\boldsymbol{Q^{+}}\right)=\frac{1}{2}\left(\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{+}}\right)+\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{-}}\right)+\tilde{B}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)+\tilde{M}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)
-\end{equation}
+\begin{align}
+\boldsymbol{\mathcal{D}}\left(\boldsymbol{Q^{-}},\boldsymbol{Q^{+}}\right) & =\frac{1}{2}\left(\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{+}}\right)+\boldsymbol{\hat{F}}\left(\boldsymbol{Q^{-}}\right)\right)\\
+ & +\frac{1}{2}\left(\tilde{B}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)+\tilde{M}\left(\boldsymbol{Q^{+}}-\boldsymbol{Q^{-}}\right)\right)\nonumber 
+\end{align}
 
 \end_inset
 
@@ -2346,6 +2384,26 @@ literal "true"
 \begin_inset Formula 
 \begin{equation}
 \tilde{M}=\max\left(\max\left|\hat{\Lambda}\left(\boldsymbol{Q^{+}}\right)\right|,\max\left|\hat{\Lambda}\left(\boldsymbol{Q^{-}}\right)\right|\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or a Roe flux (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_simple_2011"
+literal "true"
+
+\end_inset
+
+):
+\begin_inset Formula 
+\begin{equation}
+\hat{M}=\left|\int_{0}^{1}M\left(\boldsymbol{\boldsymbol{q^{-}}}+z\left(\boldsymbol{q^{+}}-\boldsymbol{q^{-}}\right)\right)dz\right|
 \end{equation}
 
 \end_inset
@@ -2711,7 +2769,17 @@ Therefore:
 \end_layout
 
 \begin_layout Standard
-It is a common result (see 
+It is a common result that
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+This does not necessitate the 
+\begin_inset Formula $U,V$
+\end_inset
+
+ are constant.
+ See section 3.2 of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "giles_extended_2008"
@@ -2719,7 +2787,12 @@ literal "true"
 
 \end_inset
 
-) that:
+ for a full derivation.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2790,13 +2863,30 @@ Denote the singular values of
 \end_layout
 
 \begin_layout Standard
+
+\size small
 \begin_inset Formula 
 \begin{equation}
 \Sigma\dev\left(\Sigma^{2}\right)=\left(\begin{array}{ccc}
-a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right) & 0 & 0\\
-0 & a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right) & 0\\
-0 & 0 & a_{1}\left(a_{1}^{2}-\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}\right)
+a_{1}\left(a_{1}^{2}-\hat{a}\right) & 0 & 0\\
+0 & a_{2}\left(a_{2}^{2}-\hat{a}\right) & 0\\
+0 & 0 & a_{3}\left(a_{3}^{2}-\hat{a}\right)
 \end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{a}=\frac{a_{1}^{2}+a_{2}^{2}+a_{3}^{2}}{3}
 \end{equation}
 
 \end_inset
@@ -3418,7 +3508,10 @@ name "subsec:Analytical-Approximation"
 We now explore cases when even the reduced ODE system 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:2odes"
+reference "eq:StretchODESystem"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -3616,8 +3709,56 @@ This is a Sturm-Liouville equation with solution:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\eta\left(\tau\right)=\frac{e^{-9\tau}}{3}\left(\left(9m_{0}-u_{0}-9\right)e^{3\tau}-\left(6m_{0}-u_{0}-6\right)\right)
+\eta\left(\tau\right)=\frac{e^{-9\tau}}{3}\left(ae^{3\tau}-b\right)
 \end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+a & =9m_{0}-u_{0}-9\\
+b & =6m_{0}-u_{0}-6
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
 
 \end_inset
 
@@ -3631,7 +3772,7 @@ Thus, we also have:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-u\left(\tau\right)=e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left(18m_{0}-3u_{0}-18\right)\right)
+u\left(\tau\right)=e^{-9\tau}\left(2ae^{3\tau}-3b\right)
 \end{equation}
 
 \end_inset
@@ -3640,15 +3781,55 @@ u\left(\tau\right)=e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left
 \end_layout
 
 \begin_layout Standard
-Once 
-\begin_inset Formula $m_{\Delta t}=1+\eta\left(\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\Delta t\right)$
+Denote the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
 \end_inset
 
- and 
-\begin_inset Formula $u_{\Delta t}=u\left(\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\Delta t\right)$
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+m_{\Delta t} & =1+\eta\left(\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\Delta t\right)\\
+u_{\Delta t} & =u\left(\frac{2}{\tau_{1}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{7}{3}}\Delta t\right)
+\end{align}
+
 \end_inset
 
- have been found, we have:
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Once these have been found, we have:
 \end_layout
 
 \begin_layout Standard
@@ -3719,7 +3900,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-x_{i} & =\frac{\sqrt[3]{6\left(\sqrt{81\Delta^{2}-6u_{\Delta t}^{3}}+9\Delta\right)}}{6}+\frac{u_{\Delta t}}{\sqrt[3]{6\left(\sqrt{81\Delta^{2}-6u_{\Delta t}^{3}}+9\Delta\right)}}+m_{\Delta t}\\
+x_{i} & =\frac{\Xi}{6}+\frac{u_{\Delta t}}{\Xi}+m_{\Delta t}\\
 x_{j} & =\frac{1}{2}\left(\sqrt{\frac{x_{i}\left(3m_{\Delta t}-x_{i}\right)^{2}-4}{x_{i}}}+3m_{\Delta t}-x_{i}\right)\label{eq:xj}\\
 x_{k} & =\frac{1}{x_{i}x_{j}}\label{eq:xk}
 \end{align}
@@ -3750,10 +3931,43 @@ where
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\Delta=-2m_{\Delta t}^{3}+m_{\Delta t}u_{\Delta t}+2
-\end{equation}
+\begin{align}
+\Xi & =\sqrt[3]{6\left(\sqrt{81\Delta^{2}-6u_{\Delta t}^{3}}+9\Delta\right)}\\
+\Delta & =-2m_{\Delta t}^{3}+m_{\Delta t}u_{\Delta t}+2
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
 
 \end_inset
 
@@ -3840,12 +4054,15 @@ The stress-strain relationships for various kinds of fluids are shown in
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:rheology"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
 .
- Dilatants and pseudoplastics may be modelled using the following power
- law, with 
+ Dilatants and pseudoplastics may be modeled using the following power law,
+ with 
 \begin_inset Formula $n>1$
 \end_inset
 
@@ -3853,7 +4070,15 @@ reference "fig:rheology"
 \begin_inset Formula $0<n<1$
 \end_inset
 
-, respectively:
+, respectively (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "sverdrup_highly_2018"
+literal "false"
+
+\end_inset
+
+):
 \end_layout
 
 \begin_layout Standard
@@ -4017,7 +4242,7 @@ Combining these two relationships, we obtain:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\coloneqq\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}
+\tau_{1}=\frac{6K^{\frac{1}{n}}}{\rho_{0}c_{s}^{2}}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\coloneqq\tau_{0}\left|\frac{1}{\boldsymbol{\sigma}}\right|^{\frac{1-n}{n}}\label{eq:τ-power-law}
 \end{equation}
 
 \end_inset
@@ -4061,11 +4286,21 @@ Thus:
 \end_layout
 
 \begin_layout Standard
-Letting 
+Thus, according to 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:τ-power-law"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and letting 
 \begin_inset Formula $k=\frac{1-n}{n}$
 \end_inset
 
-:
+, we have:
 \end_layout
 
 \begin_layout Standard
@@ -4130,9 +4365,8 @@ Note that:
 \begin_inset Formula 
 \begin{align}
 9\left\Vert X\dev\left(X\right)\right\Vert _{F}^{2} & =4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\\
- & +2\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\nonumber \\
  & -2\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
- & -4\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber 
+ & +\sum_{i\neq j,j\neq k,k\neq i}x_{i}^{2}x_{j}x_{k}-4\sum_{i\neq j}x_{i}^{3}x_{j}\nonumber 
 \end{align}
 
 \end_inset
@@ -4182,8 +4416,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{du}{d\tilde{t}} & =-18\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{k}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
-\frac{dm}{d\tilde{t}} & =-\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{k}{2}}u
+\frac{du}{d\tilde{t}} & =-18\frac{d\tau}{d\tilde{t}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tilde{t}} & =-\frac{d\tau}{d\tilde{t}}u
 \end{align}
 
 \end_inset
@@ -4208,7 +4442,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Define the the variable 
+where we have defined the variable 
 \begin_inset Formula $\tau$
 \end_inset
 
@@ -4218,12 +4452,16 @@ Define the the variable
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}
+\frac{d\tau}{d\tilde{t}}=\left(\frac{1}{2}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{k}{2}}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Using the approximation solution from before:
 \end_layout
 
 \begin_layout Standard
@@ -4276,14 +4514,18 @@ It is straightforward to verify that:
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{k}{2}}}\left(\begin{array}{c}
-108ae^{-6\tau}-324be^{-9\tau}+180a^{2}e^{-12\tau}\\
--612abe^{-15\tau}+459b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
-+\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
--24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
-\end{array}\right)^{\frac{k}{2}}\equiv\frac{f\left(\tau\right)^{\frac{k}{2}}}{54^{\frac{k}{2}}}
-\end{equation}
+\begin{align}
+\frac{d\tau}{d\tilde{t}} & =\frac{1}{54^{\frac{k}{2}}}\left(\begin{array}{c}
+108ae^{-6\tau}-324be^{-9\tau}\\
++180a^{2}e^{-12\tau}-612abe^{-15\tau}\\
++459b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
++\left(48ab^{2}-4a^{4}\right)e^{-24\tau}\\
++\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
+-24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}\\
+-4b^{4}e^{-36\tau}
+\end{array}\right)^{\frac{k}{2}}\\
+ & \equiv\frac{f\left(\tau\right)^{\frac{k}{2}}}{54^{\frac{k}{2}}}\nonumber 
+\end{align}
 
 \end_inset
 
@@ -4295,7 +4537,7 @@ It is straightforward to verify that:
 \end_inset
 
  is approximated by 
-\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\lambda\tau}$
+\begin_inset Formula $g\left(\tau\right)\equiv ce^{-\frac{c}{\lambda}\tau}$
 \end_inset
 
 , where:
@@ -4318,12 +4560,13 @@ begin{subequations}
 \end_layout
 
 \begin_layout Standard
-
-\size footnotesize
 \begin_inset Formula 
 \begin{align}
-c & =108a-324b+180a^{2}-612ab+459b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
-\lambda & =\frac{c}{18a-36b+15a^{2}-\frac{204ab}{5}+\frac{51b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
+c & =108a-324b+180a^{2}-612ab+459b^{2}\\
+ & -24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\nonumber \\
+\lambda & =18a-36b+15a^{2}-\frac{204ab}{5}+\frac{51b^{2}}{2}\\
+ & -\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}\nonumber \\
+ & -\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}\nonumber 
 \end{align}
 
 \end_inset
@@ -4363,7 +4606,7 @@ Note that
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{k}{2}}e^{-\frac{k\lambda}{2}\tau}
+\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{k}{2}}e^{-\frac{kc}{2\lambda}\tau}
 \end{equation}
 
 \end_inset
@@ -4378,8 +4621,8 @@ Therefore:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\tau & \approx\frac{2}{k\lambda}\log\left(\frac{k\lambda}{2}\left(\frac{c}{54}\right)^{\frac{k}{2}}\tilde{t}+1\right)\\
- & =\frac{2}{k\lambda}\log\left(\frac{k\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4k+7}{3}}\left(\frac{\sqrt{c}\rho c_{s}^{2}}{6\sqrt{3}}\right)^{k}t+1\right)\nonumber 
+\tau & \approx\frac{2\lambda}{kc}\log\left(\frac{kc}{2\lambda}\left(\frac{c}{54}\right)^{\frac{k}{2}}\tilde{t}+1\right)\\
+ & =\frac{2\lambda}{kc}\log\left(\frac{kc}{\tau_{0}\lambda}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4k+7}{3}}\left(\frac{\sqrt{c}\rho c_{s}^{2}}{6\sqrt{3}}\right)^{k}t+1\right)\nonumber 
 \end{align}
 
 \end_inset
@@ -4450,9 +4693,9 @@ Note that:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{27}{2}\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2} & =3\left(x_{2}x_{3}x_{1}^{2}+x_{2}x_{3}^{2}x_{1}+x_{2}^{2}x_{3}x_{1}\right)\\
+\frac{27}{2}\left\Vert \dev\left(X\dev\left(X\right)\right)\right\Vert _{F}^{2} & =\frac{3}{2}\sum_{i\neq j,j\neq k,k\neq i}x_{i}^{2}x_{j}x_{k}\\
+ & -2\sum_{i\neq j}x_{i}^{3}x_{j}\nonumber \\
  & -3\left(x_{1}^{2}x_{2}^{2}+x_{3}^{2}x_{2}^{2}+x_{1}^{2}x_{3}^{2}\right)\nonumber \\
- & -2\left(x_{2}x_{1}^{3}+x_{3}x_{1}^{3}+x_{2}^{3}x_{1}+x_{3}^{3}x_{1}+x_{2}x_{3}^{3}+x_{2}^{3}x_{3}\right)\nonumber \\
  & +4\left(x_{1}^{4}+x_{2}^{4}+x_{3}^{4}\right)\nonumber 
 \end{align}
 
@@ -4499,8 +4742,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\frac{du}{d\tilde{t}} & =-18\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
-\frac{dm}{d\tilde{t}} & =-\left(\frac{1}{6}u^{2}+4m^{2}u-6m^{4}+6m\right)^{\frac{n}{2}}u
+\frac{du}{d\tilde{t}} & =-18\frac{d\tau}{d\tilde{t}}\left(1-m\left(m^{2}-\frac{5}{6}u\right)\right)\\
+\frac{dm}{d\tilde{t}} & =-\frac{d\tau}{d\tilde{t}}u
 \end{align}
 
 \end_inset
@@ -4525,7 +4768,7 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Define the the variable 
+where we have defined the variable 
 \begin_inset Formula $\tau$
 \end_inset
 
@@ -4592,75 +4835,43 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Using the approximate solution from before:
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{subequations}
-\end_layout
+Using the approximate solution 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:m(τ)-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:u(τ)-1"
+plural "false"
+caps "false"
+noprefix "false"
 
+\end_inset
+
+ again, it is straightforward to verify that:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-m\left(\tau\right) & =1+\frac{e^{-9\tau}}{3}\left(\left(9m_{0}-u_{0}-9\right)e^{3\tau}-\left(6m_{0}-u_{0}-6\right)\right)\label{eq:m(τ)}\\
-u\left(\tau\right) & =e^{-9\tau}\left(e^{3\tau}\left(18m_{0}-2u_{0}-18\right)-\left(18m_{0}-3u_{0}-18\right)\right)\label{eq:u(τ)}
+\frac{d\tau}{d\tilde{t}} & =\frac{1}{54^{\frac{n}{2}}}\left(\begin{array}{c}
+108ae^{-6\tau}-324be^{-9\tau}\\
++108a^{2}e^{-12\tau}-396abe^{-15\tau}\\
++297b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
++\left(48ab^{2}-4a^{4}\right)e^{-24\tau}\\
++\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
+-24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}\\
+-4b^{4}e^{-36\tau}
+\end{array}\right)^{\frac{n}{2}}\\
+ & \equiv\frac{f\left(\tau\right)^{\frac{n}{2}}}{54^{\frac{n}{2}}}\nonumber 
 \end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{subequations}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Denoting 
-\begin_inset Formula $a=9m_{0}-u_{0}-9$
-\end_inset
-
-, 
-\begin_inset Formula $b=6m_{0}-u_{0}-6$
-\end_inset
-
-, it is straightforward to verify that:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\frac{d\tau}{d\tilde{t}}=\frac{1}{54^{\frac{n}{2}}}\left(\begin{array}{c}
-108ae^{-6\tau}-324be^{-9\tau}+108a^{2}e^{-12\tau}\\
--396abe^{-15\tau}+297b^{2}e^{-18\tau}-24a^{2}be^{-21\tau}\\
-+\left(48ab^{2}-4a^{4}\right)e^{-24\tau}+\left(16a^{3}b-24b^{3}\right)e^{-27\tau}\\
--24a^{2}b^{2}e^{-30\tau}+16ab^{3}e^{-33\tau}-4b^{4}e^{-36\tau}
-\end{array}\right)^{\frac{n}{2}}\equiv\frac{f\left(\tau\right)^{\frac{n}{2}}}{54^{\frac{n}{2}}}
-\end{equation}
 
 \end_inset
 
@@ -4695,12 +4906,13 @@ begin{subequations}
 \end_layout
 
 \begin_layout Standard
-
-\size footnotesize
 \begin_inset Formula 
 \begin{align}
-c & =108a-324b+108a^{2}-396ab+297b^{2}-24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\\
-\lambda & =\frac{c}{18a-36b+9a^{2}-\frac{132ab}{5}+\frac{33b^{2}}{2}-\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}+\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}}
+c & =108a-324b+108a^{2}-396ab+297b^{2}\\
+ & -24\left(a^{2}b-2ab^{2}+b^{3}\right)-4\left(a-b\right)^{4}\nonumber \\
+\lambda & =18a-36b+9a^{2}-\frac{132ab}{5}+\frac{33b^{2}}{2}\\
+ & -\frac{8a^{2}b}{7}+2ab^{2}-\frac{8b^{3}}{9}-\frac{a^{4}}{6}\nonumber \\
+ & +\frac{16a^{3}b}{27}-\frac{4a^{2}b^{2}}{5}+\frac{16ab^{3}}{33}-\frac{b^{4}}{9}\nonumber 
 \end{align}
 
 \end_inset
@@ -4740,7 +4952,7 @@ Note that
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{n}{2}}e^{-\frac{n\lambda}{2}\tau}
+\frac{d\tau}{d\tilde{t}}\approx\left(\frac{c}{54}\right)^{\frac{n}{2}}e^{-\frac{nc}{2\lambda}\tau}
 \end{equation}
 
 \end_inset
@@ -4755,8 +4967,8 @@ Therefore:
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\tau & \approx\frac{2}{n\lambda}\log\left(\frac{n\lambda}{2}\left(\frac{c}{54}\right)^{\frac{n}{2}}\tilde{t}+1\right)\\
- & =\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t+1\right)\nonumber 
+\tau & \approx\frac{2\lambda}{nc}\log\left(\frac{nc}{2\lambda}\left(\frac{c}{54}\right)^{\frac{n}{2}}\tilde{t}+1\right)\\
+ & =\frac{2\lambda}{nc}\log\left(\frac{nc}{\tau_{0}\lambda}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}t+1\right)\nonumber 
 \end{align}
 
 \end_inset
@@ -4776,14 +4988,20 @@ Thus, the value of
  is found by substituting the following into 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:m(τ)"
+reference "eq:m(τ)-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:u(τ)"
+reference "eq:u(τ)-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -4793,7 +5011,7 @@ reference "eq:u(τ)"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\tau=\frac{2}{n\lambda}\log\left(\frac{n\lambda}{\tau_{0}}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)
+\tau=\frac{2\lambda}{nc}\log\left(\frac{nc}{\tau_{0}\lambda}\left(\frac{\rho}{\rho_{0}}\right)^{\frac{4n+7}{3}}\left(\frac{\sqrt{c}}{6}\frac{\rho c_{s}^{2}}{\sigma_{0}}\right)^{n}\Delta t+1\right)
 \end{equation}
 
 \end_inset
@@ -4842,7 +5060,7 @@ noprefix "false"
 \end_inset
 
 , the method presented will perform poorly if the mean of the normalized
- singular values of the distortion tensor, 
+ singular values of the distortion, 
 \begin_inset Formula $m$
 \end_inset
 
@@ -4904,8 +5122,8 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-This is justified by the fact that the distortion tensor is not a macroscopicall
-y-measurable quantity.
+This is justified by the fact that the distortion is not a macroscopically-measu
+rable quantity.
  This transformation leaves the density, pressure, and velocity of the fluid
  unchanged, and was found to improve the stability of the numerical scheme,
  while at the same time producing correct results, as demonstrated in the
@@ -8872,7 +9090,20 @@ Strain Relaxation Test
 \end_layout
 
 \begin_layout Standard
-Take initial data used by Barton:
+The aim of this test is to gauge the accuracy of the approximate analytic
+ solver for the distortion equations.
+\end_layout
+
+\begin_layout Standard
+Take initial data used by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "barton_eulerian_2010"
+literal "false"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -8896,7 +9127,12 @@ The following parameter values were used:
 \end_inset
 
 .
- As can be seen in 
+\end_layout
+
+\begin_layout Standard
+The evolution of the components of the distortion, according to both the
+ approximate analytical solver and a stiff numerical ODE solver, are given
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:Distortion-ODEs_A-plastic"
@@ -8917,8 +9153,9 @@ reference "fig:Distortion-ODEs_Ε-plastic"
 
 \end_inset
 
-, the approximate analytic solver compares well with the exact solution
- for the distortion tensor 
+.
+ As can be seen, the approximate analytic solver compares well with the
+ exact solution for the distortion, 
 \begin_inset Formula $A$
 \end_inset
 
@@ -8963,9 +9200,8 @@ name "fig:Distortion-ODEs_A-plastic"
 
 \end_inset
 
-Components of the distortion tensor during the Strain Relaxation Test: approxima
-te analytical solution (crosses) is compared with numerical ODE solution
- (solid line)
+Distortion components during the Strain Relaxation Test: approximate analytical
+ solution (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -9016,8 +9252,8 @@ name "fig:Distortion-ODEs_σ-plastic"
 
 \end_inset
 
-Stress tensor during the Strain Relaxation Test: approximate analytical
- solution (crosses) is compared with numerical ODE solution (solid line)
+Stress tensor components during the Strain Relaxation Test: approximate
+ analytical solution (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -9061,7 +9297,7 @@ name "fig:Distortion-ODEs_Ε-plastic"
 \end_inset
 
 Total energy during the Strain Relaxation Test: approximate analytical solution
- (crosses) is compared with numerical ODE solution (solid line)
+ (crosses) and numerical ODE solution (solid line)
 \end_layout
 
 \end_inset
@@ -9076,6 +9312,14 @@ Total energy during the Strain Relaxation Test: approximate analytical solution
 
 \begin_layout Subsubsection
 Poiseuille Flow
+\end_layout
+
+\begin_layout Standard
+The aim of this test is to gauge both the performance of the modified formulatio
+n of the GPR model in simulating power-law fluids, and the accuracy of the
+ new numerical scheme we have presented to solve it.
+ The problem of poiseuille flow has been chosen due to the availability
+ of an analytical solution against which to compare.
 \end_layout
 
 \begin_layout Standard
@@ -9192,11 +9436,16 @@ In this case,
 .
  The pressure gradient is imposed by means of a body force, implemented
  as a constant source term to the momentum equation.
- The final time was taken to be 
+\end_layout
+
+\begin_layout Standard
+The final time was taken to be 
 \begin_inset Formula $20$
 \end_inset
 
-, with 100 cells taken across the width of the channel.
+, so that in each case the system had reached steady state.
+ 100 cells were taken across the width of the channel.
+ A third order WENO method was used, with a CFL number of 0.6.
 \end_layout
 
 \begin_layout Standard
@@ -9217,6 +9466,12 @@ noprefix "false"
 .
  The exact solutions are shown as dotted lines, with the numerical solutions
  in solid colors.
+ Note that there is good agreement between the numerical solutions and exact
+ solutions for all values of 
+\begin_inset Formula $n$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -9276,7 +9531,10 @@ Lid-Driven Cavity
 \end_layout
 
 \begin_layout Standard
-As detailed in 
+This lid-driven cavity test has been chosen here as a famous multidimensional
+ problem against which the power-law fluid framework we have presented can
+ be benchmarked.
+ See 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sverdrup_highly_2018"
@@ -9284,22 +9542,27 @@ literal "false"
 
 \end_inset
 
-, this test consists of a square grid, with one side at a constant velocity
+ for detailed analysis of this problem, under power-law fluids and other
+ non-Newtonian fluids.
+\end_layout
+
+\begin_layout Standard
+The test consists of a square grid, with one side at a constant velocity
  of 
 \begin_inset Formula $1$
 \end_inset
 
 , and the other three stationary, with no-slip boundary conditions imposed.
- Here, the grid is chosen to have size 
-\begin_inset Formula $100\times100$
-\end_inset
-
-.
  The fluid obeys an ideal gas EOS with 
 \begin_inset Formula $\gamma=1.4$
 \end_inset
 
-, and a viscosity power law with 
+ and 
+\begin_inset Formula $c_{s}=1$
+\end_inset
+
+.
+ It obeys a viscosity power law with 
 \begin_inset Formula $K=10^{-2}$
 \end_inset
 
@@ -9308,12 +9571,7 @@ literal "false"
 \end_inset
 
 .
- We have 
-\begin_inset Formula $c_{s}=1$
-\end_inset
-
-.
- The fluid is initially at rest, with 
+ It is initially at rest, with 
 \begin_inset Formula $\rho=1$
 \end_inset
 
@@ -9326,6 +9584,15 @@ literal "false"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+The grid is chosen to have size 
+\begin_inset Formula $100\times100$
+\end_inset
+
+.
+ A third order WENO method is used, with a CFL number of 0.5.
 \end_layout
 
 \begin_layout Standard
@@ -9357,7 +9624,7 @@ noprefix "false"
 \end_inset
 
 , respectively.
- The results are compared with those of Bell 
+ The results are compared with those of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bell_p-version_1994"
@@ -9365,7 +9632,7 @@ literal "false"
 
 \end_inset
 
- and Neofytou 
+ and 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "neofytou_3rd_2005"
@@ -9374,12 +9641,26 @@ literal "false"
 \end_inset
 
 .
- As can be seen, there is good agreement between their results and those
- of the split solver; especially so for the case 
+ As can be seen, there is very good agreement for the case 
 \begin_inset Formula $n=1.5$
 \end_inset
 
+, with the split solver performing slightly less well for the case 
+\begin_inset Formula $n=0.5$
+\end_inset
+
 .
+ The 2D streamline plots found in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:lid-driven-cavity-2d"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ take the characteristic forms found in the aforementioned literature.
 \end_layout
 
 \begin_layout Standard
@@ -9419,7 +9700,7 @@ name "fig:lid-driven-cavity-n=1.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test under the new formulation
+Velocity profiles for the Lid-Driven Cavity Test under our new formulation
  (solid line), for a dilatant with n=1.5.
  Slices are taken through the center of the domain, in both axes, and compared
  with those of 
@@ -9488,7 +9769,7 @@ name "fig:lid-driven-cavity-n=0.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test under the new formulation
+Velocity profiles for the Lid-Driven Cavity Test under our new formulation
  (solid line), for a pseudoplastic with n=0.5.
  Slices are taken through the center of the domain, in both axes, and compared
  with those of 
@@ -9577,7 +9858,9 @@ Elastoplastic Piston
 \end_layout
 
 \begin_layout Standard
-This test is taken from 
+We now demonstrate the ability of our new numerical scheme to deal with
+ problems involving elastoplastic materials.
+ This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_theoretical_2018"
@@ -9594,7 +9877,10 @@ literal "false"
 \end_inset
 
 .
- In this test, a piston with speed 
+\end_layout
+
+\begin_layout Standard
+In this test, a piston with speed 
 \begin_inset Formula $20ms^{-1}$
 \end_inset
 
@@ -9610,8 +9896,8 @@ literal "false"
 \end_inset
 
 .
- 400 grid cells were used, with a third order WENO method.
- 
+ 400 grid cells were used, with a third order WENO method, and a CFL number
+ of 0.7.
 \end_layout
 
 \begin_layout Standard
@@ -9642,11 +9928,11 @@ noprefix "false"
 \end_inset
 
 ).
- The nature of the split solver enables larger values of 
+ The split solver is able to cope with larger values of 
 \begin_inset Formula $n$
 \end_inset
 
- to be used than those found in 
+ than those that have been presented in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_theoretical_2018"
@@ -9656,7 +9942,7 @@ literal "true"
 
 .
  The results here are correspondingly closer to the ideal plasticity solution
- that they approximate.
+ that they approximate, than those found in the aforementioned paper.
 \end_layout
 
 \begin_layout Standard
@@ -9776,6 +10062,11 @@ Cylindrical Shock
 \end_layout
 
 \begin_layout Standard
+The purpose of this test is to demonstrate the efficacy of the split solver
+ in multidimensional elastoplastic problems.
+\end_layout
+
+\begin_layout Standard
 This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -9811,11 +10102,11 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-The simulation is run to 
+The simulation is run to time 
 \begin_inset Formula $t=10^{-5}$
 \end_inset
 
- on a grid of shape 
+, on a grid of shape 
 \begin_inset Formula $500\times500$
 \end_inset
 
@@ -9832,7 +10123,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:cylindrical-shock-v"
@@ -9842,7 +10133,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:cylindrical-shock-Σ"
@@ -9852,7 +10143,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:cylindrical-shock-T"
@@ -9898,6 +10189,11 @@ literal "true"
 \end_inset
 
  being more accurately resolved.
+ Additionally, the temperature jump around 
+\begin_inset Formula $r=2$
+\end_inset
+
+ is more sharply resolved.
 \end_layout
 
 \begin_layout Standard
@@ -9939,7 +10235,7 @@ name "fig:cylindrical-shock-ρ"
 \end_inset
 
 1D density profiles for the 2D Cylindrical Shock Test, comparing the GPR
- model w/ split solver (left) with the results from 
+ model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -9999,7 +10295,7 @@ name "fig:cylindrical-shock-v"
 \end_inset
 
 1D velocity profiles for the 2D Cylindrical Shock Test, comparing the GPR
- model w/ split solver (left) with the results from 
+ model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -10059,7 +10355,7 @@ name "fig:cylindrical-shock-Σ"
 \end_inset
 
 1D stress tensor profiles for the 2D Cylindrical Shock Test, comparing the
- GPR model w/ split solver (left) with the results from 
+ GPR model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -10119,7 +10415,7 @@ name "fig:cylindrical-shock-T"
 \end_inset
 
 1D temperature profiles for the 2D Cylindrical Shock Test, comparing the
- GPR model w/ split solver (left) with the results from 
+ GPR model with split solver (left) to the results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -10193,6 +10489,10 @@ name "fig:cylindrical-shock-2"
 
 \begin_layout Section
 Conclusions
+\end_layout
+
+\begin_layout Subsection
+Newtonian Fluids & Elastic Solids
 \end_layout
 
 \begin_layout Standard
@@ -10309,6 +10609,243 @@ It should be noted that both the ADER-WENO and Split-WENO methods, as described
  The computational cost of each time step is significantly smaller than
  with the ADER-WENO method, and the number of grid cells that can be used
  scales roughly linearly with number of cores, at constant time per iteration.
+\end_layout
+
+\begin_layout Subsection
+Non-Newtonian Fluids & Elastoplastic Solids
+\end_layout
+
+\begin_layout Standard
+In summary, a formulation for modeling power-law dilatants and pseudoplastics
+ under the GPR model has been presented.
+ A new numerical method - based on an operator splitting, combined with
+ some analytical results - has also been presented for solving this version
+ of the GPR model, and this numerical method has been applied also to the
+ case of elastoplastic solids under a power-law plasticity model.
+ It has been demonstrated through numerical simulation that the modified
+ GPR formulation is able to accurately describe the evolution of non-Newtonian
+ fluids, and the new numerical scheme has been shown to be an effective
+ method by which to solve this system, and the existing corresponding system
+ for elastoplastic solids.
+\end_layout
+
+\begin_layout Standard
+Under circumstances in which the flow is compressed heavily in one direction
+ relative to the other directions, it should be noted that the linearization
+ assumption 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Assumption"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ used to derive the approximate analytical solver may break down.
+ As discussed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+, this is due to the fact that one of the singular values of the distortion
+ will be much larger than the others, and the mean of the squares of the
+ singular values will be distant to the geometric mean.
+ The subsequent linearization of the ODE governing the mean of the singular
+ values will then fail.
+ It should be noted that none of the situations covered in this study presented
+ problems for the approximate analytical solver, and situations which may
+ be problematic are in some sense unusual.
+ In any case, a stiff ODE solver can be used to solve the systems 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:DistortionODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ThermalODE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ if necessary, and so this method is still very much usable in these situations,
+ albeit slightly slower.
+\end_layout
+
+\begin_layout Standard
+It may be that it is possible to find a more efficient (yet still sufficiently
+ accurate) numerical method to solve 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:HomogeneousSubsystem"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ than the WENO method that was used in this study.
+ This method was chosen due to its well-known performance characteristics
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "balsara_efficient_2009,dumbser_ader-weno_2013,jiang_efficient_1996"
+literal "false"
+
+\end_inset
+
+), but the authors are aware that further performance gains may be possible,
+ and this is an area of further investigation.
+\end_layout
+
+\begin_layout Standard
+As detailed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "leveque_study_1990"
+literal "false"
+
+\end_inset
+
+, solvers based on a temporal splitting suffer from a lack of spatial resolution
+ in evaluating the source terms.
+ Thus, it should be noted that the operator splitting method presented here
+ may suffer from the incorrect speed of propagation of discontinuities on
+ regular, structured grids.
+ This issue can be rectified, however, by the use of some form of shock
+ tracking or mesh refinement, as noted in the cited paper.
+ The effect on the propagation speeds of discontinuities can be more evident
+ if the underlying temporal ODEs have non-zero equilibrium states.
+ Noting that the singular values of the distortion cannot be 
+\begin_inset Formula $0$
+\end_inset
+
+ (as this would imply zero density), we have, by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:StretchODESystem"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, that at equilibrium the scaled squares of the singular values obey the
+ follow relations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+x_{1}-\frac{x_{1}+x_{2}+x_{3}}{3} & =0\\
+x_{2}-\frac{x_{1}+x_{2}+x_{3}}{3} & =0\\
+x_{3}-\frac{x_{1}+x_{2}+x_{3}}{3} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The set of solutions to this system is 
+\begin_inset Formula $x_{1}=x_{2}=x_{3}$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $x_{1}x_{2}x_{3}=1$
+\end_inset
+
+ for all time (due to the constraint 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:detA constraint"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), we have that the only equilibrium solution of the ODE system is 
+\begin_inset Formula $x_{1},x_{2},x_{3}=1$
+\end_inset
+
+.
+ Given any initial values for 
+\begin_inset Formula $x_{1},x_{2},x_{3}$
+\end_inset
+
+, the system tends towards this state.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_finite_2008"
+literal "false"
+
+\end_inset
+
+ note that operator splitting-based methods can result in schemes that are
+ neither well-balanced, nor asymptotically consistent.
+ The extent to which these two conditions are violated by this method –
+ and the severity in practice of any potential violation – is a topic of
+ further research.
+ 
+\end_layout
+
+\begin_layout Standard
+It should be noted that the new numerical scheme presented in this study
+ is trivially parallelizable on a cell-wise basis.
+ Thus, given a large number of computational cores, deficiencies in this
+ method in terms of its order of accuracy may be overcome by utilizing a
+ larger number of computational cells and cores.
+ The number of grid cells that can be used scales roughly linearly with
+ number of cores, at constant time per iteration.
 \end_layout
 
 \begin_layout Standard

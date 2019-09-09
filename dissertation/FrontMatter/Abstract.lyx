@@ -84,6 +84,25 @@
 \begin_body
 
 \begin_layout abstract
+A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
+ by a power law under the Godunov-Peshkov-Romenski model is presented, along
+ with a new numerical scheme for solving this system.
+ The scheme is also modified to solve the corresponding system for power-law
+ elastoplastic solids.
+\end_layout
+
+\begin_layout abstract
+The scheme is based on a temporal operator splitting, with the homogeneous
+ system solved using a finite volume method based on a WENO reconstruction,
+ and the temporal ODEs solved using an analytical approximate solution.
+ The method is found to perform favorably against problems with known exact
+ solutions, and numerical solutions published in the open literature.
+ It is simple to implement, and to the best of the authors' knowledge it
+ is currently the only method for solving this modified version of the GPR
+ model.
+\end_layout
+
+\begin_layout abstract
 A framework for simulating the interactions between multiple different continua
  is presented.
  Each constituent material is governed by the same set of equations, differing
@@ -115,7 +134,7 @@ The resulting framework is simple, yet capable of accurately reproducing
  the interfaces between materials.
 \end_layout
 
-\begin_layout Standard
+\begin_layout abstract
 \begin_inset Branch ChildOnly
 inverted 0
 status open

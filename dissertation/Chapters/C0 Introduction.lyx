@@ -113,6 +113,125 @@ Background
 The Problem at Hand
 \end_layout
 
+\begin_layout Standard
+The Godunov-Pehskov-Romenski (GPR) model of continuum mechanics (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_hyperbolic_2016"
+literal "true"
+
+\end_inset
+
+) has been purported to represent an alternative formulation to describe
+ both fluids and solids within the same hyperbolic system of differential
+ equations.
+ From a practical perspective, the potential ramifications of this include:
+ the simplification of software made for the simulation of phenomena involving
+ different states of matter (as commented on in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+); and the use of the vast array of effective numerical solvers designed
+ for first-order hyperbolic systems.
+ From a theoretical perspective, an advantage of the GPR model is that it
+ cannot produce waves of infinite speed, unlike the parabolic Navier-Stokes
+ equations.
+ Additionally, the first-principles derivation of the mechanism by which
+ viscous effects appear under the GPR model has been commented to be more
+ appropriate than the more phenomenological viscous law appearing in the
+ traditional Navier-Stokes formulation (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "peshkov_unified_2017"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Thus far, the GPR model has been solved for a wide array of different fluids
+ (inviscid and viscous Newtonian) and solids (elastic and elastoplastic)
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_high_2015,boscheri_cell_2016,peshkov_theoretical_2018,peshkov_unified_2017"
+literal "false"
+
+\end_inset
+
+).
+ It has also been extended to incorporate the effects of electrodynamics
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_high_2016"
+literal "false"
+
+\end_inset
+
+) and general relativity (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "peshkov_general_2018"
+literal "false"
+
+\end_inset
+
+).
+ To the best of our knowledge, it is yet to be formally extended to include
+ non-Newtonian power-law fluids, however.
+ A method for doing so is presented in this paper.
+ Building upon the work of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "jackson_fast_2017"
+literal "false"
+
+\end_inset
+
+ (in which a numerical scheme based upon a split solver was presented for
+ Newtonian fluids and elastic solids under the GPR model) a numerical scheme
+ is then presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Schemes"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for solving this new model.
+ This scheme is adapted to work also for elastoplastic power-law materials.
+ The scheme is validated against several 1D and 2D tests in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, with discussion presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Conclusions"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 Review of Current Solutions
 \end_layout
@@ -1054,6 +1173,25 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $\left\Vert \cdot\right\Vert _{F}$
+\end_inset
+
+ is the Frobenius norm
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The Frobenius norm is defined by: 
+\begin_inset Formula $\left\Vert X\right\Vert _{F}=\sqrt{\sum_{i,j}\left|X_{ij}\right|^{2}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ 
 \begin_inset Formula $c_{s}$
 \end_inset
 
@@ -1079,7 +1217,30 @@ reference "sec:Equations-of-State"
 \begin_inset Formula $c_{t}$
 \end_inset
 
- is related to the characteristic velocity of propagation of heat waves:
+ is related to the characteristic velocity of propagation of heat waves
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Note that 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015"
+literal "false"
+
+\end_inset
+
+ denotes this variable by 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, which is avoided here due to a clash with a parameter of one of the equations
+ of state used.
+\end_layout
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
