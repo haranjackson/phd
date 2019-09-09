@@ -441,6 +441,106 @@ Thus, the GPR system can be written in the following form:
 \end_layout
 
 \begin_layout Standard
+Defining the following variables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\tilde{\aleph}_{ij} & =-\frac{\partial\sigma_{ij}}{\partial\rho}\\
+\tilde{\Omega}_{ij} & =\rho\sigma_{ij}+\rho^{2}\tilde{\aleph}_{ij}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we have 
+\begin_inset Formula $\mathbf{M}$
+\end_inset
+
+ taking the form given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M3"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and 
+\begin_inset Formula $\mathbf{P,S_{P}}$
+\end_inset
+
+ taking the forms given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Pvec"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement p
 wide true
@@ -452,26 +552,114 @@ status open
 \noindent
 \begin_inset Formula 
 \begin{equation}
-M_{1}=\left(\begin{array}{cccccccccccccccccc}
-v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & \frac{\rho c_{h}^{2}}{T_{p}} & 0 & 0 & 0\\
-0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{11} & A_{12} & A_{13} & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & A_{21} & A_{22} & A_{23} & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & A_{31} & A_{32} & A_{33} & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
--\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial\rho} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{33}} & v_{1} & 0 & 0 & 0 & 0 & 0 & 0\\
--\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{33}} & 0 & v_{1} & 0 & 0 & 0 & 0 & 0\\
--\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{12}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{22}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{32}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{13}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{23}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{33}} & 0 & 0 & v_{1} & 0 & 0 & 0 & 0\\
-\frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0 & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1} & 0\\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & v_{1}
+M_{1}=v_{1}I+\frac{1}{\rho}\left(\begin{array}{cccccccccccccccccc}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho^{2} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tilde{\Omega}_{11}+\rho^{2}c_{0}^{2} & \tilde{\Omega}_{21} & \tilde{\Omega}_{31} & \frac{\rho^{2}c_{h}^{2}}{T_{p}} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{11} & \rho A_{12} & \rho A_{13} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{21} & \rho A_{22} & \rho A_{23} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{31} & \rho A_{32} & \rho A_{33} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{11} & 1 & \aleph_{11}^{11} & \aleph_{21}^{11} & \aleph_{31}^{11} & \aleph_{12}^{11} & \aleph_{22}^{11} & \aleph_{32}^{11} & \aleph_{13}^{11} & \aleph_{23}^{11} & \aleph_{33}^{11} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{12} & 0 & \aleph_{11}^{12} & \aleph_{21}^{12} & \aleph_{31}^{12} & \aleph_{12}^{12} & \aleph_{22}^{12} & \aleph_{32}^{12} & \aleph_{13}^{12} & \aleph_{23}^{12} & \aleph_{33}^{12} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{13} & 0 & \aleph_{11}^{13} & \aleph_{21}^{13} & \aleph_{31}^{13} & \aleph_{12}^{13} & \aleph_{22}^{13} & \aleph_{32}^{13} & \aleph_{13}^{13} & \aleph_{23}^{13} & \aleph_{33}^{13} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+T_{\rho} & T_{p} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
 \end{array}\right)\label{eq:M1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\begin{equation}
+M_{2}=v_{2}I+\frac{1}{\rho}\left(\begin{array}{cccccccccccccccccc}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho^{2} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tilde{\Omega}_{12} & \tilde{\Omega}_{22}+\rho^{2}c_{0}^{2} & \tilde{\Omega}_{32} & 0 & \frac{\rho^{2}c_{h}^{2}}{T_{p}} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{11} & \rho A_{12} & \rho A_{13} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{21} & \rho A_{22} & \rho A_{23} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{31} & \rho A_{32} & \rho A_{33} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{21} & 1 & \aleph_{11}^{21} & \aleph_{21}^{21} & \aleph_{31}^{21} & \aleph_{12}^{21} & \aleph_{22}^{21} & \aleph_{32}^{21} & \aleph_{13}^{21} & \aleph_{23}^{21} & \aleph_{33}^{21} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{22} & 0 & \aleph_{11}^{22} & \aleph_{21}^{22} & \aleph_{31}^{22} & \aleph_{12}^{22} & \aleph_{22}^{22} & \aleph_{32}^{22} & \aleph_{13}^{22} & \aleph_{23}^{22} & \aleph_{33}^{22} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{23} & 0 & \aleph_{11}^{23} & \aleph_{21}^{23} & \aleph_{31}^{23} & \aleph_{12}^{23} & \aleph_{22}^{23} & \aleph_{32}^{23} & \aleph_{13}^{23} & \aleph_{23}^{23} & \aleph_{33}^{23} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+T_{\rho} & T_{p} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}\right)\label{eq:M2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide true
+sideways true
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\begin{equation}
+M_{3}=v_{3}I+\frac{1}{\rho}\left(\begin{array}{cccccccccccccccccc}
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho^{2} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \tilde{\Omega}_{13} & \tilde{\Omega}_{23} & \tilde{\Omega}_{33}+\rho^{2}c_{0}^{2} & 0 & 0 & \frac{\rho^{2}c_{h}^{2}}{T_{p}} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{11} & \rho A_{12} & \rho A_{13} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{21} & \rho A_{22} & \rho A_{23} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho A_{31} & \rho A_{32} & \rho A_{33} & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{31} & 1 & \aleph_{11}^{31} & \aleph_{21}^{31} & \aleph_{31}^{31} & \aleph_{12}^{31} & \aleph_{22}^{31} & \aleph_{32}^{31} & \aleph_{13}^{31} & \aleph_{23}^{31} & \aleph_{33}^{31} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{32} & 0 & \aleph_{11}^{32} & \aleph_{21}^{32} & \aleph_{31}^{32} & \aleph_{12}^{32} & \aleph_{22}^{32} & \aleph_{32}^{32} & \aleph_{13}^{32} & \aleph_{23}^{32} & \aleph_{33}^{32} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\tilde{\aleph}_{33} & 0 & \aleph_{11}^{33} & \aleph_{21}^{33} & \aleph_{31}^{33} & \aleph_{12}^{33} & \aleph_{22}^{33} & \aleph_{32}^{33} & \aleph_{13}^{33} & \aleph_{23}^{33} & \aleph_{33}^{33} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+T_{\rho} & T_{p} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+\end{array}\right)\label{eq:M3}
 \end{equation}
 
 \end_inset
@@ -489,8 +677,8 @@ v_{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \rho & 0 & 0 & 0 & 0 & 0 & 0\\
 \size scriptsize
 \begin_inset Float figure
 placement p
-wide true
-sideways false
+wide false
+sideways true
 status open
 
 \begin_layout Plain Layout
@@ -514,40 +702,18 @@ v_{3}\\
 J_{1}\\
 J_{2}\\
 J_{3}
-\end{array}\right)\label{eq:Pvec}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Float figure
-placement ph
-wide true
-sideways false
-status open
-
-\begin_layout Plain Layout
-\paragraph_spacing double
-\noindent
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{S_{p}}=\frac{1}{\theta_{1}}\left(\begin{array}{c}
+\end{array}\right)\qquad\boldsymbol{S_{p}}=-\left(\frac{1}{\theta_{1}}\left(\begin{array}{c}
 0\\
-\left(\frac{1}{E_{p}}-2\rho^{2}\frac{\partial\log\left(c_{s}\right)}{\partial\rho}\right)\left\Vert \psi\right\Vert _{F}^{2}\\
--\psi_{11}\\
--\psi_{21}\\
--\psi_{31}\\
--\psi_{12}\\
--\psi_{22}\\
--\psi_{32}\\
--\psi_{13}\\
--\psi_{23}\\
--\psi_{33}\\
+-\frac{\tilde{c_{s}}\left\Vert \psi\right\Vert _{F}^{2}}{E_{p}}\\
+\psi_{11}\\
+\psi_{21}\\
+\psi_{31}\\
+\psi_{12}\\
+\psi_{22}\\
+\psi_{32}\\
+\psi_{13}\\
+\psi_{23}\\
+\psi_{33}\\
 0\\
 0\\
 0\\
@@ -557,7 +723,7 @@ status open
 0
 \end{array}\right)+\frac{1}{\theta_{2}}\left(\begin{array}{c}
 0\\
-\frac{1}{E_{p}}\left\Vert \boldsymbol{H}\right\Vert ^{2}\\
+-\frac{\left\Vert \boldsymbol{H}\right\Vert ^{2}}{E_{p}}\\
 0\\
 0\\
 0\\
@@ -570,13 +736,13 @@ status open
 0\\
 0\\
 0\\
--H_{1}\\
--H_{2}\\
--H_{3}\\
+H_{1}\\
+H_{2}\\
+H_{3}\\
 0
 \end{array}\right)+\left(\begin{array}{c}
 0\\
-\frac{1}{E_{p}}\\
+-\frac{E_{\lambda}}{E_{p}}\\
 0\\
 0\\
 0\\
@@ -592,8 +758,8 @@ status open
 0\\
 0\\
 0\\
--K
-\end{array}\right)
+K
+\end{array}\right)\right)\label{eq:Pvec}
 \end{equation}
 
 \end_inset
@@ -654,11 +820,11 @@ where
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\Xi_{1}=\left(\begin{array}{ccccc}
--\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial\rho} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}}\\
--\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}}\\
--\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}}\\
-\frac{T_{\rho}}{\rho} & \frac{T_{p}}{\rho} & 0 & 0 & 0
+\Xi_{1}=-\frac{1}{\rho}\left(\begin{array}{ccccc}
+\frac{\partial\sigma_{11}}{\partial\rho} & -1 & \frac{\partial\sigma_{11}}{\partial A_{11}} & \frac{\partial\sigma_{11}}{\partial A_{21}} & \frac{\partial\sigma_{11}}{\partial A_{31}}\\
+\frac{\partial\sigma_{21}}{\partial\rho} & 0 & \frac{\partial\sigma_{21}}{\partial A_{11}} & \frac{\partial\sigma_{21}}{\partial A_{21}} & \frac{\partial\sigma_{21}}{\partial A_{31}}\\
+\frac{\partial\sigma_{31}}{\partial\rho} & 0 & \frac{\partial\sigma_{31}}{\partial A_{11}} & \frac{\partial\sigma_{31}}{\partial A_{21}} & \frac{\partial\sigma_{31}}{\partial A_{31}}\\
+-T_{\rho} & -T_{p} & 0 & 0 & 0
 \end{array}\right)
 \end{equation}
 
@@ -846,14 +1012,6 @@ where
 Eigenvectors
 \end_layout
 
-\begin_layout Standard
-The following results are presented for an unmixed material (
-\begin_inset Formula $z\equiv0$
-\end_inset
-
-).
-\end_layout
-
 \begin_layout Subsection*
 With Heat Conduction
 \end_layout
@@ -965,7 +1123,7 @@ The four eigenvectors corresponding to eigenvalues of the form
  in 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:Right-Eigenvectors"
+reference "eq:Right-Eigenvectors-1"
 
 \end_inset
 
@@ -975,8 +1133,18 @@ reference "eq:Right-Eigenvectors"
 \end_inset
 
  are columns 5-8.
- By inspection, it can be verified that the remaining 9 eigenvectors (correspond
-ing to eigenvalue 
+ By inspection (using the system matrix 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), it can be verified that the remaining 9 eigenvectors (corresponding to
+ eigenvalue 
 \begin_inset Formula $v_{1}$
 \end_inset
 
@@ -984,11 +1152,33 @@ ing to eigenvalue
 \end_layout
 
 \begin_layout Standard
-A similar analysis yields the left eigenvectors as the rows of 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:Left-Eigenvectors"
+Note that the index 
+\begin_inset Formula $d$
+\end_inset
 
+ appearing in these representations should be taken as 
+\begin_inset Formula $1,2,3$
+\end_inset
+
+ for eigenvectors in directions 
+\begin_inset Formula $x,y,z$
+\end_inset
+
+, respectively.
+ 
+\begin_inset Formula $0_{m,n}$
+\end_inset
+
+ is defined to be the 0-matrix of shape 
+\begin_inset Formula $\left(m,n\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{n}$
+\end_inset
+
+ the identity matrix of size 
+\begin_inset Formula $n$
 \end_inset
 
 .
@@ -1016,7 +1206,7 @@ I_{3} & 0_{3,3}\\
 \end{array}\right),\left(\begin{array}{c}
 0_{15,2}\\
 I_{2}
-\end{array}\right)\right\} \label{eq:Right-Eigenvectors}
+\end{array}\right)\right\} \label{eq:Right-Eigenvectors-1}
 \end{equation}
 
 \end_inset
@@ -1047,6 +1237,7 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
+\left(\Pi_{k}\right)_{ij} & =\frac{\partial\sigma_{id}}{\partial A_{jk}}\\
 \boldsymbol{w} & =T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\\
 c & =\frac{1}{\boldsymbol{e_{d}^{T}}\left(\Pi_{d}A\right)^{-1}\boldsymbol{w}+\frac{T_{p}}{\rho}}
 \end{align}
@@ -1073,6 +1264,17 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
+A similar analysis yields the left eigenvectors as the rows of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 L=\left\{ \begin{array}{c}
@@ -1088,7 +1290,7 @@ Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & -
 \end{array}\right)\\
 \left(\begin{array}{cc}
 0_{2,15} & I_{2}\end{array}\right)
-\end{array}\right\} \label{eq:Left-Eigenvectors}
+\end{array}\right\} \label{eq:Left-Eigenvectors-1}
 \end{equation}
 
 \end_inset
@@ -1113,10 +1315,10 @@ If the system does not include the heat conduction terms, the eigenstructure
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\Xi_{1}=\left(\begin{array}{ccccc}
--\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial\rho} & \frac{1}{\rho} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{11}}{\partial A_{31}}\\
--\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{21}}{\partial A_{31}}\\
--\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial\rho} & 0 & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{11}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{21}} & -\frac{1}{\rho}\frac{\partial\sigma_{31}}{\partial A_{31}}
+\Xi_{1}=-\frac{1}{\rho}\left(\begin{array}{ccccc}
+\frac{\partial\sigma_{11}}{\partial\rho} & -1 & \frac{\partial\sigma_{11}}{\partial A_{11}} & \frac{\partial\sigma_{11}}{\partial A_{21}} & \frac{\partial\sigma_{11}}{\partial A_{31}}\\
+\frac{\partial\sigma_{21}}{\partial\rho} & 0 & \frac{\partial\sigma_{21}}{\partial A_{11}} & \frac{\partial\sigma_{21}}{\partial A_{21}} & \frac{\partial\sigma_{21}}{\partial A_{31}}\\
+\frac{\partial\sigma_{31}}{\partial\rho} & 0 & \frac{\partial\sigma_{31}}{\partial A_{11}} & \frac{\partial\sigma_{31}}{\partial A_{21}} & \frac{\partial\sigma_{31}}{\partial A_{31}}
 \end{array}\right)
 \end{equation}
 
@@ -1204,7 +1406,7 @@ ors must come in the form of the rows of the following matrix:
 \begin_inset Formula 
 \begin{equation}
 \left(\begin{array}{cccc}
-W & X & Y & Z\end{array}\right)
+W & X & Y & Z\end{array}\right)\label{eq:WXYZ}
 \end{equation}
 
 \end_inset
@@ -1277,7 +1479,11 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Thus:
+Solving this system for 
+\begin_inset Formula $X,Y,Z$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -1326,41 +1532,27 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-and
+Define:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-W\left(\begin{array}{ccccc}
-\rho & 0 & 0 & 1 & 0\\
-\left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right) & 0 & 1\\
-A_{11} & A_{12} & A_{13} & \vdots & \vdots\\
-A_{21} & A_{22} & A_{23} & -\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \Pi_{1}^{-1}\boldsymbol{e_{1}}\\
-A_{31} & A_{32} & A_{33} & \vdots & \vdots
-\end{array}\right)=WM=\left(\begin{array}{ccccc}
-0 & 0 & 0 & 1 & 0\\
-0 & 0 & 0 & 0 & 1
-\end{array}\right)
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-By the properties of block matrices:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-M^{-1}=\left(\begin{array}{cc}
--A^{-1}C\left(I-BA^{-1}C\right)^{-1} & A^{-1}\left(I+C\left(I-BA^{-1}C\right)^{-1}BA^{-1}\right)\\
-\left(I-BA^{-1}C\right)^{-1} & -\left(I-BA^{-1}C\right)^{-1}BA^{-1}
-\end{array}\right)
-\end{equation}
+\begin{align}
+\aleph & \equiv\left(\begin{array}{ccccc}
+\left(\Xi_{2}\right)_{11} & \left(\Xi_{2}\right)_{12} & \left(\Xi_{2}\right)_{13} & 1 & 0\\
+\left(\Xi_{2}\right)_{21} & \left(\Xi_{2}\right)_{22} & \left(\Xi_{2}\right)_{23} & 0 & 1\\
+\left(\Xi_{2}\right)_{31} & \left(\Xi_{2}\right)_{32} & \left(\Xi_{2}\right)_{33} & C_{11} & C_{12}\\
+\left(\Xi_{2}\right)_{41} & \left(\Xi_{2}\right)_{42} & \left(\Xi_{2}\right)_{43} & C_{21} & C_{22}\\
+\left(\Xi_{2}\right)_{51} & \left(\Xi_{2}\right)_{52} & \left(\Xi_{2}\right)_{53} & C_{31} & C_{32}
+\end{array}\right)\\
+ & =\left(\begin{array}{ccccc}
+B_{11} & B_{12} & B_{13} & 1 & 0\\
+B_{21} & B_{22} & B_{23} & 0 & 1\\
+A_{11} & A_{12} & A_{13} & C_{11} & C_{12}\\
+A_{21} & A_{22} & A_{23} & C_{21} & C_{22}\\
+A_{31} & A_{32} & A_{33} & C_{31} & C_{32}
+\end{array}\right)\nonumber 
+\end{align}
 
 \end_inset
 
@@ -1394,10 +1586,8 @@ B & =\left(\begin{array}{ccc}
 \rho & 0 & 0\\
 \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)
 \end{array}\right)\\
-C & =\left(\begin{array}{ccc}
-\cdots & -\Pi_{1}^{-1}\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \cdots\\
-\cdots & \Pi_{1}^{-1}\boldsymbol{e_{1}} & \cdots
-\end{array}\right)^{T}
+C & =\Pi_{1}^{-1}\left(\begin{array}{cc}
+-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \boldsymbol{e_{1}}\end{array}\right)
 \end{align}
 
 \end_inset
@@ -1422,7 +1612,43 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-Thus:
+By the properties of block matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\aleph^{-1}=\left(\begin{array}{cc}
+-A^{-1}C\left(I-BA^{-1}C\right)^{-1} & A^{-1}\left(I+C\left(I-BA^{-1}C\right)^{-1}BA^{-1}\right)\\
+\left(I-BA^{-1}C\right)^{-1} & -\left(I-BA^{-1}C\right)^{-1}BA^{-1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By the orthonormality of eigenvectors, we must have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W\aleph=\left(\begin{array}{ccccc}
+0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 0 & 1
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, it is straightforward to confirm that:
 \end_layout
 
 \begin_layout Standard
@@ -1448,6 +1674,10 @@ begin{subequations}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Thus, we have:
 \end_layout
 
 \begin_layout Standard
@@ -1478,6 +1708,20 @@ end{subequations}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Finally, combining the preceding results with 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:WXYZ"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have:
 \end_layout
 
 \begin_layout Standard
