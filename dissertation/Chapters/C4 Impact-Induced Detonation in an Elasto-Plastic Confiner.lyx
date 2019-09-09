@@ -87,6 +87,18 @@
 Impact-Induced Detonation in an Elastoplastic Confiner
 \end_layout
 
+\begin_layout Standard
+The material in this section is published in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jackson_unified_2019"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Taylor Bar
 \end_layout
@@ -116,7 +128,7 @@ literal "false"
 \begin_inset Formula $\rho_{0}=2.785,$
 \end_inset
 
-
+ 
 \begin_inset Formula $c_{v}=9\times10^{-4}$
 \end_inset
 
@@ -280,7 +292,7 @@ Aluminum Plate Impact
 \end_layout
 
 \begin_layout Standard
-This test follows the form found in 
+This test follows the form found in Michael & Nikiforakis 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "michael_multi-physics_2018"
@@ -290,14 +302,14 @@ literal "false"
 
  (based on the original formulation found in 
 \begin_inset CommandInset citation
-LatexCommand cite
+LatexCommand citep
 key "howell_free_2002"
 literal "false"
 
 \end_inset
 
 ).
- An aluminum projectile impacts upon an aluminum plate at 
+ An aluminum projectile impacts upon an aluminum plate at speed 
 \begin_inset Formula $400$
 \end_inset
 
@@ -396,7 +408,8 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-The pressure contours throughout the aluminium are shown in 
+The pressure contours throughout the aluminium at various times are shown
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:The-aluminium-plate"
@@ -406,7 +419,24 @@ noprefix "false"
 
 \end_inset
 
-, and plots over time of the 
+.
+ Despite relying on a slightly different plasticity model to that found
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+, it can be seen that these plots are in very good agreement with those
+ found in the aforementioned publication.
+ Note that release waves can be seen on the sides of the plate, in agreement
+ with Michael & Nikiforakis.
+\end_layout
+
+\begin_layout Standard
+Plots over time of the 
 \begin_inset Formula $x$
 \end_inset
 
@@ -422,6 +452,22 @@ noprefix "false"
 \end_inset
 
 .
+ Note the good agreement between these plots and those found in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "michael_multi-physics_2018,howell_free_2002"
+literal "false"
+
+\end_inset
+
+, both in terms of their qualitative shape, and the arrival times of the
+ waves that they represent.
+ One can clearly see the separation between the elastic precursor wave and
+ the trailing plastic wave in the impacted plate, and the subsequent return
+ waves that are generated once these waves reach the end of the plate.
+ This implies that the GPR-RGFM has correctly captured the aluminium-vacuum
+ interface.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -584,7 +630,7 @@ name "fig:The-aluminium-plate-2"
 \end_layout
 
 \begin_layout Section
-Confined C4 Detonation
+Confined C4 Detonation without Back Plate
 \end_layout
 
 \begin_layout Standard
@@ -597,8 +643,8 @@ literal "false"
 \end_inset
 
 .
- A steel bar of length 0.03 and width 0.018 impacts upon C4 of depth 0.009,
- which is confined by two steel plates of depth 0.003.
+ A steel bar of length 0.03 and width 0.018 impacts upon a steel plate of
+ depth 0.003, which is covering a region of depth 0.009 composed of C4 .
  The bar is initially traveling with speed 700.
  The system is surrounded by air.
 \end_layout
@@ -748,6 +794,49 @@ The steel is modeled using a shock Mie-Gruneisen EOS, with parameters
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation-no-backplate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ displays the resulting pressure and C4 concentration at times 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+ As can be seen, the kinetic energy of the bar is correctly transmitted
+ to the steel plate, with the plate deforming in a manner qualitatively
+ identical to that found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+.
+ This energy is in turn transmitted to the C4, leading to an exothermic
+ reaction and a symmetrical wavefront that travels through the material.
+ The C4 concentration is depleted to 0.93 at time 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and to 0.915 at time 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -826,7 +915,42 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 \end_layout
 
 \begin_layout Section
-Confined C4 Detonation without Back Plate
+Confined C4 Detonation
+\end_layout
+
+\begin_layout Standard
+This test is identical to the previous test, except a steel plate of depth
+ 0.003 is now placed behind the C4, so that the explosive is entirely confined.
+ As can be seen from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the kinetic energy of the bar is once again correctly transmitted to the
+ steel plate and C4, with the same deformation occurring in the first steel
+ plate.
+ At time 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ we see the wave in the C4 both partially rebounding off the backplate back
+ into the reactant, and partially traveling on through the backplate.
+ At the earlier time, the reactant concentration has been depleted to 0.88,
+ and at the later time to 0.865.
+ This corroborates the results of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "false"
+
+\end_inset
+
+, in that the presence of the backplate accelerates the reactive processes.
 \end_layout
 
 \begin_layout Standard
@@ -909,6 +1033,47 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 
 \begin_layout Section
 Confined C4 Detonation with Air Gap
+\end_layout
+
+\begin_layout Standard
+This problem is designed to test the ability of the framework presented
+ in this paper to capture the interaction of widely varying media.
+ It is identical to the previous problem, except an air gap is now placed
+ between the first steel plate and the C4.
+ The air has the same EOS parameters as the surrounding air.
+\end_layout
+
+\begin_layout Standard
+As can be seen in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:confined-detonation-airgap"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the rod displaces the air (with the numerical method coping with contact
+ of the region representing the plate with the region representing the C4).
+ The displacement of the air enables the kinetic energy of the rod to be
+ transmitted through the plate and into the C4, as before.
+ The earlier time of 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ corresponds with the instant after the plate makes contact with the C4.
+ The concentration is depleted to 0.9998 at 
+\begin_inset Formula $t=2.4\times10^{-6}$
+\end_inset
+
+ and 0.894 at 
+\begin_inset Formula $t=4.9\times10^{-6}$
+\end_inset
+
+.
+ The latter value is lower than the corresponding value in the previous
+ test, as the reaction has been delayed by the presence of the air gap.
 \end_layout
 
 \begin_layout Standard

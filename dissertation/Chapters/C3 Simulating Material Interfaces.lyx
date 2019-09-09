@@ -885,6 +885,12 @@ name "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Solving-the-Riemann"
+
+\end_inset
+
 Solving the Riemann Problem
 \end_layout
 
@@ -1202,8 +1208,8 @@ reference "eq:L.dP=0"
 
 \end_inset
 
- are taken: four regarding the 4 sets of characteristics traveling into
- the contact discontinuity from side 
+ are taken: 4 regarding the 4 sets of characteristics traveling into the
+ contact discontinuity from side 
 \begin_inset Formula $K$
 \end_inset
 
@@ -1219,7 +1225,7 @@ reference "eq:L.dP=0"
 \begin_inset Formula $K=R$
 \end_inset
 
-, respectively), and nine relating to the contact discontinuity itself.
+, respectively), and 9 relating to the contact discontinuity itself.
  This is demonstrated in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -1228,16 +1234,38 @@ reference "fig:HPR_RP2"
 \end_inset
 
 .
- Four more relations must be derived to solve the system for 
+ 4 more relations must be derived to solve the system for 
 \begin_inset Formula $\boldsymbol{P^{*K}}$
 \end_inset
 
 .
- Expanding the Taylor series of 
-\begin_inset Formula $\boldsymbol{\Sigma}^{*},T^{*}$
+\end_layout
+
+\begin_layout Standard
+Define the total stress tensor as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Sigma\equiv pI-\sigma
+\end{equation}
+
 \end_inset
 
-:
+
+\end_layout
+
+\begin_layout Standard
+The values of 
+\begin_inset Formula $\Sigma,T$
+\end_inset
+
+ under variables 
+\begin_inset Formula $\boldsymbol{P^{*K}}$
+\end_inset
+
+ are obtained by expanding the following Taylor series:
 \end_layout
 
 \begin_layout Standard
@@ -1320,8 +1348,8 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\Sigma^{*}-\Sigma & \approx\left(p^{*}-p\right)I-\left(\rho^{*}-\rho\right)\frac{\partial\sigma}{\partial\rho}-\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\sigma}{\partial A_{mn}}\\
-T^{*}-T & \approx\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}
+\Sigma^{*}-\Sigma & \approx\left(p^{*}-p\right)I-\left(\rho^{*}-\rho\right)\frac{\partial\sigma}{\partial\rho}-\left(A_{mn}^{*}-A_{mn}\right)\frac{\partial\sigma}{\partial A_{mn}}\label{eq:SigmaCond}\\
+T^{*}-T & \approx\left(\rho^{*}-\rho\right)\frac{\partial T}{\partial\rho}+\left(p^{*}-p\right)\frac{\partial T}{\partial p}\label{eq:TempCond}
 \end{align}
 
 \end_inset
@@ -1937,14 +1965,52 @@ Linear Conditions
 \end_layout
 
 \begin_layout Standard
-Replacing the first four lines of 
+We now obtain 
+\begin_inset Formula $\hat{L}^{K}$
+\end_inset
+
+ and its inverse in order to solve 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:Left-Eigenvectors"
+reference "eq:L(P*-P)=c"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Replacing the first four lines of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Left-Eigenvectors-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
  with the conditions 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:SigmaCond"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:TempCond"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we have:
 \end_layout
 
 \begin_layout Standard
@@ -1974,10 +2040,14 @@ Q\Xi_{1} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{2} & -\frac{1}{\rho}Q_{:,1:3}\Pi_{3} & \
 \end_layout
 
 \begin_layout Standard
+Thus, the inverse of the left-eigenvector matrix becomes:
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 \hat{L}^{K}{}^{-1}=\left\{ \left(\begin{array}{c}
-X\\
+X^{-1}I_{5,4}\\
 0_{6,4}\\
 Y\\
 0_{2,4}
@@ -2031,17 +2101,11 @@ begin{subequations}
 \begin_inset Formula 
 \begin{equation}
 X=\left(\begin{array}{ccccc}
-\vdots & \vdots & \ddots & \vdots & \iddots\\
--\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
-\vdots & \vdots & \iddots & \vdots & \ddots\\
-\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0 & 0 & 0\\
--\frac{1}{\rho} & 0 & \cdots & \boldsymbol{e_{d}^{T}}A^{-1} & \cdots
-\end{array}\right)^{-1}\left(\begin{array}{cccc}
-1 & 0 & 0 & 0\\
-0 & 1 & 0 & 0\\
-0 & 0 & 1 & 0\\
-0 & 0 & 0 & 1\\
-0 & 0 & 0 & 0
+\tilde{B}_{11} & \tilde{B}_{12} & \left(-\Pi_{1}\right)_{11} & \left(-\Pi_{1}\right)_{12} & \left(-\Pi_{1}\right)_{13}\\
+\tilde{B}_{21} & \tilde{B}_{22} & \left(-\Pi_{1}\right)_{21} & \left(-\Pi_{1}\right)_{22} & \left(-\Pi_{1}\right)_{23}\\
+\tilde{B}_{31} & \tilde{B}_{32} & \left(-\Pi_{1}\right)_{31} & \left(-\Pi_{1}\right)_{32} & \left(-\Pi_{1}\right)_{33}\\
+\tilde{D}_{11} & \tilde{D}_{12} & \tilde{C}_{11} & \tilde{C}_{12} & \tilde{C}_{13}\\
+\tilde{D}_{21} & \tilde{D}_{22} & \tilde{C}_{21} & \tilde{C}_{22} & \tilde{C}_{23}
 \end{array}\right)
 \end{equation}
 
@@ -2053,7 +2117,83 @@ X=\left(\begin{array}{ccccc}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X
+Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X^{-1}I_{5,4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and also:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{B}=\left(\begin{array}{cc}
+-\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}}\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{C}=\left(\begin{array}{ccc}
+0 & 0 & 0\\
+A_{d1}^{-1} & A_{d2}^{-1} & A_{d3}^{-1}
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{D}=\left(\begin{array}{cc}
+\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p}\\
+-\frac{1}{\rho} & 0
+\end{array}\right)
 \end{equation}
 
 \end_inset
@@ -2103,15 +2243,9 @@ C & D
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\left(\begin{array}{ccccc}
-\vdots & \vdots & \ddots & \vdots & \iddots\\
--\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
-\vdots & \vdots & \iddots & \vdots & \ddots\\
-\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p} & 0 & 0 & 0\\
--\frac{1}{\rho} & 0 & \cdots & \boldsymbol{e_{d}^{T}}A^{-1} & \cdots
-\end{array}\right)^{-1}=\left(\begin{array}{cc}
-D^{-1}CZ^{-1} & D^{-1}\left(I-CZ^{-1}BD^{-1}\right)\\
--Z^{-1} & Z^{-1}BD^{-1}
+X^{-1}=\left(\begin{array}{cc}
+\tilde{D}^{-1}\tilde{C}Z^{-1} & \tilde{D}^{-1}\left(I-\tilde{C}Z^{-1}\tilde{B}\tilde{D}^{-1}\right)\\
+-Z^{-1} & Z^{-1}\tilde{B}\tilde{D}^{-1}
 \end{array}\right)
 \end{equation}
 
@@ -2127,20 +2261,7 @@ where
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\begin{cases}
-B=\left(\begin{array}{cc}
-\vdots & \vdots\\
--\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}}\\
-\vdots & \vdots
-\end{array}\right) & C=\left(\begin{array}{ccc}
-0 & 0 & 0\\
-\cdots & \boldsymbol{e_{d}^{T}}A^{-1} & \cdots
-\end{array}\right)\\
-D=\left(\begin{array}{cc}
-\frac{\partial T}{\partial\rho} & \frac{\partial T}{\partial p}\\
--\frac{1}{\rho} & 0
-\end{array}\right) & Z=\Pi_{1}+\frac{\rho}{T_{p}}\left(T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\right)\boldsymbol{e_{d}^{T}}A^{-1}
-\end{cases}
+Z=\Pi_{1}+\frac{\rho}{T_{p}}\left(T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho}+T_{\rho}\boldsymbol{e_{d}}\right)\boldsymbol{e_{d}^{T}}A^{-1}
 \end{equation}
 
 \end_inset
@@ -2213,7 +2334,7 @@ I_{2} & -BA^{-1} & -BA^{-1}\Pi_{1}^{-1}\Pi_{2} & -BA^{-1}\Pi_{1}^{-1}\Pi_{3} & 0
 \begin_inset Formula 
 \begin{equation}
 \hat{L}^{K}{}^{-1}=\left\{ \left(\begin{array}{c}
-X\\
+X^{-1}I_{5,4}\\
 0_{6,3}\\
 Y
 \end{array}\right),\left(\begin{array}{c}
@@ -2262,17 +2383,11 @@ begin{subequations}
 \begin_inset Formula 
 \begin{equation}
 X=\left(\begin{array}{ccccc}
-\vdots & \vdots & \ddots & \vdots & \iddots\\
--\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
-\vdots & \vdots & \iddots & \vdots & \ddots\\
-\vdots & \iddots & \ddots & \vdots & \iddots\\
-\left(I-BA^{-1}C\right)^{-1} & \cdots & \cdots & -\left(I-BA^{-1}C\right)^{-1}BA^{-1} & \cdots
-\end{array}\right)^{-1}\left(\begin{array}{cccc}
-1 & 0 & 0 & 0\\
-0 & 1 & 0 & 0\\
-0 & 0 & 1 & 0\\
-0 & 0 & 0 & 1\\
-0 & 0 & 0 & 0
+\tilde{B}_{11} & \tilde{B}_{12} & \left(-\Pi_{1}\right)_{11} & \left(-\Pi_{1}\right)_{12} & \left(-\Pi_{1}\right)_{13}\\
+\tilde{B}_{21} & \tilde{B}_{22} & \left(-\Pi_{1}\right)_{21} & \left(-\Pi_{1}\right)_{22} & \left(-\Pi_{1}\right)_{23}\\
+\tilde{B}_{31} & \tilde{B}_{32} & \left(-\Pi_{1}\right)_{31} & \left(-\Pi_{1}\right)_{32} & \left(-\Pi_{1}\right)_{33}\\
+\Delta_{11}^{-1} & \Delta_{12}^{-1} & \left(-\Delta^{-1}BA^{-1}\right)_{11} & \left(-\Delta^{-1}BA^{-1}\right)_{12} & \left(-\Delta^{-1}BA^{-1}\right)_{13}\\
+\Delta_{21}^{-1} & \Delta_{22}^{-1} & \left(-\Delta^{-1}BA^{-1}\right)_{21} & \left(-\Delta^{-1}BA^{-1}\right)_{22} & \left(-\Delta^{-1}BA^{-1}\right)_{23}
 \end{array}\right)
 \end{equation}
 
@@ -2284,7 +2399,7 @@ X=\left(\begin{array}{ccccc}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X
+Y=-\xi Q^{-1}D^{-1}Q\Xi_{1}X^{-1}I_{5,4}
 \end{equation}
 
 \end_inset
@@ -2302,33 +2417,6 @@ status open
 \backslash
 end{subequations}
 \end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-By inversion of block matrices:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\begin{array}{c}
-\left(\begin{array}{ccccc}
-\vdots & \vdots & \ddots & \vdots & \iddots\\
--\frac{\partial\boldsymbol{\sigma_{d}}}{\partial\rho} & \boldsymbol{e_{d}} & \cdots & -\Pi_{1} & \cdots\\
-\vdots & \vdots & \iddots & \vdots & \ddots\\
-\vdots & \iddots & \ddots & \vdots & \iddots\\
-\left(I-BA^{-1}C\right)^{-1} & \cdots & \cdots & -\left(I-BA^{-1}C\right)^{-1}BA^{-1} & \cdots
-\end{array}\right)^{-1}\\
-=\left(\begin{array}{cc}
--BA^{-1}Z & \left(I+BA^{-1}Z\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
--Z & Z\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
-\end{array}\right)
-\end{array}
-\end{equation}
 
 \end_inset
 
@@ -2358,11 +2446,9 @@ begin{subequations}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-Z & =\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}\\
-\tilde{B} & =\left(\begin{array}{ccc}
-\cdots & -\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \cdots\\
-\cdots & \boldsymbol{e_{1}} & \cdots
-\end{array}\right)^{T}\\
+\Delta & =I-BA^{-1}C\\
+\tilde{B} & =\left(\begin{array}{cc}
+-\frac{\partial\boldsymbol{\sigma_{1}}}{\partial\rho} & \boldsymbol{e_{1}}\end{array}\right)\\
 B & =\left(\begin{array}{ccc}
 \rho & 0 & 0\\
 \left(\rho c_{0}^{2}+\sigma_{11}-\rho\frac{\partial\sigma_{11}}{\partial\rho}\right) & \left(\sigma_{21}-\rho\frac{\partial\sigma_{21}}{\partial\rho}\right) & \left(\sigma_{31}-\rho\frac{\partial\sigma_{31}}{\partial\rho}\right)
@@ -2390,6 +2476,39 @@ end{subequations}
 
 \end_layout
 
+\begin_layout Standard
+By inversion of block matrices:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X^{-1}=\left(\begin{array}{cc}
+-BA^{-1}\tilde{Z} & \left(I+BA^{-1}\tilde{Z}\tilde{B}\right)\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)\\
+-\tilde{Z} & \tilde{Z}\tilde{B}\left(I-BA^{-1}\Pi_{1}^{-1}\tilde{B}\right)
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tilde{Z}=\left(\Pi_{1}-\tilde{B}BA^{-1}\right)^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Numerical Results
 \end_layout
@@ -2398,10 +2517,14 @@ Numerical Results
 The GPR-RGFM is now assessed.
  The first fives tests in this chapter are Riemann problems that have appeared
  elsewhere in the literature.
- Exact solutions to these problems have been calculated by various methods.
- The last test is new; it assess the ability of the GPR-RGFM to correctly
+ Reference solutions to these problems have been calculated by various methods,
+ as described for each test individually.
+ The sixth test is new; it assess the ability of the GPR-RGFM to correctly
  model heat conduction across interfaces.
- The EOS parameters for three commonly-used fluids are given in 
+ The last two tests are well-known two-dimensional problems, to demonstrate
+ the applicability of the method to multiple dimensions.
+ The stiffened gas EOS parameters for three commonly-used fluids are given
+ in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "tab:fluid params"
@@ -2504,7 +2627,7 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $b_{0}$
+\begin_inset Formula $c_{s}$
 \end_inset
 
 
@@ -2518,7 +2641,7 @@ status open
 \begin_layout Plain Layout
 
 \series bold
-\begin_inset Formula $c_{\alpha}$
+\begin_inset Formula $c_{t}$
 \end_inset
 
 
@@ -3472,6 +3595,12 @@ Density, pressure, and velocity for the helium bubble test with GPR-RGFM
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Water-Air-Shock-Tube"
+
+\end_inset
+
 Water-Air Shock Tube
 \end_layout
 
@@ -3516,7 +3645,17 @@ noprefix "false"
 
 \end_inset
 
-, along with the exact solution to the Euler equations.
+, along with the exact solution to the Euler equations (computed using the
+ extension to the stiffened gas equations of the exact Riemann solver presented
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "toro_reimann_2009"
+literal "false"
+
+\end_inset
+
+).
  As can be seen, the material interface is captured well, with the correct
  intermediate density found by the numerical method.
 \end_layout
@@ -3872,6 +4011,12 @@ Density, pressure, velocity, and internal energy for the water-air shock
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:PBX9404-Copper-Shock-Tube"
+
+\end_inset
+
 PBX9404-Copper Shock Tube
 \end_layout
 
@@ -3913,7 +4058,7 @@ literal "true"
 \end_inset
 
 , 
-\begin_inset Formula $b_{0}=1$
+\begin_inset Formula $c_{s}=1$
 \end_inset
 
 , 
@@ -3972,7 +4117,15 @@ literal "false"
 \end_inset
 
 .
- Plots for density, velocity, and total stress are given in 
+ The error in the wavespeeds is calculated from the residual error in the
+ traction and velocities across the central contact, as required by the
+ Rankine–Hugoniot conditions and boundary conditions.
+ The wavespeeds are found by iteratively reducing the residual using the
+ Newton–Raphson method.
+\end_layout
+
+\begin_layout Standard
+Plots for density, velocity, and total stress are given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "fig:Copper-PBX"
@@ -4055,6 +4208,12 @@ Density, velocity, and total stress for the Copper-PBX test with GPR-RGFM
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Aluminium-in-Vacuum"
+
+\end_inset
+
 Aluminium in Vacuum
 \end_layout
 
@@ -4193,10 +4352,41 @@ noprefix "false"
 \end_inset
 
 .
- As can be seen, in both cases, the GPR-RGFM is able to accurately capture
+ The exact solutions are calculated using the iterative method presented
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_exact_2009"
+literal "false"
+
+\end_inset
+
+, as described in the previous test.
+\end_layout
+
+\begin_layout Standard
+As can be seen, in both cases, the GPR-RGFM is able to accurately capture
  the longitudinal wave and the two transverse shock waves that propagate
  to the left side of the initial point of contact.
- Without thermal conduction, the interface suffers from a 
+ Note that at 
+\begin_inset Formula $t=0.06$
+\end_inset
+
+, the vacuum occupies the region 
+\begin_inset Formula $\left[\sim0.65,1\right]$
+\end_inset
+
+.
+ As this region is empty, the plots in the aforementioned figures are shown
+ over the interval 
+\begin_inset Formula $\left[0,0.7\right]$
+\end_inset
+
+, to give greater resolution to the region of interest.
+\end_layout
+
+\begin_layout Standard
+Without thermal conduction, the interface suffers from a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5712,6 +5902,1042 @@ Heat flux for the inter-material heating-induced acoustic wave test with:
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Convergence Study
+\end_layout
+
+\begin_layout Standard
+In order to determine the order of convergence of the Riemann Ghost Fluid
+ Method presented in this study, the tests from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Water-Air-Shock-Tube"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:PBX9404-Copper-Shock-Tube"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Aluminium-in-Vacuum"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ were run with cell counts of 
+\begin_inset Formula $50,100,150,200,250,300$
+\end_inset
+
+, and the error as compared with the exact solutions were calculated at
+ the interfaces.
+ The reason for choosing these two tests was to incorporate a range of different
+ interface types (gas-liquid, fluid-solid, and solid-vacuum).
+ The results are displayed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "tab:ConvergenceRates"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ As can be seen, in all tests, the convergence rate is roughly first-order.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Water-Air Test
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+PBX-Copper Test
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Aluminium-Vacuum Test
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+# Cells
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Error
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Error
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Error
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rate
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17.67419797
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20.27348796
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.04232714
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.98596866
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.146
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.14165497
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.999
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.02180830
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.957
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.20404021
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.056
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6.57517319
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.069
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.01365700
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.154
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.19411427
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.750
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.99100631
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.958
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.01005346
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.065
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+250
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.32431075
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.042
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.73732754
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.296
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.00793378
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.061
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+300
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.77425968
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.992
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.10851219
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.00571356
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.800
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:ConvergenceRates"
+
+\end_inset
+
+Convergence Rates for the Water-Air Test, PBX-Copper Test, and Aluminium-Vacuum
+ Test
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Discussion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Riemann Ghost Fluid Method presented in this study has been demonstrated
+ to be an effective way of accurately simulating the interfaces between
+ several different materials (in all three main phases of matter, plus vacuum),
+ described by the GPR model.
+ Unlike in many existing implementations, heat conduction across the interface
+ was simulated accurately, leading to the representation of physical phenomena
+ that are often overlooked, and to the redundancy of numerical techniques
+ that are sometimes used to enforce more empirically-accurate results (such
+ as entropy and temperature fixes).
+\end_layout
+
+\begin_layout Standard
+The framework presented here greatly simplifies the conceptual framework
+ required for multimaterial interactions.
+ Implementation should be easier and quicker, and future work can be more
+ focused on a single model, rather than several fundamentally different
+ frameworks.
+ 
+\end_layout
+
+\begin_layout Subsection
+Limitations
+\end_layout
+
+\begin_layout Standard
+Throughout this study, the various fluids have been assumed to be immiscible.
+ Whilst this is a common assumption in situations where mixing is low or
+ practically non-existent, there are many problems which may require it.
+ An area of further research would be the implementation of a mixture model
+ such as that proposed by Romenski et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Romenski2007,Romenski2010"
+literal "true"
+
+\end_inset
+
+, which uses the same thermal conduction system as the GPR model.
+\end_layout
+
+\begin_layout Standard
+The truncation of the Taylor series expansions 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:q* Taylor Series"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:sigma* Taylor Series"
+
+\end_inset
+
+ used to find the star states of the heat flux and the viscous stress tensor
+ implicitly assumes that there are only small differences between the side
+ states and the star states of the variables upon which 
+\begin_inset Formula $q_{1}^{*},\boldsymbol{\sigma_{1}^{*}}$
+\end_inset
+
+ depend (
+\begin_inset Formula $\rho$
+\end_inset
+
+, 
+\begin_inset Formula $p$
+\end_inset
+
+, 
+\begin_inset Formula $J_{1}$
+\end_inset
+
+, and 
+\begin_inset Formula $\boldsymbol{A_{1}}$
+\end_inset
+
+).
+ If this is the case, higher order terms of the expansion can be neglected.
+ If it is not, however, the method may fail.
+ The linearised nature of the GPR-RGFM solver also implicitly assumes that
+ all waves of interest present in the Riemann Problem are shocks.
+ Thus, strong rarefactions may cause the method to fail.
+ 
+\end_layout
+
+\begin_layout Subsection
+Potential Improvements
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Potential-Improvements"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As noted in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Intermaterial Heat Conduction"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the GPR-RGFM method does not necessarily ensure the continuity of the
+ normal component of heat flux across interfaces that feature discontinuous
+ temperature jumps.
+ This is despite the method accurately modeling both the heat conduction
+ across the interface over time, and the corresponding evolution to thermal
+ equilibrium between the two materials.
+ The reason for this is that the star states produced by the linearised
+ solver presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Solving-the-Riemann"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ represent the state of the system at a time slightly beyond the point in
+ time at which they are applied to neighboring ghost cells.
+ With more simple systems of PDEs - such as the Euler equations - this often
+ doesn't matter, as the star states are constant in time, or their time
+ evolution is easily calculated.
+ Owing to the source terms in the GPR equations, however, the star states
+ evolve in a manner for which an analytical solution is not available.
+ Thus, when the star states are applied to the ghost cells, they contain
+ higher heat fluxes and slightly different temperatures to the actual values
+ at the interface at that moment in time, leading to the slight aberration
+ apparent in the heat flux in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Thermal Equilibration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A possible solution to this is as follows: Take materials 
+\begin_inset Formula $L$
+\end_inset
+
+ and 
+\begin_inset Formula $R$
+\end_inset
+
+ either side of an interface.
+ Given the states straddling the interface, 
+\begin_inset Formula $Q_{L},Q_{R}$
+\end_inset
+
+, derive 
+\begin_inset Formula $Q_{L}^{*}$
+\end_inset
+
+ using the procedure outlined in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Solving-the-Riemann"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Then, by inverting this procedure, derive a state 
+\begin_inset Formula $\tilde{Q_{R}}$
+\end_inset
+
+ such that if 
+\begin_inset Formula $Q_{L},\tilde{Q_{R}}$
+\end_inset
+
+ are both states for material 
+\begin_inset Formula $L$
+\end_inset
+
+ (rather than for materials 
+\begin_inset Formula $L$
+\end_inset
+
+ and 
+\begin_inset Formula $R$
+\end_inset
+
+, respectively), following the procedure in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Solving-the-Riemann"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ obtains the same star state, 
+\begin_inset Formula $Q_{L}^{*}$
+\end_inset
+
+.
+ The derivation of such an inverse mapping should be feasible, possibly
+ with the addition of some physical constraints.
+ In this way, 
+\begin_inset Formula $\tilde{Q_{R}}$
+\end_inset
+
+ represents a state for the righthand cell at the current time, which -
+ if cell 
+\begin_inset Formula $R$
+\end_inset
+
+ were occupied by material 
+\begin_inset Formula $L$
+\end_inset
+
+ - would result in the same state on the lefthand side of the interface
+ at the end of the current timestep as if the righthand cell were occupied
+ by 
+\begin_inset Formula $Q_{R}$
+\end_inset
+
+ and material 
+\begin_inset Formula $R$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Another clear improvement to the GPR-RGFM method presented would be to use
+ a better Riemann solver than the iterative, linearised solver devised in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Solving-the-Riemann"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $L$
+\end_inset
+
+ be the matrix of left eigenvectors of the primitive system.
+ As noted previously, the solver relies upon the fact that each of the following
+ relations holds along the characteristic to which it corresponds:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L\cdot\frac{d\boldsymbol{P}}{dt}=L\cdot\boldsymbol{S}\label{eq:along-characteristics}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Methods to accurately integrate 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:along-characteristics"
+
+\end_inset
+
+ from the left and right interface boundary states to their respective star
+ states warrant further research.
+\end_layout
+
+\begin_layout Standard
+Alternatively, a completely different approximate Riemann solver could be
+ employed, such as the universal HLLEM solver of Dumbser et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016"
+literal "true"
+
+\end_inset
+
+.
+ This path-conservative formulation of the HLLEM solver works for general
+ non-conservative systems (such as the GPR model) and is simple to implement.
+ It's based upon a new path-conservative HLL method (building on the original
+ method of Harten, Lax, and van Leer 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Harten1983"
+literal "true"
+
+\end_inset
+
+) but is claimed to be able to represent linearly degenerate intermediate
+ waves 
+\begin_inset Quotes eld
+\end_inset
+
+with a minimum of smearing
+\begin_inset Quotes erd
+\end_inset
+
+ by evaluating the eigenvalues and eigenvectors of the intermediate characterist
+ic fields (given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Eigenstructure"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+There are iterative exact Riemann solvers for the equations of non-linear
+ elasticity (to which the GPR model reduces as 
+\begin_inset Formula $\tau_{1}\rightarrow\infty$
+\end_inset
+
+).
+ Thus, they will work for applications of the GPR model to solids problems
+ (and perhaps to very viscous fluids problems too).
+ Although these solvers are computationally expensive, they are only used
+ once at each material interface point at each time step, and thus the added
+ accuracy that they provide may be desirable.
+ There are two ways to formulate the equations of non-linear elasticity:
+ one in which the deformation tensor (the analogue of the inverse of the
+ GPR model's distortion tensor) is evolved in time, and one in which its
+ inverse (the analogue of 
+\begin_inset Formula $A$
+\end_inset
+
+) is evolved instead.
+ Miller's exact solver 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Miller2004"
+literal "true"
+
+\end_inset
+
+ uses the first formulation and the solver of Barton et al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Barton2009"
+literal "true"
+
+\end_inset
+
+ uses the second.
+ The former can be used to evolve 
+\begin_inset Formula $A^{-1}$
+\end_inset
+
+, from which 
+\begin_inset Formula $A$
+\end_inset
+
+ can be calculated.
+ Unfortunately, both solvers critically assume that the source terms of
+ the system vanish, and so are unlikely to produce the correct boundary
+ conditions for the GPR-RGFM when modeling relatively inviscid fluids.
+ It should also be noted that they cannot be used for problems involving
+ heat conduction across material interfaces, and they do not take the thermal
+ conduction subsystem of the GPR model into account.
 \end_layout
 
 \begin_layout Standard
