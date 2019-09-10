@@ -2470,7 +2470,7 @@ where
 \begin_layout Standard
 It was found that the Osher-Solomon flux would often produce slightly less
  diffusive results, but that it was more computationally expensive, and
- also had a greater tendency to introduce numerical artefacts.
+ also had a greater tendency to introduce numerical artifacts.
 \end_layout
 
 \begin_layout Standard
@@ -6869,7 +6869,7 @@ Elastic Riemann Problems
 \end_layout
 
 \begin_layout Standard
-These tests are taken from 
+[[FINISH]] These tests are taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "boscheri_cell_2016"

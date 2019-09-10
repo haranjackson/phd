@@ -402,6 +402,8 @@ sideways true
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="7" columns="5">
 <features tabularvalignment="middle">
@@ -973,6 +975,8 @@ sideways true
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="7" columns="4">
 <features tabularvalignment="middle">

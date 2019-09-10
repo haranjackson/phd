@@ -114,6 +114,59 @@ The Problem at Hand
 \end_layout
 
 \begin_layout Standard
+The Godunov-Peshkov-Romenski model of continuum mechanics (as described
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-GPR-Model"
+
+\end_inset
+
+) presents an exciting possibility of being able to describe both fluids
+ and solids within the same mathematical framework.
+ This has the potential to streamline development of simulation software
+ by reducing the number of different systems of equations that require solvers,
+ and cutting down on the amount of theoretical work required, for example
+ in the treatment of interfaces in multimaterial problems.
+ In addition to this, the hyperbolic nature of the GPR model ensures that
+ the nonphysical instantaneous transmission of information appearing in
+ certain non-hyperbolic models (such as the Navier-Stokes equations) cannot
+ occur.
+ Parallelization also tends to be easier with hyperbolic models, allowing
+ us to leverage the great advances that have been made in parallel computing
+ architectures in recent years.
+\end_layout
+
+\begin_layout Standard
+At the time of writing, the GPR model has been solved for a variety of fluid
+ and solid problems using the ADER-WENO method (
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2016a,Boscheri2016"
+literal "true"
+
+\end_inset
+
+).
+ ADER-WENO methods (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-ADER-WENO-Method"
+
+\end_inset
+
+) are extremely effective in producing arbitrarily-high order solutions
+ to hyperbolic systems of PDEs, but in some situations their accompanying
+ computational cost may prove burdensome.
+ A new method is presented in this study that is simple to implement and
+ computationally cheaper than a corresponding ADER-WENO method if only second
+ order accuracy is required.
+ This may prove useful in the design of simulation software addressing problems
+ in which not just accuracy but also speed and usability are of paramount
+ importance.
+\end_layout
+
+\begin_layout Standard
 The Godunov-Pehskov-Romenski (GPR) model of continuum mechanics (see 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1674,12 +1727,28 @@ name "sec:Numerical-Methods"
 The GPR model, being non-conservative, with stiff source terms, represents
  a particularly challenging set of PDEs.
  In this study they are solved by an ADER-WENO method.
- First, the cell-wise constant state variable data from the current time
+ The method produces arbitrarily high-order solutions to hyperbolic systems
+ of PDEs and has been shown to be particularly effective for a wide range
+ of systems (e.g.
+ the classical Euler equations of gas dynamics, the special relativistic
+ hydrodynamics and ideal magnetohydrodynamics equations, and the Baer-Nunziato
+ model for compressible two-phase flow - see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Balsara2009,Zanotti2016"
+literal "true"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+First, the cell-wise constant state variable data from the current time
  step is reconstructed using high-order spatial polynomials according to
  the WENO method.
  This reconstruction is then extended to a reconstruction in both space
- and time for each individual cell in the domain, using the Discontinuous
- Galerkin method.
+ and time for each individual cell in the domain, using the Galerkin method.
  A finite volume solver is then used to couple neighboring cells and produce
  the cell-wise constant data at the next time step.
 \end_layout
@@ -1981,8 +2050,8 @@ where
 \end_inset
 
  are used.
- The matrices of these linear systems and their inverses are precomputed
- to accelerate the solution of these systems.
+ The matrices of these linear systems, along with their inverses, can be
+ precomputed to accelerate the solution of these systems.
 \end_layout
 
 \begin_layout Standard
@@ -2085,7 +2154,7 @@ In this study,
  is a side stencil, as in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "dumbser_high_2014"
+key "Dumbser2014"
 literal "true"
 
 \end_inset
@@ -2227,7 +2296,8 @@ literal "true"
 
 \end_inset
 
-, the Discontinuous Galerkin method produces at each time step 
+, the Continuous Galerkin or Discontinuous Galerkin methods produce at each
+ time step 
 \begin_inset Formula $t_{n}$
 \end_inset
 
@@ -2239,7 +2309,39 @@ literal "true"
 \begin_inset Formula $C_{i}\times\left[t_{n},t_{n+1}\right]$
 \end_inset
 
-.
+, using the WENO reconstruction as initial data at the start of the time
+ step (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Balsara2009"
+literal "true"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2008"
+literal "true"
+
+\end_inset
+
+ respectively for implementations of these two variations).
+ The order of this reconstruction in time is usually taken to be the same
+ as the spatial order, and the same basis polynomials are used.
+ The process involves finding the root of a non-linear system, and this
+ process is guaranteed to converge in exact arithmetic for certain classes
+ of PDEs (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jackson2017"
+literal "true"
+
+\end_inset
+
+).
+ This root finding can be computationally expensive relative to the WENO
+ reconstruction, especially if the source terms of the PDE system are stiff.
 \end_layout
 
 \begin_layout Standard

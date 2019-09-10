@@ -84,6 +84,20 @@
 \begin_body
 
 \begin_layout abstract
+A new second-order numerical scheme based on an operator splitting is proposed
+ for the Godunov-Peshkov-Romenski model of continuum mechanics.
+ The homogeneous part of the system is solved with a finite volume method
+ based on a WENO reconstruction, and the temporal ODEs are solved using
+ some analytic results presented here.
+ Whilst it is not possible to attain arbitrary-order accuracy with this
+ scheme (as with ADER-WENO schemes used previously), the attainable order
+ of accuracy is often sufficient, and solutions are computationally cheap
+ when compared with other available schemes.
+ The new scheme is compared with an ADER-WENO scheme for various test cases,
+ and a convergence study is undertaken to demonstrate its order of accuracy.
+\end_layout
+
+\begin_layout abstract
 A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
  by a power law under the Godunov-Peshkov-Romenski model is presented, along
  with a new numerical scheme for solving this system.
