@@ -1002,7 +1002,10 @@ Denote the vector of primitive variables by
  
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:Left-Eigenvectors"
+reference "eq:Left-Eigenvectors-1"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -5037,7 +5040,7 @@ name "fig:Thermal Equilibration"
 
 \end_inset
 
-Temperature, heat flux, and density for the intermaterial heat conduction
+Temperature, heat flux, and density for the inter-material heat conduction
  test with GPR-RGFM
 \end_layout
 
@@ -5052,7 +5055,7 @@ Temperature, heat flux, and density for the intermaterial heat conduction
 \end_layout
 
 \begin_layout Subsection
-Intermaterial Heating-Induced Acoustic Wave
+Inter-Material Heating-Induced Acoustic Wave
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Intermaterial-Heating-Induced-Acoustic-Wave"
@@ -5415,7 +5418,8 @@ name "tab:Intermaterial Heat Conduction"
 
 \end_inset
 
-Initial conditions for the intermaterial heating-induced acoustic wave test
+Initial conditions for the inter-material heating-induced acoustic wave
+ test
 \end_layout
 
 \end_inset
@@ -5805,7 +5809,7 @@ name "fig:Heat-Conduction-1"
 
 \end_inset
 
-Temperature and pressure for the intermaterial heating-induced acoustic
+Temperature and pressure for the inter-material heating-induced acoustic
  wave test with: a single volume of air (top); two volumes of air initially
  separated at 
 \begin_inset Formula $x^{*}=22.5$
@@ -6633,7 +6637,7 @@ reference "eq:sigma* Taylor Series"
 ).
  If this is the case, higher order terms of the expansion can be neglected.
  If it is not, however, the method may fail.
- The linearised nature of the GPR-RGFM solver also implicitly assumes that
+ The linearized nature of the GPR-RGFM solver also implicitly assumes that
  all waves of interest present in the Riemann Problem are shocks.
  Thus, strong rarefactions may cause the method to fail.
  
@@ -6667,7 +6671,7 @@ noprefix "false"
  This is despite the method accurately modeling both the heat conduction
  across the interface over time, and the corresponding evolution to thermal
  equilibrium between the two materials.
- The reason for this is that the star states produced by the linearised
+ The reason for this is that the star states produced by the linearized
  solver presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -6795,7 +6799,7 @@ noprefix "false"
 
 \begin_layout Standard
 Another clear improvement to the GPR-RGFM method presented would be to use
- a better Riemann solver than the iterative, linearised solver devised in
+ a better Riemann solver than the iterative, linearized solver devised in
  
 \begin_inset CommandInset ref
 LatexCommand formatted

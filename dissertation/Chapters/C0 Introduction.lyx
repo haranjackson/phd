@@ -118,7 +118,10 @@ The Godunov-Peshkov-Romenski model of continuum mechanics (as described
  in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "subsec:The-GPR-Model"
+reference "subsec:Equations-of-Motion"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -141,8 +144,8 @@ reference "subsec:The-GPR-Model"
 At the time of writing, the GPR model has been solved for a variety of fluid
  and solid problems using the ADER-WENO method (
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2016a,Boscheri2016"
+LatexCommand cite
+key "Boscheri2016,Dumbser2015"
 literal "true"
 
 \end_inset
@@ -151,7 +154,10 @@ literal "true"
  ADER-WENO methods (described in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "subsec:The-ADER-WENO-Method"
+reference "sec:Numerical-Methods"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -212,8 +218,8 @@ Thus far, the GPR model has been solved for a wide array of different fluids
  (inviscid and viscous Newtonian) and solids (elastic and elastoplastic)
  (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "dumbser_high_2015,boscheri_cell_2016,peshkov_theoretical_2018,peshkov_unified_2017"
+LatexCommand cite
+key "dumbser_high_2015,boscheri_cell_2016,peshkov_unified_2017,peshkov_theoretical_2019"
 literal "false"
 
 \end_inset
@@ -253,7 +259,17 @@ literal "false"
  is then presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Numerical-Schemes"
+reference "subsec:Power-Law-Fluids"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Elastoplastic-Solids"
 plural "false"
 caps "false"
 noprefix "false"
@@ -265,7 +281,7 @@ noprefix "false"
  The scheme is validated against several 1D and 2D tests in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Numerical-Results"
+reference "subsec:Non-Newtonian-Fluids-&"
 plural "false"
 caps "false"
 noprefix "false"
@@ -275,7 +291,7 @@ noprefix "false"
 , with discussion presented in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Conclusions"
+reference "subsec:Discussion-Non-Newtonian-Fluids"
 plural "false"
 caps "false"
 noprefix "false"
@@ -414,7 +430,7 @@ literal "false"
 .
  The fluid is governed by the compressible Euler equations, and the solid
  by a conservative hyperelastic model.
- This was later extended to encompass solids conforming to the visco-plastic
+ This was later extended to encompass solids conforming to the viscoplastic
  model of Maxwell type materials 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -455,15 +471,7 @@ literal "true"
 
 ) couple various Eulerian models of reactive and inert fluids and solids
  by use of a Riemann Ghost Fluid Method, with the ghost states calculated
- using specialised mixed-material Riemann solvers for each interaction (see
- 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:Ghost Fluid Methods"
-
-\end_inset
-
-).
+ using specialized mixed-material Riemann solvers for each interaction.
  Whilst these techniques do not suffer from the mesh contortion issues inherent
  in Lagrangian formulations of continuum mechanics, a fair amount of theoretical
  work needs to be done to derive analytical relations describing the interaction
@@ -515,13 +523,13 @@ literal "false"
 
 \end_inset
 
- have presented a method for multimaterial modelling of a similar system
+ have presented a method for multimaterial modeling of a similar system
  (including the distortion tensor of the GPR model, but excluding the heat
  conduction terms).
  This method is based on level sets, similar to the method presented in
  this paper.
  It should be noted, however, that de Brauer et al do not apply their method
- to the modelling of viscous flows.
+ to the modeling of viscous flows.
 \end_layout
 
 \begin_layout Subsection
@@ -556,6 +564,13 @@ name "sec:Mathematical-Models"
 
 \begin_layout Subsection
 Equations of Motion
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Equations-of-Motion"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1572,7 +1587,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\det\left(A\right)=\frac{\rho}{\rho_{0}}
+\det\left(A\right)=\frac{\rho}{\rho_{0}}\label{eq:detA=rho/rho0}
 \end{equation}
 
 \end_inset
@@ -1734,8 +1749,8 @@ The GPR model, being non-conservative, with stiff source terms, represents
  hydrodynamics and ideal magnetohydrodynamics equations, and the Baer-Nunziato
  model for compressible two-phase flow - see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Balsara2009,Zanotti2016"
+LatexCommand cite
+key "balsara_efficient_2009,zanotti_efficient_2016"
 literal "true"
 
 \end_inset
@@ -2312,17 +2327,17 @@ literal "true"
 , using the WENO reconstruction as initial data at the start of the time
  step (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Balsara2009"
+LatexCommand cite
+key "balsara_efficient_2009"
 literal "true"
 
 \end_inset
 
  and 
 \begin_inset CommandInset citation
-LatexCommand citet
+LatexCommand cite
 key "Dumbser2008"
-literal "true"
+literal "false"
 
 \end_inset
 
@@ -2333,8 +2348,8 @@ literal "true"
  process is guaranteed to converge in exact arithmetic for certain classes
  of PDEs (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Jackson2017"
+LatexCommand cite
+key "jackson_eigenvalues_2017"
 literal "true"
 
 \end_inset
@@ -2399,7 +2414,7 @@ where
 \begin_layout Standard
 The non-dimensionalization notation and spacetime cell indexing notation
  will be dropped for simplicity in what follows.
- Now define the set of spatio-temporal basis functions:
+ Now define the set of spatiotemporal basis functions:
 \end_layout
 
 \begin_layout Standard
@@ -3135,7 +3150,7 @@ Using these definitions, the interface terms arising in the FV formula have
 \begin_inset Formula $\hat{M}$
 \end_inset
 
- is chosen to either correspond to a Rusanov/Lax-Friedrichs flux 
+ is chosen to either correspond to a Rusanov / Lax-Friedrichs flux 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "toro_reimann_2009"

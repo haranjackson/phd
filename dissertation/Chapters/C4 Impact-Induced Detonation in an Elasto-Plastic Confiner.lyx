@@ -123,7 +123,7 @@ literal "false"
 
 .
  The surrounding environment is a vacuum.
- The aluminium bar is modelled by the shock Mie-Gruneisen equation of state,
+ The aluminium bar is modeled by the shock Mie-Gruneisen equation of state,
  with parameters 
 \begin_inset Formula $\rho_{0}=2.785,$
 \end_inset
@@ -205,7 +205,7 @@ literal "false"
 
 .
  In that study, the boundary between the bar and the vacuum is captured
- using a Lagrangian scheme, and it is reassuring that the same behaviour
+ using a Lagrangian scheme, and it is reassuring that the same behavior
  is captured here with a characteristically different numerical method.
 \end_layout
 

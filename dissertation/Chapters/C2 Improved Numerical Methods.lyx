@@ -177,12 +177,22 @@ Define spatial variables
 \end_inset
 
 .
- Take the space-time cell 
-\begin_inset Formula $C=\left[x_{i_{1}}^{\left(1\right)},x_{i_{1}+1}^{\left(1\right)}\right]\times\left[x_{i_{2}}^{\left(2\right)},x_{i_{2}+1}^{\left(2\right)}\right]\times\left[x_{i_{3}}^{\left(3\right)},x_{i_{3}+1}^{\left(3\right)}\right]\times\left[t_{n},t_{n+1}\right]$
+ Take the space-time cell:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+C=\left[x_{i_{1}}^{\left(1\right)},x_{i_{1}+1}^{\left(1\right)}\right]\times\left[x_{i_{2}}^{\left(2\right)},x_{i_{2}+1}^{\left(2\right)}\right]\times\left[x_{i_{3}}^{\left(3\right)},x_{i_{3}+1}^{\left(3\right)}\right]\times\left[t_{n},t_{n+1}\right]
+\end{equation}
+
 \end_inset
 
-.
- Define the scaled spatial and temporal variables:
+
+\end_layout
+
+\begin_layout Standard
+Define the scaled spatial and temporal variables:
 \end_layout
 
 \begin_layout Standard
@@ -460,25 +470,57 @@ literal "true"
 \begin_inset Formula $N$
 \end_inset
 
- polynomial reconstruction 
-\begin_inset Formula $w\left(χ^{\left(1\right)},χ^{\left(2\right)},χ^{\left(3\right)}\right)$
+ polynomial reconstruction:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+w\left(\chi^{\left(1\right)},\chi^{\left(2\right)},\chi^{\left(3\right)}\right)
+\end{equation}
+
 \end_inset
 
- of the data at time 
+
+\end_layout
+
+\begin_layout Standard
+of the data at time 
 \begin_inset Formula $t_{n}$
 \end_inset
 
- in 
-\begin_inset Formula $\left[x_{i_{1}}^{\left(1\right)},x_{i_{1}+1}^{\left(1\right)}\right]\times\left[x_{i_{2}}^{\left(2\right)},x_{i_{2}+1}^{\left(2\right)}\right]\times\left[x_{i_{3}}^{\left(3\right)},x_{i_{3}+1}^{\left(3\right)}\right]$
+ in:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left[x_{i_{1}}^{\left(1\right)},x_{i_{1}+1}^{\left(1\right)}\right]\times\left[x_{i_{2}}^{\left(2\right)},x_{i_{2}+1}^{\left(2\right)}\right]\times\left[x_{i_{3}}^{\left(3\right)},x_{i_{3}+1}^{\left(3\right)}\right]
+\end{equation}
+
 \end_inset
 
-.
- It is used as initial data in the problem of finding the Galerkin predictor.
- Taking representation 
-\begin_inset Formula $w=w_{abc}\psi_{a}\left(χ^{\left(1\right)}\right)\psi_{b}\left(χ^{\left(2\right)}\right)\psi_{c}\left(χ^{\left(3\right)}\right)$
+
+\end_layout
+
+\begin_layout Standard
+It is used as initial data in the problem of finding the Galerkin predictor.
+ Taking representation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+w=w_{abc}\psi_{a}\left(\chi^{\left(1\right)}\right)\psi_{b}\left(\chi^{\left(2\right)}\right)\psi_{c}\left(\chi^{\left(3\right)}\right)
+\end{equation}
+
 \end_inset
 
- we have for 
+
+\end_layout
+
+\begin_layout Standard
+we have for 
 \begin_inset Formula $0\leq i,j,k\leq n$
 \end_inset
 
@@ -569,7 +611,7 @@ Define
 \end_inset
 
  to be the set of Lagrange interpolating polynomials on the temporal nodes.
- We now define the spatio-temporal polynomial basis 
+ We now define the spatiotemporal polynomial basis 
 \begin_inset Formula $\Theta=\Phi\otimes\Psi\otimes\Psi\otimes\Psi=\left\{ \theta_{\beta}\right\} $
 \end_inset
 
@@ -1301,18 +1343,58 @@ For
 \begin_inset Formula $X\in M_{\left(N+1\right)^{2},\left(N+1\right)^{2}}\left(\mathbb{R}\right)$
 \end_inset
 
-, let 
-\begin_inset Formula $\boldsymbol{v}=\left(\boldsymbol{v^{0}},\boldsymbol{v^{1}}\right)$
+, let:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
 \end_inset
 
- and 
-\begin_inset Formula $X=\left(\begin{array}{cc}
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{v} & =\left(\boldsymbol{v^{0}},\boldsymbol{v^{1}}\right)\\
+X & =\left(\begin{array}{cc}
 X^{00} & X^{01}\\
 X^{10} & X^{11}
-\end{array}\right)$
+\end{array}\right)
+\end{align}
+
 \end_inset
 
- where 
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
 \begin_inset Formula $\boldsymbol{v^{0}},X^{00}$
 \end_inset
 
@@ -2070,7 +2152,7 @@ where
 The constraint 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:detA constraint"
+reference "eq:detA=rho/rho0"
 plural "false"
 caps "false"
 noprefix "false"
@@ -3494,7 +3576,7 @@ If the fluid is very inviscid, resulting in a stiff ODE, the critical time
 \end_layout
 
 \begin_layout Subsubsection
-Newontian Fluids
+Newtonian Fluids
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Analytical-Approximation"
@@ -4045,6 +4127,12 @@ At this point it is not clear which values of
 \end_layout
 
 \begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Power-Law-Fluids"
+
+\end_inset
+
 Power Law Fluids
 \end_layout
 
@@ -4315,11 +4403,22 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-Letting 
-\begin_inset Formula $x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}$
+Let:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{i}=\frac{a_{i}^{2}}{\det\left(A\right)^{\frac{2}{3}}}=\frac{a_{i}^{2}}{\left(\frac{\rho}{\rho_{0}}\right)^{\frac{2}{3}}}
+\end{equation}
+
 \end_inset
 
- then 
+
+\end_layout
+
+\begin_layout Standard
+then 
 \begin_inset Formula $\Sigma^{2}=\det\left(A\right)^{\frac{2}{3}}X$
 \end_inset
 
@@ -4631,6 +4730,12 @@ Therefore:
 \end_layout
 
 \begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Elastoplastic-Solids"
+
+\end_inset
+
 Elastoplastic Solids
 \end_layout
 
@@ -5995,7 +6100,7 @@ literal "true"
 
 \end_inset
 
-, if the wave has nondimensionalised upstream velocity 
+, if the wave has non-dimensionalized upstream velocity 
 \begin_inset Formula $\bar{v}=1$
 \end_inset
 
@@ -6003,7 +6108,7 @@ literal "true"
 \begin_inset Formula $M_{c}$
 \end_inset
 
-, then its nondimensionalised downstream velocity is:
+, then its non-dimensionalized downstream velocity is:
 \end_layout
 
 \begin_layout Standard
@@ -6084,7 +6189,7 @@ literal "true"
 
 \end_inset
 
-, the nondimensional pressure and density profiles are given by:
+, the non-dimensional pressure and density profiles are given by:
 \end_layout
 
 \begin_layout Standard
@@ -9082,6 +9187,12 @@ Convergence rates for the ADER-DG PNPM method (
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Non-Newtonian-Fluids-&"
+
+\end_inset
+
 Non-Newtonian Fluids & Elastoplastic Solids
 \end_layout
 
@@ -9863,7 +9974,7 @@ We now demonstrate the ability of our new numerical scheme to deal with
  This test is taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "peshkov_theoretical_2018"
+key "peshkov_theoretical_2019"
 literal "true"
 
 \end_inset
@@ -9935,7 +10046,7 @@ noprefix "false"
  than those that have been presented in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "peshkov_theoretical_2018"
+key "peshkov_theoretical_2019"
 literal "true"
 
 \end_inset
@@ -10612,6 +10723,12 @@ It should be noted that both the ADER-WENO and Split-WENO methods, as described
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Discussion-Non-Newtonian-Fluids"
+
+\end_inset
+
 Non-Newtonian Fluids & Elastoplastic Solids
 \end_layout
 
@@ -10803,7 +10920,7 @@ The set of solutions to this system is
  for all time (due to the constraint 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:detA constraint"
+reference "eq:detA=rho/rho0"
 plural "false"
 caps "false"
 noprefix "false"

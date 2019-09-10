@@ -2608,7 +2608,7 @@ literal "true"
 
 \end_inset
 
- as being due to initialisation errors occurring as a result of using exact
+ as being due to initialization errors occurring as a result of using exact
  algebraic conditions for an ideal (infinitely thin) CJ detonation wave,
  which are solved with a viscous model with finite reaction rate.
 \end_layout
@@ -2792,7 +2792,7 @@ reference "fig:CKR"
 \end_inset
 
 .
- Nondimensionalised time and length variables 
+ Non-dimensionalized time and length variables 
 \begin_inset Formula $t^{*},x^{*}$
 \end_inset
 
