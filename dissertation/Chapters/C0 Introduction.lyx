@@ -595,7 +595,7 @@ Any unified model of continuum mechanics purporting to describe all phases
  been promising, both here and in other preliminary studies 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016a,Boscheri2016"
+key "Boscheri2016,dumbser_high_2014"
 literal "true"
 
 \end_inset
@@ -742,7 +742,7 @@ noprefix "false"
 Objective 1 is addressed in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "chap:Objective-1:-Extending"
+reference "chap:Objective-1-Extending"
 plural "false"
 caps "false"
 noprefix "false"
@@ -792,7 +792,7 @@ noprefix "false"
 Objective 2 is addressed in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "chap:Objective-2:-Improved"
+reference "chap:Objective-2-Improved"
 plural "false"
 caps "false"
 noprefix "false"
@@ -879,7 +879,7 @@ noprefix "false"
 Objective 3 is addressed in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "chap:Objective-3:-Simulating"
+reference "chap:Objective-3-Simulating"
 plural "false"
 caps "false"
 noprefix "false"
@@ -2319,18 +2319,18 @@ literal "true"
 \end_inset
 
 ).
- The method was first devised by Toro and collaborators (see 
+ The ADER method was first devised by Toro and collaborators (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "toro2001towards"
+LatexCommand cite
+key "toro_towards_2001"
 literal "true"
 
 \end_inset
 
  and also 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "toro2002solution,titarev2002ader"
+LatexCommand cite
+key "toro_solution_2002,titarev_ader:_2002"
 literal "true"
 
 \end_inset

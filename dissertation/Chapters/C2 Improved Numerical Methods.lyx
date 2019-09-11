@@ -105,7 +105,7 @@
 Objective 2: Improved Numerical Methods
 \begin_inset CommandInset label
 LatexCommand label
-name "chap:Objective-2:-Improved"
+name "chap:Objective-2-Improved"
 
 \end_inset
 
@@ -146,8 +146,8 @@ Hyperbolic systems of PDEs can be solved to arbitrary orders of accuracy
  from the use of a Galerkin method.
  It was proved in 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Jackson2017"
+LatexCommand cite
+key "jackson_eigenvalues_2017"
 literal "true"
 
 \end_inset
@@ -7079,15 +7079,263 @@ Elastic Riemann Problems
 \end_layout
 
 \begin_layout Standard
-[[FINISH]] These tests are taken from 
+These two tests are taken from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "boscheri_cell_2016"
+key "boscheri_cell_2016,titarev_musta-type_2008"
 literal "true"
 
 \end_inset
 
 .
+ The aim of the tests is to demonstrate the efficacy of the Split-WENO method
+ in solving Riemann problems in purely elastic solids.
+ Both tests comprise a 1D bar of copper, governed by the Godunov-Romenski
+ EOS, with the following parameters (in CGS units): 
+\begin_inset Formula $\rho_{0}=8.9$
+\end_inset
+
+, 
+\begin_inset Formula $c_{v}=3.94\times10^{-4}$
+\end_inset
+
+, 
+\begin_inset Formula $T_{ref}=300$
+\end_inset
+
+, 
+\begin_inset Formula $c_{0}=3.909$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+, 
+\begin_inset Formula $\beta=3$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma=2$
+\end_inset
+
+, 
+\begin_inset Formula $b_{0}=2.1$
+\end_inset
+
+.
+ In both cases, the copper occupies the domain 
+\begin_inset Formula $x\in\left[0,1\right]$
+\end_inset
+
+, with transmissive boundary conditions imposed at each end.
+ In the region 
+\begin_inset Formula $x\in\left[0.5,1\right]$
+\end_inset
+
+, we have the values:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\rho & =8.9\\
+E & =0\\
+\mathbf{v} & =\mathbf{0}\\
+A & =I
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the first test, the region 
+\begin_inset Formula $x\in\left[0,0.5\right]$
+\end_inset
+
+ starts with values:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\rho & =9.3684\\
+E & =1.5180\\
+\mathbf{v} & =\mathbf{0}\\
+A & =\left(\begin{array}{ccc}
+20/19 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{array}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the second test, the region 
+\begin_inset Formula $x\in\left[0,0.5\right]$
+\end_inset
+
+ starts with values:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\rho & =9.3684\\
+E & =2.0257\\
+\mathbf{v} & =\left(\begin{array}{ccc}
+0 & 1 & 0\end{array}\right)^{T}\\
+A & =\left(\begin{array}{ccc}
+20/19 & 0 & 0\\
+-1/19 & 1 & 0\\
+0 & 0 & 1
+\end{array}\right)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The tests are both run to final time 
+\begin_inset Formula $t=0.06$
+\end_inset
+
+.
+ The resulting densities and 
+\begin_inset Formula $y$
+\end_inset
+
+-velocities are shown in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Elastic"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The first test results in a 3-wave solution structure, comprising: a rarefactio
+n wave traveling to the left, a contact discontinuity moving to the right
+ with speed 0.3948, and a shock wave moving rightwards with speed 5.5380.
+ The second test has a 5-wave solution structure: two rarefaction waves
+ traveling to the left of the domain, and three waves towards the right.
+ These constitute a contact discontinuity, a rarefaction, and a shock.
+ As can be seen, the numerical method closely matches the exact solution,
+ and are comparable in quality to the results obtained in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boscheri2016"
+literal "false"
+
+\end_inset
+
+, in which the authors employed a high-order ADER-WENO-ALE scheme.
 \end_layout
 
 \begin_layout Standard
