@@ -2373,20 +2373,5 @@ Plasticity parameters for various materials
 
 \end_layout
 
-\begin_layout Section
-Combustion Parameters
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:Combustion-Parameters"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-[[ADD]]
-\end_layout
-
 \end_body
 \end_document

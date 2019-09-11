@@ -1089,8 +1089,7 @@ noprefix "false"
 
 \end_inset
 
-.
- Equation of state parameters are given in 
+, and equation of state parameters are given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "sec:Equation-of-State"
@@ -1100,18 +1099,7 @@ noprefix "false"
 
 \end_inset
 
-, and parameters describing the combustion processes are given in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "sec:Combustion-Parameters"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
 .
- 
 \end_layout
 
 \begin_layout Section
