@@ -5,7 +5,7 @@
 \save_transient_properties true
 \origin unavailable
 \textclass PhDThesisLyX
-\options a4paper,titlepage,numbered
+\options a4paper,titlepage,12pt,numbered
 \use_default_options false
 \maintain_unincluded_children false
 \language english
@@ -65,8 +65,8 @@
 \end_index
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation indent
-\paragraph_indentation default
+\paragraph_separation skip
+\defskip bigskip
 \is_math_indent 0
 \math_numbering_side default
 \quotes_style english
@@ -84,68 +84,7 @@
 \begin_body
 
 \begin_layout abstract
-A new second-order numerical scheme based on an operator splitting is proposed
- for the Godunov-Peshkov-Romenski model of continuum mechanics.
- The homogeneous part of the system is solved with a finite volume method
- based on a WENO reconstruction, and the temporal ODEs are solved using
- some analytic results presented here.
- Whilst it is not possible to attain arbitrary-order accuracy with this
- scheme (as with ADER-WENO schemes used previously), the attainable order
- of accuracy is often sufficient, and solutions are computationally cheap
- when compared with other available schemes.
- The new scheme is compared with an ADER-WENO scheme for various test cases,
- and a convergence study is undertaken to demonstrate its order of accuracy.
-\end_layout
-
-\begin_layout abstract
-A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
- by a power law under the Godunov-Peshkov-Romenski model is presented, along
- with a new numerical scheme for solving this system.
- The scheme is also modified to solve the corresponding system for power-law
- elastoplastic solids.
-\end_layout
-
-\begin_layout abstract
-The scheme is based on a temporal operator splitting, with the homogeneous
- system solved using a finite volume method based on a WENO reconstruction,
- and the temporal ODEs solved using an analytical approximate solution.
- The method is found to perform favorably against problems with known exact
- solutions, and numerical solutions published in the open literature.
- It is simple to implement, and to the best of the authors' knowledge it
- is currently the only method for solving this modified version of the GPR
- model.
-\end_layout
-
-\begin_layout abstract
-A framework for simulating the interactions between multiple different continua
- is presented.
- Each constituent material is governed by the same set of equations, differing
- only in terms of their equations of state and strain dissipation functions.
- The interfaces between any combination of fluids, solids, and vacuum are
- handled by a new Riemann Ghost Fluid Method, which is agnostic to the type
- of material on either side (depending only on the desired boundary conditions).
-\end_layout
-
-\begin_layout abstract
-The Godunov-Peshkov-Romenski (GPR) model is used for modeling the continua
- (having recently been used to solve a range of problems involving Newtonian
- and non-Newtonian fluids, and elastic and elastoplastic solids), and this
- study represents a novel approach for handling multimaterial problems under
- this model.
-\end_layout
-
-\begin_layout abstract
-The resulting framework is simple, yet capable of accurately reproducing
- a wide range of different physical scenarios.
- It is demonstrated here to accurately reproduce analytical results for
- known Riemann problems, and to produce expected results in other cases,
- including some featuring heat conduction across interfaces, and impact-induced
- deformation and detonation of combustible materials.
- The framework thus has the potential to streamline development of simulation
- software for scenarios involving multiple materials and phases of matter,
- by reducing the number of different systems of equations that require solvers,
- and cutting down on the amount of theoretical work required to deal with
- the interfaces between materials.
+[[FINISH]]
 \end_layout
 
 \begin_layout abstract

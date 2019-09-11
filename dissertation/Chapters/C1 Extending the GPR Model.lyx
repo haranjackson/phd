@@ -85,6 +85,13 @@
 
 \begin_layout Chapter
 Objective 1: Extending the GPR Model
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Objective-1:-Extending"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1589,6 +1596,13 @@ If the EOS comprises a microscale energy component of Mie-Gruneisen type,
 
 \begin_layout Section
 Reactive Materials
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Reactive-Materials"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1882,6 +1896,13 @@ where
 
 \begin_layout Section
 Numerical Results
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Chap1-Numerical-Results"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection

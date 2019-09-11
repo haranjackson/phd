@@ -114,191 +114,116 @@ The Problem at Hand
 \end_layout
 
 \begin_layout Standard
-The Godunov-Peshkov-Romenski model of continuum mechanics (as described
- in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Equations-of-Motion"
-plural "false"
-caps "false"
-noprefix "false"
+A common theme over the course of humanity's uncovering of the Laws of Physics
+ has been the unification of mathematical descriptions of formerly apparently-di
+sparate physical phenomena (for example Maxwell's equations in unifying
+ the theories of electromagnetism and optics, or the proposed Grand Unified
+ Theories of the electromagnetic, weak, and strong interactions of the Standard
+ Model).
+ Computational Continuum Mechanics is yet to see ubiquitous adoption of
+ such a unified framework, with separate models used to describe the various
+ states of matter.
+ These models differ not just in terms of the first-principles descriptions
+ they posit for the materials that they purport to describe, but also in
+ their mathematical characteristics.
+ For example, the viscous stress terms in the Navier-Stokes equations are
+ empirically derived, and the resulting system is parabolic in nature.
+ By contrast, the Godunov-Romenski equations of elastoplastic deformation
+ of metals are based on a first-principles description of the microscopic
+ material elements of the continuum, and the model is hyperbolic in nature.
+\end_layout
 
-\end_inset
-
-) presents an exciting possibility of being able to describe both fluids
- and solids within the same mathematical framework.
+\begin_layout Standard
+Unified models are not just aesthetically pleasing, but also practically
+ useful.
+ The conceptual work required to implement a computational simulation involving
+ many different components is greatly reduced, saving time and allowing
+ for greater specialization of computational techniques.
  This has the potential to streamline development of simulation software
  by reducing the number of different systems of equations that require solvers,
  and cutting down on the amount of theoretical work required, for example
  in the treatment of interfaces in multimaterial problems.
- In addition to this, the hyperbolic nature of the GPR model ensures that
- the nonphysical instantaneous transmission of information appearing in
- certain non-hyperbolic models (such as the Navier-Stokes equations) cannot
- occur.
- Parallelization also tends to be easier with hyperbolic models, allowing
- us to leverage the great advances that have been made in parallel computing
- architectures in recent years.
 \end_layout
 
 \begin_layout Standard
-At the time of writing, the GPR model has been solved for a variety of fluid
- and solid problems using the ADER-WENO method (
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Boscheri2016,Dumbser2015"
-literal "true"
-
-\end_inset
-
-).
- ADER-WENO methods (described in 
+As an example for which a unified framework of Continuum Mechanics would
+ be greatly beneficial, we take the problem of impact-induced detonation
+ of a combustible material in an elastoplastic confiner.
+ A graphical representation of this problem is shown in 
 \begin_inset CommandInset ref
 LatexCommand formatted
-reference "sec:Numerical-Methods"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-) are extremely effective in producing arbitrarily-high order solutions
- to hyperbolic systems of PDEs, but in some situations their accompanying
- computational cost may prove burdensome.
- A new method is presented in this study that is simple to implement and
- computationally cheaper than a corresponding ADER-WENO method if only second
- order accuracy is required.
- This may prove useful in the design of simulation software addressing problems
- in which not just accuracy but also speed and usability are of paramount
- importance.
-\end_layout
-
-\begin_layout Standard
-The Godunov-Pehskov-Romenski (GPR) model of continuum mechanics (see 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "peshkov_hyperbolic_2016"
-literal "true"
-
-\end_inset
-
-) has been purported to represent an alternative formulation to describe
- both fluids and solids within the same hyperbolic system of differential
- equations.
- From a practical perspective, the potential ramifications of this include:
- the simplification of software made for the simulation of phenomena involving
- different states of matter (as commented on in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "jackson_fast_2017"
-literal "false"
-
-\end_inset
-
-); and the use of the vast array of effective numerical solvers designed
- for first-order hyperbolic systems.
- From a theoretical perspective, an advantage of the GPR model is that it
- cannot produce waves of infinite speed, unlike the parabolic Navier-Stokes
- equations.
- Additionally, the first-principles derivation of the mechanism by which
- viscous effects appear under the GPR model has been commented to be more
- appropriate than the more phenomenological viscous law appearing in the
- traditional Navier-Stokes formulation (see 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "peshkov_unified_2017"
-literal "false"
-
-\end_inset
-
-).
-\end_layout
-
-\begin_layout Standard
-Thus far, the GPR model has been solved for a wide array of different fluids
- (inviscid and viscous Newtonian) and solids (elastic and elastoplastic)
- (see 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dumbser_high_2015,boscheri_cell_2016,peshkov_unified_2017,peshkov_theoretical_2019"
-literal "false"
-
-\end_inset
-
-).
- It has also been extended to incorporate the effects of electrodynamics
- (see 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "dumbser_high_2016"
-literal "false"
-
-\end_inset
-
-) and general relativity (see 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "peshkov_general_2018"
-literal "false"
-
-\end_inset
-
-).
- To the best of our knowledge, it is yet to be formally extended to include
- non-Newtonian power-law fluids, however.
- A method for doing so is presented in this paper.
- Building upon the work of 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "jackson_fast_2017"
-literal "false"
-
-\end_inset
-
- (in which a numerical scheme based upon a split solver was presented for
- Newtonian fluids and elastic solids under the GPR model) a numerical scheme
- is then presented in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Power-Law-Fluids"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- and 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Elastoplastic-Solids"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- for solving this new model.
- This scheme is adapted to work also for elastoplastic power-law materials.
- The scheme is validated against several 1D and 2D tests in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Non-Newtonian-Fluids-&"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-, with discussion presented in 
-\begin_inset CommandInset ref
-LatexCommand formatted
-reference "subsec:Discussion-Non-Newtonian-Fluids"
-plural "false"
-caps "false"
-noprefix "false"
+reference "fig:ConfinedDetonation"
 
 \end_inset
 
 .
+ A reactive liquid is encased in an elastoplastic solid, which is subjected
+ to a large kinetic impulse upon impact with another solid.
+ This initiates a reaction in the combustible material, which propagates
+ throughout the domain, deforming the confiner.
+ As can be seen, three (or possibly four) states of matter are present (a
+ solid confiner, a liquid combustible confined material, and a gaseous/vacuum
+ surrounding environment).
+ Without a unified framework within which to describe this problem, several
+ different sets of equations of motion must be used, with specialized techniques
+ to pass information across the many different inter-material interfaces
+ present.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../Figures/C0/confined.png
+	lyxscale 50
+	height 45theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ConfinedDetonation"
+
+\end_inset
+
+Impact-induced detonation of a combustible material in an elastoplastic
+ confiner (at two different points in time).
+ Diagrams taken from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "michael_multi-physics_2018"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -306,7 +231,14 @@ Review of Current Solutions
 \end_layout
 
 \begin_layout Standard
-This study concerns problems featuring immiscible materials.
+The definition of a multiphase system is slightly ambiguous in the literature.
+ Here it will be taken to mean a system consisting of either two or more
+ different materials (possibly in the same phase of matter), or two or more
+ volumes of (possibly the same) material in different phases of matter.
+ There are two aspects of multiphase systems that require attention: multiphase
+ flow, and multiphase heat transfer.
+ The latter becomes important when the phases are at different temperatures.
+ In this study, the different phases will be assumed to be immiscible.
  There are many approaches available to solve these problems, broadly including
  (but not limited to): Lagrangian and Arbitrary-Lagrangian-Eulerian methods
  
@@ -345,7 +277,88 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-Solids models tend to come in Lagrangian form, and often these are combined
+Without a unified model of continuum mechanics, capable of describing all
+ phases in the same framework, different sets of equations may have to be
+ used in the different regions occupied by different phases.
+ These systems arise, for example, in fluid-structure interaction, or oil-water
+ interfaces.
+ An overview of current approaches to multiphase systems will now be given.
+ The examples here are illustrative but not exhaustive.
+\end_layout
+
+\begin_layout Standard
+There has been a huge amount of research activity in the field over the
+ years, but current approaches can be broadly classified as either monolithic
+ or partitioned 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hou2012"
+literal "true"
+
+\end_inset
+
+.
+ In a monolithic scheme, all phases are described by the same set of nonlinear
+ equations.
+ The evolution of the interfaces is implicit to the equations, unlike in
+ partitioned schemes.
+ See for example 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Michler2004,Hubner2004"
+literal "true"
+
+\end_inset
+
+.
+ The system is solved by a multivariate Newton-type method.
+ It is often ill-conditioned, due to the different scales of the state variables
+ of the different phases.
+ Thus, iterative solvers are required, proving inefficient unless good precondit
+ioners are available.
+ Codes tend to be very specialized to the specific problems they solve,
+ and it requires expertise to develop and maintain such methods.
+\end_layout
+
+\begin_layout Standard
+In a partitioned scheme, the states of the different phases are calculated
+ separately at each time step, possibly using different models.
+ See Rossi and Onate 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rossi2010"
+literal "true"
+
+\end_inset
+
+ for a recent overview of some of the common algorithmic features of these
+ schemes.
+ The individual systems do not suffer from the scaling-induced conditioning
+ problems of monolithic schemes, but attention now needs to be payed to
+ the material interfaces.
+ Modeling them can be unstable and relatively computationally expensive
+ (although typically not as expensive as solving the full monolithic systems).
+ One of the great benefits of partitioned schemes is that legacy implementations
+ of common models may be used in the domains occupied by materials that
+ they describe.
+ These implementations are often well-used and relatively bug free, and
+ tend to be written efficiently for the kinds of problems that the solve.
+ As an example of a software suite taking advantage of this, see the Caltech's
+ Virtual Test Facility 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Aivazis2000"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Under both types of schemes, the models describing the different phases
+ may be formulated in either a Lagrangian, an Eulerian, or an ALE framework.
+ Solids models tend to come in Lagrangian form, and often these are combined
  with ALE forms for the fluid phases, so that the fluid meshes may deform
  to match the deformation of the solid (see, for example, Pin et al.
  
@@ -452,10 +465,10 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-In a recently submitted paper, Michael and Nikiforakis 
+Michael and Nikiforakis 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Michael"
+key "michael_multi-physics_2018"
 literal "true"
 
 \end_inset
@@ -473,45 +486,78 @@ literal "true"
  by use of a Riemann Ghost Fluid Method, with the ghost states calculated
  using specialized mixed-material Riemann solvers for each interaction.
  Whilst these techniques do not suffer from the mesh contortion issues inherent
- in Lagrangian formulations of continuum mechanics, a fair amount of theoretical
- work needs to be done to derive analytical relations describing the interaction
-s between every pair of models used.
+ in Lagrangian formulations of continuum mechanics, and the interface coupling
+ tends to be less computationally expensive than the iterative techniques
+ demanded by monolithic schemes, a fair amount of theoretical work needs
+ to be done to derive analytical relations describing the interactions between
+ every pair of models used.
+\end_layout
+
+\begin_layout Subsection
+A New Approach
 \end_layout
 
 \begin_layout Standard
 If it were possible to describe all phases with the same Eulerian model,
- this method could be used, with only one type of Riemann solver needed
- to cope with any multiphase problem posed.
- The GPR model represents such an opportunity.
- As will be seen, the model also includes terms for heat conduction, which
- do not appear in the basic formulations of many of the common models used
- in multiphase systems (e.g.
- the Euler equations, or the Godunov-Romenski equations of solid mechanics).
+ the method of Michael and Nikiforakis could be used, with only one type
+ of Riemann solver needed to cope with any multiphase problem posed.
+ This would effectively be a partitioned scheme with the same system solved
+ in each domain.
+ The Godunov-Peshkov-Romenski (GPR) model (proposed in 2014 by Ilya Peshkov
+ and Eugeny Romenski 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Peshkov2016"
+literal "false"
+
+\end_inset
+
+) represents one such opportunity.
+ It is able to describe both fluids and solids within the same mathematical
+ framework.
+ In addition to this, the hyperbolic nature of the GPR model ensures that
+ the nonphysical instantaneous transmission of information appearing in
+ certain non-hyperbolic models (such as the Navier-Stokes equations, or
+ Fourier heat equation) cannot occur.
+ Additionally, the first-principles derivation of the mechanism by which
+ viscous effects appear under the GPR model has been commented on to be
+ more appropriate than the more phenomenological viscous law appearing in
+ the traditional Navier-Stokes formulation (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "peshkov_unified_2017"
+literal "false"
+
+\end_inset
+
+).
+ Parallelization also tends to be easier with hyperbolic models, allowing
+ us to leverage the great advances that have been made in parallel computing
+ architectures in recent years 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "afzal_parallelization_2017"
+literal "false"
+
+\end_inset
+
+, and the use of the vast array of effective numerical solvers designed
+ for first-order hyperbolic systems (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Toro2009"
+literal "false"
+
+\end_inset
+
+ for an overview).
+ As will be seen, the GPR model also includes terms for heat conduction,
+ which do not appear in the basic formulations of many of the common models
+ used in multiphase systems (e.g.
+ the Euler equations, or the Navier-Stokes equations, or the Godunov-Romenski
+ equations of solid mechanics).
  Heat conduction is often ignored in multiphase modeling, but such a framework
  based on the GPR model would almost unavoidably include it.
-\end_layout
-
-\begin_layout Standard
-At present, there is no way of dealing with material interfaces in the GPR
- model, however.
- In this study, a modification of Barton's 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "Barton2010"
-literal "false"
-
-\end_inset
-
- application of Sambasivan and Udaykumar's Riemann Ghost Fluid Method 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "Sambasivan2009,Sambasivan2009a"
-literal "false"
-
-\end_inset
-
- is devised for the GPR model, enabling the simulation of material interfaces.
- This new method is tested on a variety of interface problems.
 \end_layout
 
 \begin_layout Standard
@@ -523,13 +569,103 @@ literal "false"
 
 \end_inset
 
- have presented a method for multimaterial modeling of a similar system
- (including the distortion tensor of the GPR model, but excluding the heat
- conduction terms).
+ have presented a method for multimaterial modeling of a similar system,
+ including the distortion tensor of the GPR model (discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Equations-of-Motion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), but excluding the heat conduction terms.
  This method is based on level sets, similar to the method presented in
  this paper.
  It should be noted, however, that de Brauer et al do not apply their method
  to the modeling of viscous flows.
+\end_layout
+
+\begin_layout Standard
+Any unified model of continuum mechanics purporting to describe all phases
+ of interest must be at least as descriptive as competing models tailored
+ to each individual phase if the utmost model fidelity is required.
+ Although the results for the GPR model applied to standard test cases have
+ been promising, both here and in other preliminary studies 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dumbser2016a,Boscheri2016"
+literal "true"
+
+\end_inset
+
+, more work is required to determine how faithfully the GPR model reproduces
+ common agreed phenomenological results.
+\end_layout
+
+\begin_layout Standard
+Thus far, the GPR model has been solved for a wide array of different fluids
+ (inviscid and viscous Newtonian) and solids (elastic and elastoplastic)
+ (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2015,boscheri_cell_2016,peshkov_unified_2017,peshkov_theoretical_2019"
+literal "false"
+
+\end_inset
+
+).
+ It has also been extended to incorporate the effects of electrodynamics
+ (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "dumbser_high_2016"
+literal "false"
+
+\end_inset
+
+) and general relativity (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "peshkov_general_2018"
+literal "false"
+
+\end_inset
+
+).
+ It is yet to be formally extended to include non-Newtonian power-law fluids,
+ however.
+ Additionally, until this point, it has not been used to model reactive
+ processes, such as those occurring in impact-induced detonation of combustible
+ materials.
+\end_layout
+
+\begin_layout Standard
+The GPR model has been solved solely using the ADER-WENO method (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boscheri2016,Dumbser2015"
+literal "true"
+
+\end_inset
+
+).
+ ADER-WENO methods (described in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) are extremely effective in producing arbitrarily-high order solutions
+ to hyperbolic systems of PDEs, but in some situations their accompanying
+ computational cost proves burdensome.
+ Additionally, at present, there is no way of dealing with material interfaces
+ in the GPR model.
 \end_layout
 
 \begin_layout Subsection
@@ -537,18 +673,445 @@ Objectives of this Study
 \end_layout
 
 \begin_layout Standard
-The following two subsections outline the theory behind the GPR model and
- ghost fluid methods.
- In Section 2 we explore the eigenstructure of the GPR model, and use it
- to derive a Riemann solver for the Riemann problem at the interfaces between
- different materials, which is able to incorporate the boundary conditions
- that we wish to use.
- Section 3 presents results of fluid-fluid, solid-solid, fluid-solid, and
- solid-vacuum problems, including some multidimensional cases, and some
- incorporating heat conduction across the interfaces.
- Conclusions are drawn in section 4, along with discussion of potential
- limitations to the method presented here, and ideas for further avenues
- of enquiry.
+The objective of this study is to develop the GPR model in various specific
+ ways so that it may be used to simulate the problem of impact-induced detonatio
+n of a combustible material in an elastoplastic confiner (and thus also
+ a range of other multimaterial, multiphase physical processes - including
+ those involving reactive species).
+ The interfaces between these phases and the exchange of state information
+ between them need to be dealt with in any numerical method employed.
+ The GPR model must also be augmented in some way to capture the kinetics
+ of the chemical reactions present.
+ Up until now, ADER-WENO methods have been used to solve the GPR model.
+ Whilst these are able to provide arbitrarily-high-order accuracy solutions
+ in both space and time, they are too slow for the practical applications
+ of the aforementioned type, even at second-order accuracy; faster numerical
+ solvers are needed.
+\end_layout
+
+\begin_layout Standard
+Thus, there are three main objectives to be addressed:
+\end_layout
+
+\begin_layout Enumerate
+To combine the GPR model with the models used to describe the reactions
+ of combustible materials
+\end_layout
+
+\begin_layout Enumerate
+To develop numerical methods for solving the GPR model in a reasonable amount
+ of time
+\end_layout
+
+\begin_layout Enumerate
+To develop stable and accurate techniques to deal with the interfaces between
+ different materials in multimaterial / multiphase problems
+\end_layout
+
+\begin_layout Standard
+The outline of this study is as follows.
+ The GPR model - and the intuition behind its derivation - are covered in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Equations-of-Motion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The numerical methods that are currently used to solve this model - and
+ others of a similar mathematical form - are covered in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Numerical-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This includes a discussion of the WENO Method, the Discontinuous and Continuous
+ Galerkin Methods, and the Finite Volume Method that they are applied to.
+\end_layout
+
+\begin_layout Standard
+Objective 1 is addressed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Objective-1:-Extending"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Analytical work is performed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Equations-of-State"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to enable the use of a broad set of equations of state with the GPR model
+ (allowing for the simulation of all materials encountered in the impact-induced
+ detonation problem).
+ The GPR model is extended to incorporate reactive species in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Reactive-Materials"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ These extensions are demonstrated to reproduce accepted numerical results
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Chap1-Numerical-Results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Objective 2 is addressed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Objective-2:-Improved"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ First, in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Extending-the-Montecinos-Balsara"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the recently-proposed improvement on the ADER-WENO method of Montecinos
+ and Balsara 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "montecinos_cell-centered_2017"
+literal "true"
+
+\end_inset
+
+ is extended to work in multiple dimensions.
+ Next, a second-order operator splitting method for the GPR model is presented
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This method is significantly faster than even the aforementioned modified
+ ADER-WENO method, while retaining a reasonable order of accuracy.
+ For the first time, in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Distortion-ODEs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the relaxation mechanism of the GPR model is modified to allow for the
+ simulation of non-Newtonian viscous fluids and elastoplastic solids (as
+ required for the elastoplastic confined of the impact-induced detonation
+ problem).
+ A second-order operator splitting method is presented for these material
+ classes also.
+ Many numerical tests are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Chap2-Numerical-Results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, to demonstrate both the physical relevance of the modifications made to
+ the GPR model, and the accuracy of the solvers that have been derived.
+ Discussion of the results presented is given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Conclusions"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Objective 3 is addressed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Objective-3:-Simulating"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ An overview of Level Sets and Ghost Fluid Methods is given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Ghost-Fluid-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ A Riemann Ghost Fluid Method is derived for the GPR model in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, for both problems involving both heat conduction and no heat conduction.
+ This method is based on a novel eigenstructure analysis of the GPR model,
+ which is provided in the appendix.
+ A range of multimaterial/multiphase tests are performed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Chap3-Numerical-Results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to demonstrate the suitability of this method in modeling the evolution
+ of interfaces between every possible pairing of material types.
+ A convergence study is also provided.
+ Discussion the methods, its limitations, and potential future improvements
+ are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Discussion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Impact-Induced-Detonation-in"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is dedicated to combining the previous three chapters to solve large physical
+ problems that incorporate phenomena necessitating all the analytical and
+ numerical work that has been done.
+ It is demonstrated in this chapter that the solutions to the three objectives
+ stated above are capable of being combined into a cohesive unified continuum
+ mechanics framework.
+ Concluding remarks are made in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Conclusions-&-Discussion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ A discussion of the work produced in this study is given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Chap5-Discussion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, with discussion of future possible avenues of research given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Future-Research"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Explicit forms of mathematical objects appearing in the GPR model are given
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:System Matrices"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The fluxes, sources, and non-conservative matrices are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Fluxes,-Sources,-and"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Jacobians of the conserved and primitive variables, and their fluxes and
+ sources are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Jacobians"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ An eigenstructure analysis of the GPR model is performed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Eigenstructure"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ First, the primitive system is derived in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Primitive-System"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ From this, the eigenvalues (
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenvalues"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and eigenvectors (
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Eigenvectors"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) are derived, for both the case with heat conduction and without.
+ Parameters pertaining to the various different materials encountered in
+ this study are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Model-Parameters"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Properties of common materials are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Material-Properties"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Equation of state parameters are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Equation-of-State"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and parameters describing the combustion processes are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Combustion-Parameters"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Section
@@ -1756,6 +2319,34 @@ literal "true"
 \end_inset
 
 ).
+ The method was first devised by Toro and collaborators (see 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "toro2001towards"
+literal "true"
+
+\end_inset
+
+ and also 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "toro2002solution,titarev2002ader"
+literal "true"
+
+\end_inset
+
+).
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Dumbser2008"
+literal "true"
+
+\end_inset
+
+ obviated the need for the cumbersome analytic work required by the Cauchy-Kowal
+ewski procedure by use of a Galerkin predictor, as described in the following
+ procedure.
 \end_layout
 
 \begin_layout Standard
@@ -3248,7 +3839,7 @@ Let
 \begin_inset Formula $\Lambda_{i}^{n}$
 \end_inset
 
- be the set of eigenvalues of the HPR system evaluated at 
+ be the set of eigenvalues of the GPR system evaluated at 
 \begin_inset Formula $\boldsymbol{Q_{i}^{n}}.$
 \end_inset
 

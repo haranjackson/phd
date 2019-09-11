@@ -91,6 +91,13 @@ name "chap:Eigenstructure"
 
 \begin_layout Section
 Primitive System
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Primitive-System"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1017,6 +1024,13 @@ where
 
 \begin_layout Section
 Eigenvectors
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Eigenvectors"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection*

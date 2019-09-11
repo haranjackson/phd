@@ -80,6 +80,13 @@
 
 \begin_layout Chapter
 Model Parameters
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Model-Parameters"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -90,6 +97,13 @@ The parameters for different materials under different equations of state
 
 \begin_layout Section
 Material Properties
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Material-Properties"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1118,6 +1132,13 @@ Reference parameters for various materials
 
 \begin_layout Section
 Equation of State Parameters
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Equation-of-State"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2354,6 +2375,13 @@ Plasticity parameters for various materials
 
 \begin_layout Section
 Combustion Parameters
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Combustion-Parameters"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

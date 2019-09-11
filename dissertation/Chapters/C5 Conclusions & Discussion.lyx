@@ -84,7 +84,7 @@
 \begin_body
 
 \begin_layout Chapter
-Conclusions & Discussion
+Conclusions
 \begin_inset CommandInset label
 LatexCommand label
 name "chap:Conclusions-&-Discussion"
@@ -95,7 +95,33 @@ name "chap:Conclusions-&-Discussion"
 \end_layout
 
 \begin_layout Section
-Improvements
+Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Chap5-Discussion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[[FINISH]]
+\end_layout
+
+\begin_layout Section
+Future Research
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Future-Research"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[[FINISH]]
 \end_layout
 
 \begin_layout Itemize

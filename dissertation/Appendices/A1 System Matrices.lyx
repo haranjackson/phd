@@ -91,6 +91,13 @@ name "chap:System Matrices"
 
 \begin_layout Section
 Fluxes, Sources, and Non-Conservative Terms
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Fluxes,-Sources,-and"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -399,6 +406,13 @@ B_{3}=\left(\begin{array}{cccccccccccccccccc}
 
 \begin_layout Section
 Jacobians
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Jacobians"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection*

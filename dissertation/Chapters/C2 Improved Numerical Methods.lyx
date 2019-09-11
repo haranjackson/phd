@@ -103,10 +103,24 @@
 
 \begin_layout Chapter
 Objective 2: Improved Numerical Methods
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Objective-2:-Improved"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Extending the Montecinos-Balsara ADER Method
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Extending-the-Montecinos-Balsara"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -119,6 +133,44 @@ literal "true"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+Hyperbolic systems of PDEs can be solved to arbitrary orders of accuracy
+ by using the ADER-WENO method.
+ These PDE systems may be non-conservative and non-homogeneous, and contain
+ stiff source terms.
+ ADER-WENO requires a spatiotemporal polynomial reconstruction of the data
+ in each spacetime cell, at each time step.
+ This reconstruction is obtained as the root of a nonlinear system, resulting
+ from the use of a Galerkin method.
+ It was proved in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jackson2017"
+literal "true"
+
+\end_inset
+
+ that for traditional choices of basis polynomials, the eigenvalues of certain
+ matrices appearing in these nonlinear systems are always 0, regardless
+ of the number of spatial dimensions of the PDEs or the chosen order of
+ accuracy of the ADER-WENO method.
+ This guarantees fast convergence to the Galerkin root for certain classes
+ of PDEs.
+\end_layout
+
+\begin_layout Standard
+Montecinos and Balsara have presented a new, more efficient class of basis
+ polynomials for the one-dimensional ADER-WENO method.
+ This new class of basis polynomials, originally presented for conservative
+ systems, is extended to multidimensional, non-conservative systems here,
+ and the corresponding property regarding the eigenvalues of the Galerkin
+ matrices is proved.
+\end_layout
+
+\begin_layout Subsection
+The Method of Montecinos and Balsara
 \end_layout
 
 \begin_layout Standard
@@ -1835,7 +1887,46 @@ literal "true"
 
 \end_inset
 
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jackson_numerical_2019"
+literal "false"
+
+\end_inset
+
 .
+\end_layout
+
+\begin_layout Standard
+A new second-order numerical scheme based on an operator splitting is proposed
+ for the GPR model.
+ The homogeneous part of the system is solved with a finite volume method
+ based on a WENO reconstruction, and the temporal ODEs are solved using
+ some analytic results presented here.
+ Whilst it is not possible to attain arbitrary-order accuracy with this
+ scheme (as with ADER-WENO schemes used previously), the attainable order
+ of accuracy is often sufficient, and solutions are computationally cheap
+ when compared with other available schemes.
+ The new scheme is compared with an ADER-WENO scheme for various test cases,
+ and a convergence study is undertaken to demonstrate its order of accuracy.
+\end_layout
+
+\begin_layout Standard
+A method for modeling non-Newtonian fluids (dilatants and pseudoplastics)
+ by a power law under the GPR model is also presented, along with a new
+ numerical scheme for solving this system.
+ The scheme is also modified to solve the corresponding system for power-law
+ elastoplastic solids.
+ The method is found to perform favorably against problems with known exact
+ solutions, and numerical solutions published in the open literature.
+ It is simple to implement, and to the best of the authors' knowledge it
+ is currently the only method for solving this modified version of the GPR
+ model.
+\end_layout
+
+\begin_layout Subsection
+Strang Splitting
 \end_layout
 
 \begin_layout Standard
@@ -4241,7 +4332,15 @@ name "fig:rheology"
 
 \end_inset
 
-The stress-strain relationships for different kinds of fluids (source [REF])
+The stress-strain relationships for different kinds of fluids (source 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wikipedia_contributors_non-newtonian_2019"
+literal "false"
+
+\end_inset
+
+)
 \end_layout
 
 \end_inset
@@ -5236,6 +5335,12 @@ rable quantity.
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Chap2-Numerical-Results"
+
+\end_inset
+
 Numerical Results
 \end_layout
 
@@ -10600,6 +10705,13 @@ name "fig:cylindrical-shock-2"
 
 \begin_layout Section
 Conclusions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusions"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection

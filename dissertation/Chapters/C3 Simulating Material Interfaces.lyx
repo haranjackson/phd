@@ -85,6 +85,13 @@
 
 \begin_layout Chapter
 Objective 3: Simulating Material Interfaces
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Objective-3:-Simulating"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -97,6 +104,38 @@ literal "true"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+A framework for simulating the interactions between multiple different continua
+ is presented.
+ Each constituent material is governed by the same set of equations, differing
+ only in terms of their equations of state and strain dissipation functions.
+ The interfaces between any combination of fluids, solids, and vacuum are
+ handled by a new Riemann Ghost Fluid Method, which is agnostic to the type
+ of material on either side (depending only on the desired boundary conditions).
+\end_layout
+
+\begin_layout Standard
+The Godunov-Peshkov-Romenski (GPR) model is used for modeling the continua
+ (having recently been used to solve a range of problems involving Newtonian
+ and non-Newtonian fluids, and elastic and elastoplastic solids), and this
+ study represents a novel approach for handling multimaterial problems under
+ this model.
+\end_layout
+
+\begin_layout Standard
+The resulting framework is simple, yet capable of accurately reproducing
+ a wide range of different physical scenarios.
+ It is demonstrated here to accurately reproduce analytical results for
+ known Riemann problems, and to produce expected results in other cases,
+ including some featuring heat conduction across interfaces, and impact-induced
+ deformation and detonation of combustible materials.
+ The framework thus has the potential to streamline development of simulation
+ software for scenarios involving multiple materials and phases of matter,
+ by reducing the number of different systems of equations that require solvers,
+ and cutting down on the amount of theoretical work required to deal with
+ the interfaces between materials.
 \end_layout
 
 \begin_layout Section
@@ -2513,6 +2552,12 @@ where
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Chap3-Numerical-Results"
+
+\end_inset
+
 Numerical Results
 \end_layout
 
