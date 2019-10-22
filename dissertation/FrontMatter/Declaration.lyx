@@ -46,7 +46,7 @@
 \use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
-\biblio_style plainnat
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
@@ -60,8 +60,8 @@
 \end_index
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation indent
-\paragraph_indentation default
+\paragraph_separation skip
+\defskip medskip
 \is_math_indent 0
 \math_numbering_side default
 \quotes_style english
@@ -79,9 +79,20 @@
 \begin_body
 
 \begin_layout declaration
-This dissertation is the result of my own work and includes nothing which
- is the outcome of work done in collaboration except where specifically
- indicated in the text.
+This thesis is the result of my own work and includes nothing which is the
+ outcome of work done in collaboration except as declared in the preface
+ and specified in the text.
+\end_layout
+
+\begin_layout declaration
+It is not substantially the same as any work that has already been submitted
+ before for any degree or other qualification except as declared in the
+ preface and specified in the text.
+\end_layout
+
+\begin_layout declaration
+It does not exceed the prescribed word limit for the Physics and Chemistry
+ Degree Committee.
 \end_layout
 
 \begin_layout declaration

@@ -1044,7 +1044,7 @@ Confined C4 Detonation with Air Gap
 
 \begin_layout Standard
 This problem is designed to test the ability of the framework presented
- in this paper to capture the interaction of widely varying media.
+ in this study to capture the interaction of widely varying media.
  It is identical to the previous problem, except an air gap is now placed
  between the first steel plate and the C4.
  The air has the same EOS parameters as the surrounding air.

@@ -84,7 +84,61 @@
 \begin_body
 
 \begin_layout abstract
-[[FINISH]]
+
+\series bold
+A Unified Framework for Simulating Impact-Induced Detonation of a Combustible
+ Material in an Elasto-Plastic Confiner
+\end_layout
+
+\begin_layout abstract
+\paragraph_spacing double
+\noindent
+
+\shape slanted
+Haran Jackson
+\end_layout
+
+\begin_layout abstract
+A new framework for the computational simulation of problems arising in
+ continuum mechanics is presented.
+ It is unified in the sense that it can describe all three major phases
+ of matter within the same set of equations.
+ It is able to represent inviscid fluids, Newtonian and non-Newtonian viscous
+ fluids, elastic and plastic solids, and reactive species.
+ These materials are presented with a variety of equations of state, and
+ there is a clear methodology for extending the framework to more exotic
+ materials using other constitutive equations.
+ It is capable of accurately modeling interfaces between regions occupied
+ by different phases, and by the vacuum.
+\end_layout
+
+\begin_layout abstract
+The problem of impact-induced detonation in an elastoplastic confiner is
+ one that incorporates the whole range of aforementioned material types,
+ representing a challenge to existing frameworks.
+ This new framework is shown to accurately and efficiently solve this problem.
+\end_layout
+
+\begin_layout abstract
+The framework comprises a modification and extension of the Godunov-Peshkov-Rome
+nski (GPR) model of continuum mechanics, along with a new set of operator-splitt
+ing-based numerical solvers to allow for the efficient solution of the problems
+ that it is put to, and a new Riemann ghost fluid method for accurate simulation
+ of material interfaces.
+ In addition to this work, novel mathematical analyses of the structure
+ of the GPR equations - and the numerical methods currently used to solve
+ them - are presented in this study.
+\end_layout
+
+\begin_layout abstract
+This new framework presents a range of benefits: the conceptual work required
+ to implement a computational simulation involving many different components
+ is greatly reduced, saving time and allowing for greater specialization
+ of computational techniques.
+ This has the potential to streamline development of simulation software
+ by reducing the number of different systems of equations that require solvers,
+ and cutting down on the amount of theoretical work required, for example
+ in the treatment of interfaces in multimaterial problems.
 \end_layout
 
 \begin_layout abstract

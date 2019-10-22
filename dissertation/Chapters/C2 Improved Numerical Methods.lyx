@@ -170,7 +170,7 @@ Montecinos and Balsara have presented a new, more efficient class of basis
 \end_layout
 
 \begin_layout Subsection
-The Method of Montecinos and Balsara
+Method of Montecinos and Balsara
 \end_layout
 
 \begin_layout Standard
@@ -1061,7 +1061,7 @@ reference "eq:F representation"
 \end_layout
 
 \begin_layout Subsection
-The Discontinuous Galerkin Method
+Discontinuous Galerkin Method
 \end_layout
 
 \begin_layout Standard
@@ -1357,7 +1357,7 @@ literal "true"
 \end_layout
 
 \begin_layout Subsection
-The Continuous Galerkin Method
+Continuous Galerkin Method
 \end_layout
 
 \begin_layout Standard
@@ -2259,7 +2259,7 @@ noprefix "false"
 \end_layout
 
 \begin_layout Subsection
-The Homogeneous System
+Homogeneous System
 \end_layout
 
 \begin_layout Standard
@@ -2666,7 +2666,7 @@ It was found that the Osher-Solomon flux would often produce slightly less
 \end_layout
 
 \begin_layout Subsection
-The Thermal Impulse ODEs
+Thermal Impulse ODEs
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:The-Thermal-Impulse-ODEs"
@@ -2875,7 +2875,7 @@ Note that this is a generalized Lotka-Volterra system in
 \end_layout
 
 \begin_layout Subsection
-The Distortion ODEs
+Distortion ODEs
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:The-Distortion-ODEs"
@@ -3331,11 +3331,11 @@ name "fig:EquationBounds"
 
 \end_inset
 
-The (shaded) region to which 
+Region to which 
 \begin_inset Formula $x_{i},x_{j}$
 \end_inset
 
- are confined in the evolution of the distortion ODEs
+ are confined in the evolution of the distortion ODEs (shaded)
 \end_layout
 
 \end_inset
@@ -4332,7 +4332,7 @@ name "fig:rheology"
 
 \end_inset
 
-The stress-strain relationships for different kinds of fluids (source 
+Stress-strain relationships for different kinds of fluids (source: 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "wikipedia_contributors_non-newtonian_2019"
@@ -5475,7 +5475,7 @@ name "fig:Distortion-ODEs_A"
 
 \end_inset
 
-The components of the distortion tensor in the Strain Relaxation Test
+Components of the distortion tensor in the Strain Relaxation Test
 \end_layout
 
 \end_inset
@@ -5526,8 +5526,8 @@ name "fig:Distortion-ODEs_E"
 
 \end_inset
 
-The singular values of the distortion tensor and the energy in the Strain
- Relaxation Test
+Singular values of the distortion tensor and the energy in the Strain Relaxation
+ Test
 \end_layout
 
 \end_inset
@@ -5578,7 +5578,7 @@ name "fig:Distortion-ODEs_σ"
 
 \end_inset
 
-The components of the stress tensor in the Strain Relaxation Test
+Components of the stress tensor in the Strain Relaxation Test
 \end_layout
 
 \end_inset
@@ -6147,11 +6147,11 @@ name "fig:Stokes"
 
 \end_inset
 
-Results of solving Stokes' First Problem (
-\begin_inset Formula $\mu=10^{-2},\mu=10^{-3},\mu=10^{-4}$
+Velocity profiles in Stokes' First Problem (for 
+\begin_inset Formula $\mu=10^{-2},10^{-3},10^{-4}$
 \end_inset
 
-) with an ADER-WENO scheme and a Split-WENO scheme (
+), solved with an ADER-WENO scheme and a Split-WENO scheme (
 \begin_inset Formula $N=2$
 \end_inset
 
@@ -7056,8 +7056,8 @@ name "fig:Heat-Conduction"
 
 \end_inset
 
-Results of solving the problem of Heat Conduction in Gas with both an ADER-WENO
- scheme and a Split-WENO scheme (
+Temperature and heat flux in the problem of Heat Conduction in Gas, solved
+ with an ADER-WENO scheme and a Split-WENO scheme (
 \begin_inset Formula $N=2$
 \end_inset
 
@@ -7100,7 +7100,7 @@ literal "true"
 \end_inset
 
 , 
-\begin_inset Formula $T_{ref}=300$
+\begin_inset Formula $T^{ref}=300$
 \end_inset
 
 , 
@@ -7397,7 +7397,7 @@ name "fig:Elastic"
 
 \end_inset
 
-Results for the 3-wave and 5-wave purely elastic Riemann problems
+Density and velocity in the 3-wave and 5-wave purely elastic Riemann problems
 \end_layout
 
 \end_inset
@@ -10164,8 +10164,12 @@ name "fig:lid-driven-cavity-n=1.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test under our new formulation
- (solid line), for a dilatant with n=1.5.
+Velocity profiles for the Lid-Driven Cavity Test under the new formulation
+ (solid line), for a dilatant with 
+\begin_inset Formula $n=1.5$
+\end_inset
+
+.
  Slices are taken through the center of the domain, in both axes, and compared
  with those of 
 \begin_inset CommandInset citation
@@ -10233,8 +10237,12 @@ name "fig:lid-driven-cavity-n=0.5"
 
 \end_inset
 
-Velocity profiles for the Lid-Driven Cavity Test under our new formulation
- (solid line), for a pseudoplastic with n=0.5.
+Velocity profiles for the Lid-Driven Cavity Test under the new formulation
+ (solid line), for a pseudoplastic with 
+\begin_inset Formula $n=0.5$
+\end_inset
+
+.
  Slices are taken through the center of the domain, in both axes, and compared
  with those of 
 \begin_inset CommandInset citation
@@ -10303,8 +10311,15 @@ name "fig:lid-driven-cavity-2d"
 
 \end_inset
 
-Streamplots for the Lid-Driven Cavity Test, for a pseudoplastic with n=0.5
- (left) and a dilatant with n=1.5 (right) 
+Streamplots for the Lid-Driven Cavity Test, for a pseudoplastic with 
+\begin_inset Formula $n=0.5$
+\end_inset
+
+ (left) and a dilatant with 
+\begin_inset Formula $n=1.5$
+\end_inset
+
+ (right) 
 \end_layout
 
 \end_inset
@@ -10698,8 +10713,8 @@ name "fig:cylindrical-shock-ρ"
 
 \end_inset
 
-1D density profiles for the 2D Cylindrical Shock Test, comparing the GPR
- model with split solver (left) to the results from 
+1D density profiles for the 2D Cylindrical Shock Test: GPR model with split
+ solver (left) and results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -10758,8 +10773,8 @@ name "fig:cylindrical-shock-v"
 
 \end_inset
 
-1D velocity profiles for the 2D Cylindrical Shock Test, comparing the GPR
- model with split solver (left) to the results from 
+1D velocity profiles for the 2D Cylindrical Shock Test: GPR model with split
+ solver (left) and results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -10818,8 +10833,8 @@ name "fig:cylindrical-shock-Σ"
 
 \end_inset
 
-1D stress tensor profiles for the 2D Cylindrical Shock Test, comparing the
- GPR model with split solver (left) to the results from 
+1D stress tensor profiles for the 2D Cylindrical Shock Test: GPR model with
+ split solver (left) and results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"
@@ -10878,8 +10893,8 @@ name "fig:cylindrical-shock-T"
 
 \end_inset
 
-1D temperature profiles for the 2D Cylindrical Shock Test, comparing the
- GPR model with split solver (left) to the results from 
+1D temperature profiles for the 2D Cylindrical Shock Test: GPR model with
+ split solver (left) and results from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "barton_eulerian_2011"

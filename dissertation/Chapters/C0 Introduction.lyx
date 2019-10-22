@@ -181,7 +181,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename ../Figures/C0/confined.png
-	lyxscale 50
+	lyxscale 25
 	height 45theight%
 
 \end_inset
@@ -200,8 +200,7 @@ name "fig:ConfinedDetonation"
 \end_inset
 
 Impact-induced detonation of a combustible material in an elastoplastic
- confiner (at two different points in time).
- Diagrams taken from 
+ confiner, at two different points in time (source: 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "michael_multi-physics_2018"
@@ -209,7 +208,7 @@ literal "true"
 
 \end_inset
 
-.
+)
 \end_layout
 
 \end_inset
@@ -231,6 +230,39 @@ Review of Current Solutions
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "ALE"
+description "Arbitrary-Lagrangian-Eulerian"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "VOF"
+description "Volume of Fluid"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "GFM"
+description "Ghost Fluid Method"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The definition of a multiphase system is slightly ambiguous in the literature.
  Here it will be taken to mean a system consisting of either two or more
  different materials (possibly in the same phase of matter), or two or more
@@ -240,8 +272,8 @@ The definition of a multiphase system is slightly ambiguous in the literature.
  The latter becomes important when the phases are at different temperatures.
  In this study, the different phases will be assumed to be immiscible.
  There are many approaches available to solve these problems, broadly including
- (but not limited to): Lagrangian and Arbitrary-Lagrangian-Eulerian methods
- 
+ (but not limited to): Lagrangian and Arbitrary-Lagrangian-Eulerian (ALE)
+ methods 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "scardovelli_direct_1999,donea_arbitrary_1982"
@@ -249,7 +281,7 @@ literal "false"
 
 \end_inset
 
-, volume of fluid methods 
+, volume of fluid (VOF) methods 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "rider_reconstructing_1998,nichols_sola-vof:_1980"
@@ -265,7 +297,8 @@ literal "false"
 
 \end_inset
 
-, and level-set methods (including the ghost fluid approach 
+, and level-set methods, including the ghost fluid method (GFM) approach
+ 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "osher_level_2001,fedkiw_non-oscillatory_1999"
@@ -273,7 +306,7 @@ literal "false"
 
 \end_inset
 
-).
+.
 \end_layout
 
 \begin_layout Standard
@@ -407,8 +440,8 @@ literal "true"
  solid, and a reformulated Lagrangian model for the fluid, implementing
  the necessary adaptive remeshing.
  Yet another option is to model both the fluid and the solid in an Eulerian
- framework, although this now necessitates a level set method or volume
- of fluid method 
+ framework, although this now necessitates a level set method or VOF method
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Hirt1981"
@@ -498,12 +531,38 @@ A New Approach
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "GPR"
+description "Godunov-Peshkov-Romenski"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "ADER"
+description "Arbitrary DERivative"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 If it were possible to describe all phases with the same Eulerian model,
  the method of Michael and Nikiforakis could be used, with only one type
  of Riemann solver needed to cope with any multiphase problem posed.
  This would effectively be a partitioned scheme with the same system solved
  in each domain.
- The Godunov-Peshkov-Romenski (GPR) model (proposed in 2014 by Ilya Peshkov
+\end_layout
+
+\begin_layout Standard
+The Godunov-Peshkov-Romenski (GPR) model (proposed in 2014 by Ilya Peshkov
  and Eugeny Romenski 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -582,7 +641,7 @@ noprefix "false"
 
 ), but excluding the heat conduction terms.
  This method is based on level sets, similar to the method presented in
- this paper.
+ this study.
  It should be noted, however, that de Brauer et al do not apply their method
  to the modeling of viscous flows.
 \end_layout
@@ -924,7 +983,7 @@ noprefix "false"
  to demonstrate the suitability of this method in modeling the evolution
  of interfaces between every possible pairing of material types.
  A convergence study is also provided.
- Discussion the methods, its limitations, and potential future improvements
+ Discussion of the method, its limitations, and potential future improvements
  are given in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -948,9 +1007,9 @@ noprefix "false"
 
 \end_inset
 
- is dedicated to combining the previous three chapters to solve large physical
- problems that incorporate phenomena necessitating all the analytical and
- numerical work that has been done.
+ is dedicated to combining the ideas developed in the previous three chapters
+ to solve large physical problems that incorporate phenomena necessitating
+ all the analytical and numerical work that has been done.
  It is demonstrated in this chapter that the solutions to the three objectives
  stated above are capable of being combined into a cohesive unified continuum
  mechanics framework.
@@ -1352,6 +1411,46 @@ literal "true"
 \end_inset
 
 
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\psi$"
+description "$\\frac{\\partial E}{\\partial A}$"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$\\boldsymbol{H}$"
+description "$\\frac{\\partial E}{\\partial\\boldsymbol{J}}$"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\theta_{1}$"
+description "Positive function controlling the rate of relaxation of the distortion tensor in the GPR model"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\theta_{2}$"
+description "Positive function controlling the rate of relaxation of the thermal impulse vector in the GPR model"
+literal "true"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1498,6 +1597,59 @@ reference "eq:EnergyEquation"
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$\\boldsymbol{P}$"
+description "Vector of primitive variables"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$\\boldsymbol{Q}$"
+description "Vector of conserved variables"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$\\boldsymbol{F}$"
+description "Flux vector"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$\\boldsymbol{B}$"
+description "Matrix of purely non-conservative components of a hyperbolic system of PDEs"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$\\boldsymbol{S}$"
+description "Vector of algebraic source terms"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 \frac{\partial\boldsymbol{Q}}{\partial t}+\boldsymbol{\nabla}\cdot\boldsymbol{F}+\boldsymbol{B}\cdot\nabla\boldsymbol{Q}=\boldsymbol{S}
@@ -1509,7 +1661,7 @@ reference "eq:EnergyEquation"
 \end_layout
 
 \begin_layout Subsection
-Variable Relations
+Relationships between Variables
 \end_layout
 
 \begin_layout Standard
@@ -1660,7 +1812,7 @@ E_{1}=\frac{p+\gamma p_{\infty}}{\rho\left(\gamma-1\right)}
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-E_{1}=\frac{p_{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p-p_{ref}}{\Gamma_{0}\rho_{0}}
+E_{1}=\frac{p^{ref}}{2}\left(\frac{1}{\rho_{0}}-\frac{1}{\rho}\right)+\frac{p-p^{ref}}{\Gamma_{0}\rho_{0}}
 \end{equation}
 
 \end_inset
@@ -1708,7 +1860,7 @@ literal "false"
 \end_inset
 
 ).
- This is out of scope of this paper, however, and presents an avenue of
+ This is out of scope of this study, however, and presents an avenue of
  future research.
  Note that 
 \begin_inset Formula $E_{1},c_{s},c_{t}$
@@ -1781,7 +1933,7 @@ literal "true"
 
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
-prefix "g"
+prefix "a"
 symbol "$c_{t}$"
 description "Coefficient in the thermal impulse contribution to the energy (denoted elsewhere in the literature by $\\alpha$)"
 literal "true"
@@ -1841,7 +1993,7 @@ reference "sec:Equations-of-State"
 status open
 
 \begin_layout Plain Layout
-Note that 
+Dumbser et al 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "dumbser_high_2015"
@@ -1849,12 +2001,12 @@ literal "false"
 
 \end_inset
 
- denotes this variable by 
+ denote this variable by 
 \begin_inset Formula $\alpha$
 \end_inset
 
-, which is avoided here due to a clash with a parameter of one of the equations
- of state used.
+, which is avoided here due to a clash with a parameter of the Godunov-Romenski
+ EOS, used later in the study
 \end_layout
 
 \end_inset
@@ -1892,20 +2044,19 @@ In previous studies,
 \end_inset
 
  has been taken to be constant, as it will in this study.
- Note that Dumbser 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dumbser_high_2015"
-literal "false"
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$G$"
+description "Gramian matrix of the distortion tensor"
+literal "true"
 
 \end_inset
 
- denotes this variable by 
-\begin_inset Formula $\alpha$
-\end_inset
 
-, which is avoided here due to a clash with a parameter of one of the equations
- of state used.
 \end_layout
 
 \begin_layout Standard
@@ -2001,6 +2152,29 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\mu$"
+description "Viscosity"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "g"
+symbol "$\\kappa$"
+description "Thermal conductivity"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
@@ -2048,7 +2222,16 @@ end{subequations}
 \end_layout
 
 \begin_layout Standard
-The justification of these choices is that classical Navier–Stokes–Fourier
+where 
+\begin_inset Formula $\mu$
+\end_inset
+
+ is the viscosity and 
+\begin_inset Formula $\kappa$
+\end_inset
+
+ is the thermal conductivity.
+ The justification of these choices is that classical Navier–Stokes–Fourier
  theory is recovered in the stiff limit 
 \begin_inset Formula $\tau_{1},\tau_{2}\rightarrow0$
 \end_inset
@@ -2153,8 +2336,8 @@ Physical Intuition
 \begin_layout Standard
 The GPR model represents the same set of equations as the model of elastoplastic
  deformation originally proposed by Godunov and Romenski.
- Peshkov and Romenski first subsequently proposed that these are the equations
- of motion for an arbitrary continuum - not just a solid.
+ Peshkov and Romenski were the first to subsequently propose that these
+ are the equations of motion for an arbitrary continuum - not just a solid.
  In doing so, they were able to apply the model to fluids too.
  Note that material elements have not only finite size, but also internal
  structure (encoded in the distortion), unlike in previous continuum models.
@@ -2291,7 +2474,7 @@ name "sec:Numerical-Methods"
 
 \begin_layout Standard
 The GPR model, being non-conservative, with stiff source terms, represents
- a particularly challenging set of PDEs.
+ a particularly challenging set of PDEs to solve.
  In this study they are solved by an ADER-WENO method.
  The method produces arbitrarily high-order solutions to hyperbolic systems
  of PDEs and has been shown to be particularly effective for a wide range
@@ -2315,7 +2498,7 @@ literal "true"
 
 \end_inset
 
- and also 
+ in particular, and also 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "toro_solution_2002,titarev_ader:_2002"
@@ -2324,7 +2507,7 @@ literal "true"
 \end_inset
 
 ).
- 
+ Dumbser et al 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Dumbser2008"
@@ -2371,6 +2554,16 @@ literal "true"
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
 prefix "z"
+symbol "CG"
+description "Continuous Galerkin"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
 symbol "FV"
 description "Finite Volume"
 literal "true"
@@ -2381,7 +2574,7 @@ literal "true"
 \end_layout
 
 \begin_layout Subsection
-The WENO Reconstruction
+WENO Reconstruction
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:The-WENO-Reconstruction"
@@ -2639,11 +2832,6 @@ where
 \end_inset
 
 .
- In this study reconstructions with 
-\begin_inset Formula $N=2$
-\end_inset
-
- are used.
  The matrices of these linear systems, along with their inverses, can be
  precomputed to accelerate the solution of these systems.
 \end_layout
@@ -2826,7 +3014,7 @@ The oscillation indicator is calculated for each
 \end_layout
 
 \begin_layout Subsection
-The Galerkin Predictor 
+Galerkin Predictors 
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:The Galerkin Predictor"
@@ -2925,7 +3113,7 @@ literal "false"
  as the spatial order, and the same basis polynomials are used.
  The process involves finding the root of a non-linear system, and this
  process is guaranteed to converge in exact arithmetic for certain classes
- of PDEs (see 
+ of PDEs (see Jackson 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "jackson_eigenvalues_2017"
@@ -3237,7 +3425,7 @@ reference "eq:NonDimensionalNonConservativeSystem"
 \end_layout
 
 \begin_layout Subsubsection
-The Discontinuous Galerkin Method
+Discontinuous Galerkin Method
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:The-Discontinuous-Galerkin"
@@ -3366,7 +3554,7 @@ This nonlinear system in
 \end_layout
 
 \begin_layout Subsubsection
-The Continuous Galerkin Method
+Continuous Galerkin Method
 \end_layout
 
 \begin_layout Standard
@@ -3556,7 +3744,7 @@ Note that, as with the discontinuous Galerkin method,
 \end_layout
 
 \begin_layout Subsection
-The Finite Volume Scheme
+Finite Volume Scheme
 \end_layout
 
 \begin_layout Standard

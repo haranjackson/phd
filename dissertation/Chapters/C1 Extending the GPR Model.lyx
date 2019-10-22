@@ -139,7 +139,7 @@ literal "true"
 LatexCommand nomenclature
 prefix "a"
 symbol "$p_\\infty$"
-description "Pressure constant in stiffened gas equation of state"
+description "Pressure constant in stiffened gas EOS"
 literal "true"
 
 \end_inset
@@ -228,7 +228,7 @@ begin{subequations}
 \begin_inset Formula 
 \begin{align}
 E_{1}\left(\rho,p\right) & =e\left(\rho,p\right)=e^{ref}\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{\rho\Gamma\left(\rho\right)}\label{eq:MG form}\\
-T & =T^{ref}\phi\left(\rho\right)+\frac{e-e^{ref}}{c_{v}}=T^{ref}\phi\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{c_{V}\rho\Gamma\left(\rho\right)}\\
+T & =T^{ref}\phi\left(\rho\right)+\frac{e-e^{ref}}{c_{v}}=T^{ref}\phi\left(\rho\right)+\frac{p-p^{ref}\left(\rho\right)}{c_{v}\rho\Gamma\left(\rho\right)}\\
 \phi\left(\rho\right) & =\exp\left(\int_{\rho_{0}}^{\rho}\frac{\Gamma\left(\rho^{'}\right)}{\rho^{'}}d\rho^{'}\right)
 \end{align}
 
@@ -264,6 +264,26 @@ literal "true"
 \end_inset
 
 
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$p^{ref}$"
+description "Reference pressure appearing in the Mie-Gruneisen EOS"
+literal "true"
+
+\end_inset
+
+
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "a"
+symbol "$e^{ref}$"
+description "Reference internal energy appearing in the Mie-Gruneisen EOS"
+literal "true"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -287,7 +307,7 @@ reference "tab:MG EOSs"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-E\left(\rho,S,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{S/c_{v}}-1\right)\\
+E\left(\rho,s,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|^{\alpha/2}-1\right)^{2}+c_{v}T_{0}\left|A^{T}A\right|^{\gamma/2}\left(e^{s/c_{v}}-1\right)\\
  & +\frac{b_{0}^{2}}{4}\left|A^{T}A\right|^{\beta/2}\left\Vert \dev\left(A^{T}A\right)\right\Vert ^{2}\nonumber 
 \end{align}
 
@@ -301,7 +321,7 @@ E\left(\rho,S,A\right) & =\frac{c_{0}^{2}}{2\alpha^{2}}\left(\left|A^{T}A\right|
 LatexCommand nomenclature
 prefix "g"
 symbol "$\\alpha$"
-description "A constant appearing in the Godunov-Romenski EOS"
+description "Constant appearing in the Godunov-Romenski EOS"
 literal "true"
 
 \end_inset
@@ -311,7 +331,7 @@ literal "true"
 LatexCommand nomenclature
 prefix "g"
 symbol "$\\beta$"
-description "A constant appearing in the Godunov-Romenski EOS"
+description "Constant appearing in the Godunov-Romenski EOS"
 literal "true"
 
 \end_inset
@@ -321,7 +341,7 @@ literal "true"
 LatexCommand nomenclature
 prefix "g"
 symbol "$\\gamma$"
-description "A constant appearing in the Godunov-Romenski EOS"
+description "Constant appearing in the Godunov-Romenski EOS"
 literal "true"
 
 \end_inset
@@ -360,7 +380,7 @@ where
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-p=\rho^{2}\frac{\partial E_{1}}{\partial\rho}=\rho\left(\frac{c_{0}^{2}}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{S/c_{v}}-1\right)\right)
+p=\rho^{2}\frac{\partial E_{1}}{\partial\rho}=\rho\left(\frac{c_{0}^{2}}{\alpha}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}+\gamma c_{v}T_{0}\left(\frac{\rho}{\rho_{0}}\right)^{\gamma}\left(e^{s/c_{v}}-1\right)\right)
 \end{equation}
 
 \end_inset
@@ -843,7 +863,7 @@ Godunov-Romenski
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-\begin_inset Formula $e^{ref},p^{ref},\Gamma,T_{ref}$
+\begin_inset Formula $e^{ref},p^{ref},\Gamma,T^{ref}$
 \end_inset
 
  for different kinds of Mie-Gruneisen equations of state
@@ -1287,7 +1307,7 @@ Godunov-Romenski
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $ $
+\begin_inset Formula $\frac{c_{0}^{2}}{\alpha}\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}\left(\left(1+α\right)\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)+α\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}\right)$
 \end_inset
 
 
@@ -1299,7 +1319,7 @@ Godunov-Romenski
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $ $
+\begin_inset Formula $\frac{c_{0}^{2}}{\alpha\rho^{2}}\left(\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}-1\right)\left(\frac{\rho}{\rho_{0}}\right)^{\alpha}$
 \end_inset
 
 

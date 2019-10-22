@@ -95,6 +95,19 @@ name "chap:Objective-3-Simulating"
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+prefix "z"
+symbol "RGFM"
+description "Riemann Ghost Fluid Method"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The material in this section is published in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -112,8 +125,9 @@ A framework for simulating the interactions between multiple different continua
  Each constituent material is governed by the same set of equations, differing
  only in terms of their equations of state and strain dissipation functions.
  The interfaces between any combination of fluids, solids, and vacuum are
- handled by a new Riemann Ghost Fluid Method, which is agnostic to the type
- of material on either side (depending only on the desired boundary conditions).
+ handled by a new Riemann Ghost Fluid Method (RGFM), which is agnostic to
+ the type of material on either side (depending only on the desired boundary
+ conditions).
 \end_layout
 
 \begin_layout Standard
@@ -254,7 +268,7 @@ literal "true"
 \end_layout
 
 \begin_layout Subsection
-The Original Ghost Fluid Method
+Original Ghost Fluid Method
 \end_layout
 
 \begin_layout Standard
@@ -286,7 +300,7 @@ name "fig:OriginalGFMNoFix"
 
 \end_inset
 
-The Original Ghost Fluid Method
+Original Ghost Fluid Method
 \end_layout
 
 \end_inset
@@ -565,7 +579,7 @@ name "fig:OriginalGFMIsobaricFix"
 
 \end_inset
 
-The Original Ghost Fluid Method, with the isobaric fix
+Original Ghost Fluid Method, with the isobaric fix
 \end_layout
 
 \end_inset
@@ -653,8 +667,8 @@ name "fig:RiemannProblem"
 
 \end_inset
 
-The qualitative structure of the solution to the Riemann Problem, showing
- the different possible types of waves
+Qualitative structure of the solution to the Riemann Problem, showing the
+ different possible types of waves
 \end_layout
 
 \end_inset
@@ -672,7 +686,7 @@ The qualitative structure of the solution to the Riemann Problem, showing
 \end_layout
 
 \begin_layout Subsection
-The Riemann Ghost Fluid Method
+Riemann Ghost Fluid Method
 \end_layout
 
 \begin_layout Standard
@@ -895,7 +909,7 @@ name "fig:RiemannGFM"
 
 \end_inset
 
-The Riemann Ghost Fluid Method
+Riemann Ghost Fluid Method
 \end_layout
 
 \end_inset
@@ -1011,7 +1025,7 @@ name "fig:GPR_RP"
 
 \end_inset
 
-The Riemann Problem for the GPR model, assuming all waves are distinct
+Riemann Problem for the GPR model, assuming all waves are distinct
 \end_layout
 
 \end_inset
@@ -2312,7 +2326,7 @@ Z=\Pi_{1}+\frac{\rho}{T_{p}}\left(T_{p}\frac{\partial\boldsymbol{\sigma_{d}}}{\p
 \end_layout
 
 \begin_layout Subsection
-The Case without Heat Conduction
+Systems without Heat Conduction
 \end_layout
 
 \begin_layout Standard

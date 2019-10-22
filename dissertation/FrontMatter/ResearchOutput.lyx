@@ -204,6 +204,19 @@ literal "false"
 \end_layout
 
 \begin_layout Itemize
+NewtonKrylov (
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/haranjackson/NewtonKrylov"
+target "https://github.com/haranjackson/NewtonKrylov"
+literal "false"
+
+\end_inset
+
+): A C++ implementation of the Newton-Krylov algorithm, with Python bindings
+\end_layout
+
+\begin_layout Itemize
 LGMRES (
 \begin_inset CommandInset href
 LatexCommand href
@@ -244,16 +257,17 @@ literal "false"
 \end_layout
 
 \begin_layout Itemize
-NewtonKrylov (
+Euler1D (
 \begin_inset CommandInset href
 LatexCommand href
-name "github.com/haranjackson/NewtonKrylov"
-target "https://github.com/haranjackson/NewtonKrylov"
+name "github.com/haranjackson/Euler1D"
+target "https://github.com/haranjackson/Euler1D"
 literal "false"
 
 \end_inset
 
-): A C++ implementation of the Newton-Krylov algorithm, with Python bindings
+): A few first- and second-order methods for solving the 1D Euler equations,
+ implemented in C++
 \end_layout
 
 \begin_layout Itemize
@@ -268,20 +282,6 @@ literal "false"
 
 ): C++ code to compute the Legendre-Gauss nodes and weights on [-1,1], based
  on NumPy’s leggauss function
-\end_layout
-
-\begin_layout Itemize
-Euler1D (
-\begin_inset CommandInset href
-LatexCommand href
-name "github.com/haranjackson/Euler1D"
-target "https://github.com/haranjackson/Euler1D"
-literal "false"
-
-\end_inset
-
-): A few first- and second-order methods for solving the 1D Euler equations,
- implemented in C++
 \end_layout
 
 \end_body
