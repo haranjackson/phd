@@ -325,7 +325,7 @@ There has been a huge amount of research activity in the field over the
  or partitioned 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Hou2012"
+key "hou_numerical_2012"
 literal "true"
 
 \end_inset
@@ -338,7 +338,7 @@ literal "true"
  See for example 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Michler2004,Hubner2004"
+key "michler_monolithic_2004,hubner_monolithic_2004"
 literal "true"
 
 \end_inset
@@ -359,7 +359,7 @@ In a partitioned scheme, the states of the different phases are calculated
  See Rossi and Onate 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Rossi2010"
+key "rossi_analysis_2010"
 literal "true"
 
 \end_inset
@@ -380,7 +380,7 @@ literal "true"
  Virtual Test Facility 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Aivazis2000"
+key "aivazis_virtual_2000"
 literal "true"
 
 \end_inset
@@ -397,7 +397,7 @@ Under both types of schemes, the models describing the different phases
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Pin2007"
+key "pin_ale/lagrangian_2007"
 literal "true"
 
 \end_inset
@@ -413,7 +413,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Legay2006"
+key "legay_eulerian-lagrangian_2006"
 literal "true"
 
 \end_inset
@@ -421,7 +421,7 @@ literal "true"
  for an implementation using level sets, or Fedkiw 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Fedkiw2002"
+key "fedkiw_coupling_2002"
 literal "true"
 
 \end_inset
@@ -431,7 +431,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Ryzhakov2010"
+key "ryzhakov_monolithic_2010"
 literal "true"
 
 \end_inset
@@ -444,7 +444,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Hirt1981"
+key "hirt_volume_1981"
 literal "true"
 
 \end_inset
@@ -454,7 +454,7 @@ literal "true"
  of the media, unless methods such as AMR are employed to combat this 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Hou2012"
+key "hou_numerical_2012"
 literal "true"
 
 \end_inset
@@ -510,7 +510,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Schoch2013"
+key "schoch_eulerian_2013"
 literal "true"
 
 \end_inset
@@ -566,7 +566,7 @@ The Godunov-Peshkov-Romenski (GPR) model (proposed in 2014 by Ilya Peshkov
  and Eugeny Romenski 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Peshkov2016"
+key "peshkov_hyperbolic_2016"
 literal "false"
 
 \end_inset
@@ -604,7 +604,7 @@ literal "false"
  for first-order hyperbolic systems (see 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Toro2009"
+key "toro_reimann_2009"
 literal "false"
 
 \end_inset
@@ -654,7 +654,7 @@ Any unified model of continuum mechanics purporting to describe all phases
  been promising, both here and in other preliminary studies 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Boscheri2016,dumbser_high_2014"
+key "boscheri_cell_2016,dumbser_high_2014"
 literal "true"
 
 \end_inset
@@ -704,7 +704,7 @@ literal "false"
 The GPR model has been solved solely using the ADER-WENO method (
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Boscheri2016,Dumbser2015"
+key "boscheri_cell_2016,dumbser_high_2015"
 literal "true"
 
 \end_inset
@@ -2509,8 +2509,8 @@ literal "true"
 ).
  Dumbser et al 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "Dumbser2008"
+LatexCommand cite
+key "dumbser_unified_2008"
 literal "true"
 
 \end_inset
@@ -2936,7 +2936,7 @@ In this study,
  is a side stencil, as in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2014"
+key "dumbser_high_2014"
 literal "true"
 
 \end_inset
@@ -3103,7 +3103,7 @@ literal "true"
  and 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2008"
+key "dumbser_unified_2008"
 literal "false"
 
 \end_inset

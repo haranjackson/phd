@@ -396,16 +396,6 @@ filename "Chapters/C4 Impact-Induced Detonation in an Elasto-Plastic Confiner.ly
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset include
-LatexCommand include
-filename "Chapters/C5 Conclusions & Discussion.lyx"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset FormulaMacro
 \newcommand{\bibname}{References}
 \end_inset
@@ -417,7 +407,7 @@ filename "Chapters/C5 Conclusions & Discussion.lyx"
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
-bibfiles "refs,misc_refs"
+bibfiles "refs"
 options "siam"
 
 \end_inset

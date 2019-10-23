@@ -6648,7 +6648,7 @@ Throughout this study, the various fluids have been assumed to be immiscible.
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Romenski2007,Romenski2010"
+key "romenski_conservative_2007,romenski_conservative_2010"
 literal "true"
 
 \end_inset
@@ -6908,7 +6908,7 @@ Alternatively, a completely different approximate Riemann solver could be
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Dumbser2016"
+key "dumbser_new_2016"
 literal "true"
 
 \end_inset
@@ -6920,7 +6920,7 @@ literal "true"
  method of Harten, Lax, and van Leer 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Harten1983"
+key "harten_upstream_1983"
 literal "true"
 
 \end_inset
@@ -6971,7 +6971,7 @@ There are iterative exact Riemann solvers for the equations of non-linear
  Miller's exact solver 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Miller2004"
+key "miller_iterative_2004"
 literal "true"
 
 \end_inset
@@ -6980,7 +6980,7 @@ literal "true"
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Barton2009"
+key "barton_exact_2009"
 literal "true"
 
 \end_inset

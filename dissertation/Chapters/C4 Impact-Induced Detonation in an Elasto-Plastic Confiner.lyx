@@ -107,6 +107,17 @@ literal "true"
 \end_layout
 
 \begin_layout Section
+Numerical Results
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Numerical-Results"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Taylor Bar
 \end_layout
 
@@ -294,7 +305,7 @@ Density (top) and plastic deformation (bottom) for the Taylor bar test,
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Aluminum Plate Impact
 \end_layout
 
@@ -636,7 +647,7 @@ name "fig:The-aluminium-plate-2"
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Confined C4 Detonation without Back Plate
 \end_layout
 
@@ -921,7 +932,7 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Confined C4 Detonation
 \end_layout
 
@@ -1038,7 +1049,7 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Confined C4 Detonation with Air Gap
 \end_layout
 
@@ -1159,6 +1170,61 @@ Pressure (left) and reactant concentration (right) for the confined detonation
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Conclusions-&-Discussion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Conclusions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Chap5-Discussion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results of these numerical tests depend on the combination of the several
+ different novel ideas presented in this study.
+ 
+\end_layout
+
+\begin_layout Subsection
+Future Research
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Future-Research"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[[FINISH]]
+\end_layout
+
+\begin_layout Itemize
+Ensure conservation in multiple dimensions
+\end_layout
+
+\begin_layout Itemize
+Treat interfaces implicitly
+\end_layout
+
+\begin_layout Itemize
+Incorporate plasmas
 \end_layout
 
 \begin_layout Standard
