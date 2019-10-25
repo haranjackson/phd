@@ -1195,9 +1195,123 @@ name "sec:Chap5-Discussion"
 \end_layout
 
 \begin_layout Standard
-The results of these numerical tests depend on the combination of the several
- different novel ideas presented in this study.
+The results of these numerical tests demonstrate the power of combining
+ the several different novel ideas presented in this study into a coherent
+ framework.
+ The tests feature all three major phases of matter, reactive species, and
+ the vacuum, and the results corroborate those obtained in previous studies.
+\end_layout
+
+\begin_layout Standard
+In achieving these results, it was necessary to first perform the analytical
+ work present in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Equations-of-State"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Reactive-Materials"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, to enable the use of a broad set of equations of state with the GPR model,
+ and to extend the GPR model to incorporate reactive species.
+ Next, it was required to develop new numerical methods to solve this (extended)
+ model, in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, to allow for the solution of these problems in significantly less time
+ than with the previously-used ADER-WENO method, while retaining a reasonable
+ order of accuracy.
+ In 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Distortion-ODEs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the relaxation mechanism of the GPR model was modified to allow for the
+ simulation of non-Newtonian viscous fluids and elastoplastic solids (as
+ required for the elastoplastic confiner of the impact-induced detonation
+ problem).
+ Finally, it was required to derive a Riemann Ghost Fluid Method for this
+ extended GPR model in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ (for both problems involving both heat conduction and no heat conduction)
+ to allow for modeling the evolution of interfaces between every possible
+ pairing of material types.
  
+\end_layout
+
+\begin_layout Standard
+For completeness and reproducibility, explicit forms of mathematical objects
+ appearing in the GPR model have been provided in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:System Matrices"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the eigenstructure analysis of the GPR model is given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Eigenstructure"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and parameters pertaining to the various different materials encountered
+ in this study are given in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Model-Parameters"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ It should be straightforward for others to implement and validate the methods
+ developed in this study, enabling them to leverage a unified framework
+ for simulating a vast array of different physical phenomena.
+ This should bring the aforementioned benefits of reducing the conceptual
+ work required to implement such simulations, saving time and streamlining
+ development of simulation software by reducing the number of different
+ systems of equations that require solvers.
 \end_layout
 
 \begin_layout Subsection
@@ -1212,19 +1326,842 @@ name "sec:Future-Research"
 \end_layout
 
 \begin_layout Standard
-[[FINISH]]
+The generality of the physical phenomena captured by the framework presented
+ in this study allows it to be extended in many different ways.
+ Three major avenues of further investigation are presented in this section.
+\end_layout
+
+\begin_layout Subsubsection
+Different constitutive equations
+\end_layout
+
+\begin_layout Standard
+Although the tests in this study have demonstrated the suitability of this
+ framework to model materials governed by a wide range of Mie-Gruneisen-type
+ equations of state (discussed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Mie-Gruneisen-Models"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), there are many other kinds of EOSs that can be used.
+ As mentioned in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Relationships-between-Variables"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, it is straightforward to utilize other EOSs that express the internal
+ energy in terms of the density, entropy, pressure, or temperature (if required)
+, and other more exotic EOSs such as tabulated EOSs.
+ The derivatives of the internal energy with respect to 
+\begin_inset Formula $\rho,p$
+\end_inset
+
+ are required in the computation of eigenvalues and eigenvectors of the
+ system matrix, for both the Finite Volume flux updates (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Finite-Volume-Scheme"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and the RGFM method (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Solving-the-Riemann"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Ideally, these derivatives would have an analytical expression, but they
+ can also be calculated numerically, if required.
+ Of course, it is required to validate the use of such EOSs by solving well-unde
+rstood physical problems numerically.
+\end_layout
+
+\begin_layout Standard
+Another material-dependent aspect of this framework is the choice of functions
+ 
+\begin_inset Formula $\theta_{1},\theta_{2}$
+\end_inset
+
+ that govern the relaxation mechanisms of the distortion tensor and the
+ thermal impulse vector respectively (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Relationships-between-Variables"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ In this study, we have used pre-existing forms of 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ for inviscid and Newtonian viscous fluids, elastic solids, and elastoplastic
+ solids governed by a power law in the stress tensor.
+ A new form for 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ was presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Power-Law-Fluids"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for (power-law) non-Newtonian fluids.
+ There are many more relationships that can be explored, however, between
+ the stress tensor and the strain or other variables such as temperature
+ and pressure.
+\end_layout
+
+\begin_layout Standard
+One other such class of materials is Bingham plastics.
+ These are materials that do not strain until the stress reaches a specific
+ minimum 
+\begin_inset Formula $\sigma_{Y}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\dot{\gamma}}=\begin{cases}
+0 & \left|\boldsymbol{\sigma}\right|\leq\sigma_{Y}\\
+\frac{1}{\mu}\left(1-\frac{\sigma_{Y}}{\left|\boldsymbol{\sigma}\right|}\right)\boldsymbol{\sigma} & \left|\boldsymbol{\sigma}\right|\geq\sigma_{Y}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the analysis from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Power-Law-Fluids"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, under the GPR model we have (to first order):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\sigma}=\frac{1}{6}\tau_{1}\rho_{0}c_{s}^{2}\boldsymbol{\dot{\gamma}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the definition of 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:theta_1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ can be used with:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\tau_{1}=\begin{cases}
+\infty & \left|\boldsymbol{\sigma}\right|\leq\sigma_{Y}\\
+\frac{6\mu}{\rho_{0}c_{s}^{2}\left(1-\frac{\sigma_{Y}}{\left|\boldsymbol{\sigma}\right|}\right)} & \left|\boldsymbol{\sigma}\right|\geq\sigma_{Y}
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:bingham-poisseuille-flow"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ demonstrates the results of the Poiseuille flow problem from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Poiseuille-Flow"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, now featuring Bingham plastics with 
+\begin_inset Formula $\sigma_{Y}=0.01,0.02$
+\end_inset
+
+.
+ Solved with the ADER-WENO method on a grid of 400 cells, it is demonstrated
+ that the numerical and exact steady-state solutions almost perfectly coincide.
+ This is a promising result for the usage of our unified framework with
+ more exotic materials, but more work remains to be done in applying the
+ methodology to more tests, and adapting the new solver presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to this new form for 
+\begin_inset Formula $\tau_{1}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../Figures/C4/bingham_plastic/σY1.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../Figures/C4/bingham_plastic/σY2.png
+	lyxscale 30
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:bingham-poisseuille-flow"
+
+\end_inset
+
+The steady-state solution to Poiseuille flow problem for a Bingham plastic
+ with 
+\begin_inset Formula $\sigma_{Y}=0.01$
+\end_inset
+
+ (left) and 
+\begin_inset Formula $\sigma_{Y}=0.02$
+\end_inset
+
+ (right).
+ The numerical solution is in orange, and the exact solution in blue.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Many different models of solid plasticity have been presented over the years
+ (e.g.
+ see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "miller_high-order_2001,miller_conservative_2002,barton_eulerian_2011,favrie_dynamics_2011,barton_eulerian_2013,lopez_ortega_numerical_2014"
+literal "false"
+
+\end_inset
+
+ for a sample), and there exist more advanced concepts such as damage in
+ the realm of solid mechanics (e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "barton_eulerian_2016"
+literal "false"
+
+\end_inset
+
+).
+ The solids models referenced here are similar in mathematical structure
+ to the GPR model, differing mainly in the form of the relaxation function
+ 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+.
+ Some of the models incorporate extra state variables to track the more
+ complex properties that they describe.
+ It is conceivable - but remains to be demonstrated - that these features
+ are compatible with the RGFM presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Reaction pathways and networks for reactive species can become arbitrarily
+ complex (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pereira_de_oliveira_review_2016"
+literal "false"
+
+\end_inset
+
+ for a recent review of complex kinetic modeling methodologies), and there
+ is much potential work in extended the framework presented in this study
+ to encompass reactive systems such as those presented in the aforementioned
+ paper.
+ Care needs to be taken when multiple reactants and products are present,
+ with different properties such as viscosity and thermal conduction, as
+ these affect the relaxation rates of the distortion tensor and thermal
+ impulse vector (now representing the distortion and thermal impulse of
+ the mixture of the different materials present).
+ Appropriate mixture models must be used for 
+\begin_inset Formula $\mu,\kappa$
+\end_inset
+
+ (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alkandry_comparison_2013,gupta_review_1990,blottner_chemically_1971,wilke_viscosity_1950,grunberg_mixture_1949,herning_calculation_1936"
+literal "false"
+
+\end_inset
+
+ for several different approaches that have been devised over the years).
+\end_layout
+
+\begin_layout Subsubsection
+Extensions to the GPR model
+\end_layout
+
+\begin_layout Standard
+Several extensions to the GPR model have been presented over the last few
+ years since its initial presentation by Peshkov and Romenski, allowing
+ it to simulate more exotic physical phenomena.
+ They will be briefly noted here.
+ In each case, work remains to be done in extended the solvers presented
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the RGFM presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to operate under these extended models.
+\end_layout
+
+\begin_layout Paragraph*
+Electrodynamics
+\end_layout
+
+\begin_layout Standard
+Dumbser et al 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dumbser_high_2017"
+literal "false"
+
+\end_inset
+
+ have coupled the GPR model with electrodynamics, enabling modeling of of
+ moving elastoplastic dielectric solids and inviscid or viscous fluids in
+ the presence of electromagnetic fields.
+ The resulting PDE system tends in the stiff limit to the viscous and resistive
+ magnetohydrodynamics (MHD) equations.
+ The density, distortion, and thermal impulse evolution equations (
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:DensityEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:DistortionEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:ThermalEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) take their usual form, with the momentum and energy evolution equations
+ (
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:MomentumEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:EnergyEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) taking the modified form below, along with new evolution equations for
+ the electric field 
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+, magnetic field 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+, and the artificial scalar 
+\begin_inset Formula $\phi$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial\left(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik}+\beta_{ik}\right)}{\partial x_{k}} & =0\\
+\frac{\partial D_{i}}{\partial t}+\frac{\partial\left(v_{k}D_{i}-v_{i}D_{k}-\epsilon_{ikj}b_{j}\right)}{\partial x_{k}}+v_{i}\frac{\partial D_{k}}{\partial x_{k}} & =-\frac{d_{i}}{\eta}\label{eq:ElectricEquation}\\
+\frac{\partial B_{i}}{\partial t}+\frac{\partial\left(v_{k}B_{i}-v_{i}B_{k}+\epsilon_{ikj}d_{j}+\phi\delta_{ik}\right)}{\partial x_{k}}+v_{i}\frac{\partial B_{k}}{\partial x_{k}} & =0\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}+\beta_{ik}\right)v_{i}+q_{k}+\epsilon_{ijk}d_{i}b_{j}\right)}{\partial x_{k}} & =0\\
+\frac{\partial\phi}{\partial t}+\frac{\partial\left(c_{h}^{2}B_{k}\right)}{\partial x_{k}} & =0
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\epsilon_{ijk}$
+\end_inset
+
+ is the Levi-Civita tensor, 
+\begin_inset Formula $\eta$
+\end_inset
+
+ is the resistivity, and 
+\begin_inset Formula $\mathbf{d},\mathbf{b}$
+\end_inset
+
+ are the electric and magnetic fields in the comoving frame:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mathbf{d} & =\frac{1}{\epsilon'}\mathbf{D}+\mathbf{v}\times\mathbf{B}\label{eq:ElectricComoving}\\
+\mathbf{b} & =\frac{1}{\mu'}\mathbf{B}-\mathbf{v}\times\mathbf{D}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\epsilon',\mu'$
+\end_inset
+
+ are the electric permittivity and magnetic permeability of the material.
+\end_layout
+
+\begin_layout Standard
+The following contribution is added to 
+\begin_inset Formula $E$
+\end_inset
+
+ in the EOS 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:EnergyDefinition"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+E_{em}=\frac{1}{2\rho}\left(\frac{1}{\epsilon'}\mathbf{D}^{2}+\frac{1}{\mu'}\mathbf{B}^{2}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Maxwell stress, 
+\begin_inset Formula $\mathbf{\beta}$
+\end_inset
+
+ takes the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathbf{\beta}=\rho E_{em}I-\frac{1}{\epsilon'}\mathbf{D}\otimes\mathbf{D}-\frac{1}{\mu'}\mathbf{B}\otimes\mathbf{B}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is straightforward to solve the resulting homogeneous system of PDEs
+ with the methods presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Homogeneous-System"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Combining 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ElectricEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ElectricComoving"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the new temporal ODE to solve is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{dD_{i}}{dt}=-\frac{1}{\eta\epsilon'}D_{i}-\frac{1}{\eta}\left(\mathbf{v}\times\mathbf{B}\right)_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Denoting 
+\begin_inset Formula $D_{i}^{t}$
+\end_inset
+
+ as the value of 
+\begin_inset Formula $D_{i}$
+\end_inset
+
+ at time 
+\begin_inset Formula $t$
+\end_inset
+
+ after the current timestep:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+D_{i}^{\Delta t}=\left(D_{i}^{0}+\epsilon'\left(\mathbf{v}\times\mathbf{B}\right)_{i}\right)e^{-\frac{\Delta t}{\eta\epsilon'}}-\epsilon'\left(\mathbf{v}\times\mathbf{B}\right)_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, it should be possible to solve this system in the framework presented
+ in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Operator-Splitting-Methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ To use the RGFM with this system, a similar eigenstructure analysis to
+ that performed in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Eigenstructure"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ will need to be undertaken, and new boundary conditions will need to devised
+ in the methodology presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:Solving-the-Riemann"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-Ensure conservation in multiple dimensions
+Multiphase.
+ Note that Groom et al 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "groom_rst-order_2018"
+literal "false"
+
+\end_inset
+
+ have presented a paper working towards the formulation of a three-dimensional,
+ hyperbolic, two-phase, two-pressure, two-velocity, two-temperature model
+ for viscous, miscible and compressible fluids.
+\end_layout
+
+\begin_layout Paragraph*
+Torsion
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_continuum_2019"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Solid-Fluid Transitions
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_irreversible_2015"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+General Relativity
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_new_2019,romenski_new_2019"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Improvements to the treatment of interfaces
 \end_layout
 
 \begin_layout Itemize
 Treat interfaces implicitly
-\end_layout
-
-\begin_layout Itemize
-Incorporate plasmas
 \end_layout
 
 \begin_layout Standard

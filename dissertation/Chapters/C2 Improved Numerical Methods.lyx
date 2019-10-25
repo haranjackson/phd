@@ -2260,6 +2260,13 @@ noprefix "false"
 
 \begin_layout Subsection
 Homogeneous System
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Homogeneous-System"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9776,6 +9783,13 @@ Total energy during the Strain Relaxation Test: approximate analytical solution
 
 \begin_layout Subsubsection
 Poiseuille Flow
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Poiseuille-Flow"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
