@@ -1227,7 +1227,7 @@ noprefix "false"
 , to enable the use of a broad set of equations of state with the GPR model,
  and to extend the GPR model to incorporate reactive species.
  Next, it was required to develop new numerical methods to solve this (extended)
- model, in 
+ model (in 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "sec:Operator-Splitting-Methods"
@@ -1237,7 +1237,7 @@ noprefix "false"
 
 \end_inset
 
-, to allow for the solution of these problems in significantly less time
+), to allow for the solution of these problems in significantly less time
  than with the previously-used ADER-WENO method, while retaining a reasonable
  order of accuracy.
  In 
@@ -1309,7 +1309,7 @@ noprefix "false"
  developed in this study, enabling them to leverage a unified framework
  for simulating a vast array of different physical phenomena.
  This should bring the aforementioned benefits of reducing the conceptual
- work required to implement such simulations, saving time and streamlining
+ work required to implement such simulations; saving time and streamlining
  development of simulation software by reducing the number of different
  systems of equations that require solvers.
 \end_layout
@@ -1328,11 +1328,15 @@ name "sec:Future-Research"
 \begin_layout Standard
 The generality of the physical phenomena captured by the framework presented
  in this study allows it to be extended in many different ways.
- Three major avenues of further investigation are presented in this section.
+ Two major avenues of further investigation are presented in this section.
 \end_layout
 
 \begin_layout Subsubsection
 Different constitutive equations
+\end_layout
+
+\begin_layout Paragraph*
+Equations of State
 \end_layout
 
 \begin_layout Standard
@@ -1348,7 +1352,7 @@ noprefix "false"
 
 \end_inset
 
-), there are many other kinds of EOSs that can be used.
+), there are many other kinds of EOS that can be used.
  As mentioned in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -1392,6 +1396,10 @@ noprefix "false"
  can also be calculated numerically, if required.
  Of course, it is required to validate the use of such EOSs by solving well-unde
 rstood physical problems numerically.
+\end_layout
+
+\begin_layout Paragraph*
+Relaxation Functions
 \end_layout
 
 \begin_layout Standard
@@ -1669,6 +1677,10 @@ noprefix "false"
 .
 \end_layout
 
+\begin_layout Paragraph*
+Reactive Models
+\end_layout
+
 \begin_layout Standard
 Reaction pathways and networks for reactive species can become arbitrarily
  complex (see 
@@ -1749,12 +1761,12 @@ literal "false"
 
 \end_inset
 
- have coupled the GPR model with electrodynamics, enabling modeling of of
- moving elastoplastic dielectric solids and inviscid or viscous fluids in
- the presence of electromagnetic fields.
+ have coupled the GPR model with electrodynamics, enabling modeling of moving
+ elastoplastic dielectric solids and inviscid or viscous fluids in the presence
+ of electromagnetic fields.
  The resulting PDE system tends in the stiff limit to the viscous and resistive
  magnetohydrodynamics (MHD) equations.
- The density, distortion, and thermal impulse evolution equations (
+ The density, distortion, and thermal impulse evolution equations 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "eq:DensityEquation"
@@ -1784,8 +1796,8 @@ noprefix "false"
 
 \end_inset
 
-) take their usual form, with the momentum and energy evolution equations
- (
+ take their usual form, with the momentum and energy evolution equations
+ 
 \begin_inset CommandInset ref
 LatexCommand formatted
 reference "eq:MomentumEquation"
@@ -1805,7 +1817,7 @@ noprefix "false"
 
 \end_inset
 
-) taking the modified form below, along with new evolution equations for
+ taking the modified form below, along with new evolution equations for
  the electric field 
 \begin_inset Formula $\mathbf{D}$
 \end_inset
@@ -1842,7 +1854,7 @@ begin{subequations}
 \begin{align}
 \frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial\left(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik}+\beta_{ik}\right)}{\partial x_{k}} & =0\\
 \frac{\partial D_{i}}{\partial t}+\frac{\partial\left(v_{k}D_{i}-v_{i}D_{k}-\epsilon_{ikj}b_{j}\right)}{\partial x_{k}}+v_{i}\frac{\partial D_{k}}{\partial x_{k}} & =-\frac{d_{i}}{\eta}\label{eq:ElectricEquation}\\
-\frac{\partial B_{i}}{\partial t}+\frac{\partial\left(v_{k}B_{i}-v_{i}B_{k}+\epsilon_{ikj}d_{j}+\phi\delta_{ik}\right)}{\partial x_{k}}+v_{i}\frac{\partial B_{k}}{\partial x_{k}} & =0\\
+\frac{\partial B_{i}}{\partial t}+\frac{\partial\left(v_{k}B_{i}-v_{i}B_{k}+\epsilon_{ikj}d_{j}+\phi\delta_{ik}\right)}{\partial x_{k}}+v_{i}\frac{\partial B_{k}}{\partial x_{k}} & =0\label{eq:MagneticEquation}\\
 \frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+\left(p\delta_{ik}-\sigma_{ik}+\beta_{ik}\right)v_{i}+q_{k}+\epsilon_{ijk}d_{i}b_{j}\right)}{\partial x_{k}} & =0\\
 \frac{\partial\phi}{\partial t}+\frac{\partial\left(c_{h}^{2}B_{k}\right)}{\partial x_{k}} & =0
 \end{align}
@@ -2050,7 +2062,7 @@ Denoting
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-D_{i}^{\Delta t}=\left(D_{i}^{0}+\epsilon'\left(\mathbf{v}\times\mathbf{B}\right)_{i}\right)e^{-\frac{\Delta t}{\eta\epsilon'}}-\epsilon'\left(\mathbf{v}\times\mathbf{B}\right)_{i}
+D_{i}^{\Delta t}=\left(D_{i}^{0}+\epsilon'\left(\mathbf{v}\times\mathbf{B}\right)_{i}\right)e^{-\frac{\Delta t}{\eta\epsilon'}}-\epsilon'\left(\mathbf{v}\times\mathbf{B}\right)_{i}\label{eq:electricSolution}
 \end{equation}
 
 \end_inset
@@ -2096,41 +2108,210 @@ noprefix "false"
 .
 \end_layout
 
-\begin_layout Itemize
-Multiphase.
- Note that Groom et al 
+\begin_layout Paragraph*
+Multiphase Systems
+\end_layout
+
+\begin_layout Standard
+Romenski et al 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "groom_rst-order_2018"
+key "romenski_modeling_2019"
 literal "false"
 
 \end_inset
 
- have presented a paper working towards the formulation of a three-dimensional,
- hyperbolic, two-phase, two-pressure, two-velocity, two-temperature model
- for viscous, miscible and compressible fluids.
+ have recently proposed an extension to the GPR model for simulating multiphase
+ mixtures (in particular the problem of compressible fluid flows in elastoplasti
+c porous media).
+ The model features 2 types of phase interaction: phase pressure relaxation
+ to a common value, and interfacial friction.
 \end_layout
 
-\begin_layout Paragraph*
-Torsion
+\begin_layout Standard
+Taking two phases, let the volume fraction, phase mass fraction, and velocity
+ of the 
+\begin_inset Formula $i$
+\end_inset
+
+th phase be denoted by 
+\begin_inset Formula $\alpha^{\left(i\right)},c^{\left(i\right)},\mathbf{v^{\left(i\right)}}$
+\end_inset
+
+.
+ Note that 
+\begin_inset Formula $c^{\left(1\right)}+c^{\left(2\right)}=1$
+\end_inset
+
+ and 
+\begin_inset Formula $v_{i}=c^{\left(1\right)}v_{i}^{\left(1\right)}+c^{\left(2\right)}v_{i}^{\left(2\right)}$
+\end_inset
+
+.
+ The density and distortion evolution equations 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:DensityEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:DistortionEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ take their usual form, with the momentum and energy evolution equations
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:MomentumEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "eq:EnergyEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ taking the modified form below, along with new evolution equations for
+ the relative phase velocity 
+\begin_inset Formula $\mathbf{w}=\mathbf{v^{\left(1\right)}}-\mathbf{v^{\left(2\right)}}$
+\end_inset
+
+, 
+\begin_inset Formula $c^{\left(1\right)}$
+\end_inset
+
+, and 
+\begin_inset Formula $\alpha^{\left(1\right)}$
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Itemize
-\begin_inset CommandInset citation
-LatexCommand cite
-key "peshkov_continuum_2019"
-literal "false"
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Paragraph*
-Solid-Fluid Transitions
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\frac{\partial\left(\rho v_{i}\right)}{\partial t}+\frac{\partial\left(\rho v_{i}v_{k}+p\delta_{ik}-\sigma_{ik}+w_{i}E_{w_{k}}\right)}{\partial x_{k}} & =0\\
+\frac{\partial\left(\rho c^{\left(1\right)}\right)}{\partial t}+\frac{\partial\left(\rho c^{\left(1\right)}v_{k}+\rho E_{w_{k}}\right)}{\partial x_{k}} & =0\\
+\frac{\partial w_{k}}{\partial t}+\frac{\partial\left(w_{l}v_{l}+E_{c^{\left(1\right)}}\right)}{\partial x_{k}}+v_{l}\left(\frac{\partial w_{k}}{\partial x_{l}}-\frac{\partial w_{l}}{\partial x_{k}}\right) & =-\frac{\lambda_{k}}{\tilde{\theta}}\\
+\frac{\partial\left(\rho\alpha^{\left(1\right)}\right)}{\partial t}+\frac{\partial\left(\rho\alpha^{\left(1\right)}v_{k}\right)}{\partial x_{k}} & =-\frac{\rho\phi}{\hat{\theta}}\\
+\frac{\partial\left(\rho E\right)}{\partial t}+\frac{\partial\left(\rho Ev_{k}+v_{i}\left(p\delta_{ik}-\sigma_{ik}+\rho w_{i}E_{w_{k}}\right)+\rho E_{c^{\left(1\right)}}E_{w_{k}}\right)}{\partial x_{k}} & =0
+\end{align}
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\tilde{\theta},\hat{\theta}$
+\end_inset
+
+ characterize the rate of pressure and velocity relaxation.
+ The total energy now contains contributions from the volume fractions,
+ phase mass fractions, and the relative phase velocity.
+ Depending on the form chosen for 
+\begin_inset Formula $\tilde{\theta},\hat{\theta}$
+\end_inset
+
+, it may be possible to derive semi-analytical solutions for the temporal
+ ODEs presented by this system, in a similar manner to those performed in
+ 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "subsec:The-Distortion-ODEs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Care must be taken when choosing the RGFM boundary conditions between regions
+ occupied by different multiphase mixtures, if it is desired to apply the
+ theory from 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:A-Riemann-Ghost-Fluid-Method-for-the-GPR-Model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to this system.
+\end_layout
+
+\begin_layout Standard
+Another similar, recent attempt at modeling multiphase systems in a GPR-like
+ framework is that of Groom et al 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "groom_first-order_2018"
+literal "false"
+
+\end_inset
+
+.
+ This paper presents a one-dimensional theory, working towards the formulation
+ of a three-dimensional, hyperbolic, two-phase, two-pressure, two-velocity,
+ two-temperature model for viscous, miscible and compressible fluids.
+ This system may also be amenable to being incorporated into the framework
+ developed in this study.
+\end_layout
+
+\begin_layout Standard
+Yet another GPR-like model of multiphase systems was presented in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_irreversible_2015"
@@ -2138,14 +2319,126 @@ literal "false"
 
 \end_inset
 
+.
+ Here, a framework is presented for simulating two-phase continua experiencing
+ stress-induced solid–fluid transitions.
+ It is similar to the GPR system, with the addition of four extra state
+ variables: the Burgers tensor 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
 
+, the defect flux density 
+\series bold
+
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+
+\series default
+, and both of their divergence vectors.
+ The source term for the distortion tensor takes a different form to that
+ used in this study, and the Burgers tensor and defect flux density contain
+ source terms also.
+ Thus, a significant amount of work will need to be performed to adapt the
+ operator splitting numerical solver presented in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Objective-2-Improved"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to this system, but it may be possible.
+ Once again, care must be taken in choosing boundary conditions involving
+ 
+\begin_inset Formula $\mathbf{B},\mathbf{D}$
+\end_inset
+
+ and their divergence vectors, if the RGFM of 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "chap:Objective-3-Simulating"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is used to simulate impermeable interfaces between different regions occupied
+ by materials that can undergo stress-induced phase transitions, described
+ by this model.
 \end_layout
 
 \begin_layout Paragraph*
-General Relativity
+Riemann-Cartan Geometry and General Relativity
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
+Peshkov et al 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "peshkov_continuum_2019"
+literal "false"
+
+\end_inset
+
+ have recently applied elements of Riemann-Cartan geometry to fluid mechanics,
+ with the aim of modeling turbulence effects.
+ The authors associate the rotational degrees of freedom of the the distortion
+ tensor field with the dynamics of microscopic, unresolved vortexes.
+ The concept of the rank-3 four-torsion tensor is introduced, and is used
+ to characterize the distortion field's spin.
+ Two new evolution equations are introduced, for rank-2 components 
+\begin_inset Formula $\mathbf{B},\mathbf{D}$
+\end_inset
+
+ of the rank-3 four-torsion tensor.
+ These are similar in structure to the magnetic and electric fields encountered
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:MagneticEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ElectricEquation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ (although 
+\begin_inset Formula $\mathbf{B},\mathbf{D}$
+\end_inset
+
+ are now rank-2, rather than rank-1).
+ It may be that this system is amenable to solution in a similar manner
+ to the method given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:electricSolution"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Another recent development in this area - in part building upon the material
+ of the aforementioned study - is the introduction of general relativistic
+ effects into the GPR system 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "peshkov_new_2019,romenski_new_2019"
@@ -2153,15 +2446,11 @@ literal "false"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsubsection
-Improvements to the treatment of interfaces
-\end_layout
-
-\begin_layout Itemize
-Treat interfaces implicitly
+.
+ A significant amount of work lies ahead with regards to this extended model,
+ in the construction of numerical solvers of the kind developed in this
+ study, and the implementation of immiscible multimaterial modeling.
+ The resulting framework has the potential to be very powerful, however.
 \end_layout
 
 \begin_layout Standard

@@ -678,8 +678,8 @@ literal "false"
  It has also been extended to incorporate the effects of electrodynamics
  (see 
 \begin_inset CommandInset citation
-LatexCommand citet
-key "dumbser_high_2016"
+LatexCommand cite
+key "dumbser_high_2017"
 literal "false"
 
 \end_inset
