@@ -1,4 +1,4 @@
-from numpy import array, eye, sqrt, zeros
+from numpy import array, concatenate, eye, pad, sqrt, zeros
 
 from gpr.misc.structures import Cvec
 from gpr.vars.hyp import Cvec_hyp
@@ -18,11 +18,11 @@ def water_air():
         N = 3
         cfl = 0.5
         SPLIT = True
-        SOLVER = 'rusanov'
+        FLUX = 0
         RELAXATION = true
     """
     tf = 2.3744e-4
-    nx = 200
+    nx = 3000
     Lx = 1
     MPs = [H20_SG_SI, Air_SG_SI]
 
@@ -103,9 +103,9 @@ def pbx_copper(test):
         N = 3
         cfl = 0.5
         SPLIT = True
-        SOLVER = 'rusanov'
+        FLUX = 0
     """
-    nx = 500
+    nx = 3000
     Lx = 1
 
     dX = [Lx / nx]
@@ -121,9 +121,7 @@ def pbx_copper(test):
 
         pL = 1e5
         vR = array([2, 0, 0.1])
-        FR = array([[1, 0, 0],
-                    [-0.01, 0.95, 0.02],
-                    [-0.015, 0, 0.9]])
+        FR = array([[1, 0, 0], [-0.01, 0.95, 0.02], [-0.015, 0, 0.9]])
         tf = 9e-5
 
     vL = zeros(3)
@@ -142,35 +140,37 @@ def pbx_copper(test):
         QR = Cvec(ρL, pL, vL, PBX_SG_SI, AL)
         MPs = [Cu_GR_SI, PBX_SG_SI]
 
+    QL = concatenate([QL, [0]])
+    QR = concatenate([QR, [0]])
+
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)
     return u, MPs, tf, dX, 'transitive'
 
 
-def aluminium_vacuum():
+def aluminium_vacuum(THERMAL=True):
     """ 10.1016/j.jcp.2010.04.012
         5.3 Solid/vacuum problem
 
         N = 3
         cfl = 0.5
         SPLIT = False
-        SOLVER = 'rusanov'
+        FLUX = 0
         RELAXATION = false
     """
     tf = 0.06
-    nx = 500
+    nx = 3000
     Lx = 1
     MPs = [Al_GR_CGS, VAC]
 
     dX = [Lx / nx]
 
     vL = array([2, 0, 0.1])
-    FL = array([[1, 0, 0],
-                [-0.01, 0.95, 0.02],
-                [-0.015, 0, 0.9]])
+    FL = array([[1, 0, 0], [-0.01, 0.95, 0.02], [-0.015, 0, 0.9]])
     SL = 0
 
+    NV = 15 + int(THERMAL) * 3
     QL = Cvec_hyp(FL, SL, vL, Al_HYP_CGS)
-
+    QL = pad(QL, NV - 14, 'constant')[NV - 14:]
     QR = zeros(NV)
 
     u = riemann_IC(nx, dX, QL, QR, 0.5, True)

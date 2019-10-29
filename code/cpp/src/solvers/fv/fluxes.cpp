@@ -73,3 +73,14 @@ VecV D_RUS(VecVr qL, VecVr qR, int d, Par &MP) {
   flux(f, qR, d, MP);
   return f;
 }
+
+VecV D_RUS(VecVr qL, VecVr qR, int d, Par &MP) {
+
+  double max1 = max_abs_eigs(qL, d, MP);
+  double max2 = max_abs_eigs(qR, d, MP);
+
+  VecV f = std::max(max1, max2) * (qL - qR);
+  flux(f, qL, d, MP);
+  flux(f, qR, d, MP);
+  return f;
+}

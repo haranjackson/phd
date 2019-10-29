@@ -39,6 +39,10 @@ def primitive_IC(nx, dX, ρL, pL, vL, ρR, pR, vR, MPs, x0=0.5, λL=None, λR=No
     JR = zeros(3)
     QR = Cvec(ρR, pR, vR, MPR, AR, JR, λR)
 
+    if isMulti:
+        QL.resize(QL.size + 1)
+        QR.resize(QR.size + 1)
+
     return riemann_IC(nx, dX, QL, QR, x0, isMulti)
 
 
