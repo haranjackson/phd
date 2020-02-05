@@ -15,4 +15,4 @@ non-Newtonian fluids, elastoplasticity, multimaterial, ghost fluid methods
 
 This may be of interest:
 
-github.com/haranjackson/PyPDE
+[github.com/haranjackson/PyPDE](https://github.com/haranjackson/PyPDE)
